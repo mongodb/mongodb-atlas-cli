@@ -1,5 +1,15 @@
 ---
 pipeline:
+  dependencies:
+    image: node
+    secrets: [ snyk_token ]
+    group: ci
+    commands:
+      - npm install -g snyk
+      - snyk test
+    when:
+      branch: master
+      event: push
   lint:
     image: golangci/golangci-lint:v1.21.0
     group: ci

@@ -1,21 +1,16 @@
 ---
-kind: pipeline
-type: docker
-name: linux-amd64
-
-platform:
-  arch: amd64
-  os: linux
-
-steps:
-  - name: build
+pipeline:
+  lint:
+    image: golangci/golangci-lint:v1.21.0
+    group: ci
+    commands:
+      - golangci-lint run
+  build:
     image: golang:1.13
+    group: ci
     commands:
       - make build
 
-trigger:
-  branch:
-    - master
-  event:
-    - push
-    - pull_request
+branches:
+  - master
+  - feature/*

@@ -11,7 +11,7 @@ require (
 	github.com/manifoldco/promptui v0.6.0
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
-	github.com/mongodb-labs/pcgc v0.0.4-0.20191205143822-9c7499d7af08
+	github.com/mongodb-labs/pcgc v0.0.4-0.20191210094853-2f360168a7bd
 	github.com/mongodb/go-client-mongodb-atlas v0.1.1
 	github.com/nicksnyder/go-i18n v2.0.3+incompatible // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect

@@ -15,7 +15,7 @@ fmt:
 
 lint:
 	@echo "==> Linting all packages..."
-	golangci-lint run $SOURCE_FILES -E gofmt -E golint -E misspell
+	golangci-lint run $(SOURCE_FILES) -E gofmt -E golint -E misspell
 .PHONY: lint
 
 build:

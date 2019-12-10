@@ -8,20 +8,15 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	configName = "mcli"
-)
-
 var (
-	version string
 	orgID   string
 	profile string
 
 	rootCmd = &cobra.Command{
-		Version: version,
-		Use:     "mcli",
-		Short:   "CLI tool to manage your mongoDB cloud",
-		Long:    "Use mcli command help for information on a specific  command",
+		Version: Version,
+		Use:     toolName,
+		Short:   "CLI tool to manage your MongoDB Cloud",
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", toolName),
 	}
 )
 
@@ -39,7 +34,7 @@ func init() {
 
 func createConfigFile() {
 	// TODO: viper to release patch for this
-	configFile := fmt.Sprintf("%s/%s.toml", configDir(), configName)
+	configFile := fmt.Sprintf("%s/%s.toml", configDir(), toolName)
 
 	_, err := os.OpenFile(configFile, os.O_RDONLY|os.O_CREATE, 0600)
 	exitOnErr(err)
@@ -49,10 +44,10 @@ func createConfigFile() {
 func initConfig() {
 	// Find home directory.
 	configDir := configDir()
-	viper.SetEnvPrefix(configName)
+	viper.SetEnvPrefix(toolName)
 	viper.AutomaticEnv()
-	viper.SetConfigType("toml")
-	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+	viper.SetConfigName(toolName)
 	viper.AddConfigPath(configDir) // path to look for the config file in
 
 	viper.AutomaticEnv() // read in environment variables that match

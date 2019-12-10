@@ -121,6 +121,8 @@ github.com/mongodb-labs/pcgc v0.0.3 h1:aSX6pTAYkdq7YujMb144Euafwe0rIJgOJqmo5nEBI
 github.com/mongodb-labs/pcgc v0.0.3/go.mod h1:zx+2/O3dVZUfBr541pdTMZwuARqeycLExnpHShUefo4=
 github.com/mongodb-labs/pcgc v0.0.4-0.20191205143822-9c7499d7af08 h1:B1g+YNPBUCSLm7/RZH3KgSRI4Tj8DRsZphlOqFZPgUA=
 github.com/mongodb-labs/pcgc v0.0.4-0.20191205143822-9c7499d7af08/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
+github.com/mongodb-labs/pcgc v0.0.4-0.20191210094853-2f360168a7bd h1:8M63vjtmMt7wgCRA9BWEVgXDxo5jlhFDdxVGoplki1I=
+github.com/mongodb-labs/pcgc v0.0.4-0.20191210094853-2f360168a7bd/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1 h1:L7eaGSvw1raCQF69N/tlYWAyyJRIJpdyqK6d90BtQ74=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
 github.com/mwielbut/pointy v1.1.0 h1:U5/YEfoIkaGCHv0St3CgjduqXID4FNRoyZgLM1kY9vg=

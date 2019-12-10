@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"context"
 	"errors"
-	"fmt"
 
+	"github.com/mongodb-labs/pcgc/cloudmanager"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // projectsCmd represents the projects command
@@ -12,7 +14,7 @@ var projectsCmd = &cobra.Command{
 	Use:     "projects",
 	Short:   "Projects operations",
 	Long:    "Create, List and manage your MongoDB private cloud projects.",
-	Aliases: []string{"groups"},
+	Aliases: []string{"project", "group", "groups"},
 }
 
 // listCmd represents the list command
@@ -20,11 +22,12 @@ var listProjectsCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List projects",
 	Run: func(cmd *cobra.Command, args []string) {
-		projects, err := newAuthenticatedClient().GetAllProjects()
+		client, err := newAuthenticatedClient(profile)
+		exitOnErr(err)
+		viper.GetString("default.service")
+		projects, _, err := client.(*cloudmanager.Client).Projects.GetAllProjects(context.Background())
 
-		if err != nil {
-			fmt.Println("Error:", err)
-		}
+		exitOnErr(err)
 
 		prettyJSON(projects)
 	},
@@ -41,15 +44,18 @@ var createProjectCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		newProject, err := newAuthenticatedClient().CreateOneProject(args[0], orgID)
+		client, err := newAuthenticatedClient(profile)
 
+		exitOnErr(err)
+		project := &cloudmanager.Project{Name: "Test"}
+		newProject, _, err := client.(*cloudmanager.Client).Projects.Create(context.Background(), project)
 		exitOnErr(err)
 		prettyJSON(newProject)
 	},
 }
 
 func init() {
-	createProjectCmd.Flags().StringVar(&orgID, "org-id", "", "Organization ID for the group")
+	createProjectCmd.Flags().StringVar(&orgID, "orgId", "", "Organization ID for the group")
 	rootCmd.AddCommand(projectsCmd)
 	projectsCmd.AddCommand(listProjectsCmd)
 	projectsCmd.AddCommand(createProjectCmd)

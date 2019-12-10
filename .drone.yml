@@ -1,7 +1,7 @@
 ---
 pipeline:
   dependencies:
-    image: golang
+    image: golang:1.13
     secrets: [ snyk_token ]
     group: ci
     commands:
@@ -16,7 +16,7 @@ pipeline:
     image: golangci/golangci-lint:v1.21.0
     group: ci
     commands:
-      - golangci-lint run
+      - make lint
   build:
     image: golang:1.13
     group: ci

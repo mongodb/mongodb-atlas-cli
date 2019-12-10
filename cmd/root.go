@@ -1,28 +1,29 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"os"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var (
-	cfgFile   string
-	version   string
-	orgID     string
-	projectID string
+const (
+	configName = "mcli"
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Version: version,
-	Use:     "mpc",
-	Short:   "MPC cli tool to manage your mongo cloud",
-	Long:    "Use mpc command help for information on a  specific  command.",
-}
+var (
+	version string
+	orgID   string
+	profile string
+
+	rootCmd = &cobra.Command{
+		Version: version,
+		Use:     "mcli",
+		Short:   "CLI tool to manage your mongoDB cloud",
+		Long:    "Use mcli command help for information on a specific  command",
+	}
+)
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -33,40 +34,35 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().StringVarP(&profile, "profile", "p", "default", "profile")
+}
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mpc.json)")
+func createConfigFile() {
+	// TODO: viper to release patch for this
+	configFile := fmt.Sprintf("%s/%s.toml", configDir(), configName)
+
+	_, err := os.OpenFile(configFile, os.O_RDONLY|os.O_CREATE, 0600)
+	exitOnErr(err)
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		exitOnErr(err)
-		_, err2 := os.OpenFile(home+"/.mpc.json", os.O_RDONLY|os.O_CREATE, 0600)
-		exitOnErr(err2)
-
-		viper.SetEnvPrefix("mpc")
-		viper.AutomaticEnv()
-		viper.SetConfigType("json")
-		viper.SetConfigName(".mpc")
-		// Search config in home directory with name ".mpc" (without extension).
-		viper.AddConfigPath(home)
-		viper.AddConfigPath(".")
-	}
+	// Find home directory.
+	configDir := configDir()
+	viper.SetEnvPrefix(configName)
+	viper.AutomaticEnv()
+	viper.SetConfigType("toml")
+	viper.SetConfigName(configName)
+	viper.AddConfigPath(configDir) // path to look for the config file in
 
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	err := viper.ReadInConfig()
-	if err != nil {
-		_, ok := err.(viper.ConfigFileNotFoundError)
-
-		if ok {
-			log.Println("Config file not found :(")
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			createConfigFile()
+		} else {
+			exitOnErr(err)
 		}
 	}
 }

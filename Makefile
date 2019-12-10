@@ -3,17 +3,20 @@ SOURCE_FILES?=./...
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
 
+setup:
+	@echo "==> Installing dependencies..."
+    curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.21.0
+.PHONY: setup
+
 # gofmt and goimports all go files
 fmt:
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
 .PHONY: fmt
 
-# Clean go.mod
-go-mod-tidy:
-	@go mod tidy -v
-	@git diff HEAD
-	@git diff-index --quiet HEAD
-.PHONY: go-mod-tidy
+lint:
+	@echo "==> Linting all packages..."
+	golangci-lint run $SOURCE_FILES -E gofmt -E golint -E misspell
+.PHONY: lint
 
 build:
 	go build

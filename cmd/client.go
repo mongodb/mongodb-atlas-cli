@@ -1,23 +1,54 @@
 package cmd
 
 import (
-	"github.com/mongodb-labs/pcgc/pkg/httpclient"
-	"github.com/mongodb-labs/pcgc/pkg/opsmanager"
+	"errors"
+	"fmt"
+	"runtime"
+
+	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/viper"
 )
 
-func newAuthenticatedClient() opsmanager.Client {
-	baseURL := viper.GetString("base_url")
-	publicKey := viper.GetString("public_key")
-	privateKey := viper.GetString("private_key")
-	resolver := httpclient.NewURLResolverWithPrefix(baseURL, opsmanager.PublicAPIPrefix)
+// Version for client
+// DefaultBaseURL API default base URL
+// DefaultUserAgent To be submitted by the client
+const (
+	Version          = "0.1"
+	DefaultUserAgent = "mcli/" + Version + " (" + runtime.GOOS + "; " + runtime.GOARCH + ")"
+)
 
-	return opsmanager.NewClientWithDigestAuth(resolver, publicKey, privateKey)
+//Config ...
+type Config struct {
+	PublicKey  string
+	PrivateKey string
 }
 
-func newDefaultClient() opsmanager.Client {
-	baseURL := viper.GetString("base_url")
-	resolver := httpclient.NewURLResolverWithPrefix(baseURL, opsmanager.PublicAPIPrefix)
+//NewClient ...
+func newAuthenticatedClient(profile string) (interface{}, error) {
+	// setup a transport to handle digest
+	publicKey := viper.GetString(fmt.Sprintf("%s.public_key", profile))
+	privateKey := viper.GetString(fmt.Sprintf("%s.private_key", profile))
+	transport := digest.NewTransport(publicKey, privateKey)
 
-	return opsmanager.NewDefaultClient(resolver)
+	// initialize the client
+	client, err := transport.Client()
+	if err != nil {
+		return nil, err
+	}
+
+	provider := viper.GetString(fmt.Sprintf("%s.service", profile))
+	if provider == "cloud" {
+		//Initialize the MongoDB Atlas API Client.
+		return mongodbatlas.NewClient(client), nil
+	}
+	if provider == "cloud-manager" {
+		return cloudmanager.NewClient(client), nil
+	}
+	if provider == "ops-manager" {
+		baseURL := viper.GetString(fmt.Sprintf("%s.base_url", profile))
+		return cloudmanager.New(client, cloudmanager.SetBaseURL(baseURL+"/api/public/v1.0/"), cloudmanager.SetUserAgent(DefaultUserAgent))
+	}
+	return nil, errors.New("unsupported provider")
 }

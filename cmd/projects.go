@@ -1,14 +1,10 @@
 package cmd
 
 import (
-	"context"
 	"errors"
-	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/10gen/mcli/internal/cli"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -25,7 +21,9 @@ var (
 		Use:   "list",
 		Short: "List projects",
 		Run: func(cmd *cobra.Command, args []string) {
-			projects, _, err := listProjects()
+			config := &cli.Configuration{Profile: profile}
+			service := &cli.Projects{Configuration: config}
+			projects, _, err := service.ListProjects()
 			exitOnErr(err)
 			prettyJSON(projects)
 		},
@@ -36,50 +34,20 @@ var (
 		Use:   "create",
 		Short: "Create a project",
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) < 1 {
+			if len(args) != 1 {
 				return errors.New("requires a name argument")
 			}
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			project, _, err := createProject(args[0])
+			config := &cli.Configuration{Profile: profile}
+			service := &cli.Projects{Configuration: config}
+			project, _, err := service.CreateProject(args[0], orgID)
 			exitOnErr(err)
 			prettyJSON(project)
 		},
 	}
 )
-
-// listProjects encapsulate the logic to manage different cloud providers
-func listProjects() (interface{}, *atlas.Response, error) {
-	client, err := newAuthenticatedClient(profile)
-	exitOnErr(err)
-	service := viper.GetString(fmt.Sprintf("%s.service", profile))
-	switch service {
-	case "cloud":
-		return client.(*atlas.Client).Projects.GetAllProjects(context.Background())
-	case "cloud-manager", "ops-manager":
-		return client.(*cloudmanager.Client).Projects.GetAllProjects(context.Background())
-	default:
-		return nil, nil, fmt.Errorf("unsupported service: %s", service)
-	}
-}
-
-// createProject encapsulate the logic to manage different cloud providers
-func createProject(name string) (interface{}, *atlas.Response, error) {
-	client, err := newAuthenticatedClient(profile)
-	exitOnErr(err)
-	service := viper.GetString(fmt.Sprintf("%s.service", profile))
-	switch service {
-	case "cloud":
-		project := &atlas.Project{Name: name, OrgID: orgID}
-		return client.(*atlas.Client).Projects.Create(context.Background(), project)
-	case "cloud-manager", "ops-manager":
-		project := &cloudmanager.Project{Name: name, OrgID: orgID}
-		return client.(*cloudmanager.Client).Projects.Create(context.Background(), project)
-	default:
-		return nil, nil, fmt.Errorf("unsupported service: %s", service)
-	}
-}
 
 func init() {
 	createProjectCmd.Flags().StringVar(&orgID, "orgId", "", "Organization ID for the project")

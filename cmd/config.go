@@ -4,23 +4,27 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/10gen/mcli/internal/cli"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
 	service string
 	// configureCmd represents the configure command
-	// mcli config [--service atlas|ops-manager|cloud-manager] [--profile profileName]
+	// mcli config [--service cloud|ops-manager|cloud-manager] [--profile profileName]
 	configCmd = &cobra.Command{
 		Use:   "config",
 		Short: "Configure the tool",
 		Long:  `Set up authentication settings as well as the Base URL of the private cloud deployment.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			viper.Set(fmt.Sprintf("%s.service", profile), service)
+			config := &cli.Configuration{
+				Profile: profile,
+			}
 
-			if service == "ops-manager" {
+			config.SetService(service)
+
+			if service == cli.OpsManagerService {
 				baseURLPrompt := promptui.Prompt{
 					Label: "Base URL",
 				}
@@ -28,33 +32,30 @@ var (
 				baseURL, err := baseURLPrompt.Run()
 
 				exitOnErr(err)
-
-				viper.Set(fmt.Sprintf("%s.base_url", profile), strings.TrimSpace(baseURL))
+				config.SetOpsManagerURL(strings.TrimSpace(baseURL))
 			}
 
-			usernamePrompt := promptui.Prompt{
+			publicAPIKeyPrompt := promptui.Prompt{
 				Label: "Public Key",
 			}
 
-			username, err := usernamePrompt.Run()
-
+			publicAPIKey, err := publicAPIKeyPrompt.Run()
 			exitOnErr(err)
 
-			viper.Set(fmt.Sprintf("%s.public_key", profile), strings.TrimSpace(username))
+			config.SetPublicAPIKey(strings.TrimSpace(publicAPIKey))
 
-			prompt := promptui.Prompt{
+			privateAPIKeyPrompt := promptui.Prompt{
 				Label: "Enter Private Key",
 				Mask:  '*',
 			}
 
-			password, err := prompt.Run()
-
+			privateAPIKey, err := privateAPIKeyPrompt.Run()
 			exitOnErr(err)
 
-			viper.Set(fmt.Sprintf("%s.private_key", profile), strings.TrimSpace(password))
+			config.SetPrivateAPIKey(strings.TrimSpace(privateAPIKey))
 
-			err2 := viper.WriteConfig()
-			exitOnErr(err2)
+			err = config.Save()
+			exitOnErr(err)
 
 			fmt.Println("\nDone!")
 		},
@@ -63,5 +64,5 @@ var (
 
 func init() {
 	rootCmd.AddCommand(configCmd)
-	configCmd.Flags().StringVarP(&service, "service", "s", "cloud", "Service provider, Atlas, Cloud manager ot Ops manager")
+	configCmd.Flags().StringVarP(&service, "service", "s", "cloud", "Service provider, Atlas, Cloud manager or Ops manager")
 }

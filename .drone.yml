@@ -12,6 +12,11 @@ pipeline:
     when:
       branch: master
       event: push
+  test:
+    image: golang:1.13
+    group: ci
+    commands:
+      - make test
   lint:
     image: golangci/golangci-lint:v1.21.0
     group: ci

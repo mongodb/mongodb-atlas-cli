@@ -18,6 +18,11 @@ lint:
 	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned
 .PHONY: lint
 
+.PHONY: test
+test:
+	@echo "==> Running tests..."
+	go test $(SOURCE_FILES) -timeout=30s -parallel=4
+
 build:
 	go build
 .PHONY: build

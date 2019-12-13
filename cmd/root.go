@@ -13,9 +13,7 @@ import (
 const configType = "toml"
 
 var (
-	orgID   string
-	profile string
-
+	//profile string
 	rootCmd = &cobra.Command{
 		Version: version.Version,
 		Use:     cli.Name,
@@ -33,21 +31,26 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVarP(&profile, "profile", "p", "default", "profile")
+	rootCmd.AddCommand(cli.ProjectBuilder())
+	rootCmd.PersistentFlags().StringP("profile", "p", "default", "profile")
+	_ = viper.BindPFlag("profile", rootCmd.PersistentFlags().Lookup("profile"))
 }
 
 func createConfigFile() {
 	// TODO: viper to release patch for this
-	configFile := fmt.Sprintf("%s/%s.toml", configDir(), cli.Name)
+	home, err := configHome()
+	exitOnErr(err)
+	configFile := fmt.Sprintf("%s/%s.toml", home, cli.Name)
 
-	_, err := os.OpenFile(configFile, os.O_RDONLY|os.O_CREATE, 0600)
+	_, err = os.OpenFile(configFile, os.O_RDONLY|os.O_CREATE, 0600)
 	exitOnErr(err)
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	// Find home directory.
-	configDir := configDir()
+	configDir, err := configHome()
+	exitOnErr(err)
 	viper.SetEnvPrefix(cli.Name)
 	viper.AutomaticEnv()
 	viper.SetConfigType(configType)

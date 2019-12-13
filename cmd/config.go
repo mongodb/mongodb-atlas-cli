@@ -17,21 +17,21 @@ var (
 		Use:   "config",
 		Short: "Configure the tool",
 		Long:  `Set up authentication settings as well as the Base URL of the private cloud deployment.`,
-		Run: func(cmd *cobra.Command, args []string) {
-			config := &cli.Configuration{
-				Profile: profile,
-			}
+		RunE: func(cmd *cobra.Command, args []string) error {
+			config := cli.NewConfig()
 
 			config.SetService(service)
 
-			if service == cli.OpsManagerService {
+			if config.IsOpsManager() {
 				baseURLPrompt := promptui.Prompt{
 					Label: "Base URL",
 				}
 
 				baseURL, err := baseURLPrompt.Run()
+				if err != nil {
+					return err
+				}
 
-				exitOnErr(err)
 				config.SetOpsManagerURL(strings.TrimSpace(baseURL))
 			}
 
@@ -40,7 +40,9 @@ var (
 			}
 
 			publicAPIKey, err := publicAPIKeyPrompt.Run()
-			exitOnErr(err)
+			if err != nil {
+				return err
+			}
 
 			config.SetPublicAPIKey(strings.TrimSpace(publicAPIKey))
 
@@ -50,14 +52,19 @@ var (
 			}
 
 			privateAPIKey, err := privateAPIKeyPrompt.Run()
-			exitOnErr(err)
+			if err != nil {
+				return err
+			}
 
 			config.SetPrivateAPIKey(strings.TrimSpace(privateAPIKey))
 
 			err = config.Save()
-			exitOnErr(err)
+			if err != nil {
+				return err
+			}
 
 			fmt.Println("\nDone!")
+			return nil
 		},
 	}
 )

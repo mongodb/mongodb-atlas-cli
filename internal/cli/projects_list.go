@@ -1,12 +1,15 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/spf13/cobra"
 )
 
 type ListProjectOpts struct {
-	store store.ProjectLister
+	profile string
+	store   store.ProjectLister
 }
 
 func (opts *ListProjectOpts) Run() error {
@@ -16,13 +19,7 @@ func (opts *ListProjectOpts) Run() error {
 		return err
 	}
 
-	err = prettyJSON(projects)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return prettyJSON(projects)
 }
 
 func ProjectsListBuilder() *cobra.Command {
@@ -32,11 +29,8 @@ func ProjectsListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config := NewConfig()
-			s, err := store.New(config.GetService(),
-				config.GetPublicAPIKey(),
-				config.GetPrivateAPIKey(),
-				config.GetOpsManagerURL())
+			conf := config.New(opts.profile)
+			s, err := store.New(conf)
 
 			if err != nil {
 				return err
@@ -46,5 +40,7 @@ func ProjectsListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+
 	return cmd
 }

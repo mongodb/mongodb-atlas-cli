@@ -1,80 +1,112 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-type Config interface {
-	GetService() string
-	SetService(string)
-	GetPublicAPIKey() string
-	SetPublicAPIKey(string)
-	GetPrivateAPIKey() string
-	SetPrivateAPIKey(string)
-	GetOpsManagerURL() string
-	SetOpsManagerURL(string)
-	IsOpsManager() bool
+type ConfigOpts struct {
+	Profile       string
+	Service       string
+	PublicAPIKey  string
+	PrivateAPIKey string
+	OpsManagerURL string
+	config        config.Config
 }
 
-type VConfig struct {
-	Profile string
+func (opts *ConfigOpts) IsCloud() bool {
+	return opts.Service == config.CloudService
 }
 
-func NewConfig() *VConfig {
-	profile := viper.GetString("profile")
-
-	return &VConfig{Profile: profile}
+func (opts *ConfigOpts) IsOpsManager() bool {
+	return opts.Service == config.OpsManagerService
 }
 
-// GetService get configured service
-func (c *VConfig) GetService() string {
-	return viper.GetString(fmt.Sprintf("%s.service", c.Profile))
+func (opts *ConfigOpts) IsCloudManager() bool {
+	return opts.Service == config.CloudManagerService
 }
 
-// SetService set configured service
-func (c *VConfig) SetService(service string) {
-	viper.Set(fmt.Sprintf("%s.service", c.Profile), service)
-}
+func (opts *ConfigOpts) Save() error {
+	opts.config.SetService(opts.Service)
+	if opts.PublicAPIKey != "" {
+		opts.config.SetPublicAPIKey(opts.PublicAPIKey)
+	}
+	if opts.PrivateAPIKey != "" {
+		opts.config.SetPrivateAPIKey(opts.PrivateAPIKey)
+	}
+	if opts.IsOpsManager() && opts.OpsManagerURL != "" {
+		opts.config.SetOpsManagerURL(opts.OpsManagerURL)
+	}
 
-// IsOpsManager check if Ops Manager
-func (c *VConfig) IsOpsManager() bool {
-	return c.GetService() == store.OpsManagerService
-}
-
-// GetPublicAPIKey get configured public api key
-func (c *VConfig) GetPublicAPIKey() string {
-	return viper.GetString(fmt.Sprintf("%s.public_api_key", c.Profile))
-}
-
-// SetPublicAPIKey set configured publicAPIKey
-func (c *VConfig) SetPublicAPIKey(publicAPIKey string) {
-	viper.Set(fmt.Sprintf("%s.public_api_key", c.Profile), publicAPIKey)
-}
-
-// GetPrivateAPIKey get configured private api key
-func (c *VConfig) GetPrivateAPIKey() string {
-	return viper.GetString(fmt.Sprintf("%s.private_api_key", c.Profile))
-}
-
-// SetPrivateAPIKey set configured private api key
-func (c *VConfig) SetPrivateAPIKey(privateAPIKey string) {
-	viper.Set(fmt.Sprintf("%s.private_api_key", c.Profile), privateAPIKey)
-}
-
-// GetOpsManagerURL get configured ops manager base url
-func (c *VConfig) GetOpsManagerURL() string {
-	return viper.GetString(fmt.Sprintf("%s.ops_manager_url", c.Profile)) + "/api/public/v1.0/"
-}
-
-// SetOpsManagerURL set configured ops manager base url
-func (c *VConfig) SetOpsManagerURL(opsManagerURL string) {
-	viper.Set(fmt.Sprintf("%s.ops_manager_url", c.Profile), opsManagerURL)
-}
-
-// Save save the configuration to disk
-func (c *VConfig) Save() error {
 	return viper.WriteConfig()
+}
+
+func (opts *ConfigOpts) Run() error {
+	helpLink := "https://docs.atlas.mongodb.com/configure-api-access/"
+
+	if opts.IsOpsManager() {
+		helpLink = "https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
+	}
+
+	var defaultQuestions = []*survey.Question{
+		{
+			Name: "publicAPIKey",
+			Prompt: &survey.Input{
+				Message: "Public API Key:",
+				Help:    helpLink,
+				Default: opts.config.GetPublicAPIKey(),
+			},
+		},
+		{
+			Name: "privateAPIKey",
+			Prompt: &survey.Password{
+				Message: "Private API Key:",
+				Help:    helpLink,
+			},
+		},
+	}
+
+	if opts.IsOpsManager() {
+		var opsManagerQuestions = []*survey.Question{
+			{
+				Name: "opsManagerURL",
+				Prompt: &survey.Input{
+					Message: "Ops Manager Base URL:",
+					Default: opts.config.GetOpsManagerURL(),
+					Help:    "Ops Manager host URL",
+				},
+				Validate: validURL,
+			},
+		}
+		defaultQuestions = append(opsManagerQuestions, defaultQuestions...)
+	}
+
+	err := survey.Ask(defaultQuestions, opts)
+	if err != nil {
+		return err
+	}
+
+	return opts.Save()
+}
+
+func ConfigBuilder() *cobra.Command {
+	opts := ConfigOpts{}
+	cmd := &cobra.Command{
+		Use:   "config",
+		Short: "Configure the tool",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.config = config.New(opts.Profile)
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run()
+		},
+	}
+	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, "Service provider, Atlas, Cloud Manager or Ops Manager")
+	cmd.Flags().StringVar(&opts.Profile, flags.Profile, config.DefaultProfile, "Profile")
+
+	return cmd
 }

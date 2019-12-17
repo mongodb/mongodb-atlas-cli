@@ -3,14 +3,17 @@ package cli
 import (
 	"errors"
 
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/spf13/cobra"
 )
 
 type CreateProjectOpts struct {
-	orgID string
-	name  string
-	store store.ProjectCreator
+	profile string
+	orgID   string
+	name    string
+	store   store.ProjectCreator
 }
 
 func (opts *CreateProjectOpts) Run() error {
@@ -20,13 +23,7 @@ func (opts *CreateProjectOpts) Run() error {
 		return err
 	}
 
-	err = prettyJSON(projects)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return prettyJSON(projects)
 }
 
 // createCmd represents the create command
@@ -42,11 +39,8 @@ func ProjectCreateBuilder() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config := NewConfig()
-			s, err := store.New(config.GetService(),
-				config.GetPublicAPIKey(),
-				config.GetPrivateAPIKey(),
-				config.GetOpsManagerURL())
+			conf := config.New(opts.profile)
+			s, err := store.New(conf)
 
 			if err != nil {
 				return err
@@ -58,6 +52,8 @@ func ProjectCreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgID, "orgId", "", "Organization ID for the project")
+	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", "Organization ID for the project")
+	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+
 	return cmd
 }

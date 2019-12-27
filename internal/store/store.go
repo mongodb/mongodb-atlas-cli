@@ -2,7 +2,6 @@ package store
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -35,7 +34,7 @@ func New(c config.Config) (*Store, error) {
 		s.baseURL, _ = url.Parse(c.GetAPIPath())
 	}
 
-	fmt.Println("s.baseURL", s.baseURL)
+	// fmt.Println("s.baseURL", s.baseURL)
 	switch s.service {
 	case config.CloudService:
 		s.client = s.atlas()

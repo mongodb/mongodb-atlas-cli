@@ -5,7 +5,7 @@ export GO111MODULE := on
 
 setup:
 	@echo "==> Installing dependencies..."
-    curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.21.0
+    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.22.0
 .PHONY: setup
 
 # gofmt and goimports all go files

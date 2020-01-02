@@ -82,3 +82,18 @@ func ClusterMock() *atlas.Cluster {
 		StateName:  "CREATING",
 	}
 }
+
+func DatabaseUserMock() *atlas.DatabaseUser {
+	return &atlas.DatabaseUser{
+		Roles: []atlas.Role{
+			{
+				RoleName:     "admin",
+				DatabaseName: "admin",
+			},
+		},
+		GroupID:      "5def8d5dce4bd936ac99ae9c",
+		Username:     "test4",
+		DatabaseName: "admin",
+		LDAPAuthType: "NONE",
+	}
+}

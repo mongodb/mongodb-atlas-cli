@@ -23,7 +23,7 @@ fmt:
 
 lint:
 	@echo "==> Linting all packages..."
-	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned
+	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned --skip-dirs ^mocks/
 .PHONY: lint
 
 test:

@@ -23,4 +23,10 @@ const (
 	MDBVersion = "mdbVersion"
 	// Backup flag
 	Backup = "backup"
+	// Username flag
+	Username = "username"
+	// Password flag
+	Password = "password"
+	// Role flag
+	Role = "role"
 )

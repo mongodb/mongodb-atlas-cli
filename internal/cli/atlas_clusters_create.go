@@ -103,7 +103,7 @@ func (opts *AtlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec
 	return replicationSpec
 }
 
-// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName --nodes N --instanceSize atlasSizeName --diskSize N --mdbVersion version --backup
+// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--nodes N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := new(AtlasClustersCreateOpts)
 	cmd := &cobra.Command{

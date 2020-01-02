@@ -97,3 +97,14 @@ func DatabaseUserMock() *atlas.DatabaseUser {
 		LDAPAuthType: "NONE",
 	}
 }
+
+func ProjectIPWhitelistMock() []atlas.ProjectIPWhitelist {
+	return []atlas.ProjectIPWhitelist{
+		{
+			Comment:   "test",
+			GroupID:   "5def8d5dce4bd936ac99ae9c",
+			CIDRBlock: "37.228.254.100/32",
+			IPAddress: "37.228.254.100",
+		},
+	}
+}

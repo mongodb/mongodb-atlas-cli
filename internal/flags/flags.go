@@ -29,4 +29,8 @@ const (
 	Password = "password"
 	// Role flag
 	Role = "role"
+	// Type flag
+	Type = "type"
+	// Comment flag
+	Comment = "comment"
 )

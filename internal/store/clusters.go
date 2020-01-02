@@ -16,7 +16,7 @@ type ClusterStore interface {
 	ClusterCreator
 }
 
-// CreateProject encapsulate the logic to manage different cloud providers
+// CreateCluster encapsulate the logic to manage different cloud providers
 func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:

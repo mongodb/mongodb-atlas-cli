@@ -16,7 +16,7 @@ type DatabaseUserStore interface {
 	DatabaseUserCreator
 }
 
-// CreateProject encapsulate the logic to manage different cloud providers
+// CreateDatabaseUser encapsulate the logic to manage different cloud providers
 func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:

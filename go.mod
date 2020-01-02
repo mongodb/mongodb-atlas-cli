@@ -9,7 +9,7 @@ require (
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/mongodb-labs/pcgc v0.0.4-0.20191210094853-2f360168a7bd
-	github.com/mongodb/go-client-mongodb-atlas v0.1.1
+	github.com/mongodb/go-client-mongodb-atlas v0.1.2
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5

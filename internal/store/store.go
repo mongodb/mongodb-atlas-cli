@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -11,11 +12,6 @@ import (
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-)
-
-const (
-	// DefaultUserAgent to be submitted by the client
-	DefaultUserAgent = config.Name + "/" + version.Version + " (" + runtime.GOOS + "; " + runtime.GOARCH + ")"
 )
 
 type Store struct {
@@ -49,12 +45,16 @@ func New(c config.Config) (*Store, error) {
 	return s, nil
 }
 
+func (s *Store) userAgent() string {
+	return fmt.Sprintf("%s/%s (%s;%s)", config.Name, version.Version, runtime.GOOS, runtime.GOARCH)
+}
+
 func (s *Store) atlas() *atlas.Client {
 	atlasClient := atlas.NewClient(s.transport)
 	if s.baseURL != nil {
 		atlasClient.BaseURL = s.baseURL
 	}
-	atlasClient.UserAgent = DefaultUserAgent
+	atlasClient.UserAgent = s.userAgent()
 
 	return atlasClient
 }
@@ -64,7 +64,7 @@ func (s *Store) cloudManager() *cloudmanager.Client {
 	if s.baseURL != nil {
 		cloudManagerClient.BaseURL = s.baseURL
 	}
-	cloudManagerClient.UserAgent = DefaultUserAgent
+	cloudManagerClient.UserAgent = s.userAgent()
 
 	return cloudManagerClient
 }
@@ -72,7 +72,7 @@ func (s *Store) cloudManager() *cloudmanager.Client {
 func (s *Store) opsManager() *cloudmanager.Client {
 	opsManagerClient := cloudmanager.NewClient(s.transport)
 	opsManagerClient.BaseURL = s.baseURL
-	opsManagerClient.UserAgent = DefaultUserAgent
+	opsManagerClient.UserAgent = s.userAgent()
 
 	return opsManagerClient
 }

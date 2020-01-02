@@ -1,0 +1,38 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # you may remove this if you don't use vgo
+    - go mod tidy
+builds:
+- env:
+    - CGO_ENABLED=0
+  ldflags:
+    - -s -w -X github.com/10gen/mcli/internal/version.Version={{.Version}}
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+release:
+  # If set to true, will not auto-publish the release.
+  # Default is false.
+  draft: true
+
+  # If set to auto, will mark the release as not ready for production
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default is false.
+  prerelease: auto
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'

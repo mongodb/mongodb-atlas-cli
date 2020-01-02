@@ -1,4 +1,4 @@
 package version
 
 // Version for CLI
-const Version = "0.0.1"
+var Version string

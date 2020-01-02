@@ -83,6 +83,10 @@ func ClusterMock() *atlas.Cluster {
 	}
 }
 
+func ClustersMock() []atlas.Cluster {
+	return []atlas.Cluster{*ClusterMock()}
+}
+
 func DatabaseUserMock() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
 		Roles: []atlas.Role{

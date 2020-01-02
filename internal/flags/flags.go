@@ -33,4 +33,8 @@ const (
 	Type = "type"
 	// Comment flag
 	Comment = "comment"
+	// Page flag
+	Page = "page"
+	// Limit flag
+	Limit = "limit"
 )

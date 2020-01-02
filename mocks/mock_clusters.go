@@ -5,11 +5,48 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	reflect "reflect"
 )
+
+// MockClusterLister is a mock of ClusterLister interface
+type MockClusterLister struct {
+	ctrl     *gomock.Controller
+	recorder *MockClusterListerMockRecorder
+}
+
+// MockClusterListerMockRecorder is the mock recorder for MockClusterLister
+type MockClusterListerMockRecorder struct {
+	mock *MockClusterLister
+}
+
+// NewMockClusterLister creates a new mock instance
+func NewMockClusterLister(ctrl *gomock.Controller) *MockClusterLister {
+	mock := &MockClusterLister{ctrl: ctrl}
+	mock.recorder = &MockClusterListerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
+	return m.recorder
+}
+
+// ProjectClusters mocks base method
+func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Cluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.Cluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectClusters indicates an expected call of ProjectClusters
+func (mr *MockClusterListerMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockClusterLister)(nil).ProjectClusters), arg0, arg1)
+}
 
 // MockClusterCreator is a mock of ClusterCreator interface
 type MockClusterCreator struct {
@@ -70,6 +107,21 @@ func NewMockClusterStore(ctrl *gomock.Controller) *MockClusterStore {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockClusterStore) EXPECT() *MockClusterStoreMockRecorder {
 	return m.recorder
+}
+
+// ProjectClusters mocks base method
+func (m *MockClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Cluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.Cluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectClusters indicates an expected call of ProjectClusters
+func (mr *MockClusterStoreMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockClusterStore)(nil).ProjectClusters), arg0, arg1)
 }
 
 // CreateCluster mocks base method

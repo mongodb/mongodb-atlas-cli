@@ -11,6 +11,7 @@ func AtlasClustersBuilder() *cobra.Command {
 		Short:   "Command for working with atlas clusters",
 	}
 	cmd.AddCommand(AtlasClustersCreateBuilder())
+	cmd.AddCommand(AtlasClustersListBuilder())
 
 	return cmd
 }

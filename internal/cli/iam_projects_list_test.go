@@ -7,7 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func TestProjectsList_Run(t *testing.T) {
+func TestIAMProjectsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectLister(ctrl)
 
@@ -21,7 +21,7 @@ func TestProjectsList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	listOpts := &ListProjectOpts{store: mockStore}
+	listOpts := &IAMProjectsListOpts{store: mockStore}
 	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

@@ -7,15 +7,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type CreateProjectOpts struct {
+type IAMProjectsListOpts struct {
 	profile string
-	orgID   string
-	name    string
-	store   store.ProjectCreator
+	store   store.ProjectLister
 }
 
-func (opts *CreateProjectOpts) Run() error {
-	projects, err := opts.store.CreateProject(opts.name, opts.orgID)
+func (opts *IAMProjectsListOpts) Run() error {
+	projects, err := opts.store.GetAllProjects()
 
 	if err != nil {
 		return err
@@ -24,13 +22,13 @@ func (opts *CreateProjectOpts) Run() error {
 	return prettyJSON(projects)
 }
 
-// createCmd represents the create command
-func ProjectCreateBuilder() *cobra.Command {
-	opts := new(CreateProjectOpts)
+// mcli iam project(s) list [--orgId orgId]
+func IAMProjectsListBuilder() *cobra.Command {
+	opts := new(IAMProjectsListOpts)
 	cmd := &cobra.Command{
-		Use:   "create [name]",
-		Short: "Create a project",
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   "List projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf := config.New(opts.profile)
 			s, err := store.New(conf)
@@ -40,12 +38,9 @@ func ProjectCreateBuilder() *cobra.Command {
 			}
 
 			opts.store = s
-			opts.name = args[0]
-
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", "Organization ID for the project")
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
 
 	return cmd

@@ -35,7 +35,7 @@ func init() {
 	// atlas commands
 	rootCmd.AddCommand(cli.AtlasBuilder())
 	// IAM commands
-	rootCmd.AddCommand(cli.ProjectBuilder())
+	rootCmd.AddCommand(cli.IAMBuilder())
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -7,7 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func TestProjectsCreate_Run(t *testing.T) {
+func TestIAMProjectsCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 
@@ -20,7 +20,11 @@ func TestProjectsCreate_Run(t *testing.T) {
 		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(expected, nil).
 		Times(1)
 
-	createOpts := &CreateProjectOpts{store: mockStore, name: "ProjectBar", orgID: "5a0a1e7e0f2912c554080adc"}
+	createOpts := &IAMProjectsCreateOpts{
+		store: mockStore,
+		name:  "ProjectBar",
+		orgID: "5a0a1e7e0f2912c554080adc",
+	}
 	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

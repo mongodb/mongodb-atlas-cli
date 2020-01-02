@@ -76,8 +76,12 @@ func (p *Profile) GetOpsManagerURL() string {
 }
 
 func (p *Profile) GetAPIPath() string {
-	if p.GetOpsManagerURL() != "" {
-		return p.GetOpsManagerURL() + publicAPIPath
+	baseURL := p.GetOpsManagerURL()
+	if baseURL != "" {
+		if p.GetService() == CloudService {
+			return baseURL + atlasAPIPath
+		}
+		return baseURL + publicAPIPath
 	}
 	return ""
 }
@@ -98,8 +102,11 @@ func Load() error {
 	viper.SetConfigName(Name)
 	viper.AddConfigPath(configDir)
 
+	viper.RegisterAlias("base_url", opsManagerURL)
+
 	viper.SetEnvPrefix(Name)
 	viper.AutomaticEnv()
+
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {

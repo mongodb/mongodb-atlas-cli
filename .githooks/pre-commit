@@ -1,0 +1,4 @@
+$!/usr/bin/env bash
+
+echo "==> Running pre-commit git hook..."
+make fmt check

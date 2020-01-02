@@ -8,9 +8,17 @@ setup:
     curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.22.0
 .PHONY: setup
 
+# GIT hooks
+link-git-hooks:
+	@echo "==> Installing all git hooks..."
+	find .git/hooks -type l -exec rm {} \;
+	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
+.PHONY: link-git-hooks
+
 # gofmt and goimports all go files
 fmt:
-	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
+	@echo "==> Formatting all files..."
+	find . -name '*.go' -not -wholename './mocks/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
 .PHONY: fmt
 
 lint:
@@ -18,10 +26,13 @@ lint:
 	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned
 .PHONY: lint
 
-.PHONY: test
 test:
 	@echo "==> Running tests..."
 	go test $(SOURCE_FILES) -timeout=30s -parallel=4
+.PHONY: test
+
+check: test lint
+.PHONY: check
 
 build:
 	go build

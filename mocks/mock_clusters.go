@@ -48,6 +48,44 @@ func (mr *MockClusterListerMockRecorder) ProjectClusters(arg0, arg1 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockClusterLister)(nil).ProjectClusters), arg0, arg1)
 }
 
+// MockClusterDescriber is a mock of ClusterDescriber interface
+type MockClusterDescriber struct {
+	ctrl     *gomock.Controller
+	recorder *MockClusterDescriberMockRecorder
+}
+
+// MockClusterDescriberMockRecorder is the mock recorder for MockClusterDescriber
+type MockClusterDescriberMockRecorder struct {
+	mock *MockClusterDescriber
+}
+
+// NewMockClusterDescriber creates a new mock instance
+func NewMockClusterDescriber(ctrl *gomock.Controller) *MockClusterDescriber {
+	mock := &MockClusterDescriber{ctrl: ctrl}
+	mock.recorder = &MockClusterDescriberMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockClusterDescriber) EXPECT() *MockClusterDescriberMockRecorder {
+	return m.recorder
+}
+
+// Cluster mocks base method
+func (m *MockClusterDescriber) Cluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Cluster", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.Cluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Cluster indicates an expected call of Cluster
+func (mr *MockClusterDescriberMockRecorder) Cluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cluster", reflect.TypeOf((*MockClusterDescriber)(nil).Cluster), arg0, arg1)
+}
+
 // MockClusterCreator is a mock of ClusterCreator interface
 type MockClusterCreator struct {
 	ctrl     *gomock.Controller
@@ -122,6 +160,21 @@ func (m *MockClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListO
 func (mr *MockClusterStoreMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockClusterStore)(nil).ProjectClusters), arg0, arg1)
+}
+
+// Cluster mocks base method
+func (m *MockClusterStore) Cluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Cluster", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.Cluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Cluster indicates an expected call of Cluster
+func (mr *MockClusterStoreMockRecorder) Cluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cluster", reflect.TypeOf((*MockClusterStore)(nil).Cluster), arg0, arg1)
 }
 
 // CreateCluster mocks base method

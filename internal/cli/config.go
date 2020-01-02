@@ -93,13 +93,12 @@ func (opts *ConfigOpts) Run() error {
 }
 
 func ConfigBuilder() *cobra.Command {
-	opts := ConfigOpts{}
+	opts := new(ConfigOpts)
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure the tool",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.config = config.New(opts.Profile)
-			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

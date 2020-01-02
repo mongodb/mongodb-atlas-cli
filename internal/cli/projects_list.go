@@ -23,7 +23,7 @@ func (opts *ListProjectOpts) Run() error {
 }
 
 func ProjectsListBuilder() *cobra.Command {
-	opts := &ListProjectOpts{}
+	opts := new(ListProjectOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

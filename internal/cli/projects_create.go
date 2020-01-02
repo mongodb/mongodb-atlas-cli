@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"errors"
-
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
@@ -28,16 +26,11 @@ func (opts *CreateProjectOpts) Run() error {
 
 // createCmd represents the create command
 func ProjectCreateBuilder() *cobra.Command {
-	opts := CreateProjectOpts{}
+	opts := new(CreateProjectOpts)
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create [name]",
 		Short: "Create a project",
-		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 1 {
-				return errors.New("requires a name argument")
-			}
-			return nil
-		},
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf := config.New(opts.profile)
 			s, err := store.New(conf)

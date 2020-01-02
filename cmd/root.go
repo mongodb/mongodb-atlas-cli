@@ -30,7 +30,11 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	// config commands
 	rootCmd.AddCommand(cli.ConfigBuilder())
+	// atlas commands
+	rootCmd.AddCommand(cli.AtlasBuilder())
+	// IAM commands
 	rootCmd.AddCommand(cli.ProjectBuilder())
 }
 

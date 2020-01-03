@@ -23,11 +23,11 @@ type Store struct {
 
 // New get the appropriate client for the profile/service selected
 func New(c config.Config) (*Store, error) {
-	s := &Store{service: c.GetService()}
-	s.transport, _ = digest.NewTransport(c.GetPublicAPIKey(), c.GetPrivateAPIKey()).Client()
+	s := &Store{service: c.Service()}
+	s.transport, _ = digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
 
-	if c.GetAPIPath() != "" {
-		s.baseURL, _ = url.Parse(c.GetAPIPath())
+	if c.APIPath() != "" {
+		s.baseURL, _ = url.Parse(c.APIPath())
 	}
 
 	// fmt.Println("s.baseURL", s.baseURL)

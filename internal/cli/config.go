@@ -57,7 +57,7 @@ func (opts *ConfigOpts) Run() error {
 			Prompt: &survey.Input{
 				Message: "Public API Key:",
 				Help:    helpLink,
-				Default: opts.config.GetPublicAPIKey(),
+				Default: opts.config.PublicAPIKey(),
 			},
 		},
 		{
@@ -75,7 +75,7 @@ func (opts *ConfigOpts) Run() error {
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
 					Message: "Ops Manager Base URL:",
-					Default: opts.config.GetOpsManagerURL(),
+					Default: opts.config.OpsManagerURL(),
 					Help:    "Ops Manager host URL",
 				},
 				Validate: validURL,

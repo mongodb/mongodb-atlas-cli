@@ -42,6 +42,7 @@ check: test lint
 
 .PHONY: gen-mocks
 gen-mocks:
+	mockgen -source=internal/config/profile.go -destination=mocks/mock_config.go -package=mocks
 	mockgen -source=internal/store/clusters.go -destination=mocks/mock_clusters.go -package=mocks
 	mockgen -source=internal/store/database_users.go -destination=mocks/mock_database_users.go -package=mocks
 	mockgen -source=internal/store/project_ip_whitelist.go -destination=mocks/mock_project_ip_whitelist.go -package=mocks

@@ -7,15 +7,15 @@ import (
 )
 
 type Config interface {
-	GetService() string
+	Service() string
 	SetService(string)
-	GetPublicAPIKey() string
+	PublicAPIKey() string
 	SetPublicAPIKey(string)
-	GetPrivateAPIKey() string
+	PrivateAPIKey() string
 	SetPrivateAPIKey(string)
-	GetOpsManagerURL() string
+	OpsManagerURL() string
 	SetOpsManagerURL(string)
-	GetAPIPath() string
+	APIPath() string
 }
 
 type Profile struct {
@@ -28,8 +28,8 @@ func New(name string) Config {
 	return &Profile{Name: name}
 }
 
-// GetService get configured service
-func (p *Profile) GetService() string {
+// Service get configured service
+func (p *Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
@@ -41,8 +41,8 @@ func (p *Profile) SetService(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, service), value)
 }
 
-// GetPublicAPIKey get configured public api key
-func (p *Profile) GetPublicAPIKey() string {
+// PublicAPIKey get configured public api key
+func (p *Profile) PublicAPIKey() string {
 	if viper.IsSet(publicAPIKey) {
 		return viper.GetString(publicAPIKey)
 	}
@@ -54,8 +54,8 @@ func (p *Profile) SetPublicAPIKey(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, publicAPIKey), value)
 }
 
-// GetPrivateAPIKey get configured private api key
-func (p *Profile) GetPrivateAPIKey() string {
+// PrivateAPIKey get configured private api key
+func (p *Profile) PrivateAPIKey() string {
 	if viper.IsSet(privateAPIKey) {
 		return viper.GetString(privateAPIKey)
 	}
@@ -67,18 +67,18 @@ func (p *Profile) SetPrivateAPIKey(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, privateAPIKey), value)
 }
 
-// GetOpsManagerURL get configured ops manager base url
-func (p *Profile) GetOpsManagerURL() string {
+// OpsManagerURL get configured ops manager base url
+func (p *Profile) OpsManagerURL() string {
 	if viper.IsSet(opsManagerURL) {
 		return viper.GetString(opsManagerURL)
 	}
 	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, opsManagerURL))
 }
 
-func (p *Profile) GetAPIPath() string {
-	baseURL := p.GetOpsManagerURL()
+func (p *Profile) APIPath() string {
+	baseURL := p.OpsManagerURL()
 	if baseURL != "" {
-		if p.GetService() == CloudService {
+		if p.Service() == CloudService {
 			return baseURL + atlasAPIPath
 		}
 		return baseURL + publicAPIPath

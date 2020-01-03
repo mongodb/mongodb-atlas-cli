@@ -5,9 +5,8 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockConfig is a mock of Config interface
@@ -33,18 +32,18 @@ func (m *MockConfig) EXPECT() *MockConfigMockRecorder {
 	return m.recorder
 }
 
-// GetService mocks base method
-func (m *MockConfig) GetService() string {
+// Service mocks base method
+func (m *MockConfig) Service() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetService")
+	ret := m.ctrl.Call(m, "Service")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetService indicates an expected call of GetService
-func (mr *MockConfigMockRecorder) GetService() *gomock.Call {
+// Service indicates an expected call of Service
+func (mr *MockConfigMockRecorder) Service() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockConfig)(nil).GetService))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Service", reflect.TypeOf((*MockConfig)(nil).Service))
 }
 
 // SetService mocks base method
@@ -59,18 +58,18 @@ func (mr *MockConfigMockRecorder) SetService(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetService", reflect.TypeOf((*MockConfig)(nil).SetService), arg0)
 }
 
-// GetPublicAPIKey mocks base method
-func (m *MockConfig) GetPublicAPIKey() string {
+// PublicAPIKey mocks base method
+func (m *MockConfig) PublicAPIKey() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPublicAPIKey")
+	ret := m.ctrl.Call(m, "PublicAPIKey")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetPublicAPIKey indicates an expected call of GetPublicAPIKey
-func (mr *MockConfigMockRecorder) GetPublicAPIKey() *gomock.Call {
+// PublicAPIKey indicates an expected call of PublicAPIKey
+func (mr *MockConfigMockRecorder) PublicAPIKey() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPublicAPIKey", reflect.TypeOf((*MockConfig)(nil).GetPublicAPIKey))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublicAPIKey", reflect.TypeOf((*MockConfig)(nil).PublicAPIKey))
 }
 
 // SetPublicAPIKey mocks base method
@@ -85,18 +84,18 @@ func (mr *MockConfigMockRecorder) SetPublicAPIKey(arg0 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPublicAPIKey", reflect.TypeOf((*MockConfig)(nil).SetPublicAPIKey), arg0)
 }
 
-// GetPrivateAPIKey mocks base method
-func (m *MockConfig) GetPrivateAPIKey() string {
+// PrivateAPIKey mocks base method
+func (m *MockConfig) PrivateAPIKey() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPrivateAPIKey")
+	ret := m.ctrl.Call(m, "PrivateAPIKey")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetPrivateAPIKey indicates an expected call of GetPrivateAPIKey
-func (mr *MockConfigMockRecorder) GetPrivateAPIKey() *gomock.Call {
+// PrivateAPIKey indicates an expected call of PrivateAPIKey
+func (mr *MockConfigMockRecorder) PrivateAPIKey() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPrivateAPIKey", reflect.TypeOf((*MockConfig)(nil).GetPrivateAPIKey))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrivateAPIKey", reflect.TypeOf((*MockConfig)(nil).PrivateAPIKey))
 }
 
 // SetPrivateAPIKey mocks base method
@@ -111,18 +110,18 @@ func (mr *MockConfigMockRecorder) SetPrivateAPIKey(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPrivateAPIKey", reflect.TypeOf((*MockConfig)(nil).SetPrivateAPIKey), arg0)
 }
 
-// GetOpsManagerURL mocks base method
-func (m *MockConfig) GetOpsManagerURL() string {
+// OpsManagerURL mocks base method
+func (m *MockConfig) OpsManagerURL() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOpsManagerURL")
+	ret := m.ctrl.Call(m, "OpsManagerURL")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetOpsManagerURL indicates an expected call of GetOpsManagerURL
-func (mr *MockConfigMockRecorder) GetOpsManagerURL() *gomock.Call {
+// OpsManagerURL indicates an expected call of OpsManagerURL
+func (mr *MockConfigMockRecorder) OpsManagerURL() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOpsManagerURL", reflect.TypeOf((*MockConfig)(nil).GetOpsManagerURL))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerURL", reflect.TypeOf((*MockConfig)(nil).OpsManagerURL))
 }
 
 // SetOpsManagerURL mocks base method
@@ -137,16 +136,16 @@ func (mr *MockConfigMockRecorder) SetOpsManagerURL(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpsManagerURL", reflect.TypeOf((*MockConfig)(nil).SetOpsManagerURL), arg0)
 }
 
-// GetAPIPath mocks base method
-func (m *MockConfig) GetAPIPath() string {
+// APIPath mocks base method
+func (m *MockConfig) APIPath() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAPIPath")
+	ret := m.ctrl.Call(m, "APIPath")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetAPIPath indicates an expected call of GetAPIPath
-func (mr *MockConfigMockRecorder) GetAPIPath() *gomock.Call {
+// APIPath indicates an expected call of APIPath
+func (mr *MockConfigMockRecorder) APIPath() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAPIPath", reflect.TypeOf((*MockConfig)(nil).GetAPIPath))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIPath", reflect.TypeOf((*MockConfig)(nil).APIPath))
 }

@@ -15,25 +15,25 @@ func TestStore_New(t *testing.T) {
 
 	mockConfig.
 		EXPECT().
-		GetService().
+		Service().
 		Return("ops-manager").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetPublicAPIKey().
+		PublicAPIKey().
 		Return("1").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetPrivateAPIKey().
+		PrivateAPIKey().
 		Return("1").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetAPIPath().
+		APIPath().
 		Return("").
 		Times(1)
 
@@ -55,25 +55,25 @@ func TestStore_New_WithUrl(t *testing.T) {
 
 	mockConfig.
 		EXPECT().
-		GetService().
+		Service().
 		Return("ops-manager").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetPublicAPIKey().
+		PublicAPIKey().
 		Return("1").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetPrivateAPIKey().
+		PrivateAPIKey().
 		Return("1").
 		Times(1)
 
 	mockConfig.
 		EXPECT().
-		GetAPIPath().
+		APIPath().
 		Return("ops_manager").
 		Times(2)
 

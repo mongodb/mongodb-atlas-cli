@@ -5,10 +5,9 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	reflect "reflect"
 )
 
 // MockDatabaseUserCreator is a mock of DatabaseUserCreator interface

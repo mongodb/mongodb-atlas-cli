@@ -15,8 +15,8 @@ func TestAtlasWhitelistCreate_Run(t *testing.T) {
 
 	expected := mocks.ProjectIPWhitelistMock()
 
-	createOpts := &AtlasWhitelistCreateOpts{
-		projectID: "5a0a1e7e0f2912c554080adc",
+	createOpts := &atlasWhitelistCreateOpts{
+		atlasOpts: newAtlasOpts(),
 		entry:     "37.228.254.100",
 		entryType: ipAddress,
 		store:     mockStore,

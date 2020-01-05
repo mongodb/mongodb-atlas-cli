@@ -8,18 +8,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type AtlasClustersListOpts struct {
-	profile      string
-	projectID    string
+type atlasClustersListOpts struct {
+	*atlasOpts
 	pageNum      int
 	itemsPerPage int
-	config       config.Config
 	store        store.ClusterLister
 }
 
-func (opts *AtlasClustersListOpts) Run() error {
+func (opts *atlasClustersListOpts) init() error {
+	opts.loadConfig()
+
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *atlasClustersListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectClusters(opts.projectID, listOpts)
+	result, err := opts.store.ProjectClusters(opts.ProjectID(), listOpts)
 
 	if err != nil {
 		return err
@@ -28,7 +43,7 @@ func (opts *AtlasClustersListOpts) Run() error {
 	return prettyJSON(result)
 }
 
-func (opts *AtlasClustersListOpts) newListOptions() *atlas.ListOptions {
+func (opts *atlasClustersListOpts) newListOptions() *atlas.ListOptions {
 	return &atlas.ListOptions{
 		PageNum:      opts.pageNum,
 		ItemsPerPage: opts.itemsPerPage,
@@ -37,23 +52,18 @@ func (opts *AtlasClustersListOpts) newListOptions() *atlas.ListOptions {
 
 // mcli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
 func AtlasClustersListBuilder() *cobra.Command {
-	opts := new(AtlasClustersListOpts)
+	opts := &atlasClustersListOpts{
+		atlasOpts: newAtlasOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Command to list Atlas clusters",
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(0),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.New(opts.config)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			return opts.Run()
 		},
 	}
@@ -63,8 +73,6 @@ func AtlasClustersListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, "Items per page")
 
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
-
-	_ = cmd.MarkFlagRequired(flags.ProjectID)
 
 	return cmd
 }

@@ -136,6 +136,32 @@ func (mr *MockConfigMockRecorder) SetOpsManagerURL(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpsManagerURL", reflect.TypeOf((*MockConfig)(nil).SetOpsManagerURL), arg0)
 }
 
+// ProjectID mocks base method
+func (m *MockConfig) ProjectID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ProjectID indicates an expected call of ProjectID
+func (mr *MockConfigMockRecorder) ProjectID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectID", reflect.TypeOf((*MockConfig)(nil).ProjectID))
+}
+
+// SetProjectID mocks base method
+func (m *MockConfig) SetProjectID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetProjectID", arg0)
+}
+
+// SetProjectID indicates an expected call of SetProjectID
+func (mr *MockConfigMockRecorder) SetProjectID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetProjectID", reflect.TypeOf((*MockConfig)(nil).SetProjectID), arg0)
+}
+
 // APIPath mocks base method
 func (m *MockConfig) APIPath() string {
 	m.ctrl.T.Helper()

@@ -7,16 +7,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type AtlasClustersDescribeOpts struct {
-	profile   string
-	projectID string
-	name      string
-	config    config.Config
-	store     store.ClusterDescriber
+type atlasClustersDescribeOpts struct {
+	*atlasOpts
+	name  string
+	store store.ClusterDescriber
 }
 
-func (opts *AtlasClustersDescribeOpts) Run() error {
-	result, err := opts.store.Cluster(opts.projectID, opts.name)
+func (opts *atlasClustersDescribeOpts) init() error {
+	opts.loadConfig()
+
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *atlasClustersDescribeOpts) Run() error {
+	result, err := opts.store.Cluster(opts.ProjectID(), opts.name)
 
 	if err != nil {
 		return err
@@ -27,22 +42,17 @@ func (opts *AtlasClustersDescribeOpts) Run() error {
 
 // mcli atlas cluster(s) describe --projectId projectId
 func AtlasClustersDescribeBuilder() *cobra.Command {
-	opts := new(AtlasClustersDescribeOpts)
+	opts := &atlasClustersDescribeOpts{
+		atlasOpts: newAtlasOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
 		Short: "Command to describe an Atlas cluster",
 		Args:  cobra.ExactArgs(1),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.New(opts.config)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			opts.name = args[0]
 			return opts.Run()
 		},
@@ -51,8 +61,6 @@ func AtlasClustersDescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
 
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
-
-	_ = cmd.MarkFlagRequired(flags.ProjectID)
 
 	return cmd
 }

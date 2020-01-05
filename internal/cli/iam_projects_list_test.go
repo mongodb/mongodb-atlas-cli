@@ -21,7 +21,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	listOpts := &IAMProjectsListOpts{store: mockStore}
+	listOpts := &iamProjectsListOpts{store: mockStore}
 	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

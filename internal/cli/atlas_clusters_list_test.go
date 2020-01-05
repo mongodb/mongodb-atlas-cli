@@ -15,8 +15,8 @@ func TestAtlasClustersList_Run(t *testing.T) {
 
 	expected := mocks.ClustersMock()
 
-	listOpts := &AtlasClustersListOpts{
-		projectID: "5a0a1e7e0f2912c554080adc",
+	listOpts := &atlasClustersListOpts{
+		atlasOpts: newAtlasOpts(),
 		store:     mockStore,
 	}
 

@@ -7,12 +7,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type IAMProjectsListOpts struct {
+type iamProjectsListOpts struct {
 	profile string
 	store   store.ProjectLister
 }
 
-func (opts *IAMProjectsListOpts) Run() error {
+func (opts *iamProjectsListOpts) Run() error {
 	projects, err := opts.store.GetAllProjects()
 
 	if err != nil {
@@ -24,7 +24,7 @@ func (opts *IAMProjectsListOpts) Run() error {
 
 // mcli iam project(s) list [--orgId orgId]
 func IAMProjectsListBuilder() *cobra.Command {
-	opts := new(IAMProjectsListOpts)
+	opts := new(iamProjectsListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

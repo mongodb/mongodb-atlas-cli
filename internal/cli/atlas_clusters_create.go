@@ -17,9 +17,8 @@ const (
 	currentMDBVersion = "4.2"
 )
 
-type AtlasClustersCreateOpts struct {
-	profile      string
-	projectID    string
+type atlasClustersCreateOpts struct {
+	*atlasOpts
 	name         string
 	provider     string
 	region       string
@@ -28,11 +27,27 @@ type AtlasClustersCreateOpts struct {
 	diskSize     float64
 	backup       bool
 	mdbVersion   string
-	config       config.Config
 	store        store.ClusterCreator
 }
 
-func (opts *AtlasClustersCreateOpts) Run() error {
+func (opts *atlasClustersCreateOpts) init() error {
+	opts.loadConfig()
+
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *atlasClustersCreateOpts) Run() error {
 	cluster := opts.newCluster()
 	result, err := opts.store.CreateCluster(cluster)
 
@@ -43,7 +58,7 @@ func (opts *AtlasClustersCreateOpts) Run() error {
 	return prettyJSON(result)
 }
 
-func (opts *AtlasClustersCreateOpts) newCluster() *atlas.Cluster {
+func (opts *atlasClustersCreateOpts) newCluster() *atlas.Cluster {
 	replicationSpec := opts.newReplicationSpec()
 	providerSettings := opts.newProviderSettings()
 
@@ -51,7 +66,7 @@ func (opts *AtlasClustersCreateOpts) newCluster() *atlas.Cluster {
 		BackupEnabled:       &opts.backup,
 		ClusterType:         replicaSet,
 		DiskSizeGB:          &opts.diskSize,
-		GroupID:             opts.projectID,
+		GroupID:             opts.ProjectID(),
 		MongoDBMajorVersion: opts.mdbVersion,
 		Name:                opts.name,
 		ProviderSettings:    providerSettings,
@@ -60,7 +75,7 @@ func (opts *AtlasClustersCreateOpts) newCluster() *atlas.Cluster {
 	return cluster
 }
 
-func (opts *AtlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettings {
+func (opts *atlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettings {
 	providerName := opts.providerName()
 
 	var backingProviderName string
@@ -76,14 +91,14 @@ func (opts *AtlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettin
 	}
 }
 
-func (opts *AtlasClustersCreateOpts) providerName() string {
+func (opts *atlasClustersCreateOpts) providerName() string {
 	if opts.instanceSize == atlasM2 || opts.instanceSize == atlasM5 {
 		return tenant
 	}
 	return opts.provider
 }
 
-func (opts *AtlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec {
+func (opts *atlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec {
 	var (
 		readOnlyNodes int64 = 0
 		NumShards     int64 = 1
@@ -105,22 +120,17 @@ func (opts *AtlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec
 
 // mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--nodes N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
-	opts := new(AtlasClustersCreateOpts)
+	opts := &atlasClustersCreateOpts{
+		atlasOpts: newAtlasOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: "Command to create a cluster with Atlas",
 		Args:  cobra.ExactArgs(1),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.New(opts.config)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			opts.name = args[0]
 			return opts.Run()
 		},
@@ -137,7 +147,6 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
 
-	_ = cmd.MarkFlagRequired(flags.ProjectID)
 	_ = cmd.MarkFlagRequired(flags.Provider)
 	_ = cmd.MarkFlagRequired(flags.Region)
 

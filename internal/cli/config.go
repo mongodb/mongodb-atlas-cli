@@ -8,43 +8,43 @@ import (
 	"github.com/spf13/viper"
 )
 
-type ConfigOpts struct {
+type configOpts struct {
+	config.Config
 	Profile       string
 	Service       string
 	PublicAPIKey  string
 	PrivateAPIKey string
 	OpsManagerURL string
-	config        config.Config
 }
 
-func (opts *ConfigOpts) IsCloud() bool {
+func (opts *configOpts) IsCloud() bool {
 	return opts.Service == config.CloudService
 }
 
-func (opts *ConfigOpts) IsOpsManager() bool {
+func (opts *configOpts) IsOpsManager() bool {
 	return opts.Service == config.OpsManagerService
 }
 
-func (opts *ConfigOpts) IsCloudManager() bool {
+func (opts *configOpts) IsCloudManager() bool {
 	return opts.Service == config.CloudManagerService
 }
 
-func (opts *ConfigOpts) Save() error {
-	opts.config.SetService(opts.Service)
+func (opts *configOpts) Save() error {
+	opts.SetService(opts.Service)
 	if opts.PublicAPIKey != "" {
-		opts.config.SetPublicAPIKey(opts.PublicAPIKey)
+		opts.SetPublicAPIKey(opts.PublicAPIKey)
 	}
 	if opts.PrivateAPIKey != "" {
-		opts.config.SetPrivateAPIKey(opts.PrivateAPIKey)
+		opts.SetPrivateAPIKey(opts.PrivateAPIKey)
 	}
 	if opts.IsOpsManager() && opts.OpsManagerURL != "" {
-		opts.config.SetOpsManagerURL(opts.OpsManagerURL)
+		opts.SetOpsManagerURL(opts.OpsManagerURL)
 	}
 
 	return viper.WriteConfig()
 }
 
-func (opts *ConfigOpts) Run() error {
+func (opts *configOpts) Run() error {
 	helpLink := "https://docs.atlas.mongodb.com/configure-api-access/"
 
 	if opts.IsOpsManager() {
@@ -57,7 +57,7 @@ func (opts *ConfigOpts) Run() error {
 			Prompt: &survey.Input{
 				Message: "Public API Key:",
 				Help:    helpLink,
-				Default: opts.config.PublicAPIKey(),
+				Default: opts.Config.PublicAPIKey(),
 			},
 		},
 		{
@@ -75,7 +75,7 @@ func (opts *ConfigOpts) Run() error {
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
 					Message: "Ops Manager Base URL:",
-					Default: opts.config.OpsManagerURL(),
+					Default: opts.Config.OpsManagerURL(),
 					Help:    "Ops Manager host URL",
 				},
 				Validate: validURL,
@@ -93,19 +93,19 @@ func (opts *ConfigOpts) Run() error {
 }
 
 func ConfigBuilder() *cobra.Command {
-	opts := new(ConfigOpts)
+	opts := new(configOpts)
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure the tool",
 		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.Profile)
+			opts.Config = config.New(opts.Profile)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, "Service provider, Atlas, Cloud Manager or Ops Manager")
-	cmd.Flags().StringVar(&opts.Profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, "service provider, Atlas, Cloud Manager or Ops Manager")
+	cmd.Flags().StringVar(&opts.Profile, flags.Profile, config.DefaultProfile, "profile")
 
 	return cmd
 }

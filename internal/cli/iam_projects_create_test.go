@@ -20,7 +20,7 @@ func TestIAMProjectsCreate_Run(t *testing.T) {
 		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(expected, nil).
 		Times(1)
 
-	createOpts := &IAMProjectsCreateOpts{
+	createOpts := &iamProjectsCreateOpts{
 		store: mockStore,
 		name:  "ProjectBar",
 		orgID: "5a0a1e7e0f2912c554080adc",

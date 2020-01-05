@@ -15,8 +15,8 @@ func TestAtlasDBUserCreate_Run(t *testing.T) {
 
 	expected := mocks.DatabaseUserMock()
 
-	createOpts := &AtlasDBUsersCreateOpts{
-		projectID: "5a0a1e7e0f2912c554080adc",
+	createOpts := &atlasDBUsersCreateOpts{
+		atlasOpts: newAtlasOpts(),
 		username:  "ProjectBar",
 		password:  "US",
 		roles:     []string{"admin@admin"},

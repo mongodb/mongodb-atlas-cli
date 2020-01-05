@@ -15,17 +15,32 @@ const (
 	roleSep = "@"
 )
 
-type AtlasDBUsersCreateOpts struct {
-	profile   string
-	projectID string
-	username  string
-	password  string
-	roles     []string
-	config    config.Config
-	store     store.DatabaseUserCreator
+type atlasDBUsersCreateOpts struct {
+	*atlasOpts
+	username string
+	password string
+	roles    []string
+	store    store.DatabaseUserCreator
 }
 
-func (opts *AtlasDBUsersCreateOpts) Run() error {
+func (opts *atlasDBUsersCreateOpts) init() error {
+	opts.loadConfig()
+
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *atlasDBUsersCreateOpts) Run() error {
 	user := opts.newDatabaseUser()
 	result, err := opts.store.CreateDatabaseUser(user)
 
@@ -36,17 +51,17 @@ func (opts *AtlasDBUsersCreateOpts) Run() error {
 	return prettyJSON(result)
 }
 
-func (opts *AtlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
 		DatabaseName: adminDB,
 		Roles:        opts.buildRoles(),
-		GroupID:      opts.projectID,
+		GroupID:      opts.ProjectID(),
 		Username:     opts.username,
 		Password:     opts.password,
 	}
 }
 
-func (opts *AtlasDBUsersCreateOpts) buildRoles() []atlas.Role {
+func (opts *atlasDBUsersCreateOpts) buildRoles() []atlas.Role {
 	rolesLen := len(opts.roles)
 	roles := make([]atlas.Role, rolesLen)
 	for i, roleP := range opts.roles {
@@ -67,22 +82,17 @@ func (opts *AtlasDBUsersCreateOpts) buildRoles() []atlas.Role {
 
 // mcli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func AtlasDBUsersCreateBuilder() *cobra.Command {
-	opts := new(AtlasDBUsersCreateOpts)
+	opts := &atlasDBUsersCreateOpts{
+		atlasOpts: newAtlasOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Command to create a cluster with Atlas",
 		Args:  cobra.ExactArgs(0),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.New(opts.config)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			return opts.Run()
 		},
 	}
@@ -94,7 +104,6 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
 
-	_ = cmd.MarkFlagRequired(flags.ProjectID)
 	_ = cmd.MarkFlagRequired(flags.Username)
 	_ = cmd.MarkFlagRequired(flags.Password)
 	_ = cmd.MarkFlagRequired(flags.Role)

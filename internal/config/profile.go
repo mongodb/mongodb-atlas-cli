@@ -15,6 +15,8 @@ type Config interface {
 	SetPrivateAPIKey(string)
 	OpsManagerURL() string
 	SetOpsManagerURL(string)
+	ProjectID() string
+	SetProjectID(string)
 	APIPath() string
 }
 
@@ -22,7 +24,7 @@ type Profile struct {
 	Name string
 }
 
-var _ Config = &Profile{}
+var _ Config = new(Profile)
 
 func New(name string) Config {
 	return &Profile{Name: name}
@@ -91,6 +93,18 @@ func (p *Profile) SetOpsManagerURL(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, opsManagerURL), value)
 }
 
+// ProjectID get configured project ID
+func (p *Profile) ProjectID() string {
+	if viper.IsSet(projectID) {
+		return viper.GetString(projectID)
+	}
+	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, projectID))
+}
+
+func (p *Profile) SetProjectID(value string) {
+	viper.Set(fmt.Sprintf("%s.%s", p.Name, projectID), value)
+}
+
 // Save save the configuration to disk
 func Load() error {
 	// Find home directory.
@@ -102,7 +116,8 @@ func Load() error {
 	viper.SetConfigName(Name)
 	viper.AddConfigPath(configDir)
 
-	viper.RegisterAlias("base_url", opsManagerURL)
+	// TODO: review why this is not working as expected
+	viper.RegisterAlias(baseURL, opsManagerURL)
 
 	viper.SetEnvPrefix(Name)
 	viper.AutomaticEnv()

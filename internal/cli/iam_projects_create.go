@@ -7,14 +7,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type IAMProjectsCreateOpts struct {
+type iamProjectsCreateOpts struct {
 	profile string
 	orgID   string
 	name    string
 	store   store.ProjectCreator
 }
 
-func (opts *IAMProjectsCreateOpts) Run() error {
+func (opts *iamProjectsCreateOpts) Run() error {
 	projects, err := opts.store.CreateProject(opts.name, opts.orgID)
 
 	if err != nil {
@@ -26,7 +26,7 @@ func (opts *IAMProjectsCreateOpts) Run() error {
 
 // mcli iam project(s) create name [--orgId orgId]
 func IAMProjectsCreateBuilder() *cobra.Command {
-	opts := new(IAMProjectsCreateOpts)
+	opts := new(iamProjectsCreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: "Create a project",

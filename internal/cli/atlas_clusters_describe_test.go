@@ -15,19 +15,19 @@ func TestAtlasClustersDescribe_Run(t *testing.T) {
 
 	expected := mocks.ClusterMock()
 
-	listOpts := &AtlasClustersDescribeOpts{
-		projectID: "5a0a1e7e0f2912c554080adc",
+	describeOpts := &atlasClustersDescribeOpts{
+		atlasOpts: newAtlasOpts(),
 		name:      "test",
 		store:     mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Cluster(listOpts.projectID, listOpts.name).
+		Cluster(describeOpts.projectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

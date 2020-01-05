@@ -13,17 +13,32 @@ const (
 	ipAddress = "ipAddress"
 )
 
-type AtlasWhitelistCreateOpts struct {
-	profile   string
-	projectID string
+type atlasWhitelistCreateOpts struct {
+	*atlasOpts
 	entry     string
 	entryType string
 	comment   string
-	config    config.Config
 	store     store.ProjectIPWhitelistCreator
 }
 
-func (opts *AtlasWhitelistCreateOpts) Run() error {
+func (opts *atlasWhitelistCreateOpts) init() error {
+	opts.loadConfig()
+
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *atlasWhitelistCreateOpts) Run() error {
 	entry := opts.newWhitelist()
 	result, err := opts.store.CreateProjectIPWhitelist(entry)
 
@@ -34,9 +49,9 @@ func (opts *AtlasWhitelistCreateOpts) Run() error {
 	return prettyJSON(result)
 }
 
-func (opts *AtlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
+func (opts *atlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 	projectIPWhitelist := &atlas.ProjectIPWhitelist{
-		GroupID: opts.projectID,
+		GroupID: opts.ProjectID(),
 		Comment: opts.comment,
 	}
 	switch opts.entryType {
@@ -50,22 +65,17 @@ func (opts *AtlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 
 // mcli atlas whitelist(s) create value --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
 func AtlasWhitelistCreateBuilder() *cobra.Command {
-	opts := new(AtlasWhitelistCreateOpts)
+	opts := &atlasWhitelistCreateOpts{
+		atlasOpts: newAtlasOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:   "create [entry]",
 		Short: "Command to create a cluster with Atlas",
 		Args:  cobra.ExactArgs(1),
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.config = config.New(opts.profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.New(opts.config)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			opts.entry = args[0]
 
 			return opts.Run()
@@ -73,12 +83,10 @@ func AtlasWhitelistCreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().StringVar(&opts.entryType, flags.Type, "ipAddress", "Type of entry, cidrBlock, or ipAddress")
+	cmd.Flags().StringVar(&opts.entryType, flags.Type, ipAddress, "Type of entry, cidrBlock, or ipAddress")
 	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", "Optional comment")
 
 	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
-
-	_ = cmd.MarkFlagRequired(flags.ProjectID)
 
 	return cmd
 }

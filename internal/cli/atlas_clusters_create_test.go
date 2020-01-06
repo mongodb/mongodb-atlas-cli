@@ -16,7 +16,7 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 	expected := mocks.ClusterMock()
 
 	createOpts := &atlasClustersCreateOpts{
-		atlasOpts:    newAtlasOpts(),
+		globalOpts:   newGlobalOpts(),
 		name:         "ProjectBar",
 		region:       "US",
 		instanceSize: atlasM2,

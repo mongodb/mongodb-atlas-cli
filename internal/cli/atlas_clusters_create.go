@@ -18,7 +18,7 @@ const (
 )
 
 type atlasClustersCreateOpts struct {
-	*atlasOpts
+	*globalOpts
 	name         string
 	provider     string
 	region       string
@@ -121,7 +121,7 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec
 // mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--nodes N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
-		atlasOpts: newAtlasOpts(),
+		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",

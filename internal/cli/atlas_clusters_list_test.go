@@ -16,8 +16,8 @@ func TestAtlasClustersList_Run(t *testing.T) {
 	expected := mocks.ClustersMock()
 
 	listOpts := &atlasClustersListOpts{
-		atlasOpts: newAtlasOpts(),
-		store:     mockStore,
+		globalOpts: newGlobalOpts(),
+		store:      mockStore,
 	}
 
 	mockStore.

@@ -9,7 +9,7 @@ import (
 )
 
 type atlasClustersListOpts struct {
-	*atlasOpts
+	*globalOpts
 	pageNum      int
 	itemsPerPage int
 	store        store.ClusterLister
@@ -53,7 +53,7 @@ func (opts *atlasClustersListOpts) newListOptions() *atlas.ListOptions {
 // mcli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
 func AtlasClustersListBuilder() *cobra.Command {
 	opts := &atlasClustersListOpts{
-		atlasOpts: newAtlasOpts(),
+		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:     "list",

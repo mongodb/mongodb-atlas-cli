@@ -8,8 +8,21 @@ import (
 )
 
 type iamProjectsListOpts struct {
-	profile string
-	store   store.ProjectLister
+	*globalOpts
+	store store.ProjectLister
+}
+
+func (opts *iamProjectsListOpts) init() error {
+	opts.loadConfig()
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
 }
 
 func (opts *iamProjectsListOpts) Run() error {
@@ -24,20 +37,17 @@ func (opts *iamProjectsListOpts) Run() error {
 
 // mcli iam project(s) list [--orgId orgId]
 func IAMProjectsListBuilder() *cobra.Command {
-	opts := new(iamProjectsListOpts)
+	opts := &iamProjectsListOpts{
+		globalOpts: newGlobalOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List projects",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			conf := config.New(opts.profile)
-			s, err := store.New(conf)
-
-			if err != nil {
-				return err
-			}
-
-			opts.store = s
 			return opts.Run()
 		},
 	}

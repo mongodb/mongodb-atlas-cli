@@ -16,7 +16,7 @@ const (
 )
 
 type atlasDBUsersCreateOpts struct {
-	*atlasOpts
+	*globalOpts
 	username string
 	password string
 	roles    []string
@@ -83,7 +83,7 @@ func (opts *atlasDBUsersCreateOpts) buildRoles() []atlas.Role {
 // mcli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func AtlasDBUsersCreateBuilder() *cobra.Command {
 	opts := &atlasDBUsersCreateOpts{
-		atlasOpts: newAtlasOpts(),
+		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:   "create",

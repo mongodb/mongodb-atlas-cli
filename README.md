@@ -25,7 +25,7 @@ The easiest way to get started is to clone `mcli` and install with go:
 ```bash
 git clone https://github.com/10gen/mcli.git
 cd mcli
-go install
+make install
 ```
 
 # Contributing

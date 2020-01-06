@@ -20,9 +20,10 @@ We use [golangci-lint](https://github.com/golangci/golangci-lint) to lint our co
 
 The following is a short list of commands that can be run in the root of the project directory
 
-- Run `make` to generate a local binary in the `./bin` folder.
+- Run `make` see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
+- Run `make build` to generate a local binary in the `./bin` folder.
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 
 
@@ -35,7 +36,7 @@ If you need a new mock please add a reference on the [Make](Makefile) file and r
 
 `mcli` uses [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
 in addition to this we have defined a basic structure that should be followed.
-For a `mcli scope newCmd` command a file `internal/cli/scope_new_command.go` should implement: 
+For a `mcli scope newCommand` command a file `internal/cli/scope_new_command.go` should implement: 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.

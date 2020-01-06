@@ -1,6 +1,9 @@
 package mocks
 
-import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+import (
+	"github.com/mongodb-labs/pcgc/cloudmanager"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+)
 
 var Project1 = &atlas.Project{
 	ClusterCount: 2,
@@ -110,5 +113,150 @@ func ProjectIPWhitelistMock() []atlas.ProjectIPWhitelist {
 			CIDRBlock: "37.228.254.100/32",
 			IPAddress: "37.228.254.100",
 		},
+	}
+}
+
+func AutomationMock() *cloudmanager.AutomationConfig {
+	return &cloudmanager.AutomationConfig{
+		Auth: &cloudmanager.Auth{
+			AutoAuthMechanism: "MONGODB-CR",
+			Disabled:          true,
+			AuthoritativeSet:  false,
+		},
+		Processes: []*cloudmanager.Process{
+			{
+				Name:                        "myReplicaSet_1",
+				ProcessType:                 "mongod",
+				Version:                     "4.2.2",
+				AuthSchemaVersion:           5,
+				FeatureCompatibilityVersion: "4.2",
+				Disabled:                    false,
+				ManualMode:                  false,
+				Hostname:                    "host0",
+				Args26: cloudmanager.Args26{
+					NET: cloudmanager.Net{
+						Port: 27000,
+					},
+					Storage: cloudmanager.Storage{
+						DBPath: "/data/rs1",
+					},
+					SystemLog: cloudmanager.SystemLog{
+						Destination: "file",
+						Path:        "/data/rs1/mongodb.log",
+					},
+					Replication: cloudmanager.Replication{
+						ReplSetName: "myReplicaSet",
+					},
+				},
+				LogRotate: &cloudmanager.LogRotate{
+					SizeThresholdMB:  1000.0,
+					TimeThresholdHrs: 24,
+				},
+				LastGoalVersionAchieved: 0,
+				Cluster:                 "",
+			},
+			{
+				Name:                        "myReplicaSet_2",
+				ProcessType:                 "mongod",
+				Version:                     "4.2.2",
+				AuthSchemaVersion:           5,
+				FeatureCompatibilityVersion: "4.2",
+				Disabled:                    false,
+				ManualMode:                  false,
+				Hostname:                    "host1",
+				Args26: cloudmanager.Args26{
+					NET: cloudmanager.Net{
+						Port: 27010,
+					},
+					Storage: cloudmanager.Storage{
+						DBPath: "/data/rs2",
+					},
+					SystemLog: cloudmanager.SystemLog{
+						Destination: "file",
+						Path:        "/data/rs2/mongodb.log",
+					},
+					Replication: cloudmanager.Replication{
+						ReplSetName: "myReplicaSet",
+					},
+				},
+				LogRotate: &cloudmanager.LogRotate{
+					SizeThresholdMB:  1000.0,
+					TimeThresholdHrs: 24,
+				},
+				LastGoalVersionAchieved: 0,
+				Cluster:                 "",
+			},
+			{
+				Name:                        "myReplicaSet_3",
+				ProcessType:                 "mongod",
+				Version:                     "4.2.2",
+				AuthSchemaVersion:           5,
+				FeatureCompatibilityVersion: "4.2",
+				Disabled:                    false,
+				ManualMode:                  false,
+				Hostname:                    "host0",
+				Args26: cloudmanager.Args26{
+					NET: cloudmanager.Net{
+						Port: 27020,
+					},
+					Storage: cloudmanager.Storage{
+						DBPath: "/data/rs3",
+					},
+					SystemLog: cloudmanager.SystemLog{
+						Destination: "file",
+						Path:        "/data/rs3/mongodb.log",
+					},
+					Replication: cloudmanager.Replication{
+						ReplSetName: "myReplicaSet",
+					},
+				},
+				LogRotate: &cloudmanager.LogRotate{
+					SizeThresholdMB:  1000.0,
+					TimeThresholdHrs: 24,
+				},
+				LastGoalVersionAchieved: 0,
+				Cluster:                 "",
+			},
+		},
+		ReplicaSets: []*cloudmanager.ReplicaSet{
+			{
+				ID:              "myReplicaSet",
+				ProtocolVersion: "1",
+				Members: []cloudmanager.Member{
+					{
+						ID:           0,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         "myReplicaSet_1",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+					{
+						ID:           1,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         "myReplicaSet_2",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+					{
+						ID:           2,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         "myReplicaSet_3",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+		},
+		Version:   1,
+		UIBaseURL: "",
 	}
 }

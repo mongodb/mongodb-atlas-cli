@@ -42,7 +42,7 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if config.Load() != nil {
-		log.Fatalf("Error loading config")
+	if err := config.Load(); err != nil {
+		log.Fatalf("Error loading config: %v", err)
 	}
 }

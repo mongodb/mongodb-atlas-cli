@@ -11,7 +11,7 @@ require (
 	github.com/mongodb-labs/pcgc v0.0.4-0.20200106164407-7bf2db35485a
 	github.com/mongodb/go-client-mongodb-atlas v0.1.2
 	github.com/pelletier/go-toml v1.6.0 // indirect
-	github.com/spf13/afero v1.2.2 // indirect
+	github.com/spf13/afero v1.2.2
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

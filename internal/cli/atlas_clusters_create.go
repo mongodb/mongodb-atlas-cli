@@ -31,7 +31,9 @@ type atlasClustersCreateOpts struct {
 }
 
 func (opts *atlasClustersCreateOpts) init() error {
-	opts.loadConfig()
+	if err := opts.loadConfig(); err != nil {
+		return err
+	}
 
 	if opts.ProjectID() == "" {
 		return errMissingProjectID

@@ -21,7 +21,7 @@ func newGlobalOpts() *globalOpts {
 // ProjectID returns the project id.
 // If the id is empty, it caches it after querying config.
 func (opts *globalOpts) ProjectID() string {
-	opts.loadConfig()
+	_ = opts.loadConfig()
 	if opts.projectID != "" {
 		return opts.projectID
 	}
@@ -29,8 +29,10 @@ func (opts *globalOpts) ProjectID() string {
 	return opts.projectID
 }
 
-func (opts *globalOpts) loadConfig() {
+func (opts *globalOpts) loadConfig() error {
+	var err error
 	opts.once.Do(func() {
-		opts.Config = config.New(opts.profile)
+		opts.Config, err = config.New(opts.profile)
 	})
+	return err
 }

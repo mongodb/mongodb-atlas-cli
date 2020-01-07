@@ -22,7 +22,9 @@ type atlasWhitelistCreateOpts struct {
 }
 
 func (opts *atlasWhitelistCreateOpts) init() error {
-	opts.loadConfig()
+	if err := opts.loadConfig(); err != nil {
+		return err
+	}
 
 	if opts.ProjectID() == "" {
 		return errMissingProjectID

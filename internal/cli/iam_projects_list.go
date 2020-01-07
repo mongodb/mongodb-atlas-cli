@@ -13,7 +13,9 @@ type iamProjectsListOpts struct {
 }
 
 func (opts *iamProjectsListOpts) init() error {
-	opts.loadConfig()
+	if err := opts.loadConfig(); err != nil {
+		return err
+	}
 
 	s, err := store.New(opts.Config)
 

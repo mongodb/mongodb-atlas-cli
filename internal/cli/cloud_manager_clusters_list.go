@@ -13,7 +13,9 @@ type cmClustersListOpts struct {
 }
 
 func (opts *cmClustersListOpts) init() error {
-	opts.loadConfig()
+	if err := opts.loadConfig(); err != nil {
+		return err
+	}
 
 	if opts.ProjectID() == "" {
 		return errMissingProjectID

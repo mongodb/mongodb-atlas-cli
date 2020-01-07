@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 )
 
@@ -18,16 +19,28 @@ type Config interface {
 	ProjectID() string
 	SetProjectID(string)
 	APIPath() string
+	Save() error
 }
 
 type Profile struct {
-	Name string
+	Name      string
+	configDir string
+	fs        afero.Fs
 }
 
 var _ Config = new(Profile)
 
-func New(name string) Config {
-	return &Profile{Name: name}
+func New(name string) (Config, error) {
+	configDir, err := configHome()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Profile{
+		Name:      name,
+		configDir: configDir,
+		fs:        afero.NewOsFs(),
+	}, nil
 }
 
 // Service get configured service
@@ -114,25 +127,40 @@ func Load() error {
 	}
 	viper.SetConfigType(configType)
 	viper.SetConfigName(Name)
+	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(configDir)
 
+	viper.SetEnvPrefix(Name)
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
-
-	viper.SetEnvPrefix(Name)
 	viper.AutomaticEnv()
+
+	viper.SetDefault(service, CloudService)
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
+		// ignore if it doesn't exists
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			return createConfigFile()
+			return nil
 		}
 		return err
 	}
 	return nil
 }
 
-// Save save the configuration to disk
+// Save the configuration to disk
 func (p *Profile) Save() error {
-	return viper.WriteConfig()
+	exists, err := afero.DirExists(p.fs, p.configDir)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		err := p.fs.MkdirAll(p.configDir, 0700)
+		if err != nil {
+			return err
+		}
+	}
+	// TODO: We can now read but not write, see https://github.com/spf13/viper/pull/813
+	configFile := fmt.Sprintf("%s/%s.toml", p.configDir, Name)
+	return viper.WriteConfigAs(configFile)
 }

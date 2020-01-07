@@ -5,12 +5,10 @@ import (
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 type configOpts struct {
-	config.Config
-	Profile       string
+	*globalOpts
 	Service       string
 	PublicAPIKey  string
 	PrivateAPIKey string
@@ -41,7 +39,7 @@ func (opts *configOpts) Save() error {
 		opts.SetOpsManagerURL(opts.OpsManagerURL)
 	}
 
-	return viper.WriteConfig()
+	return opts.Config.Save()
 }
 
 func (opts *configOpts) Run() error {
@@ -93,19 +91,21 @@ func (opts *configOpts) Run() error {
 }
 
 func ConfigBuilder() *cobra.Command {
-	opts := new(configOpts)
+	opts := &configOpts{
+		globalOpts: newGlobalOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure the tool",
-		PreRun: func(cmd *cobra.Command, args []string) {
-			opts.Config = config.New(opts.Profile)
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.globalOpts.loadConfig()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, "service provider, Atlas, Cloud Manager or Ops Manager")
-	cmd.Flags().StringVar(&opts.Profile, flags.Profile, config.DefaultProfile, "profile")
+	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "profile")
 
 	return cmd
 }

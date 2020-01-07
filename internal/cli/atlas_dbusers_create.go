@@ -24,7 +24,9 @@ type atlasDBUsersCreateOpts struct {
 }
 
 func (opts *atlasDBUsersCreateOpts) init() error {
-	opts.loadConfig()
+	if err := opts.loadConfig(); err != nil {
+		return err
+	}
 
 	if opts.ProjectID() == "" {
 		return errMissingProjectID

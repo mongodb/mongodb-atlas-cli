@@ -8,6 +8,7 @@ require (
 	github.com/golang/mock v1.3.1
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mongodb-labs/pcgc v0.0.4-0.20200106164407-7bf2db35485a
 	github.com/mongodb/go-client-mongodb-atlas v0.1.2
 	github.com/pelletier/go-toml v1.6.0 // indirect

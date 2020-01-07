@@ -1,18 +1,21 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 func configHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
-	if home := os.Getenv("HOME"); home != "" {
-		return fmt.Sprintf("%s/.config", home), nil
+	home, err := homedir.Dir()
+
+	if err != nil {
+		return "", err
 	}
 
-	return "", errors.New("could not find home")
+	return fmt.Sprintf("%s/.config", home), nil
 }

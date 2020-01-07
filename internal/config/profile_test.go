@@ -16,6 +16,7 @@ func TestProfile_GetAPIPath(t *testing.T) {
 		fs:        afero.NewMemMapFs(),
 	}
 	viper.Set(opsManagerURL, "example")
+	viper.Set(service, OpsManagerService)
 	if !strings.Contains(p.APIPath(), publicAPIPath) {
 		t.Errorf("APIPath() = %s; want '%s'", p.APIPath(), publicAPIPath)
 	}

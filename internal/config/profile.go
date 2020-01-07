@@ -48,7 +48,11 @@ func (p *Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, service))
+	serviceKey := fmt.Sprintf("%s.%s", p.Name, service)
+	if viper.IsSet(serviceKey) {
+		return viper.GetString(serviceKey)
+	}
+	return CloudService
 }
 
 // SetService set configured service
@@ -134,8 +138,6 @@ func Load() error {
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
 	viper.AutomaticEnv()
-
-	viper.SetDefault(service, CloudService)
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {

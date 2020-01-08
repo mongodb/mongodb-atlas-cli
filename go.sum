@@ -3,6 +3,8 @@ github.com/AlecAivazis/survey/v2 v2.0.5 h1:xpZp+Q55wi5C7Iaze+40onHnEkex1jSc34Clt
 github.com/AlecAivazis/survey/v2 v2.0.5/go.mod h1:WYBhg6f0y/fNYUuesWQc0PKbJcEliGcYHB9sNT3Bg74=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3QEww=
+github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
@@ -97,8 +99,8 @@ github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG
 github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
-github.com/mongodb-labs/pcgc v0.0.4-0.20200106164407-7bf2db35485a h1:ydp8WPHQ8Y8M0iRmE2FCqgYILxQadLNuCkjZpyW5f/0=
-github.com/mongodb-labs/pcgc v0.0.4-0.20200106164407-7bf2db35485a/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
+github.com/mongodb-labs/pcgc v0.0.4-0.20200108104447-2ab4aa4a714b h1:ZAHT9swWhsHqqzmPE3RCgEkFOIHg2E89AMU4l2lAZbw=
+github.com/mongodb-labs/pcgc v0.0.4-0.20200108104447-2ab4aa4a714b/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1 h1:L7eaGSvw1raCQF69N/tlYWAyyJRIJpdyqK6d90BtQ74=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
 github.com/mongodb/go-client-mongodb-atlas v0.1.2 h1:qmUme1TlQBPZupmXMnpD8DxnfGXLVGs3w+0Z17HBiSA=

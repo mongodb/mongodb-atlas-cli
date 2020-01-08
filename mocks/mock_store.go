@@ -118,7 +118,7 @@ func ProjectIPWhitelistMock() []atlas.ProjectIPWhitelist {
 
 func AutomationMock() *cloudmanager.AutomationConfig {
 	return &cloudmanager.AutomationConfig{
-		Auth: &cloudmanager.Auth{
+		Auth: cloudmanager.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
 			Disabled:          true,
 			AuthoritativeSet:  false,
@@ -144,7 +144,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 						Destination: "file",
 						Path:        "/data/rs1/mongodb.log",
 					},
-					Replication: cloudmanager.Replication{
+					Replication: &cloudmanager.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},
@@ -175,7 +175,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 						Destination: "file",
 						Path:        "/data/rs2/mongodb.log",
 					},
-					Replication: cloudmanager.Replication{
+					Replication: &cloudmanager.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},
@@ -206,7 +206,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 						Destination: "file",
 						Path:        "/data/rs3/mongodb.log",
 					},
-					Replication: cloudmanager.Replication{
+					Replication: &cloudmanager.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},

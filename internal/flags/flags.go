@@ -37,4 +37,6 @@ const (
 	Page = "page"
 	// Limit flag
 	Limit = "limit"
+	// File flag
+	File = "file"
 )

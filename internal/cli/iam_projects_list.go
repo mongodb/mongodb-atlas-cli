@@ -4,6 +4,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +35,7 @@ func (opts *iamProjectsListOpts) Run() error {
 		return err
 	}
 
-	return prettyJSON(projects)
+	return utils.PrettyJSON(projects)
 }
 
 // mcli iam project(s) list [--orgId orgId]

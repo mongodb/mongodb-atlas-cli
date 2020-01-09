@@ -3,6 +3,8 @@ package cli
 import (
 	"fmt"
 
+	"github.com/10gen/mcli/internal/utils"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
@@ -43,7 +45,7 @@ func (opts *cmClustersDescribeOpts) Run() error {
 
 	for _, rs := range result.ReplicaSets {
 		if rs.ID == opts.name {
-			return prettyJSON(rs)
+			return utils.PrettyJSON(rs)
 		}
 
 	}

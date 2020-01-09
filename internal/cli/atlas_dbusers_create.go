@@ -3,6 +3,8 @@ package cli
 import (
 	"strings"
 
+	"github.com/10gen/mcli/internal/utils"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
@@ -50,7 +52,7 @@ func (opts *atlasDBUsersCreateOpts) Run() error {
 		return err
 	}
 
-	return prettyJSON(result)
+	return utils.PrettyJSON(result)
 }
 
 func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {

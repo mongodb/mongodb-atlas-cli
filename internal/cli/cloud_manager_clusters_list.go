@@ -2,6 +2,7 @@ package cli
 
 import (
 	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/utils"
@@ -39,7 +40,9 @@ func (opts *cmClustersListOpts) Run() error {
 		return err
 	}
 
-	return utils.PrettyJSON(result)
+	clusterConfigs := convert.FromAutomationConfig(result)
+
+	return utils.PrettyJSON(clusterConfigs)
 }
 
 // mcli cloud-manager cluster(s) list --projectId projectId

@@ -61,7 +61,7 @@ install: ## Install a binary in $GOPATH/bin
 
 .PHONY: release
 release:
-	goreleaser
+	goreleaser --rm-dist
 
 .PHONY: list
 list: ## List all make targets

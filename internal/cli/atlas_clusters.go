@@ -42,5 +42,6 @@ func AtlasClustersBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasClustersCreateBuilder())
 	cmd.AddCommand(AtlasClustersListBuilder())
 	cmd.AddCommand(AtlasClustersDescribeBuilder())
+
 	return cmd
 }

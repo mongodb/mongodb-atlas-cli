@@ -102,7 +102,8 @@ func AtlasClustersListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

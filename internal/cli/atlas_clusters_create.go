@@ -169,14 +169,15 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flags.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.region, flags.Region, "r", "", usage.Region)
-	cmd.Flags().Int64VarP(&opts.nodes, flags.Members, "m", 3, usage.Members)
+	cmd.Flags().StringVarP(&opts.region, flags.Region, flags.RegionShort, "", usage.Region)
+	cmd.Flags().Int64VarP(&opts.nodes, flags.Members, flags.MembersShort, 3, usage.Members)
 	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, atlasM2, usage.InstanceSize)
 	cmd.Flags().Float64Var(&opts.diskSize, flags.DiskSize, 2, usage.DiskSize)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
 
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Provider)
 	_ = cmd.MarkFlagRequired(flags.Region)

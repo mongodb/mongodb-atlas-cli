@@ -71,7 +71,7 @@ func (opts *atlasClustersDescribeOpts) Run() error {
 	return utils.PrettyJSON(result)
 }
 
-// mcli atlas cluster(s) describe --projectId projectId
+// mcli atlas cluster(s) describe [name] --projectId projectId
 func AtlasClustersDescribeBuilder() *cobra.Command {
 	opts := &atlasClustersDescribeOpts{
 		globalOpts: newGlobalOpts(),
@@ -89,7 +89,8 @@ func AtlasClustersDescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

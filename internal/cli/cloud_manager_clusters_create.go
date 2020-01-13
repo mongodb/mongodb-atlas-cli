@@ -116,9 +116,10 @@ func CloudManagerClustersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flags.File, "f", "", "Filename to use to create the cluster")
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to create the cluster")
 
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.File)
 

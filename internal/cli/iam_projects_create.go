@@ -87,7 +87,7 @@ func IAMProjectsCreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

@@ -30,11 +30,14 @@ package flags
 const (
 	Service      = "service"      // Service flag to set service
 	Profile      = "profile"      // Profile flag to use a profile
+	ProfileShort = "p"            // ProfileShort flag to use a profile
 	OrgID        = "orgId"        // OrgID flag to use an Organization ID
 	ProjectID    = "projectId"    // ProjectID flag to use a project ID
 	Provider     = "provider"     // Provider flag to set the cloud provider
 	Region       = "region"       // Region flag
+	RegionShort  = "r"            // RegionShort flag
 	Members      = "members"      // Members flag
+	MembersShort = "m"            // MembersShort flag
 	InstanceSize = "instanceSize" // InstanceSize flag
 	DiskSize     = "diskSize"     // DiskSize flag
 	MDBVersion   = "mdbVersion"   // MDBVersion flag
@@ -47,4 +50,6 @@ const (
 	Page         = "page"         // Page flag
 	Limit        = "limit"        // Limit flag
 	File         = "file"         // File flag
+	FileShort    = "f"            // File flag
+	Force        = "force"        // Force flag
 )

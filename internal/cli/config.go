@@ -133,7 +133,7 @@ func ConfigBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, usage.Service)
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Name of the profile to set up.")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, "Name of the profile to set up.")
 
 	return cmd
 }

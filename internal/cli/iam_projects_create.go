@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -85,8 +86,8 @@ func IAMProjectsCreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", "Organization ID for the project")
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

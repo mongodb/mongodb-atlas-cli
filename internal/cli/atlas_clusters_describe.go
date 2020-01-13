@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -77,7 +78,7 @@ func AtlasClustersDescribeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
-		Short: "Command to describe an Atlas cluster",
+		Short: "Describe an Atlas cluster.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -88,9 +89,7 @@ func AtlasClustersDescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

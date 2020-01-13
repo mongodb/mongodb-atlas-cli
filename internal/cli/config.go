@@ -30,6 +30,7 @@ package cli
 import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
@@ -123,7 +124,7 @@ func ConfigBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: "Configure the tool",
+		Short: "Configure the tool.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.globalOpts.loadConfig()
 		},
@@ -131,8 +132,8 @@ func ConfigBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, "service provider, Atlas, Cloud Manager or Ops Manager")
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "profile")
+	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, usage.Service)
+	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Name of the profile to set up.")
 
 	return cmd
 }

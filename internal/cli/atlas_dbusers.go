@@ -35,7 +35,11 @@ func AtlasDBUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "dbusers",
 		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
-		Short:   "Command for working with atlas database users",
+		Short:   "Manage database users for your project.",
+		Long: `
+The dbusers command lets you retrieve, create and modify the MongoDB users in your cluster.
+Each user has a set of roles that provide access to the project’s databases. 
+A user’s roles apply to all the clusters in the project.`,
 	}
 	cmd.AddCommand(AtlasDBUsersCreateBuilder())
 

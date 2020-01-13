@@ -140,14 +140,14 @@ func (p *Profile) SetOpsManagerURL(value string) {
 
 // ProjectID get configured project ID
 func (p *Profile) ProjectID() string {
-	if viper.IsSet(projectID) {
-		return viper.GetString(projectID)
+	if viper.IsSet(ProjectID) {
+		return viper.GetString(ProjectID)
 	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, projectID))
+	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, ProjectID))
 }
 
 func (p *Profile) SetProjectID(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, projectID), value)
+	viper.Set(fmt.Sprintf("%s.%s", p.Name, ProjectID), value)
 }
 
 // Save save the configuration to disk

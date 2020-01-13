@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/cobra"
@@ -148,15 +149,16 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() *atlas.ReplicationSpec
 	return replicationSpec
 }
 
-// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--nodes N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
+// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create [name]",
-		Short: "Command to create a cluster with Atlas",
-		Args:  cobra.ExactArgs(1),
+		Use:     "create [name]",
+		Short:   "Create a MongoDB cluster in Atlas.",
+		Example: `  mcli atlas cluster create myCluster --projectId=1 --region US_EAST_1 --nodes 3 --instanceSize M2 --provider AWS --profile qa --mdbVersion 4.2 --diskSize 2`,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
@@ -166,16 +168,15 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().StringVar(&opts.provider, flags.Provider, "", "Provider name")
-	cmd.Flags().StringVar(&opts.region, flags.Region, "", "Provider region name")
-	cmd.Flags().Int64Var(&opts.nodes, flags.Nodes, 3, "Number of nodes")
-	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, atlasM2, "Instance size")
-	cmd.Flags().Float64Var(&opts.diskSize, flags.DiskSize, 2, "Storage size")
-	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, "mongoDB major version")
-	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, "Backup")
+	cmd.Flags().StringVar(&opts.provider, flags.Provider, "", usage.Provider)
+	cmd.Flags().StringVarP(&opts.region, flags.Region, "r", "", usage.Region)
+	cmd.Flags().Int64VarP(&opts.nodes, flags.Members, "m", 3, usage.Members)
+	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, atlasM2, usage.InstanceSize)
+	cmd.Flags().Float64Var(&opts.diskSize, flags.DiskSize, 2, usage.DiskSize)
+	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
+	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
 
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Provider)
 	_ = cmd.MarkFlagRequired(flags.Region)

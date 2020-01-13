@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/cobra"
@@ -100,7 +101,7 @@ func AtlasWhitelistCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [entry]",
-		Short: "Command to create a cluster with Atlas",
+		Short: "Create a project IP whitelist.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -112,11 +113,10 @@ func AtlasWhitelistCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().StringVar(&opts.entryType, flags.Type, ipAddress, "Type of entry, cidrBlock, or ipAddress")
-	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", "Optional comment")
+	cmd.Flags().StringVar(&opts.entryType, flags.Type, ipAddress, usage.WhitelistType)
+	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", usage.Comment)
 
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

@@ -32,6 +32,7 @@ import (
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -80,7 +81,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Command to list a Cloud Manager cluster",
+		Short:   "Command to list a Cloud Manager cluster.",
 		Args:    cobra.ExactArgs(0),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -90,9 +91,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

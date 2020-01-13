@@ -28,42 +28,23 @@
 package flags
 
 const (
-	// Service flag to set service
-	Service = "service"
-	// Profile flag to use a profile
-	Profile = "profile"
-	// OrgID flag to use an Organization ID
-	OrgID = "orgId"
-	// ProjectID flag to use a project ID
-	ProjectID = "projectId"
-	// Provider flag to set the cloud provider
-	Provider = "provider"
-	// Region flag
-	Region = "region"
-	// Nodes flag
-	Nodes = "nodes"
-	// InstanceSize flag
-	InstanceSize = "instanceSize"
-	// DiskSize flag
-	DiskSize = "diskSize"
-	// MdbVersion flag
-	MDBVersion = "mdbVersion"
-	// Backup flag
-	Backup = "backup"
-	// Username flag
-	Username = "username"
-	// Password flag
-	Password = "password"
-	// Role flag
-	Role = "role"
-	// Type flag
-	Type = "type"
-	// Comment flag
-	Comment = "comment"
-	// Page flag
-	Page = "page"
-	// Limit flag
-	Limit = "limit"
-	// File flag
-	File = "file"
+	Service      = "service"      // Service flag to set service
+	Profile      = "profile"      // Profile flag to use a profile
+	OrgID        = "orgId"        // OrgID flag to use an Organization ID
+	ProjectID    = "projectId"    // ProjectID flag to use a project ID
+	Provider     = "provider"     // Provider flag to set the cloud provider
+	Region       = "region"       // Region flag
+	Members      = "members"      // Members flag
+	InstanceSize = "instanceSize" // InstanceSize flag
+	DiskSize     = "diskSize"     // DiskSize flag
+	MDBVersion   = "mdbVersion"   // MDBVersion flag
+	Backup       = "backup"       // Backup flag
+	Username     = "username"     // Username flag
+	Password     = "password"     // Password flag
+	Role         = "role"         // Role flag
+	Type         = "type"         // Type flag
+	Comment      = "comment"      // Comment flag
+	Page         = "page"         // Page flag
+	Limit        = "limit"        // Limit flag
+	File         = "file"         // File flag
 )

@@ -30,6 +30,8 @@ package cli
 import (
 	"fmt"
 
+	"github.com/10gen/mcli/internal/usage"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
@@ -105,7 +107,7 @@ func CloudManagerClustersCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Command to create a Cloud Manager cluster",
+		Short: "Command to create a Cloud Manager cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
@@ -114,10 +116,9 @@ func CloudManagerClustersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().StringVar(&opts.filename, flags.File, "", "File with config")
+	cmd.Flags().StringVarP(&opts.filename, flags.File, "f", "", "Filename to use to create the cluster")
 
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.File)
 

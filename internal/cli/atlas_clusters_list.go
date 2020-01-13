@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/utils"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/cobra"
@@ -87,7 +88,7 @@ func AtlasClustersListBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Command to list Atlas clusters",
+		Short:   "List Atlas clusters for a given project.",
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(0),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -98,11 +99,10 @@ func AtlasClustersListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, "Page number")
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, "Items per page")
+	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

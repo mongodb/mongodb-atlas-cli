@@ -30,6 +30,8 @@ package cli
 import (
 	"fmt"
 
+	"github.com/10gen/mcli/internal/usage"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
@@ -87,7 +89,7 @@ func CloudManagerClustersDescribeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
-		Short: "Command to describe a Cloud Manager cluster",
+		Short: "Command to describe a Cloud Manager cluster.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -98,9 +100,7 @@ func CloudManagerClustersDescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

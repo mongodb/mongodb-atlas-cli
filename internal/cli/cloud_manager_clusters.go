@@ -28,19 +28,26 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func CloudManagerClustersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "clusters",
 		Aliases: []string{"cluster"},
-		Short:   "Command for working with cloud manager clusters",
+		Short:   "Command for working with cloud manager clusters.",
 	}
 
 	cmd.AddCommand(CloudManagerClustersListBuilder())
 	cmd.AddCommand(CloudManagerClustersDescribeBuilder())
 	cmd.AddCommand(CloudManagerClustersCreateBuilder())
+
+	cmd.PersistentFlags().String(flags.ProjectID, "", usage.ProjectID)
+	_ = viper.BindPFlag(config.ProjectID, cmd.PersistentFlags().Lookup(flags.ProjectID))
 
 	return cmd
 }

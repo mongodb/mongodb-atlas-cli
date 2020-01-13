@@ -28,17 +28,24 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func AtlasBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "atlas",
-		Short: "Command for working with atlas",
+		Short: "Command for working with Atlas.",
 	}
 	cmd.AddCommand(AtlasClustersBuilder())
 	cmd.AddCommand(AtlasDBUsersBuilder())
 	cmd.AddCommand(AtlasWhitelistBuilder())
+
+	cmd.PersistentFlags().String(flags.ProjectID, "", usage.ProjectID)
+	_ = viper.BindPFlag(config.ProjectID, cmd.PersistentFlags().Lookup(flags.ProjectID))
 
 	return cmd
 }

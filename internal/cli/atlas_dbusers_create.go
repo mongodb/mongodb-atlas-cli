@@ -30,6 +30,8 @@ package cli
 import (
 	"strings"
 
+	"github.com/10gen/mcli/internal/usage"
+
 	"github.com/10gen/mcli/internal/utils"
 
 	"github.com/10gen/mcli/internal/config"
@@ -118,7 +120,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Command to create a cluster with Atlas",
+		Short: "Create a database user for a project.",
 		Args:  cobra.ExactArgs(0),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -128,12 +130,11 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", "Project ID")
-	cmd.Flags().StringVar(&opts.username, flags.Username, "", "Username")
-	cmd.Flags().StringVar(&opts.password, flags.Password, "", "Password")
-	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, "Role")
+	cmd.Flags().StringVar(&opts.username, flags.Username, "", usage.Username)
+	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
+	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
 
-	cmd.Flags().StringVar(&opts.profile, flags.Profile, config.DefaultProfile, "Profile")
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, "p", config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Username)
 	_ = cmd.MarkFlagRequired(flags.Password)

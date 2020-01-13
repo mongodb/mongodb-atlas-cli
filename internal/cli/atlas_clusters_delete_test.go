@@ -28,21 +28,33 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
 )
 
-func AtlasClustersBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:        "clusters",
-		Aliases:    []string{"cluster"},
-		SuggestFor: []string{"replicasets"},
-		Short:      "Manage clusters for your project.",
-		Long:       "The clusters command provides access to your cluster configurations. This lets you create, edit and delete clusters.",
-	}
-	cmd.AddCommand(AtlasClustersCreateBuilder())
-	cmd.AddCommand(AtlasClustersListBuilder())
-	cmd.AddCommand(AtlasClustersDescribeBuilder())
-	cmd.AddCommand(AtlasClustersDeleteBuilder())
+func TestAtlasClustersDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDeleter(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	deleteOpts := &atlasClustersDeleteOpts{
+		globalOpts: newGlobalOpts(),
+		name:       "test",
+		confirm:    true,
+		store:      mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteCluster(deleteOpts.projectID, deleteOpts.name).
+		Return(nil).
+		Times(1)
+
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

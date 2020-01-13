@@ -47,10 +47,15 @@ type ClusterCreator interface {
 	CreateCluster(*atlas.Cluster) (*atlas.Cluster, error)
 }
 
+type ClusterDeleter interface {
+	DeleteCluster(string, string) error
+}
+
 type ClusterStore interface {
 	ClusterLister
 	ClusterDescriber
 	ClusterCreator
+	ClusterDeleter
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers
@@ -61,6 +66,17 @@ func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteCluster encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteCluster(projectID, name string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 

@@ -124,6 +124,43 @@ func (mr *MockClusterCreatorMockRecorder) CreateCluster(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCluster", reflect.TypeOf((*MockClusterCreator)(nil).CreateCluster), arg0)
 }
 
+// MockClusterDeleter is a mock of ClusterDeleter interface
+type MockClusterDeleter struct {
+	ctrl     *gomock.Controller
+	recorder *MockClusterDeleterMockRecorder
+}
+
+// MockClusterDeleterMockRecorder is the mock recorder for MockClusterDeleter
+type MockClusterDeleterMockRecorder struct {
+	mock *MockClusterDeleter
+}
+
+// NewMockClusterDeleter creates a new mock instance
+func NewMockClusterDeleter(ctrl *gomock.Controller) *MockClusterDeleter {
+	mock := &MockClusterDeleter{ctrl: ctrl}
+	mock.recorder = &MockClusterDeleterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockClusterDeleter) EXPECT() *MockClusterDeleterMockRecorder {
+	return m.recorder
+}
+
+// DeleteCluster mocks base method
+func (m *MockClusterDeleter) DeleteCluster(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCluster", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteCluster indicates an expected call of DeleteCluster
+func (mr *MockClusterDeleterMockRecorder) DeleteCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCluster", reflect.TypeOf((*MockClusterDeleter)(nil).DeleteCluster), arg0, arg1)
+}
+
 // MockClusterStore is a mock of ClusterStore interface
 type MockClusterStore struct {
 	ctrl     *gomock.Controller
@@ -190,4 +227,18 @@ func (m *MockClusterStore) CreateCluster(arg0 *mongodbatlas.Cluster) (*mongodbat
 func (mr *MockClusterStoreMockRecorder) CreateCluster(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCluster", reflect.TypeOf((*MockClusterStore)(nil).CreateCluster), arg0)
+}
+
+// DeleteCluster mocks base method
+func (m *MockClusterStore) DeleteCluster(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCluster", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteCluster indicates an expected call of DeleteCluster
+func (mr *MockClusterStoreMockRecorder) DeleteCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCluster", reflect.TypeOf((*MockClusterStore)(nil).DeleteCluster), arg0, arg1)
 }

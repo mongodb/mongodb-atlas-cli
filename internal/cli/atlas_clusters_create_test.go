@@ -48,7 +48,7 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 		region:       "US",
 		instanceSize: atlasM2,
 		members:      3,
-		diskSize:     10,
+		diskSizeGB:   10,
 		backup:       false,
 		mdbVersion:   currentMDBVersion,
 		store:        mockStore,

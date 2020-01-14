@@ -53,7 +53,7 @@ type atlasClustersCreateOpts struct {
 	region       string
 	instanceSize string
 	members      int64
-	diskSize     float64
+	diskSizeGB   float64
 	backup       bool
 	mdbVersion   string
 	store        store.ClusterCreator
@@ -96,7 +96,7 @@ func (opts *atlasClustersCreateOpts) newCluster() *atlas.Cluster {
 	cluster := &atlas.Cluster{
 		BackupEnabled:       &opts.backup,
 		ClusterType:         replicaSet,
-		DiskSizeGB:          &opts.diskSize,
+		DiskSizeGB:          &opts.diskSizeGB,
 		GroupID:             opts.ProjectID(),
 		MongoDBMajorVersion: opts.mdbVersion,
 		Name:                opts.name,
@@ -149,7 +149,7 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec 
 	return replicationSpec
 }
 
-// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSize N] [--backup] [--mdbVersion]
+// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSizeGB N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		globalOpts: newGlobalOpts(),
@@ -157,7 +157,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   "Create a MongoDB cluster in Atlas.",
-		Example: `  mcli atlas cluster create myCluster --projectId=1 --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSize 2`,
+		Example: `  mcli atlas cluster create myCluster --projectId=1 --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -172,7 +172,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.region, flags.Region, flags.RegionShort, "", usage.Region)
 	cmd.Flags().Int64VarP(&opts.members, flags.Members, flags.MembersShort, 3, usage.Members)
 	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, atlasM2, usage.InstanceSize)
-	cmd.Flags().Float64Var(&opts.diskSize, flags.DiskSize, 2, usage.DiskSize)
+	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
 

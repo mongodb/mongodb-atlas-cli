@@ -33,7 +33,7 @@ const (
 	Profile       = "Use a specific profile from your configuration file."
 	Members       = "Number of replica set members."
 	InstanceSize  = "Tier for each data-bearing server in the cluster."
-	DiskSize      = "Capacity, in gigabytes, of the host’s root volume."
+	DiskSizeGB    = "Capacity, in gigabytes, of the host’s root volume."
 	Backup        = "If true, the cluster uses Atlas Continuous Backups for backing up cluster data."
 	MDBVersion    = "Version of the cluster to deploy."
 	Page          = "Page number."

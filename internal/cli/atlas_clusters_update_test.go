@@ -25,31 +25,47 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package flags
+package cli
 
-const (
-	Service      = "service"      // Service flag to set service
-	Profile      = "profile"      // Profile flag to use a profile
-	ProfileShort = "p"            // ProfileShort flag to use a profile
-	OrgID        = "orgId"        // OrgID flag to use an Organization ID
-	ProjectID    = "projectId"    // ProjectID flag to use a project ID
-	Provider     = "provider"     // Provider flag to set the cloud provider
-	Region       = "region"       // Region flag
-	RegionShort  = "r"            // RegionShort flag
-	Members      = "members"      // Members flag
-	MembersShort = "m"            // MembersShort flag
-	InstanceSize = "instanceSize" // InstanceSize flag
-	DiskSizeGB   = "diskSizeGB"   // DiskSizeGB flag
-	MDBVersion   = "mdbVersion"   // MDBVersion flag
-	Backup       = "backup"       // Backup flag
-	Username     = "username"     // Username flag
-	Password     = "password"     // Password flag
-	Role         = "role"         // Role flag
-	Type         = "type"         // Type flag
-	Comment      = "comment"      // Comment flag
-	Page         = "page"         // Page flag
-	Limit        = "limit"        // Limit flag
-	File         = "file"         // File flag
-	FileShort    = "f"            // File flag
-	Force        = "force"        // Force flag
+import (
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
 )
+
+func TestAtlasClustersUpdate_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterStore(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := mocks.ClusterMock()
+
+	createOpts := &atlasClustersUpdateOpts{
+		globalOpts:   newGlobalOpts(),
+		name:         "ProjectBar",
+		instanceSize: atlasM2,
+		diskSizeGB:   10,
+		mdbVersion:   currentMDBVersion,
+		store:        mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		Cluster(createOpts.projectID, createOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	createOpts.update(expected)
+
+	mockStore.
+		EXPECT().
+		UpdateCluster(expected).Return(expected, nil).
+		Times(1)
+
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

@@ -107,6 +107,35 @@ func FromAutomationConfig(in *cloudmanager.AutomationConfig) (out []ClusterConfi
 	return
 }
 
+// Shutdown a cluster processes
+func Shutdown(out *cloudmanager.AutomationConfig, name string) {
+	setDisabledByClusterName(out, name, true)
+}
+
+// Startup a cluster processes
+func Startup(out *cloudmanager.AutomationConfig, name string) {
+	setDisabledByClusterName(out, name, false)
+}
+
+func setDisabledByClusterName(out *cloudmanager.AutomationConfig, name string, disabled bool) {
+	// This value may not be present and is mandatory
+	if out.Auth.DeploymentAuthMechanisms == nil {
+		out.Auth.DeploymentAuthMechanisms = make([]string, 0)
+	}
+	for _, rs := range out.ReplicaSets {
+		if rs.ID == name {
+			for _, m := range rs.Members {
+				for k, p := range out.Processes {
+					if p.Name == m.Host {
+						out.Processes[k].Disabled = disabled
+					}
+				}
+			}
+			break
+		}
+	}
+}
+
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
 func convertCloudMember(out *ProcessConfig, in cloudmanager.Member) {
 	out.Votes = in.Votes

@@ -28,20 +28,42 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
 )
 
-func CloudManagerClustersBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "clusters",
-		Aliases: []string{"cluster"},
-		Short:   "Command for working with cloud manager clusters.",
+func TestCloudManagerClustersShutdown_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAutomationStore(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := mocks.AutomationMock()
+
+	createOpts := &cmClustersShutdownOpts{
+		globalOpts: newGlobalOpts(),
+		store:      mockStore,
+		confirm:    true,
+		name:       "cluster_1",
 	}
 
-	cmd.AddCommand(CloudManagerClustersListBuilder())
-	cmd.AddCommand(CloudManagerClustersDescribeBuilder())
-	cmd.AddCommand(CloudManagerClustersCreateBuilder())
-	cmd.AddCommand(CloudManagerClustersShutdownBuilder())
+	mockStore.
+		EXPECT().
+		GetAutomationConfig(createOpts.projectID).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	mockStore.
+		EXPECT().
+		UpdateAutomationConfig(createOpts.projectID, expected).
+		Return(new(cloudmanager.AutomationConfig), nil).
+		Times(1)
+
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

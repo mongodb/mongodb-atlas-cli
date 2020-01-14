@@ -87,7 +87,7 @@ func (c *ClusterConfig) PatchReplicaSet(out *cloudmanager.AutomationConfig) erro
 		newReplicaSet.Members[i] = process.toCMMember(i, c.Name)
 	}
 
-	// TODO: remove when automation fixes this CLOUDP-55268
+	// This value may not be present and is mandatory
 	if out.Auth.DeploymentAuthMechanisms == nil {
 		out.Auth.DeploymentAuthMechanisms = make([]string, 0)
 	}

@@ -30,23 +30,23 @@ package cli
 import (
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
-
 	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
 
-type atlasClustersDeleteOpts struct {
+type cmClustersShutdownOpts struct {
 	*globalOpts
 	name    string
 	confirm bool
-	store   store.ClusterDeleter
+	store   store.AutomationStore
 }
 
-func (opts *atlasClustersDeleteOpts) init() error {
+func (opts *cmClustersShutdownOpts) init() error {
 	if err := opts.loadConfig(); err != nil {
 		return err
 	}
@@ -65,40 +65,43 @@ func (opts *atlasClustersDeleteOpts) init() error {
 	return nil
 }
 
-func (opts *atlasClustersDeleteOpts) Run() error {
-	if !opts.confirm {
-		fmt.Println("Cluster not deleted")
-		return nil
-	}
-	if err := opts.store.DeleteCluster(opts.ProjectID(), opts.name); err != nil {
+func (opts *cmClustersShutdownOpts) Run() error {
+	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
+
+	if err != nil {
 		return err
 	}
 
-	fmt.Println("Cluster deleted")
+	convert.Shutdown(current, opts.name)
+
+	if _, err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+		return err
+	}
+
+	fmt.Printf("Changes are being applied, please check %s/v2/%s#deployment/topology for status\n", opts.OpsManagerURL(), opts.ProjectID())
 
 	return nil
 }
 
-func (opts *atlasClustersDeleteOpts) Confirm() error {
+func (opts *cmClustersShutdownOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete: %s", opts.name),
+		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", opts.name),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mcli atlas cluster(s) delete name --projectId projectId [--confirm]
-func AtlasClustersDeleteBuilder() *cobra.Command {
-	opts := &atlasClustersDeleteOpts{
+// mcli cloud-manager cluster(s) shutdown [name] --projectId projectId [--force]
+func CloudManagerClustersShutdownBuilder() *cobra.Command {
+	opts := &cmClustersShutdownOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [name]",
-		Short:   "Delete an Atlas cluster.",
-		Aliases: []string{"rm"},
-		Args:    cobra.ExactArgs(1),
+		Use:   "shutdown [name]",
+		Short: "Shutdown a Cloud Manager cluster.",
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
 				return err

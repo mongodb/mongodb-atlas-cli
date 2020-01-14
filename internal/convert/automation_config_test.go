@@ -35,56 +35,8 @@ import (
 )
 
 func TestFromAutomationConfig(t *testing.T) {
-	cloud := &cloudmanager.AutomationConfig{
-		Processes: []*cloudmanager.Process{
-			{
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
-						Port: 27017,
-					},
-					Replication: &cloudmanager.Replication{
-						ReplSetName: "cluster_1",
-					},
-					Sharding: nil,
-					Storage: cloudmanager.Storage{
-						DBPath: "/data/db/",
-					},
-					SystemLog: cloudmanager.SystemLog{
-						Destination: "file",
-						Path:        "/data/db/mongodb.log",
-					},
-				},
-				AuthSchemaVersion:           5,
-				Name:                        "cluster_1_0",
-				Disabled:                    false,
-				FeatureCompatibilityVersion: "4.2",
-				Hostname:                    "host0",
-				LogRotate: &cloudmanager.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
-				},
-				ProcessType: mongod,
-				Version:     "4.2.2",
-			},
-		},
-		ReplicaSets: []*cloudmanager.ReplicaSet{
-			{
-				ID: "cluster_1",
-				Members: []cloudmanager.Member{
-					{
-						ID:           0,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         "cluster_1_0",
-						Priority:     1,
-						SlaveDelay:   0,
-						Votes:        1,
-					},
-				},
-			},
-		},
-	}
+	name := "cluster_1"
+	cloud := automationConfig(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
@@ -115,5 +67,78 @@ func TestFromAutomationConfig(t *testing.T) {
 	result := FromAutomationConfig(cloud)
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("FromAutomationConfig\n got=%#v\nwant=%#v", result, expected)
+	}
+}
+
+func TestShutdown(t *testing.T) {
+	name := "cluster_1"
+	cloud := automationConfig(name, false)
+
+	Shutdown(cloud, name)
+	if !cloud.Processes[0].Disabled {
+		t.Errorf("TestShutdown\n got=%#v\nwant=%#v", cloud.Processes[0].Disabled, true)
+	}
+}
+
+func TestStartup(t *testing.T) {
+	name := "cluster_1"
+	cloud := automationConfig(name, true)
+
+	Startup(cloud, name)
+	if cloud.Processes[0].Disabled {
+		t.Errorf("TestStartup\n got=%#v\nwant=%#v", cloud.Processes[0].Disabled, false)
+	}
+}
+
+func automationConfig(name string, disabled bool) *cloudmanager.AutomationConfig {
+	return &cloudmanager.AutomationConfig{
+		Processes: []*cloudmanager.Process{
+			{
+				Args26: cloudmanager.Args26{
+					NET: cloudmanager.Net{
+						Port: 27017,
+					},
+					Replication: &cloudmanager.Replication{
+						ReplSetName: name,
+					},
+					Sharding: nil,
+					Storage: cloudmanager.Storage{
+						DBPath: "/data/db/",
+					},
+					SystemLog: cloudmanager.SystemLog{
+						Destination: "file",
+						Path:        "/data/db/mongodb.log",
+					},
+				},
+				AuthSchemaVersion:           5,
+				Name:                        name + "_0",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "host0",
+				LogRotate: &cloudmanager.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				ProcessType: mongod,
+				Version:     "4.2.2",
+			},
+		},
+		ReplicaSets: []*cloudmanager.ReplicaSet{
+			{
+				ID: name,
+				Members: []cloudmanager.Member{
+					{
+						ID:           0,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         name + "_0",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+		},
 	}
 }

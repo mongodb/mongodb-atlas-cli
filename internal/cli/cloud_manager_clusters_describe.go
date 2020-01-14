@@ -89,7 +89,7 @@ func CloudManagerClustersDescribeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
-		Short: "Command to describe a Cloud Manager cluster.",
+		Short: "Describe a Cloud Manager cluster.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

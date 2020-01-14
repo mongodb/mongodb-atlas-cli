@@ -47,7 +47,7 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 		name:         "ProjectBar",
 		region:       "US",
 		instanceSize: atlasM2,
-		nodes:        3,
+		members:      3,
 		diskSize:     10,
 		backup:       false,
 		mdbVersion:   currentMDBVersion,

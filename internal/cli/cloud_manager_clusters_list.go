@@ -81,7 +81,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Command to list a Cloud Manager cluster.",
+		Short:   "List Cloud Manager clusters.",
 		Args:    cobra.ExactArgs(0),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

@@ -81,7 +81,6 @@ func (opts *cmClustersCreateOpts) Run() error {
 		if rs.ID == newConfig.Name {
 			return fmt.Errorf("cluster %s already exists", newConfig.Name)
 		}
-
 	}
 
 	err = newConfig.PatchReplicaSet(current)
@@ -90,7 +89,7 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	if _, err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

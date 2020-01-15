@@ -40,7 +40,7 @@ type AutomationGetter interface {
 }
 
 type AutomationUpdater interface {
-	UpdateAutomationConfig(string, *cloudmanager.AutomationConfig) (*cloudmanager.AutomationConfig, error)
+	UpdateAutomationConfig(string, *cloudmanager.AutomationConfig) error
 }
 
 type AutomationStore interface {
@@ -60,12 +60,12 @@ func (s *Store) GetAutomationConfig(projectID string) (*cloudmanager.AutomationC
 }
 
 // UpdateAutomationConfig encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *cloudmanager.AutomationConfig) (*cloudmanager.AutomationConfig, error) {
+func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *cloudmanager.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*cloudmanager.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
-		return result, err
+		_, err := s.client.(*cloudmanager.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
+		return err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

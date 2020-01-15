@@ -140,7 +140,7 @@ func (p *ProcessConfig) toCMProcess(i int, name, version, fcVersion string) *clo
 		Replication: &cloudmanager.Replication{
 			ReplSetName: name,
 		},
-		Storage: cloudmanager.Storage{
+		Storage: &cloudmanager.Storage{
 			DBPath: p.DBPath,
 		},
 		SystemLog: cloudmanager.SystemLog{

@@ -72,12 +72,11 @@ func (m *MockAutomationUpdater) EXPECT() *MockAutomationUpdaterMockRecorder {
 }
 
 // UpdateAutomationConfig mocks base method
-func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) (*cloudmanager.AutomationConfig, error) {
+func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
-	ret0, _ := ret[0].(*cloudmanager.AutomationConfig)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig
@@ -125,12 +124,11 @@ func (mr *MockAutomationStoreMockRecorder) GetAutomationConfig(arg0 interface{})
 }
 
 // UpdateAutomationConfig mocks base method
-func (m *MockAutomationStore) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) (*cloudmanager.AutomationConfig, error) {
+func (m *MockAutomationStore) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
-	ret0, _ := ret[0].(*cloudmanager.AutomationConfig)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig

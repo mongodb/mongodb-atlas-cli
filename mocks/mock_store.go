@@ -164,7 +164,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 					NET: cloudmanager.Net{
 						Port: 27000,
 					},
-					Storage: cloudmanager.Storage{
+					Storage: &cloudmanager.Storage{
 						DBPath: "/data/rs1",
 					},
 					SystemLog: cloudmanager.SystemLog{
@@ -195,7 +195,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 					NET: cloudmanager.Net{
 						Port: 27010,
 					},
-					Storage: cloudmanager.Storage{
+					Storage: &cloudmanager.Storage{
 						DBPath: "/data/rs2",
 					},
 					SystemLog: cloudmanager.SystemLog{
@@ -226,7 +226,7 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 					NET: cloudmanager.Net{
 						Port: 27020,
 					},
-					Storage: cloudmanager.Storage{
+					Storage: &cloudmanager.Storage{
 						DBPath: "/data/rs3",
 					},
 					SystemLog: cloudmanager.SystemLog{

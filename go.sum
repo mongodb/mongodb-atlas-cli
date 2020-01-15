@@ -99,8 +99,8 @@ github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG
 github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
-github.com/mongodb-labs/pcgc v0.0.4-0.20200108104447-2ab4aa4a714b h1:ZAHT9swWhsHqqzmPE3RCgEkFOIHg2E89AMU4l2lAZbw=
-github.com/mongodb-labs/pcgc v0.0.4-0.20200108104447-2ab4aa4a714b/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
+github.com/mongodb-labs/pcgc v0.0.4-0.20200115103701-ce7af86cd797 h1:xzRusPmU5W24ShZhzFXrwkHqJBtOOEukpiOM2oWzz8c=
+github.com/mongodb-labs/pcgc v0.0.4-0.20200115103701-ce7af86cd797/go.mod h1:n9SCwx6rwgvHCeWCfYK3d4E5MKCl0wY3AhIlWfL+e2w=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1 h1:L7eaGSvw1raCQF69N/tlYWAyyJRIJpdyqK6d90BtQ74=
 github.com/mongodb/go-client-mongodb-atlas v0.1.1/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
 github.com/mongodb/go-client-mongodb-atlas v0.1.2 h1:qmUme1TlQBPZupmXMnpD8DxnfGXLVGs3w+0Z17HBiSA=

@@ -74,7 +74,7 @@ func (opts *cmClustersStartupOpts) Run() error {
 
 	convert.Startup(current, opts.name)
 
-	if _, err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

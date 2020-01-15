@@ -102,7 +102,7 @@ func automationConfig(name string, disabled bool) *cloudmanager.AutomationConfig
 						ReplSetName: name,
 					},
 					Sharding: nil,
-					Storage: cloudmanager.Storage{
+					Storage: &cloudmanager.Storage{
 						DBPath: "/data/db/",
 					},
 					SystemLog: cloudmanager.SystemLog{

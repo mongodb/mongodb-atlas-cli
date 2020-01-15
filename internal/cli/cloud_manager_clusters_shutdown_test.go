@@ -32,7 +32,6 @@ import (
 
 	"github.com/10gen/mcli/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb-labs/pcgc/cloudmanager"
 )
 
 func TestCloudManagerClustersShutdown_Run(t *testing.T) {
@@ -59,7 +58,7 @@ func TestCloudManagerClustersShutdown_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		UpdateAutomationConfig(createOpts.projectID, expected).
-		Return(new(cloudmanager.AutomationConfig), nil).
+		Return(nil).
 		Times(1)
 
 	err := createOpts.Run()

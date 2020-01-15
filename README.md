@@ -28,6 +28,15 @@ cd mcli
 make install
 ```
 
+# Usage
+
+Run `mcli help` for a list of available commands
+
+## Authentication
+Run `mcli config` to set up a profile.
+
+You can also use `MCLI_OPS_MANAGER_URL`, `MCLI_PUBLIC_API_KEY`, and `MCLI_PRIVATE_API_KEY` to define some of the authentication variables
+
 # Contributing
 
 See our [CONTRIBUTING.md](CONTRIBUTING.md) Guide.

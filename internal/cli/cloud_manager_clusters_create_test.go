@@ -30,7 +30,6 @@ package cli
 import (
 	"testing"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
 	"github.com/spf13/afero"
 
 	"github.com/10gen/mcli/mocks"
@@ -89,7 +88,7 @@ processes:
 	mockStore.
 		EXPECT().
 		UpdateAutomationConfig(createOpts.projectID, expected).
-		Return(new(cloudmanager.AutomationConfig), nil).
+		Return(nil).
 		Times(1)
 
 	err := createOpts.Run()

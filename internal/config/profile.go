@@ -72,7 +72,7 @@ func New(name string) (Config, error) {
 }
 
 // Service get configured service
-func (p *Profile) Service() string {
+func (p Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
@@ -84,12 +84,12 @@ func (p *Profile) Service() string {
 }
 
 // SetService set configured service
-func (p *Profile) SetService(value string) {
+func (p Profile) SetService(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, service), value)
 }
 
 // PublicAPIKey get configured public api key
-func (p *Profile) PublicAPIKey() string {
+func (p Profile) PublicAPIKey() string {
 	if viper.IsSet(publicAPIKey) {
 		return viper.GetString(publicAPIKey)
 	}
@@ -97,12 +97,12 @@ func (p *Profile) PublicAPIKey() string {
 }
 
 // SetPublicAPIKey set configured publicAPIKey
-func (p *Profile) SetPublicAPIKey(value string) {
+func (p Profile) SetPublicAPIKey(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, publicAPIKey), value)
 }
 
 // PrivateAPIKey get configured private api key
-func (p *Profile) PrivateAPIKey() string {
+func (p Profile) PrivateAPIKey() string {
 	if viper.IsSet(privateAPIKey) {
 		return viper.GetString(privateAPIKey)
 	}
@@ -110,19 +110,19 @@ func (p *Profile) PrivateAPIKey() string {
 }
 
 // SetPrivateAPIKey set configured private api key
-func (p *Profile) SetPrivateAPIKey(value string) {
+func (p Profile) SetPrivateAPIKey(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, privateAPIKey), value)
 }
 
 // OpsManagerURL get configured ops manager base url
-func (p *Profile) OpsManagerURL() string {
+func (p Profile) OpsManagerURL() string {
 	if viper.IsSet(opsManagerURL) {
 		return viper.GetString(opsManagerURL)
 	}
 	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, opsManagerURL))
 }
 
-func (p *Profile) APIPath() string {
+func (p Profile) APIPath() string {
 	baseURL := p.OpsManagerURL()
 	if baseURL != "" {
 		if p.Service() == CloudService {
@@ -134,19 +134,19 @@ func (p *Profile) APIPath() string {
 }
 
 // SetOpsManagerURL set configured ops manager base url
-func (p *Profile) SetOpsManagerURL(value string) {
+func (p Profile) SetOpsManagerURL(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, opsManagerURL), value)
 }
 
 // ProjectID get configured project ID
-func (p *Profile) ProjectID() string {
-	if viper.IsSet(ProjectID) {
+func (p Profile) ProjectID() string {
+	if viper.IsSet(ProjectID) && viper.GetString(ProjectID) != "" {
 		return viper.GetString(ProjectID)
 	}
 	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, ProjectID))
 }
 
-func (p *Profile) SetProjectID(value string) {
+func (p Profile) SetProjectID(value string) {
 	viper.Set(fmt.Sprintf("%s.%s", p.Name, ProjectID), value)
 }
 
@@ -179,7 +179,7 @@ func Load() error {
 }
 
 // Save the configuration to disk
-func (p *Profile) Save() error {
+func (p Profile) Save() error {
 	exists, err := afero.DirExists(p.fs, p.configDir)
 	if err != nil {
 		return err

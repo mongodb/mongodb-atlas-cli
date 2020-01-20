@@ -30,13 +30,12 @@ package cli
 import (
 	"strings"
 
-	"github.com/10gen/mcli/internal/usage"
-
-	"github.com/10gen/mcli/internal/utils"
-
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
+	"github.com/10gen/mcli/internal/utils"
+	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/cobra"
 )
@@ -113,6 +112,16 @@ func (opts *atlasDBUsersCreateOpts) buildRoles() []atlas.Role {
 	return roles
 }
 
+func (opts *atlasDBUsersCreateOpts) Prompt() error {
+	if opts.password != "" {
+		return nil
+	}
+	prompt := &survey.Password{
+		Message: "Password:",
+	}
+	return survey.AskOne(prompt, &opts.password)
+}
+
 // mcli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func AtlasDBUsersCreateBuilder() *cobra.Command {
 	opts := &atlasDBUsersCreateOpts{
@@ -123,7 +132,11 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 		Short: "Create a database user for a project.",
 		Args:  cobra.ExactArgs(0),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			if err := opts.init(); err != nil {
+				return err
+			}
+
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -138,7 +151,6 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Username)
-	_ = cmd.MarkFlagRequired(flags.Password)
 	_ = cmd.MarkFlagRequired(flags.Role)
 
 	return cmd

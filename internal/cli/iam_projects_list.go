@@ -38,6 +38,7 @@ import (
 
 type iamProjectsListOpts struct {
 	*globalOpts
+	orgID string
 	store store.ProjectLister
 }
 
@@ -57,12 +58,16 @@ func (opts *iamProjectsListOpts) init() error {
 }
 
 func (opts *iamProjectsListOpts) Run() error {
-	projects, err := opts.store.GetAllProjects()
-
+	var projects interface{}
+	var err error
+	if opts.orgID == "" {
+		projects, err = opts.store.GetAllProjects()
+	} else {
+		projects, err = opts.store.GetOrgProjects(opts.orgID)
+	}
 	if err != nil {
 		return err
 	}
-
 	return utils.PrettyJSON(projects)
 }
 
@@ -82,6 +87,8 @@ func IAMProjectsListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 

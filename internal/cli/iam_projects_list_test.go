@@ -42,15 +42,34 @@ func TestIAMProjectsList_Run(t *testing.T) {
 
 	expected := mocks.ProjectsMock()
 
-	mockStore.
-		EXPECT().
-		GetAllProjects().
-		Return(expected, nil).
-		Times(1)
+	t.Run("No OrgID is given", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetAllProjects().
+			Return(expected, nil).
+			Times(1)
 
-	listOpts := &iamProjectsListOpts{store: mockStore}
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		listOpts := &iamProjectsListOpts{store: mockStore}
+		err := listOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("An OrgID is given", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetOrgProjects("1").
+			Return(expected, nil).
+			Times(1)
+
+		listOpts := &iamProjectsListOpts{
+			orgID: "1",
+			store: mockStore,
+		}
+		err := listOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }

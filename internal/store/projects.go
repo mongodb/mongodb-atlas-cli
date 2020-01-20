@@ -38,6 +38,11 @@ import (
 
 type ProjectLister interface {
 	GetAllProjects() (interface{}, error)
+	GetOrgProjects(string) (interface{}, error)
+}
+
+type OrgProjectLister interface {
+	GetOrgProjects(string) (interface{}, error)
 }
 
 type ProjectCreator interface {
@@ -62,6 +67,17 @@ func (s *Store) GetAllProjects() (interface{}, error) {
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*cloudmanager.Client).Projects.GetAllProjects(context.Background())
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GetOrgProjects encapsulate the logic to manage different cloud providers
+func (s *Store) GetOrgProjects(orgID string) (interface{}, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*cloudmanager.Client).Organizations.GetProjects(context.Background(), orgID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -25,19 +25,27 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package cli
+package store
 
 import (
-	"github.com/spf13/cobra"
+	"context"
+	"fmt"
+
+	"github.com/10gen/mcli/internal/config"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
 )
 
-func IAMBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "iam",
-		Short: "Command for working with authentication",
-	}
-	cmd.AddCommand(IAMProjectsBuilder())
-	cmd.AddCommand(IAMOrganizationsBuilder())
+type OrganizationLister interface {
+	GetAllOrganizations() (interface{}, error)
+}
 
-	return cmd
+// GetAllProjects encapsulate the logic to manage different cloud providers
+func (s *Store) GetAllOrganizations() (interface{}, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*cloudmanager.Client).Organizations.GetAllOrganizations(context.Background())
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }

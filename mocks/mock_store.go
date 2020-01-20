@@ -73,6 +73,30 @@ func ProjectsMock() *atlas.Projects {
 	}
 }
 
+func OrganizationsMock() *cloudmanager.Organizations {
+	return &cloudmanager.Organizations{
+		Links: []*atlas.Link{
+			{
+				Href: "https://cloud.mongodb.com/api/atlas/v1.0/orgs",
+				Rel:  "self",
+			},
+		},
+		Results: []*cloudmanager.Organization{
+			{
+				ID:   "5a0a1e7e0f2912c554080adc",
+				Name: "",
+				Links: []*atlas.Link{
+					{
+						Href: "https://cloud.mongodb.com/api/public/v1.0/orgs/5a0a1e7e0f2912c554080adc",
+						Rel:  "self",
+					},
+				},
+			},
+		},
+		TotalCount: 1,
+	}
+}
+
 func ClusterMock() *atlas.Cluster {
 	var falseValue = true
 	var one float64 = 1

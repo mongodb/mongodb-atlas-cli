@@ -28,16 +28,29 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
 )
 
-func IAMBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "iam",
-		Short: "Command for working with authentication",
-	}
-	cmd.AddCommand(IAMProjectsBuilder())
-	cmd.AddCommand(IAMOrganizationsBuilder())
+func TestIAMOrganizationsList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationLister(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	expected := mocks.OrganizationsMock()
+
+	mockStore.
+		EXPECT().
+		GetAllOrganizations().
+		Return(expected, nil).
+		Times(1)
+
+	listOpts := &iamOrganizationsListOpts{store: mockStore}
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

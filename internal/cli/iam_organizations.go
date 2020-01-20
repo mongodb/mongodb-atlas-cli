@@ -31,13 +31,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func IAMBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "iam",
-		Short: "Command for working with authentication",
+func IAMOrganizationsBuilder() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:     "organizations",
+		Short:   "Organization operations",
+		Long:    "Create, list and manage your MongoDB Cloud organizations.",
+		Aliases: []string{"organization", "orgs", "org"},
 	}
-	cmd.AddCommand(IAMProjectsBuilder())
-	cmd.AddCommand(IAMOrganizationsBuilder())
-
+	cmd.AddCommand(IAMOrganizationsListBuilder())
 	return cmd
 }

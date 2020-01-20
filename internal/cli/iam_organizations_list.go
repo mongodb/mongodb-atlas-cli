@@ -28,16 +28,62 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
+	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
-func IAMBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "iam",
-		Short: "Command for working with authentication",
+type iamOrganizationsListOpts struct {
+	*globalOpts
+	store store.OrganizationLister
+}
+
+func (opts *iamOrganizationsListOpts) init() error {
+	if err := opts.loadConfig(); err != nil {
+		return err
 	}
-	cmd.AddCommand(IAMProjectsBuilder())
-	cmd.AddCommand(IAMOrganizationsBuilder())
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *iamOrganizationsListOpts) Run() error {
+	orgs, err := opts.store.GetAllOrganizations()
+
+	if err != nil {
+		return err
+	}
+
+	return utils.PrettyJSON(orgs)
+}
+
+// mcli iam organizations(s) list [--orgId orgId]
+func IAMOrganizationsListBuilder() *cobra.Command {
+	opts := &iamOrganizationsListOpts{
+		globalOpts: newGlobalOpts(),
+	}
+	cmd := &cobra.Command{
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   "List organizations",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run()
+		},
+	}
+
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

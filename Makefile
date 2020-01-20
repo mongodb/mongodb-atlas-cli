@@ -50,6 +50,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/database_users.go -destination=mocks/mock_database_users.go -package=mocks
 	mockgen -source=internal/store/project_ip_whitelist.go -destination=mocks/mock_project_ip_whitelist.go -package=mocks
 	mockgen -source=internal/store/projects.go -destination=mocks/mock_projects.go -package=mocks
+	mockgen -source=internal/store/organizations.go -destination=mocks/mock_organizations.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

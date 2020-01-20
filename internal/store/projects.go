@@ -44,14 +44,18 @@ type ProjectCreator interface {
 	CreateProject(string, string) (interface{}, error)
 }
 
+type ProjectDeleter interface {
+	DeleteProject(string) error
+}
+
 type ProjectStore interface {
 	ProjectLister
 	ProjectCreator
+	ProjectDeleter
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers
 func (s *Store) GetAllProjects() (interface{}, error) {
-
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background())
@@ -66,7 +70,6 @@ func (s *Store) GetAllProjects() (interface{}, error) {
 
 // CreateProject encapsulate the logic to manage different cloud providers
 func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
-
 	switch s.service {
 	case config.CloudService:
 		project := &atlas.Project{Name: name, OrgID: orgID}
@@ -78,5 +81,19 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteProject encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteProject(projectID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Projects.Delete(context.Background(), projectID)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*cloudmanager.Client).Projects.Delete(context.Background(), projectID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

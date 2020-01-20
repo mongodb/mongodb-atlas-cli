@@ -28,18 +28,30 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
 )
 
-func IAMProjectsBuilder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   "Projects operations",
-		Long:    "Create, list and manage your MongoDB Cloud projects.",
-		Aliases: []string{"project"},
+func TestIAMProjectsDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectDeleter(ctrl)
+
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		DeleteProject(gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(nil).
+		Times(1)
+
+	createOpts := &iamProjectsDeleteOpts{
+		store:     mockStore,
+		confirm:   true,
+		projectID: "5a0a1e7e0f2912c554080adc",
 	}
-	cmd.AddCommand(IAMProjectsListBuilder())
-	cmd.AddCommand(IAMProjectsCreateBuilder())
-	cmd.AddCommand(IAMProjectsDeleteOpts())
-	return cmd
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

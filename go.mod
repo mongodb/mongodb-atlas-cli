@@ -10,7 +10,7 @@ require (
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mongodb-labs/pcgc v0.0.4-0.20200115103701-ce7af86cd797
+	github.com/mongodb-labs/pcgc v0.0.4-0.20200120165027-e35081850926
 	github.com/mongodb/go-client-mongodb-atlas v0.1.2
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2

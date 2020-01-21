@@ -85,7 +85,7 @@ func (opts *iamProjectsDeleteOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mcli iam project(s) create name [--orgId orgId]
+// mcli iam project(s) delete [id] [--orgId orgId]
 func IAMProjectsDeleteOpts() *cobra.Command {
 	opts := &iamProjectsDeleteOpts{
 		globalOpts: newGlobalOpts(),

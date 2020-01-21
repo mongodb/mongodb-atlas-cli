@@ -93,7 +93,7 @@ func (opts *cmClustersStartupOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mcli cloud-manager cluster(s) shutdown [name] --projectId projectId [--force]
+// mcli cloud-manager cluster(s) startup [name] --projectId projectId [--force]
 func CloudManagerClustersStartupBuilder() *cobra.Command {
 	opts := &cmClustersStartupOpts{
 		globalOpts: newGlobalOpts(),

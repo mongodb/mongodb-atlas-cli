@@ -67,7 +67,7 @@ func (opts *cmClustersCreateOpts) init() error {
 }
 
 func (opts *cmClustersCreateOpts) Run() error {
-	newConfig, err := convert.ReadInClusterConfig(opts.fs, opts.filename)
+	newConfig, err := convert.NewClusterConfigFromFile(opts.fs, opts.filename)
 	if err != nil {
 		return err
 	}
@@ -77,13 +77,11 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	for _, rs := range current.ReplicaSets {
-		if rs.ID == newConfig.Name {
-			return fmt.Errorf("cluster %s already exists", newConfig.Name)
-		}
+	if clusterExists(current, newConfig.Name) {
+		return fmt.Errorf("cluster %s already exists", newConfig.Name)
 	}
 
-	err = newConfig.PatchReplicaSet(current)
+	err = newConfig.PatchAutomationConfig(current)
 
 	if err != nil {
 		return err
@@ -93,7 +91,7 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Changes are being applied, please check %s/v2/%s#deployment/topology for status\n", opts.OpsManagerURL(), opts.ProjectID())
+	fmt.Print(deploymentStatusMessage(opts.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }

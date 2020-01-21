@@ -29,7 +29,11 @@ package cli
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
+
+	"github.com/10gen/mcli/internal/convert"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
 )
 
 func validURL(val interface{}) error {
@@ -38,4 +42,16 @@ func validURL(val interface{}) error {
 		return errors.New("the value is not a valid URL")
 	}
 	return nil
+}
+
+func deploymentStatusMessage(baseURL, projectID string) string {
+	return fmt.Sprintf("Changes are being applied, please check %s/v2/%s#deployment/topology for status\n", baseURL, projectID)
+}
+
+func clusterExists(c *cloudmanager.AutomationConfig, name string) bool {
+	i := convert.SearchReplicaSets(c.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
+		return r.ID == name
+	})
+
+	return i >= 0
 }

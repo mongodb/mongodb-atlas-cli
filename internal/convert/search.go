@@ -25,13 +25,39 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package utils
+package convert
 
-func StringInSlice(a []string, x string) bool {
-	for _, b := range a {
-		if b == x {
-			return true
+import "github.com/mongodb-labs/pcgc/cloudmanager"
+
+// SearchProcesses find process index by the given function
+// return -1 if not found
+func SearchProcesses(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) int {
+	for i, p := range a {
+		if f(p) {
+			return i
 		}
 	}
-	return false
+	return -1
+}
+
+// SearchMembers find member index of a replica set by the given function
+// return -1 if not found
+func SearchMembers(a []cloudmanager.Member, f func(cloudmanager.Member) bool) int {
+	for i, m := range a {
+		if f(m) {
+			return i
+		}
+	}
+	return -1
+}
+
+// SearchReplicaSets find a replica set index by the given function
+// return -1 if not found
+func SearchReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) bool) int {
+	for i, m := range a {
+		if f(m) {
+			return i
+		}
+	}
+	return -1
 }

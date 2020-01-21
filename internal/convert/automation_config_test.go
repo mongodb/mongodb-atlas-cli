@@ -28,22 +28,22 @@
 package convert
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/10gen/mcli/mocks"
+	"github.com/go-test/deep"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
-	cloud := automationConfig(name, false)
+	cloud := mocks.AutomationConfigWithOneReplicaSet(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
 		{
-			Name:     "cluster_1",
+			Name:     name,
 			MongoURI: "mongodb://host0:27017",
-			Processes: []ProcessConfig{
+			ProcessConfigs: []ProcessConfig{
 				{
 					ArbiterOnly:  false,
 					BuildIndexes: &buildIndexes,
@@ -59,86 +59,34 @@ func TestFromAutomationConfig(t *testing.T) {
 					Votes:        1,
 					FCVersion:    "4.2",
 					Version:      "4.2.2",
+					Name:         name + "_0",
 				},
 			},
 		},
 	}
 
 	result := FromAutomationConfig(cloud)
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("FromAutomationConfig\n got=%#v\nwant=%#v", result, expected)
+	if diff := deep.Equal(result, expected); diff != nil {
+		t.Error(diff)
 	}
 }
 
 func TestShutdown(t *testing.T) {
 	name := "cluster_1"
-	cloud := automationConfig(name, false)
+	cloud := mocks.AutomationConfigWithOneReplicaSet(name, false)
 
 	Shutdown(cloud, name)
 	if !cloud.Processes[0].Disabled {
-		t.Errorf("TestShutdown\n got=%#v\nwant=%#v", cloud.Processes[0].Disabled, true)
+		t.Errorf("TestShutdown\n got=%#v\nwant=%#v\n", cloud.Processes[0].Disabled, true)
 	}
 }
 
 func TestStartup(t *testing.T) {
 	name := "cluster_1"
-	cloud := automationConfig(name, true)
+	cloud := mocks.AutomationConfigWithOneReplicaSet(name, true)
 
 	Startup(cloud, name)
 	if cloud.Processes[0].Disabled {
-		t.Errorf("TestStartup\n got=%#v\nwant=%#v", cloud.Processes[0].Disabled, false)
-	}
-}
-
-func automationConfig(name string, disabled bool) *cloudmanager.AutomationConfig {
-	return &cloudmanager.AutomationConfig{
-		Processes: []*cloudmanager.Process{
-			{
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
-						Port: 27017,
-					},
-					Replication: &cloudmanager.Replication{
-						ReplSetName: name,
-					},
-					Sharding: nil,
-					Storage: &cloudmanager.Storage{
-						DBPath: "/data/db/",
-					},
-					SystemLog: cloudmanager.SystemLog{
-						Destination: "file",
-						Path:        "/data/db/mongodb.log",
-					},
-				},
-				AuthSchemaVersion:           5,
-				Name:                        name + "_0",
-				Disabled:                    disabled,
-				FeatureCompatibilityVersion: "4.2",
-				Hostname:                    "host0",
-				LogRotate: &cloudmanager.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
-				},
-				ProcessType: mongod,
-				Version:     "4.2.2",
-			},
-		},
-		ReplicaSets: []*cloudmanager.ReplicaSet{
-			{
-				ID: name,
-				Members: []cloudmanager.Member{
-					{
-						ID:           0,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         name + "_0",
-						Priority:     1,
-						SlaveDelay:   0,
-						Votes:        1,
-					},
-				},
-			},
-		},
+		t.Errorf("TestStartup\n got=%#v\nwant=%#v\n", cloud.Processes[0].Disabled, false)
 	}
 }

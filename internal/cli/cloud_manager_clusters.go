@@ -43,6 +43,7 @@ func CloudManagerClustersBuilder() *cobra.Command {
 	cmd.AddCommand(CloudManagerClustersCreateBuilder())
 	cmd.AddCommand(CloudManagerClustersShutdownBuilder())
 	cmd.AddCommand(CloudManagerClustersStartupBuilder())
+	cmd.AddCommand(CloudManagerClustersUpdateBuilder())
 
 	return cmd
 }

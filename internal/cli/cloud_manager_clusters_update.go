@@ -35,18 +35,18 @@ import (
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
-type cmClustersStartupOpts struct {
+type cmClustersUpdateOpts struct {
 	*globalOpts
-	name    string
-	confirm bool
-	store   store.AutomationStore
+	filename string
+	fs       afero.Fs
+	store    store.AutomationStore
 }
 
-func (opts *cmClustersStartupOpts) init() error {
+func (opts *cmClustersUpdateOpts) init() error {
 	if err := opts.loadConfig(); err != nil {
 		return err
 	}
@@ -65,14 +65,26 @@ func (opts *cmClustersStartupOpts) init() error {
 	return nil
 }
 
-func (opts *cmClustersStartupOpts) Run() error {
+func (opts *cmClustersUpdateOpts) Run() error {
+	newConfig, err := convert.NewClusterConfigFromFile(opts.fs, opts.filename)
+	if err != nil {
+		return err
+	}
 	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	convert.Startup(current, opts.name)
+	if !clusterExists(current, newConfig.Name) {
+		return fmt.Errorf("cluster %s doesn't exist", newConfig.Name)
+	}
+
+	err = newConfig.PatchAutomationConfig(current)
+
+	if err != nil {
+		return err
+	}
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
@@ -83,41 +95,29 @@ func (opts *cmClustersStartupOpts) Run() error {
 	return nil
 }
 
-func (opts *cmClustersStartupOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to startup: %s", opts.name),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
-}
-
-// mcli cloud-manager cluster(s) shutdown [name] --projectId projectId [--force]
-func CloudManagerClustersStartupBuilder() *cobra.Command {
-	opts := &cmClustersStartupOpts{
+// mcli cloud-manager cluster(s) update --projectId projectId --file myfile.yaml
+func CloudManagerClustersUpdateBuilder() *cobra.Command {
+	opts := &cmClustersUpdateOpts{
 		globalOpts: newGlobalOpts(),
+		fs:         afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "startup [name]",
-		Short: "startup a Cloud Manager cluster.",
-		Args:  cobra.ExactArgs(1),
+		Use:   "update",
+		Short: "Update a Cloud Manager cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-			opts.name = args[0]
-			return opts.Confirm()
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to update the cluster")
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
+
+	_ = cmd.MarkFlagRequired(flags.File)
 
 	return cmd
 }

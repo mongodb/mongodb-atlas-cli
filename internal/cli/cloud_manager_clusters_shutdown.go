@@ -78,7 +78,7 @@ func (opts *cmClustersShutdownOpts) Run() error {
 		return err
 	}
 
-	fmt.Printf("Changes are being applied, please check %s/v2/%s#deployment/topology for status\n", opts.OpsManagerURL(), opts.ProjectID())
+	fmt.Print(deploymentStatusMessage(opts.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }

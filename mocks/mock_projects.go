@@ -62,6 +62,44 @@ func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectLister)(nil).GetOrgProjects), arg0)
 }
 
+// MockOrgProjectLister is a mock of OrgProjectLister interface
+type MockOrgProjectLister struct {
+	ctrl     *gomock.Controller
+	recorder *MockOrgProjectListerMockRecorder
+}
+
+// MockOrgProjectListerMockRecorder is the mock recorder for MockOrgProjectLister
+type MockOrgProjectListerMockRecorder struct {
+	mock *MockOrgProjectLister
+}
+
+// NewMockOrgProjectLister creates a new mock instance
+func NewMockOrgProjectLister(ctrl *gomock.Controller) *MockOrgProjectLister {
+	mock := &MockOrgProjectLister{ctrl: ctrl}
+	mock.recorder = &MockOrgProjectListerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockOrgProjectLister) EXPECT() *MockOrgProjectListerMockRecorder {
+	return m.recorder
+}
+
+// GetOrgProjects mocks base method
+func (m *MockOrgProjectLister) GetOrgProjects(arg0 string) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrgProjects indicates an expected call of GetOrgProjects
+func (mr *MockOrgProjectListerMockRecorder) GetOrgProjects(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockOrgProjectLister)(nil).GetOrgProjects), arg0)
+}
+
 // MockProjectCreator is a mock of ProjectCreator interface
 type MockProjectCreator struct {
 	ctrl     *gomock.Controller

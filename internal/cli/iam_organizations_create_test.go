@@ -28,18 +28,31 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/mocks"
+	"github.com/golang/mock/gomock"
 )
 
-func IAMOrganizationsBuilder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "organizations",
-		Short:   "Organization operations",
-		Long:    "Create, list and manage your MongoDB Cloud organizations.",
-		Aliases: []string{"organization", "orgs", "org"},
-	}
-	cmd.AddCommand(IAMOrganizationsListBuilder())
-	cmd.AddCommand(IAMOrganizationsCreateBuilder())
+func TestIAMOrganizationsCreate_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	expected := mocks.Organization
+
+	mockStore.
+		EXPECT().
+		CreateOrganization(gomock.Eq("Org 0")).Return(expected, nil).
+		Times(1)
+
+	createOpts := &iamOrganizationsCreateOpts{
+		store: mockStore,
+		name:  "Org 0",
+	}
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

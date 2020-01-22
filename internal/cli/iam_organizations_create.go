@@ -28,18 +28,64 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
+	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
-func IAMOrganizationsBuilder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "organizations",
-		Short:   "Organization operations",
-		Long:    "Create, list and manage your MongoDB Cloud organizations.",
-		Aliases: []string{"organization", "orgs", "org"},
+type iamOrganizationsCreateOpts struct {
+	*globalOpts
+	name  string
+	store store.OrganizationCreator
+}
+
+func (opts *iamOrganizationsCreateOpts) init() error {
+	if err := opts.loadConfig(); err != nil {
+		return err
 	}
-	cmd.AddCommand(IAMOrganizationsListBuilder())
-	cmd.AddCommand(IAMOrganizationsCreateBuilder())
+
+	s, err := store.New(opts.Config)
+
+	if err != nil {
+		return err
+	}
+
+	opts.store = s
+	return nil
+}
+
+func (opts *iamOrganizationsCreateOpts) Run() error {
+	projects, err := opts.store.CreateOrganization(opts.name)
+
+	if err != nil {
+		return err
+	}
+
+	return utils.PrettyJSON(projects)
+}
+
+// mcli iam organization(s) create name [--orgId orgId]
+func IAMOrganizationsCreateBuilder() *cobra.Command {
+	opts := &iamOrganizationsCreateOpts{
+		globalOpts: newGlobalOpts(),
+	}
+	cmd := &cobra.Command{
+		Use:   "create [name]",
+		Short: "Create an organization",
+		Args:  cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.init()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
+
+			return opts.Run()
+		},
+	}
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

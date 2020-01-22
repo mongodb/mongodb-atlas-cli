@@ -39,11 +39,27 @@ type OrganizationLister interface {
 	GetAllOrganizations() (interface{}, error)
 }
 
+type OrganizationCreator interface {
+	CreateOrganization(string) (interface{}, error)
+}
+
 // GetAllProjects encapsulate the logic to manage different cloud providers
 func (s *Store) GetAllOrganizations() (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*cloudmanager.Client).Organizations.GetAllOrganizations(context.Background())
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateOrganization encapsulate the logic to manage different cloud providers
+func (s *Store) CreateOrganization(name string) (interface{}, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		org := &cloudmanager.Organization{Name: name}
+		result, _, err := s.client.(*cloudmanager.Client).Organizations.Create(context.Background(), org)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

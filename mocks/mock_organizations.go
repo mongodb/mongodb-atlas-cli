@@ -46,3 +46,41 @@ func (mr *MockOrganizationListerMockRecorder) GetAllOrganizations() *gomock.Call
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllOrganizations", reflect.TypeOf((*MockOrganizationLister)(nil).GetAllOrganizations))
 }
+
+// MockOrganizationCreator is a mock of OrganizationCreator interface
+type MockOrganizationCreator struct {
+	ctrl     *gomock.Controller
+	recorder *MockOrganizationCreatorMockRecorder
+}
+
+// MockOrganizationCreatorMockRecorder is the mock recorder for MockOrganizationCreator
+type MockOrganizationCreatorMockRecorder struct {
+	mock *MockOrganizationCreator
+}
+
+// NewMockOrganizationCreator creates a new mock instance
+func NewMockOrganizationCreator(ctrl *gomock.Controller) *MockOrganizationCreator {
+	mock := &MockOrganizationCreator{ctrl: ctrl}
+	mock.recorder = &MockOrganizationCreatorMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockOrganizationCreator) EXPECT() *MockOrganizationCreatorMockRecorder {
+	return m.recorder
+}
+
+// CreateOrganization mocks base method
+func (m *MockOrganizationCreator) CreateOrganization(arg0 string) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrganization", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrganization indicates an expected call of CreateOrganization
+func (mr *MockOrganizationCreatorMockRecorder) CreateOrganization(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganization", reflect.TypeOf((*MockOrganizationCreator)(nil).CreateOrganization), arg0)
+}

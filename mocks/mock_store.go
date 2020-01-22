@@ -73,6 +73,17 @@ func ProjectsMock() *atlas.Projects {
 	}
 }
 
+var Organization = &cloudmanager.Organization{
+	ID:   "5a0a1e7e0f2912c554080adc",
+	Name: "Organization 0",
+	Links: []*atlas.Link{
+		{
+			Href: "https://cloud.mongodb.com/api/public/v1.0/orgs/5a0a1e7e0f2912c554080adc",
+			Rel:  "self",
+		},
+	},
+}
+
 func OrganizationsMock() *cloudmanager.Organizations {
 	return &cloudmanager.Organizations{
 		Links: []*atlas.Link{
@@ -82,16 +93,7 @@ func OrganizationsMock() *cloudmanager.Organizations {
 			},
 		},
 		Results: []*cloudmanager.Organization{
-			{
-				ID:   "5a0a1e7e0f2912c554080adc",
-				Name: "",
-				Links: []*atlas.Link{
-					{
-						Href: "https://cloud.mongodb.com/api/public/v1.0/orgs/5a0a1e7e0f2912c554080adc",
-						Rel:  "self",
-					},
-				},
-			},
+			Organization,
 		},
 		TotalCount: 1,
 	}

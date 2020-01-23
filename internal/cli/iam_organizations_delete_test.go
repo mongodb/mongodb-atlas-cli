@@ -28,64 +28,30 @@
 package cli
 
 import (
-	"github.com/10gen/mcli/internal/config"
-	"github.com/10gen/mcli/internal/flags"
-	"github.com/10gen/mcli/internal/store"
-	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/10gen/mcli/internal/mocks"
+	"github.com/golang/mock/gomock"
 )
 
-type iamOrganizationsCreateOpts struct {
-	*globalOpts
-	name  string
-	store store.OrganizationCreator
-}
+func TestIAMOrganizationsDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationDeleter(ctrl)
 
-func (opts *iamOrganizationsCreateOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		DeleteOrganization(gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(nil).
+		Times(1)
+
+	deleteOpts := &iamOrganizationsDeleteOpts{
+		store:   mockStore,
+		confirm: true,
+		orgID:   "5a0a1e7e0f2912c554080adc",
 	}
-
-	s, err := store.New(opts.Config)
-
+	err := deleteOpts.Run()
 	if err != nil {
-		return err
+		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
-	opts.store = s
-	return nil
-}
-
-func (opts *iamOrganizationsCreateOpts) Run() error {
-	projects, err := opts.store.CreateOrganization(opts.name)
-
-	if err != nil {
-		return err
-	}
-
-	return utils.PrettyJSON(projects)
-}
-
-// mcli iam organization(s) create name [--orgId orgId]
-func IAMOrganizationsCreateBuilder() *cobra.Command {
-	opts := &iamOrganizationsCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
-	cmd := &cobra.Command{
-		Use:   "create [name]",
-		Short: "Create an organization.",
-		Args:  cobra.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
-
-			return opts.Run()
-		},
-	}
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
-
-	return cmd
 }

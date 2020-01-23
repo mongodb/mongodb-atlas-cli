@@ -43,6 +43,16 @@ type OrganizationCreator interface {
 	CreateOrganization(string) (interface{}, error)
 }
 
+type OrganizationDeleter interface {
+	DeleteOrganization(string) error
+}
+
+type OrganizationStore interface {
+	OrganizationLister
+	OrganizationCreator
+	OrganizationDeleter
+}
+
 // GetAllProjects encapsulate the logic to manage different cloud providers
 func (s *Store) GetAllOrganizations() (interface{}, error) {
 	switch s.service {
@@ -63,5 +73,16 @@ func (s *Store) CreateOrganization(name string) (interface{}, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOrganization encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteOrganization(ID string) error {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*cloudmanager.Client).Organizations.Delete(context.Background(), ID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

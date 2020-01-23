@@ -34,12 +34,13 @@ import (
 func IAMOrganizationsBuilder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "organizations",
-		Short:   "Organization operations",
+		Short:   "Organization operations.",
 		Long:    "Create, list and manage your MongoDB Cloud organizations.",
 		Aliases: []string{"organization", "orgs", "org"},
 	}
 	cmd.AddCommand(IAMOrganizationsListBuilder())
 	cmd.AddCommand(IAMOrganizationsCreateBuilder())
+	cmd.AddCommand(IAMOrganizationsDeleteBuilder())
 
 	return cmd
 }

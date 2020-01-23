@@ -28,21 +28,24 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
 
-type iamOrganizationsCreateOpts struct {
+type iamOrganizationsDeleteOpts struct {
 	*globalOpts
-	name  string
-	store store.OrganizationCreator
+	orgID   string
+	confirm bool
+	store   store.OrganizationDeleter
 }
 
-func (opts *iamOrganizationsCreateOpts) init() error {
+func (opts *iamOrganizationsDeleteOpts) init() error {
 	if err := opts.loadConfig(); err != nil {
 		return err
 	}
@@ -57,34 +60,49 @@ func (opts *iamOrganizationsCreateOpts) init() error {
 	return nil
 }
 
-func (opts *iamOrganizationsCreateOpts) Run() error {
-	projects, err := opts.store.CreateOrganization(opts.name)
+func (opts *iamOrganizationsDeleteOpts) Run() error {
+	err := opts.store.DeleteOrganization(opts.orgID)
 
 	if err != nil {
 		return err
 	}
 
-	return utils.PrettyJSON(projects)
+	fmt.Printf("Organization '%s' deleted\n", opts.orgID)
+	return nil
 }
 
-// mcli iam organization(s) create name [--orgId orgId]
-func IAMOrganizationsCreateBuilder() *cobra.Command {
-	opts := &iamOrganizationsCreateOpts{
+func (opts *iamOrganizationsDeleteOpts) Confirm() error {
+	if opts.confirm {
+		return nil
+	}
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("Are you sure you want to delete organization '%s'?", opts.orgID),
+	}
+	return survey.AskOne(prompt, &opts.confirm)
+}
+
+// mcli iam organization(s) delete [id] [--orgId orgId]
+func IAMOrganizationsDeleteBuilder() *cobra.Command {
+	opts := &iamOrganizationsDeleteOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create [name]",
-		Short: "Create an organization.",
+		Use:   "delete [ID]",
+		Short: "Delete an organization.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			if err := opts.init(); err != nil {
+				return err
+			}
+			opts.orgID = args[0]
+			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
-
 			return opts.Run()
 		},
 	}
+	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+
 	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd

@@ -28,6 +28,7 @@
 package cli
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/10gen/mcli/internal/config"
@@ -128,14 +129,18 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create a database user for a project.",
-		Args:  cobra.ExactArgs(0),
+		Use:       "create",
+		Short:     "Create a database user for a project.",
+		Args:      cobra.OnlyValidArgs,
+		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
 				return err
 			}
-
+			if len(args) == 0 && len(opts.roles) == 0 {
+				return errors.New("no role specified for the user")
+			}
+			opts.roles = append(opts.roles, args...)
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -151,7 +156,6 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Username)
-	_ = cmd.MarkFlagRequired(flags.Role)
 
 	return cmd
 }

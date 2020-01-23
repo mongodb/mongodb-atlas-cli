@@ -90,7 +90,7 @@ func AtlasClustersListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   "List Atlas clusters for a given project.",
 		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(0),
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

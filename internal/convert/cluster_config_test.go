@@ -30,7 +30,7 @@ package convert
 import (
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
 	"github.com/go-test/deep"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
 )
@@ -42,7 +42,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		changes  ClusterConfig
 	}{
 		"add a replica set to an empty config": {
-			current: mocks.EmptyAutomationConfig(),
+			current: fixtures.EmptyAutomationConfig(),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "test_config",
@@ -112,7 +112,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"add a replica set to a config with an existing replica set": {
-			current: mocks.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "test_config",
@@ -227,7 +227,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"add a process to a config with an existing replica set": {
-			current: mocks.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "replica_set_1",
@@ -343,7 +343,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"replace a process to a config with an existing replica set": {
-			current: mocks.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "replica_set_1",

@@ -41,30 +41,46 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
+var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.Name, version.Version, runtime.GOOS, runtime.GOARCH)
+
+const atlasAPIPath = "/api/atlas/v1.0/"
+
 type Store struct {
-	service   string
-	baseURL   *url.URL
-	transport *http.Client
-	client    interface{}
+	service string
+	baseURL *url.URL
+	client  interface{}
+}
+
+type Config interface {
+	Service() string
+	PublicAPIKey() string
+	PrivateAPIKey() string
+	OpsManagerURL() string
 }
 
 // New get the appropriate client for the profile/service selected
-func New(c config.Config) (*Store, error) {
-	s := &Store{service: c.Service()}
-	s.transport, _ = digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
+func New(c Config) (*Store, error) {
+	s := new(Store)
+	s.service = c.Service()
+	client, err := digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
 
-	if c.APIPath() != "" {
-		s.baseURL, _ = url.Parse(c.APIPath())
+	if err != nil {
+		return nil, err
 	}
 
-	// fmt.Println("s.baseURL", s.baseURL)
+	if c.OpsManagerURL() != "" {
+		baseURL, err := url.Parse(s.apiPath(c.OpsManagerURL()))
+		if err != nil {
+			return nil, err
+		}
+		s.baseURL = baseURL
+	}
+
 	switch s.service {
 	case config.CloudService:
-		s.client = s.atlas()
-	case config.CloudManagerService:
-		s.client = s.cloudManager()
-	case config.OpsManagerService:
-		s.client = s.opsManager()
+		s.setAtlasClient(client)
+	case config.CloudManagerService, config.OpsManagerService:
+		s.setCloudManagerClient(client)
 	default:
 		return nil, errors.New("unsupported service")
 	}
@@ -72,34 +88,29 @@ func New(c config.Config) (*Store, error) {
 	return s, nil
 }
 
-func (s *Store) userAgent() string {
-	return fmt.Sprintf("%s/%s (%s;%s)", config.Name, version.Version, runtime.GOOS, runtime.GOARCH)
-}
-
-func (s *Store) atlas() *atlas.Client {
-	atlasClient := atlas.NewClient(s.transport)
+func (s *Store) setAtlasClient(client *http.Client) {
+	atlasClient := atlas.NewClient(client)
 	if s.baseURL != nil {
 		atlasClient.BaseURL = s.baseURL
 	}
-	atlasClient.UserAgent = s.userAgent()
+	atlasClient.UserAgent = userAgent
 
-	return atlasClient
+	s.client = atlasClient
 }
 
-func (s *Store) cloudManager() *cloudmanager.Client {
-	cloudManagerClient := cloudmanager.NewClient(s.transport)
+func (s *Store) setCloudManagerClient(client *http.Client) {
+	cmClient := cloudmanager.NewClient(client)
 	if s.baseURL != nil {
-		cloudManagerClient.BaseURL = s.baseURL
+		cmClient.BaseURL = s.baseURL
 	}
-	cloudManagerClient.UserAgent = s.userAgent()
+	cmClient.UserAgent = userAgent
 
-	return cloudManagerClient
+	s.client = cmClient
 }
 
-func (s *Store) opsManager() *cloudmanager.Client {
-	opsManagerClient := cloudmanager.NewClient(s.transport)
-	opsManagerClient.BaseURL = s.baseURL
-	opsManagerClient.UserAgent = s.userAgent()
-
-	return opsManagerClient
+func (s *Store) apiPath(baseURL string) string {
+	if s.service == config.CloudService {
+		return baseURL + atlasAPIPath
+	}
+	return baseURL + cloudmanager.APIPublicV1Path
 }

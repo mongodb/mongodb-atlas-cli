@@ -25,45 +25,19 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package cli
+package fixtures
 
 import (
-	"testing"
-
-	"github.com/10gen/mcli/internal/fixtures"
-	"github.com/10gen/mcli/internal/mocks"
-	"github.com/golang/mock/gomock"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestCloudManagerClustersStartup_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStore(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := fixtures.AutomationConfig()
-
-	createOpts := &cmClustersStartupOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		confirm:    true,
-		name:       "cluster_1",
-	}
-
-	mockStore.
-		EXPECT().
-		GetAutomationConfig(createOpts.projectID).
-		Return(expected, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		UpdateAutomationConfig(createOpts.projectID, expected).
-		Return(nil).
-		Times(1)
-
-	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+func ProjectIPWhitelist() []atlas.ProjectIPWhitelist {
+	return []atlas.ProjectIPWhitelist{
+		{
+			Comment:   "test",
+			GroupID:   "5def8d5dce4bd936ac99ae9c",
+			CIDRBlock: "37.228.254.100/32",
+			IPAddress: "37.228.254.100",
+		},
 	}
 }

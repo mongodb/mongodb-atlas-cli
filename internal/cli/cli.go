@@ -33,8 +33,22 @@ import (
 	"github.com/10gen/mcli/internal/config"
 )
 
+type Config interface {
+	Service() string
+	SetService(string)
+	PublicAPIKey() string
+	SetPublicAPIKey(string)
+	PrivateAPIKey() string
+	SetPrivateAPIKey(string)
+	OpsManagerURL() string
+	SetOpsManagerURL(string)
+	ProjectID() string
+	SetProjectID(string)
+	Save() error
+}
+
 type globalOpts struct {
-	config.Config
+	Config
 	profile   string
 	projectID string
 	once      sync.Once

@@ -30,7 +30,8 @@ package cli
 import (
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
+	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
 )
 
@@ -40,7 +41,7 @@ func TestIAMOrganizationsCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := mocks.Organization
+	expected := fixtures.Organization
 
 	mockStore.
 		EXPECT().

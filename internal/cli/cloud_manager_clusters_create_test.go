@@ -30,10 +30,10 @@ package cli
 import (
 	"testing"
 
-	"github.com/spf13/afero"
-
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
+	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
+	"github.com/spf13/afero"
 )
 
 func TestCloudManagerClustersCreate_Run(t *testing.T) {
@@ -42,7 +42,7 @@ func TestCloudManagerClustersCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := mocks.AutomationMock()
+	expected := fixtures.AutomationConfig()
 	appFS := afero.NewMemMapFs()
 	// create test file
 	fileYML := `

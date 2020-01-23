@@ -30,13 +30,13 @@ package convert
 import (
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
 	"github.com/go-test/deep"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
-	cloud := mocks.AutomationConfigWithOneReplicaSet(name, false)
+	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
@@ -73,7 +73,7 @@ func TestFromAutomationConfig(t *testing.T) {
 
 func TestShutdown(t *testing.T) {
 	name := "cluster_1"
-	cloud := mocks.AutomationConfigWithOneReplicaSet(name, false)
+	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, false)
 
 	Shutdown(cloud, name)
 	if !cloud.Processes[0].Disabled {
@@ -83,7 +83,7 @@ func TestShutdown(t *testing.T) {
 
 func TestStartup(t *testing.T) {
 	name := "cluster_1"
-	cloud := mocks.AutomationConfigWithOneReplicaSet(name, true)
+	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, true)
 
 	Startup(cloud, name)
 	if cloud.Processes[0].Disabled {

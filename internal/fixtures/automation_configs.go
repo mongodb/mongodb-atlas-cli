@@ -25,151 +25,11 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package mocks
+package fixtures
 
-import (
-	"github.com/mongodb-labs/pcgc/cloudmanager"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-)
+import "github.com/mongodb-labs/pcgc/cloudmanager"
 
-var Project1 = &atlas.Project{
-	ClusterCount: 2,
-	Created:      "2016-07-14T14:19:33Z",
-	ID:           "5a0a1e7e0f2912c554080ae6",
-	Links: []*atlas.Link{
-		{
-			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/5a0a1e7e0f2912c554080ae6",
-			Rel:  "self",
-		},
-	},
-	Name:  "ProjectBar",
-	OrgID: "5a0a1e7e0f2912c554080adc",
-}
-
-var Project2 = &atlas.Project{
-	ClusterCount: 0,
-	Created:      "2017-10-16T15:24:01Z",
-	ID:           "5a0a1e7e0f2912c554080ae7",
-	Links: []*atlas.Link{
-		{
-			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/5a0a1e7e0f2912c554080ae7",
-			Rel:  "self",
-		},
-	},
-	Name:  "Project Foo",
-	OrgID: "5a0a1e7e0f2912c554080adc",
-}
-
-func ProjectsMock() *atlas.Projects {
-	return &atlas.Projects{
-		Links: []*atlas.Link{
-			{
-				Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups",
-				Rel:  "self",
-			},
-		},
-		Results:    []*atlas.Project{Project1, Project2},
-		TotalCount: 2,
-	}
-}
-
-var Organization = &cloudmanager.Organization{
-	ID:   "5a0a1e7e0f2912c554080adc",
-	Name: "Organization 0",
-	Links: []*atlas.Link{
-		{
-			Href: "https://cloud.mongodb.com/api/public/v1.0/orgs/5a0a1e7e0f2912c554080adc",
-			Rel:  "self",
-		},
-	},
-}
-
-func OrganizationsMock() *cloudmanager.Organizations {
-	return &cloudmanager.Organizations{
-		Links: []*atlas.Link{
-			{
-				Href: "https://cloud.mongodb.com/api/atlas/v1.0/orgs",
-				Rel:  "self",
-			},
-		},
-		Results: []*cloudmanager.Organization{
-			Organization,
-		},
-		TotalCount: 1,
-	}
-}
-
-func ClusterMock() *atlas.Cluster {
-	var falseValue = true
-	var one float64 = 1
-	var two int64 = 1
-	return &atlas.Cluster{
-		ID:                       "1",
-		AutoScaling:              atlas.AutoScaling{DiskGBEnabled: &falseValue},
-		BackupEnabled:            &falseValue,
-		BiConnector:              atlas.BiConnector{Enabled: &falseValue, ReadPreference: "secondary"},
-		ClusterType:              "REPLICASET",
-		DiskSizeGB:               &one,
-		EncryptionAtRestProvider: "AWS",
-		GroupID:                  "asdasdads",
-		MongoDBVersion:           "3.4.9",
-		MongoURI:                 "mongodb://mongo-shard-00-00.mongodb.net:27017,mongo-shard-00-01.mongodb.net:27017,mongo-shard-00-02.mongodb.net:27017",
-		MongoURIUpdated:          "2017-10-23T21:26:17Z",
-		MongoURIWithOptions:      "mongodb://mongo-shard-00-00.mongodb.net:27017,mongo-shard-00-01.mongodb.net:27017,mongo-shard-00-02.mongodb.net:27017/?ssl=true&authSource=admin&replicaSet=mongo-shard-0",
-		Name:                     "AppData",
-		NumShards:                &two,
-		Paused:                   &falseValue,
-		ProviderSettings: &atlas.ProviderSettings{
-			ProviderName:     "AWS",
-			DiskIOPS:         &two,
-			EncryptEBSVolume: &falseValue,
-			InstanceSizeName: "M40",
-			RegionName:       "US_WEST_2",
-		},
-		ReplicationFactor: &two,
-		ReplicationSpec: map[string]atlas.RegionsConfig{
-			"US_EAST_1": {
-				ElectableNodes: &two,
-				Priority:       &two,
-				ReadOnlyNodes:  &two,
-			},
-		},
-		SrvAddress: "mongodb+srv://mongo-shard-00-00.mongodb.net:27017,mongo-shard-00-01.mongodb.net:27017,mongo-shard-00-02.mongodb.net:27017",
-		StateName:  "CREATING",
-	}
-}
-
-func ClustersMock() []atlas.Cluster {
-	return []atlas.Cluster{*ClusterMock()}
-}
-
-func DatabaseUserMock() *atlas.DatabaseUser {
-	return &atlas.DatabaseUser{
-		Roles: []atlas.Role{
-			{
-				RoleName:     "admin",
-				DatabaseName: "admin",
-			},
-		},
-		GroupID:      "5def8d5dce4bd936ac99ae9c",
-		Username:     "test4",
-		DatabaseName: "admin",
-		LDAPAuthType: "NONE",
-	}
-}
-
-func ProjectIPWhitelistMock() []atlas.ProjectIPWhitelist {
-	return []atlas.ProjectIPWhitelist{
-		{
-			Comment:   "test",
-			GroupID:   "5def8d5dce4bd936ac99ae9c",
-			CIDRBlock: "37.228.254.100/32",
-			IPAddress: "37.228.254.100",
-		},
-	}
-}
-
-func AutomationMock() *cloudmanager.AutomationConfig {
+func AutomationConfig() *cloudmanager.AutomationConfig {
 	return &cloudmanager.AutomationConfig{
 		Auth: cloudmanager.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
@@ -311,5 +171,65 @@ func AutomationMock() *cloudmanager.AutomationConfig {
 		},
 		Version:   1,
 		UIBaseURL: "",
+	}
+}
+
+func AutomationConfigWithOneReplicaSet(name string, disabled bool) *cloudmanager.AutomationConfig {
+	return &cloudmanager.AutomationConfig{
+		Processes: []*cloudmanager.Process{
+			{
+				Args26: cloudmanager.Args26{
+					NET: cloudmanager.Net{
+						Port: 27017,
+					},
+					Replication: &cloudmanager.Replication{
+						ReplSetName: name,
+					},
+					Sharding: nil,
+					Storage: &cloudmanager.Storage{
+						DBPath: "/data/db/",
+					},
+					SystemLog: cloudmanager.SystemLog{
+						Destination: "file",
+						Path:        "/data/db/mongodb.log",
+					},
+				},
+				AuthSchemaVersion:           5,
+				Name:                        name + "_0",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "host0",
+				LogRotate: &cloudmanager.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				ProcessType: "mongod",
+				Version:     "4.2.2",
+			},
+		},
+		ReplicaSets: []*cloudmanager.ReplicaSet{
+			{
+				ID:              name,
+				ProtocolVersion: "1",
+				Members: []cloudmanager.Member{
+					{
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         name + "_0",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+		},
+	}
+}
+
+func EmptyAutomationConfig() *cloudmanager.AutomationConfig {
+	return &cloudmanager.AutomationConfig{
+		Processes:   make([]*cloudmanager.Process, 0),
+		ReplicaSets: make([]*cloudmanager.ReplicaSet, 0),
 	}
 }

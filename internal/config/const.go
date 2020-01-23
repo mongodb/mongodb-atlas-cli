@@ -40,6 +40,4 @@ const (
 	privateAPIKey       = "private_api_key"
 	opsManagerURL       = "ops_manager_url"
 	baseURL             = "base_url"
-	publicAPIPath       = "/api/public/v1.0/"
-	atlasAPIPath        = "/api/atlas/v1.0/"
 )

@@ -28,9 +28,12 @@
 package store
 
 import (
+	"strings"
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
+
+	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
 )
 
@@ -60,7 +63,7 @@ func TestStore_New(t *testing.T) {
 
 	mockConfig.
 		EXPECT().
-		APIPath().
+		OpsManagerURL().
 		Return("").
 		Times(1)
 
@@ -100,7 +103,7 @@ func TestStore_New_WithUrl(t *testing.T) {
 
 	mockConfig.
 		EXPECT().
-		APIPath().
+		OpsManagerURL().
 		Return("ops_manager").
 		Times(2)
 
@@ -108,8 +111,29 @@ func TestStore_New_WithUrl(t *testing.T) {
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
-
-	if store.baseURL.String() != "ops_manager" {
-		t.Errorf("store.baseURL = %s; want 'ops_manager'", store.baseURL)
+	expected := "ops_manager/api/public/v1.0/"
+	if store.baseURL.String() != expected {
+		t.Errorf("store.baseURL = %s; want '%s'", expected, store.baseURL)
 	}
+}
+
+func TestStore_apiPath(t *testing.T) {
+	t.Run("ops manager", func(t *testing.T) {
+		s := &Store{
+			service: "ops-manager",
+		}
+		result := s.apiPath("localhost")
+		if !strings.Contains(result, cloudmanager.APIPublicV1Path) {
+			t.Errorf("apiPath() = %s; want '%s'", result, cloudmanager.APIPublicV1Path)
+		}
+	})
+	t.Run("atlas", func(t *testing.T) {
+		s := &Store{
+			service: "cloud",
+		}
+		result := s.apiPath("localhost")
+		if !strings.Contains(result, atlasAPIPath) {
+			t.Errorf("apiPath() = %s; want '%s'", result, atlasAPIPath)
+		}
+	})
 }

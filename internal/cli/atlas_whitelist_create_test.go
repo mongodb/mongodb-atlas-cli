@@ -30,7 +30,8 @@ package cli
 import (
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
+	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
 )
 
@@ -40,7 +41,7 @@ func TestAtlasWhitelistCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := mocks.ProjectIPWhitelistMock()
+	expected := fixtures.ProjectIPWhitelist()
 
 	createOpts := &atlasWhitelistCreateOpts{
 		globalOpts: newGlobalOpts(),

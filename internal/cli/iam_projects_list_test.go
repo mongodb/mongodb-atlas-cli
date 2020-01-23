@@ -30,7 +30,8 @@ package cli
 import (
 	"testing"
 
-	"github.com/10gen/mcli/mocks"
+	"github.com/10gen/mcli/internal/fixtures"
+	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
 )
 
@@ -40,7 +41,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := mocks.ProjectsMock()
+	expected := fixtures.Projects()
 
 	t.Run("No OrgID is given", func(t *testing.T) {
 		mockStore.

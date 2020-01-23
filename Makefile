@@ -27,7 +27,7 @@ link-git-hooks: ## Install git hooks
 .PHONY: fmt
 fmt: ## Format code
 	@echo "==> Formatting all files..."
-	find . -name '*.go' -not -wholename './mocks/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
+	find . -name '*.go' -not -wholename './internal/mocks/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
 
 .PHONY: test
 test: ## Run tests
@@ -37,20 +37,20 @@ test: ## Run tests
 .PHONY: lint
 lint: ## Run linter
 	@echo "==> Linting all packages..."
-	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned --skip-dirs ^mocks/
+	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned --skip-dirs ^internal/mocks/
 
 .PHONY: check
 check: test lint ## Run tests and linters
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
-	mockgen -source=internal/config/profile.go -destination=mocks/mock_config.go -package=mocks
-	mockgen -source=internal/store/automation.go -destination=mocks/mock_automation.go -package=mocks
-	mockgen -source=internal/store/clusters.go -destination=mocks/mock_clusters.go -package=mocks
-	mockgen -source=internal/store/database_users.go -destination=mocks/mock_database_users.go -package=mocks
-	mockgen -source=internal/store/project_ip_whitelist.go -destination=mocks/mock_project_ip_whitelist.go -package=mocks
-	mockgen -source=internal/store/projects.go -destination=mocks/mock_projects.go -package=mocks
-	mockgen -source=internal/store/organizations.go -destination=mocks/mock_organizations.go -package=mocks
+	mockgen -source=internal/store/store.go -destination=internal/mocks/mock_store.go -package=mocks
+	mockgen -source=internal/store/automation.go -destination=internal/mocks/mock_automation.go -package=mocks
+	mockgen -source=internal/store/clusters.go -destination=internal/mocks/mock_clusters.go -package=mocks
+	mockgen -source=internal/store/database_users.go -destination=internal/mocks/mock_database_users.go -package=mocks
+	mockgen -source=internal/store/project_ip_whitelist.go -destination=internal/mocks/mock_project_ip_whitelist.go -package=mocks
+	mockgen -source=internal/store/projects.go -destination=internal/mocks/mock_projects.go -package=mocks
+	mockgen -source=internal/store/organizations.go -destination=internal/mocks/mock_organizations.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

@@ -34,30 +34,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Config interface {
-	Service() string
-	SetService(string)
-	PublicAPIKey() string
-	SetPublicAPIKey(string)
-	PrivateAPIKey() string
-	SetPrivateAPIKey(string)
-	OpsManagerURL() string
-	SetOpsManagerURL(string)
-	ProjectID() string
-	SetProjectID(string)
-	APIPath() string
-	Save() error
-}
-
 type Profile struct {
 	Name      string
 	configDir string
 	fs        afero.Fs
 }
 
-var _ Config = new(Profile)
-
-func New(name string) (Config, error) {
+func New(name string) (*Profile, error) {
 	configDir, err := configHome()
 	if err != nil {
 		return nil, err
@@ -120,17 +103,6 @@ func (p Profile) OpsManagerURL() string {
 		return viper.GetString(opsManagerURL)
 	}
 	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, opsManagerURL))
-}
-
-func (p Profile) APIPath() string {
-	baseURL := p.OpsManagerURL()
-	if baseURL != "" {
-		if p.Service() == CloudService {
-			return baseURL + atlasAPIPath
-		}
-		return baseURL + publicAPIPath
-	}
-	return ""
 }
 
 // SetOpsManagerURL set configured ops manager base url

@@ -25,45 +25,49 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package cli
+package fixtures
 
 import (
-	"testing"
-
-	"github.com/10gen/mcli/internal/fixtures"
-	"github.com/10gen/mcli/internal/mocks"
-	"github.com/golang/mock/gomock"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestCloudManagerClustersStartup_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStore(ctrl)
+var Project1 = &atlas.Project{
+	ClusterCount: 2,
+	Created:      "2016-07-14T14:19:33Z",
+	ID:           "5a0a1e7e0f2912c554080ae6",
+	Links: []*atlas.Link{
+		{
+			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/5a0a1e7e0f2912c554080ae6",
+			Rel:  "self",
+		},
+	},
+	Name:  "ProjectBar",
+	OrgID: "5a0a1e7e0f2912c554080adc",
+}
 
-	defer ctrl.Finish()
+var Project2 = &atlas.Project{
+	ClusterCount: 0,
+	Created:      "2017-10-16T15:24:01Z",
+	ID:           "5a0a1e7e0f2912c554080ae7",
+	Links: []*atlas.Link{
+		{
+			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/5a0a1e7e0f2912c554080ae7",
+			Rel:  "self",
+		},
+	},
+	Name:  "Project Foo",
+	OrgID: "5a0a1e7e0f2912c554080adc",
+}
 
-	expected := fixtures.AutomationConfig()
-
-	createOpts := &cmClustersStartupOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		confirm:    true,
-		name:       "cluster_1",
-	}
-
-	mockStore.
-		EXPECT().
-		GetAutomationConfig(createOpts.projectID).
-		Return(expected, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		UpdateAutomationConfig(createOpts.projectID, expected).
-		Return(nil).
-		Times(1)
-
-	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+func Projects() *atlas.Projects {
+	return &atlas.Projects{
+		Links: []*atlas.Link{
+			{
+				Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups",
+				Rel:  "self",
+			},
+		},
+		Results:    []*atlas.Project{Project1, Project2},
+		TotalCount: 2,
 	}
 }

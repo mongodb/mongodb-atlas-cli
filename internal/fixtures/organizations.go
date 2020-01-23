@@ -25,30 +25,35 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package config
+package fixtures
 
 import (
-	"strings"
-	"testing"
-
-	"github.com/spf13/afero"
-
-	"github.com/spf13/viper"
+	"github.com/mongodb-labs/pcgc/cloudmanager"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestProfile_GetAPIPath(t *testing.T) {
-	p := &Profile{
-		Name:      "test",
-		configDir: "home",
-		fs:        afero.NewMemMapFs(),
-	}
-	viper.Set(opsManagerURL, "example")
-	viper.Set(service, OpsManagerService)
-	if !strings.Contains(p.APIPath(), publicAPIPath) {
-		t.Errorf("APIPath() = %s; want '%s'", p.APIPath(), publicAPIPath)
-	}
-	viper.Set(service, CloudService)
-	if !strings.Contains(p.APIPath(), atlasAPIPath) {
-		t.Errorf("APIPath() = %s; want '%s'", p.APIPath(), atlasAPIPath)
+var Organization = &cloudmanager.Organization{
+	ID:   "5a0a1e7e0f2912c554080adc",
+	Name: "Organization 0",
+	Links: []*atlas.Link{
+		{
+			Href: "https://cloud.mongodb.com/api/public/v1.0/orgs/5a0a1e7e0f2912c554080adc",
+			Rel:  "self",
+		},
+	},
+}
+
+func Organizations() *cloudmanager.Organizations {
+	return &cloudmanager.Organizations{
+		Links: []*atlas.Link{
+			{
+				Href: "https://cloud.mongodb.com/api/atlas/v1.0/orgs",
+				Rel:  "self",
+			},
+		},
+		Results: []*cloudmanager.Organization{
+			Organization,
+		},
+		TotalCount: 1,
 	}
 }

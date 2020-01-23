@@ -49,7 +49,7 @@ const (
 // ClusterConfig configuration for a cluster
 // This cluster can be used to patch an automation config
 type ClusterConfig struct {
-	FCVersion      string          `yaml:"feature_compatibility_version,omitempty" json:"feature_compatibility_version,omitempty"`
+	FCVersion      string          `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
 	MongoURI       string          `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
 	Name           string          `yaml:"name" json:"name"`
 	ProcessConfigs []ProcessConfig `yaml:"processes" json:"processes"`

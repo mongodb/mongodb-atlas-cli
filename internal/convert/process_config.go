@@ -36,18 +36,18 @@ import (
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
 	BuildIndexes *bool   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath       string  `yaml:"db_path" json:"db_path"`
-	FCVersion    string  `yaml:"feature_compatibility_version,omitempty" json:"feature_compatibility_version,omitempty"`
+	DBPath       string  `yaml:"dbPath" json:"db_path"`
+	FCVersion    string  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
 	Hostname     string  `yaml:"hostname" json:"hostname"`
-	LogPath      string  `yaml:"log_path" json:"log_path"`
+	LogPath      string  `yaml:"logPath" json:"log_path"`
 	Name         string  `yaml:"name,omitempty" json:"name,omitempty"`
 	Port         int     `yaml:"port" json:"port"`
 	Priority     float64 `yaml:"priority" json:"priority"`
-	ProcessType  string  `yaml:"process_type" json:"process_type"`
-	SlaveDelay   float64 `yaml:"slave_delay" json:"slave_delay"`
+	ProcessType  string  `yaml:"processType" json:"process_type"`
+	SlaveDelay   float64 `yaml:"slaveDelay" json:"slave_delay"`
 	Version      string  `yaml:"version,omitempty" json:"version,omitempty"`
 	Votes        float64 `yaml:"votes" json:"votes"`
-	ArbiterOnly  bool    `yaml:"arbiter_only" json:"arbiter_only"`
+	ArbiterOnly  bool    `yaml:"arbiterOnly" json:"arbiter_only"`
 	Disabled     bool    `yaml:"disabled" json:"disabled"`
 	Hidden       bool    `yaml:"hidden" json:"hidden"`
 }

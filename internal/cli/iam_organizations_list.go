@@ -74,7 +74,7 @@ func IAMOrganizationsListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List organizations",
+		Short:   "List all organizations.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

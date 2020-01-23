@@ -28,53 +28,57 @@
 package cli
 
 import (
-	"sync"
+	"fmt"
 
 	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/usage"
+	"github.com/10gen/mcli/internal/utils"
+	"github.com/spf13/cobra"
 )
 
-type Config interface {
-	Set(string, string)
-	Service() string
-	SetService(string)
-	PublicAPIKey() string
-	SetPublicAPIKey(string)
-	PrivateAPIKey() string
-	SetPrivateAPIKey(string)
-	OpsManagerURL() string
-	SetOpsManagerURL(string)
-	ProjectID() string
-	SetProjectID(string)
-	Save() error
+type configSetOpts struct {
+	*globalOpts
+	prop string
+	val  string
 }
 
-type globalOpts struct {
-	Config
-	profile   string
-	projectID string
-	once      sync.Once
-}
-
-// newGlobalOpts returns an globalOpts
-func newGlobalOpts() *globalOpts {
-	return new(globalOpts)
-}
-
-// ProjectID returns the project id.
-// If the id is empty, it caches it after querying config.
-func (opts *globalOpts) ProjectID() string {
-	_ = opts.loadConfig()
-	if opts.projectID != "" {
-		return opts.projectID
+func (opts *configSetOpts) Run() error {
+	opts.Config.Set(opts.prop, opts.val)
+	if err := opts.Config.Save(); err != nil {
+		return err
 	}
-	opts.projectID = opts.Config.ProjectID()
-	return opts.projectID
+	fmt.Printf("Updated prop '%s'\n", opts.prop)
+	return nil
 }
 
-func (opts *globalOpts) loadConfig() error {
-	var err error
-	opts.once.Do(func() {
-		opts.Config, err = config.New(opts.profile)
-	})
-	return err
+func ConfigSetBuilder() *cobra.Command {
+	opts := &configSetOpts{
+		globalOpts: newGlobalOpts(),
+	}
+	cmd := &cobra.Command{
+		Use:   "set [prop] [val]",
+		Short: "Configure the tool.",
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
+			}
+			if !utils.StringInSlice(cmd.ValidArgs, args[0]) {
+				return fmt.Errorf("invalid prop %q", args[0])
+			}
+			return nil
+		},
+		ValidArgs: config.Properties(),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.globalOpts.loadConfig()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.prop = args[0]
+			opts.val = args[1]
+			return opts.Run()
+		},
+	}
+	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.ProfileConfig)
+
+	return cmd
 }

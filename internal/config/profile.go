@@ -54,6 +54,22 @@ func New(name string) (*Profile, error) {
 	return p, nil
 }
 
+func Properties() []string {
+	return []string{service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
+}
+
+func (p Profile) Set(name, value string) {
+	viper.Set(fmt.Sprintf("%s.%s", p.Name, name), value)
+}
+
+func (p Profile) GetString(name string) string {
+	if viper.IsSet(name) && viper.GetString(name) != "" {
+		return viper.GetString(name)
+	}
+
+	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, name))
+}
+
 // Service get configured service
 func (p Profile) Service() string {
 	if viper.IsSet(service) {
@@ -67,59 +83,47 @@ func (p Profile) Service() string {
 }
 
 // SetService set configured service
-func (p Profile) SetService(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, service), value)
+func (p Profile) SetService(v string) {
+	p.Set(service, v)
 }
 
 // PublicAPIKey get configured public api key
 func (p Profile) PublicAPIKey() string {
-	if viper.IsSet(publicAPIKey) {
-		return viper.GetString(publicAPIKey)
-	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, publicAPIKey))
+	return p.GetString(publicAPIKey)
 }
 
 // SetPublicAPIKey set configured publicAPIKey
-func (p Profile) SetPublicAPIKey(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, publicAPIKey), value)
+func (p Profile) SetPublicAPIKey(v string) {
+	p.Set(publicAPIKey, v)
 }
 
 // PrivateAPIKey get configured private api key
 func (p Profile) PrivateAPIKey() string {
-	if viper.IsSet(privateAPIKey) {
-		return viper.GetString(privateAPIKey)
-	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, privateAPIKey))
+	return p.GetString(privateAPIKey)
 }
 
 // SetPrivateAPIKey set configured private api key
-func (p Profile) SetPrivateAPIKey(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, privateAPIKey), value)
+func (p Profile) SetPrivateAPIKey(v string) {
+	p.Set(privateAPIKey, v)
 }
 
 // OpsManagerURL get configured ops manager base url
 func (p Profile) OpsManagerURL() string {
-	if viper.IsSet(opsManagerURL) {
-		return viper.GetString(opsManagerURL)
-	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, opsManagerURL))
+	return p.GetString(opsManagerURL)
 }
 
 // SetOpsManagerURL set configured ops manager base url
-func (p Profile) SetOpsManagerURL(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, opsManagerURL), value)
+func (p Profile) SetOpsManagerURL(v string) {
+	p.Set(opsManagerURL, v)
 }
 
 // ProjectID get configured project ID
 func (p Profile) ProjectID() string {
-	if viper.IsSet(ProjectID) && viper.GetString(ProjectID) != "" {
-		return viper.GetString(ProjectID)
-	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, ProjectID))
+	return p.GetString(ProjectID)
 }
 
-func (p Profile) SetProjectID(value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, ProjectID), value)
+func (p Profile) SetProjectID(v string) {
+	p.Set(ProjectID, v)
 }
 
 // Save save the configuration to disk

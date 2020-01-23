@@ -30,12 +30,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
-
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -74,7 +73,7 @@ func (opts *atlasClustersDeleteOpts) Run() error {
 		return err
 	}
 
-	fmt.Println("Cluster deleted")
+	fmt.Printf("Cluster '%s' deleted\n", opts.name)
 
 	return nil
 }

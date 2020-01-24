@@ -37,6 +37,14 @@ Run `mcli config` to set up a profile.
 
 You can also use `MCLI_OPS_MANAGER_URL`, `MCLI_PUBLIC_API_KEY`, and `MCLI_PRIVATE_API_KEY` to define some of the authentication variables
 
+## ZSH Completion (experimental)
+Add the following to your `.zshrc` file
+
+```bash
+source <(mcli completion zsh)
+compdef _mcli mcli
+```
+
 # Contributing
 
 See our [CONTRIBUTING.md](CONTRIBUTING.md) Guide.

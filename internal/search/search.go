@@ -27,7 +27,9 @@
 
 package search
 
-import "github.com/mongodb-labs/pcgc/cloudmanager"
+import (
+	"github.com/mongodb-labs/pcgc/cloudmanager"
+)
 
 func StringInSlice(a []string, x string) bool {
 	for _, b := range a {
@@ -38,8 +40,10 @@ func StringInSlice(a []string, x string) bool {
 	return false
 }
 
-// Processes find process index by the given function
-// return -1 if not found
+// Processes return the smallest index i
+// in [0, n) at which f(i) is true, assuming that on the range [0, n),
+// f(i) == true implies f(i+1) == true.
+// returns the first true index. If there is no such index, Processes returns n and false
 func Processes(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) (int, bool) {
 	for i, p := range a {
 		if f(p) {
@@ -49,8 +53,10 @@ func Processes(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) (i
 	return len(a), false
 }
 
-// Members find member index of a replica set by the given function
-// return -1 if not found
+// Members return the smallest index i
+// in [0, n) at which f(i) is true, assuming that on the range [0, n),
+// f(i) == true implies f(i+1) == true.
+// returns the first true index. If there is no such index, Members returns n and false
 func Members(a []cloudmanager.Member, f func(cloudmanager.Member) bool) (int, bool) {
 	for i, m := range a {
 		if f(m) {
@@ -60,8 +66,10 @@ func Members(a []cloudmanager.Member, f func(cloudmanager.Member) bool) (int, bo
 	return len(a), false
 }
 
-// ReplicaSets find a replica set index by the given function
-// return -1 if not found
+// Members return the smallest index i
+// in [0, n) at which f(i) is true, assuming that on the range [0, n),
+// f(i) == true implies f(i+1) == true.
+// returns the first true index. If there is no such index, Members returns n and false
 func ReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) bool) (int, bool) {
 	for i, m := range a {
 		if f(m) {
@@ -71,6 +79,7 @@ func ReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) 
 	return len(a), false
 }
 
+// ClusterExists return true if a cluster exists for the given name
 func ClusterExists(c *cloudmanager.AutomationConfig, name string) bool {
 	_, found := ReplicaSets(c.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
 		return r.ID == name

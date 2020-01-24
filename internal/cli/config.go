@@ -31,6 +31,7 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/usage"
+	"github.com/10gen/mcli/internal/validators"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
@@ -104,7 +105,7 @@ func (opts *configOpts) Run() error {
 					Default: opts.Config.OpsManagerURL(),
 					Help:    "Ops Manager host URL",
 				},
-				Validate: validURL,
+				Validate: validators.ValidURL,
 			},
 		}
 		defaultQuestions = append(opsManagerQuestions, defaultQuestions...)

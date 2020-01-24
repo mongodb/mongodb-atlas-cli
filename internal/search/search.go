@@ -27,6 +27,8 @@
 
 package search
 
+import "github.com/mongodb-labs/pcgc/cloudmanager"
+
 func StringInSlice(a []string, x string) bool {
 	for _, b := range a {
 		if b == x {
@@ -34,4 +36,45 @@ func StringInSlice(a []string, x string) bool {
 		}
 	}
 	return false
+}
+
+// Processes find process index by the given function
+// return -1 if not found
+func Processes(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) (int, bool) {
+	for i, p := range a {
+		if f(p) {
+			return i, true
+		}
+	}
+	return len(a), false
+}
+
+// Members find member index of a replica set by the given function
+// return -1 if not found
+func Members(a []cloudmanager.Member, f func(cloudmanager.Member) bool) (int, bool) {
+	for i, m := range a {
+		if f(m) {
+			return i, true
+		}
+	}
+	return len(a), false
+}
+
+// ReplicaSets find a replica set index by the given function
+// return -1 if not found
+func ReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) bool) (int, bool) {
+	for i, m := range a {
+		if f(m) {
+			return i, true
+		}
+	}
+	return len(a), false
+}
+
+func ClusterExists(c *cloudmanager.AutomationConfig, name string) bool {
+	_, found := ReplicaSets(c.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
+		return r.ID == name
+	})
+
+	return found
 }

@@ -33,6 +33,8 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/messages"
+	"github.com/10gen/mcli/internal/search"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
 	"github.com/AlecAivazis/survey/v2"
@@ -72,13 +74,17 @@ func (opts *cmClustersStartupOpts) Run() error {
 		return err
 	}
 
+	if !search.ClusterExists(current, opts.name) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
+	}
+
 	convert.Startup(current, opts.name)
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 
-	fmt.Print(deploymentStatusMessage(opts.OpsManagerURL(), opts.ProjectID()))
+	fmt.Print(messages.DeploymentStatus(opts.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }

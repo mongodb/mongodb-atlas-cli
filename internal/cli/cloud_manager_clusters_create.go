@@ -30,12 +30,13 @@ package cli
 import (
 	"fmt"
 
-	"github.com/10gen/mcli/internal/usage"
-
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/messages"
+	"github.com/10gen/mcli/internal/search"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -77,7 +78,7 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	if clusterExists(current, newConfig.Name) {
+	if search.ClusterExists(current, newConfig.Name) {
 		return fmt.Errorf("cluster %s already exists", newConfig.Name)
 	}
 
@@ -91,7 +92,7 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	fmt.Print(deploymentStatusMessage(opts.OpsManagerURL(), opts.ProjectID()))
+	fmt.Print(messages.DeploymentStatus(opts.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }

@@ -47,7 +47,7 @@ func TestCloudManagerClustersStartup_Run(t *testing.T) {
 		globalOpts: newGlobalOpts(),
 		store:      mockStore,
 		confirm:    true,
-		name:       "cluster_1",
+		name:       "myReplicaSet",
 	}
 
 	mockStore.

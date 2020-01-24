@@ -147,10 +147,10 @@ func patchProcesses(out *cloudmanager.AutomationConfig, newReplicaSetID string, 
 			oldProcess.Disabled = true
 			oldProcess.Args26.Replication = new(cloudmanager.Replication)
 		}
-		pos := SearchProcesses(newProcesses, func(p *cloudmanager.Process) bool {
+		pos, found := search.Processes(newProcesses, func(p *cloudmanager.Process) bool {
 			return p.Name == oldProcess.Name
 		})
-		if pos != -1 {
+		if found {
 			out.Processes[i] = newProcesses[pos]
 			newProcesses = append(newProcesses[:pos], newProcesses[pos+1:]...)
 		}
@@ -162,11 +162,11 @@ func patchProcesses(out *cloudmanager.AutomationConfig, newReplicaSetID string, 
 
 // patchReplicaSet if the replica set exists try to patch it if not add it
 func patchReplicaSet(out *cloudmanager.AutomationConfig, newReplicaSet *cloudmanager.ReplicaSet) {
-	pos := SearchReplicaSets(out.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
+	pos, found := search.ReplicaSets(out.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
 		return r.ID == newReplicaSet.ID
 	})
 
-	if pos == -1 {
+	if !found {
 		out.ReplicaSets = append(out.ReplicaSets, newReplicaSet)
 		return
 	}
@@ -174,10 +174,10 @@ func patchReplicaSet(out *cloudmanager.AutomationConfig, newReplicaSet *cloudman
 	oldReplicaSet := out.ReplicaSets[pos]
 	lastID := oldReplicaSet.Members[len(oldReplicaSet.Members)-1].ID
 	for j, newMember := range newReplicaSet.Members {
-		k := SearchMembers(oldReplicaSet.Members, func(m cloudmanager.Member) bool {
+		k, found := search.Members(oldReplicaSet.Members, func(m cloudmanager.Member) bool {
 			return m.Host == newMember.Host
 		})
-		if k != -1 {
+		if found {
 			newMember.ID = oldReplicaSet.Members[k].ID
 		} else {
 			lastID++

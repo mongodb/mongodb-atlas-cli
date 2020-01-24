@@ -28,7 +28,6 @@
 package cli
 
 import (
-	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
@@ -60,20 +59,14 @@ type atlasClustersCreateOpts struct {
 }
 
 func (opts *atlasClustersCreateOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
 
-	s, err := store.New(opts.Config)
-
+	s, err := store.New()
 	if err != nil {
 		return err
 	}
-
 	opts.store = s
 	return nil
 }
@@ -177,7 +170,6 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.Provider)
 	_ = cmd.MarkFlagRequired(flags.Region)

@@ -29,53 +29,68 @@ package config
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 )
 
 type Profile struct {
-	Name      string
+	name      *string
 	configDir string
 	fs        afero.Fs
-}
-
-func New(name string) (*Profile, error) {
-	configDir, err := configHome()
-	if err != nil {
-		return nil, err
-	}
-
-	p := new(Profile)
-	p.Name = name
-	p.configDir = configDir
-	p.fs = afero.NewOsFs()
-
-	return p, nil
 }
 
 func Properties() []string {
 	return []string{service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
 }
 
-func (p Profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.Name, name), value)
+var p *Profile
+
+func init() {
+	p = New()
 }
 
+func New() *Profile {
+	configDir, err := configHome()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	p := new(Profile)
+	p.configDir = configDir
+	p.fs = afero.NewOsFs()
+
+	return p
+}
+
+func SetName(name *string) {
+	p.name = name
+}
+
+func Set(name, value string) { p.Set(name, value) }
+func (p Profile) Set(name, value string) {
+	viper.Set(fmt.Sprintf("%s.%s", *p.name, name), value)
+}
+
+func GetString(name string) string { return p.GetString(name) }
 func (p Profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-
-	return viper.GetString(fmt.Sprintf("%s.%s", p.Name, name))
+	if p.name != nil {
+		return viper.GetString(fmt.Sprintf("%s.%s", *p.name, name))
+	}
+	return ""
 }
 
 // Service get configured service
+func Service() string { return p.Service() }
 func (p Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", p.Name, service)
+	serviceKey := fmt.Sprintf("%s.%s", *p.name, service)
 	if viper.IsSet(serviceKey) {
 		return viper.GetString(serviceKey)
 	}
@@ -83,60 +98,64 @@ func (p Profile) Service() string {
 }
 
 // SetService set configured service
+func SetService(v string) { p.SetService(v) }
 func (p Profile) SetService(v string) {
 	p.Set(service, v)
 }
 
 // PublicAPIKey get configured public api key
+func PublicAPIKey() string { return p.PublicAPIKey() }
 func (p Profile) PublicAPIKey() string {
 	return p.GetString(publicAPIKey)
 }
 
 // SetPublicAPIKey set configured publicAPIKey
+func SetPublicAPIKey(v string) { p.SetPublicAPIKey(v) }
 func (p Profile) SetPublicAPIKey(v string) {
 	p.Set(publicAPIKey, v)
 }
 
 // PrivateAPIKey get configured private api key
+func PrivateAPIKey() string { return p.PrivateAPIKey() }
 func (p Profile) PrivateAPIKey() string {
 	return p.GetString(privateAPIKey)
 }
 
 // SetPrivateAPIKey set configured private api key
+func SetPrivateAPIKey(v string) { p.SetPrivateAPIKey(v) }
 func (p Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
 }
 
 // OpsManagerURL get configured ops manager base url
+func OpsManagerURL() string { return p.OpsManagerURL() }
 func (p Profile) OpsManagerURL() string {
 	return p.GetString(opsManagerURL)
 }
 
 // SetOpsManagerURL set configured ops manager base url
+func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
 func (p Profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
 }
 
 // ProjectID get configured project ID
+func ProjectID() string { return p.ProjectID() }
 func (p Profile) ProjectID() string {
-	return p.GetString(ProjectID)
+	return p.GetString(projectID)
 }
 
 func (p Profile) SetProjectID(v string) {
-	p.Set(ProjectID, v)
+	p.Set(projectID, v)
 }
 
-// Save save the configuration to disk
-func Load() error {
-	// Find home directory.
-	configDir, err := configHome()
-	if err != nil {
-		return err
-	}
+// Load loads the configuration from disk
+func Load() error { return p.Load() }
+func (p Profile) Load() error {
 	viper.SetConfigType(configType)
 	viper.SetConfigName(Name)
 	viper.SetConfigPermissions(0600)
-	viper.AddConfigPath(configDir)
+	viper.AddConfigPath(p.configDir)
 
 	viper.SetEnvPrefix(Name)
 	// TODO: review why this is not working as expected
@@ -155,6 +174,7 @@ func Load() error {
 }
 
 // Save the configuration to disk
+func Save() error { return p.Save() }
 func (p Profile) Save() error {
 	exists, err := afero.DirExists(p.fs, p.configDir)
 	if err != nil {

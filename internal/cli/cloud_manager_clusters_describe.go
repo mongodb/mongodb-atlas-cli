@@ -30,14 +30,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/10gen/mcli/internal/json"
-
-	"github.com/10gen/mcli/internal/usage"
-
-	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -48,15 +45,11 @@ type cmClustersDescribeOpts struct {
 }
 
 func (opts *cmClustersDescribeOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
 
-	s, err := store.New(opts.Config)
+	s, err := store.New()
 
 	if err != nil {
 		return err
@@ -102,7 +95,6 @@ func CloudManagerClustersDescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

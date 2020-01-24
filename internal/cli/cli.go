@@ -28,31 +28,11 @@
 package cli
 
 import (
-	"sync"
-
 	"github.com/10gen/mcli/internal/config"
 )
 
-type Config interface {
-	Set(string, string)
-	Service() string
-	SetService(string)
-	PublicAPIKey() string
-	SetPublicAPIKey(string)
-	PrivateAPIKey() string
-	SetPrivateAPIKey(string)
-	OpsManagerURL() string
-	SetOpsManagerURL(string)
-	ProjectID() string
-	SetProjectID(string)
-	Save() error
-}
-
 type globalOpts struct {
-	Config
-	profile   string
 	projectID string
-	once      sync.Once
 }
 
 // newGlobalOpts returns an globalOpts
@@ -63,18 +43,9 @@ func newGlobalOpts() *globalOpts {
 // ProjectID returns the project id.
 // If the id is empty, it caches it after querying config.
 func (opts *globalOpts) ProjectID() string {
-	_ = opts.loadConfig()
 	if opts.projectID != "" {
 		return opts.projectID
 	}
-	opts.projectID = opts.Config.ProjectID()
+	opts.projectID = config.ProjectID()
 	return opts.projectID
-}
-
-func (opts *globalOpts) loadConfig() error {
-	var err error
-	opts.once.Do(func() {
-		opts.Config, err = config.New(opts.profile)
-	})
-	return err
 }

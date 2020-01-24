@@ -33,7 +33,7 @@ const (
 	CloudService        = "cloud"         // CloudService setting when using Atlas API
 	CloudManagerService = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService   = "ops-manager"   // OpsManagerService settings when using Ops Manager API
-	ProjectID           = "project_id"
+	projectID           = "project_id"
 	configType          = "toml"
 	service             = "service"
 	publicAPIKey        = "public_api_key"

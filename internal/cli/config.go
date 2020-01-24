@@ -57,18 +57,18 @@ func (opts *configOpts) IsCloudManager() bool {
 }
 
 func (opts *configOpts) Save() error {
-	opts.SetService(opts.Service)
+	config.SetService(opts.Service)
 	if opts.PublicAPIKey != "" {
-		opts.SetPublicAPIKey(opts.PublicAPIKey)
+		config.SetPublicAPIKey(opts.PublicAPIKey)
 	}
 	if opts.PrivateAPIKey != "" {
-		opts.SetPrivateAPIKey(opts.PrivateAPIKey)
+		config.SetPrivateAPIKey(opts.PrivateAPIKey)
 	}
 	if opts.IsOpsManager() && opts.OpsManagerURL != "" {
-		opts.SetOpsManagerURL(opts.OpsManagerURL)
+		config.SetOpsManagerURL(opts.OpsManagerURL)
 	}
 
-	return opts.Config.Save()
+	return config.Save()
 }
 
 func (opts *configOpts) Run() error {
@@ -84,7 +84,7 @@ func (opts *configOpts) Run() error {
 			Prompt: &survey.Input{
 				Message: "Public API Key:",
 				Help:    helpLink,
-				Default: opts.Config.PublicAPIKey(),
+				Default: config.PublicAPIKey(),
 			},
 		},
 		{
@@ -102,7 +102,7 @@ func (opts *configOpts) Run() error {
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
 					Message: "Ops Manager Base URL:",
-					Default: opts.Config.OpsManagerURL(),
+					Default: config.OpsManagerURL(),
 					Help:    "Ops Manager host URL",
 				},
 				Validate: validators.ValidURL,
@@ -126,15 +126,11 @@ func ConfigBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure the tool.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.globalOpts.loadConfig()
-		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, usage.Service)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.ProfileConfig)
 	cmd.AddCommand(ConfigSetBuilder())
 
 	return cmd

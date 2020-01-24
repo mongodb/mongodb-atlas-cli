@@ -28,11 +28,8 @@
 package cli
 
 import (
-	"github.com/10gen/mcli/internal/config"
-	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
-	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -42,11 +39,7 @@ type iamOrganizationsListOpts struct {
 }
 
 func (opts *iamOrganizationsListOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
-	s, err := store.New(opts.Config)
+	s, err := store.New()
 
 	if err != nil {
 		return err
@@ -82,8 +75,6 @@ func IAMOrganizationsListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

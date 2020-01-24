@@ -49,15 +49,11 @@ type cmClustersCreateOpts struct {
 }
 
 func (opts *cmClustersCreateOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
 
-	s, err := store.New(opts.Config)
+	s, err := store.New()
 
 	if err != nil {
 		return err
@@ -92,7 +88,7 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	fmt.Print(messages.DeploymentStatus(opts.OpsManagerURL(), opts.ProjectID()))
+	fmt.Print(messages.DeploymentStatus(config.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }
@@ -117,7 +113,6 @@ func CloudManagerClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to create the cluster")
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	_ = cmd.MarkFlagRequired(flags.File)
 

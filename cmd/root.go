@@ -33,6 +33,8 @@ import (
 
 	"github.com/10gen/mcli/internal/cli"
 	"github.com/10gen/mcli/internal/config"
+	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/usage"
 	"github.com/10gen/mcli/internal/version"
 	"github.com/spf13/cobra"
 )
@@ -65,6 +67,9 @@ func init() {
 	rootCmd.AddCommand(cli.CloudManagerBuilder())
 	// IAM commands
 	rootCmd.AddCommand(cli.IAMBuilder())
+
+	profile := rootCmd.PersistentFlags().StringP(flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
+	config.SetName(profile)
 }
 
 // initConfig reads in config file and ENV variables if set.

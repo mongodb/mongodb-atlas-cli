@@ -31,9 +31,7 @@ import (
 	"fmt"
 
 	"github.com/10gen/mcli/internal/config"
-	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/search"
-	"github.com/10gen/mcli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -44,8 +42,8 @@ type configSetOpts struct {
 }
 
 func (opts *configSetOpts) Run() error {
-	opts.Config.Set(opts.prop, opts.val)
-	if err := opts.Config.Save(); err != nil {
+	config.Set(opts.prop, opts.val)
+	if err := config.Save(); err != nil {
 		return err
 	}
 	fmt.Printf("Updated prop '%s'\n", opts.prop)
@@ -69,16 +67,12 @@ func ConfigSetBuilder() *cobra.Command {
 			return nil
 		},
 		ValidArgs: config.Properties(),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.globalOpts.loadConfig()
-		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.prop = args[0]
 			opts.val = args[1]
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.ProfileConfig)
 
 	return cmd
 }

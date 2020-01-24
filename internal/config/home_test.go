@@ -30,27 +30,33 @@ package config
 import (
 	"os"
 	"testing"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 func TestConfig_configHome(t *testing.T) {
-	_ = os.Setenv("XDG_CONFIG_HOME", "my_config")
-	_ = os.Setenv("HOME", ".")
-
-	home, err := configHome()
-	if home != "my_config" {
-		t.Errorf("configHome() = %s; want 'my_config'", home)
-	}
-	if err != nil {
-		t.Fatalf("configHome() unexpected error: %v", err)
-	}
-
-	_ = os.Unsetenv("XDG_CONFIG_HOME")
-
-	home, err = configHome()
-	if home != "./.config" {
-		t.Errorf("configHome() = %s; want './.config'", home)
-	}
-	if err != nil {
-		t.Fatalf("configHome() unexpected error: %v", err)
-	}
+	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
+		xdgHome := "my_config"
+		_ = os.Setenv("XDG_CONFIG_HOME", xdgHome)
+		home, err := configHome()
+		if err != nil {
+			t.Fatalf("configHome() unexpected error: %v", err)
+		}
+		if home != "my_config" {
+			t.Errorf("configHome() = %s; want '%s'", home, xdgHome)
+		}
+		_ = os.Unsetenv("XDG_CONFIG_HOME")
+	})
+	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
+		homedir.DisableCache = true
+		_ = os.Setenv("HOME", ".")
+		home, err := configHome()
+		if err != nil {
+			t.Fatalf("configHome() unexpected error: %v", err)
+		}
+		if home != "./.config" {
+			t.Errorf("configHome() = %s; want './.config'", home)
+		}
+		homedir.DisableCache = false
+	})
 }

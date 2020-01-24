@@ -30,7 +30,6 @@ package cli
 import (
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
@@ -46,11 +45,7 @@ type iamProjectsDeleteOpts struct {
 }
 
 func (opts *iamProjectsDeleteOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
-	s, err := store.New(opts.Config)
+	s, err := store.New()
 
 	if err != nil {
 		return err
@@ -107,7 +102,6 @@ func IAMProjectsDeleteOpts() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 
 	return cmd
 }

@@ -51,25 +51,20 @@ type Store struct {
 	client  interface{}
 }
 
-type Config interface {
-	Service() string
-	PublicAPIKey() string
-	PrivateAPIKey() string
-	OpsManagerURL() string
-}
-
 // New get the appropriate client for the profile/service selected
-func New(c Config) (*Store, error) {
+func New() (*Store, error) {
 	s := new(Store)
-	s.service = c.Service()
-	client, err := digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
+	s.service = config.Service()
+	client, err := digest.NewTransport(config.PublicAPIKey(), config.PrivateAPIKey()).Client()
 
 	if err != nil {
 		return nil, err
 	}
 
-	if c.OpsManagerURL() != "" {
-		baseURL, err := url.Parse(s.apiPath(c.OpsManagerURL()))
+	configURL := config.OpsManagerURL()
+	if configURL != "" {
+		apiPath := s.apiPath(configURL)
+		baseURL, err := url.Parse(apiPath)
 		if err != nil {
 			return nil, err
 		}

@@ -30,9 +30,9 @@ package cli
 import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -65,7 +65,7 @@ func (opts *iamProjectsCreateOpts) Run() error {
 		return err
 	}
 
-	return utils.PrettyJSON(projects)
+	return json.PrettyPrint(projects)
 }
 
 // mcli iam project(s) create name [--orgId orgId]

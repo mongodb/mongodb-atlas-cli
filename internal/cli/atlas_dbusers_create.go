@@ -31,11 +31,12 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/10gen/mcli/internal/json"
+
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/spf13/cobra"
@@ -81,7 +82,7 @@ func (opts *atlasDBUsersCreateOpts) Run() error {
 		return err
 	}
 
-	return utils.PrettyJSON(result)
+	return json.PrettyPrint(result)
 }
 
 func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {

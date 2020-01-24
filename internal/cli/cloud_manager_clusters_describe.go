@@ -30,13 +30,14 @@ package cli
 import (
 	"fmt"
 
+	"github.com/10gen/mcli/internal/json"
+
 	"github.com/10gen/mcli/internal/usage"
 
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/store"
-	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -75,7 +76,7 @@ func (opts *cmClustersDescribeOpts) Run() error {
 	clusterConfigs := convert.FromAutomationConfig(result)
 	for _, rs := range clusterConfigs {
 		if rs.Name == opts.name {
-			return utils.PrettyJSON(rs)
+			return json.PrettyPrint(rs)
 		}
 
 	}

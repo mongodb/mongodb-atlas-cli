@@ -25,7 +25,7 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package utils
+package search
 
 func StringInSlice(a []string, x string) bool {
 	for _, b := range a {

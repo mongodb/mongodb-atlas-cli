@@ -31,9 +31,9 @@ import (
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/convert"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +70,7 @@ func (opts *cmClustersListOpts) Run() error {
 
 	clusterConfigs := convert.FromAutomationConfig(result)
 
-	return utils.PrettyJSON(clusterConfigs)
+	return json.PrettyPrint(clusterConfigs)
 }
 
 // mcli cloud-manager cluster(s) list --projectId projectId

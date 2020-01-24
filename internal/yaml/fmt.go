@@ -25,27 +25,16 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package utils
+package yaml
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"gopkg.in/yaml.v2"
 )
 
-func PrettyJSON(obj interface{}) error {
-	prettyJSON, err := json.MarshalIndent(obj, "", "\t")
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(prettyJSON))
-
-	return nil
-}
-
 // TODO: use me ;)
-func PrettyYAML(obj interface{}) error {
+func PrettyPrint(obj interface{}) error {
 	prettyYAML, err := yaml.Marshal(obj)
 	if err != nil {
 		return err

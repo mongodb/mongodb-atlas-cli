@@ -25,65 +25,19 @@
 // exception statement from all source files in the program, then also delete
 // it in the license file.
 
-package cli
+package json
 
 import (
-	"github.com/10gen/mcli/internal/config"
-	"github.com/10gen/mcli/internal/flags"
-	"github.com/10gen/mcli/internal/json"
-	"github.com/10gen/mcli/internal/store"
-	"github.com/10gen/mcli/internal/usage"
-	"github.com/spf13/cobra"
+	"encoding/json"
+	"fmt"
 )
 
-type iamOrganizationsListOpts struct {
-	*globalOpts
-	store store.OrganizationLister
-}
-
-func (opts *iamOrganizationsListOpts) init() error {
-	if err := opts.loadConfig(); err != nil {
-		return err
-	}
-
-	s, err := store.New(opts.Config)
-
+func PrettyPrint(obj interface{}) error {
+	prettyJSON, err := json.MarshalIndent(obj, "", "\t")
 	if err != nil {
 		return err
 	}
+	fmt.Println(string(prettyJSON))
 
-	opts.store = s
 	return nil
-}
-
-func (opts *iamOrganizationsListOpts) Run() error {
-	orgs, err := opts.store.GetAllOrganizations()
-
-	if err != nil {
-		return err
-	}
-
-	return json.PrettyPrint(orgs)
-}
-
-// mcli iam organizations(s) list [--orgId orgId]
-func IAMOrganizationsListBuilder() *cobra.Command {
-	opts := &iamOrganizationsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
-	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "List all organizations.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
-		},
-	}
-
-	cmd.Flags().StringVarP(&opts.profile, flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
-
-	return cmd
 }

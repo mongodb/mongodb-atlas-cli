@@ -32,7 +32,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/10gen/mcli/internal/utils"
+	"github.com/10gen/mcli/internal/search"
 	"github.com/Masterminds/semver"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
 	"github.com/spf13/afero"
@@ -69,7 +69,7 @@ func NewClusterConfigFromFile(fs afero.Fs, filename string) (*ClusterConfig, err
 		return nil, fmt.Errorf("filename: %s requires valid extension", filename)
 	}
 	configType := ext[1:]
-	if !utils.StringInSlice(supportedExts, configType) {
+	if !search.StringInSlice(supportedExts, configType) {
 		return nil, fmt.Errorf("unsupported file type: %s", configType)
 	}
 

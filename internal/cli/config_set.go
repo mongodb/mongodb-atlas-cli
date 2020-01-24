@@ -32,8 +32,8 @@ import (
 
 	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
+	"github.com/10gen/mcli/internal/search"
 	"github.com/10gen/mcli/internal/usage"
-	"github.com/10gen/mcli/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -63,7 +63,7 @@ func ConfigSetBuilder() *cobra.Command {
 			if len(args) != 2 {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
 			}
-			if !utils.StringInSlice(cmd.ValidArgs, args[0]) {
+			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
 				return fmt.Errorf("invalid prop %q", args[0])
 			}
 			return nil

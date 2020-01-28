@@ -40,7 +40,6 @@ type atlasClustersUpdateOpts struct {
 	*globalOpts
 	name         string
 	instanceSize string
-	nodes        int64
 	diskSizeGB   float64
 	mdbVersion   string
 	store        store.ClusterStore
@@ -122,7 +121,6 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Int64VarP(&opts.nodes, flags.Members, flags.MembersShort, 0, usage.Members)
 	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, "", usage.InstanceSize)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, "", usage.MDBVersion)

@@ -38,7 +38,6 @@ import (
 )
 
 type iamProjectsDeleteOpts struct {
-	*globalOpts
 	projectID string
 	confirm   bool
 	store     store.ProjectDeleter
@@ -82,9 +81,7 @@ func (opts *iamProjectsDeleteOpts) Confirm() error {
 
 // mcli iam project(s) delete [id] [--orgId orgId]
 func IAMProjectsDeleteOpts() *cobra.Command {
-	opts := &iamProjectsDeleteOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(iamProjectsDeleteOpts)
 	cmd := &cobra.Command{
 		Use:   "delete [id]",
 		Short: "Delete a project",

@@ -34,7 +34,6 @@ import (
 )
 
 type iamOrganizationsCreateOpts struct {
-	*globalOpts
 	name  string
 	store store.OrganizationCreator
 }
@@ -62,9 +61,7 @@ func (opts *iamOrganizationsCreateOpts) Run() error {
 
 // mcli iam organization(s) create name [--orgId orgId]
 func IAMOrganizationsCreateBuilder() *cobra.Command {
-	opts := &iamOrganizationsCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(iamOrganizationsCreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: "Create an organization.",

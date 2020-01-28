@@ -38,7 +38,6 @@ import (
 )
 
 type iamOrganizationsDeleteOpts struct {
-	*globalOpts
 	orgID   string
 	confirm bool
 	store   store.OrganizationDeleter
@@ -78,9 +77,7 @@ func (opts *iamOrganizationsDeleteOpts) Confirm() error {
 
 // mcli iam organization(s) delete [id] [--orgId orgId]
 func IAMOrganizationsDeleteBuilder() *cobra.Command {
-	opts := &iamOrganizationsDeleteOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(iamOrganizationsDeleteOpts)
 	cmd := &cobra.Command{
 		Use:   "delete [ID]",
 		Short: "Delete an organization.",

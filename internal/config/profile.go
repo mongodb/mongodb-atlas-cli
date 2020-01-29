@@ -58,13 +58,16 @@ func New() *Profile {
 	}
 
 	p := new(Profile)
+	name := "default"
+	p.name = &name
 	p.configDir = configDir
 	p.fs = afero.NewOsFs()
 
 	return p
 }
 
-func SetName(name *string) {
+func SetName(name *string) { p.SetName(name) }
+func (p *Profile) SetName(name *string) {
 	p.name = name
 }
 

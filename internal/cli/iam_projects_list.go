@@ -28,6 +28,7 @@
 package cli
 
 import (
+	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/flags"
 	"github.com/10gen/mcli/internal/json"
 	"github.com/10gen/mcli/internal/store"
@@ -54,10 +55,10 @@ func (opts *iamProjectsListOpts) init() error {
 func (opts *iamProjectsListOpts) Run() error {
 	var projects interface{}
 	var err error
-	if opts.orgID == "" {
-		projects, err = opts.store.GetAllProjects()
-	} else {
+	if opts.orgID != "" && config.Service() == config.OpsManagerService {
 		projects, err = opts.store.GetOrgProjects(opts.orgID)
+	} else {
+		projects, err = opts.store.GetAllProjects()
 	}
 	if err != nil {
 		return err

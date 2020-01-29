@@ -30,6 +30,7 @@ package cli
 import (
 	"testing"
 
+	"github.com/10gen/mcli/internal/config"
 	"github.com/10gen/mcli/internal/fixtures"
 	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
@@ -57,7 +58,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 		}
 	})
 
-	t.Run("An OrgID is given", func(t *testing.T) {
+	t.Run("An OrgID is given for OM", func(t *testing.T) {
 		mockStore.
 			EXPECT().
 			GetOrgProjects("1").
@@ -68,6 +69,25 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			orgID: "1",
 			store: mockStore,
 		}
+		config.SetService(config.OpsManagerService)
+		err := listOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("An OrgID is given for Atlas", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetAllProjects().
+			Return(expected, nil).
+			Times(1)
+
+		listOpts := &iamProjectsListOpts{
+			orgID: "1",
+			store: mockStore,
+		}
+		config.SetService(config.CloudService)
 		err := listOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

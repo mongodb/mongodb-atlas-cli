@@ -1,4 +1,5 @@
 # MCLI
+[![Build Status](https://cloud.drone.io/api/badges/mongodb/mcli/status.svg)](https://cloud.drone.io/mongodb/mcli)
 
 `mcli` is a tool for managing your MongoDB cloud services
 

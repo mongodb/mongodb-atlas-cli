@@ -1,33 +1,32 @@
 ---
-pipeline:
-  dependencies:
+kind: pipeline
+name: mcli
+type: docker
+
+steps:
+  - name: test
     image: golang:1.13
-    secrets: [ snyk_token ]
-    group: ci
-    commands:
-      - curl -sL https://deb.nodesource.com/setup_12.x | bash -
-      - apt-get install -y nodejs
-      - npm install -g snyk
-      - snyk test
-    when:
-      branch: master
-      event: push
-  test:
-    image: golang:1.13
-    group: ci
+    volumes:
+      - name: deps
+        path: /go
     commands:
       - make test
-  lint:
+
+  - name: lint
     image: golangci/golangci-lint:v1.22.0
-    group: ci
+    volumes:
+      - name: deps
+        path: /go
     commands:
       - make lint
-  build:
-    image: golang:1.13
-    group: ci
-    commands:
-      - make build
 
-branches:
-  - master
-  - feature/*
+  - name: build
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go build
+volumes:
+  - name: deps
+    temp: {}

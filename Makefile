@@ -42,6 +42,10 @@ lint: ## Run linter
 .PHONY: check
 check: test lint ## Run tests and linters
 
+.PHONY: addlicense
+addlicense:
+	find . -name '*.go' -not -wholename './internal/mocks/*' | while read -r file; do addlicense -c "MongoDB Inc" "$$file"; done
+
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/automation.go -destination=internal/mocks/mock_automation.go -package=mocks

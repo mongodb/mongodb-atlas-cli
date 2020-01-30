@@ -24,7 +24,7 @@ import (
 )
 
 type iamProjectsListOpts struct {
-	orgID string
+	*globalOpts
 	store store.ProjectLister
 }
 
@@ -42,8 +42,8 @@ func (opts *iamProjectsListOpts) init() error {
 func (opts *iamProjectsListOpts) Run() error {
 	var projects interface{}
 	var err error
-	if opts.orgID != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.orgID)
+	if opts.OrgID() != "" && config.Service() == config.OpsManagerService {
+		projects, err = opts.store.GetOrgProjects(opts.OrgID())
 	} else {
 		projects, err = opts.store.GetAllProjects()
 	}
@@ -55,7 +55,9 @@ func (opts *iamProjectsListOpts) Run() error {
 
 // mcli iam project(s) list [--orgId orgId]
 func IAMProjectsListBuilder() *cobra.Command {
-	opts := new(iamProjectsListOpts)
+	opts := &iamProjectsListOpts{
+		globalOpts: newGlobalOpts(),
+	}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

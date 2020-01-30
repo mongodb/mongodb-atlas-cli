@@ -36,10 +36,11 @@ func TestIAMProjectsCreate_Run(t *testing.T) {
 		Times(1)
 
 	createOpts := &iamProjectsCreateOpts{
-		store: mockStore,
-		name:  "ProjectBar",
-		orgID: "5a0a1e7e0f2912c554080adc",
+		globalOpts: newGlobalOpts(),
+		store:      mockStore,
+		name:       "ProjectBar",
 	}
+	createOpts.orgID = "5a0a1e7e0f2912c554080adc"
 	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

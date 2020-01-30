@@ -38,7 +38,10 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		listOpts := &iamProjectsListOpts{store: mockStore}
+		listOpts := &iamProjectsListOpts{
+			store:      mockStore,
+			globalOpts: newGlobalOpts(),
+		}
 		err := listOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -53,9 +56,10 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &iamProjectsListOpts{
-			orgID: "1",
-			store: mockStore,
+			globalOpts: newGlobalOpts(),
+			store:      mockStore,
 		}
+		listOpts.orgID = "1"
 		config.SetService(config.OpsManagerService)
 		err := listOpts.Run()
 		if err != nil {
@@ -71,9 +75,10 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &iamProjectsListOpts{
-			orgID: "1",
-			store: mockStore,
+			globalOpts: newGlobalOpts(),
+			store:      mockStore,
 		}
+		listOpts.orgID = "1"
 		config.SetService(config.CloudService)
 		err := listOpts.Run()
 		if err != nil {

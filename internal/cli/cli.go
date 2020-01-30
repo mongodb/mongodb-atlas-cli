@@ -19,6 +19,7 @@ import (
 )
 
 type globalOpts struct {
+	orgID     string
 	projectID string
 }
 
@@ -35,4 +36,14 @@ func (opts *globalOpts) ProjectID() string {
 	}
 	opts.projectID = config.ProjectID()
 	return opts.projectID
+}
+
+// OrgID returns the organization id.
+// If the id is empty, it caches it after querying config.
+func (opts *globalOpts) OrgID() string {
+	if opts.orgID != "" {
+		return opts.orgID
+	}
+	opts.orgID = config.OrgID()
+	return opts.orgID
 }

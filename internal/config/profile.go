@@ -29,7 +29,7 @@ type Profile struct {
 }
 
 func Properties() []string {
-	return []string{service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
+	return []string{projectID, orgID, service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
 }
 
 var p *Profile
@@ -135,8 +135,22 @@ func (p Profile) ProjectID() string {
 	return p.GetString(projectID)
 }
 
+// SetProjectID sets the global project ID
+func SetProjectID(v string) { p.SetProjectID(v) }
 func (p Profile) SetProjectID(v string) {
 	p.Set(projectID, v)
+}
+
+// OrgID get configured organization ID
+func OrgID() string { return p.OrgID() }
+func (p Profile) OrgID() string {
+	return p.GetString(orgID)
+}
+
+// SetOrgID sets the global organization ID
+func SetOrgID(v string) { p.SetOrgID(v) }
+func (p Profile) SetOrgID(v string) {
+	p.Set(orgID, v)
 }
 
 // Load loads the configuration from disk

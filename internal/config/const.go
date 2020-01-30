@@ -21,6 +21,7 @@ const (
 	CloudManagerService = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService   = "ops-manager"   // OpsManagerService settings when using Ops Manager API
 	projectID           = "project_id"
+	orgID               = "org_id"
 	configType          = "toml"
 	service             = "service"
 	publicAPIKey        = "public_api_key"

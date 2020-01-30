@@ -82,8 +82,8 @@ func CloudManagerClustersApplyBuilder() *cobra.Command {
 		fs:         afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "update",
-		Short: "Update a Cloud Manager cluster.",
+		Use:   "apply",
+		Short: "Apply a new cluster configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

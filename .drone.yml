@@ -14,9 +14,6 @@ steps:
 
   - name: lint
     image: golangci/golangci-lint:v1.22.0
-    volumes:
-      - name: deps
-        path: /go
     commands:
       - make lint
 
@@ -30,3 +27,10 @@ steps:
 volumes:
   - name: deps
     temp: {}
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+    - pull_request

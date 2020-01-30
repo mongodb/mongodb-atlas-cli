@@ -51,4 +51,4 @@ See our [CONTRIBUTING.md](CONTRIBUTING.md) Guide.
 
 # License
 
-[SSPL](LICENSE)
+mcli is released under the Apache 2.0 license. See [LICENSE](LICENSE)

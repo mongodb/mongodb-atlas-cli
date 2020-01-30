@@ -18,14 +18,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasBuilder() *cobra.Command {
+func OpsManagerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: "Atlas operations.",
+		Use:     "ops-manager",
+		Aliases: []string{"om"},
+		Short:   "Ops Manager operations.",
 	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
+
+	cmd.AddCommand(CloudManagerClustersBuilder())
+	cmd.AddCommand(OpsManagerOwnerBuilder())
 
 	return cmd
 }

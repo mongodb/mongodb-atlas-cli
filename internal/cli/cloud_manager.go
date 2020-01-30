@@ -21,8 +21,8 @@ import (
 func CloudManagerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "cloud-manager",
-		Aliases: []string{"cm", "ops-manager", "om", "deployments"},
-		Short:   "Command for working with atlas.",
+		Aliases: []string{"cm"},
+		Short:   "Cloud Manager operations.",
 	}
 
 	cmd.AddCommand(CloudManagerClustersBuilder())

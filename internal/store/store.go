@@ -70,6 +70,30 @@ func New() (*Store, error) {
 	return s, nil
 }
 
+func NewUnauthenticated() (*Store, error) {
+	s := new(Store)
+	s.service = config.Service()
+
+	configURL := config.OpsManagerURL()
+	if configURL != "" {
+		apiPath := s.apiPath(configURL)
+		baseURL, err := url.Parse(apiPath)
+		if err != nil {
+			return nil, err
+		}
+		s.baseURL = baseURL
+	}
+
+	switch s.service {
+	case config.OpsManagerService:
+		s.setCloudManagerClient(nil)
+	default:
+		return nil, errors.New("unsupported service")
+	}
+
+	return s, nil
+}
+
 func (s *Store) setAtlasClient(client *http.Client) {
 	atlasClient := atlas.NewClient(client)
 	if s.baseURL != nil {

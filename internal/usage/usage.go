@@ -18,7 +18,6 @@ const (
 	ProjectID     = "The project ID to use. Overrides config/env settings."
 	OrgID         = "The organization ID to use. Overrides config/env settings."
 	Profile       = "Use a specific profile from your configuration file."
-	ProfileConfig = "Name of the profile to set up."
 	Members       = "Number of replica set members."
 	InstanceSize  = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB    = "Capacity, in gigabytes, of the host’s root volume."
@@ -31,6 +30,10 @@ const (
 	Roles         = "User’s roles and the databases/collections on which the roles apply."
 	Comment       = "Optional comment associated with the whitelist entry."
 	Force         = "Don't ask for confirmation."
+	Email         = "The user’s email"
+	FirstName     = "The user’s first name"
+	LastName      = "The user’s last name"
+	WhitelistIps  = "API key allowed IPs"
 	WhitelistType = `Type of entry.
 On of: cidrBlock|ipAddress`
 	Service = `Cloud service type.

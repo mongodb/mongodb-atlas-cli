@@ -12,20 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package fixtures
 
-import (
-	"github.com/spf13/cobra"
-)
+import "github.com/mongodb-labs/pcgc/cloudmanager"
 
-func AtlasBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: "Atlas operations.",
+func OwnerResponse(email, firstName, lastName string) *cloudmanager.CreateUserResponse {
+	user := &cloudmanager.User{
+		Username:     email,
+		FirstName:    firstName,
+		LastName:     lastName,
+		EmailAddress: email,
+		ID:           "1",
+		Links:        nil,
+		Roles:        nil,
 	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
-
-	return cmd
+	return &cloudmanager.CreateUserResponse{
+		APIKey: "123",
+		User:   user,
+	}
 }

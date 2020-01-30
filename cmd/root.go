@@ -50,8 +50,10 @@ func init() {
 	rootCmd.AddCommand(cli.ConfigBuilder())
 	// Atlas commands
 	rootCmd.AddCommand(cli.AtlasBuilder())
-	// C/OM commands
+	// CM commands
 	rootCmd.AddCommand(cli.CloudManagerBuilder())
+	// OM commands
+	rootCmd.AddCommand(cli.OpsManagerBuilder())
 	// IAM commands
 	rootCmd.AddCommand(cli.IAMBuilder())
 

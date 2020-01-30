@@ -18,14 +18,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasBuilder() *cobra.Command {
+func OpsManagerOwnerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: "Atlas operations.",
+		Use:   "owner",
+		Short: "Owner management for Ops Manager.",
 	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
 
+	cmd.AddCommand(OpsManagerOwnerCreateBuilder())
 	return cmd
 }

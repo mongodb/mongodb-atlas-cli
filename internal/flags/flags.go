@@ -31,6 +31,9 @@ const (
 	Backup       = "backup"       // Backup flag
 	Username     = "username"     // Username flag
 	Password     = "password"     // Password flag
+	Email        = "email"        // Email flag
+	FirstName    = "firstName"    // FirstName flag
+	LastName     = "lastName"     // LastName flag
 	Role         = "role"         // Role flag
 	Type         = "type"         // Type flag
 	Comment      = "comment"      // Comment flag
@@ -39,4 +42,5 @@ const (
 	File         = "file"         // File flag
 	FileShort    = "f"            // File flag
 	Force        = "force"        // Force flag
+	WhitelistIps = "whitelistIps" // WhitelistIps flag
 )

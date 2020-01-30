@@ -36,18 +36,18 @@ import (
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
 	BuildIndexes *bool   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath       string  `yaml:"dbPath" json:"db_path"`
+	DBPath       string  `yaml:"dbPath" json:"dbPath"`
 	FCVersion    string  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
 	Hostname     string  `yaml:"hostname" json:"hostname"`
-	LogPath      string  `yaml:"logPath" json:"log_path"`
+	LogPath      string  `yaml:"logPath" json:"logPath"`
 	Name         string  `yaml:"name,omitempty" json:"name,omitempty"`
 	Port         int     `yaml:"port" json:"port"`
 	Priority     float64 `yaml:"priority" json:"priority"`
-	ProcessType  string  `yaml:"processType" json:"process_type"`
-	SlaveDelay   float64 `yaml:"slaveDelay" json:"slave_delay"`
+	ProcessType  string  `yaml:"processType" json:"processType"`
+	SlaveDelay   float64 `yaml:"slaveDelay" json:"slaveDelay"`
 	Version      string  `yaml:"version,omitempty" json:"version,omitempty"`
 	Votes        float64 `yaml:"votes" json:"votes"`
-	ArbiterOnly  bool    `yaml:"arbiterOnly" json:"arbiter_only"`
+	ArbiterOnly  bool    `yaml:"arbiterOnly" json:"arbiterOnly"`
 	Disabled     bool    `yaml:"disabled" json:"disabled"`
 	Hidden       bool    `yaml:"hidden" json:"hidden"`
 }

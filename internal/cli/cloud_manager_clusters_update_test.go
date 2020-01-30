@@ -49,23 +49,23 @@ func TestCloudManagerClustersUpdate_Run(t *testing.T) {
 ---
 name: "myReplicaSet"
 version: 4.2.2
-feature_compatibility_version: 4.2
+featureCompatibilityVersion: 4.2
 processes:
   - hostname: host0
-    db_path: /data/myReplicaSet/rs1
-    log_path: /data/myReplicaSet/rs1/mongodb.log
+    dbPath: /data/myReplicaSet/rs1
+    logPath: /data/myReplicaSet/rs1/mongodb.log
     priority: 1
     votes: 1
     port: 29010
   - hostname: host1
-    db_path: /data/myReplicaSet/rs2
-    log_path: /data/myReplicaSet/rs2/mongodb.log
+    dbPath: /data/myReplicaSet/rs2
+    logPath: /data/myReplicaSet/rs2/mongodb.log
     priority: 1
     votes: 1
     port: 29020
   - hostname: host2
-    db_path: /data/myReplicaSet/rs3
-    log_path: /data/myReplicaSet/rs3/mongodb.log
+    dbPath: /data/myReplicaSet/rs3
+    logPath: /data/myReplicaSet/rs3/mongodb.log
     priority: 1
     votes: 1
     port: 29030`

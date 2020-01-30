@@ -124,7 +124,7 @@ func (c *ClusterConfig) PatchAutomationConfig(out *cloudmanager.AutomationConfig
 
 // toReplicaSet convert from cli config to cloudmanager.ReplicaSet
 func (c *ClusterConfig) toReplicaSet() (*cloudmanager.ReplicaSet, error) {
-	protocolVer, err := protocolVer(c.Version)
+	protocolVer, err := protocolVer(c.FCVersion)
 	if err != nil {
 		return nil, err
 	}

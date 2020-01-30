@@ -17,8 +17,8 @@ package convert
 import (
 	"testing"
 
-	"github.com/10gen/mcli/internal/fixtures"
 	"github.com/go-test/deep"
+	"github.com/mongodb/mcli/internal/fixtures"
 )
 
 func TestFromAutomationConfig(t *testing.T) {

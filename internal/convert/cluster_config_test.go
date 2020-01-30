@@ -17,9 +17,9 @@ package convert
 import (
 	"testing"
 
-	"github.com/10gen/mcli/internal/fixtures"
 	"github.com/go-test/deep"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/mongodb/mcli/internal/fixtures"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {

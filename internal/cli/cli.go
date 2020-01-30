@@ -15,7 +15,7 @@
 package cli
 
 import (
-	"github.com/10gen/mcli/internal/config"
+	"github.com/mongodb/mcli/internal/config"
 )
 
 type globalOpts struct {

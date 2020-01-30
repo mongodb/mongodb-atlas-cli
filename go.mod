@@ -1,4 +1,4 @@
-module github.com/10gen/mcli
+module github.com/mongodb/mcli
 
 go 1.13
 

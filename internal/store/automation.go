@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/mongodb/mcli/internal/config"
 )
 
 type AutomationGetter interface {

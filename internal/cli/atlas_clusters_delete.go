@@ -17,10 +17,10 @@ package cli
 import (
 	"fmt"
 
-	"github.com/10gen/mcli/internal/flags"
-	"github.com/10gen/mcli/internal/store"
-	"github.com/10gen/mcli/internal/usage"
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mcli/internal/flags"
+	"github.com/mongodb/mcli/internal/store"
+	"github.com/mongodb/mcli/internal/usage"
 	"github.com/spf13/cobra"
 )
 

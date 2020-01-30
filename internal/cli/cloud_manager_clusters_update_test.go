@@ -17,9 +17,9 @@ package cli
 import (
 	"testing"
 
-	"github.com/10gen/mcli/internal/fixtures"
-	"github.com/10gen/mcli/internal/mocks"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mcli/internal/fixtures"
+	"github.com/mongodb/mcli/internal/mocks"
 	"github.com/spf13/afero"
 )
 

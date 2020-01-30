@@ -7,7 +7,7 @@ DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.22.2
 
 VERSION=$(shell git describe --always --tags)
-LINKER_FLAGS=-X github.com/10gen/mcli/internal/version.Version=${VERSION}
+LINKER_FLAGS=-X github.com/mongodb/mcli/internal/version.Version=${VERSION}
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on

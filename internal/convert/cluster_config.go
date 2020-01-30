@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/10gen/mcli/internal/search"
 	"github.com/Masterminds/semver"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/mongodb/mcli/internal/search"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
 	cm "github.com/mongodb-labs/pcgc/cloudmanager"
+	"github.com/mongodb/mcli/internal/config"
 )
 
 type OwnerCreator interface {

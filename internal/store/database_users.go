@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/config"
 )
 
 type DatabaseUserCreator interface {

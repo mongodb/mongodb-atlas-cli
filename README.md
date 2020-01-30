@@ -7,7 +7,7 @@
 
 # Installing
 ## Binary
-Download the appropriate version for your platform from [mcli releases](https://github.com/10gen/mcli/releases). 
+Download the appropriate version for your platform from [mcli releases](https://github.com/mongodb/mcli/releases). 
 Once downloaded, the binary can be run from anywhere.
 You don't need to install it into a global location. 
 This works well for shared hosts and other systems where you don't have a privileged account.
@@ -24,7 +24,7 @@ Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/
 The easiest way to get started is to clone `mcli` and install with go:
 
 ```bash
-git clone https://github.com/10gen/mcli.git
+git clone https://github.com/mongodb/mcli.git
 cd mcli
 make install
 ```

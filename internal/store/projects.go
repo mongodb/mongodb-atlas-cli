@@ -18,9 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/config"
 )
 
 type ProjectLister interface {

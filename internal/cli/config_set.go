@@ -17,8 +17,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/10gen/mcli/internal/config"
-	"github.com/10gen/mcli/internal/search"
+	"github.com/mongodb/mcli/internal/config"
+	"github.com/mongodb/mcli/internal/search"
 	"github.com/spf13/cobra"
 )
 

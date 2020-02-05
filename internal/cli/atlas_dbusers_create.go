@@ -113,7 +113,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "create",
 		Short:     "Create a database user for a project.",
-		Example: `  mcli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
+		Example:   `  mcli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

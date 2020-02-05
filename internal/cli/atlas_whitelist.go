@@ -21,7 +21,7 @@ import (
 func AtlasWhitelistBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "whitelist",
-		Short: "Manages IP whitelist for your project.",
+		Short: "Manage the IP whitelist for a project.",
 	}
 	cmd.AddCommand(AtlasWhitelistCreateBuilder())
 

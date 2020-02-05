@@ -22,7 +22,7 @@ func IAMOrganizationsBuilder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "organizations",
 		Short:   "Organization operations.",
-		Long:    "Create, list and manage your MongoDB Cloud organizations.",
+		Long:    "Create, list and manage your MongoDB organizations.",
 		Aliases: []string{"organization", "orgs", "org"},
 	}
 	cmd.AddCommand(IAMOrganizationsListBuilder())

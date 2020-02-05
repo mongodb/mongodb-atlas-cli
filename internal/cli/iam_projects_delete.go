@@ -71,7 +71,7 @@ func IAMProjectsDeleteOpts() *cobra.Command {
 	opts := new(iamProjectsDeleteOpts)
 	cmd := &cobra.Command{
 		Use:   "delete [id]",
-		Short: "Delete a project",
+		Short: "Delete a project.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

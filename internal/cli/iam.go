@@ -21,7 +21,7 @@ import (
 func IAMBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "iam",
-		Short: "Command for working with authentication",
+		Short: "Authentication operations.",
 	}
 	cmd.AddCommand(IAMProjectsBuilder())
 	cmd.AddCommand(IAMOrganizationsBuilder())

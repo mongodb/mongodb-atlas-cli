@@ -89,7 +89,7 @@ func CloudManagerClustersStartupBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "startup [name]",
-		Short: "startup a Cloud Manager cluster.",
+		Short: "Startup a Cloud Manager cluster.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

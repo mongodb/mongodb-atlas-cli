@@ -21,8 +21,8 @@ import (
 func IAMProjectsBuilder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "projects",
-		Short:   "Projects operations",
-		Long:    "Create, list and manage your MongoDB Cloud projects.",
+		Short:   "Project operations.",
+		Long:    "Create, list and manage your MongoDB projects.",
 		Aliases: []string{"project"},
 	}
 	cmd.AddCommand(IAMProjectsListBuilder())

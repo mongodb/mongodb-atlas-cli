@@ -23,8 +23,8 @@ func AtlasClustersBuilder() *cobra.Command {
 		Use:        "clusters",
 		Aliases:    []string{"cluster"},
 		SuggestFor: []string{"replicasets"},
-		Short:      "Manage clusters for your project.",
-		Long:       "The clusters command provides access to your cluster configurations. This lets you create, edit and delete clusters.",
+		Short:      "Manage Atlas clusters for your project.",
+		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
 	}
 	cmd.AddCommand(AtlasClustersCreateBuilder())
 	cmd.AddCommand(AtlasClustersListBuilder())

@@ -70,7 +70,7 @@ func AtlasClustersListBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Atlas clusters for a given project.",
+		Short:   "List Atlas clusters for a project.",
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -56,7 +56,7 @@ func IAMProjectsCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: "Create a project",
+		Short: "Create a project.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

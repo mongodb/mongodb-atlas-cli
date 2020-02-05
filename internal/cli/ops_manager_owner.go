@@ -21,7 +21,7 @@ import (
 func OpsManagerOwnerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "owner",
-		Short: "Owner management for Ops Manager.",
+		Short: "Manage Ops Manager owners.",
 	}
 
 	cmd.AddCommand(OpsManagerOwnerCreateBuilder())

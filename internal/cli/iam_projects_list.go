@@ -61,7 +61,7 @@ func IAMProjectsListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List projects",
+		Short:   "List projects.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

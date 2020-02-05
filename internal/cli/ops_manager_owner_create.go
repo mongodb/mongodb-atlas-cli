@@ -82,7 +82,7 @@ func OpsManagerOwnerCreateBuilder() *cobra.Command {
 	opts := new(opsManagerOwnerCreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create the first user for the installation.",
+		Short: "Create the first user for Ops Manager.",
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

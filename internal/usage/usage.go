@@ -15,31 +15,31 @@
 package usage
 
 const (
-	ProjectID     = "The project ID to use. Overrides config/env settings."
-	OrgID         = "The organization ID to use. Overrides config/env settings."
-	Profile       = "Use a specific profile from your configuration file."
-	Members       = "Number of replica set members."
+	ProjectID     = "Project ID to use. Overrides configuration file or environment variable settings."
+	OrgID         = "Organization ID to use. Overrides configuration file or environment variable settings."
+	Profile       = "Profile to use from your configuration file."
+	Members       = "Number of members in the replica set."
 	InstanceSize  = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB    = "Capacity, in gigabytes, of the host’s root volume."
-	Backup        = "If true, the cluster uses Atlas Continuous Backups for backing up cluster data."
-	MDBVersion    = "Version of the cluster to deploy."
+	Backup        = "If true, uses Atlas Continuous Backups to back up cluster data."
+	MDBVersion    = "MongoDB version of the cluster to deploy."
 	Page          = "Page number."
-	Limit         = "Items per page."
+	Limit         = "Number of items per page."
 	Username      = "Username for authenticating to MongoDB."
-	Password      = "The user’s password."
-	Roles         = "User’s roles and the databases/collections on which the roles apply."
-	Comment       = "Optional comment associated with the whitelist entry."
+	Password      = "User’s password."
+	Roles         = "User's roles and the databases or collections on which the roles apply."
+	Comment       = "Optional description of the whitelist entry."
 	Force         = "Don't ask for confirmation."
-	Email         = "The user’s email"
-	FirstName     = "The user’s first name"
-	LastName      = "The user’s last name"
-	WhitelistIps  = "API key allowed IPs"
-	WhitelistType = `Type of entry.
-On of: cidrBlock|ipAddress`
-	Service = `Cloud service type.
-On of: cloud|cloud-manager|ops-manager`
-	Provider = `Provider name.
-One of: AWS|AZURE|GCP.`
+	Email         = "User’s email address."
+	FirstName     = "User’s first name."
+	LastName      = "User’s last name."
+	WhitelistIps  = "IP addresses to add to the new user’s whitelist."
+	WhitelistType = `Type of whitelist entry.
+Valid values: cidrBlock|ipAddress`
+	Service = `Type of MongoDB service.
+Valid values: cloud|cloud-manager|ops-manager`
+	Provider = `Name of your cloud service provider.
+Valid values: AWS|AZURE|GCP.`
 	Region = `Physical location of your MongoDB cluster.
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
 For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure

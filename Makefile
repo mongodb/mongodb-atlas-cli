@@ -4,7 +4,7 @@ SOURCE_FILES?=./...
 BINARY_NAME=mcli
 
 DESTINATION=./bin/${BINARY_NAME}
-GOLANGCI_VERSION=v1.22.2
+GOLANGCI_VERSION=v1.23.3
 
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mcli/internal/version.Version=${VERSION}

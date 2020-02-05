@@ -1,7 +1,7 @@
 ---
 kind: pipeline
-name: mcli
 type: docker
+name: mcli
 
 steps:
   - name: test
@@ -11,19 +11,18 @@ steps:
         path: /go
     commands:
       - make test
-
   - name: lint
-    image: golangci/golangci-lint:v1.22.0
+    image: golangci/golangci-lint:v1.23.3
     commands:
       - make lint
-
   - name: build
-    image: golang
+    image: golang:1.13
     volumes:
       - name: deps
         path: /go
     commands:
-      - go build
+      - make build
+
 volumes:
   - name: deps
     temp: {}

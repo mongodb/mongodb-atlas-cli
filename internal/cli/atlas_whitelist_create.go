@@ -24,8 +24,9 @@ import (
 )
 
 const (
-	cidrBlock = "cidrBlock"
-	ipAddress = "ipAddress"
+	cidrBlock        = "cidrBlock"
+	ipAddress        = "ipAddress"
+	awsSecurityGroup = "awsSecurityGroup"
 )
 
 type atlasWhitelistCreateOpts struct {
@@ -72,6 +73,8 @@ func (opts *atlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 		projectIPWhitelist.CIDRBlock = opts.entry
 	case ipAddress:
 		projectIPWhitelist.IPAddress = opts.entry
+	case awsSecurityGroup:
+		projectIPWhitelist.AwsSecurityGroup = opts.entry
 	}
 	return projectIPWhitelist
 }
@@ -83,7 +86,7 @@ func AtlasWhitelistCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [entry]",
-		Short: "Create a project IP whitelist.",
+		Short: "Create an IP whitelist for a project.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

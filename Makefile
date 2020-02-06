@@ -48,6 +48,7 @@ addlicense:
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
+	@echo "==> Generating mocks"
 	mockgen -source=internal/store/automation.go -destination=internal/mocks/mock_automation.go -package=mocks
 	mockgen -source=internal/store/clusters.go -destination=internal/mocks/mock_clusters.go -package=mocks
 	mockgen -source=internal/store/database_users.go -destination=internal/mocks/mock_database_users.go -package=mocks
@@ -58,14 +59,22 @@ gen-mocks: ## Generate mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin
+	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
 	go install -ldflags "${LINKER_FLAGS}"
 
+.PHONY: gen-notices
+gen-notices: ## Generate 3rd party notices
+	@echo "==> Generating 3rd party notices"
+	@chmod -R 777 ./third_party_notices
+	@rm -Rf third_party_notices
+	go-licenses save "github.com/mongodb/mcli" --save_path=third_party_notices
+
 .PHONY: release
-release:
+release: gen-notices ## Use goreleaser to generate builds and publish
 	goreleaser --rm-dist
 
 .PHONY: list

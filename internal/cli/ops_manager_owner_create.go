@@ -29,7 +29,7 @@ type opsManagerOwnerCreateOpts struct {
 	password     string
 	firstName    string
 	lastName     string
-	whitelistIps string
+	whitelistIps []string
 	store        store.OwnerCreator
 }
 
@@ -99,7 +99,7 @@ func OpsManagerOwnerCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
 	cmd.Flags().StringVar(&opts.firstName, flags.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flags.LastName, "", usage.LastName)
-	cmd.Flags().StringVar(&opts.whitelistIps, flags.WhitelistIps, "", usage.WhitelistIps)
+	cmd.Flags().StringSliceVar(&opts.whitelistIps, flags.WhitelistIP, []string{}, usage.WhitelistIps)
 
 	_ = cmd.MarkFlagRequired(flags.Username)
 	_ = cmd.MarkFlagRequired(flags.FirstName)

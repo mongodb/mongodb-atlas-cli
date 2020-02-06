@@ -9,14 +9,18 @@ import (
 )
 
 type OwnerCreator interface {
-	CreateOwner(*cm.User, string) (*cm.CreateUserResponse, error)
+	CreateOwner(*cm.User, []string) (*cm.CreateUserResponse, error)
 }
 
 // CreateOwner encapsulate the logic to manage different cloud providers
-func (s *Store) CreateOwner(u *cm.User, IPs string) (*cm.CreateUserResponse, error) {
+func (s *Store) CreateOwner(u *cm.User, IPs []string) (*cm.CreateUserResponse, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		opts := &cm.WhitelistOpts{Whitelist: IPs}
+		var opts *cm.WhitelistOpts
+		if len(IPs) > 0 {
+			opts = &cm.WhitelistOpts{Whitelist: IPs}
+		}
+
 		result, _, err := s.client.(*cm.Client).UnauthUsers.CreateFirstUser(context.Background(), u, opts)
 		return result, err
 	default:

@@ -17,7 +17,7 @@ steps:
       - snyk test
     environment:
       SNYK_TOKEN:
-        from_secret: skyk
+        from_secret: skyk_token
     when:
       branch:
         - master

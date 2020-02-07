@@ -3,25 +3,47 @@ kind: pipeline
 type: docker
 name: mcli
 
+platform:
+  os: linux
+  arch: amd64
+
 steps:
+  - name: dependencies
+    image: golang:1.13
+    commands:
+      - curl -sL https://deb.nodesource.com/setup_12.x | bash -
+      - apt-get install -y nodejs
+      - npm install -g snyk
+      - snyk test
+    environment:
+      SNYK:
+        from_secret: skyk
+    when:
+      branch:
+        - master
+      event:
+        - push
+
   - name: test
     image: golang:1.13
+    commands:
+      - make test
     volumes:
       - name: deps
         path: /go
-    commands:
-      - make test
+
   - name: lint
     image: golangci/golangci-lint:v1.23.3
     commands:
       - make lint
+
   - name: build
     image: golang:1.13
+    commands:
+      - make build
     volumes:
       - name: deps
         path: /go
-    commands:
-      - make build
 
 volumes:
   - name: deps

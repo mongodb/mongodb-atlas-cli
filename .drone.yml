@@ -14,11 +14,10 @@ steps:
       - curl -sL https://deb.nodesource.com/setup_12.x | bash -
       - apt-get install -y nodejs
       - npm install -g snyk
-      - snyk auth
       - snyk test
     environment:
       SNYK_TOKEN:
-        from_secret: skyk_token
+        from_secret: snyk_token
     when:
       branch:
         - master

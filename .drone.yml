@@ -48,7 +48,7 @@ steps:
   - name: e2e
     image: golang:1.13
     commands:
-      - e2e-test
+      - make e2e-test
     volumes:
       - name: deps
         path: /go

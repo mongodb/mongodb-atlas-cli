@@ -29,25 +29,49 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	email := "test@test.com"
+	password := "Passw0rd!"
 	firstName := "Testy"
 	lastName := "McTestyson"
 	expected := fixtures.OwnerResponse(email, firstName, lastName)
 
-	createOpts := &opsManagerOwnerCreateOpts{
-		email:     email,
-		password:  "Passw0rd!",
-		firstName: firstName,
-		lastName:  lastName,
-		store:     mockStore,
-	}
+	t.Run("no whitelist", func(t *testing.T) {
+		createOpts := &opsManagerOwnerCreateOpts{
+			email:     email,
+			password:  password,
+			firstName: firstName,
+			lastName:  lastName,
+			store:     mockStore,
+		}
 
-	mockStore.
-		EXPECT().
-		CreateOwner(createOpts.newOwner(), createOpts.whitelistIps).Return(expected, nil).
-		Times(1)
+		mockStore.
+			EXPECT().
+			CreateOwner(createOpts.newOwner(), createOpts.whitelistIps).Return(expected, nil).
+			Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		err := createOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("with whitelist", func(t *testing.T) {
+		createOpts := &opsManagerOwnerCreateOpts{
+			email:        email,
+			password:     password,
+			firstName:    firstName,
+			lastName:     lastName,
+			store:        mockStore,
+			whitelistIps: []string{"192.168.0.1"},
+		}
+
+		mockStore.
+			EXPECT().
+			CreateOwner(createOpts.newOwner(), createOpts.whitelistIps).Return(expected, nil).
+			Times(1)
+
+		err := createOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }

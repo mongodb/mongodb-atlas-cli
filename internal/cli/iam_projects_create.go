@@ -29,6 +29,10 @@ type iamProjectsCreateOpts struct {
 }
 
 func (opts *iamProjectsCreateOpts) init() error {
+	if opts.OrgID() == "" {
+		return errMissingOrgID
+	}
+
 	s, err := store.New()
 
 	if err != nil {

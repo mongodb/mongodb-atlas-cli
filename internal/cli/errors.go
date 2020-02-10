@@ -21,3 +21,4 @@ import (
 )
 
 var errMissingProjectID = fmt.Errorf(`required flag(s) "%s" not set`, flags.ProjectID)
+var errMissingOrgID = fmt.Errorf(`required flag(s) "%s" not set`, flags.OrgID)

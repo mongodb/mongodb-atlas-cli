@@ -37,14 +37,6 @@ steps:
     commands:
       - make lint
 
-  - name: build
-    image: golang:1.13
-    commands:
-      - make build
-    volumes:
-      - name: deps
-        path: /go
-
   - name: e2e
     image: golang:1.13
     commands:

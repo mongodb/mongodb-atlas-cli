@@ -55,6 +55,8 @@ steps:
         from_secret: mcli_service
       MCLI_ORG_ID:
         from_secret: mcli_org_id
+      MCLI_PROJECT_ID:
+        from_secret: mcli_project_id
 
 volumes:
   - name: deps

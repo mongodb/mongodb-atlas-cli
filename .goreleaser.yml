@@ -28,6 +28,24 @@ archives:
     - README.md
     - LICENSE
     - third_party_notices/**/*
+brews:
+- name: mcli
+  ids:
+    - mcli
+  github:
+    owner: mongodb-labs
+    name: homebrew-mcli
+  url_template: "https://github.com/mongodb/mcli/releases/{{ .Tag }}/{{ .ArtifactName }}"
+  commit_author:
+    name: gustavo.bazan
+    email: gustavo.bazan@mongodb.com
+  homepage: "https://github.com/mongodb/mcli"
+  description: "A tool to manage MongoDB Cloud."
+  skip_upload: true
+  test: |
+    system "#{bin}/mcli --version"
+  install: |
+    bin.install "mcli"
 checksum:
   name_template: 'checksums.txt'
 snapshot:

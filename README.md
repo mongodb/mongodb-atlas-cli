@@ -6,6 +6,7 @@
 ![Screenshot 2020-01-03 at 10 49 27](https://user-images.githubusercontent.com/461027/73472371-d6656480-4382-11ea-8bfb-535d91cf1fb4.png)
 
 # Installing
+
 ## Binary
 Download the appropriate version for your platform from [mcli releases](https://github.com/mongodb/mcli/releases). 
 Once downloaded, the binary can be run from anywhere.
@@ -13,6 +14,11 @@ You don't need to install it into a global location.
 This works well for shared hosts and other systems where you don't have a privileged account.
 
 Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/bin` is the most probable location.
+
+## Hombrew
+```bash
+brew install puma/puma/puma-dev
+```
 
 ## Source 
 

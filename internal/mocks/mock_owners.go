@@ -34,7 +34,7 @@ func (m *MockOwnerCreator) EXPECT() *MockOwnerCreatorMockRecorder {
 }
 
 // CreateOwner mocks base method
-func (m *MockOwnerCreator) CreateOwner(arg0 *cloudmanager.User, arg1 string) (*cloudmanager.CreateUserResponse, error) {
+func (m *MockOwnerCreator) CreateOwner(arg0 *cloudmanager.User, arg1 []string) (*cloudmanager.CreateUserResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOwner", arg0, arg1)
 	ret0, _ := ret[0].(*cloudmanager.CreateUserResponse)

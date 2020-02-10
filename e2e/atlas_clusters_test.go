@@ -18,10 +18,12 @@ package e2e
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -37,9 +39,11 @@ func TestAtlasClusters(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	atlasEntity := "atlas"
 	clustersEntity := "clusters"
-	clusterName := "e2e-cluster"
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "create", clusterName, "--region=US_EAST_1", "--members=3", "--instanceSize=M5", "--provider=AWS", "--mdbVersion=4.2")

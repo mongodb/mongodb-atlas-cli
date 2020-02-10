@@ -42,5 +42,5 @@ const (
 	File         = "file"         // File flag
 	FileShort    = "f"            // File flag
 	Force        = "force"        // Force flag
-	WhitelistIps = "whitelistIps" // WhitelistIps flag
+	WhitelistIP  = "whitelistIp"  // WhitelistIP flag
 )

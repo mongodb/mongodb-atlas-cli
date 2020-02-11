@@ -46,7 +46,15 @@ func TestAtlasClusters(t *testing.T) {
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "create", clusterName, "--region=US_EAST_1", "--members=3", "--instanceSize=M5", "--provider=AWS", "--mdbVersion=4.2")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"create", clusterName,
+			"--region=US_EAST_1",
+			"--members=3",
+			"--instanceSize=M5",
+			"--provider=AWS",
+			"--mdbVersion=4.2")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -94,8 +102,9 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if string(resp) != fmt.Sprintf("Cluster '%s' deleted\n", clusterName) {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), fmt.Sprintf("Cluster '%s' deleted\n", clusterName))
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
 }

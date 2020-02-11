@@ -18,12 +18,13 @@ package e2e
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
+	"time"
 
-	"github.com/google/uuid"
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
@@ -40,11 +41,8 @@ func TestAtlasIAMProjects(t *testing.T) {
 
 	iamEntity := "iam"
 	projectEntity := "projects"
-	u, err := uuid.NewRandom()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	projectName := "e2e-test-" + u.String()
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	projectName := fmt.Sprintf("e2e-proj-%v", r.Uint32())
 
 	var projectID string
 	t.Run("Create", func(t *testing.T) {
@@ -88,8 +86,9 @@ func TestAtlasIAMProjects(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if string(resp) != fmt.Sprintf("Project '%s' deleted\n", projectID) {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), fmt.Sprintf("Project '%s' deleted\n", projectID))
+		expected := fmt.Sprintf("Project '%s' deleted\n", projectID)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
 }

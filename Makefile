@@ -5,6 +5,7 @@ BINARY_NAME=mcli
 
 DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.23.3
+COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mcli/internal/version.Version=${VERSION}
@@ -32,7 +33,7 @@ fmt: ## Format code
 .PHONY: test
 test: ## Run tests
 	@echo "==> Running tests..."
-	go test $(SOURCE_FILES) -timeout=30s -parallel=4
+	go test -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: lint
 lint: ## Run linter
@@ -61,6 +62,12 @@ gen-mocks: ## Generate mocks
 build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
+
+.PHONY: e2e-test
+e2e-test: build ## Run E2E tests
+	@echo "==> Running E2E tests..."
+	# the target assumes the MCLI-* environment variables are exported
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

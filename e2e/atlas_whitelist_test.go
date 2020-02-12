@@ -39,7 +39,7 @@ func TestAtlasWhitelist(t *testing.T) {
 
 	atlasEntity := "atlas"
 	whitelistEntity := "whitelist"
-	entry := "77.107.234.162"
+	entry := "192.168.0.1"
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

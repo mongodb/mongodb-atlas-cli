@@ -63,7 +63,7 @@ func (opts *atlasWhitelistDeleteOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
-	prompt := prompts.NewDeleteConfirmation(opts.entry)
+	prompt := prompts.NewDeleteConfirm(opts.entry)
 	return survey.AskOne(prompt, &opts.confirm)
 }
 

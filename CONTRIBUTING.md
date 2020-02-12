@@ -23,6 +23,7 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
+- Run `make e2e` will run end to end tests against an Atlas instance, plase make sure too have set `MCLI_*` variables.
 - Run `make build` to generate a local binary in the `./bin` folder.
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 
@@ -40,3 +41,8 @@ For a `mcli scope newCommand` command a file `internal/cli/scope_new_command.go`
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.
+
+## Third party dependencies
+
+We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).
+To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI) 

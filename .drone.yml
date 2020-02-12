@@ -14,7 +14,7 @@ steps:
       - curl -sL https://deb.nodesource.com/setup_12.x | bash -
       - apt-get install -y nodejs
       - npm install -g snyk
-      - snyk test
+      - snyk test --org=cloud
     environment:
       SNYK_TOKEN:
         from_secret: snyk_token

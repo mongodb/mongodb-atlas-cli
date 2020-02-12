@@ -15,16 +15,33 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mcli/internal/mocks"
 )
 
-func AtlasWhitelistBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "whitelist",
-		Short: "Manage the IP whitelist for a project.",
-	}
-	cmd.AddCommand(AtlasWhitelistCreateBuilder())
-	cmd.AddCommand(AtlasWhitelistDeleteBuilder())
+func TestAtlasWhitelistDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPWhitelistDeleter(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	deleteOpts := &atlasWhitelistDeleteOpts{
+		globalOpts: newGlobalOpts(),
+		entry:      "test",
+		confirm:    true,
+		store:      mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteProjectIPWhitelist(deleteOpts.projectID, deleteOpts.entry).
+		Return(nil).
+		Times(1)
+
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

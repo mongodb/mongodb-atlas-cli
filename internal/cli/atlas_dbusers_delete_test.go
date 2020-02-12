@@ -15,21 +15,33 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mcli/internal/mocks"
 )
 
-func AtlasDBUsersBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "dbusers",
-		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
-		Short:   "Manage database users for your project.",
-		Long: `
-The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
-Each user has a set of roles that provide access to the project’s databases. 
-A user’s roles apply to all the clusters in the project.`,
-	}
-	cmd.AddCommand(AtlasDBUsersCreateBuilder())
-	cmd.AddCommand(AtlasDBUsersDeleteBuilder())
+func TestAtlasDBUsersDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockDatabaseUserDeleter(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	deleteOpts := &atlasDBUsersDeleteOpts{
+		globalOpts: newGlobalOpts(),
+		username:   "test",
+		confirm:    true,
+		store:      mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteDatabaseUser(deleteOpts.projectID, deleteOpts.username).
+		Return(nil).
+		Times(1)
+
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

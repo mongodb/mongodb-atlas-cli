@@ -48,6 +48,43 @@ func (mr *MockProjectIPWhitelistCreatorMockRecorder) CreateProjectIPWhitelist(ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistCreator)(nil).CreateProjectIPWhitelist), arg0)
 }
 
+// MockProjectIPWhitelistDeleter is a mock of ProjectIPWhitelistDeleter interface
+type MockProjectIPWhitelistDeleter struct {
+	ctrl     *gomock.Controller
+	recorder *MockProjectIPWhitelistDeleterMockRecorder
+}
+
+// MockProjectIPWhitelistDeleterMockRecorder is the mock recorder for MockProjectIPWhitelistDeleter
+type MockProjectIPWhitelistDeleterMockRecorder struct {
+	mock *MockProjectIPWhitelistDeleter
+}
+
+// NewMockProjectIPWhitelistDeleter creates a new mock instance
+func NewMockProjectIPWhitelistDeleter(ctrl *gomock.Controller) *MockProjectIPWhitelistDeleter {
+	mock := &MockProjectIPWhitelistDeleter{ctrl: ctrl}
+	mock.recorder = &MockProjectIPWhitelistDeleterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockProjectIPWhitelistDeleter) EXPECT() *MockProjectIPWhitelistDeleterMockRecorder {
+	return m.recorder
+}
+
+// DeleteProjectIPWhitelist mocks base method
+func (m *MockProjectIPWhitelistDeleter) DeleteProjectIPWhitelist(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteProjectIPWhitelist", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteProjectIPWhitelist indicates an expected call of DeleteProjectIPWhitelist
+func (mr *MockProjectIPWhitelistDeleterMockRecorder) DeleteProjectIPWhitelist(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistDeleter)(nil).DeleteProjectIPWhitelist), arg0, arg1)
+}
+
 // MockProjectIPWhitelistStore is a mock of ProjectIPWhitelistStore interface
 type MockProjectIPWhitelistStore struct {
 	ctrl     *gomock.Controller
@@ -84,4 +121,18 @@ func (m *MockProjectIPWhitelistStore) CreateProjectIPWhitelist(arg0 *mongodbatla
 func (mr *MockProjectIPWhitelistStoreMockRecorder) CreateProjectIPWhitelist(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistStore)(nil).CreateProjectIPWhitelist), arg0)
+}
+
+// DeleteProjectIPWhitelist mocks base method
+func (m *MockProjectIPWhitelistStore) DeleteProjectIPWhitelist(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteProjectIPWhitelist", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteProjectIPWhitelist indicates an expected call of DeleteProjectIPWhitelist
+func (mr *MockProjectIPWhitelistStoreMockRecorder) DeleteProjectIPWhitelist(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistStore)(nil).DeleteProjectIPWhitelist), arg0, arg1)
 }

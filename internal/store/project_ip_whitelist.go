@@ -26,8 +26,13 @@ type ProjectIPWhitelistCreator interface {
 	CreateProjectIPWhitelist(*atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error)
 }
 
+type ProjectIPWhitelistDeleter interface {
+	DeleteProjectIPWhitelist(string, string) error
+}
+
 type ProjectIPWhitelistStore interface {
 	ProjectIPWhitelistCreator
+	ProjectIPWhitelistDeleter
 }
 
 // CreateProjectIPWhitelist encapsulate the logic to manage different cloud providers
@@ -38,5 +43,16 @@ func (s *Store) CreateProjectIPWhitelist(whitelist *atlas.ProjectIPWhitelist) ([
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteProjectIPWhitelist encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteProjectIPWhitelist(projectID, whitelistEntry string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).ProjectIPWhitelist.Delete(context.Background(), projectID, whitelistEntry)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

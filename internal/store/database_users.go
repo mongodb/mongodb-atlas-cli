@@ -26,8 +26,13 @@ type DatabaseUserCreator interface {
 	CreateDatabaseUser(*atlas.DatabaseUser) (*atlas.DatabaseUser, error)
 }
 
+type DatabaseUserDeleter interface {
+	DeleteDatabaseUser(string, string) error
+}
+
 type DatabaseUserStore interface {
 	DatabaseUserCreator
+	DatabaseUserDeleter
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers
@@ -38,5 +43,15 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+func (s *Store) DeleteDatabaseUser(groupID, username string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), groupID, username)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

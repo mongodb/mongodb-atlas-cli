@@ -55,14 +55,14 @@ func TestAtlasWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		user := mongodbatlas.ProjectIPWhitelist{}
-		err = json.Unmarshal(resp, &user)
+		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
+		err = json.Unmarshal(resp, &entries)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if user.IPAddress != entry {
-			t.Errorf("got=%#v\nwant=%#v\n", user.IPAddress, entry)
+		if entries[0].IPAddress != entry {
+			t.Errorf("got=%#v\nwant=%#v\n", entries[0].IPAddress, entry)
 		}
 	})
 

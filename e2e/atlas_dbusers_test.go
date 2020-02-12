@@ -80,7 +80,7 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", username)
+		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

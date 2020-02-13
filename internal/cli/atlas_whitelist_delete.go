@@ -46,7 +46,7 @@ func AtlasWhitelistDeleteBuilder() *cobra.Command {
 	opts := &atlasWhitelistDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
-			successMessage: "Project whitelist entry '%s' deleted\n\n",
+			successMessage: "Project whitelist entry '%s' deleted\n",
 			failMessage:    "Project whitelist entry not deleted",
 		},
 	}

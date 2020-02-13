@@ -52,6 +52,9 @@ func (opts *globalOpts) OrgID() string {
 	return opts.orgID
 }
 
+// deleteOpts options required when deleting a resource.
+// A command can embed this structure and then safely rely on the methods Confirm, DeleteFromProject or Delete
+// to manage the interactions with the user
 type deleteOpts struct {
 	entry          string
 	confirm        bool
@@ -59,8 +62,11 @@ type deleteOpts struct {
 	failMessage    string
 }
 
+// DeleterFromProject a function to delete from the store.
 type DeleterFromProject func(projectID string, entry string) error
 
+// DeleteFromProject deletes a resource from a project, it expects a callback
+// that should perform the deletion from the store.
 func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string) error {
 	if !opts.confirm {
 		fmt.Println(opts.failMessage)
@@ -77,8 +83,11 @@ func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string
 	return nil
 }
 
+// Deleter a function to delete from the store.
 type Deleter func(entry string) error
 
+// Delete deletes a resource not associated to a project, it expects a callback
+//// that should perform the deletion from the store.
 func (opts *deleteOpts) Delete(d Deleter) error {
 	if !opts.confirm {
 		fmt.Println(opts.failMessage)
@@ -95,6 +104,7 @@ func (opts *deleteOpts) Delete(d Deleter) error {
 	return nil
 }
 
+// Confirm confirms that the resource should be deleted
 func (opts *deleteOpts) Confirm() error {
 	if opts.confirm {
 		return nil

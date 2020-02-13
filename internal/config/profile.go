@@ -15,6 +15,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -169,7 +170,8 @@ func (p Profile) Load() error {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
 		// ignore if it doesn't exists
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+		var e viper.ConfigFileNotFoundError
+		if errors.As(err, &e) {
 			return nil
 		}
 		return err

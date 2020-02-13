@@ -40,17 +40,15 @@ func (opts *cmClustersShutdownOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *cmClustersShutdownOpts) Run() error {
+	if !opts.confirm {
+		return nil
+	}
 	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {

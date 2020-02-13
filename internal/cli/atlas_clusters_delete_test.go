@@ -29,14 +29,16 @@ func TestAtlasClustersDelete_Run(t *testing.T) {
 
 	deleteOpts := &atlasClustersDeleteOpts{
 		globalOpts: newGlobalOpts(),
-		name:       "test",
-		confirm:    true,
-		store:      mockStore,
+		deleteOpts: &deleteOpts{
+			confirm: true,
+			entry:   "test",
+		},
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteCluster(deleteOpts.projectID, deleteOpts.name).
+		DeleteCluster(deleteOpts.projectID, deleteOpts.entry).
 		Return(nil).
 		Times(1)
 

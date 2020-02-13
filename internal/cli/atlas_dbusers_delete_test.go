@@ -29,14 +29,16 @@ func TestAtlasDBUsersDelete_Run(t *testing.T) {
 
 	deleteOpts := &atlasDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),
-		username:   "test",
-		confirm:    true,
-		store:      mockStore,
+		deleteOpts: &deleteOpts{
+			confirm: true,
+			entry:   "test",
+		},
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteDatabaseUser(deleteOpts.projectID, deleteOpts.username).
+		DeleteDatabaseUser(deleteOpts.projectID, deleteOpts.entry).
 		Return(nil).
 		Times(1)
 

@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
@@ -25,50 +22,28 @@ import (
 )
 
 type iamProjectsDeleteOpts struct {
-	projectID string
-	confirm   bool
-	store     store.ProjectDeleter
+	*deleteOpts
+	store store.ProjectDeleter
 }
 
 func (opts *iamProjectsDeleteOpts) init() error {
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *iamProjectsDeleteOpts) Run() error {
-	if !opts.confirm {
-		fmt.Println("Project not deleted")
-		return nil
-	}
-	err := opts.store.DeleteProject(opts.projectID)
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Project '%s' deleted\n", opts.projectID)
-	return nil
-}
-
-func (opts *iamProjectsDeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete project '%s'?", opts.projectID),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
+	return opts.Delete(opts.store.DeleteProject)
 }
 
 // mcli iam project(s) delete [id] [--orgId orgId]
 func IAMProjectsDeleteOpts() *cobra.Command {
-	opts := new(iamProjectsDeleteOpts)
+	opts := &iamProjectsDeleteOpts{
+		deleteOpts: &deleteOpts{
+			failMessage:    "Project not deleted",
+			successMessage: "Project '%s' deleted\n",
+		},
+	}
 	cmd := &cobra.Command{
 		Use:   "delete [id]",
 		Short: "Delete a project.",
@@ -77,7 +52,7 @@ func IAMProjectsDeleteOpts() *cobra.Command {
 			if err := opts.init(); err != nil {
 				return err
 			}
-			opts.projectID = args[0]
+			opts.entry = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

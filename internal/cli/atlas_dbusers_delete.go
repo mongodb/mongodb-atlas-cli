@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
@@ -26,9 +23,8 @@ import (
 
 type atlasDBUsersDeleteOpts struct {
 	*globalOpts
-	username string
-	confirm  bool
-	store    store.DatabaseUserDeleter
+	*deleteOpts
+	store store.DatabaseUserDeleter
 }
 
 func (opts *atlasDBUsersDeleteOpts) init() error {
@@ -36,42 +32,23 @@ func (opts *atlasDBUsersDeleteOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasDBUsersDeleteOpts) Run() error {
-	err := opts.store.DeleteDatabaseUser(opts.ProjectID(), opts.username)
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("DB user '%s' deleted\n", opts.username)
-
-	return nil
-}
-
-func (opts *atlasDBUsersDeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete: %s", opts.username),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
+	return opts.DeleteFromProject(opts.store.DeleteDatabaseUser, opts.projectID)
 }
 
 // mcli atlas dbuser(s) delete <username> --force
 func AtlasDBUsersDeleteBuilder() *cobra.Command {
 	opts := &atlasDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),
+		deleteOpts: &deleteOpts{
+			successMessage: "DB user '%s' deleted\n",
+			failMessage:    "DB user not deleted",
+		},
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [username]",
@@ -82,7 +59,7 @@ func AtlasDBUsersDeleteBuilder() *cobra.Command {
 			if err := opts.init(); err != nil {
 				return err
 			}
-			opts.username = args[0]
+			opts.entry = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

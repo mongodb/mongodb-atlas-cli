@@ -15,7 +15,11 @@
 package cli
 
 import (
+	"fmt"
+
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/config"
+	"github.com/mongodb/mcli/internal/prompts"
 )
 
 type globalOpts struct {
@@ -46,4 +50,56 @@ func (opts *globalOpts) OrgID() string {
 	}
 	opts.orgID = config.OrgID()
 	return opts.orgID
+}
+
+type deleteOpts struct {
+	entry          string
+	confirm        bool
+	successMessage string
+	failMessage    string
+}
+
+type DeleterFromProject func(projectID string, entry string) error
+
+func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string) error {
+	if !opts.confirm {
+		fmt.Println(opts.failMessage)
+		return nil
+	}
+	err := d(projectID, opts.entry)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf(opts.successMessage, opts.entry)
+
+	return nil
+}
+
+type Deleter func(entry string) error
+
+func (opts *deleteOpts) Delete(d Deleter) error {
+	if !opts.confirm {
+		fmt.Println(opts.failMessage)
+		return nil
+	}
+	err := d(opts.entry)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf(opts.successMessage, opts.entry)
+
+	return nil
+}
+
+func (opts *deleteOpts) Confirm() error {
+	if opts.confirm {
+		return nil
+	}
+
+	prompt := prompts.NewDeleteConfirm(opts.entry)
+	return survey.AskOne(prompt, &opts.confirm)
 }

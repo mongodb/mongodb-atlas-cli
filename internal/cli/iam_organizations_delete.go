@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
@@ -25,46 +22,28 @@ import (
 )
 
 type iamOrganizationsDeleteOpts struct {
-	orgID   string
-	confirm bool
-	store   store.OrganizationDeleter
+	*deleteOpts
+	store store.OrganizationDeleter
 }
 
 func (opts *iamOrganizationsDeleteOpts) init() error {
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *iamOrganizationsDeleteOpts) Run() error {
-	err := opts.store.DeleteOrganization(opts.orgID)
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Organization '%s' deleted\n", opts.orgID)
-	return nil
-}
-
-func (opts *iamOrganizationsDeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete organization '%s'?", opts.orgID),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
+	return opts.Delete(opts.store.DeleteOrganization)
 }
 
 // mcli iam organization(s) delete [id] [--orgId orgId]
 func IAMOrganizationsDeleteBuilder() *cobra.Command {
-	opts := new(iamOrganizationsDeleteOpts)
+	opts := &iamOrganizationsDeleteOpts{
+		deleteOpts: &deleteOpts{
+			failMessage:    "Organization not deleted",
+			successMessage: "Organization '%s' deleted\n",
+		},
+	}
 	cmd := &cobra.Command{
 		Use:   "delete [ID]",
 		Short: "Delete an organization.",
@@ -73,7 +52,7 @@ func IAMOrganizationsDeleteBuilder() *cobra.Command {
 			if err := opts.init(); err != nil {
 				return err
 			}
-			opts.orgID = args[0]
+			opts.entry = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

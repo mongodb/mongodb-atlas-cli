@@ -15,11 +15,7 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/prompts"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,9 +23,8 @@ import (
 
 type atlasWhitelistDeleteOpts struct {
 	*globalOpts
-	entry   string
-	confirm bool
-	store   store.ProjectIPWhitelistDeleter
+	*deleteOpts
+	store store.ProjectIPWhitelistDeleter
 }
 
 func (opts *atlasWhitelistDeleteOpts) init() error {
@@ -37,40 +32,23 @@ func (opts *atlasWhitelistDeleteOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasWhitelistDeleteOpts) Run() error {
-	err := opts.store.DeleteProjectIPWhitelist(opts.ProjectID(), opts.entry)
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Project whitelist entry '%s' deleted\n", opts.entry)
-
-	return nil
-}
-
-func (opts *atlasWhitelistDeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := prompts.NewDeleteConfirm(opts.entry)
-	return survey.AskOne(prompt, &opts.confirm)
+	return opts.DeleteFromProject(opts.store.DeleteProjectIPWhitelist, opts.projectID)
 }
 
 // mcli atlas whitelist delete <entry> --force
 func AtlasWhitelistDeleteBuilder() *cobra.Command {
 	opts := &atlasWhitelistDeleteOpts{
 		globalOpts: newGlobalOpts(),
+		deleteOpts: &deleteOpts{
+			successMessage: "Project whitelist entry '%s' deleted\n\n",
+			failMessage:    "Project whitelist entry not deleted",
+		},
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [entry]",

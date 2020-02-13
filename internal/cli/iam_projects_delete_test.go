@@ -29,13 +29,16 @@ func TestIAMProjectsDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteProject(gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(nil).
+		DeleteProject(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
 		Times(1)
 
 	createOpts := &iamProjectsDeleteOpts{
-		store:     mockStore,
-		confirm:   true,
-		projectID: "5a0a1e7e0f2912c554080adc",
+		store: mockStore,
+		deleteOpts: &deleteOpts{
+			entry:   "5a0a1e7e0f2912c554080adc",
+			confirm: true,
+		},
 	}
 	err := createOpts.Run()
 	if err != nil {

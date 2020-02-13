@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
@@ -26,9 +23,8 @@ import (
 
 type atlasClustersDeleteOpts struct {
 	*globalOpts
-	name    string
-	confirm bool
-	store   store.ClusterDeleter
+	*deleteOpts
+	store store.ClusterDeleter
 }
 
 func (opts *atlasClustersDeleteOpts) init() error {
@@ -36,43 +32,23 @@ func (opts *atlasClustersDeleteOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasClustersDeleteOpts) Run() error {
-	if !opts.confirm {
-		fmt.Println("Cluster not deleted")
-		return nil
-	}
-	if err := opts.store.DeleteCluster(opts.ProjectID(), opts.name); err != nil {
-		return err
-	}
-
-	fmt.Printf("Cluster '%s' deleted\n", opts.name)
-
-	return nil
-}
-
-func (opts *atlasClustersDeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete: %s", opts.name),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
+	return opts.DeleteFromProject(opts.store.DeleteCluster, opts.projectID)
 }
 
 // mcli atlas cluster(s) delete name --projectId projectId [--confirm]
 func AtlasClustersDeleteBuilder() *cobra.Command {
 	opts := &atlasClustersDeleteOpts{
 		globalOpts: newGlobalOpts(),
+		deleteOpts: &deleteOpts{
+			successMessage: "Cluster '%s' deleted\n",
+			failMessage:    "Cluster not deleted",
+		},
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [name]",
@@ -83,7 +59,7 @@ func AtlasClustersDeleteBuilder() *cobra.Command {
 			if err := opts.init(); err != nil {
 				return err
 			}
-			opts.name = args[0]
+			opts.entry = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

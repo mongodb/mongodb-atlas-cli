@@ -42,14 +42,9 @@ func (opts *atlasWhitelistCreateOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasWhitelistCreateOpts) Run() error {

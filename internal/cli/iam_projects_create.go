@@ -33,14 +33,9 @@ func (opts *iamProjectsCreateOpts) init() error {
 		return errMissingOrgID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *iamProjectsCreateOpts) Run() error {

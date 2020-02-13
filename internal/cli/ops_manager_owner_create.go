@@ -34,14 +34,9 @@ type opsManagerOwnerCreateOpts struct {
 }
 
 func (opts *opsManagerOwnerCreateOpts) init() error {
-	s, err := store.NewUnauthenticated()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.NewUnauthenticated()
+	return err
 }
 
 func (opts *opsManagerOwnerCreateOpts) Run() error {

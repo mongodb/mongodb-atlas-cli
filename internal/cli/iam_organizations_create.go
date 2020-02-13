@@ -26,14 +26,9 @@ type iamOrganizationsCreateOpts struct {
 }
 
 func (opts *iamOrganizationsCreateOpts) init() error {
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *iamOrganizationsCreateOpts) Run() error {

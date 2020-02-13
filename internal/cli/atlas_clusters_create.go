@@ -50,12 +50,9 @@ func (opts *atlasClustersCreateOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-	if err != nil {
-		return err
-	}
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasClustersCreateOpts) Run() error {
@@ -129,7 +126,8 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec 
 	return replicationSpec
 }
 
-// mcli atlas cluster(s) create name --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSizeGB N] [--backup] [--mdbVersion]
+// AtlasClustersCreateBuilder builds a cobra.Command that can run as:
+// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSizeGB N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		globalOpts: newGlobalOpts(),
@@ -137,7 +135,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   "Create a MongoDB cluster in Atlas.",
-		Example: `  mcli atlas cluster create myCluster --projectId=1 --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
+		Example: `  mcli atlas cluster create myCluster --projectId=<projectId> --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

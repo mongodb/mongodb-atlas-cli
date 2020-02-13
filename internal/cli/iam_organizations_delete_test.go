@@ -29,13 +29,16 @@ func TestIAMOrganizationsDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteOrganization(gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(nil).
+		DeleteOrganization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
 		Times(1)
 
 	deleteOpts := &iamOrganizationsDeleteOpts{
-		store:   mockStore,
-		confirm: true,
-		orgID:   "5a0a1e7e0f2912c554080adc",
+		store: mockStore,
+		deleteOpts: &deleteOpts{
+			entry:   "5a0a1e7e0f2912c554080adc",
+			confirm: true,
+		},
 	}
 	err := deleteOpts.Run()
 	if err != nil {

@@ -14,10 +14,11 @@
 package cli
 
 import (
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mcli/internal/fixtures"
 	"github.com/mongodb/mcli/internal/mocks"
-	"testing"
 )
 
 func TestAtlasDBUserList_Run(t *testing.T) {

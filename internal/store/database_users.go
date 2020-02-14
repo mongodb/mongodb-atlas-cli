@@ -22,8 +22,6 @@ import (
 	"github.com/mongodb/mcli/internal/config"
 )
 
-
-
 type DatabaseUserLister interface {
 	ProjectDatabaseUser(groupID string,  opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
 }

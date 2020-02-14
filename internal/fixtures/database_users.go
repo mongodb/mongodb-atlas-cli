@@ -32,6 +32,7 @@ func DatabaseUser() *atlas.DatabaseUser {
 		LDAPAuthType: "NONE",
 	}
 }
+
 func DatabaseUsers() []atlas.DatabaseUser {
 	return []atlas.DatabaseUser{*DatabaseUser()}
 }

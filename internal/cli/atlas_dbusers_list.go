@@ -55,7 +55,6 @@ func (opts *atlasDBUsersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-
 func (opts *atlasDBUsersListOpts) newListOptions() *atlas.ListOptions {
 	return &atlas.ListOptions{
 		PageNum:      opts.pageNum,

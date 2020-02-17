@@ -77,7 +77,7 @@ func TestAtlasWhitelist(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "describe", clusterName)
+		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "describe", entry)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -23,6 +23,7 @@ func AtlasWhitelistBuilder() *cobra.Command {
 		Use:   "whitelist",
 		Short: "Manage the IP whitelist for a project.",
 	}
+	cmd.AddCommand(AtlasWhitelistListBuilder())
 	cmd.AddCommand(AtlasWhitelistCreateBuilder())
 	cmd.AddCommand(AtlasWhitelistDeleteBuilder())
 

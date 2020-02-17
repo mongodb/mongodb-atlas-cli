@@ -28,9 +28,11 @@ The dbusers command retrieves, creates and modifies the MongoDB database users i
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`,
 	}
-	cmd.AddCommand(AtlasDBUserListBuilder())
+
+	cmd.AddCommand(AtlasDBUsersListBuilder())
 	cmd.AddCommand(AtlasDBUsersCreateBuilder())
 	cmd.AddCommand(AtlasDBUsersDeleteBuilder())
+
 
 	return cmd
 }

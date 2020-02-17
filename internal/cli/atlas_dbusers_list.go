@@ -63,7 +63,7 @@ func (opts *atlasDBUsersListOpts) newListOptions() *atlas.ListOptions {
 }
 
 // mcli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
-func AtlasDBUserListBuilder() *cobra.Command {
+func AtlasDBUsersListBuilder() *cobra.Command {
 	opts := &atlasDBUsersListOpts{
 		globalOpts: newGlobalOpts(),
 	}

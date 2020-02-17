@@ -10,6 +10,44 @@ import (
 	reflect "reflect"
 )
 
+// MockProjectIPWhitelistDescriber is a mock of ProjectIPWhitelistDescriber interface
+type MockProjectIPWhitelistDescriber struct {
+	ctrl     *gomock.Controller
+	recorder *MockProjectIPWhitelistDescriberMockRecorder
+}
+
+// MockProjectIPWhitelistDescriberMockRecorder is the mock recorder for MockProjectIPWhitelistDescriber
+type MockProjectIPWhitelistDescriberMockRecorder struct {
+	mock *MockProjectIPWhitelistDescriber
+}
+
+// NewMockProjectIPWhitelistDescriber creates a new mock instance
+func NewMockProjectIPWhitelistDescriber(ctrl *gomock.Controller) *MockProjectIPWhitelistDescriber {
+	mock := &MockProjectIPWhitelistDescriber{ctrl: ctrl}
+	mock.recorder = &MockProjectIPWhitelistDescriberMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockProjectIPWhitelistDescriber) EXPECT() *MockProjectIPWhitelistDescriberMockRecorder {
+	return m.recorder
+}
+
+// IPWhitelist mocks base method
+func (m *MockProjectIPWhitelistDescriber) IPWhitelist(arg0, arg1 string) (*mongodbatlas.ProjectIPWhitelist, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IPWhitelist", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.ProjectIPWhitelist)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IPWhitelist indicates an expected call of IPWhitelist
+func (mr *MockProjectIPWhitelistDescriberMockRecorder) IPWhitelist(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistDescriber)(nil).IPWhitelist), arg0, arg1)
+}
+
 // MockProjectIPWhitelistLister is a mock of ProjectIPWhitelistLister interface
 type MockProjectIPWhitelistLister struct {
 	ctrl     *gomock.Controller

@@ -19,12 +19,14 @@ import (
 )
 
 func ProjectIPWhitelist() []atlas.ProjectIPWhitelist {
-	return []atlas.ProjectIPWhitelist{
-		{
-			Comment:   "test",
-			GroupID:   "5def8d5dce4bd936ac99ae9c",
-			CIDRBlock: "37.228.254.100/32",
-			IPAddress: "37.228.254.100",
-		},
+	return []atlas.ProjectIPWhitelist{*IPWhiteList()}
+}
+
+func IPWhiteList() *atlas.ProjectIPWhitelist {
+	return &atlas.ProjectIPWhitelist{
+		Comment:   "test",
+		GroupID:   "5def8d5dce4bd936ac99ae9c",
+		CIDRBlock: "37.228.254.100/32",
+		IPAddress: "37.228.254.100",
 	}
 }

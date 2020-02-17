@@ -61,10 +61,10 @@ func (s *Store) DeleteDatabaseUser(groupID, username string) error {
 	}
 }
 
-func (s *Store) ProjectDatabaseUser(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
+func (s *Store) ProjectDatabaseUser(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), groupID, opts)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

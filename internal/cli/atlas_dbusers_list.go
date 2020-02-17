@@ -46,7 +46,7 @@ func (opts *atlasDBUsersListOpts) init() error {
 
 func (opts *atlasDBUsersListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectDatabaseUser(opts.orgID, listOpts)
+	result, err := opts.store.ProjectDatabaseUser(opts.projectID, listOpts)
 
 	if err != nil {
 		return err

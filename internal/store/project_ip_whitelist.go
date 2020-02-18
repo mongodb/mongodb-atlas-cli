@@ -65,7 +65,7 @@ func (s *Store) DeleteProjectIPWhitelist(projectID, whitelistEntry string) error
 	}
 }
 
-// ProjectIPWhitelist encapsulate the logic to manage different cloud providers
+// ProjectIPWhitelists encapsulate the logic to manage different cloud providers
 func (s *Store) ProjectIPWhitelists(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:

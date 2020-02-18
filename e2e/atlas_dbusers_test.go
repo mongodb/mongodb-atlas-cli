@@ -102,7 +102,8 @@ func TestAtlasDBUsers(t *testing.T) {
 			dbusersEntity,
 			"update",
 			username,
-			"--role 'read@admin,write'")
+			"--role",
+			"read@admin,write")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

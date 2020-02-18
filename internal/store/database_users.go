@@ -22,6 +22,10 @@ import (
 	"github.com/mongodb/mcli/internal/config"
 )
 
+type DatabaseUserLister interface {
+	DatabaseUsers(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
+}
+
 type DatabaseUserCreator interface {
 	CreateDatabaseUser(*atlas.DatabaseUser) (*atlas.DatabaseUser, error)
 }
@@ -33,6 +37,7 @@ type DatabaseUserDeleter interface {
 type DatabaseUserStore interface {
 	DatabaseUserCreator
 	DatabaseUserDeleter
+	DatabaseUserLister
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers
@@ -53,5 +58,15 @@ func (s *Store) DeleteDatabaseUser(groupID, username string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

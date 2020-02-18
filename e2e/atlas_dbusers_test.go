@@ -71,6 +71,16 @@ func TestAtlasDBUsers(t *testing.T) {
 		}
 	})
 
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "ls")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force")
 		cmd.Env = os.Environ()

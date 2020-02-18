@@ -71,19 +71,19 @@ func (m *MockProjectIPWhitelistLister) EXPECT() *MockProjectIPWhitelistListerMoc
 	return m.recorder
 }
 
-// ProjectIPWhitelist mocks base method
-func (m *MockProjectIPWhitelistLister) ProjectIPWhitelist(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
+// ProjectIPWhitelists mocks base method
+func (m *MockProjectIPWhitelistLister) ProjectIPWhitelists(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectIPWhitelist", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectIPWhitelists", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ProjectIPWhitelist indicates an expected call of ProjectIPWhitelist
-func (mr *MockProjectIPWhitelistListerMockRecorder) ProjectIPWhitelist(arg0, arg1 interface{}) *gomock.Call {
+// ProjectIPWhitelists indicates an expected call of ProjectIPWhitelists
+func (mr *MockProjectIPWhitelistListerMockRecorder) ProjectIPWhitelists(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistLister)(nil).ProjectIPWhitelist), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPWhitelists", reflect.TypeOf((*MockProjectIPWhitelistLister)(nil).ProjectIPWhitelists), arg0, arg1)
 }
 
 // MockProjectIPWhitelistCreator is a mock of ProjectIPWhitelistCreator interface
@@ -184,19 +184,19 @@ func (m *MockProjectIPWhitelistStore) EXPECT() *MockProjectIPWhitelistStoreMockR
 	return m.recorder
 }
 
-// ProjectIPWhitelist mocks base method
-func (m *MockProjectIPWhitelistStore) ProjectIPWhitelist(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
+// ProjectIPWhitelists mocks base method
+func (m *MockProjectIPWhitelistStore) ProjectIPWhitelists(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectIPWhitelist", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectIPWhitelists", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ProjectIPWhitelist indicates an expected call of ProjectIPWhitelist
-func (mr *MockProjectIPWhitelistStoreMockRecorder) ProjectIPWhitelist(arg0, arg1 interface{}) *gomock.Call {
+// ProjectIPWhitelists indicates an expected call of ProjectIPWhitelists
+func (mr *MockProjectIPWhitelistStoreMockRecorder) ProjectIPWhitelists(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPWhitelist", reflect.TypeOf((*MockProjectIPWhitelistStore)(nil).ProjectIPWhitelist), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPWhitelists", reflect.TypeOf((*MockProjectIPWhitelistStore)(nil).ProjectIPWhitelists), arg0, arg1)
 }
 
 // CreateProjectIPWhitelist mocks base method

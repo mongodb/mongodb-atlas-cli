@@ -41,7 +41,7 @@ func (opts *atlasWhitelistListOpts) init() error {
 
 func (opts *atlasWhitelistListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectIPWhitelist(opts.ProjectID(), listOpts)
+	result, err := opts.store.ProjectIPWhitelists(opts.ProjectID(), listOpts)
 
 	if err != nil {
 		return err

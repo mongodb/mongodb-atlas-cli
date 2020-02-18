@@ -50,6 +50,7 @@ addlicense:
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
+	mockgen -source=internal/store/alert_configuration.go -destination=internal/mocks/mock_alert_configuration.go -package=mocks
 	mockgen -source=internal/store/automation.go -destination=internal/mocks/mock_automation.go -package=mocks
 	mockgen -source=internal/store/clusters.go -destination=internal/mocks/mock_clusters.go -package=mocks
 	mockgen -source=internal/store/database_users.go -destination=internal/mocks/mock_database_users.go -package=mocks

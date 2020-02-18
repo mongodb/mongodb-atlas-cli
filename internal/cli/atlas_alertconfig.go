@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fixtures
+package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/spf13/cobra"
 )
 
-func ProjectIPWhitelist() []atlas.ProjectIPWhitelist {
-	return []atlas.ProjectIPWhitelist{*IPWhiteList()}
-}
-
-func IPWhiteList() *atlas.ProjectIPWhitelist {
-	return &atlas.ProjectIPWhitelist{
-		Comment:   "test",
-		GroupID:   "5def8d5dce4bd936ac99ae9c",
-		CIDRBlock: "37.228.254.100/32",
-		IPAddress: "37.228.254.100",
+func AtlasAlertConfigBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "alert-config",
+		Aliases: []string{"alertConfig", "alertConfigs", "alert-configs"},
+		Short:   "Manage Atlas alert configurations for your project.",
+		Long:    "The alertConfigs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
 	}
+	cmd.AddCommand(AtlasAlertConfigListBuilder())
+
+	return cmd
 }

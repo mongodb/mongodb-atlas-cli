@@ -22,6 +22,13 @@ import (
 	"github.com/mongodb/mcli/internal/config"
 )
 
+type ProjectIPWhitelistDescriber interface {
+	IPWhitelist(string, string) (*atlas.ProjectIPWhitelist, error)
+}
+type ProjectIPWhitelistLister interface {
+	ProjectProjectIPWhitelist(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
+}
+
 type ProjectIPWhitelistCreator interface {
 	CreateProjectIPWhitelist(*atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error)
 }
@@ -31,6 +38,7 @@ type ProjectIPWhitelistDeleter interface {
 }
 
 type ProjectIPWhitelistStore interface {
+	ProjectIPWhitelistLister
 	ProjectIPWhitelistCreator
 	ProjectIPWhitelistDeleter
 }
@@ -54,5 +62,27 @@ func (s *Store) DeleteProjectIPWhitelist(projectID, whitelistEntry string) error
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectProjectIPWhitelist encapsulate the logic to manage different cloud providers
+func (s *Store) ProjectProjectIPWhitelist(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// IPWhitelist encapsulate the logic to manage different cloud providers
+func (s *Store) IPWhitelist(projectID string, name string) (*atlas.ProjectIPWhitelist, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Get(context.Background(), projectID, name)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

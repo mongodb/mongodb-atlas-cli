@@ -37,7 +37,7 @@ func TestAtlasAlertConfigList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectAlertConfiguration(listOpts.projectID, listOpts.newListOptions()).
+		AlertConfigurations(listOpts.projectID, listOpts.newListOptions()).
 		Return(expected, nil).
 		Times(1)
 

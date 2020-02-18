@@ -33,19 +33,19 @@ func (m *MockAlertConfigurationLister) EXPECT() *MockAlertConfigurationListerMoc
 	return m.recorder
 }
 
-// ProjectAlertConfiguration mocks base method
-func (m *MockAlertConfigurationLister) ProjectAlertConfiguration(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
+// AlertConfigurations mocks base method
+func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectAlertConfiguration", arg0, arg1)
+	ret := m.ctrl.Call(m, "AlertConfigurations", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ProjectAlertConfiguration indicates an expected call of ProjectAlertConfiguration
-func (mr *MockAlertConfigurationListerMockRecorder) ProjectAlertConfiguration(arg0, arg1 interface{}) *gomock.Call {
+// AlertConfigurations indicates an expected call of AlertConfigurations
+func (mr *MockAlertConfigurationListerMockRecorder) AlertConfigurations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationLister)(nil).ProjectAlertConfiguration), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlertConfigurations", reflect.TypeOf((*MockAlertConfigurationLister)(nil).AlertConfigurations), arg0, arg1)
 }
 
 // MockAlertConfigurationStore is a mock of AlertConfigurationStore interface
@@ -71,17 +71,17 @@ func (m *MockAlertConfigurationStore) EXPECT() *MockAlertConfigurationStoreMockR
 	return m.recorder
 }
 
-// ProjectAlertConfiguration mocks base method
-func (m *MockAlertConfigurationStore) ProjectAlertConfiguration(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
+// AlertConfigurations mocks base method
+func (m *MockAlertConfigurationStore) AlertConfigurations(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectAlertConfiguration", arg0, arg1)
+	ret := m.ctrl.Call(m, "AlertConfigurations", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ProjectAlertConfiguration indicates an expected call of ProjectAlertConfiguration
-func (mr *MockAlertConfigurationStoreMockRecorder) ProjectAlertConfiguration(arg0, arg1 interface{}) *gomock.Call {
+// AlertConfigurations indicates an expected call of AlertConfigurations
+func (mr *MockAlertConfigurationStoreMockRecorder) AlertConfigurations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationStore)(nil).ProjectAlertConfiguration), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlertConfigurations", reflect.TypeOf((*MockAlertConfigurationStore)(nil).AlertConfigurations), arg0, arg1)
 }

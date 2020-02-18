@@ -23,15 +23,15 @@ import (
 )
 
 type AlertConfigurationLister interface {
-	ProjectAlertConfiguration(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
+	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
 }
 
 type AlertConfigurationStore interface {
 	AlertConfigurationLister
 }
 
-// ProjectAlertConfiguration encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectAlertConfiguration(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
+// AlertConfigurations encapsulate the logic to manage different cloud providers
+func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(context.Background(), projectID, opts)

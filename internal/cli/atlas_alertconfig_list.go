@@ -42,7 +42,7 @@ func (opts *atlasAlertConfigListOpts) init() error {
 
 func (opts *atlasAlertConfigListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectAlertConfiguration(opts.ProjectID(), listOpts)
+	result, err := opts.store.AlertConfigurations(opts.ProjectID(), listOpts)
 
 	if err != nil {
 		return err

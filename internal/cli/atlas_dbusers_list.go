@@ -34,19 +34,14 @@ func (opts *atlasDBUsersListOpts) init() error {
 		return errMissingProjectID
 	}
 
-	s, err := store.New()
-
-	if err != nil {
-		return err
-	}
-
-	opts.store = s
-	return nil
+	var err error
+	opts.store, err = store.New()
+	return err
 }
 
 func (opts *atlasDBUsersListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectDatabaseUser(opts.projectID, listOpts)
+	result, err := opts.store.DatabaseUser(opts.projectID, listOpts)
 
 	if err != nil {
 		return err

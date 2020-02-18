@@ -36,7 +36,7 @@ func TestAtlasDBUserList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectDatabaseUser(listOpts.projectID, listOpts.newListOptions()).
+		DatabaseUser(listOpts.projectID, listOpts.newListOptions()).
 		Return(expected, nil).
 		Times(1)
 

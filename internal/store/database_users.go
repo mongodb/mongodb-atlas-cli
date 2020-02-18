@@ -23,7 +23,7 @@ import (
 )
 
 type DatabaseUserLister interface {
-	ProjectDatabaseUser(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
+	DatabaseUser(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
 }
 
 type DatabaseUserCreator interface {
@@ -61,7 +61,7 @@ func (s *Store) DeleteDatabaseUser(groupID, username string) error {
 	}
 }
 
-func (s *Store) ProjectDatabaseUser(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
+func (s *Store) DatabaseUser(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)

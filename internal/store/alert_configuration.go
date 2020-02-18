@@ -26,7 +26,6 @@ type AlertConfigurationLister interface {
 	ProjectAlertConfiguration(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
 }
 
-
 type AlertConfigurationStore interface {
 	AlertConfigurationLister
 }
@@ -41,4 +40,3 @@ func (s *Store) ProjectAlertConfiguration(projectID string, opts *atlas.ListOpti
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
-

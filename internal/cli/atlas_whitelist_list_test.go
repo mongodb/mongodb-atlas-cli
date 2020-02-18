@@ -37,7 +37,7 @@ func TestAtlasWhitelistList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectProjectIPWhitelist(listOpts.projectID, listOpts.newListOptions()).
+		ProjectIPWhitelists(listOpts.projectID, listOpts.newListOptions()).
 		Return(expected, nil).
 		Times(1)
 

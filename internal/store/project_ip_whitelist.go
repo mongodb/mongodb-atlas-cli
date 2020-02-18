@@ -26,7 +26,7 @@ type ProjectIPWhitelistDescriber interface {
 	IPWhitelist(string, string) (*atlas.ProjectIPWhitelist, error)
 }
 type ProjectIPWhitelistLister interface {
-	ProjectProjectIPWhitelist(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
+	ProjectIPWhitelists(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
 }
 
 type ProjectIPWhitelistCreator interface {
@@ -65,8 +65,8 @@ func (s *Store) DeleteProjectIPWhitelist(projectID, whitelistEntry string) error
 	}
 }
 
-// ProjectProjectIPWhitelist encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectProjectIPWhitelist(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
+// ProjectIPWhitelists encapsulate the logic to manage different cloud providers
+func (s *Store) ProjectIPWhitelists(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.List(context.Background(), projectID, opts)

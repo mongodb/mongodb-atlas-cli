@@ -87,7 +87,7 @@ func AtlasDBUsersUpdateBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:     "update [name]",
+		Use:     "update [username]",
 		Short:   "Update a MongoDB dbuser in Atlas.",
 		Example: `mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
 		Args:    cobra.ExactArgs(1),

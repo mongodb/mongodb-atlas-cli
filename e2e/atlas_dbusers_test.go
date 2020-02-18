@@ -97,7 +97,12 @@ func TestAtlasDBUsers(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "update", username, "--role read@quick-test2, read")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"update",
+			username,
+			"--role 'read@admin,write'")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

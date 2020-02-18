@@ -16,12 +16,10 @@
 package e2e
 
 import (
-	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
-	"time"
 )
 
 func TestAtlasAlertConfig(t *testing.T) {
@@ -34,8 +32,6 @@ func TestAtlasAlertConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	atlasEntity := "atlas"
 	alertConfigEntity := "alert-config"

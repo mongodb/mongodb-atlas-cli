@@ -23,7 +23,8 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
-- Run `make e2e` will run end to end tests against an Atlas instance, plase make sure too have set `MCLI_*` variables.
+- Run `make e2e` will run end to end tests against an Atlas instance,
+  please make sure too have set `MCLI_*` variables pointing to that instance.
 - Run `make build` to generate a local binary in the `./bin` folder.
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 

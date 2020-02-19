@@ -34,7 +34,7 @@ don't hesitate to ask. We're here to help! This is simply a reminder of what we 
 - [] I have added any necessary documentation (if appropriate)
 - [] I have run `make fmt` and formatted my code
 
-## 💬 Further comments
+## Further comments
 
 <!--
 If this is a relatively large or complex change, kick off the discussion by explaining why you chose the solution you did and what alternatives you considered, etc...

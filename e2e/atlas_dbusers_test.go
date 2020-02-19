@@ -81,21 +81,6 @@ func TestAtlasDBUsers(t *testing.T) {
 		}
 	})
 
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
-		}
-	})
-
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -116,4 +101,20 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		}
+	})
+
 }

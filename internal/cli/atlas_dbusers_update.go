@@ -43,7 +43,7 @@ func (opts *atlasDBUsersUpdateOpts) init() error {
 }
 
 func (opts *atlasDBUsersUpdateOpts) Run() error {
-	current, err := opts.store.DatabaseUser(opts.orgID, opts.username)
+	current, err := opts.store.DatabaseUser(opts.projectID, opts.username)
 
 	if err != nil {
 		return err

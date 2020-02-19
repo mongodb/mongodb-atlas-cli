@@ -20,6 +20,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mcli/internal/fixtures"
 	"github.com/mongodb/mcli/internal/mocks"
+	"github.com/spf13/afero"
 )
 
 func TestAtlasClustersCreate_Run(t *testing.T) {
@@ -28,27 +29,83 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Cluster()
+	t.Run("flags run", func(t *testing.T) {
+		expected := fixtures.Cluster()
 
-	createOpts := &atlasClustersCreateOpts{
-		globalOpts:   newGlobalOpts(),
-		name:         "ProjectBar",
-		region:       "US",
-		instanceSize: atlasM2,
-		members:      3,
-		diskSizeGB:   10,
-		backup:       false,
-		mdbVersion:   currentMDBVersion,
-		store:        mockStore,
-	}
+		createOpts := &atlasClustersCreateOpts{
+			globalOpts:   newGlobalOpts(),
+			name:         "ProjectBar",
+			region:       "US",
+			instanceSize: atlasM2,
+			members:      3,
+			diskSizeGB:   10,
+			backup:       false,
+			mdbVersion:   currentMDBVersion,
+			store:        mockStore,
+		}
 
-	mockStore.
-		EXPECT().
-		CreateCluster(createOpts.newCluster()).Return(expected, nil).
-		Times(1)
+		cluster, _ := createOpts.newCluster()
+		mockStore.
+			EXPECT().
+			CreateCluster(cluster).Return(expected, nil).
+			Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		err := createOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		fileYML := `
+{
+  "name": "ProjectBar",
+  "diskSizeGB": 10,
+  "numShards": 1,
+  "providerSettings": {
+    "providerName": "AWS",
+    "instanceSizeName": "M2",
+    "regionName": "US"
+  },
+  "clusterType" : "REPLICASET",
+  "replicationFactor": 3,
+  "replicationSpecs": [{
+    "numShards": 1,
+    "regionsConfig": {
+      "US_EAST_1": {
+        "analyticsNodes": 0,
+        "electableNodes": 3,
+        "priority": 7,
+        "readOnlyNodes": 0
+      }
+    },
+    "zoneName": "Zone 1"
+  }],
+  "backupEnabled": false,
+  "providerBackupEnabled" : false
+}`
+		fileName := "test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
+		expected := fixtures.Cluster()
+
+		createOpts := &atlasClustersCreateOpts{
+			globalOpts: newGlobalOpts(),
+			filename:   fileName,
+			fs:         appFS,
+			store:      mockStore,
+		}
+
+		cluster, _ := createOpts.newCluster()
+		mockStore.
+			EXPECT().
+			CreateCluster(cluster).Return(expected, nil).
+			Times(1)
+
+		err := createOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }

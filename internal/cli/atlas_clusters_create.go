@@ -15,11 +15,15 @@
 package cli
 
 import (
+	"errors"
+
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/file"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/json"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -42,6 +46,8 @@ type atlasClustersCreateOpts struct {
 	diskSizeGB   float64
 	backup       bool
 	mdbVersion   string
+	filename     string
+	fs           afero.Fs
 	store        store.ClusterCreator
 }
 
@@ -56,9 +62,11 @@ func (opts *atlasClustersCreateOpts) init() error {
 }
 
 func (opts *atlasClustersCreateOpts) Run() error {
-	cluster := opts.newCluster()
+	cluster, err := opts.newCluster()
+	if err != nil {
+		return err
+	}
 	result, err := opts.store.CreateCluster(cluster)
-
 	if err != nil {
 		return err
 	}
@@ -66,21 +74,28 @@ func (opts *atlasClustersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasClustersCreateOpts) newCluster() *atlas.Cluster {
-	replicationSpec := opts.newReplicationSpec()
-	providerSettings := opts.newProviderSettings()
-
-	cluster := &atlas.Cluster{
-		BackupEnabled:       &opts.backup,
-		ClusterType:         replicaSet,
-		DiskSizeGB:          &opts.diskSizeGB,
-		GroupID:             opts.ProjectID(),
-		MongoDBMajorVersion: opts.mdbVersion,
-		Name:                opts.name,
-		ProviderSettings:    providerSettings,
-		ReplicationSpecs:    []atlas.ReplicationSpec{replicationSpec},
+func (opts *atlasClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
+	cluster := new(atlas.Cluster)
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
+			return nil, err
+		}
+	} else {
+		cluster.ClusterType = replicaSet
+		opts.applyOpts(cluster)
 	}
-	return cluster
+	cluster.GroupID = opts.ProjectID()
+	return cluster, nil
+}
+
+func (opts *atlasClustersCreateOpts) applyOpts(out *atlas.Cluster) {
+	replicationSpec := opts.newReplicationSpec()
+	out.BackupEnabled = &opts.backup
+	out.DiskSizeGB = &opts.diskSizeGB
+	out.MongoDBMajorVersion = opts.mdbVersion
+	out.Name = opts.name
+	out.ProviderSettings = opts.newProviderSettings()
+	out.ReplicationSpecs = []atlas.ReplicationSpec{replicationSpec}
 }
 
 func (opts *atlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettings {
@@ -131,17 +146,26 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec 
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		globalOpts: newGlobalOpts(),
+		fs:         afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   "Create a MongoDB cluster in Atlas.",
 		Example: `  mcli atlas cluster create myCluster --projectId=<projectId> --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
-		Args:    cobra.ExactArgs(1),
+		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flags.Provider)
+				_ = cmd.MarkFlagRequired(flags.Region)
+
+				if len(args) == 0 {
+					return errors.New("cluster name missing")
+				}
+				opts.name = args[0]
+			}
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
@@ -153,11 +177,9 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to deploy a new cluster")
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.Provider)
-	_ = cmd.MarkFlagRequired(flags.Region)
 
 	return cmd
 }

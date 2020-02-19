@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mcli/internal/config"
 	"github.com/mongodb/mcli/internal/convert"
+	"github.com/mongodb/mcli/internal/file"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/messages"
 	"github.com/mongodb/mcli/internal/store"
@@ -45,7 +46,8 @@ func (opts *cmClustersApplyOpts) init() error {
 }
 
 func (opts *cmClustersApplyOpts) Run() error {
-	newConfig, err := convert.NewClusterConfigFromFile(opts.fs, opts.filename)
+	newConfig := new(convert.ClusterConfig)
+	err := file.Load(opts.fs, opts.filename, newConfig)
 	if err != nil {
 		return err
 	}

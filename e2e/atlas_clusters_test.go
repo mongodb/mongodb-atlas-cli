@@ -56,7 +56,7 @@ func TestAtlasClusters(t *testing.T) {
 			"--instanceSize=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
-			"--diskSizeGB=10",)
+			"--diskSizeGB=10")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -92,30 +92,30 @@ func TestAtlasClusters(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		for {
-			cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
-			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
+		//for {
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
 
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
-
-			cluster := new(mongodbatlas.Cluster)
-			err = json.Unmarshal(resp, cluster)
-			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-
-			if cluster.Name != clusterName {
-				t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
-			}
-			if cluster.StateName == "IDLE" {
-				break
-			} else {
-				time.Sleep(5 * time.Second)
-			}
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if cluster.Name != clusterName {
+			t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+		}
+		//if cluster.StateName == "IDLE" {
+		//	break
+		//} else {
+		//	time.Sleep(5 * time.Second)
+		//}
+		//}
 	})
 
 	t.Run("Update", func(t *testing.T) {

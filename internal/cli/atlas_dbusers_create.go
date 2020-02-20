@@ -16,7 +16,8 @@ package cli
 
 import (
 	"errors"
-	"strings"
+
+	"github.com/mongodb/mcli/internal/convert"
 
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
@@ -25,11 +26,6 @@ import (
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
 	"github.com/spf13/cobra"
-)
-
-const (
-	adminDB = "admin"
-	roleSep = "@"
 )
 
 type atlasDBUsersCreateOpts struct {
@@ -63,31 +59,12 @@ func (opts *atlasDBUsersCreateOpts) Run() error {
 
 func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
-		DatabaseName: adminDB,
-		Roles:        opts.buildRoles(),
+		DatabaseName: convert.AdminDB,
+		Roles:        convert.BuildRoles(opts.roles),
 		GroupID:      opts.ProjectID(),
 		Username:     opts.username,
 		Password:     opts.password,
 	}
-}
-
-func (opts *atlasDBUsersCreateOpts) buildRoles() []atlas.Role {
-	rolesLen := len(opts.roles)
-	roles := make([]atlas.Role, rolesLen)
-	for i, roleP := range opts.roles {
-		role := strings.Split(roleP, roleSep)
-		roleName := role[0]
-		databaseName := adminDB
-		if len(role) > 1 {
-			databaseName = role[1]
-		}
-
-		roles[i] = atlas.Role{
-			RoleName:     roleName,
-			DatabaseName: databaseName,
-		}
-	}
-	return roles
 }
 
 func (opts *atlasDBUsersCreateOpts) Prompt() error {

@@ -15,9 +15,8 @@
 package cli
 
 import (
-	"strings"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/convert"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/json"
 	"github.com/mongodb/mcli/internal/store"
@@ -43,11 +42,11 @@ func (opts *atlasDBUsersUpdateOpts) init() error {
 }
 
 func (opts *atlasDBUsersUpdateOpts) Run() error {
-	current := atlas.DatabaseUser{}
+	current := new(atlas.DatabaseUser)
 
-	opts.update(&current)
+	opts.update(current)
 
-	result, err := opts.store.UpdateDatabaseUser(&current)
+	result, err := opts.store.UpdateDatabaseUser(current)
 
 	if err != nil {
 		return err
@@ -58,25 +57,13 @@ func (opts *atlasDBUsersUpdateOpts) Run() error {
 
 func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 
-	out.GroupID = opts.OrgID()
+	out.GroupID = opts.ProjectID()
 	out.Username = opts.username
 	if opts.password != "" {
 		out.Password = opts.password
 	}
 
-	for _, role := range opts.roles {
-		var newRole = atlas.Role{}
-		if i := strings.IndexByte(role, '@'); i >= 0 {
-			newRole.RoleName = role[:i]
-			newRole.DatabaseName = role[i+1:]
-		} else {
-			//if no dbName is given then admin is assumed
-			newRole.DatabaseName = "admin"
-			newRole.RoleName = role
-		}
-
-		out.Roles = append(out.Roles, newRole)
-	}
+	out.Roles = convert.BuildRoles(opts.roles)
 }
 
 //mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]

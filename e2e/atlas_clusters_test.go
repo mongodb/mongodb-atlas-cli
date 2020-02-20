@@ -145,12 +145,12 @@ func TestAtlasClusters(t *testing.T) {
 
 func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName string, version string, diskSizeGB float64) {
 	if cluster.Name != clusterName {
-		t.Errorf("Name, got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+		t.Errorf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName)
 	}
-	if cluster.MongoDBMajorVersion != "4.0" {
-		t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, version)
+	if cluster.MongoDBMajorVersion != version {
+		t.Errorf("MongoDBMajorVersion, got=%s\nwant=%s\n", cluster.MongoDBMajorVersion, version)
 	}
-	if *cluster.DiskSizeGB != 10 {
-		t.Errorf("DiskSizeGB, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, diskSizeGB)
+	if *cluster.DiskSizeGB != diskSizeGB {
+		t.Errorf("DiskSizeGB, got=%#v\nwant=%f\n", cluster.DiskSizeGB, diskSizeGB)
 	}
 }

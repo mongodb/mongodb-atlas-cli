@@ -18,10 +18,12 @@ package e2e
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -39,7 +41,8 @@ func TestAtlasWhitelist(t *testing.T) {
 
 	atlasEntity := "atlas"
 	whitelistEntity := "whitelist"
-	entry := "192.168.0.1"
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -60,9 +63,15 @@ func TestAtlasWhitelist(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if entries[0].IPAddress != entry {
-			t.Errorf("got=%#v\nwant=%#v\n", entries[0].IPAddress, entry)
+		found := false
+		for i := range entries {
+			if entries[i].IPAddress == entry {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
 		}
 	})
 

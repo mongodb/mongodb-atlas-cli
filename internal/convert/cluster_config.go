@@ -15,15 +15,9 @@
 package convert
 
 import (
-	"encoding/json"
-	"fmt"
-	"path/filepath"
-
 	"github.com/Masterminds/semver"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
 	"github.com/mongodb/mcli/internal/search"
-	"github.com/spf13/afero"
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -41,43 +35,6 @@ type ClusterConfig struct {
 	Name           string          `yaml:"name" json:"name"`
 	ProcessConfigs []ProcessConfig `yaml:"processes" json:"processes"`
 	Version        string          `yaml:"version,omitempty" json:"version,omitempty"`
-}
-
-var supportedExts = []string{"json", "yaml", "yml"}
-
-// NewClusterConfigFromFile load a ClusterConfig from a YAML or JSON file
-func NewClusterConfigFromFile(fs afero.Fs, filename string) (*ClusterConfig, error) {
-	if exists, err := afero.Exists(fs, filename); !exists || err != nil {
-		return nil, fmt.Errorf("file not found: %s", filename)
-	}
-
-	ext := filepath.Ext(filename)
-	if len(ext) <= 1 {
-		return nil, fmt.Errorf("filename: %s requires valid extension", filename)
-	}
-	configType := ext[1:]
-	if !search.StringInSlice(supportedExts, configType) {
-		return nil, fmt.Errorf("unsupported file type: %s", configType)
-	}
-
-	file, err := afero.ReadFile(fs, filename)
-	if err != nil {
-		return nil, err
-	}
-
-	config := new(ClusterConfig)
-	switch configType {
-	case "yaml", "yml":
-		if err := yaml.Unmarshal(file, config); err != nil {
-			return nil, err
-		}
-	case "json":
-		if err := json.Unmarshal(file, config); err != nil {
-			return nil, err
-		}
-	}
-
-	return config, nil
 }
 
 // PatchAutomationConfig add the ClusterConfig to a cloudmanager.AutomationConfig

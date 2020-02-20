@@ -20,5 +20,7 @@ import (
 	"github.com/mongodb/mcli/internal/flags"
 )
 
-var errMissingProjectID = fmt.Errorf(`required flag(s) "%s" not set`, flags.ProjectID)
-var errMissingOrgID = fmt.Errorf(`required flag(s) "%s" not set`, flags.OrgID)
+const requiredF = `required flag(s) "%s" not set`
+
+var errMissingProjectID = fmt.Errorf(requiredF, flags.ProjectID)
+var errMissingOrgID = fmt.Errorf(requiredF, flags.OrgID)

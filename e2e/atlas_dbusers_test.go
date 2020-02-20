@@ -26,6 +26,11 @@ import (
 	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/convert"
+)
+
+const (
+	roleReadWrite = "readWrite"
 )
 
 func TestAtlasDBUsers(t *testing.T) {
@@ -88,7 +93,7 @@ func TestAtlasDBUsers(t *testing.T) {
 			"update",
 			username,
 			"--role",
-			"readWrite")
+			roleReadWrite)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -104,6 +109,18 @@ func TestAtlasDBUsers(t *testing.T) {
 
 		if user.Username != username {
 			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
+		}
+
+		if len(user.Roles) != 1 {
+			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
+		}
+
+		if user.Roles[0].DatabaseName != convert.AdminDB {
+			t.Errorf("got=%#v\nwant=%#v\n", convert.AdminDB, user.Roles[0].DatabaseName)
+		}
+
+		if user.Roles[0].RoleName != roleReadWrite {
+			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
 		}
 
 	})

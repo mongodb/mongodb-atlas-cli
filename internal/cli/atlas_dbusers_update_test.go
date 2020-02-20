@@ -17,10 +17,9 @@ package cli
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mcli/internal/fixtures"
-
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mcli/internal/mocks"
 )
 

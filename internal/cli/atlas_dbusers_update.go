@@ -29,7 +29,7 @@ type atlasDBUsersUpdateOpts struct {
 	username string
 	password string
 	roles    []string
-	store    store.DatabaseUserStore
+	store    store.DatabaseUserUpdater
 }
 
 func (opts *atlasDBUsersUpdateOpts) init() error {

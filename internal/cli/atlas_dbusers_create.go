@@ -17,10 +17,9 @@ package cli
 import (
 	"errors"
 
-	"github.com/mongodb/mcli/internal/convert"
-
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/convert"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/json"
 	"github.com/mongodb/mcli/internal/store"

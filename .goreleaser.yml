@@ -30,8 +30,6 @@ archives:
     - third_party_notices/**/*
 brews:
 - name: mcli
-  ids:
-    - mcli
   github:
     owner: mongodb-labs
     name: homebrew-mcli

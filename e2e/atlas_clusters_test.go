@@ -49,12 +49,13 @@ func TestAtlasClusters(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
-			"create", clusterName,
+			"create",
+			clusterName,
 			"--region=US_EAST_1",
 			"--members=3",
-			"--instanceSize=M5",
+			"--instanceSize=M2",
 			"--provider=AWS",
-			"--mdbVersion=4.2")
+			"--mdbVersion=4.0")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -62,14 +63,17 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := mongodbatlas.Cluster{}
-		err = json.Unmarshal(resp, &cluster)
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if cluster.Name != clusterName {
-			t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+			t.Errorf("Name, got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+		}
+		if cluster.MongoDBMajorVersion != "4.0" {
+			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.0")
 		}
 	})
 
@@ -84,12 +88,61 @@ func TestAtlasClusters(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
+		for {
+			cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			cluster := new(mongodbatlas.Cluster)
+			err = json.Unmarshal(resp, cluster)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if cluster.Name != clusterName {
+				t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+			}
+			if cluster.StateName == "IDLE" {
+				break
+			} else {
+				time.Sleep(5 * time.Second)
+			}
+		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"update",
+			clusterName,
+			"--diskSizeGB=10",
+			"--mdbVersion=4.2")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if cluster.Name != clusterName {
+			t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+		}
+		if cluster.MongoDBMajorVersion != "4.2" {
+			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.2")
+		}
+		if *cluster.DiskSizeGB != 10 {
+			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 10)
 		}
 	})
 

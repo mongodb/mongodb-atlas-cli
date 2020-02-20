@@ -26,6 +26,11 @@ import (
 	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/convert"
+)
+
+const (
+	roleReadWrite = "readWrite"
 )
 
 func TestAtlasDBUsers(t *testing.T) {
@@ -81,6 +86,45 @@ func TestAtlasDBUsers(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"update",
+			username,
+			"--role",
+			roleReadWrite)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		user := mongodbatlas.DatabaseUser{}
+		err = json.Unmarshal(resp, &user)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if user.Username != username {
+			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
+		}
+
+		if len(user.Roles) != 1 {
+			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
+		}
+
+		if user.Roles[0].DatabaseName != convert.AdminDB {
+			t.Errorf("got=%#v\nwant=%#v\n", convert.AdminDB, user.Roles[0].DatabaseName)
+		}
+
+		if user.Roles[0].RoleName != roleReadWrite {
+			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
+		}
+
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force")
 		cmd.Env = os.Environ()
@@ -95,4 +139,5 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+
 }

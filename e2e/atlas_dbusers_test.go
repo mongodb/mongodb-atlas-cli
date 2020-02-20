@@ -96,10 +96,16 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		user := mongodbatlas.DatabaseUser{}
+		err = json.Unmarshal(resp, &user)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
 		}
+
+		if user.Username != username {
+			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
+		}
+
 	})
 
 	t.Run("Delete", func(t *testing.T) {

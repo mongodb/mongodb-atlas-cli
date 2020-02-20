@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"errors"
-
-	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mcli/internal/convert"
 	"github.com/mongodb/mcli/internal/flags"
@@ -27,27 +24,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasDBUsersCreateOpts struct {
+type atlasDBUsersUpdateOpts struct {
 	*globalOpts
 	username string
 	password string
 	roles    []string
-	store    store.DatabaseUserCreator
+	store    store.DatabaseUserUpdater
 }
 
-func (opts *atlasDBUsersCreateOpts) init() error {
+func (opts *atlasDBUsersUpdateOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
-
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasDBUsersCreateOpts) Run() error {
-	user := opts.newDatabaseUser()
-	result, err := opts.store.CreateDatabaseUser(user)
+func (opts *atlasDBUsersUpdateOpts) Run() error {
+	current := new(atlas.DatabaseUser)
+
+	opts.update(current)
+
+	result, err := opts.store.UpdateDatabaseUser(current)
 
 	if err != nil {
 		return err
@@ -56,48 +55,32 @@ func (opts *atlasDBUsersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
-	return &atlas.DatabaseUser{
-		DatabaseName: convert.AdminDB,
-		Roles:        convert.BuildRoles(opts.roles),
-		GroupID:      opts.ProjectID(),
-		Username:     opts.username,
-		Password:     opts.password,
-	}
-}
+func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 
-func (opts *atlasDBUsersCreateOpts) Prompt() error {
+	out.GroupID = opts.ProjectID()
+	out.Username = opts.username
 	if opts.password != "" {
-		return nil
+		out.Password = opts.password
 	}
-	prompt := &survey.Password{
-		Message: "Password:",
-	}
-	return survey.AskOne(prompt, &opts.password)
+
+	out.Roles = convert.BuildRoles(opts.roles)
 }
 
-// mcli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
-func AtlasDBUsersCreateBuilder() *cobra.Command {
-	opts := &atlasDBUsersCreateOpts{
+//mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]
+func AtlasDBUsersUpdateBuilder() *cobra.Command {
+	opts := &atlasDBUsersUpdateOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:       "create",
-		Short:     "Create a database user for a project.",
-		Example:   `  mcli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
-		Args:      cobra.OnlyValidArgs,
-		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
+		Use:     "update [username]",
+		Short:   "Update a MongoDB dbuser in Atlas.",
+		Example: `mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-			if len(args) == 0 && len(opts.roles) == 0 {
-				return errors.New("no role specified for the user")
-			}
-			opts.roles = append(opts.roles, args...)
-			return opts.Prompt()
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.username = args[0]
 			return opts.Run()
 		},
 	}
@@ -107,8 +90,6 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.Username)
 
 	return cmd
 }

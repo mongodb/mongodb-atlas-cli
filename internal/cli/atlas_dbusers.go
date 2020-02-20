@@ -32,6 +32,7 @@ A user’s roles apply to all the clusters in the project.`,
 	cmd.AddCommand(AtlasDBUsersListBuilder())
 	cmd.AddCommand(AtlasDBUsersCreateBuilder())
 	cmd.AddCommand(AtlasDBUsersDeleteBuilder())
+	cmd.AddCommand(AtlasDBUsersUpdateBuilder())
 
 	return cmd
 }

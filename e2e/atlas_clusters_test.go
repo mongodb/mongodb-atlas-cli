@@ -53,9 +53,10 @@ func TestAtlasClusters(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--members=3",
-			"--instanceSize=M2",
+			"--instanceSize=M10",
 			"--provider=AWS",
-			"--mdbVersion=4.0")
+			"--mdbVersion=4.0",
+			"--diskSizeGB=10",)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -74,6 +75,9 @@ func TestAtlasClusters(t *testing.T) {
 		}
 		if cluster.MongoDBMajorVersion != "4.0" {
 			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.0")
+		}
+		if *cluster.DiskSizeGB != 10 {
+			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 10)
 		}
 	})
 
@@ -120,7 +124,7 @@ func TestAtlasClusters(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterName,
-			"--diskSizeGB=10",
+			"--diskSizeGB=20",
 			"--mdbVersion=4.2")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -141,8 +145,8 @@ func TestAtlasClusters(t *testing.T) {
 		if cluster.MongoDBMajorVersion != "4.2" {
 			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.2")
 		}
-		if *cluster.DiskSizeGB != 10 {
-			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 10)
+		if *cluster.DiskSizeGB != 20 {
+			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 20)
 		}
 	})
 

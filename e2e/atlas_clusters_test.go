@@ -70,15 +70,7 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if cluster.Name != clusterName {
-			t.Errorf("Name, got=%#v\nwant=%#v\n", cluster.Name, clusterName)
-		}
-		if cluster.MongoDBMajorVersion != "4.0" {
-			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.0")
-		}
-		if *cluster.DiskSizeGB != 10 {
-			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 10)
-		}
+		ensureCluster(t, cluster, clusterName, "4.0", 10)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -132,15 +124,7 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if cluster.Name != clusterName {
-			t.Errorf("got=%#v\nwant=%#v\n", cluster.Name, clusterName)
-		}
-		if cluster.MongoDBMajorVersion != "4.2" {
-			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, "4.2")
-		}
-		if *cluster.DiskSizeGB != 20 {
-			t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, 20)
-		}
+		ensureCluster(t, cluster, clusterName, "4.2", 20)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -157,4 +141,16 @@ func TestAtlasClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+}
+
+func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName string, version string, diskSizeGB float64) {
+	if cluster.Name != clusterName {
+		t.Errorf("Name, got=%#v\nwant=%#v\n", cluster.Name, clusterName)
+	}
+	if cluster.MongoDBMajorVersion != "4.0" {
+		t.Errorf("MongoDBMajorVersion, got=%#v\nwant=%#v\n", cluster.MongoDBMajorVersion, version)
+	}
+	if *cluster.DiskSizeGB != 10 {
+		t.Errorf("DiskSizeGB, got=%#v\nwant=%#v\n", cluster.DiskSizeGB, diskSizeGB)
+	}
 }

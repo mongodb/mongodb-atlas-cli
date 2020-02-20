@@ -43,15 +43,11 @@ func (opts *atlasDBUsersUpdateOpts) init() error {
 }
 
 func (opts *atlasDBUsersUpdateOpts) Run() error {
-	current, err := opts.store.DatabaseUser(opts.projectID, opts.username)
+	current := atlas.DatabaseUser{}
 
-	if err != nil {
-		return err
-	}
+	opts.update(&current)
 
-	opts.update(current)
-
-	result, err := opts.store.UpdateDatabaseUser(current)
+	result, err := opts.store.UpdateDatabaseUser(&current)
 
 	if err != nil {
 		return err
@@ -62,6 +58,8 @@ func (opts *atlasDBUsersUpdateOpts) Run() error {
 
 func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 
+	out.GroupID = opts.OrgID()
+	out.Username = opts.username
 	if opts.password != "" {
 		out.Password = opts.password
 	}

@@ -17,8 +17,10 @@ package cli
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mcli/internal/fixtures"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mcli/internal/mocks"
 )
 
@@ -30,28 +32,24 @@ func TestAtlasDBUserUpdate_Run(t *testing.T) {
 
 	expected := fixtures.DatabaseUser()
 
-	createOpts := &atlasDBUsersUpdateOpts{
+	updateOpts := &atlasDBUsersUpdateOpts{
 		globalOpts: newGlobalOpts(),
 		username:   "test4",
 		password:   "US",
-		roles:      []string{"admin@admin", "test"},
+		roles:      []string{"admin@admin"},
 		store:      mockStore,
 	}
 
+	dbUser := atlas.DatabaseUser{}
+	updateOpts.update(&dbUser)
+
 	mockStore.
 		EXPECT().
-		DatabaseUser(createOpts.orgID, createOpts.username).
+		UpdateDatabaseUser(&dbUser).
 		Return(expected, nil).
 		Times(1)
 
-	createOpts.update(expected)
-
-	mockStore.
-		EXPECT().
-		UpdateDatabaseUser(expected).Return(expected, nil).
-		Times(1)
-
-	err := createOpts.Run()
+	err := updateOpts.Run()
 
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

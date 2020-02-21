@@ -20,8 +20,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"testing"
 	"strconv"
+	"testing"
+
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
@@ -29,7 +30,7 @@ const (
 	group         = "GROUP"
 	eventTypeName = "NO_PRIMARY"
 	interval_min  = 5
-	delay_min 	  = 0
+	delay_min     = 0
 )
 
 func TestAtlasAlertConfig(t *testing.T) {

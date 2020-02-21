@@ -55,7 +55,7 @@ const (
 	MetricThresholdMode              = "metricThresholdMode"             // MetricThresholdMode flag
 	Token                            = "token"                           // Token flag
 	NotificationsChannelName         = "notificationsChannelName"        // NotificationsChannelName flag
-	ApiKey                           = "apiKey"                          // ApiKey flag
+	APIKey                           = "apiKey"                          // APIKey flag
 	NotificationsRegion              = "notificationRegion"              // NotificationRegion flag
 	NotificationsDelayMin            = "notificationDelayMin"            // NotificationsDelayMin flag
 	NotificationsEmailAddress        = "notificationEmailAddress"        // NotificationsEmailAddress flag
@@ -66,7 +66,7 @@ const (
 	NotificationsOrgName             = "notificationOrgName"             // NotificationsOrgName flag
 	NotificationsServiceKey          = "notificationServiceKey"          // NotificationsServiceKey flag
 	NotificationsSmsEnabled          = "notificationSmsEnabled"          // NotificationsSmsEnabled flag
-	NotificationsTeamId              = "notificationTeamId"              // NotificationsTeamId flag
+	NotificationsTeamID              = "notificationTeamId"              // NotificationsTeamID flag
 	NotificationsTypeName            = "notificationTypeName"            // NotificationsTypeName flag
 	NotificationsUsername            = "notificationUsername"            // NotificationsUsername flag
 	NotificationsVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationsVictorOpsRoutingKey flag

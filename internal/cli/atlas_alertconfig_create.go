@@ -42,32 +42,32 @@ const (
 type atlasAlertConfigCreateOpts struct {
 	*globalOpts
 	event                           string
-	enabled                         bool
 	matcherFieldName                string
 	matcherOperator                 string
 	matcherValue                    string
 	metricThresholdMetricName       string
 	metricThresholdOperator         string
-	metricThresholdThreshold        float64
 	metricThresholdUnits            string
 	metricThresholdMode             string
 	token                           string // notificationsApiToken, notificationsFlowdockApiToken
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
-	notificationDelayMin            int
 	notificationEmailAddress        string
-	notificationEmailEnabled        bool
 	notificationFlowName            string
-	notificationIntervalMin         int
 	notificationMobileNumber        string
 	notificationRegion              string // notificationsOpsGenieRegion, notificationsDatadogRegion
 	notificationOrgName             string
 	notificationServiceKey          string
-	notificationSmsEnabled          bool
-	notificationTeamId              string
+	notificationTeamID              string
 	notificationTypeName            string
 	notificationUsername            string
 	notificationVictorOpsRoutingKey string
+	notificationDelayMin            int
+	notificationIntervalMin         int
+	notificationSmsEnabled          bool
+	enabled                         bool
+	notificationEmailEnabled        bool
+	metricThresholdThreshold        float64
 	store                           store.AlertConfigurationCreator
 }
 
@@ -122,7 +122,7 @@ func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertCo
 	notification.TypeName = strings.ToUpper(opts.notificationTypeName)
 	notification.DelayMin = &opts.notificationDelayMin
 	notification.IntervalMin = opts.notificationIntervalMin
-	notification.TeamID = opts.notificationTeamId
+	notification.TeamID = opts.notificationTeamID
 	notification.Username = opts.notificationUsername
 
 	switch notification.TypeName {
@@ -168,7 +168,7 @@ func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertCo
 }
 
 // mcli atlas alert-config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
-// [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamId id
+// [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // --notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region] [--projectId projectId]
 func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	opts := &atlasAlertConfigCreateOpts{
@@ -198,41 +198,24 @@ func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.metricThresholdUnits, flags.MetricThresholdUnits, "", usage.MetricThresholdUnits)
 	cmd.Flags().StringVar(&opts.metricThresholdMode, flags.MetricThresholdMode, "", usage.MetricThresholdMode)
 	cmd.Flags().StringVar(&opts.token, flags.Token, "", usage.Token)
-	cmd.Flags().StringVar(&opts.notificationChannelName, flags.NotificationsChannelName, "", usage.NotificationsChannelName)
-	cmd.Flags().StringVar(&opts.apiKey, flags.ApiKey, "", usage.ApiKey)
-	cmd.Flags().StringVar(&opts.notificationRegion, flags.NotificationsRegion, "", usage.NotificationRegion)
-	cmd.Flags().IntVar(&opts.notificationDelayMin, flags.NotificationsDelayMin, 0, usage.NotificationDelayMin)
-	cmd.Flags().StringVar(&opts.notificationEmailAddress, flags.NotificationsEmailAddress, "", usage.NotificationEmailAddress)
-	cmd.Flags().BoolVar(&opts.notificationEmailEnabled, flags.NotificationsEmailEnabled, false, usage.NotificationEmailEnabled)
-	cmd.Flags().StringVar(&opts.notificationFlowName, flags.NotificationsFlowName, "", usage.NotificationFlowName)
-	cmd.Flags().IntVar(&opts.notificationIntervalMin, flags.NotificationsIntervalMin, 0, usage.NotificationIntervalMin)
-	cmd.Flags().StringVar(&opts.notificationMobileNumber, flags.NotificationsMobileNumber, "", usage.NotificationMobileNumber)
-	cmd.Flags().StringVar(&opts.notificationOrgName, flags.NotificationsOrgName, "", usage.NotificationOrgName)
-	cmd.Flags().StringVar(&opts.notificationServiceKey, flags.NotificationsServiceKey, "", usage.NotificationServiceKey)
-	cmd.Flags().BoolVar(&opts.notificationSmsEnabled, flags.NotificationsSmsEnabled, false, usage.NotificationSmsEnabled)
-	cmd.Flags().StringVar(&opts.notificationTeamId, flags.NotificationsTeamId, "", usage.NotificationTeamId)
-	cmd.Flags().StringVar(&opts.notificationTypeName, flags.NotificationsTypeName, "", usage.NotificationTypeName)
-	cmd.Flags().StringVar(&opts.notificationUsername, flags.NotificationsUsername, "", usage.NotificationUsername)
-	cmd.Flags().StringVar(&opts.notificationVictorOpsRoutingKey, flags.NotificationsVictorOpsRoutingKey, "", usage.NotificationVictorOpsRoutingKey)
+	cmd.Flags().StringVar(&opts.notificationChannelName, flags.NotificationChannelName, "", usage.NotificationsChannelName)
+	cmd.Flags().StringVar(&opts.apiKey, flags.APIKey, "", usage.APIKey)
+	cmd.Flags().StringVar(&opts.notificationRegion, flags.NotificationRegion, "", usage.NotificationRegion)
+	cmd.Flags().IntVar(&opts.notificationDelayMin, flags.NotificationDelayMin, 0, usage.NotificationDelayMin)
+	cmd.Flags().StringVar(&opts.notificationEmailAddress, flags.NotificationEmailAddress, "", usage.NotificationEmailAddress)
+	cmd.Flags().BoolVar(&opts.notificationEmailEnabled, flags.NotificationEmailEnabled, false, usage.NotificationEmailEnabled)
+	cmd.Flags().StringVar(&opts.notificationFlowName, flags.NotificationFlowName, "", usage.NotificationFlowName)
+	cmd.Flags().IntVar(&opts.notificationIntervalMin, flags.NotificationIntervalMin, 0, usage.NotificationIntervalMin)
+	cmd.Flags().StringVar(&opts.notificationMobileNumber, flags.NotificationMobileNumber, "", usage.NotificationMobileNumber)
+	cmd.Flags().StringVar(&opts.notificationOrgName, flags.NotificationOrgName, "", usage.NotificationOrgName)
+	cmd.Flags().StringVar(&opts.notificationServiceKey, flags.NotificationServiceKey, "", usage.NotificationServiceKey)
+	cmd.Flags().BoolVar(&opts.notificationSmsEnabled, flags.NotificationSmsEnabled, false, usage.NotificationSmsEnabled)
+	cmd.Flags().StringVar(&opts.notificationTeamID, flags.NotificationTeamID, "", usage.NotificationTeamID)
+	cmd.Flags().StringVar(&opts.notificationTypeName, flags.NotificationTypeName, "", usage.NotificationTypeName)
+	cmd.Flags().StringVar(&opts.notificationUsername, flags.NotificationUsername, "", usage.NotificationUsername)
+	cmd.Flags().StringVar(&opts.notificationVictorOpsRoutingKey, flags.NotificationVictorOpsRoutingKey, "", usage.NotificationVictorOpsRoutingKey)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }
-
-/*
-curl -X POST -u "dozqoqjw:6e89fd16-ebfd-4584-9f3b-d3b692326983" --digest "https://cloud-dev.mongodb.com/api/atlas/v1.0/groups/5e4e593f70dfbf1010295836/alertConfigs" \
-   -H "Content-Type: application/json" --data '
-   {
-	 "groupId": "5e4e593f70dfbf1010295836",
-     "eventTypeName" : "NO_PRIMARY",
-     "enabled" : true,
-     "notifications" : [ {
-       "typeName" : "GROUP",
-       "intervalMin" : 5,
-       "delayMin" : 0,
-       "smsEnabled" : false,
-       "emailEnabled" : true
-     } ]
-   }'
-*/

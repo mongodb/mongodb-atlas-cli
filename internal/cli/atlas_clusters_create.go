@@ -15,8 +15,6 @@
 package cli
 
 import (
-	"errors"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mcli/internal/file"
 	"github.com/mongodb/mcli/internal/flags"
@@ -159,7 +157,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 				_ = cmd.MarkFlagRequired(flags.Region)
 
 				if len(args) == 0 {
-					return errors.New("cluster name missing")
+					return errMissingClusterName
 				}
 				opts.name = args[0]
 			}
@@ -177,7 +175,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to deploy a new cluster")
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", usage.Filename)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

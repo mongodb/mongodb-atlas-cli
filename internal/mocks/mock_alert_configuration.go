@@ -48,6 +48,44 @@ func (mr *MockAlertConfigurationListerMockRecorder) AlertConfigurations(arg0, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlertConfigurations", reflect.TypeOf((*MockAlertConfigurationLister)(nil).AlertConfigurations), arg0, arg1)
 }
 
+// MockAlertConfigurationCreator is a mock of AlertConfigurationCreator interface
+type MockAlertConfigurationCreator struct {
+	ctrl     *gomock.Controller
+	recorder *MockAlertConfigurationCreatorMockRecorder
+}
+
+// MockAlertConfigurationCreatorMockRecorder is the mock recorder for MockAlertConfigurationCreator
+type MockAlertConfigurationCreatorMockRecorder struct {
+	mock *MockAlertConfigurationCreator
+}
+
+// NewMockAlertConfigurationCreator creates a new mock instance
+func NewMockAlertConfigurationCreator(ctrl *gomock.Controller) *MockAlertConfigurationCreator {
+	mock := &MockAlertConfigurationCreator{ctrl: ctrl}
+	mock.recorder = &MockAlertConfigurationCreatorMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAlertConfigurationCreator) EXPECT() *MockAlertConfigurationCreatorMockRecorder {
+	return m.recorder
+}
+
+// CreateAlertConfiguration mocks base method
+func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAlertConfiguration", arg0)
+	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAlertConfiguration indicates an expected call of CreateAlertConfiguration
+func (mr *MockAlertConfigurationCreatorMockRecorder) CreateAlertConfiguration(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationCreator)(nil).CreateAlertConfiguration), arg0)
+}
+
 // MockAlertConfigurationStore is a mock of AlertConfigurationStore interface
 type MockAlertConfigurationStore struct {
 	ctrl     *gomock.Controller
@@ -84,4 +122,19 @@ func (m *MockAlertConfigurationStore) AlertConfigurations(arg0 string, arg1 *mon
 func (mr *MockAlertConfigurationStoreMockRecorder) AlertConfigurations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlertConfigurations", reflect.TypeOf((*MockAlertConfigurationStore)(nil).AlertConfigurations), arg0, arg1)
+}
+
+// CreateAlertConfiguration mocks base method
+func (m *MockAlertConfigurationStore) CreateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAlertConfiguration", arg0)
+	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAlertConfiguration indicates an expected call of CreateAlertConfiguration
+func (mr *MockAlertConfigurationStoreMockRecorder) CreateAlertConfiguration(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationStore)(nil).CreateAlertConfiguration), arg0)
 }

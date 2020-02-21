@@ -34,14 +34,39 @@ const (
 	FirstName     = "User’s first name."
 	LastName      = "User’s last name."
 	WhitelistIps  = "IP addresses to add to the new user’s whitelist."
-	WhitelistType = `Type of whitelist entry.
-Valid values: cidrBlock|ipAddress`
-	Service = `Type of MongoDB service.
-Valid values: cloud|cloud-manager|ops-manager`
-	Provider = `Name of your cloud service provider.
-Valid values: AWS|AZURE|GCP.`
+	WhitelistType = `Type of whitelist entry. Valid values: cidrBlock|ipAddress`
+	Service       = `Type of MongoDB service. Valid values: cloud|cloud-manager|ops-manager`
+	Provider      = `Name of your cloud service provider.
+										Valid values: AWS|AZURE|GCP.`
 	Region = `Physical location of your MongoDB cluster.
-For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
-For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure
-For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp`
+										For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
+										For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure
+										For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp`
+	Event                           = "Type of event that will trigger an alert."
+	Enabled                         = "If set to true, the alert configuration is enabled."
+	MatcherFieldName                = "Name of the field in the target object to match on"
+	MatcherOperator                 = "The operator to test the field’s value"
+	MatcherValue                    = "Value to test with the specified operator"
+	MetricThresholdMetricName       = "Name of the metric against which Atlas checks the configured"
+	MetricThresholdOperator         = "Operator to apply when checking the current metric value against the threshold value"
+	MetricThresholdThreshold        = "Threshold value outside of which an alert will be triggered"
+	MetricThresholdUnits            = "The units for the threshold value"
+	MetricThresholdMode             = "Atlas computes the current metric value as an average"
+	Token                           = "Slack API token or Bot token or Flowdock personal API token"
+	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type"
+	ApiKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key"
+	NotificationRegion              = "Region that indicates which API URL to use"
+	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification"
+	NotificationEmailAddress        = "Email address to which alert notifications are sent"
+	NotificationEmailEnabled        = "Flag indicating if email notifications should be sent"
+	NotificationFlowName            = "Flowdock flow name in lower-case letters"
+	NotificationIntervalMin         = "Number of minutes to wait between successive notifications for unacknowledged alerts that are not resolved"
+	NotificationMobileNumber        = "Mobile number to which alert notifications are sent"
+	NotificationOrgName             = "Flowdock organization name in lower-case letters"
+	NotificationServiceKey          = "PagerDuty service key"
+	NotificationSmsEnabled          = "Flag indicating if text message notifications should be sent"
+	NotificationTeamId              = "Unique identifier of a team"
+	NotificationTypeName            = "Type of alert notification"
+	NotificationUsername            = "Name of the Atlas user to which to send notifications"
+	NotificationVictorOpsRoutingKey = "VictorOps routing key"
 )

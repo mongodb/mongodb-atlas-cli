@@ -47,12 +47,13 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers
-func (s *Store) CreateAlertConfiguration(alert *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
-		project := alert.GroupID
-		alert.GroupID = ""
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(context.Background(), project, alert)
+		// TODO: fix me https://github.com/mongodb/go-client-mongodb-atlas/pull/56
+		project := alertConfig.GroupID
+		alertConfig.GroupID = ""
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(context.Background(), project, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

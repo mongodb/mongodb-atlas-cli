@@ -30,11 +30,12 @@ func TestAtlasAlertConfigCreate_Run(t *testing.T) {
 
 	t.Run("flags run", func(t *testing.T) {
 		expected := fixtures.AlertConfig()
+		var enabled = true
 
 		createOpts := &atlasAlertConfigCreateOpts{
 			globalOpts:                newGlobalOpts(),
 			event:                     "OUTSIDE_METRIC_THRESHOLD",
-			enabled:                   true,
+			enabled:                   &enabled,
 			matcherFieldName:          "HOSTNAME_AND_PORT",
 			matcherOperator:           "EQUALS",
 			matcherValue:              "mongo.example.com:27017",
@@ -46,7 +47,7 @@ func TestAtlasAlertConfigCreate_Run(t *testing.T) {
 			notificationDelayMin:      0,
 			notificationIntervalMin:   5,
 			notificationMobileNumber:  "2343454567",
-			notificationTypeName:      "sms",
+			notificationType:          "sms",
 			store:                     mockStore,
 		}
 

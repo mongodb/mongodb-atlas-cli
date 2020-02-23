@@ -52,7 +52,7 @@ const (
 	MetricThresholdThreshold        = "Threshold value outside of which an alert will be triggered"
 	MetricThresholdUnits            = "The units for the threshold value"
 	MetricThresholdMode             = "Atlas computes the current metric value as an average"
-	Token                           = "Slack API token or Bot token or Flowdock personal API token"
+	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token"
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type"
 	APIKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key"
 	NotificationRegion              = "Region that indicates which API URL to use"
@@ -66,7 +66,7 @@ const (
 	NotificationServiceKey          = "PagerDuty service key"
 	NotificationSmsEnabled          = "Flag indicating if text message notifications should be sent"
 	NotificationTeamID              = "Unique identifier of a team"
-	NotificationTypeName            = "Type of alert notification"
+	NotificationType                = "Type of alert notification"
 	NotificationUsername            = "Name of the Atlas user to which to send notifications"
 	NotificationVictorOpsRoutingKey = "VictorOps routing key"
 )

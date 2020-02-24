@@ -94,89 +94,91 @@ func (opts *atlasAlertConfigCreateOpts) Run() error {
 
 func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertConfiguration {
 
-	alertConfig := new(atlas.AlertConfiguration)
+	out := new(atlas.AlertConfiguration)
 
-	alertConfig.GroupID = opts.ProjectID()
-	alertConfig.EventTypeName = strings.ToUpper(opts.event)
-	alertConfig.Enabled = &opts.enabled
+	out.GroupID = opts.ProjectID()
+	out.EventTypeName = strings.ToUpper(opts.event)
+	out.Enabled = &opts.enabled
 
-	buildMatcher(opts, alertConfig)
-	buildMetricThreshold(opts, alertConfig)
-	buildNotification(opts, alertConfig)
+	if opts.matcherFieldName != "" {
+		out.Matchers = []atlas.Matcher{*newMatcher(opts)}
+	}
 
-	return alertConfig
+	if opts.metricThresholdMetricName != "" {
+		out.MetricThreshold = newMetricThreshold(opts)
+	}
+
+	out.Notifications = []atlas.Notification{*newNotification(opts)}
+
+	return out
 }
 
-func buildNotification(opts *atlasAlertConfigCreateOpts, alertConfig *atlas.AlertConfiguration) {
+func newNotification(opts *atlasAlertConfigCreateOpts) *atlas.Notification {
 
-	notification := atlas.Notification{}
-	notification.TypeName = strings.ToUpper(opts.notificationType)
-	notification.DelayMin = &opts.notificationDelayMin
-	notification.IntervalMin = opts.notificationIntervalMin
-	notification.TeamID = opts.notificationTeamID
-	notification.Username = opts.notificationUsername
+	out := new(atlas.Notification)
+	out.TypeName = strings.ToUpper(opts.notificationType)
+	out.DelayMin = &opts.notificationDelayMin
+	out.IntervalMin = opts.notificationIntervalMin
+	out.TeamID = opts.notificationTeamID
+	out.Username = opts.notificationUsername
 
-	switch notification.TypeName {
+	switch out.TypeName {
 
 	case victor:
-		notification.VictorOpsAPIKey = opts.apiKey
-		notification.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
+		out.VictorOpsAPIKey = opts.apiKey
+		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
 
 	case slack:
-		notification.VictorOpsAPIKey = opts.apiKey
-		notification.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
-		notification.APIToken = opts.notificationToken
+		out.VictorOpsAPIKey = opts.apiKey
+		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
+		out.APIToken = opts.notificationToken
 
 	case datadog:
-		notification.DatadogAPIKey = opts.apiKey
-		notification.DatadogRegion = strings.ToUpper(opts.notificationRegion)
+		out.DatadogAPIKey = opts.apiKey
+		out.DatadogRegion = strings.ToUpper(opts.notificationRegion)
 
 	case email:
-		notification.EmailAddress = opts.notificationEmailAddress
+		out.EmailAddress = opts.notificationEmailAddress
 
 	case flowdock:
-		notification.FlowdockAPIToken = opts.notificationToken
-		notification.FlowName = opts.notificationFlowName
-		notification.OrgName = opts.notificationOrgName
+		out.FlowdockAPIToken = opts.notificationToken
+		out.FlowName = opts.notificationFlowName
+		out.OrgName = opts.notificationOrgName
 
 	case sms:
-		notification.MobileNumber = opts.notificationMobileNumber
+		out.MobileNumber = opts.notificationMobileNumber
 
 	case group, user, org:
-		notification.SMSEnabled = &opts.notificationSmsEnabled
-		notification.EmailEnabled = &opts.notificationEmailEnabled
+		out.SMSEnabled = &opts.notificationSmsEnabled
+		out.EmailEnabled = &opts.notificationEmailEnabled
 
 	case ops:
-		notification.OpsGenieAPIKey = opts.apiKey
-		notification.OpsGenieRegion = opts.notificationRegion
+		out.OpsGenieAPIKey = opts.apiKey
+		out.OpsGenieRegion = opts.notificationRegion
 
 	case pager:
-		notification.ServiceKey = opts.notificationServiceKey
+		out.ServiceKey = opts.notificationServiceKey
 
 	}
 
-	alertConfig.Notifications = []atlas.Notification{notification}
+	return out
 }
 
-func buildMetricThreshold(opts *atlasAlertConfigCreateOpts, alertConfig *atlas.AlertConfiguration) {
-	if opts.metricThresholdMetricName != "" {
-		metric := new(atlas.MetricThreshold)
-		metric.MetricName = strings.ToUpper(opts.metricThresholdMetricName)
-		metric.Operator = strings.ToUpper(opts.metricThresholdOperator)
-		metric.Threshold = opts.metricThresholdThreshold
-		metric.Units = strings.ToUpper(opts.metricThresholdUnits)
-		metric.Mode = strings.ToUpper(opts.metricThresholdMode)
-		alertConfig.MetricThreshold = metric
+func newMetricThreshold(opts *atlasAlertConfigCreateOpts) *atlas.MetricThreshold {
+	return &atlas.MetricThreshold{
+		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
+		Operator:   strings.ToUpper(opts.metricThresholdOperator),
+		Threshold:  opts.metricThresholdThreshold,
+		Units:      strings.ToUpper(opts.metricThresholdUnits),
+		Mode:       strings.ToUpper(opts.metricThresholdMode),
 	}
 }
 
-func buildMatcher(opts *atlasAlertConfigCreateOpts, alertConfig *atlas.AlertConfiguration) {
-	if opts.matcherFieldName != "" {
-		match := new(atlas.Matcher)
-		match.FieldName = strings.ToUpper(opts.matcherFieldName)
-		match.Operator = strings.ToUpper(opts.matcherOperator)
-		match.Value = strings.ToUpper(opts.matcherValue)
-		alertConfig.Matchers = []atlas.Matcher{*match}
+func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
+	return &atlas.Matcher{
+		FieldName: strings.ToUpper(opts.matcherFieldName),
+		Operator:  strings.ToUpper(opts.matcherOperator),
+		Value:     strings.ToUpper(opts.matcherValue),
 	}
 }
 
@@ -205,11 +207,11 @@ func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.matcherFieldName, flags.MatcherFieldName, "", usage.MatcherFieldName)
 	cmd.Flags().StringVar(&opts.matcherOperator, flags.MatcherOperator, "", usage.MatcherOperator)
 	cmd.Flags().StringVar(&opts.matcherValue, flags.MatcherValue, "", usage.MatcherValue)
-	cmd.Flags().StringVar(&opts.metricThresholdMetricName, flags.MetricThresholdMetricName, "", usage.MetricThresholdMetricName)
-	cmd.Flags().StringVar(&opts.metricThresholdOperator, flags.MetricThresholdOperator, "", usage.MetricThresholdOperator)
-	cmd.Flags().Float64Var(&opts.metricThresholdThreshold, flags.MetricThresholdThreshold, 0, usage.MetricThresholdThreshold)
-	cmd.Flags().StringVar(&opts.metricThresholdUnits, flags.MetricThresholdUnits, "", usage.MetricThresholdUnits)
-	cmd.Flags().StringVar(&opts.metricThresholdMode, flags.MetricThresholdMode, "", usage.MetricThresholdMode)
+	cmd.Flags().StringVar(&opts.metricThresholdMetricName, flags.MetricName, "", usage.MetricName)
+	cmd.Flags().StringVar(&opts.metricThresholdOperator, flags.MetricOperator, "", usage.MetricOperator)
+	cmd.Flags().Float64Var(&opts.metricThresholdThreshold, flags.MetricThreshold, 0, usage.MetricThreshold)
+	cmd.Flags().StringVar(&opts.metricThresholdUnits, flags.MetricUnits, "", usage.MetricUnits)
+	cmd.Flags().StringVar(&opts.metricThresholdMode, flags.MetricMode, "", usage.MetricMode)
 	cmd.Flags().StringVar(&opts.notificationToken, flags.NotificationToken, "", usage.NotificationToken)
 	cmd.Flags().StringVar(&opts.notificationChannelName, flags.NotificationChannelName, "", usage.NotificationsChannelName)
 	cmd.Flags().StringVar(&opts.apiKey, flags.APIKey, "", usage.APIKey)

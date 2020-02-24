@@ -48,11 +48,11 @@ const (
 	MatcherFieldName                = "matcherFieldName"                // MatcherFieldName flag
 	MatcherOperator                 = "matcherOperator"                 // MatcherOperator flag
 	MatcherValue                    = "matcherValue"                    // MatcherValue flag
-	MetricThresholdMetricName       = "metricThresholdMetricName"       // MetricThresholdMetricName flag
-	MetricThresholdOperator         = "metricThresholdOperator"         // MetricThresholdOperator flag
-	MetricThresholdThreshold        = "metricThresholdThreshold"        // MetricThresholdThreshold flag
-	MetricThresholdUnits            = "metricThresholdUnits"            // MetricThresholdUnits flag
-	MetricThresholdMode             = "metricThresholdMode"             // MetricThresholdMode flag
+	MetricName                      = "metricName"                      // MetricName flag
+	MetricOperator                  = "metricOperator"                  // MetricOperator flag
+	MetricThreshold                 = "metricThreshold"                 // MetricThreshold flag
+	MetricUnits                     = "metricUnits"                     // MetricUnits flag
+	MetricMode                      = "metricMode"                      // MetricMode flag
 	NotificationToken               = "notificationToken"               // NotificationToken flag
 	NotificationChannelName         = "notificationsChannelName"        // NotificationChannelName flag
 	APIKey                          = "apiKey"                          // APIKey flag

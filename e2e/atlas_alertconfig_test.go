@@ -22,12 +22,12 @@ import (
 	"testing"
 )
 
-const (
-	group         = "GROUP"
-	eventTypeName = "NO_PRIMARY"
-	interval_min  = 5
-	delay_min     = 0
-)
+//const (
+//	group         = "GROUP"
+//	eventTypeName = "NO_PRIMARY"
+//	intervalMin  = 5
+//	delayMin     = 0
+//)
 
 func TestAtlasAlertConfig(t *testing.T) {
 	cliPath, err := filepath.Abs("../bin/mcli")
@@ -41,7 +41,7 @@ func TestAtlasAlertConfig(t *testing.T) {
 	}
 
 	atlasEntity := "atlas"
-	alertConfigEntity := "alert-config"
+	alertConfigEntity := "alerts configs"
 
 	//t.Run("Create", func(t *testing.T) {
 	//	cmd := exec.Command(cliPath,
@@ -54,9 +54,9 @@ func TestAtlasAlertConfig(t *testing.T) {
 	//		"--notificationTypeName",
 	//		group,
 	//		"--notificationIntervalMin",
-	//		strconv.Itoa(interval_min),
+	//		strconv.Itoa(intervalMin),
 	//		"--notificationDelayMin",
-	//		strconv.Itoa(delay_min),
+	//		strconv.Itoa(delayMin),
 	//		"--notificationSmsEnabled=false",
 	//		"--notificationEmailEnabled=true")
 	//	cmd.Env = os.Environ()

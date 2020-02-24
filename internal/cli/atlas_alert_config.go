@@ -20,8 +20,8 @@ import (
 
 func AtlasAlertConfigBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "alert-config",
-		Aliases: []string{"alertConfig", "alertConfigs", "alert-configs"},
+		Use:     "alerts configs",
+		Aliases: []string{"alertConfig", "alertConfigs", "alert-configs", "alert-config"},
 		Short:   "Manage Atlas alert configurations for your project.",
 		Long:    "The alertConfigs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
 	}

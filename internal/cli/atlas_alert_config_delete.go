@@ -15,22 +15,19 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertConfigListOpts struct {
+type atlasAlertConfigDeleteOpts struct {
 	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	store        store.AlertConfigurationLister
+	*deleteOpts
+	store store.AlertConfigurationDeleter
 }
 
-func (opts *atlasAlertConfigListOpts) init() error {
+func (opts *atlasAlertConfigDeleteOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -40,35 +37,26 @@ func (opts *atlasAlertConfigListOpts) init() error {
 	return err
 }
 
-func (opts *atlasAlertConfigListOpts) Run() error {
-	listOpts := opts.newListOptions()
-	result, err := opts.store.AlertConfigurations(opts.ProjectID(), listOpts)
-
-	if err != nil {
-		return err
-	}
-
-	return json.PrettyPrint(result)
+func (opts *atlasAlertConfigDeleteOpts) Run() error {
+	return opts.DeleteFromProject(opts.store.DeleteAlertConfiguration, opts.ProjectID())
 }
 
-func (opts *atlasAlertConfigListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
-// mcli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
-func AtlasAlertConfigListBuilder() *cobra.Command {
-	opts := &atlasAlertConfigListOpts{
+// mcli atlas alerts config(s) delete id --projectId projectId [--confirm]
+func AtlasAlertConfigDeleteBuilder() *cobra.Command {
+	opts := &atlasAlertConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),
+		deleteOpts: &deleteOpts{
+			successMessage: "Alert Config '%s' deleted\n",
+			failMessage:    "Alert Config not deleted",
+		},
 	}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List Atlas alert configurations for a project.",
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "delete [id]",
+		Short:   "Delete an Atlas Alert Config.",
+		Aliases: []string{"rm", "Delete", "Remove"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.entry = args[0]
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -76,8 +64,7 @@ func AtlasAlertConfigListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

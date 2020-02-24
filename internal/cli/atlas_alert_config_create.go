@@ -182,7 +182,7 @@ func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
 	}
 }
 
-// mcli atlas alert-config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mcli atlas alerts config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // --notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region] [--projectId projectId]
 func AtlasAlertConfigCreateBuilder() *cobra.Command {

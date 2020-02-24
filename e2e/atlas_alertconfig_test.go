@@ -16,18 +16,22 @@
 package e2e
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"testing"
+
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-//const (
-//	group         = "GROUP"
-//	eventTypeName = "NO_PRIMARY"
-//	intervalMin  = 5
-//	delayMin     = 0
-//)
+const (
+	group         = "GROUP"
+	eventTypeName = "NO_PRIMARY"
+	intervalMin   = 5
+	delayMin      = 0
+)
 
 func TestAtlasAlertConfig(t *testing.T) {
 	cliPath, err := filepath.Abs("../bin/mcli")
@@ -41,65 +45,82 @@ func TestAtlasAlertConfig(t *testing.T) {
 	}
 
 	atlasEntity := "atlas"
-	alertConfigEntity := "alerts configs"
+	alertsEntity := "alerts"
+	configEntity := "configs"
 
-	//t.Run("Create", func(t *testing.T) {
-	//	cmd := exec.Command(cliPath,
-	//		atlasEntity,
-	//		alertConfigEntity,
-	//		"create",
-	//		"--event",
-	//		eventTypeName,
-	//		"--enabled=true",
-	//		"--notificationTypeName",
-	//		group,
-	//		"--notificationIntervalMin",
-	//		strconv.Itoa(intervalMin),
-	//		"--notificationDelayMin",
-	//		strconv.Itoa(delayMin),
-	//		"--notificationSmsEnabled=false",
-	//		"--notificationEmailEnabled=true")
-	//	cmd.Env = os.Environ()
-	//	resp, err := cmd.CombinedOutput()
-	//
-	//	if err != nil {
-	//		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	//	}
-	//
-	//	alert := mongodbatlas.AlertConfiguration{}
-	//	err = json.Unmarshal(resp, &alert)
-	//	if err != nil {
-	//		t.Fatalf("unexpected error: %v", err)
-	//	}
-	//
-	//	if alert.EventTypeName != eventTypeName {
-	//		t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, eventTypeName)
-	//	}
-	//
-	//	if len(alert.Notifications) != 1 {
-	//		t.Errorf("len(alert.Notifications) got=%#v\nwant=%#v\n", len(alert.Notifications), 1)
-	//	}
-	//
-	//	if *alert.Notifications[0].DelayMin != delay_min {
-	//		t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].DelayMin, delay_min)
-	//	}
-	//
-	//	if alert.Notifications[0].TypeName != group {
-	//		t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].TypeName, group)
-	//	}
-	//
-	//	if alert.Notifications[0].IntervalMin != interval_min {
-	//		t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].IntervalMin, interval_min)
-	//	}
-	//
-	//	if *alert.Notifications[0].SMSEnabled != false {
-	//		t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].SMSEnabled, false)
-	//	}
-	//
-	//})
+	var alertID string
+
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			configEntity,
+			"create",
+			"--event",
+			eventTypeName,
+			"--enabled=true",
+			"--notificationType",
+			group,
+			"--notificationIntervalMin",
+			strconv.Itoa(intervalMin),
+			"--notificationDelayMin",
+			strconv.Itoa(delayMin),
+			"--notificationSmsEnabled=false",
+			"--notificationEmailEnabled=true")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alert := mongodbatlas.AlertConfiguration{}
+		err = json.Unmarshal(resp, &alert)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if alert.EventTypeName != eventTypeName {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, eventTypeName)
+		}
+
+		if len(alert.Notifications) != 1 {
+			t.Errorf("len(alert.Notifications) got=%#v\nwant=%#v\n", len(alert.Notifications), 1)
+		}
+
+		if *alert.Notifications[0].DelayMin != delayMin {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].DelayMin, delayMin)
+		}
+
+		if alert.Notifications[0].TypeName != group {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].TypeName, group)
+		}
+
+		if alert.Notifications[0].IntervalMin != intervalMin {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].IntervalMin, intervalMin)
+		}
+
+		if *alert.Notifications[0].SMSEnabled != false {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].SMSEnabled, false)
+		}
+
+		alertID = alert.ID
+
+	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertConfigEntity, "ls")
+		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "ls")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

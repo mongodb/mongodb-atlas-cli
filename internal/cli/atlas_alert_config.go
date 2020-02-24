@@ -18,7 +18,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasAlertConfigBuilder() *cobra.Command {
+func AtlasAlertConfigsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "configs",
 		Aliases: []string{"alertConfig", "alertConfigs", "alert-configs", "alert-config", "config"},

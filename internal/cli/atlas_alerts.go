@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasAlertBuilder() *cobra.Command {
+func AtlasAlertsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "alerts",
 		Aliases: []string{"alert"},
@@ -12,7 +12,7 @@ func AtlasAlertBuilder() *cobra.Command {
 		Long:    "The alertConfigs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
 	}
 
-	cmd.AddCommand(AtlasAlertConfigBuilder())
+	cmd.AddCommand(AtlasAlertConfigsBuilder())
 
 	return cmd
 }

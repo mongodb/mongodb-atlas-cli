@@ -54,7 +54,7 @@ const (
 	MetricUnits                     = "metricUnits"                     // MetricUnits flag
 	MetricMode                      = "metricMode"                      // MetricMode flag
 	NotificationToken               = "notificationToken"               // NotificationToken flag
-	NotificationChannelName         = "notificationsChannelName"        // NotificationChannelName flag
+	NotificationChannelName         = "notificationChannelName"         // NotificationChannelName flag
 	APIKey                          = "apiKey"                          // APIKey flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag
 	NotificationDelayMin            = "notificationDelayMin"            // NotificationDelayMin flag

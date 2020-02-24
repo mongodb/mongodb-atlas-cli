@@ -35,8 +35,6 @@ const (
 	LastName                        = "User’s last name."
 	Filename                        = "Filename to use"
 	WhitelistIps                    = "IP addresses to add to the new user’s whitelist."
-	WhitelistType                   = `Type of whitelist entry. Valid values: cidrBlock|ipAddress`
-	Service                         = `Type of MongoDB service. Valid values: cloud|cloud-manager|ops-manager`
 	Event                           = "Type of event that will trigger an alert."
 	Enabled                         = "If set to true, the alert configuration is enabled."
 	MatcherFieldName                = "Name of the field in the target object to match on."
@@ -64,7 +62,11 @@ const (
 	NotificationType                = "Type of alert notification."
 	NotificationUsername            = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
-	Provider                        = `Name of your cloud service provider.
+	WhitelistType                   = `Type of whitelist entry.
+Valid values: cidrBlock|ipAddress`
+	Service = `Type of MongoDB service.
+Valid values: cloud|cloud-manager|ops-manager`
+	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
 	Region = `Physical location of your MongoDB cluster.
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws

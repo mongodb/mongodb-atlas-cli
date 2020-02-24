@@ -24,7 +24,7 @@ import (
 type atlasAlertConfigDeleteOpts struct {
 	*globalOpts
 	*deleteOpts
-	store          store.AlertConfigurationDeleter
+	store store.AlertConfigurationDeleter
 }
 
 func (opts *atlasAlertConfigDeleteOpts) init() error {
@@ -38,13 +38,13 @@ func (opts *atlasAlertConfigDeleteOpts) init() error {
 }
 
 func (opts *atlasAlertConfigDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store. DeleteAlertConfiguration, opts.ProjectID())
+	return opts.DeleteFromProject(opts.store.DeleteAlertConfiguration, opts.ProjectID())
 }
 
 // mcli atlas alerts config(s) delete id --projectId projectId [--confirm]
 func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	opts := &atlasAlertConfigDeleteOpts{
-		globalOpts:     newGlobalOpts(),
+		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
 			successMessage: "Alert Config '%s' deleted\n",
 			failMessage:    "Alert Config not deleted",

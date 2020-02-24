@@ -33,7 +33,7 @@ func TestAtlasAlertConfigsDelete_Run(t *testing.T) {
 			confirm: true,
 			entry:   "test",
 		},
-		store:      mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

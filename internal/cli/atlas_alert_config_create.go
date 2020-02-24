@@ -64,9 +64,9 @@ type atlasAlertConfigCreateOpts struct {
 	notificationVictorOpsRoutingKey string
 	notificationDelayMin            int
 	notificationIntervalMin         int
-	notificationSmsEnabled          *bool
-	enabled                         *bool
-	notificationEmailEnabled        *bool
+	notificationSmsEnabled          bool
+	enabled                         bool
+	notificationEmailEnabled        bool
 	metricThresholdThreshold        float64
 	store                           store.AlertConfigurationCreator
 }
@@ -98,7 +98,7 @@ func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertCo
 
 	alertConfig.GroupID = opts.ProjectID()
 	alertConfig.EventTypeName = strings.ToUpper(opts.event)
-	alertConfig.Enabled = opts.enabled
+	alertConfig.Enabled = &opts.enabled
 
 	buildMatcher(opts, alertConfig)
 	buildMetricThreshold(opts, alertConfig)
@@ -143,8 +143,8 @@ func buildNotification(opts *atlasAlertConfigCreateOpts, alertConfig *atlas.Aler
 		notification.MobileNumber = opts.notificationMobileNumber
 
 	case group, user, org:
-		notification.SMSEnabled = opts.notificationSmsEnabled
-		notification.EmailEnabled = opts.notificationEmailEnabled
+		notification.SMSEnabled = &opts.notificationSmsEnabled
+		notification.EmailEnabled = &opts.notificationEmailEnabled
 
 	case ops:
 		notification.OpsGenieAPIKey = opts.apiKey
@@ -201,7 +201,7 @@ func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.event, flags.Event, "", usage.Event)
-	cmd.Flags().BoolVar(opts.enabled, flags.Enabled, false, usage.Enabled)
+	cmd.Flags().BoolVar(&opts.enabled, flags.Enabled, false, usage.Enabled)
 	cmd.Flags().StringVar(&opts.matcherFieldName, flags.MatcherFieldName, "", usage.MatcherFieldName)
 	cmd.Flags().StringVar(&opts.matcherOperator, flags.MatcherOperator, "", usage.MatcherOperator)
 	cmd.Flags().StringVar(&opts.matcherValue, flags.MatcherValue, "", usage.MatcherValue)
@@ -216,13 +216,13 @@ func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.notificationRegion, flags.NotificationRegion, "", usage.NotificationRegion)
 	cmd.Flags().IntVar(&opts.notificationDelayMin, flags.NotificationDelayMin, 0, usage.NotificationDelayMin)
 	cmd.Flags().StringVar(&opts.notificationEmailAddress, flags.NotificationEmailAddress, "", usage.NotificationEmailAddress)
-	cmd.Flags().BoolVar(opts.notificationEmailEnabled, flags.NotificationEmailEnabled, false, usage.NotificationEmailEnabled)
+	cmd.Flags().BoolVar(&opts.notificationEmailEnabled, flags.NotificationEmailEnabled, false, usage.NotificationEmailEnabled)
 	cmd.Flags().StringVar(&opts.notificationFlowName, flags.NotificationFlowName, "", usage.NotificationFlowName)
 	cmd.Flags().IntVar(&opts.notificationIntervalMin, flags.NotificationIntervalMin, 0, usage.NotificationIntervalMin)
 	cmd.Flags().StringVar(&opts.notificationMobileNumber, flags.NotificationMobileNumber, "", usage.NotificationMobileNumber)
 	cmd.Flags().StringVar(&opts.notificationOrgName, flags.NotificationOrgName, "", usage.NotificationOrgName)
 	cmd.Flags().StringVar(&opts.notificationServiceKey, flags.NotificationServiceKey, "", usage.NotificationServiceKey)
-	cmd.Flags().BoolVar(opts.notificationSmsEnabled, flags.NotificationSmsEnabled, false, usage.NotificationSmsEnabled)
+	cmd.Flags().BoolVar(&opts.notificationSmsEnabled, flags.NotificationSmsEnabled, false, usage.NotificationSmsEnabled)
 	cmd.Flags().StringVar(&opts.notificationTeamID, flags.NotificationTeamID, "", usage.NotificationTeamID)
 	cmd.Flags().StringVar(&opts.notificationType, flags.NotificationType, "", usage.NotificationType)
 	cmd.Flags().StringVar(&opts.notificationUsername, flags.NotificationUsername, "", usage.NotificationUsername)

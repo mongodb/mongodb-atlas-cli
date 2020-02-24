@@ -33,7 +33,7 @@ const (
 	Email                           = "User’s email address."
 	FirstName                       = "User’s first name."
 	LastName                        = "User’s last name."
-  Filename                        = "Filename to use"
+	Filename                        = "Filename to use"
 	WhitelistIps                    = "IP addresses to add to the new user’s whitelist."
 	WhitelistType                   = `Type of whitelist entry. Valid values: cidrBlock|ipAddress`
 	Service                         = `Type of MongoDB service. Valid values: cloud|cloud-manager|ops-manager`

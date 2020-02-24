@@ -58,7 +58,7 @@ func (opts *atlasAlertConfigListOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// mcli atlas alert-config(s) list --projectId projectId [--page N] [--limit N]
+// mcli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
 func AtlasAlertConfigListBuilder() *cobra.Command {
 	opts := &atlasAlertConfigListOpts{
 		globalOpts: newGlobalOpts(),

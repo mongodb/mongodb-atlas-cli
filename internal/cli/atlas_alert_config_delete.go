@@ -53,7 +53,7 @@ func (opts *atlasAlertConfigDeleteOpts) Run() error {
 	return error
 }
 
-// mcli atlas alert_config(s) delete id --projectId projectId [--confirm]
+// mcli atlas alerts config(s) delete id --projectId projectId [--confirm]
 func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	opts := &atlasAlertConfigDeleteOpts{
 		globalOpts:     newGlobalOpts(),

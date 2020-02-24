@@ -86,6 +86,43 @@ func (mr *MockAlertConfigurationCreatorMockRecorder) CreateAlertConfiguration(ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationCreator)(nil).CreateAlertConfiguration), arg0)
 }
 
+// MockAlertConfigurationDeleter is a mock of AlertConfigurationDeleter interface
+type MockAlertConfigurationDeleter struct {
+	ctrl     *gomock.Controller
+	recorder *MockAlertConfigurationDeleterMockRecorder
+}
+
+// MockAlertConfigurationDeleterMockRecorder is the mock recorder for MockAlertConfigurationDeleter
+type MockAlertConfigurationDeleterMockRecorder struct {
+	mock *MockAlertConfigurationDeleter
+}
+
+// NewMockAlertConfigurationDeleter creates a new mock instance
+func NewMockAlertConfigurationDeleter(ctrl *gomock.Controller) *MockAlertConfigurationDeleter {
+	mock := &MockAlertConfigurationDeleter{ctrl: ctrl}
+	mock.recorder = &MockAlertConfigurationDeleterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAlertConfigurationDeleter) EXPECT() *MockAlertConfigurationDeleterMockRecorder {
+	return m.recorder
+}
+
+// DeleteAlertConfiguration mocks base method
+func (m *MockAlertConfigurationDeleter) DeleteAlertConfiguration(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAlertConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAlertConfiguration indicates an expected call of DeleteAlertConfiguration
+func (mr *MockAlertConfigurationDeleterMockRecorder) DeleteAlertConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationDeleter)(nil).DeleteAlertConfiguration), arg0, arg1)
+}
+
 // MockAlertConfigurationStore is a mock of AlertConfigurationStore interface
 type MockAlertConfigurationStore struct {
 	ctrl     *gomock.Controller
@@ -137,4 +174,18 @@ func (m *MockAlertConfigurationStore) CreateAlertConfiguration(arg0 *mongodbatla
 func (mr *MockAlertConfigurationStoreMockRecorder) CreateAlertConfiguration(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationStore)(nil).CreateAlertConfiguration), arg0)
+}
+
+// DeleteAlertConfiguration mocks base method
+func (m *MockAlertConfigurationStore) DeleteAlertConfiguration(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAlertConfiguration", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAlertConfiguration indicates an expected call of DeleteAlertConfiguration
+func (mr *MockAlertConfigurationStoreMockRecorder) DeleteAlertConfiguration(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationStore)(nil).DeleteAlertConfiguration), arg0, arg1)
 }

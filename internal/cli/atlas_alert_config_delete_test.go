@@ -15,20 +15,32 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mcli/internal/mocks"
 )
 
-func AtlasAlertConfigsBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "configs",
-		Aliases: []string{"config"},
-		Short:   "Manage Atlas alert configurations for your project.",
-		Long:    "The configs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
+func TestAtlasAlertConfigsDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAlertConfigurationDeleter(ctrl)
+
+	defer ctrl.Finish()
+
+	deleteOpts := &atlasAlertConfigDeleteOpts{
+		globalOpts: newGlobalOpts(),
+		entry:      "test",
+		store:      mockStore,
 	}
 
-	cmd.AddCommand(AtlasAlertConfigCreateBuilder())
-	cmd.AddCommand(AtlasAlertConfigListBuilder())
-	cmd.AddCommand(AtlasAlertConfigDeleteBuilder())
+	mockStore.
+		EXPECT().
+		DeleteAlertConfiguration(deleteOpts.projectID, deleteOpts.entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

@@ -18,13 +18,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasAlertConfigBuilder() *cobra.Command {
+func AtlasAlertConfigsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "alert-config",
-		Aliases: []string{"alertConfig", "alertConfigs", "alert-configs"},
+		Use:     "configs",
+		Aliases: []string{"config"},
 		Short:   "Manage Atlas alert configurations for your project.",
-		Long:    "The alertConfigs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
+		Long:    "The configs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
 	}
+
+	cmd.AddCommand(AtlasAlertConfigCreateBuilder())
 	cmd.AddCommand(AtlasAlertConfigListBuilder())
 
 	return cmd

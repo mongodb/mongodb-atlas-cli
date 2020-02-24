@@ -26,8 +26,13 @@ type AlertConfigurationLister interface {
 	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
 }
 
+type AlertConfigurationCreator interface {
+	CreateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+}
+
 type AlertConfigurationStore interface {
 	AlertConfigurationLister
+	AlertConfigurationCreator
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers
@@ -35,6 +40,20 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateAlertConfiguration encapsulate the logic to manage different cloud providers
+func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService:
+		// TODO: fix me https://github.com/mongodb/go-client-mongodb-atlas/pull/56
+		project := alertConfig.GroupID
+		alertConfig.GroupID = ""
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(context.Background(), project, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -28,39 +28,37 @@ func TestAtlasAlertConfigCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	t.Run("flags run", func(t *testing.T) {
-		expected := fixtures.AlertConfig()
+	expected := fixtures.AlertConfig()
 
-		createOpts := &atlasAlertConfigCreateOpts{
-			globalOpts:                newGlobalOpts(),
-			event:                     "OUTSIDE_METRIC_THRESHOLD",
-			enabled:                   true,
-			matcherFieldName:          "HOSTNAME_AND_PORT",
-			matcherOperator:           "EQUALS",
-			matcherValue:              "mongo.example.com:27017",
-			metricThresholdMetricName: "ASSERT_REGULAR",
-			metricThresholdOperator:   "LESS_THAN",
-			metricThresholdThreshold:  99,
-			metricThresholdUnits:      "RAW",
-			metricThresholdMode:       "RAW",
-			notificationDelayMin:      0,
-			notificationIntervalMin:   5,
-			notificationMobileNumber:  "2343454567",
-			notificationType:          "sms",
-			store:                     mockStore,
-		}
+	createOpts := &atlasAlertConfigCreateOpts{
+		globalOpts:                newGlobalOpts(),
+		event:                     "OUTSIDE_METRIC_THRESHOLD",
+		enabled:                   true,
+		matcherFieldName:          "HOSTNAME_AND_PORT",
+		matcherOperator:           "EQUALS",
+		matcherValue:              "mongo.example.com:27017",
+		metricThresholdMetricName: "ASSERT_REGULAR",
+		metricThresholdOperator:   "LESS_THAN",
+		metricThresholdThreshold:  99,
+		metricThresholdUnits:      "RAW",
+		metricThresholdMode:       "RAW",
+		notificationDelayMin:      0,
+		notificationIntervalMin:   5,
+		notificationMobileNumber:  "2343454567",
+		notificationType:          "sms",
+		store:                     mockStore,
+	}
 
-		alert := createOpts.buildAlertConfiguration()
-		mockStore.
-			EXPECT().
-			CreateAlertConfiguration(alert).
-			Return(expected, nil).
-			Times(1)
+	alert := createOpts.buildAlertConfiguration()
+	mockStore.
+		EXPECT().
+		CreateAlertConfiguration(alert).
+		Return(expected, nil).
+		Times(1)
 
-		err := createOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 
 }

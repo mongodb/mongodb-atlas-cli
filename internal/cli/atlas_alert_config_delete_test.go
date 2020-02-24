@@ -29,7 +29,10 @@ func TestAtlasAlertConfigsDelete_Run(t *testing.T) {
 
 	deleteOpts := &atlasAlertConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),
-		entry:      "test",
+		deleteOpts: &deleteOpts{
+			confirm: true,
+			entry:   "test",
+		},
 		store:      mockStore,
 	}
 

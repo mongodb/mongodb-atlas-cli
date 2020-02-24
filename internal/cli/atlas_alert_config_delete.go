@@ -15,8 +15,6 @@
 package cli
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
@@ -25,9 +23,7 @@ import (
 
 type atlasAlertConfigDeleteOpts struct {
 	*globalOpts
-	entry          string
-	successMessage string
-	failMessage    string
+	*deleteOpts
 	store          store.AlertConfigurationDeleter
 }
 
@@ -42,23 +38,17 @@ func (opts *atlasAlertConfigDeleteOpts) init() error {
 }
 
 func (opts *atlasAlertConfigDeleteOpts) Run() error {
-	error := opts.store.DeleteAlertConfiguration(opts.ProjectID(), opts.entry)
-
-	if error != nil {
-		fmt.Println(opts.failMessage, opts.entry)
-	} else {
-		fmt.Println(opts.successMessage, opts.entry)
-	}
-
-	return error
+	return opts.DeleteFromProject(opts.store. DeleteAlertConfiguration, opts.ProjectID())
 }
 
 // mcli atlas alerts config(s) delete id --projectId projectId [--confirm]
 func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	opts := &atlasAlertConfigDeleteOpts{
 		globalOpts:     newGlobalOpts(),
-		successMessage: "Alert Config '%s' deleted\n",
-		failMessage:    "Alert Config '%s' not deleted",
+		deleteOpts: &deleteOpts{
+			successMessage: "Alert Config '%s' deleted\n",
+			failMessage:    "Alert Config not deleted",
+		},
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [id]",
@@ -73,6 +63,8 @@ func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

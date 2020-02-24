@@ -120,7 +120,7 @@ func TestAtlasAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "delete", alertID)
+		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

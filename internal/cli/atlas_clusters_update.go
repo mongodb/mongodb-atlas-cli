@@ -16,10 +16,12 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mcli/internal/file"
 	"github.com/mongodb/mcli/internal/flags"
 	"github.com/mongodb/mcli/internal/json"
 	"github.com/mongodb/mcli/internal/store"
 	"github.com/mongodb/mcli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +31,8 @@ type atlasClustersUpdateOpts struct {
 	instanceSize string
 	diskSizeGB   float64
 	mdbVersion   string
+	filename     string
+	fs           afero.Fs
 	store        store.ClusterStore
 }
 
@@ -42,15 +46,17 @@ func (opts *atlasClustersUpdateOpts) init() error {
 }
 
 func (opts *atlasClustersUpdateOpts) Run() error {
-	current, err := opts.store.Cluster(opts.projectID, opts.name)
-
+	cluster, err := opts.cluster()
 	if err != nil {
 		return err
 	}
+	if opts.filename == "" {
+		opts.patchOpts(cluster)
+	} else {
+		cluster.GroupID = opts.ProjectID()
+	}
 
-	opts.update(current)
-
-	result, err := opts.store.UpdateCluster(current)
+	result, err := opts.store.UpdateCluster(cluster)
 
 	if err != nil {
 		return err
@@ -59,7 +65,19 @@ func (opts *atlasClustersUpdateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasClustersUpdateOpts) update(out *atlas.Cluster) {
+func (opts *atlasClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
+	var cluster *atlas.Cluster
+	var err error
+	if opts.filename != "" {
+		cluster = new(atlas.Cluster)
+		err = file.Load(opts.fs, opts.filename, cluster)
+	} else {
+		cluster, err = opts.store.Cluster(opts.projectID, opts.name)
+	}
+	return cluster, err
+}
+
+func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	// There can only be one
 	if out.ReplicationSpecs != nil {
 		out.ReplicationSpec = nil
@@ -74,11 +92,9 @@ func (opts *atlasClustersUpdateOpts) update(out *atlas.Cluster) {
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = opts.mdbVersion
 	}
-
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
-
 	if opts.instanceSize != "" {
 		out.ProviderSettings.InstanceSizeName = opts.instanceSize
 	}
@@ -88,17 +104,23 @@ func (opts *atlasClustersUpdateOpts) update(out *atlas.Cluster) {
 func AtlasClustersUpdateBuilder() *cobra.Command {
 	opts := &atlasClustersUpdateOpts{
 		globalOpts: newGlobalOpts(),
+		fs:         afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
 		Use:     "update [name]",
 		Short:   "Update a MongoDB cluster in Atlas.",
 		Example: `  mcli atlas cluster update myCluster --projectId=1 --instanceSize M2 --mdbVersion 4.2 --diskSizeGB 2`,
-		Args:    cobra.ExactArgs(1),
+		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				if len(args) == 0 {
+					return errMissingClusterName
+				}
+				opts.name = args[0]
+			}
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
@@ -106,6 +128,7 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, "", usage.InstanceSize)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", usage.Filename)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

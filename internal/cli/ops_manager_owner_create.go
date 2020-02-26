@@ -17,10 +17,10 @@ package cli
 import (
 	"github.com/AlecAivazis/survey/v2"
 	cm "github.com/mongodb-labs/pcgc/cloudmanager"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -72,7 +72,7 @@ func (opts *opsManagerOwnerCreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mcli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --whitelistIps whitelistIp
+// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --whitelistIps whitelistIp
 func OpsManagerOwnerCreateBuilder() *cobra.Command {
 	opts := new(opsManagerOwnerCreateOpts)
 	cmd := &cobra.Command{

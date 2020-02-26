@@ -18,10 +18,10 @@ import (
 	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -182,7 +182,7 @@ func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
 	}
 }
 
-// mcli atlas alerts config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mongocli atlas alerts config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // --notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region] [--projectId projectId]
 func AtlasAlertConfigCreateBuilder() *cobra.Command {

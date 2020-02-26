@@ -15,10 +15,10 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -47,7 +47,7 @@ func (opts *atlasClustersDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mcli atlas cluster(s) describe [name] --projectId projectId
+// mongocli atlas cluster(s) describe [name] --projectId projectId
 func AtlasClustersDescribeBuilder() *cobra.Command {
 	opts := &atlasClustersDescribeOpts{
 		globalOpts: newGlobalOpts(),

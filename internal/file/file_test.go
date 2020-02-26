@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mongodb/mcli/internal/file"
+	"github.com/mongodb/mongocli/internal/file"
 	"github.com/spf13/afero"
 )
 

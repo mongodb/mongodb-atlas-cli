@@ -19,8 +19,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/fixtures"
-	"github.com/mongodb/mcli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
 func TestAtlasDBUserUpdate_Run(t *testing.T) {

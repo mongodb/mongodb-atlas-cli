@@ -16,10 +16,10 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -74,7 +74,7 @@ func (opts *atlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 	return projectIPWhitelist
 }
 
-// mcli atlas whitelist(s) create value --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
+// mongocli atlas whitelist(s) create value --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
 func AtlasWhitelistCreateBuilder() *cobra.Command {
 	opts := &atlasWhitelistCreateOpts{
 		globalOpts: newGlobalOpts(),

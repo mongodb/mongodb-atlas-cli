@@ -16,10 +16,10 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ func (opts *atlasAlertConfigListOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// mcli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
+// mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
 func AtlasAlertConfigListBuilder() *cobra.Command {
 	opts := &atlasAlertConfigListOpts{
 		globalOpts: newGlobalOpts(),

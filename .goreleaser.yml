@@ -6,7 +6,7 @@ builds:
 - env:
     - CGO_ENABLED=0
   ldflags:
-    - -s -w -X github.com/mongodb/mcli/internal/version.Version={{.Version}}
+    - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
   goos:
     - darwin
     - linux
@@ -29,21 +29,21 @@ archives:
     - LICENSE
     - third_party_notices/**/*
 brews:
-- name: mcli
+- name: mongocli
   github:
     owner: mongodb-labs
-    name: homebrew-mcli
-  url_template: "https://github.com/mongodb/mcli/releases/{{ .Tag }}/{{ .ArtifactName }}"
+    name: homebrew-mongocli
+  url_template: "https://github.com/mongodb/mongocli/releases/{{ .Tag }}/{{ .ArtifactName }}"
   commit_author:
     name: gustavo.bazan
     email: gustavo.bazan@mongodb.com
-  homepage: "https://github.com/mongodb/mcli"
+  homepage: "https://github.com/mongodb/mongocli"
   description: "A tool to manage MongoDB Cloud."
   skip_upload: true
   test: |
-    system "#{bin}/mcli --version"
+    system "#{bin}/mongocli --version"
   install: |
-    bin.install "mcli"
+    bin.install "mongocli"
 checksum:
   name_template: 'checksums.txt'
 snapshot:

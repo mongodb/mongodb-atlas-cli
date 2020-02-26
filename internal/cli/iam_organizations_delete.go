@@ -15,9 +15,9 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +36,7 @@ func (opts *iamOrganizationsDeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOrganization)
 }
 
-// mcli iam organization(s) delete [id] [--orgId orgId]
+// mongocli iam organization(s) delete [id] [--orgId orgId]
 func IAMOrganizationsDeleteBuilder() *cobra.Command {
 	opts := &iamOrganizationsDeleteOpts{
 		deleteOpts: &deleteOpts{

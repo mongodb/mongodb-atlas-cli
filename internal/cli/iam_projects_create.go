@@ -15,10 +15,10 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +48,7 @@ func (opts *iamProjectsCreateOpts) Run() error {
 	return json.PrettyPrint(projects)
 }
 
-// mcli iam project(s) create name [--orgId orgId]
+// mongocli iam project(s) create name [--orgId orgId]
 func IAMProjectsCreateBuilder() *cobra.Command {
 	opts := &iamProjectsCreateOpts{
 		globalOpts: newGlobalOpts(),

@@ -15,9 +15,9 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +41,7 @@ func (opts *atlasAlertConfigDeleteOpts) Run() error {
 	return opts.DeleteFromProject(opts.store.DeleteAlertConfiguration, opts.ProjectID())
 }
 
-// mcli atlas alerts config(s) delete id --projectId projectId [--confirm]
+// mongocli atlas alerts config(s) delete id --projectId projectId [--confirm]
 func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	opts := &atlasAlertConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),

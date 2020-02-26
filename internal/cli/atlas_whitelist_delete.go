@@ -15,9 +15,9 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -38,10 +38,10 @@ func (opts *atlasWhitelistDeleteOpts) init() error {
 }
 
 func (opts *atlasWhitelistDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteProjectIPWhitelist, opts.projectID)
+	return opts.DeleteFromProject(opts.store.DeleteProjectIPWhitelist, opts.ProjectID())
 }
 
-// mcli atlas whitelist delete <entry> --force
+// mongocli atlas whitelist delete <entry> --force
 func AtlasWhitelistDeleteBuilder() *cobra.Command {
 	opts := &atlasWhitelistDeleteOpts{
 		globalOpts: newGlobalOpts(),

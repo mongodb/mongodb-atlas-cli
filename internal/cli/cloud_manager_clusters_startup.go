@@ -18,13 +18,13 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mcli/internal/config"
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/messages"
-	"github.com/mongodb/mcli/internal/search"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/messages"
+	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -80,7 +80,7 @@ func (opts *cmClustersStartupOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mcli cloud-manager cluster(s) startup [name] --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) startup [name] --projectId projectId [--force]
 func CloudManagerClustersStartupBuilder() *cobra.Command {
 	opts := &cmClustersStartupOpts{
 		globalOpts: newGlobalOpts(),

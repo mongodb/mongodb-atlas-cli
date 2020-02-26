@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: mcli
+name: mongocli
 
 platform:
   os: linux

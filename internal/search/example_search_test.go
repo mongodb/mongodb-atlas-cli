@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/mongodb-labs/pcgc/cloudmanager"
-	"github.com/mongodb/mcli/internal/fixtures"
-	"github.com/mongodb/mcli/internal/search"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/search"
 )
 
 // This example demonstrates searching a list.

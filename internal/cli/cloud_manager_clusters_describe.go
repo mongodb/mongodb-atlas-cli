@@ -17,11 +17,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ func (opts *cmClustersDescribeOpts) Run() error {
 	return fmt.Errorf("replicaset %s not found", opts.name)
 }
 
-// mcli cloud-manager cluster(s) describe [name] --projectId projectId
+// mongocli cloud-manager cluster(s) describe [name] --projectId projectId
 func CloudManagerClustersDescribeBuilder() *cobra.Command {
 	opts := &cmClustersDescribeOpts{
 		globalOpts: newGlobalOpts(),

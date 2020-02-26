@@ -19,11 +19,11 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -76,7 +76,7 @@ func (opts *atlasDBUsersCreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mcli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
+// mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func AtlasDBUsersCreateBuilder() *cobra.Command {
 	opts := &atlasDBUsersCreateOpts{
 		globalOpts: newGlobalOpts(),
@@ -84,7 +84,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "create",
 		Short:     "Create a database user for a project.",
-		Example:   `  mcli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
+		Example:   `  mongocli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

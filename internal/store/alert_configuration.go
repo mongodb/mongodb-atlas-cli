@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/config"
+	"github.com/mongodb/mongocli/internal/config"
 )
 
 type AlertConfigurationLister interface {

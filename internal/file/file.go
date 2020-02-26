@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mongodb/mcli/internal/search"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )

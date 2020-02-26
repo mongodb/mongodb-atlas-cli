@@ -1,7 +1,7 @@
 <!--
-Thanks for contributing to mcli!
+Thanks for contributing to MongoDB CLI!
 
-Before you submit your pull request, please be sure that you've reviewed our contributing guidelines: https://github.com/mongodb/mcli/blob/master/CONTRIBUTING.md
+Before you submit your pull request, please be sure that you've reviewed our contributing guidelines: https://github.com/mongodb/mongocli/blob/master/CONTRIBUTING.md
 
 Please fill out the information below to help speed the review along, and hopefully
 the merge of your pull request!
@@ -17,7 +17,7 @@ If it fixes a bug or resolves a feature request, be sure to link to that issue.
 _Jira ticket:_ [Name of ticket](https://jira.mongodb.org/browse/[name-of-ticket])
 
 <!--
-What mcli issue does this PR address? (for example, #1234)
+What MongoDB CLI issue does this PR address? (for example, #1234), remove this section if none
 -->
 
 Closes #[issue number]

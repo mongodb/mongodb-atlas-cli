@@ -16,10 +16,10 @@ package cli
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mcli/internal/config"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/usage"
-	"github.com/mongodb/mcli/internal/validators"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validators"
 	"github.com/spf13/cobra"
 )
 

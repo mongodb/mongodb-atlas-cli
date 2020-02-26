@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mcli/internal/config"
-	"github.com/mongodb/mcli/internal/prompts"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/prompts"
 )
 
 type globalOpts struct {

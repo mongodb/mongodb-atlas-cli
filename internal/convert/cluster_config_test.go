@@ -19,7 +19,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
-	"github.com/mongodb/mcli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {

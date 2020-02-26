@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mcli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
 func TestAtlasDBUsersDelete_Run(t *testing.T) {

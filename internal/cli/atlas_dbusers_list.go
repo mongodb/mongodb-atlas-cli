@@ -15,10 +15,10 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -57,7 +57,7 @@ func (opts *atlasDBUsersListOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// mcli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
+// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
 func AtlasDBUsersListBuilder() *cobra.Command {
 	opts := &atlasDBUsersListOpts{
 		globalOpts: newGlobalOpts(),

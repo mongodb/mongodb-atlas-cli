@@ -15,9 +15,9 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -38,10 +38,10 @@ func (opts *atlasDBUsersDeleteOpts) init() error {
 }
 
 func (opts *atlasDBUsersDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteDatabaseUser, opts.projectID)
+	return opts.DeleteFromProject(opts.store.DeleteDatabaseUser, opts.ProjectID())
 }
 
-// mcli atlas dbuser(s) delete <username> --force
+// mongocli atlas dbuser(s) delete <username> --force
 func AtlasDBUsersDeleteBuilder() *cobra.Command {
 	opts := &atlasDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),

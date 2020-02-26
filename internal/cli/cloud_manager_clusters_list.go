@@ -15,11 +15,11 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +50,7 @@ func (opts *cmClustersListOpts) Run() error {
 	return json.PrettyPrint(clusterConfigs)
 }
 
-// mcli cloud-manager cluster(s) list --projectId projectId
+// mongocli cloud-manager cluster(s) list --projectId projectId
 func CloudManagerClustersListBuilder() *cobra.Command {
 	opts := &cmClustersListOpts{
 		globalOpts: newGlobalOpts(),

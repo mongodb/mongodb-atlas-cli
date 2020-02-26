@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/convert"
 )
 
 const (
@@ -34,7 +33,7 @@ const (
 )
 
 func TestAtlasDBUsers(t *testing.T) {
-	cliPath, err := filepath.Abs("../bin/mcli")
+	cliPath, err := filepath.Abs("../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -115,8 +114,8 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
 		}
 
-		if user.Roles[0].DatabaseName != convert.AdminDB {
-			t.Errorf("got=%#v\nwant=%#v\n", convert.AdminDB, user.Roles[0].DatabaseName)
+		if user.Roles[0].DatabaseName != "admin" {
+			t.Errorf("got=%#v\nwant=%#v\n", "admin", user.Roles[0].DatabaseName)
 		}
 
 		if user.Roles[0].RoleName != roleReadWrite {

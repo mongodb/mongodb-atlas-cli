@@ -1,14 +1,14 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
 SOURCE_FILES?=./...
-BINARY_NAME=mcli
+BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.23.3
 COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)
-LINKER_FLAGS=-X github.com/mongodb/mcli/internal/version.Version=${VERSION}
+LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
@@ -79,7 +79,7 @@ gen-notices: ## Generate 3rd party notices
 	@echo "==> Generating 3rd party notices"
 	@chmod -R 777 ./third_party_notices
 	@rm -Rf third_party_notices
-	go-licenses save "github.com/mongodb/mcli" --save_path=third_party_notices
+	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
 
 .PHONY: release
 release: gen-notices ## Use goreleaser to generate builds and publish

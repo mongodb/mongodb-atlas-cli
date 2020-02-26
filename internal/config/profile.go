@@ -162,7 +162,7 @@ func (p Profile) Load() error {
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
 
-	viper.SetEnvPrefix(Name)
+	viper.SetEnvPrefix(EnvPrefix)
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
 	viper.AutomaticEnv()

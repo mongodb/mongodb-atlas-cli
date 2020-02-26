@@ -17,7 +17,7 @@ package convert
 import (
 	"github.com/Masterminds/semver"
 	"github.com/mongodb-labs/pcgc/cloudmanager"
-	"github.com/mongodb/mcli/internal/search"
+	"github.com/mongodb/mongocli/internal/search"
 )
 
 const (

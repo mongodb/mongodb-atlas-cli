@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mcli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
 func TestFromAutomationConfig(t *testing.T) {

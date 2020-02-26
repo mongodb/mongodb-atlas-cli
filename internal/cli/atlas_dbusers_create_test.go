@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mcli/internal/fixtures"
-	"github.com/mongodb/mcli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
 func TestAtlasDBUserCreate_Run(t *testing.T) {

@@ -15,8 +15,8 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +41,7 @@ func (opts *iamOrganizationsCreateOpts) Run() error {
 	return json.PrettyPrint(projects)
 }
 
-// mcli iam organization(s) create name [--orgId orgId]
+// mongocli iam organization(s) create name [--orgId orgId]
 func IAMOrganizationsCreateBuilder() *cobra.Command {
 	opts := new(iamOrganizationsCreateOpts)
 	cmd := &cobra.Command{

@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mcli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
 func TestIAMOrganizationsDelete_Run(t *testing.T) {

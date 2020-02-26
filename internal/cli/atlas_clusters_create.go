@@ -16,11 +16,11 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/file"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -149,7 +149,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   "Create a MongoDB cluster in Atlas.",
-		Example: `  mcli atlas cluster create myCluster --projectId=<projectId> --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
+		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {

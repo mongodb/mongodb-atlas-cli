@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mcli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flags"
 )
 
 const requiredF = `required flag(s) "%s" not set`

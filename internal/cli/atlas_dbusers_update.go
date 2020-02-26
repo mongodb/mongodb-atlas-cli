@@ -16,11 +16,11 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/json"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +66,7 @@ func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 	out.Roles = convert.BuildRoles(opts.roles)
 }
 
-//mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]
+// mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]
 func AtlasDBUsersUpdateBuilder() *cobra.Command {
 	opts := &atlasDBUsersUpdateOpts{
 		globalOpts: newGlobalOpts(),
@@ -74,7 +74,7 @@ func AtlasDBUsersUpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [username]",
 		Short:   "Update a MongoDB dbuser in Atlas.",
-		Example: `mcli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
+		Example: `mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

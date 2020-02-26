@@ -15,9 +15,9 @@
 package cli
 
 import (
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -38,10 +38,10 @@ func (opts *atlasClustersDeleteOpts) init() error {
 }
 
 func (opts *atlasClustersDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteCluster, opts.projectID)
+	return opts.DeleteFromProject(opts.store.DeleteCluster, opts.ProjectID())
 }
 
-// mcli atlas cluster(s) delete name --projectId projectId [--confirm]
+// mongocli atlas cluster(s) delete name --projectId projectId [--confirm]
 func AtlasClustersDeleteBuilder() *cobra.Command {
 	opts := &atlasClustersDeleteOpts{
 		globalOpts: newGlobalOpts(),

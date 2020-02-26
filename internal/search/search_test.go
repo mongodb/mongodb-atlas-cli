@@ -3,8 +3,8 @@ package search_test
 import (
 	"testing"
 
-	"github.com/mongodb/mcli/internal/fixtures"
-	"github.com/mongodb/mcli/internal/search"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/search"
 )
 
 func TestStringInSlice(t *testing.T) {

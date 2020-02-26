@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	cm "github.com/mongodb-labs/pcgc/cloudmanager"
-	"github.com/mongodb/mcli/internal/config"
+	"github.com/mongodb/mongocli/internal/config"
 )
 
 type OwnerCreator interface {

@@ -17,13 +17,13 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/mcli/internal/config"
-	"github.com/mongodb/mcli/internal/convert"
-	"github.com/mongodb/mcli/internal/file"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/messages"
-	"github.com/mongodb/mcli/internal/store"
-	"github.com/mongodb/mcli/internal/usage"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/messages"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -72,7 +72,7 @@ func (opts *cmClustersApplyOpts) Run() error {
 	return nil
 }
 
-// mcli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml
+// mongocli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml
 func CloudManagerClustersApplyBuilder() *cobra.Command {
 	opts := &cmClustersApplyOpts{
 		globalOpts: newGlobalOpts(),

@@ -1,4 +1,4 @@
-module github.com/mongodb/mcli
+module github.com/mongodb/mongocli
 
 go 1.13
 

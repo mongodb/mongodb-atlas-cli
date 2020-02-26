@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mongodb/mcli/internal/cli"
-	"github.com/mongodb/mcli/internal/config"
-	"github.com/mongodb/mcli/internal/flags"
-	"github.com/mongodb/mcli/internal/usage"
-	"github.com/mongodb/mcli/internal/version"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
 

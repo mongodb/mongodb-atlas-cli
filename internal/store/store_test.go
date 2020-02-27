@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
 func TestStore_apiPath(t *testing.T) {
@@ -27,8 +27,8 @@ func TestStore_apiPath(t *testing.T) {
 			service: "ops-manager",
 		}
 		result := s.apiPath("localhost")
-		if !strings.Contains(result, cloudmanager.APIPublicV1Path) {
-			t.Errorf("apiPath() = %s; want '%s'", result, cloudmanager.APIPublicV1Path)
+		if !strings.Contains(result, om.APIPublicV1Path) {
+			t.Errorf("apiPath() = %s; want '%s'", result, om.APIPublicV1Path)
 		}
 	})
 	t.Run("atlas", func(t *testing.T) {

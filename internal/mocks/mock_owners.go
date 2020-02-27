@@ -6,7 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	cloudmanager "github.com/mongodb-labs/pcgc/cloudmanager"
+	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockOwnerCreator) EXPECT() *MockOwnerCreatorMockRecorder {
 }
 
 // CreateOwner mocks base method
-func (m *MockOwnerCreator) CreateOwner(arg0 *cloudmanager.User, arg1 []string) (*cloudmanager.CreateUserResponse, error) {
+func (m *MockOwnerCreator) CreateOwner(arg0 *opsmngr.User, arg1 []string) (*opsmngr.CreateUserResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOwner", arg0, arg1)
-	ret0, _ := ret[0].(*cloudmanager.CreateUserResponse)
+	ret0, _ := ret[0].(*opsmngr.CreateUserResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

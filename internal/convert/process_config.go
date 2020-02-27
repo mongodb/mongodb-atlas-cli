@@ -17,7 +17,7 @@ package convert
 import (
 	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
 // ProcessConfig that belongs to a cluster
@@ -58,7 +58,7 @@ func (p *ProcessConfig) setDefaults(c *ClusterConfig) {
 
 // setProcessName reuse Name from an existing process
 // this is based on hostname:port matching
-func (p *ProcessConfig) setProcessName(clusterName string, processes []*cloudmanager.Process, i int) {
+func (p *ProcessConfig) setProcessName(clusterName string, processes []*om.Process, i int) {
 	if p.Name != "" {
 		return
 	}
@@ -72,8 +72,8 @@ func (p *ProcessConfig) setProcessName(clusterName string, processes []*cloudman
 	}
 }
 
-func (p *ProcessConfig) toCMProcess(replSetName string) *cloudmanager.Process {
-	process := &cloudmanager.Process{
+func (p *ProcessConfig) toCMProcess(replSetName string) *om.Process {
+	process := &om.Process{
 		AuthSchemaVersion:           5,
 		Disabled:                    p.Disabled,
 		ManualMode:                  false,
@@ -84,22 +84,22 @@ func (p *ProcessConfig) toCMProcess(replSetName string) *cloudmanager.Process {
 		Name:                        p.Name,
 	}
 
-	process.Args26 = cloudmanager.Args26{
-		NET: cloudmanager.Net{
+	process.Args26 = om.Args26{
+		NET: om.Net{
 			Port: p.Port,
 		},
-		Replication: &cloudmanager.Replication{
+		Replication: &om.Replication{
 			ReplSetName: replSetName,
 		},
-		Storage: &cloudmanager.Storage{
+		Storage: &om.Storage{
 			DBPath: p.DBPath,
 		},
-		SystemLog: cloudmanager.SystemLog{
+		SystemLog: om.SystemLog{
 			Destination: file,
 			Path:        p.LogPath,
 		},
 	}
-	process.LogRotate = &cloudmanager.LogRotate{
+	process.LogRotate = &om.LogRotate{
 		SizeThresholdMB:  1000,
 		TimeThresholdHrs: 24,
 	}
@@ -107,8 +107,8 @@ func (p *ProcessConfig) toCMProcess(replSetName string) *cloudmanager.Process {
 	return process
 }
 
-func (p *ProcessConfig) toCMMember(i int) cloudmanager.Member {
-	return cloudmanager.Member{
+func (p *ProcessConfig) toCMMember(i int) om.Member {
+	return om.Member{
 		ID:           i,
 		ArbiterOnly:  p.ArbiterOnly,
 		BuildIndexes: *p.BuildIndexes,

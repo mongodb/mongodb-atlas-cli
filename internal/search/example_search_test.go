@@ -3,7 +3,7 @@ package search_test
 import (
 	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/search"
 )
@@ -26,7 +26,7 @@ func ExampleStringInSlice() {
 func ExampleProcesses() {
 	a := fixtures.AutomationConfig().Processes
 	x := "myReplicaSet_2"
-	i, found := search.Processes(a, func(p *cloudmanager.Process) bool { return p.Name == x })
+	i, found := search.Processes(a, func(p *om.Process) bool { return p.Name == x })
 	if i < len(a) && found {
 		fmt.Printf("found %v at index %d\n", x, i)
 	} else {
@@ -40,7 +40,7 @@ func ExampleProcesses() {
 func ExampleReplicaSets() {
 	a := fixtures.AutomationConfig().ReplicaSets
 	x := "myReplicaSet"
-	i, found := search.ReplicaSets(a, func(r *cloudmanager.ReplicaSet) bool { return r.ID == x })
+	i, found := search.ReplicaSets(a, func(r *om.ReplicaSet) bool { return r.ID == x })
 	if i < len(a) && found {
 		fmt.Printf("found %v at index %d\n", x, i)
 	} else {
@@ -54,7 +54,7 @@ func ExampleReplicaSets() {
 func ExampleMembers() {
 	a := fixtures.AutomationConfig().ReplicaSets[0].Members
 	x := "myReplicaSet_2"
-	i, found := search.Members(a, func(m cloudmanager.Member) bool { return m.Host == x })
+	i, found := search.Members(a, func(m om.Member) bool { return m.Host == x })
 	if i < len(a) && found {
 		fmt.Printf("found %v at index %d\n", x, i)
 	} else {

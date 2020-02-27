@@ -18,7 +18,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
@@ -44,7 +44,7 @@ type OrganizationStore interface {
 func (s *Store) GetAllOrganizations() (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*cloudmanager.Client).Organizations.GetAllOrganizations(context.Background())
+		result, _, err := s.client.(*om.Client).Organizations.GetAllOrganizations(context.Background())
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -55,8 +55,8 @@ func (s *Store) GetAllOrganizations() (interface{}, error) {
 func (s *Store) CreateOrganization(name string) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		org := &cloudmanager.Organization{Name: name}
-		result, _, err := s.client.(*cloudmanager.Client).Organizations.Create(context.Background(), org)
+		org := &om.Organization{Name: name}
+		result, _, err := s.client.(*om.Client).Organizations.Create(context.Background(), org)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -67,7 +67,7 @@ func (s *Store) CreateOrganization(name string) (interface{}, error) {
 func (s *Store) DeleteOrganization(ID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*cloudmanager.Client).Organizations.Delete(context.Background(), ID)
+		_, err := s.client.(*om.Client).Organizations.Delete(context.Background(), ID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

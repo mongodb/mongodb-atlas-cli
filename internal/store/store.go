@@ -22,8 +22,8 @@ import (
 	"runtime"
 
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
-	"github.com/mongodb-labs/pcgc/cloudmanager"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/version"
 )
@@ -105,7 +105,7 @@ func (s *Store) setAtlasClient(client *http.Client) {
 }
 
 func (s *Store) setCloudManagerClient(client *http.Client) {
-	cmClient := cloudmanager.NewClient(client)
+	cmClient := om.NewClient(client)
 	if s.baseURL != nil {
 		cmClient.BaseURL = s.baseURL
 	}
@@ -118,5 +118,5 @@ func (s *Store) apiPath(baseURL string) string {
 	if s.service == config.CloudService {
 		return baseURL + atlasAPIPath
 	}
-	return baseURL + cloudmanager.APIPublicV1Path
+	return baseURL + om.APIPublicV1Path
 }

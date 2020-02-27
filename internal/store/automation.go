@@ -18,16 +18,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
 type AutomationGetter interface {
-	GetAutomationConfig(string) (*cloudmanager.AutomationConfig, error)
+	GetAutomationConfig(string) (*om.AutomationConfig, error)
 }
 
 type AutomationUpdater interface {
-	UpdateAutomationConfig(string, *cloudmanager.AutomationConfig) error
+	UpdateAutomationConfig(string, *om.AutomationConfig) error
 }
 
 type AutomationStore interface {
@@ -36,10 +36,10 @@ type AutomationStore interface {
 }
 
 // GetAutomationConfig encapsulate the logic to manage different cloud providers
-func (s *Store) GetAutomationConfig(projectID string) (*cloudmanager.AutomationConfig, error) {
+func (s *Store) GetAutomationConfig(projectID string) (*om.AutomationConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*cloudmanager.Client).AutomationConfig.Get(context.Background(), projectID)
+		result, _, err := s.client.(*om.Client).AutomationConfig.Get(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -47,10 +47,10 @@ func (s *Store) GetAutomationConfig(projectID string) (*cloudmanager.AutomationC
 }
 
 // UpdateAutomationConfig encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *cloudmanager.AutomationConfig) error {
+func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*cloudmanager.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
+		_, err := s.client.(*om.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

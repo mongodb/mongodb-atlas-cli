@@ -6,7 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	cloudmanager "github.com/mongodb-labs/pcgc/cloudmanager"
+	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockAutomationGetter) EXPECT() *MockAutomationGetterMockRecorder {
 }
 
 // GetAutomationConfig mocks base method
-func (m *MockAutomationGetter) GetAutomationConfig(arg0 string) (*cloudmanager.AutomationConfig, error) {
+func (m *MockAutomationGetter) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
-	ret0, _ := ret[0].(*cloudmanager.AutomationConfig)
+	ret0, _ := ret[0].(*opsmngr.AutomationConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,7 +72,7 @@ func (m *MockAutomationUpdater) EXPECT() *MockAutomationUpdaterMockRecorder {
 }
 
 // UpdateAutomationConfig mocks base method
-func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) error {
+func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -109,10 +109,10 @@ func (m *MockAutomationStore) EXPECT() *MockAutomationStoreMockRecorder {
 }
 
 // GetAutomationConfig mocks base method
-func (m *MockAutomationStore) GetAutomationConfig(arg0 string) (*cloudmanager.AutomationConfig, error) {
+func (m *MockAutomationStore) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
-	ret0, _ := ret[0].(*cloudmanager.AutomationConfig)
+	ret0, _ := ret[0].(*opsmngr.AutomationConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -124,7 +124,7 @@ func (mr *MockAutomationStoreMockRecorder) GetAutomationConfig(arg0 interface{})
 }
 
 // UpdateAutomationConfig mocks base method
-func (m *MockAutomationStore) UpdateAutomationConfig(arg0 string, arg1 *cloudmanager.AutomationConfig) error {
+func (m *MockAutomationStore) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
 	ret0, _ := ret[0].(error)

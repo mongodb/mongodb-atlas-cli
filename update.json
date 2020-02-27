@@ -1,6 +1,0 @@
-{
-  "name": "MultiRegionCluster",
-  "diskSizeGB": 30,
-  "clusterType": "REPLICASET",
-  "backupEnabled": false
-}

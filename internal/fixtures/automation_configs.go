@@ -14,16 +14,16 @@
 
 package fixtures
 
-import "github.com/mongodb-labs/pcgc/cloudmanager"
+import "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 
-func AutomationConfig() *cloudmanager.AutomationConfig {
-	return &cloudmanager.AutomationConfig{
-		Auth: cloudmanager.Auth{
+func AutomationConfig() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
 			Disabled:          true,
 			AuthoritativeSet:  false,
 		},
-		Processes: []*cloudmanager.Process{
+		Processes: []*opsmngr.Process{
 			{
 				Name:                        "myReplicaSet_1",
 				ProcessType:                 "mongod",
@@ -33,22 +33,22 @@ func AutomationConfig() *cloudmanager.AutomationConfig {
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host0",
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{
 						Port: 27000,
 					},
-					Storage: &cloudmanager.Storage{
+					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs1",
 					},
-					SystemLog: cloudmanager.SystemLog{
+					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/rs1/mongodb.log",
 					},
-					Replication: &cloudmanager.Replication{
+					Replication: &opsmngr.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},
-				LogRotate: &cloudmanager.LogRotate{
+				LogRotate: &opsmngr.LogRotate{
 					SizeThresholdMB:  1000.0,
 					TimeThresholdHrs: 24,
 				},
@@ -64,22 +64,22 @@ func AutomationConfig() *cloudmanager.AutomationConfig {
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host1",
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{
 						Port: 27010,
 					},
-					Storage: &cloudmanager.Storage{
+					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs2",
 					},
-					SystemLog: cloudmanager.SystemLog{
+					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/rs2/mongodb.log",
 					},
-					Replication: &cloudmanager.Replication{
+					Replication: &opsmngr.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},
-				LogRotate: &cloudmanager.LogRotate{
+				LogRotate: &opsmngr.LogRotate{
 					SizeThresholdMB:  1000.0,
 					TimeThresholdHrs: 24,
 				},
@@ -95,22 +95,22 @@ func AutomationConfig() *cloudmanager.AutomationConfig {
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host0",
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{
 						Port: 27020,
 					},
-					Storage: &cloudmanager.Storage{
+					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs3",
 					},
-					SystemLog: cloudmanager.SystemLog{
+					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/rs3/mongodb.log",
 					},
-					Replication: &cloudmanager.Replication{
+					Replication: &opsmngr.Replication{
 						ReplSetName: "myReplicaSet",
 					},
 				},
-				LogRotate: &cloudmanager.LogRotate{
+				LogRotate: &opsmngr.LogRotate{
 					SizeThresholdMB:  1000.0,
 					TimeThresholdHrs: 24,
 				},
@@ -118,11 +118,11 @@ func AutomationConfig() *cloudmanager.AutomationConfig {
 				Cluster:                 "",
 			},
 		},
-		ReplicaSets: []*cloudmanager.ReplicaSet{
+		ReplicaSets: []*opsmngr.ReplicaSet{
 			{
 				ID:              "myReplicaSet",
 				ProtocolVersion: "1",
-				Members: []cloudmanager.Member{
+				Members: []opsmngr.Member{
 					{
 						ID:           0,
 						ArbiterOnly:  false,
@@ -161,22 +161,22 @@ func AutomationConfig() *cloudmanager.AutomationConfig {
 	}
 }
 
-func AutomationConfigWithOneReplicaSet(name string, disabled bool) *cloudmanager.AutomationConfig {
-	return &cloudmanager.AutomationConfig{
-		Processes: []*cloudmanager.Process{
+func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Processes: []*opsmngr.Process{
 			{
-				Args26: cloudmanager.Args26{
-					NET: cloudmanager.Net{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{
 						Port: 27017,
 					},
-					Replication: &cloudmanager.Replication{
+					Replication: &opsmngr.Replication{
 						ReplSetName: name,
 					},
 					Sharding: nil,
-					Storage: &cloudmanager.Storage{
+					Storage: &opsmngr.Storage{
 						DBPath: "/data/db/",
 					},
-					SystemLog: cloudmanager.SystemLog{
+					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/db/mongodb.log",
 					},
@@ -186,7 +186,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *cloudmanager
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
 				Hostname:                    "host0",
-				LogRotate: &cloudmanager.LogRotate{
+				LogRotate: &opsmngr.LogRotate{
 					SizeThresholdMB:  1000,
 					TimeThresholdHrs: 24,
 				},
@@ -194,11 +194,11 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *cloudmanager
 				Version:     "4.2.2",
 			},
 		},
-		ReplicaSets: []*cloudmanager.ReplicaSet{
+		ReplicaSets: []*opsmngr.ReplicaSet{
 			{
 				ID:              name,
 				ProtocolVersion: "1",
-				Members: []cloudmanager.Member{
+				Members: []opsmngr.Member{
 					{
 						ArbiterOnly:  false,
 						BuildIndexes: true,
@@ -214,9 +214,9 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *cloudmanager
 	}
 }
 
-func EmptyAutomationConfig() *cloudmanager.AutomationConfig {
-	return &cloudmanager.AutomationConfig{
-		Processes:   make([]*cloudmanager.Process, 0),
-		ReplicaSets: make([]*cloudmanager.ReplicaSet, 0),
+func EmptyAutomationConfig() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Processes:   make([]*opsmngr.Process, 0),
+		ReplicaSets: make([]*opsmngr.ReplicaSet, 0),
 	}
 }

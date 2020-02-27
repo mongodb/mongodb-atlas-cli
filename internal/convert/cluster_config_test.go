@@ -18,14 +18,14 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 	testCases := map[string]struct {
-		current  *cloudmanager.AutomationConfig
-		expected *cloudmanager.AutomationConfig
+		current  *om.AutomationConfig
+		expected *om.AutomationConfig
 		changes  ClusterConfig
 	}{
 		"add a replica set to an empty config": {
@@ -45,26 +45,26 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &cloudmanager.AutomationConfig{
-				Auth: cloudmanager.Auth{
+			expected: &om.AutomationConfig{
+				Auth: om.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*cloudmanager.Process{
+				Processes: []*om.Process{
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 1},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 1},
+							Replication: &om.Replication{
 								ReplSetName: "test_config",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -78,11 +78,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*cloudmanager.ReplicaSet{
+				ReplicaSets: []*om.ReplicaSet{
 					{
 						ID:              "test_config",
 						ProtocolVersion: "1",
-						Members: []cloudmanager.Member{
+						Members: []om.Member{
 							{
 								ID:           0,
 								ArbiterOnly:  false,
@@ -115,27 +115,27 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &cloudmanager.AutomationConfig{
-				Auth: cloudmanager.Auth{
+			expected: &om.AutomationConfig{
+				Auth: om.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*cloudmanager.Process{
+				Processes: []*om.Process{
 					// Old
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 27017},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 27017},
+							Replication: &om.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -150,20 +150,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 1},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 1},
+							Replication: &om.Replication{
 								ReplSetName: "test_config",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -177,12 +177,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*cloudmanager.ReplicaSet{
+				ReplicaSets: []*om.ReplicaSet{
 					// Old
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []cloudmanager.Member{
+						Members: []om.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -198,7 +198,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					{
 						ID:              "test_config",
 						ProtocolVersion: "1",
-						Members: []cloudmanager.Member{
+						Members: []om.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -237,27 +237,27 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &cloudmanager.AutomationConfig{
-				Auth: cloudmanager.Auth{
+			expected: &om.AutomationConfig{
+				Auth: om.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*cloudmanager.Process{
+				Processes: []*om.Process{
 					// Old
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 27017},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 27017},
+							Replication: &om.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -272,20 +272,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 27017},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 27017},
+							Replication: &om.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -299,12 +299,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*cloudmanager.ReplicaSet{
+				ReplicaSets: []*om.ReplicaSet{
 					// Old
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []cloudmanager.Member{
+						Members: []om.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -346,25 +346,25 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &cloudmanager.AutomationConfig{
-				Auth: cloudmanager.Auth{
+			expected: &om.AutomationConfig{
+				Auth: om.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*cloudmanager.Process{
+				Processes: []*om.Process{
 					// Old
 					{
-						Args26: cloudmanager.Args26{
-							NET:         cloudmanager.Net{Port: 27017},
-							Replication: &cloudmanager.Replication{},
-							Storage: &cloudmanager.Storage{
+						Args26: om.Args26{
+							NET:         om.Net{Port: 27017},
+							Replication: &om.Replication{},
+							Storage: &om.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -379,20 +379,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: cloudmanager.Args26{
-							NET: cloudmanager.Net{Port: 27017},
-							Replication: &cloudmanager.Replication{
+						Args26: om.Args26{
+							NET: om.Net{Port: 27017},
+							Replication: &om.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &cloudmanager.Storage{
+							Storage: &om.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: cloudmanager.SystemLog{
+							SystemLog: om.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &cloudmanager.LogRotate{
+						LogRotate: &om.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -406,12 +406,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*cloudmanager.ReplicaSet{
+				ReplicaSets: []*om.ReplicaSet{
 					// New
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []cloudmanager.Member{
+						Members: []om.Member{
 							{
 								ID:           1,
 								ArbiterOnly:  false,

@@ -17,7 +17,7 @@ package convert
 import (
 	"fmt"
 
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
 const (
@@ -25,7 +25,7 @@ const (
 )
 
 // FromAutomationConfig convert from cloud format to mCLI format
-func FromAutomationConfig(in *cloudmanager.AutomationConfig) (out []ClusterConfig) {
+func FromAutomationConfig(in *om.AutomationConfig) (out []ClusterConfig) {
 	out = make([]ClusterConfig, len(in.ReplicaSets))
 
 	for i, rs := range in.ReplicaSets {
@@ -53,16 +53,16 @@ func FromAutomationConfig(in *cloudmanager.AutomationConfig) (out []ClusterConfi
 }
 
 // Shutdown a cluster processes
-func Shutdown(out *cloudmanager.AutomationConfig, name string) {
+func Shutdown(out *om.AutomationConfig, name string) {
 	setDisabledByClusterName(out, name, true)
 }
 
 // Startup a cluster processes
-func Startup(out *cloudmanager.AutomationConfig, name string) {
+func Startup(out *om.AutomationConfig, name string) {
 	setDisabledByClusterName(out, name, false)
 }
 
-func setDisabledByClusterName(out *cloudmanager.AutomationConfig, name string, disabled bool) {
+func setDisabledByClusterName(out *om.AutomationConfig, name string, disabled bool) {
 	// This value may not be present and is mandatory
 	if out.Auth.DeploymentAuthMechanisms == nil {
 		out.Auth.DeploymentAuthMechanisms = make([]string, 0)
@@ -82,7 +82,7 @@ func setDisabledByClusterName(out *cloudmanager.AutomationConfig, name string, d
 }
 
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
-func convertCloudMember(out *ProcessConfig, in cloudmanager.Member) {
+func convertCloudMember(out *ProcessConfig, in om.Member) {
 	out.Votes = in.Votes
 	out.Priority = in.Priority
 	out.SlaveDelay = in.SlaveDelay
@@ -90,7 +90,7 @@ func convertCloudMember(out *ProcessConfig, in cloudmanager.Member) {
 }
 
 // convertCloudProcess map cloudmanager.Process -> convert.ProcessConfig
-func convertCloudProcess(out *ProcessConfig, in *cloudmanager.Process) {
+func convertCloudProcess(out *ProcessConfig, in *om.Process) {
 	out.DBPath = in.Args26.Storage.DBPath
 	out.LogPath = in.Args26.SystemLog.Path
 	out.Port = in.Args26.NET.Port

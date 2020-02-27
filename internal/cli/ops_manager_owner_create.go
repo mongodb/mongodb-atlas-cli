@@ -16,7 +16,7 @@ package cli
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	cm "github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -50,8 +50,8 @@ func (opts *opsManagerOwnerCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerOwnerCreateOpts) newOwner() *cm.User {
-	user := &cm.User{
+func (opts *opsManagerOwnerCreateOpts) newOwner() *om.User {
+	user := &om.User{
 		Username:     opts.email,
 		Password:     opts.password,
 		FirstName:    opts.firstName,

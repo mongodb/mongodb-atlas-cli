@@ -15,7 +15,7 @@
 package search
 
 import (
-	"github.com/mongodb-labs/pcgc/cloudmanager"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
 func StringInSlice(a []string, x string) bool {
@@ -31,7 +31,7 @@ func StringInSlice(a []string, x string) bool {
 // in [0, n) at which f(i) is true, assuming that on the range [0, n),
 // f(i) == true implies f(i+1) == true.
 // returns the first true index. If there is no such index, Processes returns n and false
-func Processes(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) (int, bool) {
+func Processes(a []*om.Process, f func(*om.Process) bool) (int, bool) {
 	for i, p := range a {
 		if f(p) {
 			return i, true
@@ -44,7 +44,7 @@ func Processes(a []*cloudmanager.Process, f func(*cloudmanager.Process) bool) (i
 // in [0, n) at which f(i) is true, assuming that on the range [0, n),
 // f(i) == true implies f(i+1) == true.
 // returns the first true index. If there is no such index, Members returns n and false
-func Members(a []cloudmanager.Member, f func(cloudmanager.Member) bool) (int, bool) {
+func Members(a []om.Member, f func(om.Member) bool) (int, bool) {
 	for i, m := range a {
 		if f(m) {
 			return i, true
@@ -57,7 +57,7 @@ func Members(a []cloudmanager.Member, f func(cloudmanager.Member) bool) (int, bo
 // in [0, n) at which f(i) is true, assuming that on the range [0, n),
 // f(i) == true implies f(i+1) == true.
 // returns the first true index. If there is no such index, Members returns n and false
-func ReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) bool) (int, bool) {
+func ReplicaSets(a []*om.ReplicaSet, f func(*om.ReplicaSet) bool) (int, bool) {
 	for i, m := range a {
 		if f(m) {
 			return i, true
@@ -67,8 +67,8 @@ func ReplicaSets(a []*cloudmanager.ReplicaSet, f func(*cloudmanager.ReplicaSet) 
 }
 
 // ClusterExists return true if a cluster exists for the given name
-func ClusterExists(c *cloudmanager.AutomationConfig, name string) bool {
-	_, found := ReplicaSets(c.ReplicaSets, func(r *cloudmanager.ReplicaSet) bool {
+func ClusterExists(c *om.AutomationConfig, name string) bool {
+	_, found := ReplicaSets(c.ReplicaSets, func(r *om.ReplicaSet) bool {
 		return r.ID == name
 	})
 

@@ -14,10 +14,10 @@
 
 package fixtures
 
-import "github.com/mongodb-labs/pcgc/cloudmanager"
+import "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 
-func OwnerResponse(email, firstName, lastName string) *cloudmanager.CreateUserResponse {
-	user := &cloudmanager.User{
+func OwnerResponse(email, firstName, lastName string) *opsmngr.CreateUserResponse {
+	user := &opsmngr.User{
 		Username:     email,
 		FirstName:    firstName,
 		LastName:     lastName,
@@ -26,7 +26,7 @@ func OwnerResponse(email, firstName, lastName string) *cloudmanager.CreateUserRe
 		Links:        nil,
 		Roles:        nil,
 	}
-	return &cloudmanager.CreateUserResponse{
+	return &opsmngr.CreateUserResponse{
 		APIKey: "123",
 		User:   user,
 	}

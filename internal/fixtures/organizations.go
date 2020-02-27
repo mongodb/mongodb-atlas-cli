@@ -15,11 +15,11 @@
 package fixtures
 
 import (
-	"github.com/mongodb-labs/pcgc/cloudmanager"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
-var Organization = &cloudmanager.Organization{
+var Organization = &om.Organization{
 	ID:   "5a0a1e7e0f2912c554080adc",
 	Name: "Organization 0",
 	Links: []*atlas.Link{
@@ -30,15 +30,15 @@ var Organization = &cloudmanager.Organization{
 	},
 }
 
-func Organizations() *cloudmanager.Organizations {
-	return &cloudmanager.Organizations{
+func Organizations() *om.Organizations {
+	return &om.Organizations{
 		Links: []*atlas.Link{
 			{
 				Href: "https://cloud.mongodb.com/api/atlas/v1.0/orgs",
 				Rel:  "self",
 			},
 		},
-		Results: []*cloudmanager.Organization{
+		Results: []*om.Organization{
 			Organization,
 		},
 		TotalCount: 1,

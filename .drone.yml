@@ -33,7 +33,7 @@ steps:
         path: /go
 
   - name: lint
-    image: golangci/golangci-lint:v1.23.3
+    image: golangci/golangci-lint:v1.23.6
     commands:
       - make lint
 

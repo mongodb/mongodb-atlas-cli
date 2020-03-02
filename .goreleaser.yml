@@ -33,7 +33,7 @@ brews:
   github:
     owner: mongodb-labs
     name: homebrew-mongocli
-  url_template: "https://github.com/mongodb/mongocli/releases/{{ .Tag }}/{{ .ArtifactName }}"
+  url_template: "https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
   commit_author:
     name: gustavo.bazan
     email: gustavo.bazan@mongodb.com

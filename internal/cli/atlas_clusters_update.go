@@ -71,6 +71,9 @@ func (opts *atlasClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
 	if opts.filename != "" {
 		cluster = new(atlas.Cluster)
 		err = file.Load(opts.fs, opts.filename, cluster)
+		if opts.name != "" {
+			cluster.Name = opts.name
+		}
 	} else {
 		cluster, err = opts.store.Cluster(opts.projectID, opts.name)
 	}

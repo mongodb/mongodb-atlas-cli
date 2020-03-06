@@ -31,5 +31,5 @@
     },
     "zoneName" : "Zone 1"
   } ],
-  "backupEnabled": true
+  "backupEnabled": false
 }

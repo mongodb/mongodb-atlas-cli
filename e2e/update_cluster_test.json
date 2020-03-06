@@ -1,6 +1,6 @@
 {
   "name": "TestMultiRegionCluster",
-  "diskSizeGB": 10,
+  "diskSizeGB": 25,
   "numShards": 1,
   "providerSettings": {
     "providerName": "GCP",

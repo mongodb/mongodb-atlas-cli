@@ -161,7 +161,29 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterName, "4.0", 10)
+		ensureCluster(t, cluster, "TestMultiRegionCluster", "4.0", 10)
+	})
+
+	t.Run("Update via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"update",
+			"--file=update_cluster_test.json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		ensureCluster(t, cluster, "TestMultiRegionCluster", "4.0", 25)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

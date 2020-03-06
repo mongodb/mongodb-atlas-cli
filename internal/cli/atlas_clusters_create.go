@@ -163,6 +163,8 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 				if len(args) == 0 {
 					return errMissingClusterName
 				}
+			}
+			if len(args) != 0 {
 				opts.name = args[0]
 			}
 			return opts.init()

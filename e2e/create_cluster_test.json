@@ -1,5 +1,4 @@
 {
-  "name": "TestMultiRegionCluster",
   "diskSizeGB": 10,
   "numShards": 1,
   "providerSettings": {
@@ -14,7 +13,7 @@
         "analyticsNodes" : 0,
         "electableNodes" : 2,
         "priority" : 6,
-        "readOnlyNodes" : 1
+        "readOnlyNodes" : 0
       },
       "US_EAST_4" : {
         "analyticsNodes" : 0,
@@ -24,7 +23,7 @@
       },
       "WESTERN_US" : {
         "analyticsNodes" : 0,
-        "electableNodes" : 3,
+        "electableNodes" : 2,
         "priority" : 7,
         "readOnlyNodes" : 0
       }

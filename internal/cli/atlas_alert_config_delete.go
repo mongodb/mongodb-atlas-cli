@@ -46,18 +46,21 @@ func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	opts := &atlasAlertConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
-			successMessage: "Alert Config '%s' deleted\n",
-			failMessage:    "Alert Config not deleted",
+			successMessage: "Alert config '%s' deleted\n",
+			failMessage:    "Alert config not deleted",
 		},
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [id]",
-		Short:   "Delete an Atlas Alert Config.",
+		Short:   "Delete an alert config.",
 		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.init(); err != nil {
+				return err
+			}
 			opts.entry = args[0]
-			return opts.init()
+			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

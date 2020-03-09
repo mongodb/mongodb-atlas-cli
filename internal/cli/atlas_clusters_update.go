@@ -71,6 +71,9 @@ func (opts *atlasClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
 	if opts.filename != "" {
 		cluster = new(atlas.Cluster)
 		err = file.Load(opts.fs, opts.filename, cluster)
+		if opts.name != "" {
+			cluster.Name = opts.name
+		}
 	} else {
 		cluster, err = opts.store.Cluster(opts.projectID, opts.name)
 	}
@@ -112,10 +115,10 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 		Example: `  mongocli atlas cluster update myCluster --projectId=1 --instanceSize M2 --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.filename == "" {
-				if len(args) == 0 {
-					return errMissingClusterName
-				}
+			if opts.filename == "" && len(args) == 0 {
+				return errMissingClusterName
+			}
+			if len(args) != 0 {
 				opts.name = args[0]
 			}
 			return opts.init()

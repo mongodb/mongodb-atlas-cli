@@ -142,11 +142,13 @@ func TestAtlasClusters(t *testing.T) {
 		}
 	})
 
+	clusterFileName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
+			clusterFileName,
 			"--file=create_cluster_test.json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -161,11 +163,16 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterName, "4.0", 10)
+		ensureCluster(t, cluster, clusterFileName, "4.0", 10)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", "TestMultiRegionCluster", "--force")
+	t.Run("Update via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"update",
+			clusterFileName,
+			"--file=update_cluster_test.json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -173,7 +180,25 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", "TestMultiRegionCluster")
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		ensureCluster(t, cluster, clusterFileName, "4.0", 25)
+	})
+
+	t.Run("Delete file creation", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

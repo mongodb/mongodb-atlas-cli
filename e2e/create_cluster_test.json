@@ -1,6 +1,5 @@
 {
-  "name": "TestMultiRegionCluster",
-  "diskSizeGB": 25,
+  "diskSizeGB": 10,
   "numShards": 1,
   "providerSettings": {
     "providerName": "GCP",
@@ -31,5 +30,5 @@
     },
     "zoneName" : "Zone 1"
   } ],
-  "backupEnabled": true
+  "backupEnabled": false
 }

@@ -26,6 +26,7 @@ func CloudManagerBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(CloudManagerClustersBuilder())
+	cmd.AddCommand(AtlasBackupsBuilder())
 
 	return cmd
 }

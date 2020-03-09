@@ -163,7 +163,7 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterFileName, "4.0", 10)
+		ensureCluster(t, cluster, clusterFileName, "4.2", 10)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -186,7 +186,7 @@ func TestAtlasClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterFileName, "4.0", 25)
+		ensureCluster(t, cluster, clusterFileName, "4.2", 25)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

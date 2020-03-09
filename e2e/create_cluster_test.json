@@ -1,6 +1,7 @@
 {
   "diskSizeGB": 10,
   "numShards": 1,
+  "mdbVersion": "4.2",
   "providerSettings": {
     "providerName": "GCP",
     "instanceSizeName": "M10"

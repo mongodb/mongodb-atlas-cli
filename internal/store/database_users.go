@@ -61,9 +61,10 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 }
 
 func (s *Store) DeleteDatabaseUser(groupID, username string) error {
+	dbName := "admin"
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), groupID, username)
+		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), dbName, groupID, username)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -91,9 +92,10 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 }
 
 func (s *Store) DatabaseUser(groupID string, username string) (*atlas.DatabaseUser, error) {
+	dbName := "admin"
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), groupID, username)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), dbName, groupID, username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

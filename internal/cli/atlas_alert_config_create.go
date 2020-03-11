@@ -191,7 +191,7 @@ func AtlasAlertConfigCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an Atlas alert configuration for a project.",
+		Short: "Create an alert configuration for a project.",
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

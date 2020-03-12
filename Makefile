@@ -4,7 +4,7 @@ SOURCE_FILES?=./...
 BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
-GOLANGCI_VERSION=v1.23.6
+GOLANGCI_VERSION=v1.23.8
 COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)

@@ -25,18 +25,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type clustersListOpts struct {
+type cloudManagerClustersListOpts struct {
 	*globalOpts
 	store store.CloudManagerClustersLister
 }
 
-func (opts *clustersListOpts) init() error {
+func (opts *cloudManagerClustersListOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *clustersListOpts) Run() error {
+func (opts *cloudManagerClustersListOpts) Run() error {
 
 	var result interface{}
 	var err error
@@ -59,7 +59,7 @@ func (opts *clustersListOpts) Run() error {
 
 // mongocli cloud-manager cluster(s) list --projectId projectId
 func CloudManagerClustersListBuilder() *cobra.Command {
-	opts := &clustersListOpts{
+	opts := &cloudManagerClustersListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{

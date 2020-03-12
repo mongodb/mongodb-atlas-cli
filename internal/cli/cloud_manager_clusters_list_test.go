@@ -33,7 +33,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 	t.Run("ProjectID is given", func(t *testing.T) {
 		expected := fixtures.AutomationConfig()
 
-		listOpts := &clustersListOpts{
+		listOpts := &cloudManagerClustersListOpts{
 			globalOpts: newGlobalOpts(),
 			store:      mockStore,
 		}
@@ -61,7 +61,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		listOpts := &clustersListOpts{
+		listOpts := &cloudManagerClustersListOpts{
 			globalOpts: newGlobalOpts(),
 			store:      mockStore,
 		}

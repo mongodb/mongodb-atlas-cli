@@ -57,6 +57,8 @@ func init() {
 	// IAM commands
 	rootCmd.AddCommand(cli.IAMBuilder())
 
+	cobra.EnableCommandSorting = false
+
 	profile := rootCmd.PersistentFlags().StringP(flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
 	config.SetName(profile)
 }

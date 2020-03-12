@@ -65,11 +65,10 @@ func AtlasBackupsRestoresListBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:       "list",
-		Aliases:   []string{"ls"},
-		Short:     "Start a restore job.",
-		Args:      cobra.ExactArgs(1),
-		ValidArgs: []string{automatedRestore, httpRestore},
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   "Start a restore job.",
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

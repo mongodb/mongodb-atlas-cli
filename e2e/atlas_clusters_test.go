@@ -154,3 +154,34 @@ func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName stri
 		t.Errorf("DiskSizeGB, got=%#v\nwant=%f\n", cluster.DiskSizeGB, diskSizeGB)
 	}
 }
+
+
+
+
+func TestOpsMangerClusters(t *testing.T) {
+	cliPath, err := filepath.Abs("../bin/mongocli")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	_, err = os.Stat(cliPath)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	omEntity := "om"
+	clustersEntity := "clusters"
+
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath, omEntity, clustersEntity, "list")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
+}
+

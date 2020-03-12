@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package e2e
+package e2e_test
 
 import (
 	"encoding/json"
@@ -45,7 +45,7 @@ func TestAtlasClusters(t *testing.T) {
 	clustersEntity := "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	t.Run("Create", func(t *testing.T) {
+	t.Run("Create via params", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -137,6 +137,68 @@ func TestAtlasClusters(t *testing.T) {
 		}
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		}
+	})
+
+	clusterFileName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	t.Run("Create via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"create",
+			clusterFileName,
+			"--file=create_cluster_test.json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		ensureCluster(t, cluster, clusterFileName, "4.2", 10)
+	})
+
+	t.Run("Update via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"update",
+			clusterFileName,
+			"--file=update_cluster_test.json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		ensureCluster(t, cluster, clusterFileName, "4.2", 25)
+	})
+
+	t.Run("Delete file creation", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

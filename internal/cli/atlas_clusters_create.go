@@ -82,6 +82,11 @@ func (opts *atlasClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.ClusterType = replicaSet
 		opts.applyOpts(cluster)
 	}
+
+	if opts.name != "" {
+		cluster.Name = opts.name
+	}
+
 	cluster.GroupID = opts.ProjectID()
 	return cluster, nil
 }
@@ -91,7 +96,6 @@ func (opts *atlasClustersCreateOpts) applyOpts(out *atlas.Cluster) {
 	out.BackupEnabled = &opts.backup
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
-	out.Name = opts.name
 	out.ProviderSettings = opts.newProviderSettings()
 	out.ReplicationSpecs = []atlas.ReplicationSpec{replicationSpec}
 }
@@ -159,6 +163,8 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 				if len(args) == 0 {
 					return errMissingClusterName
 				}
+			}
+			if len(args) != 0 {
 				opts.name = args[0]
 			}
 			return opts.init()

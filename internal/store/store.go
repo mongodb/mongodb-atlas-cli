@@ -62,7 +62,7 @@ func New() (*Store, error) {
 	case config.CloudService:
 		s.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
-		s.setCloudManagerClient(client)
+		s.setOpsManagerClient(client)
 	default:
 		return nil, errors.New("unsupported service")
 	}
@@ -86,7 +86,7 @@ func NewUnauthenticated() (*Store, error) {
 
 	switch s.service {
 	case config.OpsManagerService:
-		s.setCloudManagerClient(nil)
+		s.setOpsManagerClient(nil)
 	default:
 		return nil, errors.New("unsupported service")
 	}
@@ -104,7 +104,7 @@ func (s *Store) setAtlasClient(client *http.Client) {
 	s.client = atlasClient
 }
 
-func (s *Store) setCloudManagerClient(client *http.Client) {
+func (s *Store) setOpsManagerClient(client *http.Client) {
 	cmClient := om.NewClient(client)
 	if s.baseURL != nil {
 		cmClient.BaseURL = s.baseURL

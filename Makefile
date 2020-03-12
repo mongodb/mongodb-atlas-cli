@@ -28,7 +28,7 @@ link-git-hooks: ## Install git hooks
 .PHONY: fmt
 fmt: ## Format code
 	@echo "==> Formatting all files..."
-	find . -name '*.go' -not -wholename './internal/mocks/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
+	find . -name '*.go' -not -path './third_party_notices*' -not -path './internal/mocks*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
 
 .PHONY: test
 test: ## Run tests
@@ -45,7 +45,7 @@ check: test lint ## Run tests and linters
 
 .PHONY: addlicense
 addlicense:
-	find . -name '*.go' -not -wholename './internal/mocks/*' | while read -r file; do addlicense -c "MongoDB Inc" "$$file"; done
+	find . -name '*.go' -not -path './third_party_notices*' -not -path './internal/mocks*' | while read -r file; do addlicense -c "MongoDB Inc" "$$file"; done
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks

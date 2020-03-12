@@ -4,7 +4,7 @@ SOURCE_FILES?=./...
 BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
-GOLANGCI_VERSION=v1.23.6
+GOLANGCI_VERSION=v1.23.8
 COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)
@@ -58,6 +58,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/projects.go -destination=internal/mocks/mock_projects.go -package=mocks
 	mockgen -source=internal/store/organizations.go -destination=internal/mocks/mock_organizations.go -package=mocks
 	mockgen -source=internal/store/owners.go -destination=internal/mocks/mock_owners.go -package=mocks
+	mockgen -source=internal/store/continuous_snapshots.go -destination=internal/mocks/mock_continuous_snapshots.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

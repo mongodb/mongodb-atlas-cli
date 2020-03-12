@@ -27,6 +27,7 @@ func AtlasBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasDBUsersBuilder())
 	cmd.AddCommand(AtlasWhitelistBuilder())
 	cmd.AddCommand(AtlasAlertsBuilder())
+	cmd.AddCommand(AtlasBackupsBuilder())
 
 	return cmd
 }

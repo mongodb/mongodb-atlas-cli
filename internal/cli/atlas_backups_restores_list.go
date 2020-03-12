@@ -23,15 +23,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasBackupsSnapshotsListOpts struct {
+type atlasBackupsRestoresListOpts struct {
 	*globalOpts
 	clusterName  string
 	pageNum      int
 	itemsPerPage int
-	store        store.SnapshotsLister
+	store        store.ContinuousJobLister
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) init() error {
+func (opts *atlasBackupsRestoresListOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -41,9 +41,9 @@ func (opts *atlasBackupsSnapshotsListOpts) init() error {
 	return err
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) Run() error {
+func (opts *atlasBackupsRestoresListOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ContinuousSnapshots(opts.ProjectID(), opts.clusterName, listOpts)
+	result, err := opts.store.ContinuousRestoreJobs(opts.ProjectID(), opts.clusterName, listOpts)
 
 	if err != nil {
 		return err
@@ -52,23 +52,24 @@ func (opts *atlasBackupsSnapshotsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) newListOptions() *atlas.ListOptions {
+func (opts *atlasBackupsRestoresListOpts) newListOptions() *atlas.ListOptions {
 	return &atlas.ListOptions{
 		PageNum:      opts.pageNum,
 		ItemsPerPage: opts.itemsPerPage,
 	}
 }
 
-// mongocli atlas backups snapshots list --projectId projectId [--page N] [--limit N]
-func AtlasBackupsSnapshotsListBuilder() *cobra.Command {
-	opts := &atlasBackupsSnapshotsListOpts{
+// mongocli atlas backup(s) restore(s) job(s) list
+func AtlasBackupsRestoresListBuilder() *cobra.Command {
+	opts := &atlasBackupsRestoresListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List continuous snapshots for a project.",
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(1),
+		Use:       "list",
+		Aliases:   []string{"ls"},
+		Short:     "Start a restore job.",
+		Args:      cobra.ExactArgs(1),
+		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

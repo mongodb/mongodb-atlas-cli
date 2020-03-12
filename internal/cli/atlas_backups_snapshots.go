@@ -18,16 +18,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CloudManagerBuilder() *cobra.Command {
+func AtlasBackupsSnapshotsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "cloud-manager",
-		Aliases: []string{"cm"},
-		Short:   "Cloud Manager operations.",
+		Use:     "snapshots",
+		Aliases: []string{"snapshot"},
+		Short:   "Manage continuous snapshots for your project.",
 	}
 
-	cmd.AddCommand(CloudManagerClustersBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
+	cmd.AddCommand(AtlasBackupsSnapshotsListBuilder())
 
 	return cmd
 }

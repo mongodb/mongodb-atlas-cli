@@ -12,7 +12,7 @@ type ListAllClusters interface {
 	ListAllClustersProjects() (*om.AllClustersProjects, error)
 }
 
-// CreateOwner encapsulate the logic to manage different cloud providers
+// ListAllClustersProjects encapsulate the logic to manage different cloud providers
 func (s *Store) ListAllClustersProjects() (*om.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService:

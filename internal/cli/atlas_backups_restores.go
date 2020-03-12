@@ -26,6 +26,7 @@ func AtlasBackupsRestoresBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(AtlasBackupsRestoresListBuilder())
+	cmd.AddCommand(AtlasBackupsRestoresStartBuilder())
 
 	return cmd
 }

@@ -70,4 +70,17 @@ const (
 	NotificationType                = "notificationType"                // NotificationType flag
 	NotificationUsername            = "notificationUsername"            // NotificationUsername flag
 	NotificationVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationVictorOpsRoutingKey flag
+	SnapshotID                      = "snapshotId"                      // SnapshotID flag
+	ClusterName                     = "clusterName"                     // ClusterName flag
+	ClusterID                       = "clusterId"                       // ClusterID flag
+	TargetProjectID                 = "targetProjectId"                 // TargetProjectID flag
+	TargetClusterID                 = "targetClusterId"                 // TargetClusterID flag
+	TargetClusterName               = "targetClusterName"               // TargetClusterName flag
+	CheckpointID                    = "checkpointId"                    // CheckpointID flag
+	OplogTs                         = "oplogTs"                         // OplogTs flag
+	OplogInc                        = "oplogInc"                        // OplogInc flag
+	PointInTimeUTCMillis            = "pointInTimeUTCMillis"            // PointInTimeUTCMillis flag
+	Expires                         = "expires"                         // Expires flag
+	MaxDownloads                    = "maxDownloads"                    // MaxDownloads flag
+	ExpirationHours                 = "expirationHours"                 // ExpirationHours
 )

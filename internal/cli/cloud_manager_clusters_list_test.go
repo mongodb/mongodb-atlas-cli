@@ -30,9 +30,9 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 
 	expected := fixtures.AutomationConfig()
 
-	listOpts := &cmClustersListOpts{
+	listOpts := &clustersListOpts{
 		globalOpts: newGlobalOpts(),
-		store:      mockStore,
+		storeCM:    mockStore,
 	}
 
 	mockStore.
@@ -41,8 +41,35 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := listOpts.RunCM()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCloudManagerAllClustersProjectsList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockListAllClusters(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := fixtures.AllClusters()
+
+	t.Run("List all clusters projects", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			ListAllClustersProjects().
+			Return(expected, nil).
+			Times(1)
+
+		listOpts := &clustersListOpts{
+			storeOM: mockStore,
+		}
+
+		err := listOpts.RunOM()
+		if err != nil {
+			t.Fatalf("RunCM() unexpected error: %v", err)
+		}
+	})
+
 }

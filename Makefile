@@ -58,6 +58,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/projects.go -destination=internal/mocks/mock_projects.go -package=mocks
 	mockgen -source=internal/store/organizations.go -destination=internal/mocks/mock_organizations.go -package=mocks
 	mockgen -source=internal/store/owners.go -destination=internal/mocks/mock_owners.go -package=mocks
+	mockgen -source=internal/store/all_clusters_projects.go -destination=internal/mocks/mock_all_clusters_projects.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

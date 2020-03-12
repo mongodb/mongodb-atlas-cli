@@ -27,27 +27,38 @@ type atlasClustersListOpts struct {
 	*globalOpts
 	pageNum      int
 	itemsPerPage int
-	store        store.ClusterLister
+	storeAT      store.ClusterLister
+	storeOM      store.ListAllClusters
 }
 
 func (opts *atlasClustersListOpts) init() error {
+	var err error
+
 	if opts.ProjectID() == "" {
-		return errMissingProjectID
+		opts.storeOM, err = store.New()
+	} else {
+		opts.storeAT, err = store.New()
 	}
 
-	var err error
-	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasClustersListOpts) Run() error {
+func (opts *atlasClustersListOpts) RunAT() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.ProjectClusters(opts.ProjectID(), listOpts)
+	result, err := opts.storeAT.ProjectClusters(opts.ProjectID(), listOpts)
 
 	if err != nil {
 		return err
 	}
 
+	return json.PrettyPrint(result)
+}
+
+func (opts *atlasClustersListOpts) RunOM() error {
+	result, err := opts.storeOM.ListAllClustersProjects()
+	if err != nil {
+		return err
+	}
 	return json.PrettyPrint(result)
 }
 
@@ -72,7 +83,10 @@ func AtlasClustersListBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			if opts.storeAT != nil {
+				return opts.RunAT()
+			}
+			return opts.RunOM()
 		},
 	}
 

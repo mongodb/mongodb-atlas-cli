@@ -23,23 +23,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type cmClustersListOpts struct {
+type clustersListOpts struct {
 	*globalOpts
-	store store.AutomationGetter
+	storeCM store.AutomationGetter
+	storeOM store.ListAllClusters
 }
 
-func (opts *cmClustersListOpts) init() error {
+func (opts *clustersListOpts) init() error {
+	var err error
+
 	if opts.ProjectID() == "" {
-		return errMissingProjectID
+		opts.storeOM, err = store.New()
+	} else {
+		opts.storeCM, err = store.New()
 	}
 
-	var err error
-	opts.store, err = store.New()
 	return err
 }
 
-func (opts *cmClustersListOpts) Run() error {
-	result, err := opts.store.GetAutomationConfig(opts.ProjectID())
+func (opts *clustersListOpts) RunCM() error {
+	result, err := opts.storeCM.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {
 		return err
@@ -50,9 +53,17 @@ func (opts *cmClustersListOpts) Run() error {
 	return json.PrettyPrint(clusterConfigs)
 }
 
+func (opts *clustersListOpts) RunOM() error {
+	result, err := opts.storeOM.ListAllClustersProjects()
+	if err != nil {
+		return err
+	}
+	return json.PrettyPrint(result)
+}
+
 // mongocli cloud-manager cluster(s) list --projectId projectId
 func CloudManagerClustersListBuilder() *cobra.Command {
-	opts := &cmClustersListOpts{
+	opts := &clustersListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
@@ -64,7 +75,10 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			if opts.storeCM != nil {
+				return opts.RunCM()
+			}
+			return opts.RunOM()
 		},
 	}
 

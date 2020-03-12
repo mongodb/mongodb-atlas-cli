@@ -15,6 +15,8 @@
 package cli
 
 import (
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,39 +27,33 @@ import (
 
 type clustersListOpts struct {
 	*globalOpts
-	storeCM store.AutomationGetter
-	storeOM store.ListAllClusters
+	store store.CloudManagerClustersLister
 }
 
 func (opts *clustersListOpts) init() error {
 	var err error
-
-	if opts.ProjectID() == "" {
-		opts.storeOM, err = store.New()
-	} else {
-		opts.storeCM, err = store.New()
-	}
-
+	opts.store, err = store.New()
 	return err
 }
 
-func (opts *clustersListOpts) RunCM() error {
-	result, err := opts.storeCM.GetAutomationConfig(opts.ProjectID())
+func (opts *clustersListOpts) Run() error {
+
+	var result interface{}
+	var err error
+
+	if opts.projectID == "" && config.Service() == config.OpsManagerService {
+		result, err = opts.store.ListAllClustersProjects()
+
+	} else {
+		var clusterConfigs *om.AutomationConfig
+		clusterConfigs, err = opts.store.GetAutomationConfig(opts.ProjectID())
+		result = convert.FromAutomationConfig(clusterConfigs)
+	}
 
 	if err != nil {
 		return err
 	}
 
-	clusterConfigs := convert.FromAutomationConfig(result)
-
-	return json.PrettyPrint(clusterConfigs)
-}
-
-func (opts *clustersListOpts) RunOM() error {
-	result, err := opts.storeOM.ListAllClustersProjects()
-	if err != nil {
-		return err
-	}
 	return json.PrettyPrint(result)
 }
 
@@ -75,10 +71,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if opts.storeCM != nil {
-				return opts.RunCM()
-			}
-			return opts.RunOM()
+			return opts.Run()
 		},
 	}
 

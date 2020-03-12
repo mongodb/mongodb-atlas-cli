@@ -32,7 +32,7 @@ func TestAtlasClustersList_Run(t *testing.T) {
 
 	listOpts := &atlasClustersListOpts{
 		globalOpts: newGlobalOpts(),
-		storeAT:    mockStore,
+		store:      mockStore,
 	}
 
 	mockStore.
@@ -41,35 +41,8 @@ func TestAtlasClustersList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.RunAT()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestAtlasAllClustersProjectsList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockListAllClusters(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := fixtures.AllClusters()
-
-	t.Run("List all clusters projects", func(t *testing.T) {
-		mockStore.
-			EXPECT().
-			ListAllClustersProjects().
-			Return(expected, nil).
-			Times(1)
-
-		listOpts := &atlasClustersListOpts{
-			storeOM: mockStore,
-		}
-
-		err := listOpts.RunOM()
-		if err != nil {
-			t.Fatalf("RunCM() unexpected error: %v", err)
-		}
-	})
-
 }

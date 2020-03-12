@@ -17,6 +17,8 @@ package cli
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/config"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -24,38 +26,35 @@ import (
 
 func TestCloudManagerClustersList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationGetter(ctrl)
+	mockStore := mocks.NewMockCloudManagerClustersLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := fixtures.AutomationConfig()
+	t.Run("ProjectID is given", func(t *testing.T) {
+		expected := fixtures.AutomationConfig()
 
-	listOpts := &clustersListOpts{
-		globalOpts: newGlobalOpts(),
-		storeCM:    mockStore,
-	}
+		listOpts := &clustersListOpts{
+			globalOpts: newGlobalOpts(),
+			store:      mockStore,
+		}
 
-	mockStore.
-		EXPECT().
-		GetAutomationConfig(listOpts.projectID).
-		Return(expected, nil).
-		Times(1)
+		listOpts.projectID = "1"
+		mockStore.
+			EXPECT().
+			GetAutomationConfig(listOpts.projectID).
+			Return(expected, nil).
+			Times(1)
 
-	err := listOpts.RunCM()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
+		err := listOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
 
-func TestCloudManagerAllClustersProjectsList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockListAllClusters(ctrl)
+	})
 
-	defer ctrl.Finish()
-
-	expected := fixtures.AllClusters()
-
-	t.Run("List all clusters projects", func(t *testing.T) {
+	t.Run("No ProjectID is given", func(t *testing.T) {
+		expected := fixtures.AllClusters()
+		config.SetService(config.OpsManagerService)
 		mockStore.
 			EXPECT().
 			ListAllClustersProjects().
@@ -63,12 +62,13 @@ func TestCloudManagerAllClustersProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &clustersListOpts{
-			storeOM: mockStore,
+			globalOpts: newGlobalOpts(),
+			store:      mockStore,
 		}
 
-		err := listOpts.RunOM()
+		err := listOpts.Run()
 		if err != nil {
-			t.Fatalf("RunCM() unexpected error: %v", err)
+			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
 

@@ -30,9 +30,18 @@ type AutomationUpdater interface {
 	UpdateAutomationConfig(string, *om.AutomationConfig) error
 }
 
+type AllClusterLister interface {
+	ListAllClustersProjects() (*om.AllClustersProjects, error)
+}
+
 type AutomationStore interface {
 	AutomationGetter
 	AutomationUpdater
+}
+
+type CloudManagerClustersLister interface {
+	AutomationGetter
+	AllClusterLister
 }
 
 // GetAutomationConfig encapsulate the logic to manage different cloud providers
@@ -54,5 +63,16 @@ func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.Au
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ListAllClustersProjects encapsulate the logic to manage different cloud providers
+func (s *Store) ListAllClustersProjects() (*om.AllClustersProjects, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).AllCusters.List(context.Background())
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

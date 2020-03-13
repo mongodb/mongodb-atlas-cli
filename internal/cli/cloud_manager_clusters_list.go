@@ -41,6 +41,16 @@ func (opts *cloudManagerClustersListOpts) Run() error {
 	var result interface{}
 	var err error
 
+	result, err = cloudManagerClustersListRun(opts, result, err)
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
+}
+
+func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts, result interface{}, err error) (interface{}, error) {
 	if opts.projectID == "" && config.Service() == config.OpsManagerService {
 		result, err = opts.store.ListAllClustersProjects()
 
@@ -49,12 +59,7 @@ func (opts *cloudManagerClustersListOpts) Run() error {
 		clusterConfigs, err = opts.store.GetAutomationConfig(opts.ProjectID())
 		result = convert.FromAutomationConfig(clusterConfigs)
 	}
-
-	if err != nil {
-		return err
-	}
-
-	return json.PrettyPrint(result)
+	return result, err
 }
 
 // mongocli cloud-manager cluster(s) list --projectId projectId

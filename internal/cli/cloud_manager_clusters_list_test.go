@@ -17,9 +17,8 @@ package cli
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/config"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )

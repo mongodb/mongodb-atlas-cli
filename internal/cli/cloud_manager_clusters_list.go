@@ -37,11 +37,7 @@ func (opts *cloudManagerClustersListOpts) init() error {
 }
 
 func (opts *cloudManagerClustersListOpts) Run() error {
-
-	var result interface{}
-	var err error
-
-	result, err = cloudManagerClustersListRun(opts, result, err)
+	result, err := cloudManagerClustersListRun(opts)
 
 	if err != nil {
 		return err
@@ -50,7 +46,10 @@ func (opts *cloudManagerClustersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts, result interface{}, err error) (interface{}, error) {
+func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts) (interface{}, error) {
+	var result interface{}
+	var err error
+
 	if opts.projectID == "" && config.Service() == config.OpsManagerService {
 		result, err = opts.store.ListAllClustersProjects()
 

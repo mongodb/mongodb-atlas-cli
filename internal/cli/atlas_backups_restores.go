@@ -18,15 +18,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasBackupsBuilder() *cobra.Command {
+func AtlasBackupsRestoresBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "backups",
-		Aliases: []string{"backup"},
-		Short:   "Manage continuous backups for your project.",
+		Use:     "restores",
+		Short:   "Manage restore jobs.",
+		Aliases: []string{"restore"},
 	}
 
-	cmd.AddCommand(AtlasBackupsSnapshotsBuilder())
-	cmd.AddCommand(AtlasBackupsRestoresBuilder())
+	cmd.AddCommand(AtlasBackupsRestoresListBuilder())
 
 	return cmd
 }

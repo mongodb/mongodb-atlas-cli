@@ -62,7 +62,29 @@ const (
 	NotificationType                = "Type of alert notification."
 	NotificationUsername            = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
-	WhitelistType                   = `Type of whitelist entry.
+	SnapshotID                      = "Unique identifier of the snapshot to restore."
+	ClusterName                     = "Name of the cluster that contains the snapshots that you want to retrieve."
+	ClusterID                       = "Unique identifier of the cluster that the job represents."
+	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
+	TargetClusterID                 = `Unique identifier of the target cluster.
+For use only with automated restore jobs.`
+	TargetClusterName = `Name of the target cluster.
+For use only with automated restore jobs.`
+	CheckpointID = `Unique identifier for the sharded cluster checkpoint that represents the point in time to which your data will be restored.
+If you set checkpointId, you cannot set oplogInc, oplogTs, snapshotId, or pointInTimeUTCMillis.`
+	OplogTs = `Oplog timestamp given as a timestamp in the number of seconds that have elapsed since the UNIX epoch. 
+When paired with oplogInc, they represent the point in time to which your data will be restored.`
+	OplogInc = `32-bit incrementing ordinal that represents operations within a given second. 
+When paired with oplogTs, they represent the point in time to which your data will be restored.`
+	PointInTimeUTCMillis = `Timestamp in the number of milliseconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored.
+This timestamp must be within last 24 hours of the current time.`
+	Expires = `Timestamp in ISO 8601 date and time format after which the URL is no longer available.
+For use only with download restore jobs.`
+	ExpirationHours = `Number of hours the download URL is valid once the restore job is complete.
+For use only with download restore jobs.`
+	MaxDownloads = `Number of times the download URL can be used. This must be 1 or greater.
+For use only with download restore jobs.`
+	WhitelistType = `Type of whitelist entry.
 Valid values: cidrBlock|ipAddress`
 	Service = `Type of MongoDB service.
 Valid values: cloud|cloud-manager|ops-manager`

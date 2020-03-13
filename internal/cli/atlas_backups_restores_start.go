@@ -16,8 +16,10 @@ package cli
 
 import (
 	"errors"
+	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -28,6 +30,7 @@ import (
 const (
 	automatedRestore = "AUTOMATED_RESTORE"
 	httpRestore      = "HTTP"
+	onlyFor          = "'%s' can only be used with %s"
 )
 
 type atlasBackupsRestoresStartOpts struct {
@@ -127,38 +130,50 @@ func (opts *atlasBackupsRestoresStartOpts) isHTTP() bool {
 }
 
 func (opts *atlasBackupsRestoresStartOpts) validateParams() error {
-	if opts.clusterName == "" && opts.clusterID == "" {
-		return errors.New("missing clusterName or clusterId")
+	if (opts.clusterName == "" && opts.clusterID == "") || (opts.clusterName != "" && opts.clusterID != "") {
+		return errors.New("needs clusterName or clusterId")
 	}
-	if opts.clusterName != "" && opts.clusterID != "" {
-		return errors.New("clusterName and clusterId specified")
+
+	if !opts.isAutomatedRestore() {
+		if e := opts.automatedRestoreOnlyFlags(); e != nil {
+			return e
+		}
 	}
-	if !opts.isAutomatedRestore() && opts.checkpointID != "" {
-		return errors.New("checkpointId can only be used with AUTOMATED_RESTORE")
+
+	if !opts.isHTTP() {
+		if e := opts.httpRestoreOnlyFlags(); e != nil {
+			return e
+		}
 	}
-	if !opts.isAutomatedRestore() && opts.oplogTs != "" {
-		return errors.New("oplogTs can only be used with AUTOMATED_RESTORE")
+
+	return nil
+}
+
+func (opts *atlasBackupsRestoresStartOpts) httpRestoreOnlyFlags() error {
+	if opts.expires != "" {
+		return fmt.Errorf(onlyFor, flags.Expires, httpRestore)
 	}
-	if !opts.isAutomatedRestore() && opts.oplogInc > 0 {
-		return errors.New("oplogInc can only be used with AUTOMATED_RESTORE")
+	if opts.maxDownloads > 0 {
+		return fmt.Errorf(onlyFor, flags.MaxDownloads, httpRestore)
 	}
-	if !opts.isAutomatedRestore() && opts.pointInTimeUTCMillis > 0 {
-		return errors.New("pointInTimeUTCMillis can only be used with AUTOMATED_RESTORE")
+	if opts.expirationHours > 0 {
+		return fmt.Errorf(onlyFor, flags.ExpirationHours, httpRestore)
 	}
-	if opts.isAutomatedRestore() && opts.targetProjectID == "" {
-		return errors.New("missing targetProject")
+	return nil
+}
+
+func (opts *atlasBackupsRestoresStartOpts) automatedRestoreOnlyFlags() error {
+	if opts.checkpointID != "" {
+		return fmt.Errorf(onlyFor, flags.CheckpointID, automatedRestore)
 	}
-	if opts.isAutomatedRestore() && opts.targetClusterID == "" && opts.targetClusterName == "" {
-		return errors.New("missing targetClusterID or targetClusterName")
+	if opts.oplogTs != "" {
+		return fmt.Errorf(onlyFor, flags.OplogTs, automatedRestore)
 	}
-	if !opts.isHTTP() && opts.expires != "" {
-		return errors.New("expires can only be used with HTTP")
+	if opts.oplogInc > 0 {
+		return fmt.Errorf(onlyFor, flags.OplogInc, automatedRestore)
 	}
-	if !opts.isHTTP() && opts.maxDownloads > 0 {
-		return errors.New("maxDownloads can only be used with HTTP")
-	}
-	if !opts.isHTTP() && opts.expirationHours > 0 {
-		return errors.New("expirationHours can only be used with HTTP")
+	if opts.pointInTimeUTCMillis > 0 {
+		return fmt.Errorf(onlyFor, flags.PointInTimeUTCMillis, automatedRestore)
 	}
 	return nil
 }
@@ -174,6 +189,15 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.isAutomatedRestore() {
+				_ = cmd.MarkFlagRequired(flags.TargetProjectID)
+
+				if config.Service() == config.CloudService {
+					_ = cmd.MarkFlagRequired(flags.ClusterName)
+				} else {
+					_ = cmd.MarkFlagRequired(flags.ClusterID)
+				}
+			}
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -15,6 +15,8 @@
 package cli
 
 import (
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -23,36 +25,45 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type cmClustersListOpts struct {
+type cloudManagerClustersListOpts struct {
 	*globalOpts
-	store store.AutomationGetter
+	store store.CloudManagerClustersLister
 }
 
-func (opts *cmClustersListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *cloudManagerClustersListOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *cmClustersListOpts) Run() error {
-	result, err := opts.store.GetAutomationConfig(opts.ProjectID())
+func (opts *cloudManagerClustersListOpts) Run() error {
+	result, err := cloudManagerClustersListRun(opts)
 
 	if err != nil {
 		return err
 	}
 
-	clusterConfigs := convert.FromAutomationConfig(result)
+	return json.PrettyPrint(result)
+}
 
-	return json.PrettyPrint(clusterConfigs)
+func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts) (interface{}, error) {
+	var result interface{}
+	var err error
+
+	if opts.projectID == "" && config.Service() == config.OpsManagerService {
+		result, err = opts.store.ListAllClustersProjects()
+
+	} else {
+		var clusterConfigs *om.AutomationConfig
+		clusterConfigs, err = opts.store.GetAutomationConfig(opts.ProjectID())
+		result = convert.FromAutomationConfig(clusterConfigs)
+	}
+	return result, err
 }
 
 // mongocli cloud-manager cluster(s) list --projectId projectId
 func CloudManagerClustersListBuilder() *cobra.Command {
-	opts := &cmClustersListOpts{
+	opts := &cloudManagerClustersListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{

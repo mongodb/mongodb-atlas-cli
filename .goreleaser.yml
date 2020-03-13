@@ -38,12 +38,27 @@ brews:
     name: gustavo.bazan
     email: gustavo.bazan@mongodb.com
   homepage: "https://github.com/mongodb/mongocli"
-  description: "A tool to manage MongoDB Cloud."
+  description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   skip_upload: true
   test: |
     system "#{bin}/mongocli --version"
   install: |
     bin.install "mongocli"
+nfpms:
+  - id: mongocli
+    package_name: mongocli
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    replacements:
+      386: i386
+      amd64: x86_64
+    vendor: MongoDB Inc.
+    homepage: https://www.mongodb.com/
+    maintainer: MongoDB Inc. <support@mongodb.com>
+    description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+    license: Apache 2.0
+    formats:
+      - deb
+      - rpm
 checksum:
   name_template: 'checksums.txt'
 snapshot:

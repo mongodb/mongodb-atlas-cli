@@ -178,6 +178,17 @@ func (opts *atlasBackupsRestoresStartOpts) automatedRestoreOnlyFlags() error {
 	return nil
 }
 
+func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
+	if err := cmd.MarkFlagRequired(flags.TargetProjectID); err != nil {
+		return err
+	}
+
+	if config.Service() == config.CloudService {
+		return cmd.MarkFlagRequired(flags.ClusterName)
+	}
+	return cmd.MarkFlagRequired(flags.ClusterID)
+}
+
 // mongocli atlas backup(s) restore(s) job(s) start
 func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 	opts := &atlasBackupsRestoresStartOpts{
@@ -190,12 +201,8 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {
-				_ = cmd.MarkFlagRequired(flags.TargetProjectID)
-
-				if config.Service() == config.CloudService {
-					_ = cmd.MarkFlagRequired(flags.ClusterName)
-				} else {
-					_ = cmd.MarkFlagRequired(flags.ClusterID)
+				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
+					return err
 				}
 			}
 			return opts.init()

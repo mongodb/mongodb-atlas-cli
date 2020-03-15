@@ -48,44 +48,6 @@ func (mr *MockCheckpointsGetterMockRecorder) Get(arg0, arg1, arg2 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCheckpointsGetter)(nil).Get), arg0, arg1, arg2)
 }
 
-// MockCheckpointsList is a mock of CheckpointsList interface
-type MockCheckpointsList struct {
-	ctrl     *gomock.Controller
-	recorder *MockCheckpointsListMockRecorder
-}
-
-// MockCheckpointsListMockRecorder is the mock recorder for MockCheckpointsList
-type MockCheckpointsListMockRecorder struct {
-	mock *MockCheckpointsList
-}
-
-// NewMockCheckpointsList creates a new mock instance
-func NewMockCheckpointsList(ctrl *gomock.Controller) *MockCheckpointsList {
-	mock := &MockCheckpointsList{ctrl: ctrl}
-	mock.recorder = &MockCheckpointsListMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockCheckpointsList) EXPECT() *MockCheckpointsListMockRecorder {
-	return m.recorder
-}
-
-// List mocks base method
-func (m *MockCheckpointsList) List(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.Checkpoints, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Checkpoints)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// List indicates an expected call of List
-func (mr *MockCheckpointsListMockRecorder) List(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCheckpointsList)(nil).List), arg0, arg1, arg2)
-}
-
 // MockCheckpointsLister is a mock of CheckpointsLister interface
 type MockCheckpointsLister struct {
 	ctrl     *gomock.Controller
@@ -109,21 +71,6 @@ func (m *MockCheckpointsLister) EXPECT() *MockCheckpointsListerMockRecorder {
 	return m.recorder
 }
 
-// Get mocks base method
-func (m *MockCheckpointsLister) Get(arg0, arg1, arg2 string) (*mongodbatlas.Checkpoint, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Checkpoint)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Get indicates an expected call of Get
-func (mr *MockCheckpointsListerMockRecorder) Get(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCheckpointsLister)(nil).Get), arg0, arg1, arg2)
-}
-
 // List mocks base method
 func (m *MockCheckpointsLister) List(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.Checkpoints, error) {
 	m.ctrl.T.Helper()
@@ -137,4 +84,57 @@ func (m *MockCheckpointsLister) List(arg0, arg1 string, arg2 *mongodbatlas.ListO
 func (mr *MockCheckpointsListerMockRecorder) List(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCheckpointsLister)(nil).List), arg0, arg1, arg2)
+}
+
+// MockCheckpointsStore is a mock of CheckpointsStore interface
+type MockCheckpointsStore struct {
+	ctrl     *gomock.Controller
+	recorder *MockCheckpointsStoreMockRecorder
+}
+
+// MockCheckpointsStoreMockRecorder is the mock recorder for MockCheckpointsStore
+type MockCheckpointsStoreMockRecorder struct {
+	mock *MockCheckpointsStore
+}
+
+// NewMockCheckpointsStore creates a new mock instance
+func NewMockCheckpointsStore(ctrl *gomock.Controller) *MockCheckpointsStore {
+	mock := &MockCheckpointsStore{ctrl: ctrl}
+	mock.recorder = &MockCheckpointsStoreMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockCheckpointsStore) EXPECT() *MockCheckpointsStoreMockRecorder {
+	return m.recorder
+}
+
+// Get mocks base method
+func (m *MockCheckpointsStore) Get(arg0, arg1, arg2 string) (*mongodbatlas.Checkpoint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*mongodbatlas.Checkpoint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get
+func (mr *MockCheckpointsStoreMockRecorder) Get(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCheckpointsStore)(nil).Get), arg0, arg1, arg2)
+}
+
+// List mocks base method
+func (m *MockCheckpointsStore) List(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.Checkpoints, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*mongodbatlas.Checkpoints)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List
+func (mr *MockCheckpointsStoreMockRecorder) List(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCheckpointsStore)(nil).List), arg0, arg1, arg2)
 }

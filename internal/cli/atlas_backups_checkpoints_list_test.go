@@ -24,7 +24,7 @@ import (
 
 func TestAtlasBackupsCheckpointsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCheckpointsList(ctrl)
+	mockStore := mocks.NewMockCheckpointsLister(ctrl)
 
 	defer ctrl.Finish()
 

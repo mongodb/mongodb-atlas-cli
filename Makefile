@@ -60,6 +60,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/owners.go -destination=internal/mocks/mock_owners.go -package=mocks
 	mockgen -source=internal/store/continuous_snapshots.go -destination=internal/mocks/mock_continuous_snapshots.go -package=mocks
 	mockgen -source=internal/store/continuous_jobs.go -destination=internal/mocks/mock_continuous_jobs.go -package=mocks
+	mockgen -source=internal/store/checkpoints.go -destination=internal/mocks/mock_checkpoints.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

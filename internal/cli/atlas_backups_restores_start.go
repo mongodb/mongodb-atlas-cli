@@ -220,7 +220,7 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.snapshotID, flags.SnapshotID, "", usage.SnapshotID)
 	// Atlas uses cluster name
-	cmd.Flags().StringVar(&opts.clusterName, flags.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.clusterName, flags.ClusterName, "", usage.ClusterNameSnapshots)
 	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.clusterID, flags.ClusterID, "", usage.ClusterID)
 

@@ -29,6 +29,7 @@ func OpsManagerBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasAlertsBuilder())
 	cmd.AddCommand(OpsManagerOwnerBuilder())
 	cmd.AddCommand(AtlasBackupsBuilder())
+	cmd.AddCommand(OpsManagerServersBuilder())
 
 	return cmd
 }

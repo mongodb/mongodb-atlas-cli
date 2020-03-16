@@ -70,7 +70,7 @@ func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.Au
 func (s *Store) ListAllClustersProjects() (*om.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AllCusters.List(context.Background())
+		result, _, err := s.client.(*om.Client).AllClusters.List(context.Background())
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

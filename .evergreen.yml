@@ -1,0 +1,52 @@
+#####################################################
+#               A note on expansions                #
+#####################################################
+
+# Expansions usually appear in the form ${key|default}
+# If 'key' is found in the executor's map of currently known
+# expansions, the corresponding value is used. If the key can
+# not be found, the default is used.
+#
+# Arbitrary expansions can be specified in the YAML configuration
+# files in the following places:
+# - The 'expansions' field for buildvariants (branch file)
+# - The 'expansions' field for distros (distros file)
+#
+# A number of 'built-in' expansions are also available for use; these include:
+# - environment variables available on the host machine
+# - 'workdir' (references the executor's work directory).
+# - 'task_id' (references the task id of the task the executor is working on).
+# - 'build_variant' (references the executing task's buildvariant).
+# - 'config_root' (references the root directory for the executor's configuration artifacts).
+
+stepback: true
+command_type: system
+pre_error_fails_task: true
+
+# Files that match an ignore-list pattern will not trigger a build, if they're the only modified
+# files in the patch.
+ignore:
+  - "*.md"
+  - "*.txt"
+  - "/dist/**"
+  - "/bin/**"
+  - "/third_party_notices/**"
+
+variables:
+  - &go_bin
+      "/opt/golang/go1.13/bin"
+
+  - &go_options
+    GO111MODULE: "on"
+    GOFLAGS: "-mod=vendor"
+    GOROOT: "/opt/golang/go1.13"
+tasks:
+  - name: compile
+    commands:
+      - command: git.get_project
+      - command: "make build"
+  - name: package
+    depends_on:
+      - name: compile
+    commands:
+      - command: "make package"

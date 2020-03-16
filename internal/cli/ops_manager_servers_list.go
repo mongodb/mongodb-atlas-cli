@@ -37,12 +37,12 @@ func (opts *OpsManagerServersListOpts) init() error {
 }
 
 func (opts *OpsManagerServersListOpts) Run() error {
-	var err error
 	servers, err := opts.store.Agents(opts.projectID, agentType)
 
 	if err != nil {
 		return err
 	}
+
 	return json.PrettyPrint(servers)
 }
 

@@ -40,13 +40,61 @@ variables:
     GO111MODULE: "on"
     GOFLAGS: "-mod=vendor"
     GOROOT: "/opt/golang/go1.13"
+
+functions:
+  "clone":
+    - command: git.get_project
+      type: setup
+      params:
+        directory: mongocli
+  "build":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - *go_bin
+          - *go_bin
+        working_dir: mongocli
+        env:
+          WORKDIR: ${workdir}
+          <<: *go_options
+        command: make build
+  "package":
+    - command: subprocess.exec
+      type: setup
+      params:
+        env:
+          WORKDIR: ${workdir}
+          <<: *go_options
+        command: "curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh"
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - *go_bin
+          - ./bin
+        working_dir: mongocli
+        env:
+          WORKDIR: ${workdir}
+          <<: *go_options
+        command: make build
 tasks:
   - name: compile
     commands:
-      - command: git.get_project
-      - command: "make build"
+      - func: "clone"
+      - func: "build"
   - name: package
     depends_on:
       - name: compile
     commands:
-      - command: "make package"
+      - func: "package"
+buildvariants:
+  - name: ubuntu
+    display_name: Ubuntu
+    run_on:
+      - ubuntu1804-test
+    expansions:
+      test_flags: "blah blah"
+    tasks:
+      - name: compile
+      - name: package

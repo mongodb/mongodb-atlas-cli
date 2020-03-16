@@ -31,26 +31,25 @@ func TestOpsManagerAgentsList_Run(t *testing.T) {
 
 	expected := fixtures.Agents()
 
-	listOpts := OpsManagerAgentsListOpts{
+	listOpts := OpsManagerServersListOpts{
 		globalOpts: &globalOpts{
 			projectID: "1",
 		},
 		store: mockStore,
 	}
 
-	t.Run("ProjectID is given", func(t *testing.T) {
-		mockStore.
-			EXPECT().
-			Agents(listOpts.projectID, AgentType).
-			Return(expected, nil).
-			Times(1)
+	mockStore.
+		EXPECT().
+		Agents(listOpts.projectID, agentType).
+		Return(expected, nil).
+		Times(1)
 
-		config.SetService(config.OpsManagerService)
+	config.SetService(config.OpsManagerService)
 
-		err := listOpts.Run()
+	err := listOpts.Run()
 
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
 }

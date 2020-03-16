@@ -25,10 +25,6 @@ type AgentLister interface {
 	Agents(string, string) (*om.Agents, error)
 }
 
-type AgentStore interface {
-	AgentLister
-}
-
 // Agents encapsulate the logic to manage different cloud providers
 func (s *Store) Agents(projectID, agentType string) (*om.Agents, error) {
 	switch s.service {

@@ -22,41 +22,40 @@ import (
 )
 
 const (
-	AgentType = "AUTOMATION"
+	agentType = "AUTOMATION"
 )
 
-type OpsManagerAgentsListOpts struct {
+type OpsManagerServersListOpts struct {
 	*globalOpts
 	store store.AgentLister
 }
 
-func (opts *OpsManagerAgentsListOpts) init() error {
+func (opts *OpsManagerServersListOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *OpsManagerAgentsListOpts) Run() error {
-	var projects interface{}
+func (opts *OpsManagerServersListOpts) Run() error {
 	var err error
-	projects, err = opts.store.Agents(opts.projectID, AgentType)
+	servers, err := opts.store.Agents(opts.projectID, agentType)
 
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(projects)
+	return json.PrettyPrint(servers)
 }
 
 // mongocli om server(s) list [--projectId projectId]
 func OpsManagerAgentsListBuilder() *cobra.Command {
-	opts := &OpsManagerAgentsListOpts{
+	opts := &OpsManagerServersListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
-		Short:   "List all available servers which are running an automation server, they may or may not be running mongod/s processes.",
+		Short:   "List all available servers running an automation agent for the given project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

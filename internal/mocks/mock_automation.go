@@ -85,6 +85,44 @@ func (mr *MockAutomationUpdaterMockRecorder) UpdateAutomationConfig(arg0, arg1 i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAutomationConfig", reflect.TypeOf((*MockAutomationUpdater)(nil).UpdateAutomationConfig), arg0, arg1)
 }
 
+// MockAutomationStatusGetter is a mock of AutomationStatusGetter interface
+type MockAutomationStatusGetter struct {
+	ctrl     *gomock.Controller
+	recorder *MockAutomationStatusGetterMockRecorder
+}
+
+// MockAutomationStatusGetterMockRecorder is the mock recorder for MockAutomationStatusGetter
+type MockAutomationStatusGetterMockRecorder struct {
+	mock *MockAutomationStatusGetter
+}
+
+// NewMockAutomationStatusGetter creates a new mock instance
+func NewMockAutomationStatusGetter(ctrl *gomock.Controller) *MockAutomationStatusGetter {
+	mock := &MockAutomationStatusGetter{ctrl: ctrl}
+	mock.recorder = &MockAutomationStatusGetterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAutomationStatusGetter) EXPECT() *MockAutomationStatusGetterMockRecorder {
+	return m.recorder
+}
+
+// GetAutomationConfigStatus mocks base method
+func (m *MockAutomationStatusGetter) GetAutomationConfigStatus(arg0 string) (*opsmngr.AutomationStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAutomationConfigStatus", arg0)
+	ret0, _ := ret[0].(*opsmngr.AutomationStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAutomationConfigStatus indicates an expected call of GetAutomationConfigStatus
+func (mr *MockAutomationStatusGetterMockRecorder) GetAutomationConfigStatus(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfigStatus", reflect.TypeOf((*MockAutomationStatusGetter)(nil).GetAutomationConfigStatus), arg0)
+}
+
 // MockAllClusterLister is a mock of AllClusterLister interface
 type MockAllClusterLister struct {
 	ctrl     *gomock.Controller
@@ -173,6 +211,21 @@ func (m *MockAutomationStore) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.
 func (mr *MockAutomationStoreMockRecorder) UpdateAutomationConfig(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAutomationConfig", reflect.TypeOf((*MockAutomationStore)(nil).UpdateAutomationConfig), arg0, arg1)
+}
+
+// GetAutomationConfigStatus mocks base method
+func (m *MockAutomationStore) GetAutomationConfigStatus(arg0 string) (*opsmngr.AutomationStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAutomationConfigStatus", arg0)
+	ret0, _ := ret[0].(*opsmngr.AutomationStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAutomationConfigStatus indicates an expected call of GetAutomationConfigStatus
+func (mr *MockAutomationStoreMockRecorder) GetAutomationConfigStatus(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfigStatus", reflect.TypeOf((*MockAutomationStore)(nil).GetAutomationConfigStatus), arg0)
 }
 
 // MockCloudManagerClustersLister is a mock of CloudManagerClustersLister interface

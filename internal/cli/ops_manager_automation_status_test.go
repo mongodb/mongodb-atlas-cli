@@ -37,7 +37,7 @@ func TestOpsManagerAutomationStatus_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfigStatus(opts.projectID).
+		GetAutomationStatus(opts.projectID).
 		Return(expected, nil).
 		Times(1)
 

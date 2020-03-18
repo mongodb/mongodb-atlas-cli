@@ -31,7 +31,7 @@ type AutomationUpdater interface {
 }
 
 type AutomationStatusGetter interface {
-	GetAutomationConfigStatus(string) (*om.AutomationStatus, error)
+	GetAutomationStatus(string) (*om.AutomationStatus, error)
 }
 
 type AllClusterLister interface {
@@ -49,7 +49,7 @@ type CloudManagerClustersLister interface {
 	AllClusterLister
 }
 
-func (s *Store) GetAutomationConfigStatus(projectID string) (*om.AutomationStatus, error) {
+func (s *Store) GetAutomationStatus(projectID string) (*om.AutomationStatus, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*om.Client).AutomationStatus.Get(context.Background(), projectID)

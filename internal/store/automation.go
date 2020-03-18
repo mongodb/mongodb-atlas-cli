@@ -30,6 +30,10 @@ type AutomationUpdater interface {
 	UpdateAutomationConfig(string, *om.AutomationConfig) error
 }
 
+type AutomationStatusGetter interface {
+	GetAutomationStatus(string) (*om.AutomationStatus, error)
+}
+
 type AllClusterLister interface {
 	ListAllClustersProjects() (*om.AllClustersProjects, error)
 }
@@ -37,11 +41,22 @@ type AllClusterLister interface {
 type AutomationStore interface {
 	AutomationGetter
 	AutomationUpdater
+	AutomationStatusGetter
 }
 
 type CloudManagerClustersLister interface {
 	AutomationGetter
 	AllClusterLister
+}
+
+func (s *Store) GetAutomationStatus(projectID string) (*om.AutomationStatus, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*om.Client).AutomationStatus.Get(context.Background(), projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // GetAutomationConfig encapsulate the logic to manage different cloud providers

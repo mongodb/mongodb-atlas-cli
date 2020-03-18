@@ -16,11 +16,6 @@ package fixtures
 
 import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 
-// TODO: https://github.com/mongodb/go-client-mongodb-atlas/pull/64
-func ContinuousJob() *atlas.ContinuousJob {
-	return &atlas.ContinuousJob{}
-}
-
 func ContinuousJobs() *atlas.ContinuousJobs {
 	pointInTime := false
 

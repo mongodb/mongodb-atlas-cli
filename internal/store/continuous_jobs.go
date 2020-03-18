@@ -28,7 +28,7 @@ type ContinuousJobLister interface {
 }
 
 type ContinuousJobCreator interface {
-	CreateContinuousRestoreJob(string, string, *atlas.ContinuousJobRequest) (*atlas.ContinuousJob, error)
+	CreateContinuousRestoreJob(string, string, *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error)
 }
 
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
@@ -45,7 +45,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 }
 
 // CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers
-func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJob, error) {
+func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)

@@ -29,6 +29,8 @@ The following is a short list of commands that can be run in the root of the pro
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 
 
+We run our some packaging and publishing tasks in [Evergreen](https://github.com/evergreen-ci/evergreen).
+
 ### Generating mocks
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests

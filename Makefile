@@ -85,11 +85,13 @@ gen-notices: ## Generate 3rd party notices
 	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
 
 .PHONY: package
-package: gen-notices ## Use goreleaser to generate builds and publish
+package: ## Use goreleaser to generate builds
+	@echo "==> Packaging"
 	goreleaser --skip-publish --rm-dist --snapshot
 
 .PHONY: release
 release: gen-notices ## Use goreleaser to generate builds and publish
+	@echo "==> Releasing"
 	goreleaser --rm-dist
 
 .PHONY: list

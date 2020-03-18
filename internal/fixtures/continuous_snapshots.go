@@ -18,6 +18,17 @@ import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 
 func ContinuousSnapshots() *atlas.ContinuousSnapshots {
 	doNotDelete := false
+	part := new(atlas.Part)
+
+	part.ClusterID = "7c2487d833e9e75286093696"
+	part.CompressionSetting = "GZIP"
+	part.DataSizeBytes = 4502
+	part.EncryptionEnabled = false
+	part.FileSizeBytes = 324760
+	part.MongodVersion = "3.6.10"
+	part.ReplicaSetName = "Cluster0-shard-0"
+	part.StorageSizeBytes = 53248
+	part.TypeName = "REPLICA_SET"
 
 	return &atlas.ContinuousSnapshots{
 		Links: []*atlas.Link{
@@ -48,19 +59,7 @@ func ContinuousSnapshots() *atlas.ContinuousSnapshots {
 						Rel:  "self",
 					},
 				},
-				Parts: []*atlas.Part{
-					{
-						ClusterID:          "7c2487d833e9e75286093696",
-						CompressionSetting: "GZIP",
-						DataSizeBytes:      4502,
-						EncryptionEnabled:  false,
-						FileSizeBytes:      324760,
-						MongodVersion:      "3.6.10",
-						ReplicaSetName:     "Cluster0-shard-0",
-						StorageSizeBytes:   53248,
-						TypeName:           "REPLICA_SET",
-					},
-				},
+				Parts: []*atlas.Part{part},
 			},
 		},
 		TotalCount: 1,

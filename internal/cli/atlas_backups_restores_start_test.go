@@ -28,7 +28,7 @@ func TestAtlasBackupsRestoresStart_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.ContinuousJob()
+	expected := fixtures.ContinuousJobs()
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &atlasBackupsRestoresStartOpts{

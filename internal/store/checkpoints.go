@@ -27,24 +27,6 @@ type CheckpointsLister interface {
 	List(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
 }
 
-type CheckpointsStore interface {
-	CheckpointsLister
-}
-
-// Get encapsulate the logic to manage different cloud providers
-func (s *Store) Get(projectID, clusterID, checkpointID string) (*atlas.Checkpoint, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Checkpoints.Get(context.Background(), projectID, clusterID, checkpointID)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).Checkpoints.Get(context.Background(), projectID, clusterID, checkpointID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
 // List encapsulate the logic to manage different cloud providers
 func (s *Store) List(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {

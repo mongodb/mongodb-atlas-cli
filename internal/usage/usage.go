@@ -64,7 +64,6 @@ const (
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
 	ClusterNameSnapshots            = "Name of the cluster that contains the snapshots that you want to retrieve."
-	ClusterNameCheckpoints          = "Name of the cluster that contains the checkpoints that you want to retrieve."
 	ClusterID                       = "Unique identifier of the cluster that the job represents."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	TargetClusterID                 = `Unique identifier of the target cluster.

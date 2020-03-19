@@ -36,10 +36,6 @@ func (opts *atlasBackupsCheckpointsListOpts) init() error {
 		return errMissingProjectID
 	}
 
-	if opts.clusterName == "" {
-		return errMissingClusterName
-	}
-
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -64,7 +60,7 @@ func (opts *atlasBackupsCheckpointsListOpts) newListOptions() *atlas.ListOptions
 	}
 }
 
-// mongocli atlas backup(s) checkpoint(s) list
+// mongocli atlas backup(s) checkpoint(s) list clusterName [--projectId projectId]
 func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	opts := &atlasBackupsCheckpointsListOpts{
 		globalOpts: newGlobalOpts(),
@@ -72,12 +68,13 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List backups checkpoints.",
+		Short:   "List continuous backup checkpoints.",
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.clusterName = args[0]
 			return opts.Run()
 		},
 	}
@@ -86,7 +83,6 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.clusterName, flags.ClusterName, "", usage.ClusterNameCheckpoints)
 
 	return cmd
 }

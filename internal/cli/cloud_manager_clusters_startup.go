@@ -32,7 +32,7 @@ type cmClustersStartupOpts struct {
 	*globalOpts
 	name    string
 	confirm bool
-	store   store.AutomationStore
+	store   store.AutomationPatcher
 }
 
 func (opts *cmClustersStartupOpts) init() error {

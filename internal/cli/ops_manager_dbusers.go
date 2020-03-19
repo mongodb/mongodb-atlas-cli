@@ -18,20 +18,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func OpsManagerBuilder() *cobra.Command {
+func OpsManagerDBUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "ops-manager",
-		Aliases: []string{"om"},
-		Short:   "Ops Manager operations.",
+		Use:     "dbusers",
+		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
+		Short:   "Manage database users for your project.",
+		Long: `
+The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
+Each user has a set of roles that provide access to the project’s databases. 
+A user’s roles apply to all the clusters in the project.`,
 	}
 
-	cmd.AddCommand(CloudManagerClustersBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(OpsManagerOwnerBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(OpsManagerServersBuilder())
-	cmd.AddCommand(OpsManagerAutomationBuilder())
-	cmd.AddCommand(OpsManagerDBUsersBuilder())
+	cmd.AddCommand(OpsManagerDBUsersCreateBuilder())
 
 	return cmd
 }

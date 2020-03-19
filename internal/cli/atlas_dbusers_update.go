@@ -63,7 +63,7 @@ func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 		out.Password = opts.password
 	}
 
-	out.Roles = convert.BuildRoles(opts.roles)
+	out.Roles = convert.BuildAtlasRoles(opts.roles)
 }
 
 // mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]

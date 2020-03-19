@@ -31,10 +31,12 @@ const (
 	Backup                          = "backup"                          // Backup flag
 	Username                        = "username"                        // Username flag
 	Password                        = "password"                        // Password flag
+	AuthDB                          = "authDB"                          // AuthDB flag
 	Email                           = "email"                           // Email flag
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
+	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag
 	Page                            = "page"                            // Page flag

@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
 //Public constants
@@ -30,9 +31,9 @@ const (
 	roleSep = "@"
 )
 
-// BuildRoles converts the roles inside the array of string in an array of Atlas.Role Objects
+// BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs
 // r contains roles in the format roleName@dbName
-func BuildRoles(r []string) []atlas.Role {
+func BuildAtlasRoles(r []string) []atlas.Role {
 	roles := make([]atlas.Role, len(r))
 	for i, roleP := range r {
 		role := strings.Split(roleP, roleSep)
@@ -45,6 +46,26 @@ func BuildRoles(r []string) []atlas.Role {
 		roles[i] = atlas.Role{
 			RoleName:     roleName,
 			DatabaseName: databaseName,
+		}
+	}
+	return roles
+}
+
+// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs
+// r contains roles in the format roleName@dbName
+func BuildOMRoles(r []string) []*om.Role {
+	roles := make([]*om.Role, len(r))
+	for i, roleP := range r {
+		role := strings.Split(roleP, roleSep)
+		roleName := role[0]
+		databaseName := AdminDB
+		if len(role) > 1 {
+			databaseName = role[1]
+		}
+
+		roles[i] = &om.Role{
+			Role:     roleName,
+			Database: databaseName,
 		}
 	}
 	return roles

@@ -33,7 +33,7 @@ type cmClustersUpdateOpts struct {
 	*globalOpts
 	filename string
 	fs       afero.Fs
-	store    store.AutomationStore
+	store    store.AutomationPatcher
 }
 
 func (opts *cmClustersUpdateOpts) init() error {

@@ -15,27 +15,30 @@
 package cli
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flags"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type atlasDBUsersCreateOpts struct {
+type opsManagerDBUsersCreateOpts struct {
 	*globalOpts
-	username string
-	password string
-	roles    []string
-	store    store.DatabaseUserCreator
+	username   string
+	password   string
+	authDB     string
+	roles      []string
+	mechanisms []string
+	store      store.AutomationPatcher
 }
 
-func (opts *atlasDBUsersCreateOpts) init() error {
+func (opts *opsManagerDBUsersCreateOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -45,28 +48,36 @@ func (opts *atlasDBUsersCreateOpts) init() error {
 	return err
 }
 
-func (opts *atlasDBUsersCreateOpts) Run() error {
-	user := opts.newDatabaseUser()
-	result, err := opts.store.CreateDatabaseUser(user)
+func (opts *opsManagerDBUsersCreateOpts) Run() error {
+	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	current.Auth.Users = append(current.Auth.Users, opts.newDBUser())
+
+	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+		return err
+	}
+
+	fmt.Print(messages.DeploymentStatus(config.OpsManagerURL(), opts.ProjectID()))
+
+	return nil
 }
 
-func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
-	return &atlas.DatabaseUser{
-		DatabaseName: convert.AdminDB,
-		Roles:        convert.BuildAtlasRoles(opts.roles),
-		GroupID:      opts.ProjectID(),
-		Username:     opts.username,
-		Password:     opts.password,
+func (opts *opsManagerDBUsersCreateOpts) newDBUser() *om.MongoDBUser {
+	return &om.MongoDBUser{
+		Database:                   opts.authDB,
+		Username:                   opts.username,
+		InitPassword:               opts.password,
+		Roles:                      convert.BuildOMRoles(opts.roles),
+		AuthenticationRestrictions: []string{},
+		Mechanisms:                 opts.mechanisms,
 	}
 }
 
-func (opts *atlasDBUsersCreateOpts) Prompt() error {
+func (opts *opsManagerDBUsersCreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
@@ -77,24 +88,19 @@ func (opts *atlasDBUsersCreateOpts) Prompt() error {
 }
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
-func AtlasDBUsersCreateBuilder() *cobra.Command {
-	opts := &atlasDBUsersCreateOpts{
+func OpsManagerDBUsersCreateBuilder() *cobra.Command {
+	opts := &opsManagerDBUsersCreateOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:       "create",
-		Short:     "Create a database user for a project.",
-		Example:   `  mongocli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
-		Args:      cobra.OnlyValidArgs,
-		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
+		Use:     "create",
+		Short:   "Create a database user for a project.",
+		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanism SCRAM-SHA-256 --projectId <>`,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
 				return err
 			}
-			if len(args) == 0 && len(opts.roles) == 0 {
-				return errors.New("no role specified for the user")
-			}
-			opts.roles = append(opts.roles, args...)
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -104,7 +110,9 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.username, flags.Username, "", usage.Username)
 	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
+	cmd.Flags().StringSliceVar(&opts.mechanisms, flags.Mechanisms, []string{"SCRAM-SHA-1"}, usage.Mechanisms)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

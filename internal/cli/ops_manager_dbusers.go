@@ -30,6 +30,7 @@ A user’s roles apply to all the clusters in the project.`,
 	}
 
 	cmd.AddCommand(OpsManagerDBUsersCreateBuilder())
+	cmd.AddCommand(OpsManagerDBUsersListBuilder())
 
 	return cmd
 }

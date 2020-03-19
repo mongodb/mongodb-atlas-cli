@@ -28,6 +28,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const scransha1 = "SCRAM-SHA-1"
+
 type opsManagerDBUsersCreateOpts struct {
 	*globalOpts
 	username   string
@@ -112,7 +114,7 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
 	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
-	cmd.Flags().StringSliceVar(&opts.mechanisms, flags.Mechanisms, []string{"SCRAM-SHA-1"}, usage.Mechanisms)
+	cmd.Flags().StringSliceVar(&opts.mechanisms, flags.Mechanisms, []string{scransha1}, usage.Mechanisms)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

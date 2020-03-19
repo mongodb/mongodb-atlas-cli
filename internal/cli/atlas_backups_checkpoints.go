@@ -18,16 +18,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasBackupsBuilder() *cobra.Command {
+func AtlasBackupsCheckpointsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "backups",
-		Aliases: []string{"backup"},
-		Short:   "Manage continuous backups for your project.",
+		Use:     "checkpoints",
+		Aliases: []string{"checkpoint"},
+		Short:   "Manage backup checkpoints for your project.",
 	}
 
-	cmd.AddCommand(AtlasBackupsSnapshotsBuilder())
-	cmd.AddCommand(AtlasBackupsRestoresBuilder())
-	cmd.AddCommand(AtlasBackupsCheckpointsBuilder())
+	cmd.AddCommand(AtlasBackupsCheckpointsListBuilder())
 
 	return cmd
 }

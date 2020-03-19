@@ -20,6 +20,7 @@ const (
 	ProfileShort                    = "p"                               // ProfileShort flag to use a profile
 	OrgID                           = "orgId"                           // OrgID flag to use an Organization ID
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
+	AuthDB                          = "authDB"                          // AuthDB flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
 	Region                          = "region"                          // Region flag
 	RegionShort                     = "r"                               // RegionShort flag

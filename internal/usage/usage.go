@@ -23,6 +23,7 @@ const (
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
 	Backup                          = "If true, uses Atlas Continuous Backups to back up cluster data."
 	MDBVersion                      = "MongoDB version of the cluster to deploy."
+	AuthDB                          = "Database name."
 	Page                            = "Page number."
 	Limit                           = "Number of items per page."
 	Username                        = "Username for authenticating to MongoDB."

@@ -38,7 +38,7 @@ func (opts *atlasDBUsersDeleteOpts) init() error {
 }
 
 func (opts *atlasDBUsersDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteDatabaseUser, opts.ProjectID())
+	return opts.DeleterFromProjectAuthDB(opts.store.DeleteDatabaseUser, opts.ProjectID())
 }
 
 // mongocli atlas dbuser(s) delete <username> --force
@@ -70,6 +70,7 @@ func AtlasDBUsersDeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, "", usage.AuthDB)
 
 	return cmd
 }

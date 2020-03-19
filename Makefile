@@ -60,6 +60,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/owners.go -destination=internal/mocks/mock_owners.go -package=mocks
 	mockgen -source=internal/store/continuous_snapshots.go -destination=internal/mocks/mock_continuous_snapshots.go -package=mocks
 	mockgen -source=internal/store/continuous_jobs.go -destination=internal/mocks/mock_continuous_jobs.go -package=mocks
+	mockgen -source=internal/store/agents.go -destination=internal/mocks/mock_agents.go -package=mocks
 	mockgen -source=internal/store/checkpoints.go -destination=internal/mocks/mock_checkpoints.go -package=mocks
 
 .PHONY: build
@@ -84,8 +85,14 @@ gen-notices: ## Generate 3rd party notices
 	@rm -Rf third_party_notices
 	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
 
+.PHONY: package
+package: ## Use goreleaser to generate builds
+	@echo "==> Packaging"
+	goreleaser --skip-publish --rm-dist --snapshot
+
 .PHONY: release
 release: gen-notices ## Use goreleaser to generate builds and publish
+	@echo "==> Releasing"
 	goreleaser --rm-dist
 
 .PHONY: list

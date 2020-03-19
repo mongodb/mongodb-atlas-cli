@@ -18,19 +18,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func OpsManagerBuilder() *cobra.Command {
+func OpsManagerServersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "ops-manager",
-		Aliases: []string{"om"},
-		Short:   "Ops Manager operations.",
+		Use:   "servers",
+		Short: "Manage Ops Manager servers.",
 	}
 
-	cmd.AddCommand(CloudManagerClustersBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(OpsManagerOwnerBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(OpsManagerServersBuilder())
-	cmd.AddCommand(OpsManagerAutomationBuilder())
-
+	cmd.AddCommand(OpsManagerAgentsListBuilder())
 	return cmd
 }

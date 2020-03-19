@@ -72,10 +72,10 @@ func (m *MockContinuousJobCreator) EXPECT() *MockContinuousJobCreatorMockRecorde
 }
 
 // CreateContinuousRestoreJob mocks base method
-func (m *MockContinuousJobCreator) CreateContinuousRestoreJob(arg0, arg1 string, arg2 *mongodbatlas.ContinuousJobRequest) (*mongodbatlas.ContinuousJob, error) {
+func (m *MockContinuousJobCreator) CreateContinuousRestoreJob(arg0, arg1 string, arg2 *mongodbatlas.ContinuousJobRequest) (*mongodbatlas.ContinuousJobs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContinuousRestoreJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ContinuousJob)
+	ret0, _ := ret[0].(*mongodbatlas.ContinuousJobs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

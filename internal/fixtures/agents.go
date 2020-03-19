@@ -12,25 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package fixtures
 
 import (
-	"github.com/spf13/cobra"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
-func OpsManagerBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "ops-manager",
-		Aliases: []string{"om"},
-		Short:   "Ops Manager operations.",
+func Agent() *om.Agent {
+	return &om.Agent{
+		TypeName:  "AUTOMATION",
+		Hostname:  "example",
+		ConfCount: 59,
+		LastConf:  "2015-06-18T14:21:42Z",
+		StateName: "ACTIVE",
+		PingCount: 6,
+		IsManaged: true,
+		LastPing:  "2015-06-18T14:21:42Z",
 	}
+}
 
-	cmd.AddCommand(CloudManagerClustersBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(OpsManagerOwnerBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(OpsManagerServersBuilder())
-	cmd.AddCommand(OpsManagerAutomationBuilder())
-
-	return cmd
+func Agents() *om.Agents {
+	return &om.Agents{
+		Links:      []*atlas.Link{},
+		Results:    []*om.Agent{Agent()},
+		TotalCount: 1,
+	}
 }

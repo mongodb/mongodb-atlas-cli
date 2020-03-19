@@ -30,8 +30,9 @@ func TestAtlasWhitelistDelete_Run(t *testing.T) {
 	deleteOpts := &atlasWhitelistDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
-			confirm: true,
-			entry:   "test",
+			confirm:        true,
+			entry:          "test",
+			successMessage: "Project whitelist entry '%s' deleted\n",
 		},
 		store: mockStore,
 	}

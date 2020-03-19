@@ -23,16 +23,11 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-type CheckpointsGetter interface {
-	Get(string, string, string) (*atlas.Checkpoint, error)
-}
-
 type CheckpointsLister interface {
 	List(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
 }
 
 type CheckpointsStore interface {
-	CheckpointsGetter
 	CheckpointsLister
 }
 

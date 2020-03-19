@@ -69,7 +69,7 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List continuous backup checkpoints.",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

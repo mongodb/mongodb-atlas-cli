@@ -34,7 +34,7 @@ func TestAtlasDBUsersDelete_Run(t *testing.T) {
 			entry:          "test",
 			successMessage: "DB user '%s' deleted\n",
 		},
-		authDB: "Admin",
+		authDB: "admin",
 		store:  mockStore,
 	}
 

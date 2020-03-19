@@ -22,6 +22,11 @@ import (
 	"github.com/mongodb/mongocli/internal/prompts"
 )
 
+const (
+	fallbackSuccessMessage = "'%s' deleted\n"
+	fallbackFailMessage    = "'%s' not deleted\n"
+)
+
 type globalOpts struct {
 	orgID     string
 	projectID string
@@ -72,7 +77,7 @@ type DeleterFromProjectAuthDB func(authDB string, projectID string, entry string
 // that should perform the deletion from the store.
 func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string) error {
 	if !opts.confirm {
-		fmt.Println(opts.failMessage)
+		opts.printFailMessage()
 		return nil
 	}
 	err := d(projectID, opts.entry)
@@ -81,7 +86,7 @@ func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string
 		return err
 	}
 
-	fmt.Printf(opts.successMessage, opts.entry)
+	opts.printSuccessMessage()
 
 	return nil
 }
@@ -90,7 +95,7 @@ func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string
 // that should perform the deletion from the store.
 func (opts *deleteOpts) DeleterFromProjectAuthDB(d DeleterFromProjectAuthDB, authDB, projectID string) error {
 	if !opts.confirm {
-		fmt.Println(opts.failMessage)
+		opts.printFailMessage()
 		return nil
 	}
 	err := d(authDB, projectID, opts.entry)
@@ -99,9 +104,27 @@ func (opts *deleteOpts) DeleterFromProjectAuthDB(d DeleterFromProjectAuthDB, aut
 		return err
 	}
 
-	fmt.Printf(opts.successMessage, opts.entry)
+	opts.printSuccessMessage()
 
 	return nil
+}
+
+// printSuccessMessage prints a success message
+func (opts *deleteOpts) printSuccessMessage() {
+	if opts.successMessage != "" {
+		fmt.Printf(opts.successMessage, opts.entry)
+	} else {
+		fmt.Printf(fallbackSuccessMessage, opts.entry)
+	}
+}
+
+// printFailMessage prints a fail message
+func (opts *deleteOpts) printFailMessage() {
+	if opts.successMessage != "" {
+		fmt.Printf(opts.failMessage, opts.entry)
+	} else {
+		fmt.Printf(fallbackFailMessage, opts.entry)
+	}
 }
 
 // Deleter a function to delete from the store.
@@ -111,7 +134,7 @@ type Deleter func(entry string) error
 //// that should perform the deletion from the store.
 func (opts *deleteOpts) Delete(d Deleter) error {
 	if !opts.confirm {
-		fmt.Println(opts.failMessage)
+		opts.printFailMessage()
 		return nil
 	}
 	err := d(opts.entry)
@@ -120,7 +143,7 @@ func (opts *deleteOpts) Delete(d Deleter) error {
 		return err
 	}
 
-	fmt.Printf(opts.successMessage, opts.entry)
+	opts.printSuccessMessage()
 
 	return nil
 }

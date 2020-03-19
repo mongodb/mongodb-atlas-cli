@@ -125,7 +125,7 @@ func TestAtlasDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force")
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

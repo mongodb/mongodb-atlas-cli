@@ -110,17 +110,17 @@ func (m *MockDatabaseUserDeleter) EXPECT() *MockDatabaseUserDeleterMockRecorder 
 }
 
 // DeleteDatabaseUser mocks base method
-func (m *MockDatabaseUserDeleter) DeleteDatabaseUser(arg0, arg1 string) error {
+func (m *MockDatabaseUserDeleter) DeleteDatabaseUser(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteDatabaseUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteDatabaseUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteDatabaseUser indicates an expected call of DeleteDatabaseUser
-func (mr *MockDatabaseUserDeleterMockRecorder) DeleteDatabaseUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDatabaseUserDeleterMockRecorder) DeleteDatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseUser", reflect.TypeOf((*MockDatabaseUserDeleter)(nil).DeleteDatabaseUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseUser", reflect.TypeOf((*MockDatabaseUserDeleter)(nil).DeleteDatabaseUser), arg0, arg1, arg2)
 }
 
 // MockDatabaseUserUpdater is a mock of DatabaseUserUpdater interface
@@ -185,18 +185,18 @@ func (m *MockDatabaseUserDescriber) EXPECT() *MockDatabaseUserDescriberMockRecor
 }
 
 // DatabaseUser mocks base method
-func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1 string) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockDatabaseUserDescriber) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlas.DatabaseUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DatabaseUser indicates an expected call of DatabaseUser
-func (mr *MockDatabaseUserDescriberMockRecorder) DatabaseUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDatabaseUserDescriberMockRecorder) DatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockDatabaseUserDescriber)(nil).DatabaseUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockDatabaseUserDescriber)(nil).DatabaseUser), arg0, arg1, arg2)
 }
 
 // MockDatabaseUserStore is a mock of DatabaseUserStore interface
@@ -238,17 +238,17 @@ func (mr *MockDatabaseUserStoreMockRecorder) CreateDatabaseUser(arg0 interface{}
 }
 
 // DeleteDatabaseUser mocks base method
-func (m *MockDatabaseUserStore) DeleteDatabaseUser(arg0, arg1 string) error {
+func (m *MockDatabaseUserStore) DeleteDatabaseUser(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteDatabaseUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteDatabaseUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteDatabaseUser indicates an expected call of DeleteDatabaseUser
-func (mr *MockDatabaseUserStoreMockRecorder) DeleteDatabaseUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDatabaseUserStoreMockRecorder) DeleteDatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseUser", reflect.TypeOf((*MockDatabaseUserStore)(nil).DeleteDatabaseUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseUser", reflect.TypeOf((*MockDatabaseUserStore)(nil).DeleteDatabaseUser), arg0, arg1, arg2)
 }
 
 // UpdateDatabaseUser mocks base method
@@ -267,16 +267,16 @@ func (mr *MockDatabaseUserStoreMockRecorder) UpdateDatabaseUser(arg0 interface{}
 }
 
 // DatabaseUser mocks base method
-func (m *MockDatabaseUserStore) DatabaseUser(arg0, arg1 string) (*mongodbatlas.DatabaseUser, error) {
+func (m *MockDatabaseUserStore) DatabaseUser(arg0, arg1, arg2 string) (*mongodbatlas.DatabaseUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DatabaseUser indicates an expected call of DatabaseUser
-func (mr *MockDatabaseUserStoreMockRecorder) DatabaseUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockDatabaseUserStoreMockRecorder) DatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockDatabaseUserStore)(nil).DatabaseUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockDatabaseUserStore)(nil).DatabaseUser), arg0, arg1, arg2)
 }

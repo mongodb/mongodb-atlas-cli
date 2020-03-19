@@ -31,7 +31,7 @@ type DatabaseUserCreator interface {
 }
 
 type DatabaseUserDeleter interface {
-	DeleteDatabaseUser(string, string) error
+	DeleteDatabaseUser(string, string, string) error
 }
 
 type DatabaseUserUpdater interface {
@@ -39,7 +39,7 @@ type DatabaseUserUpdater interface {
 }
 
 type DatabaseUserDescriber interface {
-	DatabaseUser(string, string) (*atlas.DatabaseUser, error)
+	DatabaseUser(string, string, string) (*atlas.DatabaseUser, error)
 }
 
 type DatabaseUserStore interface {
@@ -60,11 +60,10 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 	}
 }
 
-func (s *Store) DeleteDatabaseUser(groupID, username string) error {
-	dbName := "admin"
+func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), dbName, groupID, username)
+		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), authDB, groupID, username)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -91,11 +90,10 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 	}
 }
 
-func (s *Store) DatabaseUser(groupID string, username string) (*atlas.DatabaseUser, error) {
-	dbName := "admin"
+func (s *Store) DatabaseUser(authDB string, groupID string, username string) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), dbName, groupID, username)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

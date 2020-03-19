@@ -60,7 +60,6 @@ type deleteOpts struct {
 	confirm        bool
 	successMessage string
 	failMessage    string
-	authDB         string
 }
 
 // DeleterFromProject a function to delete from the store.
@@ -89,12 +88,12 @@ func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string
 
 // DeleterFromProjectAuthDB deletes a resource from a project, it expects a callback
 // that should perform the deletion from the store.
-func (opts *deleteOpts) DeleterFromProjectAuthDB(d DeleterFromProjectAuthDB, projectID string) error {
+func (opts *deleteOpts) DeleterFromProjectAuthDB(d DeleterFromProjectAuthDB, authDB, projectID string) error {
 	if !opts.confirm {
 		fmt.Println(opts.failMessage)
 		return nil
 	}
-	err := d(opts.authDB, projectID, opts.entry)
+	err := d(authDB, projectID, opts.entry)
 
 	if err != nil {
 		return err

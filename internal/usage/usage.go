@@ -28,7 +28,6 @@ const (
 	Limit                           = "Number of items per page."
 	Username                        = "Username for authenticating to MongoDB."
 	Password                        = "User’s password."
-	AuthDB                          = "Authentication database name."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
 	Comment                         = "Optional description of the whitelist entry."
 	Force                           = "Don't ask for confirmation."

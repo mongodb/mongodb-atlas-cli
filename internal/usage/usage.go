@@ -28,6 +28,7 @@ const (
 	Limit                           = "Number of items per page."
 	Username                        = "Username for authenticating to MongoDB."
 	Password                        = "User’s password."
+	AuthDB                          = "Authentication database name."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
 	Comment                         = "Optional description of the whitelist entry."
 	Force                           = "Don't ask for confirmation."
@@ -85,6 +86,8 @@ For use only with download restore jobs.`
 For use only with download restore jobs.`
 	MaxDownloads = `Number of times the download URL can be used. This must be 1 or greater.
 For use only with download restore jobs.`
+	Mechanisms = `Authentication mechanism. 
+Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
 	WhitelistType = `Type of whitelist entry.
 Valid values: cidrBlock|ipAddress`
 	Service = `Type of MongoDB service.

@@ -56,7 +56,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 		config.SetService(config.OpsManagerService)
 		mockStore.
 			EXPECT().
-			ListAllClustersProjects().
+			ListAllProjectClusters().
 			Return(expected, nil).
 			Times(1)
 

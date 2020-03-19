@@ -32,7 +32,7 @@ type cmClustersShutdownOpts struct {
 	*globalOpts
 	name    string
 	confirm bool
-	store   store.AutomationStore
+	store   store.AutomationPatcher
 }
 
 func (opts *cmClustersShutdownOpts) init() error {

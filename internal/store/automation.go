@@ -35,7 +35,12 @@ type AutomationStatusGetter interface {
 }
 
 type AllClusterLister interface {
-	ListAllClustersProjects() (*om.AllClustersProjects, error)
+	ListAllProjectClusters() (*om.AllClustersProjects, error)
+}
+
+type AutomationPatcher interface {
+	AutomationGetter
+	AutomationUpdater
 }
 
 type AutomationStore interface {
@@ -81,8 +86,8 @@ func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.Au
 	}
 }
 
-// ListAllClustersProjects encapsulate the logic to manage different cloud providers
-func (s *Store) ListAllClustersProjects() (*om.AllClustersProjects, error) {
+// ListAllProjectClusters encapsulate the logic to manage different cloud providers
+func (s *Store) ListAllProjectClusters() (*om.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*om.Client).AllClusters.List(context.Background())

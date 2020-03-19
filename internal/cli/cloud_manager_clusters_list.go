@@ -51,7 +51,7 @@ func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts) (interface{
 	var err error
 
 	if opts.projectID == "" && config.Service() == config.OpsManagerService {
-		result, err = opts.store.ListAllClustersProjects()
+		result, err = opts.store.ListAllProjectClusters()
 
 	} else {
 		var clusterConfigs *om.AutomationConfig

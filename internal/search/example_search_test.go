@@ -78,6 +78,20 @@ func ExampleMembers() {
 	// found myReplicaSet_2 at index 1
 }
 
+// This example demonstrates searching a list of db users by username.
+func ExampleMongoDBUsers() {
+	a := fixtures.AutomationConfigWithMongoDBUsers().Auth.Users
+	x := "test"
+	i, found := search.MongoDBUsers(a, func(m *om.MongoDBUser) bool { return m.Username == x })
+	if i < len(a) && found {
+		fmt.Printf("found %v at index %d\n", x, i)
+	} else {
+		fmt.Printf("%s not found\n", x)
+	}
+	// Output:
+	// found test at index 0
+}
+
 // This example demonstrates searching a cluster in an automation config.
 func ExampleClusterExists() {
 	a := fixtures.AutomationConfig()

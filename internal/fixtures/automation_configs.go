@@ -214,6 +214,29 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 	}
 }
 
+func AutomationConfigWithMongoDBUsers() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
+			AutoAuthMechanism: "MONGODB-CR",
+			Disabled:          true,
+			AuthoritativeSet:  false,
+			Users: []*opsmngr.MongoDBUser{
+				{
+					Mechanisms: []string{"SCRAM-SHA-1"},
+					Roles: []*opsmngr.Role{
+						{
+							Role:     "test",
+							Database: "test",
+						},
+					},
+					Username: "test",
+					Database: "test",
+				},
+			},
+		},
+	}
+}
+
 func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
 		Processes:   make([]*opsmngr.Process, 0),

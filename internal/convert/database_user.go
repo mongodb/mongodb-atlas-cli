@@ -21,12 +21,12 @@ import (
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 )
 
-//Public constants
+// Public constants
 const (
 	AdminDB = "admin"
 )
 
-//Private constants
+// Private constants
 const (
 	roleSep = "@"
 )

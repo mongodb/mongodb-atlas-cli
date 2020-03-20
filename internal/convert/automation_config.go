@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/search"
 )
 
 const (
@@ -60,6 +61,21 @@ func Shutdown(out *om.AutomationConfig, name string) {
 // Startup a cluster processes
 func Startup(out *om.AutomationConfig, name string) {
 	setDisabledByClusterName(out, name, false)
+}
+
+// AddUser adds a MongoDBUser to the config
+func AddUser(out *om.AutomationConfig, u *om.MongoDBUser) {
+	out.Auth.Users = append(out.Auth.Users, u)
+}
+
+// RemoveUser removes a MongoDBUser from the config
+func RemoveUser(out *om.AutomationConfig, username string, database string) {
+	pos, found := search.MongoDBUsers(out.Auth.Users, func(p *om.MongoDBUser) bool {
+		return p.Username == username && p.Database == database
+	})
+	if found {
+		out.Auth.Users = append(out.Auth.Users[:pos], out.Auth.Users[pos+1:]...)
+	}
 }
 
 func setDisabledByClusterName(out *om.AutomationConfig, name string, disabled bool) {

@@ -38,7 +38,7 @@ func (opts *atlasAlertConfigDeleteOpts) init() error {
 }
 
 func (opts *atlasAlertConfigDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteAlertConfiguration, opts.ProjectID())
+	return opts.Delete(opts.store.DeleteAlertConfiguration, opts.ProjectID())
 }
 
 // mongocli atlas alerts config(s) delete id --projectId projectId [--confirm]

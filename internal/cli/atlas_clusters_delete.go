@@ -38,7 +38,7 @@ func (opts *atlasClustersDeleteOpts) init() error {
 }
 
 func (opts *atlasClustersDeleteOpts) Run() error {
-	return opts.DeleteFromProject(opts.store.DeleteCluster, opts.ProjectID())
+	return opts.Delete(opts.store.DeleteCluster, opts.ProjectID())
 }
 
 // mongocli atlas cluster(s) delete name --projectId projectId [--confirm]

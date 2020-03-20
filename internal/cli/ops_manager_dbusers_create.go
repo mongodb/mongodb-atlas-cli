@@ -57,7 +57,7 @@ func (opts *opsManagerDBUsersCreateOpts) Run() error {
 		return err
 	}
 
-	current.Auth.Users = append(current.Auth.Users, opts.newDBUser())
+	convert.AddUser(current, opts.newDBUser())
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err

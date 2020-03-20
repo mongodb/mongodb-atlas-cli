@@ -15,19 +15,25 @@
 package cli
 
 import (
+	"fmt"
+
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type atlasWhitelistDeleteOpts struct {
+type opsManagerDBUsersDeleteOpts struct {
 	*globalOpts
 	*deleteOpts
-	store store.ProjectIPWhitelistDeleter
+	authDB string
+	store  store.AutomationPatcher
 }
 
-func (opts *atlasWhitelistDeleteOpts) init() error {
+func (opts *opsManagerDBUsersDeleteOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -37,21 +43,35 @@ func (opts *atlasWhitelistDeleteOpts) init() error {
 	return err
 }
 
-func (opts *atlasWhitelistDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProjectIPWhitelist, opts.ProjectID())
+func (opts *opsManagerDBUsersDeleteOpts) Run() error {
+	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
+
+	if err != nil {
+		return err
+	}
+
+	convert.RemoveUser(current, opts.entry, opts.authDB)
+
+	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+		return err
+	}
+
+	fmt.Print(messages.DeploymentStatus(config.OpsManagerURL(), opts.ProjectID()))
+
+	return nil
 }
 
-// mongocli atlas whitelist delete <entry> --force
-func AtlasWhitelistDeleteBuilder() *cobra.Command {
-	opts := &atlasWhitelistDeleteOpts{
+// mongocli atlas dbuser(s) delete <username> [--projectId projectId]
+func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
+	opts := &opsManagerDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
-			successMessage: "Project whitelist entry '%s' deleted\n",
-			failMessage:    "Project whitelist entry not deleted",
+			successMessage: "DB user '%s' deleted\n",
+			failMessage:    "DB user not deleted",
 		},
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [entry]",
+		Use:     "delete [username]",
 		Short:   "Delete a database user for a project.",
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
@@ -67,7 +87,7 @@ func AtlasWhitelistDeleteBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

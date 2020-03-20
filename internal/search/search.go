@@ -53,11 +53,24 @@ func Members(a []om.Member, f func(om.Member) bool) (int, bool) {
 	return len(a), false
 }
 
-// Members return the smallest index i
+// ReplicaSets return the smallest index i
 // in [0, n) at which f(i) is true, assuming that on the range [0, n),
 // f(i) == true implies f(i+1) == true.
-// returns the first true index. If there is no such index, Members returns n and false
+// returns the first true index. If there is no such index, ReplicaSets returns n and false
 func ReplicaSets(a []*om.ReplicaSet, f func(*om.ReplicaSet) bool) (int, bool) {
+	for i, m := range a {
+		if f(m) {
+			return i, true
+		}
+	}
+	return len(a), false
+}
+
+// MongoDBUser return the smallest index i
+// in [0, n) at which f(i) is true, assuming that on the range [0, n),
+// f(i) == true implies f(i+1) == true.
+// returns the first true index. If there is no such index, MongoDBUser returns n and false
+func MongoDBUsers(a []*om.MongoDBUser, f func(*om.MongoDBUser) bool) (int, bool) {
 	for i, m := range a {
 		if f(m) {
 			return i, true

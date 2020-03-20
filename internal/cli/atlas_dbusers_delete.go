@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -39,7 +40,7 @@ func (opts *atlasDBUsersDeleteOpts) init() error {
 }
 
 func (opts *atlasDBUsersDeleteOpts) Run() error {
-	return opts.DeleterFromProjectAuthDB(opts.store.DeleteDatabaseUser, opts.authDB, opts.ProjectID())
+	return opts.Delete(opts.store.DeleteDatabaseUser, opts.authDB, opts.ProjectID())
 }
 
 // mongocli atlas dbuser(s) delete <username> --force
@@ -69,9 +70,9 @@ func AtlasDBUsersDeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, "admin", usage.AuthDB)
 
 	return cmd
 }

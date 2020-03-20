@@ -23,7 +23,7 @@ import (
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
-	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, false)
+	config := fixtures.AutomationConfigWithOneReplicaSet(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
@@ -52,7 +52,7 @@ func TestFromAutomationConfig(t *testing.T) {
 		},
 	}
 
-	result := FromAutomationConfig(cloud)
+	result := FromAutomationConfig(config)
 	if diff := deep.Equal(result, expected); diff != nil {
 		t.Error(diff)
 	}
@@ -60,11 +60,11 @@ func TestFromAutomationConfig(t *testing.T) {
 
 func TestShutdown(t *testing.T) {
 	name := "cluster_1"
-	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, false)
+	config := fixtures.AutomationConfigWithOneReplicaSet(name, false)
 
-	Shutdown(cloud, name)
-	if !cloud.Processes[0].Disabled {
-		t.Errorf("TestShutdown\n got=%#v\nwant=%#v\n", cloud.Processes[0].Disabled, true)
+	Shutdown(config, name)
+	if !config.Processes[0].Disabled {
+		t.Errorf("TestShutdown\n got=%#v\nwant=%#v\n", config.Processes[0].Disabled, true)
 	}
 }
 
@@ -75,5 +75,23 @@ func TestStartup(t *testing.T) {
 	Startup(cloud, name)
 	if cloud.Processes[0].Disabled {
 		t.Errorf("TestStartup\n got=%#v\nwant=%#v\n", cloud.Processes[0].Disabled, false)
+	}
+}
+
+func TestAddUser(t *testing.T) {
+	config := fixtures.AutomationConfigWithoutMongoDBUsers()
+	u := fixtures.MongoDBUsers()
+	AddUser(config, u)
+	if len(config.Auth.Users) != 1 {
+		t.Error("User not added\n")
+	}
+}
+
+func TestRemoveUser(t *testing.T) {
+	config := fixtures.AutomationConfigWithMongoDBUsers()
+	u := fixtures.MongoDBUsers()
+	RemoveUser(config, u.Username, u.Database)
+	if len(config.Auth.Users) != 0 {
+		t.Error("User not removed\n")
 	}
 }

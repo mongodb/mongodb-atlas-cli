@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -24,7 +25,7 @@ import (
 
 const (
 	fallbackSuccessMessage = "'%s' deleted\n"
-	fallbackFailMessage    = "'%s' not deleted\n"
+	fallbackFailMessage    = "entry not deleted"
 )
 
 type globalOpts struct {
@@ -58,7 +59,7 @@ func (opts *globalOpts) OrgID() string {
 }
 
 // deleteOpts options required when deleting a resource.
-// A command can embed this structure and then safely rely on the methods Confirm, DeleteFromProject or Delete
+// A command can compose this struct and then safely rely on the methods Confirm, or Delete
 // to manage the interactions with the user
 type deleteOpts struct {
 	entry          string
@@ -67,83 +68,31 @@ type deleteOpts struct {
 	failMessage    string
 }
 
-// DeleterFromProject a function to delete from the store.
-type DeleterFromProject func(projectID string, entry string) error
-
-// DeleterFromProjectAuthDB a function to delete from the store.
-type DeleterFromProjectAuthDB func(authDB string, projectID string, entry string) error
-
-// DeleteFromProject deletes a resource from a project, it expects a callback
-// that should perform the deletion from the store.
-func (opts *deleteOpts) DeleteFromProject(d DeleterFromProject, projectID string) error {
-	if !opts.confirm {
-		opts.printFailMessage()
-		return nil
-	}
-	err := d(projectID, opts.entry)
-
-	if err != nil {
-		return err
-	}
-
-	opts.printSuccessMessage()
-
-	return nil
-}
-
-// DeleterFromProjectAuthDB deletes a resource from a project, it expects a callback
-// that should perform the deletion from the store.
-func (opts *deleteOpts) DeleterFromProjectAuthDB(d DeleterFromProjectAuthDB, authDB, projectID string) error {
-	if !opts.confirm {
-		opts.printFailMessage()
-		return nil
-	}
-	err := d(authDB, projectID, opts.entry)
-
-	if err != nil {
-		return err
-	}
-
-	opts.printSuccessMessage()
-
-	return nil
-}
-
-// printSuccessMessage prints a success message
-func (opts *deleteOpts) printSuccessMessage() {
-	if opts.successMessage != "" {
-		fmt.Printf(opts.successMessage, opts.entry)
-	} else {
-		fmt.Printf(fallbackSuccessMessage, opts.entry)
-	}
-}
-
-// printFailMessage prints a fail message
-func (opts *deleteOpts) printFailMessage() {
-	if opts.successMessage != "" {
-		fmt.Printf(opts.failMessage, opts.entry)
-	} else {
-		fmt.Printf(fallbackFailMessage, opts.entry)
-	}
-}
-
-// Deleter a function to delete from the store.
-type Deleter func(entry string) error
-
 // Delete deletes a resource not associated to a project, it expects a callback
-//// that should perform the deletion from the store.
-func (opts *deleteOpts) Delete(d Deleter) error {
+// that should perform the deletion from the store.
+func (opts *deleteOpts) Delete(d interface{}, a ...string) error {
 	if !opts.confirm {
-		opts.printFailMessage()
+		fmt.Println(opts.FailMessage())
 		return nil
 	}
-	err := d(opts.entry)
+
+	var err error
+	switch f := d.(type) {
+	case func(string) error:
+		err = f(opts.entry)
+	case func(string, string) error:
+		err = f(a[0], opts.entry)
+	case func(string, string, string) error:
+		err = f(a[0], a[1], opts.entry)
+	default:
+		return errors.New("invalid")
+	}
 
 	if err != nil {
 		return err
 	}
 
-	opts.printSuccessMessage()
+	fmt.Printf(opts.SuccessMessage(), opts.entry)
 
 	return nil
 }
@@ -156,4 +105,20 @@ func (opts *deleteOpts) Confirm() error {
 
 	prompt := prompts.NewDeleteConfirm(opts.entry)
 	return survey.AskOne(prompt, &opts.confirm)
+}
+
+// SuccessMessage gets the set success message or the default value
+func (opts *deleteOpts) SuccessMessage() string {
+	if opts.successMessage != "" {
+		return opts.successMessage
+	}
+	return fallbackSuccessMessage
+}
+
+// FailMessage gets the set fail message or the default value
+func (opts *deleteOpts) FailMessage() string {
+	if opts.failMessage != "" {
+		return opts.failMessage
+	}
+	return fallbackFailMessage
 }

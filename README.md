@@ -38,6 +38,7 @@ make install
 # Usage
 
 Run `mongocli help` for a list of available commands
+or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details
 
 ## Authentication
 Run `mongocli config` to set up a profile.

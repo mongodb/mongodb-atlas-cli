@@ -31,6 +31,7 @@ type atlasDBUsersCreateOpts struct {
 	*globalOpts
 	username string
 	password string
+	authDB   string
 	roles    []string
 	store    store.DatabaseUserCreator
 }
@@ -58,7 +59,7 @@ func (opts *atlasDBUsersCreateOpts) Run() error {
 
 func (opts *atlasDBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
-		DatabaseName: convert.AdminDB,
+		DatabaseName: opts.authDB,
 		Roles:        convert.BuildAtlasRoles(opts.roles),
 		GroupID:      opts.ProjectID(),
 		Username:     opts.username,
@@ -105,6 +106,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.username, flags.Username, "", usage.Username)
 	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
+	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

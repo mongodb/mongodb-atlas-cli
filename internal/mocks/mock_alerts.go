@@ -47,3 +47,41 @@ func (mr *MockAlertDescriberMockRecorder) Alert(arg0, arg1 interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertDescriber)(nil).Alert), arg0, arg1)
 }
+
+// MockAlertLister is a mock of AlertLister interface
+type MockAlertLister struct {
+	ctrl     *gomock.Controller
+	recorder *MockAlertListerMockRecorder
+}
+
+// MockAlertListerMockRecorder is the mock recorder for MockAlertLister
+type MockAlertListerMockRecorder struct {
+	mock *MockAlertLister
+}
+
+// NewMockAlertLister creates a new mock instance
+func NewMockAlertLister(ctrl *gomock.Controller) *MockAlertLister {
+	mock := &MockAlertLister{ctrl: ctrl}
+	mock.recorder = &MockAlertListerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
+	return m.recorder
+}
+
+// Alerts mocks base method
+func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.AlertsListOptions) (*mongodbatlas.AlertsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.AlertsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Alerts indicates an expected call of Alerts
+func (mr *MockAlertListerMockRecorder) Alerts(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0, arg1)
+}

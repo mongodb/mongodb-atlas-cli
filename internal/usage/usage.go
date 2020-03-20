@@ -25,6 +25,7 @@ const (
 	MDBVersion                      = "MongoDB version of the cluster to deploy."
 	AuthDB                          = "Authentication database name."
 	Page                            = "Page number."
+	Status							= "Alert's status."
 	Limit                           = "Number of items per page."
 	Username                        = "Username for authenticating to MongoDB."
 	Password                        = "User’s password."

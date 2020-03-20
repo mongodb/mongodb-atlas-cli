@@ -13,6 +13,7 @@ func Alert() *atlas.Alert {
 		Created:       "2016-08-23T20:26:50Z",
 		Updated:       "2016-08-23T20:26:50Z",
 		Enabled:       pointy.Bool(true),
+		Status:		   "OPEN",
 		Matchers: []atlas.Matcher{
 			{
 				FieldName: "HOSTNAME_AND_PORT",
@@ -35,5 +36,13 @@ func Alert() *atlas.Alert {
 			Units:      "RAW",
 			Mode:       "AVERAGE",
 		},
+	}
+}
+
+func AlertsResponse() *atlas.AlertsResponse {
+	return &atlas.AlertsResponse{
+		Links:      nil,
+		Results:    []atlas.Alert{*Alert()},
+		TotalCount: 1,
 	}
 }

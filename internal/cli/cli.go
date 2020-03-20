@@ -108,7 +108,7 @@ func (opts *deleteOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// SuccessMessage prints a success message
+// SuccessMessage gets the set success message or the default value
 func (opts *deleteOpts) SuccessMessage() string {
 	if opts.successMessage != "" {
 		return opts.successMessage
@@ -116,7 +116,7 @@ func (opts *deleteOpts) SuccessMessage() string {
 	return fallbackSuccessMessage
 }
 
-// FailMessage prints a fail message
+// FailMessage gets the set fail message or the default value
 func (opts *deleteOpts) FailMessage() string {
 	if opts.failMessage != "" {
 		return opts.failMessage

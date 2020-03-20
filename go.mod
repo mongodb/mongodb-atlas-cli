@@ -27,5 +27,3 @@ require (
 	gopkg.in/ini.v1 v1.52.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8
 )
-
-replace github.com/mongodb/go-client-mongodb-ops-manager => /Users/gustavobazan/Projects/golang/src/github.com/mongodb/go-client-mongodb-ops-manager

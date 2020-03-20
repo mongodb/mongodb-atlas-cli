@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package store
 
 import (
-	"github.com/spf13/cobra"
+	"context"
+	"fmt"
+
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/config"
 )
 
-func AtlasAlertsBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "alerts",
-		Aliases: []string{"alert"},
-		Short:   "Manage alerts for your project.",
+type AlertDescriber interface {
+	Alert(string, string) (*atlas.Alert, error)
+}
+
+// Alert encapsulate the logic to manage different cloud providers
+func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Alerts.Get(context.Background(), projectID, alertID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
-
-	cmd.AddCommand(AtlasAlertConfigsBuilder())
-	cmd.AddCommand(AtlasAlertsDescribeBuilder())
-
-	return cmd
 }

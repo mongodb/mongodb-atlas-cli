@@ -214,6 +214,31 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 	}
 }
 
+func MongoDBUsers() *opsmngr.MongoDBUser {
+	return &opsmngr.MongoDBUser{
+		Mechanisms: []string{"SCRAM-SHA-1"},
+		Roles: []*opsmngr.Role{
+			{
+				Role:     "test",
+				Database: "test",
+			},
+		},
+		Username: "test",
+		Database: "test",
+	}
+}
+
+func AutomationConfigWithoutMongoDBUsers() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
+			AutoAuthMechanism: "MONGODB-CR",
+			Disabled:          true,
+			AuthoritativeSet:  false,
+			Users:             make([]*opsmngr.MongoDBUser, 0),
+		},
+	}
+}
+
 func AutomationConfigWithMongoDBUsers() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
@@ -221,17 +246,7 @@ func AutomationConfigWithMongoDBUsers() *opsmngr.AutomationConfig {
 			Disabled:          true,
 			AuthoritativeSet:  false,
 			Users: []*opsmngr.MongoDBUser{
-				{
-					Mechanisms: []string{"SCRAM-SHA-1"},
-					Roles: []*opsmngr.Role{
-						{
-							Role:     "test",
-							Database: "test",
-						},
-					},
-					Username: "test",
-					Database: "test",
-				},
+				MongoDBUsers(),
 			},
 		},
 	}

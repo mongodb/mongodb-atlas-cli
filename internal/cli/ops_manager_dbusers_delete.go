@@ -91,7 +91,5 @@ func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.Username)
-
 	return cmd
 }

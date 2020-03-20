@@ -77,7 +77,6 @@ func (opts *deleteOpts) Delete(d interface{}, a ...string) error {
 	}
 
 	var err error
-	fmt.Printf("%#v", d)
 	switch f := d.(type) {
 	case func(string) error:
 		err = f(opts.entry)

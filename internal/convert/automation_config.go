@@ -63,12 +63,12 @@ func Startup(out *om.AutomationConfig, name string) {
 	setDisabledByClusterName(out, name, false)
 }
 
-// Startup a cluster processes
+// AddUser adds a MongoDBUser to the config
 func AddUser(out *om.AutomationConfig, u *om.MongoDBUser) {
 	out.Auth.Users = append(out.Auth.Users, u)
 }
 
-// Startup a cluster processes
+// RemoveUser removes a MongoDBUser from the config
 func RemoveUser(out *om.AutomationConfig, username string, database string) {
 	pos, found := search.MongoDBUsers(out.Auth.Users, func(p *om.MongoDBUser) bool {
 		return p.Username == username && p.Database == database

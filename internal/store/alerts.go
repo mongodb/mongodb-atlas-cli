@@ -30,6 +30,11 @@ type AlertLister interface {
 	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
 }
 
+type AlertsStore interface {
+	AlertDescriber
+	AlertLister
+}
+
 // Alert encapsulate the logic to manage different cloud providers
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {

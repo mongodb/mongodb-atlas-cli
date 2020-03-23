@@ -91,7 +91,7 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 // MatcherFields encapsulate the logic to manage different cloud providers
 func (s *Store) MatcherFields() ([]string, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
 	default:

@@ -85,5 +85,4 @@ const (
 	Expires                         = "expires"                         // Expires flag
 	MaxDownloads                    = "maxDownloads"                    // MaxDownloads flag
 	ExpirationHours                 = "expirationHours"                 // ExpirationHours
-	Until                           = "until"                           // Until flag
 )

@@ -48,31 +48,31 @@ func (mr *MockAlertDescriberMockRecorder) Alert(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertDescriber)(nil).Alert), arg0, arg1)
 }
 
-// MockAlertAcknowledge is a mock of AlertAcknowledge interface
-type MockAlertAcknowledge struct {
+// MockAlertAcknowledger is a mock of AlertAcknowledger interface
+type MockAlertAcknowledger struct {
 	ctrl     *gomock.Controller
-	recorder *MockAlertAcknowledgeMockRecorder
+	recorder *MockAlertAcknowledgerMockRecorder
 }
 
-// MockAlertAcknowledgeMockRecorder is the mock recorder for MockAlertAcknowledge
-type MockAlertAcknowledgeMockRecorder struct {
-	mock *MockAlertAcknowledge
+// MockAlertAcknowledgerMockRecorder is the mock recorder for MockAlertAcknowledger
+type MockAlertAcknowledgerMockRecorder struct {
+	mock *MockAlertAcknowledger
 }
 
-// NewMockAlertAcknowledge creates a new mock instance
-func NewMockAlertAcknowledge(ctrl *gomock.Controller) *MockAlertAcknowledge {
-	mock := &MockAlertAcknowledge{ctrl: ctrl}
-	mock.recorder = &MockAlertAcknowledgeMockRecorder{mock}
+// NewMockAlertAcknowledger creates a new mock instance
+func NewMockAlertAcknowledger(ctrl *gomock.Controller) *MockAlertAcknowledger {
+	mock := &MockAlertAcknowledger{ctrl: ctrl}
+	mock.recorder = &MockAlertAcknowledgerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockAlertAcknowledge) EXPECT() *MockAlertAcknowledgeMockRecorder {
+func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
 	return m.recorder
 }
 
 // Acknowledge mocks base method
-func (m *MockAlertAcknowledge) Acknowledge(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
+func (m *MockAlertAcknowledger) Acknowledge(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Acknowledge", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.Alert)
@@ -81,9 +81,9 @@ func (m *MockAlertAcknowledge) Acknowledge(arg0, arg1 string, arg2 *mongodbatlas
 }
 
 // Acknowledge indicates an expected call of Acknowledge
-func (mr *MockAlertAcknowledgeMockRecorder) Acknowledge(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAlertAcknowledgerMockRecorder) Acknowledge(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Acknowledge", reflect.TypeOf((*MockAlertAcknowledge)(nil).Acknowledge), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Acknowledge", reflect.TypeOf((*MockAlertAcknowledger)(nil).Acknowledge), arg0, arg1, arg2)
 }
 
 // MockAlertsStore is a mock of AlertsStore interface

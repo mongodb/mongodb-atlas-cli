@@ -24,7 +24,7 @@ import (
 
 func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertAcknowledge(ctrl)
+	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
 
 	defer ctrl.Finish()
 
@@ -38,7 +38,7 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 		store:      mockStore,
 	}
 
-	ackReq := acknowledgeOpts.getAcknowledgeRequest()
+	ackReq := acknowledgeOpts.newAcknowledgeRequest()
 
 	mockStore.
 		EXPECT().

@@ -30,7 +30,7 @@ type atlasAlertsAcknowledgeOpts struct {
 	alertID string
 	until   string
 	comment string
-	store   store.AlertAcknowledge
+	store   store.AlertAcknowledger
 }
 
 func (opts *atlasAlertsAcknowledgeOpts) init() error {
@@ -44,7 +44,7 @@ func (opts *atlasAlertsAcknowledgeOpts) init() error {
 
 func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 
-	body := opts.getAcknowledgeRequest()
+	body := opts.newAcknowledgeRequest()
 	result, err := opts.store.Acknowledge(opts.ProjectID(), opts.alertID, body)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsAcknowledgeOpts) getAcknowledgeRequest() *atlas.AcknowledgeRequest {
+func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 
 	until := opts.until
 
@@ -76,7 +76,7 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "acknowledge [name]",
+		Use:   "acknowledge [alertId]",
 		Short: "Acknowledge an Atlas Alert.",
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

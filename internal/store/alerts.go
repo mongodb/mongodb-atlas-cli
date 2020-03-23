@@ -26,13 +26,13 @@ type AlertDescriber interface {
 	Alert(string, string) (*atlas.Alert, error)
 }
 
-type AlertAcknowledge interface {
+type AlertAcknowledger interface {
 	Acknowledge(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 type AlertsStore interface {
 	AlertDescriber
-	AlertAcknowledge
+	AlertAcknowledger
 }
 
 // Alert encapsulate the logic to manage different cloud providers

@@ -94,6 +94,9 @@ func (s *Store) MatcherFields() ([]string, error) {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).AlertConfigurations.ListMatcherFields(context.Background())
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}

@@ -27,7 +27,7 @@ type AlertDescriber interface {
 }
 
 type AlertLister interface {
-	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
+	Alerts(string, *atlas.ListOptions) ([]atlas.Alert, error)
 }
 
 type AlertsStore interface {
@@ -47,7 +47,7 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 }
 
 // Alerts encapsulate the logic to manage different cloud providers
-func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
+func (s *Store) Alerts(projectID string, opts *atlas.ListOptions) ([]atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.List(context.Background(), projectID, opts)

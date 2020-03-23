@@ -41,6 +41,7 @@ func (opts *atlasAlertsListOpts) init() error {
 }
 
 func (opts *atlasAlertsListOpts) Run() error {
+
 	listOpts := opts.newAlertsListOptions()
 	result, err := opts.store.Alerts(opts.ProjectID(), listOpts)
 
@@ -51,13 +52,10 @@ func (opts *atlasAlertsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
-	return &atlas.AlertsListOptions{
-		Status: opts.status,
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
+func (opts *atlasAlertsListOpts) newAlertsListOptions() *atlas.ListOptions {
+	return &atlas.ListOptions{
+		PageNum:      opts.pageNum,
+		ItemsPerPage: opts.itemsPerPage,
 	}
 }
 
@@ -81,7 +79,7 @@ func AtlasAlertsListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-	cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
+	//cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

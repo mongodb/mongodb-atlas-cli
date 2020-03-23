@@ -109,6 +109,7 @@ func TestAtlasAlerts(t *testing.T) {
 		}
 
 	})
+	// TODO: CLOUDP-59492
 	//	t.Run("List with status OPEN", func(t *testing.T) {
 	//
 	//		cmd := exec.Command(cliPath,

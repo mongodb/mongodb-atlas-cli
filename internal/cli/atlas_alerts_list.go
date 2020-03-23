@@ -79,6 +79,8 @@ func AtlasAlertsListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+
+	// TODO: CLOUDP-59492
 	//cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)

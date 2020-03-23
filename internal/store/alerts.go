@@ -34,6 +34,7 @@ type AlertsStore interface {
 	AlertDescriber
 	AlertAcknowledge
 }
+
 // Alert encapsulate the logic to manage different cloud providers
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {

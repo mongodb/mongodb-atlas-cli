@@ -26,36 +26,19 @@ type AlertDescriber interface {
 	Alert(string, string) (*atlas.Alert, error)
 }
 
-type AlertLister interface {
-	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
-}
-
 type AlertAcknowledge interface {
 	Acknowledge(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 type AlertsStore interface {
 	AlertDescriber
-	AlertLister
 	AlertAcknowledge
 }
-
 // Alert encapsulate the logic to manage different cloud providers
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Get(context.Background(), projectID, alertID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// Alerts encapsulate the logic to manage different cloud providers
-func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Alerts.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

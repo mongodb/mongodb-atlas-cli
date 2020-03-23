@@ -97,15 +97,15 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alerts := mongodbatlas.AlertsResponse{}
+		alerts := []mongodbatlas.Alert{}
 		err = json.Unmarshal(resp, &alerts)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts.Results) != 7 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(alerts.Results), 7)
+		if len(alerts) != 7 {
+			t.Errorf("got=%#v\nwant=%#v\n", len(alerts), 7)
 		}
 
 	})

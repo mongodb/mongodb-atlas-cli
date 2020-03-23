@@ -132,7 +132,7 @@ func TestAtlasAlertConfig(t *testing.T) {
 	})
 
 	t.Run("List Matcher Fields", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, "fields", "type")
+		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "fields", "type")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

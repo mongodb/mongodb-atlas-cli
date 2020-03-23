@@ -38,11 +38,14 @@ make install
 # Usage
 
 Run `mongocli help` for a list of available commands
+or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details
 
-## Authentication
-Run `mongocli config` to set up a profile.
+## Getting started
 
-You can also use `MCLI_OPS_MANAGER_URL`, `MCLI_PUBLIC_API_KEY`, and `MCLI_PRIVATE_API_KEY` to define some of the authentication variables
+Run `mongocli config` to set up your credentials.
+
+You can also use `MCLI_PUBLIC_API_KEY`, `MCLI_PRIVATE_API_KEY`, and optionally `MCLI_OPS_MANAGER_URL`
+to define some of the authentication variables
 
 ## ZSH Completion (experimental)
 Add the following to your `.zshrc` file

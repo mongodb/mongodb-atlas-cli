@@ -48,42 +48,42 @@ func (mr *MockAlertDescriberMockRecorder) Alert(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertDescriber)(nil).Alert), arg0, arg1)
 }
 
-// MockAlertAcknowledger is a mock of AlertAcknowledger interface
-type MockAlertAcknowledger struct {
+// MockAlertLister is a mock of AlertLister interface
+type MockAlertLister struct {
 	ctrl     *gomock.Controller
-	recorder *MockAlertAcknowledgerMockRecorder
+	recorder *MockAlertListerMockRecorder
 }
 
-// MockAlertAcknowledgerMockRecorder is the mock recorder for MockAlertAcknowledger
-type MockAlertAcknowledgerMockRecorder struct {
-	mock *MockAlertAcknowledger
+// MockAlertListerMockRecorder is the mock recorder for MockAlertLister
+type MockAlertListerMockRecorder struct {
+	mock *MockAlertLister
 }
 
-// NewMockAlertAcknowledger creates a new mock instance
-func NewMockAlertAcknowledger(ctrl *gomock.Controller) *MockAlertAcknowledger {
-	mock := &MockAlertAcknowledger{ctrl: ctrl}
-	mock.recorder = &MockAlertAcknowledgerMockRecorder{mock}
+// NewMockAlertLister creates a new mock instance
+func NewMockAlertLister(ctrl *gomock.Controller) *MockAlertLister {
+	mock := &MockAlertLister{ctrl: ctrl}
+	mock.recorder = &MockAlertListerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
+func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 	return m.recorder
 }
 
-// Acknowledge mocks base method
-func (m *MockAlertAcknowledger) Acknowledge(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
+// Alerts mocks base method
+func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Alert, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Acknowledge", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Alert)
+	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Acknowledge indicates an expected call of Acknowledge
-func (mr *MockAlertAcknowledgerMockRecorder) Acknowledge(arg0, arg1, arg2 interface{}) *gomock.Call {
+// Alerts indicates an expected call of Alerts
+func (mr *MockAlertListerMockRecorder) Alerts(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Acknowledge", reflect.TypeOf((*MockAlertAcknowledger)(nil).Acknowledge), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertLister)(nil).Alerts), arg0, arg1)
 }
 
 // MockAlertsStore is a mock of AlertsStore interface
@@ -124,17 +124,17 @@ func (mr *MockAlertsStoreMockRecorder) Alert(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alert", reflect.TypeOf((*MockAlertsStore)(nil).Alert), arg0, arg1)
 }
 
-// Acknowledge mocks base method
-func (m *MockAlertsStore) Acknowledge(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
+// Alerts mocks base method
+func (m *MockAlertsStore) Alerts(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Alert, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Acknowledge", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Alert)
+	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Acknowledge indicates an expected call of Acknowledge
-func (mr *MockAlertsStoreMockRecorder) Acknowledge(arg0, arg1, arg2 interface{}) *gomock.Call {
+// Alerts indicates an expected call of Alerts
+func (mr *MockAlertsStoreMockRecorder) Alerts(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Acknowledge", reflect.TypeOf((*MockAlertsStore)(nil).Acknowledge), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Alerts", reflect.TypeOf((*MockAlertsStore)(nil).Alerts), arg0, arg1)
 }

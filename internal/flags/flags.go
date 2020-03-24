@@ -33,6 +33,7 @@ const (
 	Username                        = "username"                        // Username flag
 	Password                        = "password"                        // Password flag
 	Email                           = "email"                           // Email flag
+	Status                          = "status"                          // Status flag
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag

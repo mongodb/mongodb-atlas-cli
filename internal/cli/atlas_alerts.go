@@ -28,6 +28,7 @@ func AtlasAlertsBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasAlertConfigsBuilder())
 	cmd.AddCommand(AtlasAlertsDescribeBuilder())
 	cmd.AddCommand(AtlasAlertsListBuilder())
+	cmd.AddCommand(AtlasAlertsAcknowledgeBuilder())
 
 	return cmd
 }

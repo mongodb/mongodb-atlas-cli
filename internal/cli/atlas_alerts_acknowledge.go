@@ -15,6 +15,8 @@
 package cli
 
 import (
+	"time"
+
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -23,27 +25,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasBackupsSnapshotsListOpts struct {
+type atlasAlertsAcknowledgeOpts struct {
 	*globalOpts
-	clusterName  string
-	pageNum      int
-	itemsPerPage int
-	store        store.SnapshotsLister
+	alertID string
+	until   string
+	comment string
+	store   store.AlertAcknowledger
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) init() error {
+func (opts *atlasAlertsAcknowledgeOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
-
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) Run() error {
-	listOpts := opts.newListOptions()
-	result, err := opts.store.ContinuousSnapshots(opts.ProjectID(), opts.clusterName, listOpts)
+func (opts *atlasAlertsAcknowledgeOpts) Run() error {
+
+	body := opts.newAcknowledgeRequest()
+	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
 
 	if err != nil {
 		return err
@@ -52,35 +54,43 @@ func (opts *atlasBackupsSnapshotsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasBackupsSnapshotsListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
+func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
+
+	until := opts.until
+
+	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
+	if until == "" {
+		until = time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
 	}
+
+	return &atlas.AcknowledgeRequest{
+		AcknowledgedUntil:      until,
+		AcknowledgementComment: opts.comment,
+	}
+
 }
 
-// mongocli atlas backups snapshots list <clusterId|clusterName> --projectId projectId [--page N] [--limit N]
-func AtlasBackupsSnapshotsListBuilder() *cobra.Command {
-	opts := &atlasBackupsSnapshotsListOpts{
+// mongocli atlas alerts acknowledge alertID --projectId projectId
+func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
+	opts := &atlasAlertsAcknowledgeOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List continuous snapshots for a project.",
-		Aliases: []string{"ls"},
+		Use:     "acknowledge [alertId]",
+		Short:   "Acknowledge an Atlas Alert.",
+		Aliases: []string{"ack", "unacknowledge", "unack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
-
+			opts.alertID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+	cmd.Flags().StringVar(&opts.until, flags.Until, "", usage.Until)
+	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

@@ -59,7 +59,7 @@ func (opts *atlasBackupsSnapshotsListOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// mongocli atlas backups snapshots list --projectId projectId [--page N] [--limit N]
+// mongocli atlas backups snapshots list <clusterId|clusterName> --projectId projectId [--page N] [--limit N]
 func AtlasBackupsSnapshotsListBuilder() *cobra.Command {
 	opts := &atlasBackupsSnapshotsListOpts{
 		globalOpts: newGlobalOpts(),

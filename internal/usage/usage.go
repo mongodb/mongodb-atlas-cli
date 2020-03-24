@@ -31,7 +31,7 @@ const (
 	Username                        = "Username for authenticating to MongoDB."
 	Password                        = "User’s password."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
-	Comment                         = "Optional description of the whitelist entry or comment for the entry."
+	Comment                         = "Optional description or comment for the entry."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
 	FirstName                       = "User’s first name."

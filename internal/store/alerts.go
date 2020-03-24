@@ -31,7 +31,7 @@ type AlertLister interface {
 }
 
 type AlertAcknowledger interface {
-	Acknowledge(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
+	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 type AlertsStore interface {
@@ -63,7 +63,7 @@ func (s *Store) Alerts(projectID string, opts *atlas.ListOptions) ([]atlas.Alert
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers
-func (s *Store) Acknowledge(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)

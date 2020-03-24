@@ -42,7 +42,7 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Acknowledge(acknowledgeOpts.projectID, acknowledgeOpts.alertID, ackReq).
+		AcknowledgeAlert(acknowledgeOpts.projectID, acknowledgeOpts.alertID, ackReq).
 		Return(expected, nil).
 		Times(1)
 

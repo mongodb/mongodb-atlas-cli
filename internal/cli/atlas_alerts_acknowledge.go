@@ -45,7 +45,7 @@ func (opts *atlasAlertsAcknowledgeOpts) init() error {
 func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 
 	body := opts.newAcknowledgeRequest()
-	result, err := opts.store.Acknowledge(opts.ProjectID(), opts.alertID, body)
+	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
 
 	if err != nil {
 		return err
@@ -76,9 +76,10 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "acknowledge [alertId]",
-		Short: "Acknowledge an Atlas Alert.",
-		Args:  cobra.ExactArgs(1),
+		Use:     "acknowledge [alertId]",
+		Short:   "Acknowledge an Atlas Alert.",
+		Aliases: []string{"ack", "unacknowledge", "unack"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

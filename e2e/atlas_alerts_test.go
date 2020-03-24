@@ -104,7 +104,7 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts) != 0 {
+		if len(alerts) == 0 {
 			t.Errorf("got=%#v\nwant=%#v\n", len(alerts), 14)
 		}
 

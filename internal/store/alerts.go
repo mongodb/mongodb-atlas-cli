@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
@@ -46,6 +47,9 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Get(context.Background(), projectID, alertID)
 		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Alerts.Get(context.Background(), projectID, alertID)
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
@@ -57,6 +61,9 @@ func (s *Store) Alerts(projectID string, opts *atlas.ListOptions) ([]atlas.Alert
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.List(context.Background(), projectID, opts)
 		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Alerts.List(context.Background(), projectID, opts)
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
@@ -67,6 +74,9 @@ func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.Acknowle
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

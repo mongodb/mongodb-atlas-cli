@@ -105,7 +105,7 @@ func TestAtlasAlerts(t *testing.T) {
 		}
 
 		if len(alerts) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(alerts), 14)
+			t.Errorf("got=%#v\nwant>0\n", len(alerts))
 		}
 
 	})

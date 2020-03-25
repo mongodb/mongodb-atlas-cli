@@ -15,17 +15,33 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func AtlasAlertConfigsFieldsBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "fields",
-		Aliases: []string{"field"},
-		Short:   "Manage alerts configuration fields for your project.",
+func TestAtlasAlertConfigFieldsType_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAlertConfigurationFieldsLister(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := fixtures.MatcherFieldsType()
+
+	listOpts := &atlasAlertsConfigFieldsTypeOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(AtlasAlertConfigFieldsTypeBuilder())
+	mockStore.
+		EXPECT().
+		MatcherFields().
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

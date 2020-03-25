@@ -20,17 +20,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertConfigFieldsTypeOpts struct {
+type atlasAlertsConfigFieldsTypeOpts struct {
 	store store.AlertConfigurationFieldsLister
 }
 
-func (opts *atlasAlertConfigFieldsTypeOpts) init() error {
+func (opts *atlasAlertsConfigFieldsTypeOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasAlertConfigFieldsTypeOpts) Run() error {
+func (opts *atlasAlertsConfigFieldsTypeOpts) Run() error {
 	result, err := opts.store.MatcherFields()
 
 	if err != nil {
@@ -41,11 +41,11 @@ func (opts *atlasAlertConfigFieldsTypeOpts) Run() error {
 }
 
 // mongocli atlas alerts config(s) fields type
-func AtlasAlertConfigFieldsTypeBuilder() *cobra.Command {
-	opts := &atlasAlertConfigFieldsTypeOpts{}
+func AtlasAlertsConfigsFieldsBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigFieldsTypeOpts{}
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   "List alert configurations for a project.",
+		Short:   "List alert configurations available field types.",
 		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

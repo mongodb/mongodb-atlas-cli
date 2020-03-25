@@ -39,11 +39,10 @@ func Alert() *atlas.Alert {
 	}
 }
 
-func AlertsResponse() []atlas.Alert {
-	//return &atlas.AlertsResponse{
-	//	Links:      nil,
-	//	Results:    []atlas.Alert{*Alert()},
-	//	TotalCount: 1,
-	//}
-	return []atlas.Alert{*Alert()}
+func AlertsResponse() *atlas.AlertsResponse {
+	return &atlas.AlertsResponse{
+		Links:      nil,
+		Results:    []atlas.Alert{*Alert()},
+		TotalCount: 1,
+	}
 }

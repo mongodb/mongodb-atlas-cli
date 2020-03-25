@@ -72,10 +72,10 @@ func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 }
 
 // Alerts mocks base method
-func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Alert, error) {
+func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.AlertsListOptions) (*mongodbatlas.AlertsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Alert)
+	ret0, _ := ret[0].(*mongodbatlas.AlertsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -163,10 +163,10 @@ func (mr *MockAlertsStoreMockRecorder) Alert(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // Alerts mocks base method
-func (m *MockAlertsStore) Alerts(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Alert, error) {
+func (m *MockAlertsStore) Alerts(arg0 string, arg1 *mongodbatlas.AlertsListOptions) (*mongodbatlas.AlertsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Alert)
+	ret0, _ := ret[0].(*mongodbatlas.AlertsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

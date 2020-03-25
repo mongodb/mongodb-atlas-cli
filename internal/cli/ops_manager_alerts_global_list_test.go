@@ -17,9 +17,8 @@ package cli
 import (
 	"testing"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-
 	"github.com/golang/mock/gomock"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )

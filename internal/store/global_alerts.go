@@ -33,7 +33,7 @@ type GlobalAlertsStore interface {
 // GlobalAlerts encapsulate the logic to manage different cloud providers
 func (s *Store) GlobalAlerts(opts *om.AlertsListOptions) (*om.GlobalAlerts, error) {
 	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.OpsManagerService:
 		result, _, err := s.client.(*om.Client).GlobalAlerts.List(context.Background(), opts)
 		return result, err
 	default:

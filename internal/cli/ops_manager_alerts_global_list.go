@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -24,8 +25,10 @@ import (
 )
 
 type opsManagerAlertsGlobalListOpts struct {
-	store  store.GlobalAlertLister
-	status string
+	store        store.GlobalAlertLister
+	pageNum      int
+	itemsPerPage int
+	status       string
 }
 
 func (opts *opsManagerAlertsGlobalListOpts) init() error {
@@ -35,11 +38,15 @@ func (opts *opsManagerAlertsGlobalListOpts) init() error {
 }
 
 func (opts *opsManagerAlertsGlobalListOpts) Run() error {
-	alertOpts := om.AlertsListOptions{
+	alertOpts := &om.AlertsListOptions{
 		Status: opts.status,
+		ListOptions: mongodbatlas.ListOptions{
+			PageNum:      opts.pageNum,
+			ItemsPerPage: opts.itemsPerPage,
+		},
 	}
 
-	result, err := opts.store.GlobalAlerts(&alertOpts)
+	result, err := opts.store.GlobalAlerts(alertOpts)
 	if err != nil {
 		return err
 	}
@@ -63,6 +70,8 @@ func OpsManagerAlertsGlobalListBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
 
 	return cmd

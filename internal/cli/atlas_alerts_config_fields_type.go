@@ -21,7 +21,7 @@ import (
 )
 
 type atlasAlertsConfigFieldsTypeOpts struct {
-	store store.AlertConfigurationFieldsLister
+	store store.MatcherFieldsLister
 }
 
 func (opts *atlasAlertsConfigFieldsTypeOpts) init() error {

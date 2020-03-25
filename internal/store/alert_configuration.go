@@ -35,7 +35,7 @@ type AlertConfigurationDeleter interface {
 	DeleteAlertConfiguration(string, string) error
 }
 
-type AlertConfigurationFieldsLister interface {
+type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
 }
 
@@ -43,7 +43,7 @@ type AlertConfigurationStore interface {
 	AlertConfigurationLister
 	AlertConfigurationCreator
 	AlertConfigurationDeleter
-	AlertConfigurationFieldsLister
+	MatcherFieldsLister
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers

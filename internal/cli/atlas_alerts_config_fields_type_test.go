@@ -24,7 +24,7 @@ import (
 
 func TestAtlasAlertConfigFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertConfigurationFieldsLister(ctrl)
+	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
 
 	defer ctrl.Finish()
 

@@ -49,3 +49,9 @@ For a `mongocli scope newCommand` command a file `internal/cli/scope_new_command
 
 We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).
 To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI) 
+
+## Contributing
+
+Please file issues before filing PRs. For PRs to be accepted, contributors must sign our [CLA](https://www.mongodb.com/legal/contributor-agreement).
+
+Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).

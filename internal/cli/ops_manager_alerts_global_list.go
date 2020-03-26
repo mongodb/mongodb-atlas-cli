@@ -15,7 +15,8 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -23,28 +24,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertsListOpts struct {
-	*globalOpts
+type opsManagerAlertsGlobalListOpts struct {
+	store        store.GlobalAlertLister
 	pageNum      int
 	itemsPerPage int
 	status       string
-	store        store.AlertLister
 }
 
-func (opts *atlasAlertsListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
+func (opts *opsManagerAlertsGlobalListOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasAlertsListOpts) Run() error {
+func (opts *opsManagerAlertsGlobalListOpts) Run() error {
+	alertOpts := &om.AlertsListOptions{
+		Status: opts.status,
+		ListOptions: mongodbatlas.ListOptions{
+			PageNum:      opts.pageNum,
+			ItemsPerPage: opts.itemsPerPage,
+		},
+	}
 
-	listOpts := opts.newAlertsListOptions()
-	result, err := opts.store.Alerts(opts.ProjectID(), listOpts)
-
+	result, err := opts.store.GlobalAlerts(alertOpts)
 	if err != nil {
 		return err
 	}
@@ -52,24 +54,12 @@ func (opts *atlasAlertsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
-	return &atlas.AlertsListOptions{
-		Status: opts.status,
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-	}
-}
-
-// mongocli atlas alerts list [--status status] [--projectId projectId] [--page N] [--limit N]
-func AtlasAlertsListBuilder() *cobra.Command {
-	opts := &atlasAlertsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+// mongocli om|cm alert(s) global list [--status status]
+func OpsManagerAlertsGlobalListBuilder() *cobra.Command {
+	opts := &opsManagerAlertsGlobalListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Atlas Alerts.",
+		Short:   "List global alerts.",
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -83,8 +73,6 @@ func AtlasAlertsListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
-
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

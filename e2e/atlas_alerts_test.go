@@ -97,75 +97,74 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alerts := []mongodbatlas.Alert{}
+		alerts := mongodbatlas.AlertsResponse{}
 		err = json.Unmarshal(resp, &alerts)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts))
+		if len(alerts.Results) == 0 {
+			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
 
 	})
-	// TODO: CLOUDP-59492
-	//	t.Run("List with status OPEN", func(t *testing.T) {
-	//
-	//		cmd := exec.Command(cliPath,
-	//			atlasEntity,
-	//			alertsEntity,
-	//			"list",
-	//			"--status",
-	//			"OPEN",
-	//		)
-	//
-	//		cmd.Env = os.Environ()
-	//		resp, err := cmd.CombinedOutput()
-	//
-	//		if err != nil {
-	//			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	//		}
-	//
-	//		alerts := mongodbatlas.AlertsResponse{}
-	//		err = json.Unmarshal(resp, &alerts)
-	//
-	//		if err != nil {
-	//			t.Fatalf("unexpected error: %v", err)
-	//		}
-	//
-	//		if len(alerts.Results) != 0 {
-	//			t.Errorf("got=%#v\nwant=%#v\n", len(alerts.Results), 0)
-	//		}
-	//
-	//	})
-	//	t.Run("List with status CLOSED", func(t *testing.T) {
-	//
-	//		cmd := exec.Command(cliPath,
-	//			atlasEntity,
-	//			alertsEntity,
-	//			"list",
-	//			"--status",
-	//			"CLOSED",
-	//		)
-	//
-	//		cmd.Env = os.Environ()
-	//		resp, err := cmd.CombinedOutput()
-	//
-	//		if err != nil {
-	//			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	//		}
-	//
-	//		alerts := mongodbatlas.AlertsResponse{}
-	//		err = json.Unmarshal(resp, &alerts)
-	//
-	//		if err != nil {
-	//			t.Fatalf("unexpected error: %v", err)
-	//		}
-	//
-	//		if len(alerts.Results) != 7 {
-	//			t.Errorf("got=%#v\nwant=%#v\n", len(alerts.Results), 7)
-	//		}
-	//
-	//	})
+	t.Run("List with status OPEN", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			"list",
+			"--status",
+			"OPEN",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alerts := mongodbatlas.AlertsResponse{}
+		err = json.Unmarshal(resp, &alerts)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(alerts.Results) == 0 {
+			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
+		}
+
+	})
+	t.Run("List with status CLOSED", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			"list",
+			"--status",
+			"CLOSED",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alerts := mongodbatlas.AlertsResponse{}
+		err = json.Unmarshal(resp, &alerts)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(alerts.Results) == 0 {
+			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
+		}
+
+	})
 }

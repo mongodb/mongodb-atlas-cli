@@ -18,34 +18,29 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerAlertsGlobalList_Run(t *testing.T) {
+func TestAtlasAlertConfigFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockGlobalAlertLister(ctrl)
+	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := fixtures.GlobalAlerts()
+	expected := fixtures.MatcherFieldsType()
 
-	alertOpts := atlas.AlertsListOptions{
-		Status: "OPEN",
+	listOpts := &atlasAlertsConfigFieldsTypeOpts{
+		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().GlobalAlerts(&alertOpts).
+		EXPECT().
+		MatcherFields().
 		Return(expected, nil).
 		Times(1)
 
-	opts := &opsManagerAlertsGlobalListOpts{
-		store:  mockStore,
-		status: "OPEN",
-	}
-
-	err := opts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

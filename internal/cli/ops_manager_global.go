@@ -18,18 +18,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasAlertsBuilder() *cobra.Command {
+func OpsManagerGlobalBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "alerts",
-		Aliases: []string{"alert"},
-		Short:   "Manage alerts for your project.",
+		Use:   "global",
+		Short: "Manage Ops Manager global properties.",
 	}
 
-	cmd.AddCommand(AtlasAlertConfigsBuilder())
-	cmd.AddCommand(AtlasAlertsDescribeBuilder())
-	cmd.AddCommand(AtlasAlertsListBuilder())
-	cmd.AddCommand(AtlasAlertsAcknowledgeBuilder())
-	cmd.AddCommand(OpsManagerGlobalBuilder())
-
+	cmd.AddCommand(OpsManagerAlertsGlobalListBuilder())
 	return cmd
 }

@@ -22,7 +22,7 @@ func AtlasAlertConfigsFieldsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "fields",
 		Aliases: []string{"field"},
-		Short:   "Manage alerts configuration fields for your project.",
+		Short:   "Manage alert configuration fields for your project.",
 	}
 
 	cmd.AddCommand(AtlasAlertsConfigsFieldsBuilder())

@@ -15,8 +15,7 @@
 package cli
 
 import (
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -38,9 +37,9 @@ func (opts *opsManagerAlertsGlobalListOpts) init() error {
 }
 
 func (opts *opsManagerAlertsGlobalListOpts) Run() error {
-	alertOpts := &om.AlertsListOptions{
+	alertOpts := &atlas.AlertsListOptions{
 		Status: opts.status,
-		ListOptions: mongodbatlas.ListOptions{
+		ListOptions: atlas.ListOptions{
 			PageNum:      opts.pageNum,
 			ItemsPerPage: opts.itemsPerPage,
 		},

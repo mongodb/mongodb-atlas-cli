@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
@@ -31,7 +31,7 @@ func TestOpsManagerAlertsGlobalList_Run(t *testing.T) {
 
 	expected := fixtures.GlobalAlerts()
 
-	alertOpts := om.AlertsListOptions{
+	alertOpts := atlas.AlertsListOptions{
 		Status: "OPEN",
 	}
 

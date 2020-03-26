@@ -18,12 +18,13 @@ import (
 	"context"
 	"fmt"
 
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
 type GlobalAlertLister interface {
-	GlobalAlerts(*om.AlertsListOptions) (*om.GlobalAlerts, error)
+	GlobalAlerts(*atlas.AlertsListOptions) (*om.GlobalAlerts, error)
 }
 
 type GlobalAlertsStore interface {
@@ -31,7 +32,7 @@ type GlobalAlertsStore interface {
 }
 
 // GlobalAlerts encapsulate the logic to manage different cloud providers
-func (s *Store) GlobalAlerts(opts *om.AlertsListOptions) (*om.GlobalAlerts, error) {
+func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*om.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*om.Client).GlobalAlerts.List(context.Background(), opts)

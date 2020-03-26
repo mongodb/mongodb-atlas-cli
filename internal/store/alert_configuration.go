@@ -35,6 +35,10 @@ type AlertConfigurationDeleter interface {
 	DeleteAlertConfiguration(string, string) error
 }
 
+type AlertConfigurationUpdater interface {
+	UpdateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+}
+
 type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
 }
@@ -43,6 +47,7 @@ type AlertConfigurationStore interface {
 	AlertConfigurationLister
 	AlertConfigurationCreator
 	AlertConfigurationDeleter
+	AlertConfigurationUpdater
 	MatcherFieldsLister
 }
 
@@ -97,4 +102,15 @@ func (s *Store) MatcherFields() ([]string, error) {
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
+}
+
+func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+
 }

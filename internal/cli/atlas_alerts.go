@@ -25,7 +25,7 @@ func AtlasAlertsBuilder() *cobra.Command {
 		Short:   "Manage alerts for your project.",
 	}
 
-	cmd.AddCommand(AtlasAlertConfigsBuilder())
+	cmd.AddCommand(AtlasAlertsConfigsBuilder())
 	cmd.AddCommand(AtlasAlertsDescribeBuilder())
 	cmd.AddCommand(AtlasAlertsListBuilder())
 	cmd.AddCommand(AtlasAlertsAcknowledgeBuilder())

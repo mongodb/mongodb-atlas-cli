@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasAlertConfigCreate_Run(t *testing.T) {
+func TestAtlasAlertsConfigCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationCreator(ctrl)
 
@@ -30,7 +30,7 @@ func TestAtlasAlertConfigCreate_Run(t *testing.T) {
 
 	expected := fixtures.AlertConfig()
 
-	createOpts := &atlasAlertConfigCreateOpts{
+	createOpts := &atlasAlertsConfigCreateOpts{
 		globalOpts:                newGlobalOpts(),
 		event:                     "OUTSIDE_METRIC_THRESHOLD",
 		enabled:                   true,

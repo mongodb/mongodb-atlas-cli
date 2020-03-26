@@ -39,7 +39,7 @@ const (
 	user     = "USER"
 )
 
-type atlasAlertConfigCreateOpts struct {
+type atlasAlertsConfigCreateOpts struct {
 	*globalOpts
 	event                           string
 	matcherFieldName                string
@@ -71,7 +71,7 @@ type atlasAlertConfigCreateOpts struct {
 	store                           store.AlertConfigurationCreator
 }
 
-func (opts *atlasAlertConfigCreateOpts) init() error {
+func (opts *atlasAlertsConfigCreateOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -81,7 +81,7 @@ func (opts *atlasAlertConfigCreateOpts) init() error {
 	return err
 }
 
-func (opts *atlasAlertConfigCreateOpts) Run() error {
+func (opts *atlasAlertsConfigCreateOpts) Run() error {
 	alert := opts.buildAlertConfiguration()
 	result, err := opts.store.CreateAlertConfiguration(alert)
 
@@ -92,7 +92,7 @@ func (opts *atlasAlertConfigCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertConfiguration {
+func (opts *atlasAlertsConfigCreateOpts) buildAlertConfiguration() *atlas.AlertConfiguration {
 
 	out := new(atlas.AlertConfiguration)
 
@@ -113,7 +113,7 @@ func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertCo
 	return out
 }
 
-func newNotification(opts *atlasAlertConfigCreateOpts) *atlas.Notification {
+func newNotification(opts *atlasAlertsConfigCreateOpts) *atlas.Notification {
 
 	out := new(atlas.Notification)
 	out.TypeName = strings.ToUpper(opts.notificationType)
@@ -164,7 +164,7 @@ func newNotification(opts *atlasAlertConfigCreateOpts) *atlas.Notification {
 	return out
 }
 
-func newMetricThreshold(opts *atlasAlertConfigCreateOpts) *atlas.MetricThreshold {
+func newMetricThreshold(opts *atlasAlertsConfigCreateOpts) *atlas.MetricThreshold {
 	return &atlas.MetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   strings.ToUpper(opts.metricThresholdOperator),
@@ -174,7 +174,7 @@ func newMetricThreshold(opts *atlasAlertConfigCreateOpts) *atlas.MetricThreshold
 	}
 }
 
-func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
+func newMatcher(opts *atlasAlertsConfigCreateOpts) *atlas.Matcher {
 	return &atlas.Matcher{
 		FieldName: strings.ToUpper(opts.matcherFieldName),
 		Operator:  strings.ToUpper(opts.matcherOperator),
@@ -182,11 +182,12 @@ func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
 	}
 }
 
-// mongocli atlas alerts config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
-// --notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region] [--projectId projectId]
-func AtlasAlertConfigCreateBuilder() *cobra.Command {
-	opts := &atlasAlertConfigCreateOpts{
+// [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
+// [--projectId projectId]
+func AtlasAlertsConfigCreateBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigCreateOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{

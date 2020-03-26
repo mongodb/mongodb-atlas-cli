@@ -121,6 +121,55 @@ func TestAtlasAlertConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			configEntity,
+			"update",
+			alertID,
+			"--event",
+			eventTypeName,
+			"--notificationType",
+			group,
+			"--notificationIntervalMin",
+			strconv.Itoa(intervalMin),
+			"--notificationDelayMin",
+			strconv.Itoa(delayMin),
+			"--notificationSmsEnabled=true",
+			"--notificationEmailEnabled=true")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alert := mongodbatlas.AlertConfiguration{}
+		err = json.Unmarshal(resp, &alert)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		if *alert.Enabled {
+			t.Errorf("got=%#v\nwant=%#v\n", true, false)
+		}
+
+		if len(alert.Notifications) != 1 {
+			t.Errorf("got=%#v\nwant=%#v\n", len(alert.Notifications), 1)
+		}
+
+		if !*alert.Notifications[0].SMSEnabled {
+			t.Errorf("got=%#v\nwant=%#v\n", false, true)
+		}
+
+		if !*alert.Notifications[0].EmailEnabled {
+			t.Errorf("got=%#v\nwant=%#v\n", false, true)
+		}
+
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()

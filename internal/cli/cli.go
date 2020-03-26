@@ -125,7 +125,8 @@ func (opts *deleteOpts) FailMessage() string {
 	return fallbackFailMessage
 }
 
-type AtlasAlertsConfig struct {
+// atlasAlertsConfigOpts contains all the information and functions to manage an alert configuration
+type atlasAlertsConfigOpts struct {
 	*globalOpts
 	event                           string
 	matcherFieldName                string
@@ -156,28 +157,28 @@ type AtlasAlertsConfig struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *AtlasAlertsConfig) buildAlertConfiguration() *atlas.AlertConfiguration {
+func (opts *atlasAlertsConfigOpts) newAlertConfiguration(projectID string) *atlas.AlertConfiguration {
 
 	out := new(atlas.AlertConfiguration)
 
-	out.GroupID = opts.ProjectID()
+	out.GroupID = projectID
 	out.EventTypeName = strings.ToUpper(opts.event)
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = []atlas.Matcher{*newMatcher(opts)}
+		out.Matchers = []atlas.Matcher{*opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
-		out.MetricThreshold = newMetricThreshold(opts)
+		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []atlas.Notification{*newNotification(opts)}
+	out.Notifications = []atlas.Notification{*opts.newNotification()}
 
 	return out
 }
 
-func newNotification(opts *AtlasAlertsConfig) *atlas.Notification {
+func (opts *atlasAlertsConfigOpts) newNotification() *atlas.Notification {
 
 	out := new(atlas.Notification)
 	out.TypeName = strings.ToUpper(opts.notificationType)
@@ -229,7 +230,7 @@ func newNotification(opts *AtlasAlertsConfig) *atlas.Notification {
 	return out
 }
 
-func newMetricThreshold(opts *AtlasAlertsConfig) *atlas.MetricThreshold {
+func (opts *atlasAlertsConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
 	return &atlas.MetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   strings.ToUpper(opts.metricThresholdOperator),
@@ -239,7 +240,7 @@ func newMetricThreshold(opts *AtlasAlertsConfig) *atlas.MetricThreshold {
 	}
 }
 
-func newMatcher(opts *AtlasAlertsConfig) *atlas.Matcher {
+func (opts *atlasAlertsConfigOpts) newMatcher() *atlas.Matcher {
 	return &atlas.Matcher{
 		FieldName: strings.ToUpper(opts.matcherFieldName),
 		Operator:  strings.ToUpper(opts.matcherOperator),

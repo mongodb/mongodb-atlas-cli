@@ -31,23 +31,24 @@ func TestAtlasAlertsConfigCreate_Run(t *testing.T) {
 	expected := fixtures.AlertConfig()
 
 	createOpts := &atlasAlertsConfigCreateOpts{
-		globalOpts:                newGlobalOpts(),
-		event:                     "OUTSIDE_METRIC_THRESHOLD",
-		enabled:                   true,
-		matcherFieldName:          "HOSTNAME_AND_PORT",
-		matcherOperator:           "EQUALS",
-		matcherValue:              "mongo.example.com:27017",
-		metricThresholdMetricName: "ASSERT_REGULAR",
-		metricThresholdOperator:   "LESS_THAN",
-		metricThresholdThreshold:  99,
-		metricThresholdUnits:      "RAW",
-		metricThresholdMode:       "RAW",
-		notificationDelayMin:      0,
-		notificationIntervalMin:   5,
-		notificationMobileNumber:  "2343454567",
-		notificationType:          "sms",
-		store:                     mockStore,
-	}
+		AtlasAlertsConfig: &AtlasAlertsConfig{
+			globalOpts:                newGlobalOpts(),
+			event:                     "OUTSIDE_METRIC_THRESHOLD",
+			enabled:                   true,
+			matcherFieldName:          "HOSTNAME_AND_PORT",
+			matcherOperator:           "EQUALS",
+			matcherValue:              "mongo.example.com:27017",
+			metricThresholdMetricName: "ASSERT_REGULAR",
+			metricThresholdOperator:   "LESS_THAN",
+			metricThresholdThreshold:  99,
+			metricThresholdUnits:      "RAW",
+			metricThresholdMode:       "RAW",
+			notificationDelayMin:      0,
+			notificationIntervalMin:   5,
+			notificationMobileNumber:  "2343454567",
+			notificationType:          "sms",
+		},
+		store: mockStore}
 
 	alert := createOpts.buildAlertConfiguration()
 	mockStore.

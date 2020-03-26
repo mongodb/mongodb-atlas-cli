@@ -31,7 +31,7 @@ func TestAtlasAlertsConfigUpdates_Run(t *testing.T) {
 	expected := fixtures.AlertConfig()
 
 	updateOpts := &atlasAlertsConfigUpdateOpts{
-		atlasAlertsConfigCreateOpts: &atlasAlertsConfigCreateOpts{
+		AtlasAlertsConfig: &AtlasAlertsConfig{
 			globalOpts:                newGlobalOpts(),
 			event:                     "OUTSIDE_METRIC_THRESHOLD",
 			enabled:                   true,

@@ -6,6 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	reflect "reflect"
 )
@@ -34,7 +35,7 @@ func (m *MockGlobalAlertLister) EXPECT() *MockGlobalAlertListerMockRecorder {
 }
 
 // GlobalAlerts mocks base method
-func (m *MockGlobalAlertLister) GlobalAlerts(arg0 *opsmngr.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
+func (m *MockGlobalAlertLister) GlobalAlerts(arg0 *mongodbatlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAlerts", arg0)
 	ret0, _ := ret[0].(*opsmngr.GlobalAlerts)
@@ -72,7 +73,7 @@ func (m *MockGlobalAlertsStore) EXPECT() *MockGlobalAlertsStoreMockRecorder {
 }
 
 // GlobalAlerts mocks base method
-func (m *MockGlobalAlertsStore) GlobalAlerts(arg0 *opsmngr.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
+func (m *MockGlobalAlertsStore) GlobalAlerts(arg0 *mongodbatlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAlerts", arg0)
 	ret0, _ := ret[0].(*opsmngr.GlobalAlerts)

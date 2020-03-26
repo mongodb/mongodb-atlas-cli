@@ -15,37 +15,24 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type opsManagerAlertsGlobalListOpts struct {
-	store        store.GlobalAlertLister
-	pageNum      int
-	itemsPerPage int
-	status       string
+type atlasAlertsConfigFieldsTypeOpts struct {
+	store store.MatcherFieldsLister
 }
 
-func (opts *opsManagerAlertsGlobalListOpts) init() error {
+func (opts *atlasAlertsConfigFieldsTypeOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerAlertsGlobalListOpts) Run() error {
-	alertOpts := &atlas.AlertsListOptions{
-		Status: opts.status,
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-	}
+func (opts *atlasAlertsConfigFieldsTypeOpts) Run() error {
+	result, err := opts.store.MatcherFields()
 
-	result, err := opts.store.GlobalAlerts(alertOpts)
 	if err != nil {
 		return err
 	}
@@ -53,13 +40,13 @@ func (opts *opsManagerAlertsGlobalListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om|cm alert(s) global list [--status status]
-func OpsManagerAlertsGlobalListBuilder() *cobra.Command {
-	opts := &opsManagerAlertsGlobalListOpts{}
+// mongocli atlas alerts config(s) fields type
+func AtlasAlertsConfigsFieldsBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigFieldsTypeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List global alerts.",
-		Aliases: []string{"ls"},
+		Use:     "type",
+		Short:   "List alert configurations available field types.",
+		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
@@ -68,10 +55,6 @@ func OpsManagerAlertsGlobalListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-	cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
 
 	return cmd
 }

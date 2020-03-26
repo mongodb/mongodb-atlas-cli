@@ -133,8 +133,8 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(alerts.Results), 0)
+		if len(alerts.Results) > 0 {
+			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
 		}
 
 	})
@@ -163,7 +163,7 @@ func TestAtlasAlerts(t *testing.T) {
 		}
 
 		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(alerts.Results), 7)
+			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
 
 	})

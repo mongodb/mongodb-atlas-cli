@@ -23,7 +23,9 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
 const (
@@ -129,4 +131,25 @@ func TestAtlasAlertConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("List Matcher Fields", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "fields", "type")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		fields := []string{}
+		err = json.Unmarshal(resp, &fields)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		if diff := deep.Equal(fields, fixtures.MatcherFieldsType()); diff != nil {
+			t.Error(diff)
+		}
+
+	})
 }

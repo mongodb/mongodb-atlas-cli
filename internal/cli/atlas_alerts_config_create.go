@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"strings"
-
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -39,39 +36,13 @@ const (
 	user     = "USER"
 )
 
-type atlasAlertConfigCreateOpts struct {
+type atlasAlertsConfigCreateOpts struct {
 	*globalOpts
-	event                           string
-	matcherFieldName                string
-	matcherOperator                 string
-	matcherValue                    string
-	metricThresholdMetricName       string
-	metricThresholdOperator         string
-	metricThresholdUnits            string
-	metricThresholdMode             string
-	notificationToken               string // notificationsApiToken, notificationsFlowdockApiToken
-	notificationChannelName         string
-	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
-	notificationEmailAddress        string
-	notificationFlowName            string
-	notificationMobileNumber        string
-	notificationRegion              string // notificationsOpsGenieRegion, notificationsDatadogRegion
-	notificationOrgName             string
-	notificationServiceKey          string
-	notificationTeamID              string
-	notificationType                string
-	notificationUsername            string
-	notificationVictorOpsRoutingKey string
-	notificationDelayMin            int
-	notificationIntervalMin         int
-	notificationSmsEnabled          bool
-	enabled                         bool
-	notificationEmailEnabled        bool
-	metricThresholdThreshold        float64
-	store                           store.AlertConfigurationCreator
+	*atlasAlertsConfigOpts
+	store store.AlertConfigurationCreator
 }
 
-func (opts *atlasAlertConfigCreateOpts) init() error {
+func (opts *atlasAlertsConfigCreateOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -81,8 +52,8 @@ func (opts *atlasAlertConfigCreateOpts) init() error {
 	return err
 }
 
-func (opts *atlasAlertConfigCreateOpts) Run() error {
-	alert := opts.buildAlertConfiguration()
+func (opts *atlasAlertsConfigCreateOpts) Run() error {
+	alert := opts.newAlertConfiguration(opts.ProjectID())
 	result, err := opts.store.CreateAlertConfiguration(alert)
 
 	if err != nil {
@@ -92,102 +63,14 @@ func (opts *atlasAlertConfigCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertConfigCreateOpts) buildAlertConfiguration() *atlas.AlertConfiguration {
-
-	out := new(atlas.AlertConfiguration)
-
-	out.GroupID = opts.ProjectID()
-	out.EventTypeName = strings.ToUpper(opts.event)
-	out.Enabled = &opts.enabled
-
-	if opts.matcherFieldName != "" {
-		out.Matchers = []atlas.Matcher{*newMatcher(opts)}
-	}
-
-	if opts.metricThresholdMetricName != "" {
-		out.MetricThreshold = newMetricThreshold(opts)
-	}
-
-	out.Notifications = []atlas.Notification{*newNotification(opts)}
-
-	return out
-}
-
-func newNotification(opts *atlasAlertConfigCreateOpts) *atlas.Notification {
-
-	out := new(atlas.Notification)
-	out.TypeName = strings.ToUpper(opts.notificationType)
-	out.DelayMin = &opts.notificationDelayMin
-	out.IntervalMin = opts.notificationIntervalMin
-	out.TeamID = opts.notificationTeamID
-	out.Username = opts.notificationUsername
-
-	switch out.TypeName {
-
-	case victor:
-		out.VictorOpsAPIKey = opts.apiKey
-		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
-
-	case slack:
-		out.VictorOpsAPIKey = opts.apiKey
-		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
-		out.APIToken = opts.notificationToken
-
-	case datadog:
-		out.DatadogAPIKey = opts.apiKey
-		out.DatadogRegion = strings.ToUpper(opts.notificationRegion)
-
-	case email:
-		out.EmailAddress = opts.notificationEmailAddress
-
-	case flowdock:
-		out.FlowdockAPIToken = opts.notificationToken
-		out.FlowName = opts.notificationFlowName
-		out.OrgName = opts.notificationOrgName
-
-	case sms:
-		out.MobileNumber = opts.notificationMobileNumber
-
-	case group, user, org:
-		out.SMSEnabled = &opts.notificationSmsEnabled
-		out.EmailEnabled = &opts.notificationEmailEnabled
-
-	case ops:
-		out.OpsGenieAPIKey = opts.apiKey
-		out.OpsGenieRegion = opts.notificationRegion
-
-	case pager:
-		out.ServiceKey = opts.notificationServiceKey
-
-	}
-
-	return out
-}
-
-func newMetricThreshold(opts *atlasAlertConfigCreateOpts) *atlas.MetricThreshold {
-	return &atlas.MetricThreshold{
-		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
-		Operator:   strings.ToUpper(opts.metricThresholdOperator),
-		Threshold:  opts.metricThresholdThreshold,
-		Units:      strings.ToUpper(opts.metricThresholdUnits),
-		Mode:       strings.ToUpper(opts.metricThresholdMode),
-	}
-}
-
-func newMatcher(opts *atlasAlertConfigCreateOpts) *atlas.Matcher {
-	return &atlas.Matcher{
-		FieldName: strings.ToUpper(opts.matcherFieldName),
-		Operator:  strings.ToUpper(opts.matcherOperator),
-		Value:     strings.ToUpper(opts.matcherValue),
-	}
-}
-
-// mongocli atlas alerts config(s) create -event event --enabled [--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
-// --notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region] [--projectId projectId]
-func AtlasAlertConfigCreateBuilder() *cobra.Command {
-	opts := &atlasAlertConfigCreateOpts{
-		globalOpts: newGlobalOpts(),
+// [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
+// [--projectId projectId]
+func AtlasAlertsConfigCreateBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigCreateOpts{
+		globalOpts:            newGlobalOpts(),
+		atlasAlertsConfigOpts: newAtlasAlertsConfigOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:   "create",

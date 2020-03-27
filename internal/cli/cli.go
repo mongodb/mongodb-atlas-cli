@@ -17,8 +17,10 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/prompts"
 )
@@ -121,4 +123,131 @@ func (opts *deleteOpts) FailMessage() string {
 		return opts.failMessage
 	}
 	return fallbackFailMessage
+}
+
+// newAtlasAlertsConfigOpts returns an atlasAlertsConfigOpts
+func newAtlasAlertsConfigOpts() *atlasAlertsConfigOpts {
+	return new(atlasAlertsConfigOpts)
+}
+
+// atlasAlertsConfigOpts contains all the information and functions to manage an alert configuration
+type atlasAlertsConfigOpts struct {
+	event                           string
+	matcherFieldName                string
+	matcherOperator                 string
+	matcherValue                    string
+	metricThresholdMetricName       string
+	metricThresholdOperator         string
+	metricThresholdUnits            string
+	metricThresholdMode             string
+	notificationToken               string // notificationsApiToken, notificationsFlowdockApiToken
+	notificationChannelName         string
+	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
+	notificationEmailAddress        string
+	notificationFlowName            string
+	notificationMobileNumber        string
+	notificationRegion              string // notificationsOpsGenieRegion, notificationsDatadogRegion
+	notificationOrgName             string
+	notificationServiceKey          string
+	notificationTeamID              string
+	notificationType                string
+	notificationUsername            string
+	notificationVictorOpsRoutingKey string
+	notificationDelayMin            int
+	notificationIntervalMin         int
+	notificationSmsEnabled          bool
+	enabled                         bool
+	notificationEmailEnabled        bool
+	metricThresholdThreshold        float64
+}
+
+func (opts *atlasAlertsConfigOpts) newAlertConfiguration(projectID string) *atlas.AlertConfiguration {
+
+	out := new(atlas.AlertConfiguration)
+
+	out.GroupID = projectID
+	out.EventTypeName = strings.ToUpper(opts.event)
+	out.Enabled = &opts.enabled
+
+	if opts.matcherFieldName != "" {
+		out.Matchers = []atlas.Matcher{*opts.newMatcher()}
+	}
+
+	if opts.metricThresholdMetricName != "" {
+		out.MetricThreshold = opts.newMetricThreshold()
+	}
+
+	out.Notifications = []atlas.Notification{*opts.newNotification()}
+
+	return out
+}
+
+func (opts *atlasAlertsConfigOpts) newNotification() *atlas.Notification {
+
+	out := new(atlas.Notification)
+	out.TypeName = strings.ToUpper(opts.notificationType)
+	out.DelayMin = &opts.notificationDelayMin
+	out.IntervalMin = opts.notificationIntervalMin
+	out.TeamID = opts.notificationTeamID
+	out.Username = opts.notificationUsername
+	out.ChannelName = opts.notificationChannelName
+
+	switch out.TypeName {
+
+	case victor:
+		out.VictorOpsAPIKey = opts.apiKey
+		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
+
+	case slack:
+		out.VictorOpsAPIKey = opts.apiKey
+		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
+		out.APIToken = opts.notificationToken
+
+	case datadog:
+		out.DatadogAPIKey = opts.apiKey
+		out.DatadogRegion = strings.ToUpper(opts.notificationRegion)
+
+	case email:
+		out.EmailAddress = opts.notificationEmailAddress
+
+	case flowdock:
+		out.FlowdockAPIToken = opts.notificationToken
+		out.FlowName = opts.notificationFlowName
+		out.OrgName = opts.notificationOrgName
+
+	case sms:
+		out.MobileNumber = opts.notificationMobileNumber
+
+	case group, user, org:
+		out.SMSEnabled = &opts.notificationSmsEnabled
+		out.EmailEnabled = &opts.notificationEmailEnabled
+
+	case ops:
+		out.OpsGenieAPIKey = opts.apiKey
+		out.OpsGenieRegion = opts.notificationRegion
+
+	case pager:
+		out.ServiceKey = opts.notificationServiceKey
+
+	}
+
+	return out
+}
+
+func (opts *atlasAlertsConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
+	return &atlas.MetricThreshold{
+		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
+		Operator:   strings.ToUpper(opts.metricThresholdOperator),
+		Threshold:  opts.metricThresholdThreshold,
+		Units:      strings.ToUpper(opts.metricThresholdUnits),
+		Mode:       strings.ToUpper(opts.metricThresholdMode),
+	}
+}
+
+func (opts *atlasAlertsConfigOpts) newMatcher() *atlas.Matcher {
+	return &atlas.Matcher{
+		FieldName: strings.ToUpper(opts.matcherFieldName),
+		Operator:  strings.ToUpper(opts.matcherOperator),
+		Value:     strings.ToUpper(opts.matcherValue),
+	}
 }

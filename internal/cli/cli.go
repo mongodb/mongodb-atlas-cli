@@ -125,9 +125,13 @@ func (opts *deleteOpts) FailMessage() string {
 	return fallbackFailMessage
 }
 
+// newAtlasAlertsConfigOpts returns an atlasAlertsConfigOpts
+func newAtlasAlertsConfigOpts() *atlasAlertsConfigOpts {
+	return new(atlasAlertsConfigOpts)
+}
+
 // atlasAlertsConfigOpts contains all the information and functions to manage an alert configuration
 type atlasAlertsConfigOpts struct {
-	*globalOpts
 	event                           string
 	matcherFieldName                string
 	matcherOperator                 string

@@ -112,6 +112,9 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}

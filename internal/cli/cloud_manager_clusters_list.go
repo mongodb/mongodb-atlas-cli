@@ -16,7 +16,6 @@ package cli
 
 import (
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -51,7 +50,7 @@ func cloudManagerClustersListRun(opts *cloudManagerClustersListOpts) (interface{
 	var result interface{}
 	var err error
 
-	if opts.projectID == "" && config.Service() == config.OpsManagerService {
+	if opts.ProjectID() == "" {
 		result, err = opts.store.ListAllProjectClusters()
 
 	} else {

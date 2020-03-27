@@ -81,7 +81,7 @@ func CloudManagerClustersApplyBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "apply",
-		Short: description.ApplyOMCluster,
+		Short: description.ApplyCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

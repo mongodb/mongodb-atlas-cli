@@ -53,7 +53,7 @@ func AtlasAlertsConfigDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [id]",
-		Short:   description.DeleteConfig,
+		Short:   description.DeleteAlertsConfig,
 		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

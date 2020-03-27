@@ -46,7 +46,7 @@ func AtlasAlertsConfigsFieldsBuilder() *cobra.Command {
 	opts := &atlasAlertsConfigFieldsTypeOpts{}
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   description.FieldsType,
+		Short:   description.AlertsConfigFieldsType,
 		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

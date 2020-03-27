@@ -66,7 +66,7 @@ func CloudManagerClustersDescribeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
-		Short: description.DescribeOMCluster,
+		Short: description.DescribeCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

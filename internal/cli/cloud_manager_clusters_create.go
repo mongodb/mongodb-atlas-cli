@@ -86,7 +86,7 @@ func CloudManagerClustersCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateOMCluster,
+		Short: description.CreateCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

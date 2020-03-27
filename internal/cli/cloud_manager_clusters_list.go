@@ -70,7 +70,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ListOMClusters,
+		Short:   description.ListClusters,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

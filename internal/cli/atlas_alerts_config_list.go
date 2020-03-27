@@ -66,7 +66,7 @@ func AtlasAlertsConfigListBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListConfig,
+		Short:   description.AlertsConfigList,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

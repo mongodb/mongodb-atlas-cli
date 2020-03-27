@@ -37,7 +37,6 @@ const (
 )
 
 type atlasAlertsConfigCreateOpts struct {
-	*globalOpts
 	*atlasAlertsConfigOpts
 	store store.AlertConfigurationCreator
 }
@@ -69,7 +68,9 @@ func (opts *atlasAlertsConfigCreateOpts) Run() error {
 // [--projectId projectId]
 func AtlasAlertsConfigCreateBuilder() *cobra.Command {
 	opts := &atlasAlertsConfigCreateOpts{
-		globalOpts: newGlobalOpts(),
+		atlasAlertsConfigOpts: &atlasAlertsConfigOpts{
+			globalOpts: newGlobalOpts(),
+		},
 	}
 	cmd := &cobra.Command{
 		Use:   "create",

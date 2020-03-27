@@ -83,4 +83,6 @@ A user’s roles apply to all the clusters in the project.`
 	CreateOwner          = "Create the first user for Ops Manager."
 	Servers              = "Manage Ops Manager servers."
 	ListServer           = "List all available servers running an automation agent for the given project."
+	Security             = "Manage clusters security configuration."
+	EnableSecurity       = "Enable authentication mechanisms for the project."
 )

@@ -95,3 +95,33 @@ func TestRemoveUser(t *testing.T) {
 		t.Error("User not removed\n")
 	}
 }
+
+func TestEnableMechanism(t *testing.T) {
+	config := fixtures.AutomationConfigWithoutMongoDBUsers()
+
+	e := EnableMechanism(config, []string{"SCRAM-SHA-256"})
+
+	if e != nil {
+		t.Fatalf("EnableMechanism() unexpected error: %v\n", e)
+	}
+
+	if config.Auth.Disabled {
+		t.Error("config.Auth.Disabled is true\n")
+	}
+
+	if config.Auth.AutoAuthMechanisms[0] != "SCRAM-SHA-256" {
+		t.Error("AutoAuthMechanisms not set\n")
+	}
+
+	if config.Auth.AutoUser == "" || config.Auth.AutoPwd == "" {
+		t.Error("config.Auth.Auto* not set\n")
+	}
+
+	if config.Auth.Key == "" || config.Auth.KeyFileWindows == "" || config.Auth.KeyFile == "" {
+		t.Error("config.Auth.Key* not set\n")
+	}
+
+	if len(config.Auth.Users) != 2 {
+		t.Error("automation and monitoring users not set\n")
+	}
+}

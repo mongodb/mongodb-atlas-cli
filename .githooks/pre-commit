@@ -1,4 +1,11 @@
 $!/usr/bin/env bash
 
-echo "==> Running pre-commit git hook..."
-make fmt check
+STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$")
+
+for FILE in $STAGED_GO_FILES
+do
+    gofmt -w -s $FILE
+    goimports -w $FILE
+done
+
+make check

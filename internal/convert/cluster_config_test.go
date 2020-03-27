@@ -433,7 +433,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := tc.changes.PatchAutomationConfig(tc.current)
 			if err != nil {
-				t.Fatalf("PatchAutomationConfig() unexpected error: %v", err)
+				t.Fatalf("PatchAutomationConfig() unexpected error: %v\n", err)
 			}
 			if diff := deep.Equal(tc.current, tc.expected); diff != nil {
 				t.Error(diff)
@@ -460,7 +460,7 @@ func TestProtocolVersion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ver, err := protocolVer(tc.mdbVersion)
 			if err != nil {
-				t.Fatalf("protocolVer() unexpected error: %v", err)
+				t.Fatalf("protocolVer() unexpected error: %v\n", err)
 			}
 			if ver != tc.protocolVersion {
 				t.Errorf("protocolVer() expected: %s but got: %s", tc.protocolVersion, ver)

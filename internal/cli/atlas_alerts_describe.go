@@ -55,7 +55,7 @@ func AtlasAlertsDescribeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "describe [alertID]",
-		Short: description.DescribeAlerts,
+		Short: description.DescribeAlert,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

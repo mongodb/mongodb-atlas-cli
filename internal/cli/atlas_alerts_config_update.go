@@ -63,7 +63,7 @@ func AtlasAlertsConfigUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "update",
-		Short:   description.UpdateConfig,
+		Short:   description.UpdateAlertsConfig,
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

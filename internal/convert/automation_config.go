@@ -22,9 +22,9 @@ import (
 )
 
 const (
-	mongod                                = "mongod"
-	automationAgentWindowsKeyFilePath     = "%SystemDrive%\\MMSAutomation\\versions\\keyfile"
-	automationAgentKeyFilePathInContainer = "/var/lib/mongodb-mms-automation/keyfile"
+	mongod                         = "mongod"
+	atmAgentWindowsKeyFilePath     = "%SystemDrive%\\MMSAutomation\\versions\\keyfile"
+	atmAgentKeyFilePathInContainer = "/var/lib/mongodb-mms-automation/keyfile"
 )
 
 // FromAutomationConfig convert from cloud format to mCLI format
@@ -105,20 +105,20 @@ func EnableMechanism(out *om.AutomationConfig, m []string) error {
 		}
 	}
 	if out.Auth.KeyFile == "" {
-		out.Auth.KeyFile = automationAgentKeyFilePathInContainer
+		out.Auth.KeyFile = atmAgentKeyFilePathInContainer
 	}
 	if out.Auth.KeyFileWindows == "" {
-		out.Auth.KeyFileWindows = automationAgentWindowsKeyFilePath
+		out.Auth.KeyFileWindows = atmAgentWindowsKeyFilePath
 	}
 
 	return nil
 }
 
 func addMonitoringUser(out *om.AutomationConfig) {
-	_, hasMonitoring := search.MongoDBUsers(out.Auth.Users, func(user *om.MongoDBUser) bool {
+	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *om.MongoDBUser) bool {
 		return user.Username == monitoringAgentName
 	})
-	if !hasMonitoring {
+	if !exists {
 		AddUser(out, newMonitoringUser(out.Auth.AutoPwd))
 	}
 }

@@ -27,6 +27,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	cr     = "MONGODB-CR"
+	sha1   = "SCRAM-SHA-1"
+	sha256 = "SCRAM-SHA-256"
+)
+
 type opsManagerSecurityEnableOpts struct {
 	*globalOpts
 	mechanisms []string
@@ -67,10 +73,10 @@ func OpsManagerSecurityEnableBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:       "enable [MONGODB-CR|SCRAM-SHA-256]",
+		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
 		Short:     description.EnableSecurity,
 		Args:      cobra.OnlyValidArgs,
-		ValidArgs: []string{"MONGODB-CR", "SCRAM-SHA-1", "SCRAM-SHA-256"},
+		ValidArgs: []string{cr, sha1, sha256},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

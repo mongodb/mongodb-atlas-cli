@@ -196,7 +196,7 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:       "start",
+		Use:       fmt.Sprintf("start [%s|%s]", automatedRestore, httpRestore),
 		Short:     description.StartRestore,
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
@@ -227,7 +227,9 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 
 	// For Automatic restore
 	cmd.Flags().StringVar(&opts.targetProjectID, flags.TargetProjectID, "", usage.TargetProjectID)
+	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.targetClusterID, flags.TargetClusterID, "", usage.TargetClusterID)
+	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flags.TargetClusterName, "", usage.TargetClusterName)
 	cmd.Flags().StringVar(&opts.checkpointID, flags.CheckpointID, "", usage.CheckpointID)
 	cmd.Flags().StringVar(&opts.oplogTs, flags.OplogTs, "", usage.OplogTs)

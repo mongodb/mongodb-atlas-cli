@@ -60,13 +60,13 @@ func (opts *atlasBackupsRestoresListOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// mongocli atlas backup(s) restore(s) job(s) list
+// mongocli atlas backup(s) restore(s) job(s) list [clusterName|clusterId] [--page N] [--limit N]
 func AtlasBackupsRestoresListBuilder() *cobra.Command {
 	opts := &atlasBackupsRestoresListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list [clusterName|clusterId]",
 		Aliases: []string{"ls"},
 		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),

@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func AtlasBackupsRestoresBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "restores",
-		Short:   "Manage restore jobs.",
+		Short:   description.Restores,
 		Aliases: []string{"restore"},
 	}
 

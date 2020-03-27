@@ -16,6 +16,7 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -111,7 +112,7 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "update [name]",
-		Short:   "Update a MongoDB cluster in Atlas.",
+		Short:   description.UpdateCluster,
 		Example: `  mongocli atlas cluster update myCluster --projectId=1 --instanceSize M2 --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

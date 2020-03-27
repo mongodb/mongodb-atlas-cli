@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,11 +23,8 @@ func AtlasDBUsersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "dbusers",
 		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
-		Short:   "Manage database users for your project.",
-		Long: `
-The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
-Each user has a set of roles that provide access to the project’s databases. 
-A user’s roles apply to all the clusters in the project.`,
+		Short:   description.DBUsers,
+		Long:    description.DBUsersLong,
 	}
 
 	cmd.AddCommand(AtlasDBUsersListBuilder())

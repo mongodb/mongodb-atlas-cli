@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
@@ -45,7 +46,7 @@ func AtlasAlertsConfigsFieldsBuilder() *cobra.Command {
 	opts := &atlasAlertsConfigFieldsTypeOpts{}
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   "List alert configurations available field types.",
+		Short:   description.FieldsType,
 		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

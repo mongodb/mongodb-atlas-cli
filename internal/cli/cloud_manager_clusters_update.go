@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
@@ -85,7 +86,7 @@ func CloudManagerClustersUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update",
-		Short: "Update a Cloud Manager cluster.",
+		Short: description.UpdateOMCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

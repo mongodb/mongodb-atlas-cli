@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func AtlasBackupsCheckpointsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "checkpoints",
 		Aliases: []string{"checkpoint"},
-		Short:   "Manage backup checkpoints for your project.",
+		Short:   description.Checkpoints,
 	}
 
 	cmd.AddCommand(AtlasBackupsCheckpointsListBuilder())

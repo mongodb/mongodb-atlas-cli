@@ -20,6 +20,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -84,7 +85,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:       "create",
-		Short:     "Create a database user for a project.",
+		Short:     description.CreateDBUser,
 		Example:   `  mongocli atlas dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --projectId <>`,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},

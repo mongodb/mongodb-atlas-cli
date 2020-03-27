@@ -20,6 +20,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/search"
@@ -87,7 +88,7 @@ func CloudManagerClustersStartupBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "startup [name]",
-		Short: "Startup a Cloud Manager cluster.",
+		Short: description.StartUpOMCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

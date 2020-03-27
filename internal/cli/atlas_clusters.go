@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +24,8 @@ func AtlasClustersBuilder() *cobra.Command {
 		Use:        "clusters",
 		Aliases:    []string{"cluster"},
 		SuggestFor: []string{"replicasets"},
-		Short:      "Manage Atlas clusters for your project.",
-		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
+		Short:      description.Clusters,
+		Long:       description.ClustersLong,
 	}
 	cmd.AddCommand(AtlasClustersCreateBuilder())
 	cmd.AddCommand(AtlasClustersListBuilder())

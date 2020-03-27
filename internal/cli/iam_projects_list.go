@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -56,7 +57,7 @@ func IAMProjectsListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List projects.",
+		Short:   description.ListProjects,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

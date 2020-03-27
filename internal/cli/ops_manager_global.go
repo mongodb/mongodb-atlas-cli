@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func OpsManagerGlobalBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "global",
-		Short: "Manage Ops Manager global properties.",
+		Short: description.Global,
 	}
 
 	cmd.AddCommand(OpsManagerAlertsGlobalListBuilder())

@@ -16,6 +16,7 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -23,14 +24,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertConfigListOpts struct {
+type atlasAlertsConfigListOpts struct {
 	*globalOpts
 	pageNum      int
 	itemsPerPage int
 	store        store.AlertConfigurationLister
 }
 
-func (opts *atlasAlertConfigListOpts) init() error {
+func (opts *atlasAlertsConfigListOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -40,7 +41,7 @@ func (opts *atlasAlertConfigListOpts) init() error {
 	return err
 }
 
-func (opts *atlasAlertConfigListOpts) Run() error {
+func (opts *atlasAlertsConfigListOpts) Run() error {
 	listOpts := opts.newListOptions()
 	result, err := opts.store.AlertConfigurations(opts.ProjectID(), listOpts)
 
@@ -51,7 +52,7 @@ func (opts *atlasAlertConfigListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertConfigListOpts) newListOptions() *atlas.ListOptions {
+func (opts *atlasAlertsConfigListOpts) newListOptions() *atlas.ListOptions {
 	return &atlas.ListOptions{
 		PageNum:      opts.pageNum,
 		ItemsPerPage: opts.itemsPerPage,
@@ -59,13 +60,13 @@ func (opts *atlasAlertConfigListOpts) newListOptions() *atlas.ListOptions {
 }
 
 // mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
-func AtlasAlertConfigListBuilder() *cobra.Command {
-	opts := &atlasAlertConfigListOpts{
+func AtlasAlertsConfigListBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigListOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List alert configurations for a project.",
+		Short:   description.ListConfig,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

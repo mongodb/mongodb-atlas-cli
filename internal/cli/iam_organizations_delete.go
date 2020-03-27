@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -46,7 +47,7 @@ func IAMOrganizationsDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete [ID]",
-		Short: "Delete an organization.",
+		Short: description.DeleteOrganization,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

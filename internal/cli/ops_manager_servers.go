@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func OpsManagerServersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "servers",
-		Short: "Manage Ops Manager servers.",
+		Short: description.Servers,
 	}
 
 	cmd.AddCommand(OpsManagerAgentsListBuilder())

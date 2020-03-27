@@ -17,6 +17,7 @@ package cli
 import (
 	"github.com/AlecAivazis/survey/v2"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -77,7 +78,7 @@ func OpsManagerOwnerCreateBuilder() *cobra.Command {
 	opts := new(opsManagerOwnerCreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create the first user for Ops Manager.",
+		Short: description.CreateOwner,
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

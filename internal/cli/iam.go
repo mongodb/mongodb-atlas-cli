@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func IAMBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "iam",
-		Short: "Authentication operations.",
+		Short: description.IAM,
 	}
 	cmd.AddCommand(IAMProjectsBuilder())
 	cmd.AddCommand(IAMOrganizationsBuilder())

@@ -15,14 +15,15 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func IAMOrganizationsBuilder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "organizations",
-		Short:   "Organization operations.",
-		Long:    "Create, list and manage your MongoDB organizations.",
+		Short:   description.Organization,
+		Long:    description.OrganizationLong,
 		Aliases: []string{"organization", "orgs", "org"},
 	}
 	cmd.AddCommand(IAMOrganizationsListBuilder())

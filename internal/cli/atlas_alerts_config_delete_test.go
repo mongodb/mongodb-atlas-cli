@@ -21,13 +21,13 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasAlertConfigsDelete_Run(t *testing.T) {
+func TestAtlasAlertsConfigsDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationDeleter(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &atlasAlertConfigDeleteOpts{
+	deleteOpts := &atlasAlertsConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
 			confirm:        true,

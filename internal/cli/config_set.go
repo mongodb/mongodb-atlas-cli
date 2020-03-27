@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/spf13/cobra"
 )
@@ -43,7 +44,7 @@ func ConfigSetBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "set [prop] [val]",
-		Short: "Configure the tool.",
+		Short: description.SetConfig,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))

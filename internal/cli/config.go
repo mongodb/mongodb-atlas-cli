@@ -17,6 +17,7 @@ package cli
 import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validators"
@@ -112,7 +113,7 @@ func ConfigBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: "Configure the tool.",
+		Short: description.ConfigDescription,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

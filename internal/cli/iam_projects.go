@@ -15,14 +15,15 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func IAMProjectsBuilder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "projects",
-		Short:   "Project operations.",
-		Long:    "Create, list and manage your MongoDB projects.",
+		Short:   description.Projects,
+		Long:    description.ProjectsLong,
 		Aliases: []string{"project"},
 	}
 	cmd.AddCommand(IAMProjectsListBuilder())

@@ -20,6 +20,7 @@ import (
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -196,7 +197,7 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:       "start",
-		Short:     "Start a restore job.",
+		Short:     description.StartRestore,
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

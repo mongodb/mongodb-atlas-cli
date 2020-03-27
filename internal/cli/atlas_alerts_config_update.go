@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -62,7 +63,7 @@ func AtlasAlertsConfigUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "update",
-		Short:   "Update an alert configuration for a project.",
+		Short:   description.UpdateAlertsConfig,
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

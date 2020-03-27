@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func OpsManagerOwnerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "owner",
-		Short: "Manage Ops Manager owners.",
+		Short: description.Owner,
 	}
 
 	cmd.AddCommand(OpsManagerOwnerCreateBuilder())

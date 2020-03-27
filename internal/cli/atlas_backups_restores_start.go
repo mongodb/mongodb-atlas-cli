@@ -20,6 +20,7 @@ import (
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -189,14 +190,14 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flags.ClusterID)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) start [AUTOMATED_RESTORE|HTTP]
+// mongocli atlas backup(s) restore(s) job(s) start
 func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 	opts := &atlasBackupsRestoresStartOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start [%s|%s]", automatedRestore, httpRestore),
-		Short:     "Start a restore job.",
+		Short:     description.StartRestore,
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

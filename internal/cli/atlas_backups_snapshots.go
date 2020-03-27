@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func AtlasBackupsSnapshotsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "snapshots",
 		Aliases: []string{"snapshot"},
-		Short:   "Manage continuous snapshots for your project.",
+		Short:   description.Snapshots,
 	}
 
 	cmd.AddCommand(AtlasBackupsSnapshotsListBuilder())

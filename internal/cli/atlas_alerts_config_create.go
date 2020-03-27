@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -74,7 +75,7 @@ func AtlasAlertsConfigCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an alert configuration for a project.",
+		Short: description.CreateAlertsConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

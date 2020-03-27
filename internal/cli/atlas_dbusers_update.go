@@ -17,6 +17,7 @@ package cli
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -73,7 +74,7 @@ func AtlasDBUsersUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "update [username]",
-		Short:   "Update a MongoDB dbuser in Atlas.",
+		Short:   description.UpdateDBUser,
 		Example: `mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

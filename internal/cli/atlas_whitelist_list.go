@@ -15,6 +15,7 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -64,7 +65,7 @@ func AtlasWhitelistListBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Atlas whitelist for a project.",
+		Short:   description.ListWhitelist,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

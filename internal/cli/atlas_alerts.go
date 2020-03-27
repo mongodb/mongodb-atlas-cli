@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func AtlasAlertsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "alerts",
 		Aliases: []string{"alert"},
-		Short:   "Manage alerts for your project.",
+		Short:   description.Alerts,
 	}
 
 	cmd.AddCommand(AtlasAlertsConfigBuilder())

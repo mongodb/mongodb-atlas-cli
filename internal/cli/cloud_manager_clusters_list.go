@@ -18,6 +18,7 @@ import (
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -69,7 +70,7 @@ func CloudManagerClustersListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "List Cloud Manager clusters.",
+		Short:   description.ListClusters,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

@@ -18,6 +18,7 @@ import (
 	"time"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -77,7 +78,7 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "acknowledge [alertId]",
-		Short:   "Acknowledge an Atlas Alert.",
+		Short:   description.AcknowledgeAlerts,
 		Aliases: []string{"ack", "unacknowledge", "unack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

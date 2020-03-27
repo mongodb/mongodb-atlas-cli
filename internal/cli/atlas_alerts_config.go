@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,13 +23,13 @@ func AtlasAlertsConfigBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "configs",
 		Aliases: []string{"config"},
-		Short:   "Manage alerts configuration for your project.",
-		Long:    "The configs command provides access to your alerts configurations. You can create, edit, and delete alert configurations.",
+		Short:   description.Config,
+		Long:    description.ConfigLong,
 	}
 
 	cmd.AddCommand(AtlasAlertsConfigCreateBuilder())
-	cmd.AddCommand(AtlasAlertConfigListBuilder())
-	cmd.AddCommand(AtlasAlertConfigDeleteBuilder())
+	cmd.AddCommand(AtlasAlertsConfigListBuilder())
+	cmd.AddCommand(AtlasAlertsConfigDeleteBuilder())
 	cmd.AddCommand(AtlasAlertConfigsFieldsBuilder())
 	cmd.AddCommand(AtlasAlertsConfigUpdateBuilder())
 

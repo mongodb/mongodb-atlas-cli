@@ -21,6 +21,7 @@ import (
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/store"
@@ -96,7 +97,7 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "create",
-		Short:   "Create a database user for a project.",
+		Short:   description.CreateDBUser,
 		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanism SCRAM-SHA-256 --projectId <>`,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

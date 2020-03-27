@@ -14,6 +14,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -55,7 +56,7 @@ func OpsManagerAgentsListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
-		Short:   "List all available servers running an automation agent for the given project.",
+		Short:   description.ListServer,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

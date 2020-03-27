@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -52,7 +53,7 @@ func AtlasWhitelistDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [entry]",
-		Short:   "Delete a database user for a project.",
+		Short:   description.DeleteWhitelist,
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

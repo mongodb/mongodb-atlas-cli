@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func AtlasBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "atlas",
-		Short: "Atlas operations.",
+		Short: description.Atlas,
 	}
 	cmd.AddCommand(AtlasClustersBuilder())
 	cmd.AddCommand(AtlasDBUsersBuilder())

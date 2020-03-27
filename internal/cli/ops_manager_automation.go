@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func OpsManagerAutomationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "automation",
-		Short: "Manage Ops Manager automation config.",
+		Short: description.Automation,
 	}
 
 	cmd.AddCommand(OpsManagerAutomationStatusBuilder())

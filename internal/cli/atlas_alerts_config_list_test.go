@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasAlertConfigList_Run(t *testing.T) {
+func TestAtlasAlertsConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
@@ -30,7 +30,7 @@ func TestAtlasAlertConfigList_Run(t *testing.T) {
 
 	expected := fixtures.AlertConfigs()
 
-	listOpts := &atlasAlertConfigListOpts{
+	listOpts := &atlasAlertsConfigListOpts{
 		globalOpts: newGlobalOpts(),
 		store:      mockStore,
 	}

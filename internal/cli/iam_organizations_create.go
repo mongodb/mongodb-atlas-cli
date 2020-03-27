@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
@@ -46,7 +47,7 @@ func IAMOrganizationsCreateBuilder() *cobra.Command {
 	opts := new(iamOrganizationsCreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: "Create an organization.",
+		Short: description.CreateOrganization,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

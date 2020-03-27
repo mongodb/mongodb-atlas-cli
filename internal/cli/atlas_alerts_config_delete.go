@@ -15,19 +15,20 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertConfigDeleteOpts struct {
+type atlasAlertsConfigDeleteOpts struct {
 	*globalOpts
 	*deleteOpts
 	store store.AlertConfigurationDeleter
 }
 
-func (opts *atlasAlertConfigDeleteOpts) init() error {
+func (opts *atlasAlertsConfigDeleteOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -37,13 +38,13 @@ func (opts *atlasAlertConfigDeleteOpts) init() error {
 	return err
 }
 
-func (opts *atlasAlertConfigDeleteOpts) Run() error {
+func (opts *atlasAlertsConfigDeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteAlertConfiguration, opts.ProjectID())
 }
 
 // mongocli atlas alerts config(s) delete id --projectId projectId [--confirm]
-func AtlasAlertConfigDeleteBuilder() *cobra.Command {
-	opts := &atlasAlertConfigDeleteOpts{
+func AtlasAlertsConfigDeleteBuilder() *cobra.Command {
+	opts := &atlasAlertsConfigDeleteOpts{
 		globalOpts: newGlobalOpts(),
 		deleteOpts: &deleteOpts{
 			successMessage: "Alert config '%s' deleted\n",
@@ -52,7 +53,7 @@ func AtlasAlertConfigDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [id]",
-		Short:   "Delete an alert config.",
+		Short:   description.DeleteAlertsConfig,
 		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

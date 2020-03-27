@@ -15,13 +15,14 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func AtlasWhitelistBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "whitelist",
-		Short: "Manage the IP whitelist for a project.",
+		Short: description.Whitelist,
 	}
 	cmd.AddCommand(AtlasWhitelistDescribeBuilder())
 	cmd.AddCommand(AtlasWhitelistListBuilder())

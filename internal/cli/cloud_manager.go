@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ func CloudManagerBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "cloud-manager",
 		Aliases: []string{"cm"},
-		Short:   "Cloud Manager operations.",
+		Short:   description.CloudManager,
 	}
 
 	cmd.AddCommand(CloudManagerClustersBuilder())

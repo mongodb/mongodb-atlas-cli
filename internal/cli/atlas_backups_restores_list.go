@@ -16,6 +16,7 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -67,7 +68,7 @@ func AtlasBackupsRestoresListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list [clusterName|clusterId]",
 		Aliases: []string{"ls"},
-		Short:   "Start a restore job.",
+		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

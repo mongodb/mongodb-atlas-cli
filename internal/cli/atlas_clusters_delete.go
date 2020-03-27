@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -52,7 +53,7 @@ func AtlasClustersDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [name]",
-		Short:   "Delete an Atlas cluster.",
+		Short:   description.DeleteCluster,
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

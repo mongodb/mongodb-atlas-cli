@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -54,7 +55,7 @@ func AtlasDBUsersDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete [username]",
-		Short:   "Delete a database user for a project.",
+		Short:   description.DeleteDBUser,
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

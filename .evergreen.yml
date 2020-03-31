@@ -130,4 +130,3 @@ buildvariants:
     tasks:
       - name: compile
       - name: package
-      - name: publish

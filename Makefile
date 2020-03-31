@@ -90,7 +90,7 @@ gen-notices: ## Generate 3rd party notices
 .PHONY: package
 package: ## Use goreleaser to generate builds
 	@echo "==> Packaging"
-	goreleaser --skip-publish --rm-dist --snapshot
+	goreleaser --rm-dist --snapshot
 
 .PHONY: release
 release: gen-notices ## Use goreleaser to generate builds and publish

@@ -31,6 +31,20 @@ functions:
           WORKDIR: ${workdir}
           <<: *go_options
         command: make build
+  "set up notary client credentials":
+    - command: shell.exec
+      params:
+        working_dir: mongocli
+        silent: true
+        script: |
+          set -o errexit
+          cat <<EOF > notary_env.sh
+          export NOTARY_TOKEN=${signing_auth_token}
+          export BARQUE_USERNAME=${barque_user}
+          export BARQUE_PASSWORD=${barque_password}
+          EOF
+
+          echo "${signing_auth_token}" > signing_auth_token
   "gen-notices":
     - command: shell.exec
       type: setup
@@ -77,11 +91,43 @@ tasks:
       - func: "gen-notices"
       - func: "fetch goreleaser"
       - func: "package"
+      - command: shell.exec
+        params:
+          working_dir: mongocli/dist
+          script: |
+            set -o errexit
+            set -o verbose
+
+            # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
+            mv mongocli_next_linux_i386.deb mongocli_next_${revision}_${version_id}_${created_at}_linux_i386.deb
+            mv mongocli_next_linux_i386.rpm mongocli_next_${revision}_${version_id}_${created_at}_linux_i386.rpm
+            mv mongocli_next_linux_i386.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_linux_i386.tar.gz
+            mv mongocli_next_linux_x86_64.deb mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.deb
+            mv mongocli_next_linux_x86_64.rpm mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
+            mv mongocli_next_linux_x86_64.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.tar.gz
+            mv mongocli_next_macOS_x86_64.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_macOS_x86_64.tar.gz
+            mv mongocli_next_windows_i386.zip mongocli_next_${revision}_${version_id}_${created_at}_windows_i386.zip
+            mv mongocli_next_windows_x86_64.zip mongocli_next_${revision}_${version_id}_${created_at}_windows_x86_64.zip
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_files_include_filter:
+            - mongocli/dist/*.tgz
+            - mongocli/dist/*.zip
+            - mongocli/dist/*.deb
+            - mongocli/dist/*.rpm
+          remote_file: ${project}/${revision}/dist/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+
 buildvariants:
-  - name: redhat
-    display_name: RHEL7 Test
+  - name: publish
+    display_name: Building & Publishing
     run_on:
       - rhel70-small
     tasks:
       - name: compile
       - name: package
+      - name: publish

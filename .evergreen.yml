@@ -43,7 +43,6 @@ functions:
           export BARQUE_USERNAME=${barque_user}
           export BARQUE_PASSWORD=${barque_password}
           EOF
-
           echo "${signing_auth_token}" > signing_auth_token
   "gen-notices":
     - command: shell.exec
@@ -105,7 +104,7 @@ tasks:
             mv mongocli_next_linux_x86_64.deb mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.deb
             mv mongocli_next_linux_x86_64.rpm mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
             mv mongocli_next_linux_x86_64.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.tar.gz
-            mv mongocli_next_macOS_x86_64.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_macOS_x86_64.tar.gz
+            mv mongocli_next_macos_x86_64.tar.gz mongocli_next_${revision}_${version_id}_${created_at}_macOS_x86_64.tar.gz
             mv mongocli_next_windows_i386.zip mongocli_next_${revision}_${version_id}_${created_at}_windows_i386.zip
             mv mongocli_next_windows_x86_64.zip mongocli_next_${revision}_${version_id}_${created_at}_windows_x86_64.zip
       - command: s3.put
@@ -123,10 +122,6 @@ tasks:
           content_type: ${content_type|application/x-gzip}
 
   - name: publish
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
     depends_on:
       - name: compile
       - name: package
@@ -137,10 +132,10 @@ tasks:
         params:
           working_dir: mongocli
           script: |
+            . ./notary_env.sh
+
             set -o errexit
             set -o verbose
-
-            . ./notary_env.sh
 
             CURATOR_RELEASE=${curator_release|"latest"}
             curl -L -O http://boxes.10gen.com/build/curator/curator-dist-rhel70-$CURATOR_RELEASE.tar.gz

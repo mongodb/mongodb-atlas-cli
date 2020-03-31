@@ -122,6 +122,49 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
 
+  - name: publish
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - command: shell.exec
+        params:
+          working_dir: mongocli
+          script: |
+            set -o errexit
+            set -o verbose
+
+            . ./notary_env.sh
+
+            CURATOR_RELEASE=${curator_release|"latest"}
+            curl -L -O http://boxes.10gen.com/build/curator/curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
+            tar -zxvf curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
+
+            VERSION=$(git describe --always --tags)
+
+            ./curator repo submit \
+              --service ${barque_url} \
+              --config .repo_config.yml \
+              --distro rhel70 \
+              --edition org \
+              --version $VERSION \
+              --arch x86_64 \
+              --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
+
+            ./curator repo submit \
+              --service ${barque_url} \
+              --config .repo_config.yml \
+              --distro rhel70 \
+              --edition enterprise \
+              --version $VERSION \
+              --arch x86_64 \
+              --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
 buildvariants:
   - name: publish
     display_name: Building & Publishing
@@ -130,3 +173,4 @@ buildvariants:
     tasks:
       - name: compile
       - name: package
+      - name: publish

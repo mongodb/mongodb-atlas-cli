@@ -83,7 +83,7 @@ func (opts *atlasEventsListOpts) newEventListOptions() *atlas.EventListOptions {
 	}
 }
 
-// mongocli atlas event(s) list [--projectId projectId] [--source source][--type type] [--page N] [--limit N]
+// mongocli atlas event(s) list [--projectId projectId] [--source source][--type type] [--page N] [--limit N] [--mindate minDate] [--maxDate maxDate]
 func AtlasEventsListBuilder() *cobra.Command {
 	opts := &atlasEventsListOpts{
 		globalOpts: newGlobalOpts(),

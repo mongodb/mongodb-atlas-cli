@@ -122,14 +122,15 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
 
-  - name: publish
+  - name: push
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
     patchable: false
     stepback: false
+    tags: ["push"]
     depends_on:
-      - name: compile
       - name: package
+        variant: package
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -152,26 +153,76 @@ tasks:
             ./curator repo submit \
               --service ${barque_url} \
               --config .repo_config.yml \
-              --distro rhel70 \
-              --edition org \
+              --distro ${distro} \
+              --edition ${edition} \
               --version $VERSION \
               --arch x86_64 \
               --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
 
-            ./curator repo submit \
-              --service ${barque_url} \
-              --config .repo_config.yml \
-              --distro rhel70 \
-              --edition enterprise \
-              --version $VERSION \
-              --arch x86_64 \
-              --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
 buildvariants:
-  - name: publish
-    display_name: Building & Publishing
+  - name: package
+    display_name: Packaging
     run_on:
       - rhel70-small
     tasks:
       - name: compile
       - name: package
-      - name: publish
+  # Redhat buildvariants
+  - name: push_rhel70_enterprise
+    display_name: Pushing (rhel70 - enterprise)
+    run_on:
+      - rhel70-small
+    expansions:
+      edition: enterprise
+      distro: rhel70
+    tasks:
+      - name: .push
+  - name: push_rhel70_org
+    display_name: Pushing (rhel70 - org)
+    batchtime: 10
+    run_on:
+      - rhel70-small
+    expansions:
+      edition: org
+      distro: rhel70
+    tasks:
+      - name: .push
+  - name: push_rhel80_enterprise
+    display_name: Pushing (rhel80 - enterprise)
+    run_on:
+      - rhel80-small
+    expansions:
+      edition: enterprise
+      distro: rhel80
+    tasks:
+      - name: .push
+  - name: push_rhel80_org
+    display_name: Pushing (rhel80 - org)
+    batchtime: 10
+    run_on:
+      - rhel80-small
+    expansions:
+      edition: org
+      distro: rhel80
+    tasks:
+      - name: .push
+  - name: push_amazon2_enterprise
+    display_name: Pushing (amazon2 - enterprise)
+    run_on:
+      - amazon2-small
+    expansions:
+      edition: enterprise
+      distro: amazon2
+    tasks:
+      - name: .push
+  - name: push_amazon2_org
+    display_name: Pushing (amazon2 - org)
+    batchtime: 10
+    run_on:
+      - amazon2-small
+    expansions:
+      edition: org
+      distro: amazon2
+    tasks:
+      - name: .push
+

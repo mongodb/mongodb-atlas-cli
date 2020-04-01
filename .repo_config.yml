@@ -66,31 +66,7 @@ repos:
   #
   ####################
 
-  - name: rhel62
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/6/mongodb-org
-      - yum/redhat/6Server/mongodb-org
-
-  - name: rhel67
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/6/mongodb-org
-      - yum/redhat/6Server/mongodb-org
-
   - name: rhel70
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/7/mongodb-org
-      - yum/redhat/7Server/mongodb-org
-
-  - name: rhel72
     type: rpm
     edition: org
     bucket: repo.mongodb.org
@@ -106,26 +82,12 @@ repos:
       - yum/redhat/8/mongodb-org
       - yum/redhat/8Server/mongodb-org
 
-  - name: amazon
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/amazon/2013.03/mongodb-org
-
   - name: amazon2
     type: rpm
     edition: org
     bucket: repo.mongodb.org
     repos:
       - yum/amazon/2/mongodb-org
-
-  - name: suse11
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - zypper/suse/11/mongodb-org
 
   - name: suse12
     type: rpm
@@ -187,30 +149,6 @@ repos:
     repos:
       - apt/debian/dists/wheezy/mongodb-org
 
-  - name: ubuntu1204
-    type: deb
-    code_name: "precise"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/ubuntu/dists/precise/mongodb-org
-
-  - name: ubuntu1404
-    type: deb
-    code_name: "trusty"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-    repos:
-      - apt/ubuntu/dists/trusty/mongodb-org
-
   - name: ubuntu1604
     type: deb
     code_name: "xenial"
@@ -243,14 +181,6 @@ repos:
   # Enterprise Repos:
   #
   ####################
-
-  - name: rhel62
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/6/mongodb-enterprise
-      - yum/redhat/6Server/mongodb-enterprise
 
   - name: rhel67
     type: rpm
@@ -292,26 +222,12 @@ repos:
       - yum/redhat/8/mongodb-enterprise
       - yum/redhat/8Server/mongodb-enterprise
 
-  - name: amazon
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/amazon/2013.03/mongodb-enterprise
-
   - name: amazon2
     type: rpm
     edition: enterprise
     bucket: repo.mongodb.com
     repos:
       - yum/amazon/2/mongodb-enterprise
-
-  - name: suse11
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - zypper/suse/11/mongodb-enterprise
 
   - name: suse12
     type: rpm
@@ -376,34 +292,6 @@ repos:
       - i386
     repos:
       - apt/debian/dists/wheezy/mongodb-enterprise
-
-  - name: ubuntu1204
-    type: deb
-    code_name: "precise"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/ubuntu/dists/precise/mongodb-enterprise
-
-  - name: ubuntu1404
-    type: deb
-    code_name: "trusty"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - i386
-    repos:
-      - apt/ubuntu/dists/trusty/mongodb-enterprise
 
   - name: ubuntu1604
     type: deb

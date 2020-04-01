@@ -17,7 +17,7 @@ package flags
 const (
 	Service                         = "service"                         // Service flag to set service
 	Profile                         = "profile"                         // Profile flag to use a profile
-	ProfileShort                    = "p"                               // ProfileShort flag to use a profile
+	ProfileShort                    = "P"                               // ProfileShort flag to use a profile
 	OrgID                           = "orgId"                           // OrgID flag to use an Organization ID
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
 	AuthDB                          = "authDB"                          // AuthDB flag
@@ -31,7 +31,9 @@ const (
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag
 	Username                        = "username"                        // Username flag
+	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
+	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag
 	Status                          = "status"                          // Status flag
 	FirstName                       = "firstName"                       // FirstName flag

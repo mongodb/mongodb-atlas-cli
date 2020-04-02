@@ -25,7 +25,6 @@ const (
 	MDBVersion                      = "MongoDB version of the cluster to deploy."
 	AuthDB                          = "Authentication database name."
 	Page                            = "Page number."
-	Source                          = "The source where listing events."
 	Status                          = "Alert's status."
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."

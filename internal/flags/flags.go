@@ -33,9 +33,13 @@ const (
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
+	Period							= "period"							// Period flag
 	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag
 	Status                          = "status"                          // Status flag
+	Start							= "start"							// Start flag
+	End								= "end"								// End flag
+	MeasurementType					= "type"							// MeasurementType flag
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
@@ -89,4 +93,7 @@ const (
 	Expires                         = "expires"                         // Expires flag
 	MaxDownloads                    = "maxDownloads"                    // MaxDownloads flag
 	ExpirationHours                 = "expirationHours"                 // ExpirationHours
+	Granularity						= "granularity"						// Granularity flag
+
+
 )

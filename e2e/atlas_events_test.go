@@ -46,7 +46,6 @@ func TestAtlasEvents(t *testing.T) {
 			eventsEntity,
 			"list",
 			"--projectId=5e429f2e06822c6eac4d59c9",
-			"--source=project",
 		)
 
 		cmd.Env = os.Environ()
@@ -75,8 +74,7 @@ func TestAtlasEvents(t *testing.T) {
 			atlasEntity,
 			eventsEntity,
 			"list",
-			"--projectId=5e429e7706822c6eac4d5970",
-			"--source=organization",
+			"--orgId=5e429e7706822c6eac4d5970",
 			"--minDate=2020-04-01",
 		)
 

@@ -88,5 +88,7 @@ const (
 	PointInTimeUTCMillis            = "pointInTimeUTCMillis"            // PointInTimeUTCMillis flag
 	Expires                         = "expires"                         // Expires flag
 	MaxDownloads                    = "maxDownloads"                    // MaxDownloads flag
-	ExpirationHours                 = "expirationHours"                 // ExpirationHours
+	ExpirationHours                 = "expirationHours"                 // ExpirationHours flag
+	MaxDate                         = "maxDate"                         // MaxDate flag
+	MinDate                         = "minDate"                         // MinDate flag
 )

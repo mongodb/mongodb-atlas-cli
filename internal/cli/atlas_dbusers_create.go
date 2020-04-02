@@ -104,8 +104,8 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flags.Username, "", usage.Username)
-	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
+	cmd.Flags().StringVarP(&opts.username, flags.Username, flags.UsernameShort, "", usage.Username)
+	cmd.Flags().StringVarP(&opts.password, flags.Password, flags.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
 	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 

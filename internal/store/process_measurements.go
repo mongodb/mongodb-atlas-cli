@@ -19,7 +19,6 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-
 	"github.com/mongodb/mongocli/internal/config"
 )
 

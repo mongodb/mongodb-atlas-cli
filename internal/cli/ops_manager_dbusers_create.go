@@ -98,7 +98,7 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   description.CreateDBUser,
-		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanism SCRAM-SHA-256 --projectId <>`,
+		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <>`,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

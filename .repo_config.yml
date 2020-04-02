@@ -10,7 +10,7 @@ templates:
       Codename: {{ .CodeName }}/mongodb-org
       Architectures: {{ .Architectures }}
       Components: {{ .Component }}
-      Description: MongoDB packages
+      Description: MongoDB CLI packages
     enterprise: |
       Origin: mongodb
       Label: mongodb
@@ -18,7 +18,7 @@ templates:
       Codename: {{ .CodeName }}/mongodb-enterprise
       Architectures: {{ .Architectures }}
       Components: {{ .Component }}
-      Description: MongoDB packages
+      Description: MongoDB CLI packages
   index_page: |
     <!DOCTYPE html>
     <html>

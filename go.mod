@@ -12,7 +12,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mongodb/go-client-mongodb-atlas v0.1.4-0.20200402143647-b2e23a196304
-	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200325183336-61ab48668700
+	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200402144858-5160c11d086a
 	github.com/mwielbut/pointy v1.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2

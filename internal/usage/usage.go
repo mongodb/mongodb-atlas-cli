@@ -41,6 +41,8 @@ const (
 	MeasurementType					= "Measurements to return. If it is not specified, all measurements are returned."
 	FirstName                       = "User’s first name."
 	LastName                        = "User’s last name."
+	MaxDate                         = "Returns events whose created date is less than or equal to it."
+	MinDate                         = "Returns events whose created date is greater than or equal to it."
 	Filename                        = "Filename to use"
 	WhitelistIps                    = "IP addresses to add to the new user’s whitelist."
 	Event                           = "Type of event that will trigger an alert."

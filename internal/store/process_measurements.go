@@ -17,29 +17,27 @@ package store
 import (
 	"context"
 	"fmt"
+
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-
 type ProcessMeasurementLister interface {
 	ListProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
-
-type MeasurementStore interface {
+type ProcessMeasurementStore interface {
 	ProcessMeasurementLister
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers
-func (s *Store) ListProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (interface{}, error) {
+func (s *Store) ListProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port,opts)
+		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
-

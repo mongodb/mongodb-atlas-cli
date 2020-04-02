@@ -15,8 +15,11 @@
 package cli
 
 import (
+	"errors"
+	"strconv"
+	"strings"
+
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -27,15 +30,20 @@ import (
 
 type atlasMeasurementsProcessOpts struct {
 	*globalOpts
-	pageNum      int
-	itemsPerPage int
+	pageNum         int
+	itemsPerPage    int
 	host            string
 	granularity     string
 	period          string
 	start           string
 	end             string
 	measurementType string
-	store           store.DatabaseUserUpdater
+	store           store.ProcessMeasurementLister
+}
+
+type hostInfo struct {
+	hostName string
+	port     int
 }
 
 func (opts *atlasMeasurementsProcessOpts) init() error {
@@ -50,13 +58,37 @@ func (opts *atlasMeasurementsProcessOpts) init() error {
 
 func (opts *atlasMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.AlertConfigurations(opts.ProjectID(), listOpts)
+
+	hostInfo, err := opts.newHostInfo()
+	if err != nil {
+		return err
+	}
+
+	result, err := opts.store.ListProcessMeasurements(opts.ProjectID(), hostInfo.hostName, hostInfo.port, listOpts)
 
 	if err != nil {
 		return err
 	}
 
 	return json.PrettyPrint(result)
+}
+
+func (opts *atlasMeasurementsProcessOpts) newHostInfo() (*hostInfo, error) {
+	host := strings.SplitN(opts.host, ":", -1)
+	if len(host) != 2 {
+		return nil, errors.New("the host information must be in the format host:port")
+	}
+
+	port, err := strconv.Atoi(host[1])
+	if err != nil {
+		return nil, err
+	}
+
+	hostInfo := &hostInfo{
+		hostName: host[0],
+		port:     port,
+	}
+	return hostInfo, nil
 }
 
 func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
@@ -92,7 +124,7 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.period, flags.Period,"", usage.Period)
+	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.Start)
 	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.End)
 	cmd.Flags().StringVar(&opts.measurementType, flags.MeasurementType, "", usage.MeasurementType)

@@ -88,5 +88,5 @@ A user’s roles apply to all the clusters in the project.`
 	Security             = "Manage clusters security configuration."
 	EnableSecurity       = "Enable authentication mechanisms for the project."
 	Events               = "Manage events for your project."
-	Measurements		 = "Get measurements on the state of the MongoDB process."
+	Measurements         = "Get measurements on the state of the MongoDB process."
 )

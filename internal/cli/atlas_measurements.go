@@ -21,8 +21,8 @@ import (
 
 func AtlasMeasurementsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "measurements",
-		Short:   description.Measurements,
+		Use:   "measurements",
+		Short: description.Measurements,
 	}
 
 	cmd.AddCommand(AtlasMeasurementsProcessBuilder())

@@ -98,7 +98,7 @@ func AtlasEventsListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.eventType, flags.Type, "", usage.Event)
 	cmd.Flags().StringVar(&opts.maxDate, flags.MaxDate, "", usage.MaxDate)
-	cmd.Flags().StringVar(&opts.minDate, flags.MinDate, "", usage.MaxDate)
+	cmd.Flags().StringVar(&opts.minDate, flags.MinDate, "", usage.MinDate)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)

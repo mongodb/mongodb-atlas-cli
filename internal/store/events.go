@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
@@ -41,16 +42,22 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.ListOptions) (*atlas
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
 		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers
-func (s *Store) OrganizationEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
+func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

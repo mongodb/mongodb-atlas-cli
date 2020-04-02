@@ -15,7 +15,6 @@ package cli
 
 import (
 	"errors"
-	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
@@ -30,7 +29,6 @@ type atlasEventsListOpts struct {
 	*globalOpts
 	pageNum      int
 	itemsPerPage int
-	source       string
 	eventType    string
 	minDate      string
 	maxDate      string
@@ -38,10 +36,6 @@ type atlasEventsListOpts struct {
 }
 
 func (opts *atlasEventsListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -53,14 +47,12 @@ func (opts *atlasEventsListOpts) Run() error {
 	var result *atlas.EventResponse
 	var err error
 
-	source := strings.ToLower(opts.source)
-	switch source {
-	case "organization":
-		result, err = opts.store.OrganizationEvents(opts.projectID, listOpts)
-	case "project":
+	if opts.orgID != "" {
+		result, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+	} else if opts.projectID != "" {
 		result, err = opts.store.ProjectEvents(opts.projectID, &listOpts.ListOptions)
-	default:
-		return errors.New("--source must be project or organization")
+	} else {
+		return errors.New("--projectID or --orgID must be set")
 	}
 
 	if err != nil {
@@ -103,12 +95,13 @@ func AtlasEventsListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-	cmd.Flags().StringVar(&opts.source, flags.Source, "organization", usage.Source)
+
 	cmd.Flags().StringVar(&opts.eventType, flags.Type, "", usage.Event)
 	cmd.Flags().StringVar(&opts.maxDate, flags.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.minDate, flags.MinDate, "", usage.MaxDate)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
 
 	return cmd
 }

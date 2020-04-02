@@ -18,12 +18,12 @@ func TestAtlasOrganizationEventsList_Run(t *testing.T) {
 
 	listOpts := &atlasEventsListOpts{
 		globalOpts: newGlobalOpts(),
-		source:     "organization",
 		store:      mockStore,
 	}
+	listOpts.orgID = "1"
 
 	mockStore.
-		EXPECT().OrganizationEvents(listOpts.projectID, listOpts.newEventListOptions()).
+		EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -43,10 +43,10 @@ func TestAtlasProjectEventsList_Run(t *testing.T) {
 
 	listOpts := &atlasEventsListOpts{
 		globalOpts: newGlobalOpts(),
-		source:     "project",
 		store:      mockStore,
 	}
 
+	listOpts.projectID = "1"
 	mockStore.
 		EXPECT().ProjectEvents(listOpts.projectID, &listOpts.newEventListOptions().ListOptions).
 		Return(expected, nil).

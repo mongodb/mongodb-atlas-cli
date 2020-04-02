@@ -19,7 +19,10 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+<<<<<<< HEAD
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+=======
+>>>>>>> origin/master
 	"github.com/mongodb/mongocli/internal/config"
 )
 

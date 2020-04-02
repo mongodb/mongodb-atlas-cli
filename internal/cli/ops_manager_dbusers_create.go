@@ -98,7 +98,7 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   description.CreateDBUser,
-		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanism SCRAM-SHA-256 --projectId <>`,
+		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <>`,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
@@ -111,8 +111,8 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flags.Username, "", usage.Username)
-	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
+	cmd.Flags().StringVarP(&opts.username, flags.Username, flags.UsernameShort, "", usage.Username)
+	cmd.Flags().StringVarP(&opts.password, flags.Password, flags.PasswordShort, "", usage.Password)
 	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
 	cmd.Flags().StringSliceVar(&opts.mechanisms, flags.Mechanisms, []string{scransha1}, usage.Mechanisms)

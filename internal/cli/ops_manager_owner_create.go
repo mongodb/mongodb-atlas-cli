@@ -92,7 +92,7 @@ func OpsManagerOwnerCreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.email, flags.Email, "", usage.Email)
-	cmd.Flags().StringVar(&opts.password, flags.Password, "", usage.Password)
+	cmd.Flags().StringVarP(&opts.password, flags.Password, flags.PasswordShort, "", usage.Password)
 	cmd.Flags().StringVar(&opts.firstName, flags.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flags.LastName, "", usage.LastName)
 	cmd.Flags().StringSliceVar(&opts.whitelistIps, flags.WhitelistIP, []string{}, usage.WhitelistIps)

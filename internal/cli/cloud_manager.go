@@ -31,7 +31,8 @@ func CloudManagerBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasBackupsBuilder())
 	cmd.AddCommand(OpsManagerServersBuilder())
 	cmd.AddCommand(OpsManagerAutomationBuilder())
-	cmd.AddCommand(OpsManagerDBUsersCreateBuilder())
+	cmd.AddCommand(OpsManagerSecurityBuilder())
+	cmd.AddCommand(OpsManagerDBUsersBuilder())
 
 	return cmd
 }

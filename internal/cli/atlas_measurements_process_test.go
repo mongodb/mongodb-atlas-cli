@@ -38,7 +38,7 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	hostName, port, err := listOpts.getHostNameAndPort("hard-00-00.mongodb.net:27017")
+	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -15,10 +15,6 @@
 package cli
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -63,20 +59,6 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasMeasurementsProcessOpts) getHostNameAndPort(hostInfo string) (string, int, error) {
-	host := strings.SplitN(hostInfo, ":", -1)
-	if len(host) != 2 {
-		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
-	}
-
-	port, err := strconv.Atoi(host[1])
-	if err != nil {
-		return "", 0, err
-	}
-
-	return host[0], port, nil
-}
-
 func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
 	return &atlas.ProcessMeasurementListOptions{
 		ListOptions: &atlas.ListOptions{
@@ -97,15 +79,16 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
-		Use:   "process",
-		Short: description.ProcessMeasurements,
-		Args:  cobra.ExactArgs(1),
+		Use:     "process",
+		Short:   description.ProcessMeasurements,
+		Aliases: []string{"processes"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			opts.host, opts.port, err = opts.getHostNameAndPort(args[0])
+			opts.host, opts.port, err = GetHostNameAndPort(args[0])
 			if err != nil {
 				return err
 			}

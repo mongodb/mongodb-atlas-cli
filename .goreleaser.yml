@@ -77,3 +77,17 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+    
+snapcrafts:
+  -
+    replacements:
+      386: i386
+      amd64: x86_64
+    summary: The MongoDB Command Line Interface
+    description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+    grade: stable
+    confinement: devmode
+    license: Apache-2.0
+    base: core18
+    apps:
+      mongocli:

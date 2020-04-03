@@ -15,7 +15,7 @@
 package cli
 
 import (
-	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -33,17 +33,13 @@ type atlasMeasurementsProcessOpts struct {
 	pageNum         int
 	itemsPerPage    int
 	host            string
+	port            int
 	granularity     string
 	period          string
 	start           string
 	end             string
 	measurementType string
 	store           store.ProcessMeasurementLister
-}
-
-type hostInfo struct {
-	hostName string
-	port     int
 }
 
 func (opts *atlasMeasurementsProcessOpts) init() error {
@@ -58,13 +54,7 @@ func (opts *atlasMeasurementsProcessOpts) init() error {
 
 func (opts *atlasMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-
-	hostInfo, err := opts.newHostInfo()
-	if err != nil {
-		return err
-	}
-
-	result, err := opts.store.ListProcessMeasurements(opts.ProjectID(), hostInfo.hostName, hostInfo.port, listOpts)
+	result, err := opts.store.ListProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
 
 	if err != nil {
 		return err
@@ -73,22 +63,18 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasMeasurementsProcessOpts) newHostInfo() (*hostInfo, error) {
-	host := strings.SplitN(opts.host, ":", -1)
+func (opts *atlasMeasurementsProcessOpts) getHostNameAndPort(hostInfo string) (string, int, error) {
+	host := strings.SplitN(hostInfo, ":", -1)
 	if len(host) != 2 {
-		return nil, errors.New("the host information must be in the format host:port")
+		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
 	}
 
 	port, err := strconv.Atoi(host[1])
 	if err != nil {
-		return nil, err
+		return "", 0, err
 	}
 
-	hostInfo := &hostInfo{
-		hostName: host[0],
-		port:     port,
-	}
-	return hostInfo, nil
+	return host[0], port, nil
 }
 
 func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
@@ -118,7 +104,12 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.host = args[0]
+			var err error
+			opts.host, opts.port, err = opts.getHostNameAndPort(args[0])
+			if err != nil {
+				return err
+			}
+
 			return opts.Run()
 		},
 	}

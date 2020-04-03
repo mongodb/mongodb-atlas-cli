@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasMeasurementsProcess_Run(t *testing.T) {
+func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
 
@@ -29,29 +29,21 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 
 	expected := fixtures.ProcessMeasurements()
 
-	port := 27017
-
-	listOpts := &atlasMeasurementsProcessOpts{
+	listOpts := &OpsManagerMeasurementsProcessOpts{
 		globalOpts:  newGlobalOpts(),
-		host:        "hard-00-00.mongodb.net",
-		port:        port,
+		hostID:      "hard-00-00.mongodb.net",
 		granularity: "PT1M",
 		period:      "PT1M",
 		store:       mockStore,
 	}
 
-	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().ListProcessMeasurements(listOpts.projectID, hostName, &port, opts).
+		EXPECT().ListProcessMeasurements(listOpts.projectID, listOpts.hostID, nil, opts).
 		Return(expected, nil).
 		Times(1)
 
-	err = listOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -23,18 +23,16 @@ import (
 
 func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockAtlasProcessMeasurementLister(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := fixtures.ProcessMeasurements()
 
-	port := 27017
-
 	listOpts := &atlasMeasurementsProcessOpts{
 		globalOpts:  newGlobalOpts(),
 		host:        "hard-00-00.mongodb.net",
-		port:        port,
+		port:        27017,
 		granularity: "PT1M",
 		period:      "PT1M",
 		store:       mockStore,
@@ -47,7 +45,7 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().ListProcessMeasurements(listOpts.projectID, hostName, &port, opts).
+		EXPECT().AtlasProcessMeasurements(listOpts.projectID, hostName, port, opts).
 		Return(expected, nil).
 		Times(1)
 

@@ -23,20 +23,28 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-type ProcessMeasurementLister interface {
-	ListProcessMeasurements(string, string, *int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+type AtlasProcessMeasurementLister interface {
+	AtlasProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
-type ProcessMeasurementStore interface {
-	ProcessMeasurementLister
+type OpsManagerProcessMeasurementLister interface {
+	OpsManagerProcessMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
-// GetAllProjects encapsulate the logic to manage different cloud providers
-func (s *Store) ListProcessMeasurements(groupID, host string, port *int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+// AtlasProcessMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) AtlasProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, *port, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port, opts)
 		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OpsManagerProcessMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) OpsManagerProcessMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*om.Client).SystemMeasurements.List(context.Background(), groupID, host, opts)
 		return result, err

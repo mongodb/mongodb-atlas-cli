@@ -35,7 +35,7 @@ type atlasMeasurementsProcessOpts struct {
 	start           string
 	end             string
 	measurementType string
-	store           store.ProcessMeasurementLister
+	store           store.AtlasProcessMeasurementLister
 }
 
 func (opts *atlasMeasurementsProcessOpts) init() error {
@@ -50,7 +50,7 @@ func (opts *atlasMeasurementsProcessOpts) init() error {
 
 func (opts *atlasMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ListProcessMeasurements(opts.ProjectID(), opts.host, &opts.port, listOpts)
+	result, err := opts.store.AtlasProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
 
 	if err != nil {
 		return err

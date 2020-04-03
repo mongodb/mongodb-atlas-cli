@@ -34,7 +34,7 @@ type OpsManagerMeasurementsProcessOpts struct {
 	start           string
 	end             string
 	measurementType string
-	store           store.ProcessMeasurementLister
+	store           store.OpsManagerProcessMeasurementLister
 }
 
 func (opts *OpsManagerMeasurementsProcessOpts) init() error {
@@ -49,7 +49,7 @@ func (opts *OpsManagerMeasurementsProcessOpts) init() error {
 
 func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ListProcessMeasurements(opts.ProjectID(), opts.hostID, nil, listOpts)
+	result, err := opts.store.OpsManagerProcessMeasurements(opts.ProjectID(), opts.hostID, listOpts)
 
 	if err != nil {
 		return err

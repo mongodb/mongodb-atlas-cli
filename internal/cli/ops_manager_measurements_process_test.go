@@ -23,7 +23,7 @@ import (
 
 func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockOpsManagerProcessMeasurementLister(ctrl)
 
 	defer ctrl.Finish()
 
@@ -39,7 +39,7 @@ func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().ListProcessMeasurements(listOpts.projectID, listOpts.hostID, nil, opts).
+		EXPECT().OpsManagerProcessMeasurements(listOpts.projectID, listOpts.hostID, opts).
 		Return(expected, nil).
 		Times(1)
 

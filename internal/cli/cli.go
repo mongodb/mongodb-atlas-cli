@@ -17,6 +17,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -250,4 +251,19 @@ func (opts *atlasAlertsConfigOpts) newMatcher() *atlas.Matcher {
 		Operator:  strings.ToUpper(opts.matcherOperator),
 		Value:     strings.ToUpper(opts.matcherValue),
 	}
+}
+
+// GetHostNameAndPort return the hostname and the port starting from the string hostname:port
+func GetHostNameAndPort(hostInfo string) (string, int, error) {
+	host := strings.SplitN(hostInfo, ":", -1)
+	if len(host) != 2 {
+		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
+	}
+
+	port, err := strconv.Atoi(host[1])
+	if err != nil {
+		return "", 0, fmt.Errorf("invalid port number, got %s", host[1])
+	}
+
+	return host[0], port, nil
 }

@@ -62,7 +62,7 @@ func (opts *opsManagerDBUsersDeleteOpts) Run() error {
 	return nil
 }
 
-// mongocli atlas dbuser(s) delete <username> [--projectId projectId]
+// mongocli atlas dbuser(s) delete <username> [--projectId projectId] [--force]
 func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
 	opts := &opsManagerDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),
@@ -89,6 +89,7 @@ func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

@@ -51,7 +51,9 @@ A user’s roles apply to all the clusters in the project.`
 	CreateDBUser         = "Create a database user for a project."
 	DeleteDBUser         = "Delete a database user for a project."
 	ListDBUsers          = "List Atlas database users for a project."
+	ListEvents           = "List events for an organization or project"
 	UpdateDBUser         = "Update a MongoDB dbuser in Atlas."
+	ProcessMeasurements  = "Get measurements for a given host."
 	Whitelist            = "Manage the IP whitelist for a project."
 	CreateWhitelist      = "Create an IP whitelist for a project."
 	DeleteWhitelist      = "Delete a database user for a project."
@@ -85,4 +87,6 @@ A user’s roles apply to all the clusters in the project.`
 	ListServer           = "List all available servers running an automation agent for the given project."
 	Security             = "Manage clusters security configuration."
 	EnableSecurity       = "Enable authentication mechanisms for the project."
+	Events               = "Manage events for your project."
+	Measurements         = "Get measurements on the state of the MongoDB process."
 )

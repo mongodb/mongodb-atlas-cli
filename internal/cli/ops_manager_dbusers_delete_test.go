@@ -28,7 +28,7 @@ func TestOpsManagerDBUserDelete_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.AutomationConfig()
+	expected := fixtures.AutomationConfigWithMongoDBUsers()
 
 	createOpts := &opsManagerDBUsersDeleteOpts{
 		globalOpts: newGlobalOpts(),
@@ -37,7 +37,7 @@ func TestOpsManagerDBUserDelete_Run(t *testing.T) {
 			entry:          "test",
 			successMessage: "DB user '%s' deleted\n",
 		},
-		authDB: "admin",
+		authDB: "test",
 		store:  mockStore,
 	}
 

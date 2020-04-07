@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -58,7 +59,7 @@ func (opts *opsManagerDBUsersCreateOpts) Run() error {
 		return err
 	}
 
-	convert.AddUser(current, opts.newDBUser())
+	atmcfg.AddUser(current, opts.newDBUser())
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err

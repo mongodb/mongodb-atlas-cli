@@ -256,6 +256,20 @@ repos:
     repos:
       - apt/debian/dists/wheezy/mongodb-enterprise
 
+  - name: ubuntu1404
+    type: deb
+    code_name: "trusty"
+    edition: enterprise
+    bucket: repo.mongodb.com
+    component: multiverse
+    architectures:
+      - amd64
+      - ppc64el
+      - s390x
+      - i386
+    repos:
+      - apt/ubuntu/dists/trusty/mongodb-enterprise
+
   - name: ubuntu1604
     type: deb
     code_name: "xenial"

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/go-client-mongodb-ops-manager/search"
 )
 
 const (

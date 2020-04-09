@@ -10,78 +10,78 @@ import (
 	reflect "reflect"
 )
 
-// MockAtlasProcessMeasurementLister is a mock of AtlasProcessMeasurementLister interface
-type MockAtlasProcessMeasurementLister struct {
+// MockProcessMeasurementLister is a mock of ProcessMeasurementLister interface
+type MockProcessMeasurementLister struct {
 	ctrl     *gomock.Controller
-	recorder *MockAtlasProcessMeasurementListerMockRecorder
+	recorder *MockProcessMeasurementListerMockRecorder
 }
 
-// MockAtlasProcessMeasurementListerMockRecorder is the mock recorder for MockAtlasProcessMeasurementLister
-type MockAtlasProcessMeasurementListerMockRecorder struct {
-	mock *MockAtlasProcessMeasurementLister
+// MockProcessMeasurementListerMockRecorder is the mock recorder for MockProcessMeasurementLister
+type MockProcessMeasurementListerMockRecorder struct {
+	mock *MockProcessMeasurementLister
 }
 
-// NewMockAtlasProcessMeasurementLister creates a new mock instance
-func NewMockAtlasProcessMeasurementLister(ctrl *gomock.Controller) *MockAtlasProcessMeasurementLister {
-	mock := &MockAtlasProcessMeasurementLister{ctrl: ctrl}
-	mock.recorder = &MockAtlasProcessMeasurementListerMockRecorder{mock}
+// NewMockProcessMeasurementLister creates a new mock instance
+func NewMockProcessMeasurementLister(ctrl *gomock.Controller) *MockProcessMeasurementLister {
+	mock := &MockProcessMeasurementLister{ctrl: ctrl}
+	mock.recorder = &MockProcessMeasurementListerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockAtlasProcessMeasurementLister) EXPECT() *MockAtlasProcessMeasurementListerMockRecorder {
+func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMockRecorder {
 	return m.recorder
 }
 
-// AtlasProcessMeasurements mocks base method
-func (m *MockAtlasProcessMeasurementLister) AtlasProcessMeasurements(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+// ProcessMeasurements mocks base method
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AtlasProcessMeasurements", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// AtlasProcessMeasurements indicates an expected call of AtlasProcessMeasurements
-func (mr *MockAtlasProcessMeasurementListerMockRecorder) AtlasProcessMeasurements(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+// ProcessMeasurements indicates an expected call of ProcessMeasurements
+func (mr *MockProcessMeasurementListerMockRecorder) ProcessMeasurements(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasProcessMeasurements", reflect.TypeOf((*MockAtlasProcessMeasurementLister)(nil).AtlasProcessMeasurements), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMeasurements", reflect.TypeOf((*MockProcessMeasurementLister)(nil).ProcessMeasurements), arg0, arg1, arg2, arg3)
 }
 
-// MockOpsManagerProcessMeasurementLister is a mock of OpsManagerProcessMeasurementLister interface
-type MockOpsManagerProcessMeasurementLister struct {
+// MockHostMeasurementLister is a mock of HostMeasurementLister interface
+type MockHostMeasurementLister struct {
 	ctrl     *gomock.Controller
-	recorder *MockOpsManagerProcessMeasurementListerMockRecorder
+	recorder *MockHostMeasurementListerMockRecorder
 }
 
-// MockOpsManagerProcessMeasurementListerMockRecorder is the mock recorder for MockOpsManagerProcessMeasurementLister
-type MockOpsManagerProcessMeasurementListerMockRecorder struct {
-	mock *MockOpsManagerProcessMeasurementLister
+// MockHostMeasurementListerMockRecorder is the mock recorder for MockHostMeasurementLister
+type MockHostMeasurementListerMockRecorder struct {
+	mock *MockHostMeasurementLister
 }
 
-// NewMockOpsManagerProcessMeasurementLister creates a new mock instance
-func NewMockOpsManagerProcessMeasurementLister(ctrl *gomock.Controller) *MockOpsManagerProcessMeasurementLister {
-	mock := &MockOpsManagerProcessMeasurementLister{ctrl: ctrl}
-	mock.recorder = &MockOpsManagerProcessMeasurementListerMockRecorder{mock}
+// NewMockHostMeasurementLister creates a new mock instance
+func NewMockHostMeasurementLister(ctrl *gomock.Controller) *MockHostMeasurementLister {
+	mock := &MockHostMeasurementLister{ctrl: ctrl}
+	mock.recorder = &MockHostMeasurementListerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockOpsManagerProcessMeasurementLister) EXPECT() *MockOpsManagerProcessMeasurementListerMockRecorder {
+func (m *MockHostMeasurementLister) EXPECT() *MockHostMeasurementListerMockRecorder {
 	return m.recorder
 }
 
-// OpsManagerHostMeasurements mocks base method
-func (m *MockOpsManagerProcessMeasurementLister) OpsManagerHostMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+// HostMeasurements mocks base method
+func (m *MockHostMeasurementLister) HostMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OpsManagerHostMeasurements", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "HostMeasurements", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// OpsManagerHostMeasurements indicates an expected call of OpsManagerHostMeasurements
-func (mr *MockOpsManagerProcessMeasurementListerMockRecorder) OpsManagerHostMeasurements(arg0, arg1, arg2 interface{}) *gomock.Call {
+// HostMeasurements indicates an expected call of HostMeasurements
+func (mr *MockHostMeasurementListerMockRecorder) HostMeasurements(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerHostMeasurements", reflect.TypeOf((*MockOpsManagerProcessMeasurementLister)(nil).OpsManagerHostMeasurements), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HostMeasurements", reflect.TypeOf((*MockHostMeasurementLister)(nil).HostMeasurements), arg0, arg1, arg2)
 }

@@ -23,7 +23,7 @@ import (
 
 func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
 
 	defer ctrl.Finish()
 
@@ -45,7 +45,7 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().AtlasProcessMeasurements(listOpts.projectID, hostName, port, opts).
+		EXPECT().ProcessMeasurements(listOpts.projectID, hostName, port, opts).
 		Return(expected, nil).
 		Times(1)
 

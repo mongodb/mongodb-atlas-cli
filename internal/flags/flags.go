@@ -96,4 +96,10 @@ const (
 	MaxDate                         = "maxDate"                         // MaxDate flag
 	MinDate                         = "minDate"                         // MinDate flag
 	Granularity                     = "granularity"                     // Granularity flag
+	Key                             = "key"                             // Key flag
+	Collection                      = "collection"                      // Collection flag
+	Database                        = "db"                              // Database flag
+	Unique                          = "unique"                          // Unique flag
+	Sparse                          = "sparse"                          // Sparse flag
+	Background                      = "background"                      // Background flag
 )

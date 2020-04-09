@@ -49,7 +49,7 @@ func (opts *OpsManagerMeasurementsProcessOpts) init() error {
 
 func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.OpsManagerProcessMeasurements(opts.ProjectID(), opts.hostID, listOpts)
+	result, err := opts.store.OpsManagerHostMeasurements(opts.ProjectID(), opts.hostID, listOpts)
 
 	if err != nil {
 		return err

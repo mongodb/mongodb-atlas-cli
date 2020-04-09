@@ -39,7 +39,7 @@ func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().OpsManagerProcessMeasurements(listOpts.projectID, listOpts.hostID, opts).
+		EXPECT().OpsManagerHostMeasurements(listOpts.projectID, listOpts.hostID, opts).
 		Return(expected, nil).
 		Times(1)
 

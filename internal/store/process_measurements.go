@@ -28,7 +28,7 @@ type AtlasProcessMeasurementLister interface {
 }
 
 type OpsManagerProcessMeasurementLister interface {
-	OpsManagerProcessMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+	OpsManagerHostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
 // AtlasProcessMeasurements encapsulate the logic to manage different cloud providers
@@ -42,11 +42,11 @@ func (s *Store) AtlasProcessMeasurements(groupID, host string, port int, opts *a
 	}
 }
 
-// OpsManagerProcessMeasurements encapsulate the logic to manage different cloud providers
-func (s *Store) OpsManagerProcessMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+// OpsManagerHostMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) OpsManagerHostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).SystemMeasurements.List(context.Background(), groupID, host, opts)
+		result, _, err := s.client.(*om.Client).HostMeasurements.List(context.Background(), groupID, host, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

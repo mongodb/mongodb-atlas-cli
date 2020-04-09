@@ -71,17 +71,17 @@ func (m *MockOpsManagerProcessMeasurementLister) EXPECT() *MockOpsManagerProcess
 	return m.recorder
 }
 
-// OpsManagerProcessMeasurements mocks base method
-func (m *MockOpsManagerProcessMeasurementLister) OpsManagerProcessMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+// OpsManagerHostMeasurements mocks base method
+func (m *MockOpsManagerProcessMeasurementLister) OpsManagerHostMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OpsManagerProcessMeasurements", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "OpsManagerHostMeasurements", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// OpsManagerProcessMeasurements indicates an expected call of OpsManagerProcessMeasurements
-func (mr *MockOpsManagerProcessMeasurementListerMockRecorder) OpsManagerProcessMeasurements(arg0, arg1, arg2 interface{}) *gomock.Call {
+// OpsManagerHostMeasurements indicates an expected call of OpsManagerHostMeasurements
+func (mr *MockOpsManagerProcessMeasurementListerMockRecorder) OpsManagerHostMeasurements(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerProcessMeasurements", reflect.TypeOf((*MockOpsManagerProcessMeasurementLister)(nil).OpsManagerProcessMeasurements), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerHostMeasurements", reflect.TypeOf((*MockOpsManagerProcessMeasurementLister)(nil).OpsManagerHostMeasurements), arg0, arg1, arg2)
 }

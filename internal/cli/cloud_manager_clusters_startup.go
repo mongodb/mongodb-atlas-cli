@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
@@ -60,7 +60,7 @@ func (opts *cmClustersStartupOpts) Run() error {
 		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
 	}
 
-	convert.Startup(current, opts.name)
+	atmcfg.Startup(current, opts.name)
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err

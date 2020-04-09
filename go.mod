@@ -11,8 +11,8 @@ require (
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mongodb/go-client-mongodb-atlas v0.1.4-0.20200402145105-fa504e988bc4
-	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200407140211-7b57157cd359
+	github.com/mongodb/go-client-mongodb-atlas v0.1.4-0.20200408164237-a1a83bd4824f
+	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200409122000-4fea663b73d0
 	github.com/mwielbut/pointy v1.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2

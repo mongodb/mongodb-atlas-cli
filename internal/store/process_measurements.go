@@ -23,16 +23,16 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-type AtlasProcessMeasurementLister interface {
-	AtlasProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+type ProcessMeasurementLister interface {
+	ProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
-type OpsManagerProcessMeasurementLister interface {
-	OpsManagerProcessMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+type HostMeasurementLister interface {
+	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
 
-// AtlasProcessMeasurements encapsulate the logic to manage different cloud providers
-func (s *Store) AtlasProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+// ProcessMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port, opts)
@@ -42,11 +42,11 @@ func (s *Store) AtlasProcessMeasurements(groupID, host string, port int, opts *a
 	}
 }
 
-// OpsManagerProcessMeasurements encapsulate the logic to manage different cloud providers
-func (s *Store) OpsManagerProcessMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+// HostMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).SystemMeasurements.List(context.Background(), groupID, host, opts)
+		result, _, err := s.client.(*om.Client).HostMeasurements.List(context.Background(), groupID, host, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

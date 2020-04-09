@@ -133,7 +133,7 @@ func TestAtlasClusters(t *testing.T) {
 			clustersEntity,
 			"indexes",
 			"create",
-			"--clusterName "+clusterName,
+			"--clusterName="+clusterName,
 			"--db=tes",
 			"--collection=tes",
 			"--key=name:1")

@@ -58,44 +58,6 @@ func TestFromAutomationConfig(t *testing.T) {
 	}
 }
 
-func TestShutdown(t *testing.T) {
-	name := "cluster_1"
-	config := fixtures.AutomationConfigWithOneReplicaSet(name, false)
-
-	Shutdown(config, name)
-	if !config.Processes[0].Disabled {
-		t.Errorf("TestShutdown\n got=%#v\nwant=%#v\n", config.Processes[0].Disabled, true)
-	}
-}
-
-func TestStartup(t *testing.T) {
-	name := "cluster_1"
-	cloud := fixtures.AutomationConfigWithOneReplicaSet(name, true)
-
-	Startup(cloud, name)
-	if cloud.Processes[0].Disabled {
-		t.Errorf("TestStartup\n got=%#v\nwant=%#v\n", cloud.Processes[0].Disabled, false)
-	}
-}
-
-func TestAddUser(t *testing.T) {
-	config := fixtures.AutomationConfigWithoutMongoDBUsers()
-	u := fixtures.MongoDBUsers()
-	AddUser(config, u)
-	if len(config.Auth.Users) != 1 {
-		t.Error("User not added\n")
-	}
-}
-
-func TestRemoveUser(t *testing.T) {
-	config := fixtures.AutomationConfigWithMongoDBUsers()
-	u := fixtures.MongoDBUsers()
-	RemoveUser(config, u.Username, u.Database)
-	if len(config.Auth.Users) != 0 {
-		t.Error("User not removed\n")
-	}
-}
-
 func TestEnableMechanism(t *testing.T) {
 	config := fixtures.AutomationConfigWithoutMongoDBUsers()
 

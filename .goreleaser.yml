@@ -93,3 +93,5 @@ snapcrafts:
       mongocli:
         plugs:
           - network
+          - home
+

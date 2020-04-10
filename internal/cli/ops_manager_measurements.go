@@ -19,20 +19,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasClustersBuilder() *cobra.Command {
+func OpsManagerMeasurementsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:        "clusters",
-		Aliases:    []string{"cluster"},
-		SuggestFor: []string{"replicasets"},
-		Short:      description.Clusters,
-		Long:       description.ClustersLong,
+		Use:   "measurements",
+		Short: description.Measurements,
 	}
-	cmd.AddCommand(AtlasClustersCreateBuilder())
-	cmd.AddCommand(AtlasClustersListBuilder())
-	cmd.AddCommand(AtlasClustersDescribeBuilder())
-	cmd.AddCommand(AtlasClustersDeleteBuilder())
-	cmd.AddCommand(AtlasClustersUpdateBuilder())
-	cmd.AddCommand(AtlasClustersIndexesBuilder())
+
+	cmd.AddCommand(OpsManagerMeasurementsProcessBuilder())
 
 	return cmd
 }

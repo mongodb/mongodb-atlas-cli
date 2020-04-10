@@ -11,45 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasMeasurementsProcess_Run(t *testing.T) {
+func TestAtlasClustersIndexesCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockIndexCreator(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := fixtures.ProcessMeasurements()
-
-	listOpts := &atlasMeasurementsProcessOpts{
+	createOpts := &atlasClustersIndexesCreateOpts{
 		globalOpts:  newGlobalOpts(),
-		host:        "hard-00-00.mongodb.net",
-		port:        27017,
-		granularity: "PT1M",
-		period:      "PT1M",
+		name:        "ProjectBar",
+		clusterName: "US",
+		db:          "test",
+		collection:  "test",
+		keys:        []string{"name:1"},
 		store:       mockStore,
 	}
 
-	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	opts := listOpts.newProcessMeasurementListOptions()
+	index, _ := createOpts.newIndex()
 	mockStore.
-		EXPECT().ProcessMeasurements(listOpts.projectID, hostName, port, opts).
-		Return(expected, nil).
+		EXPECT().
+		CreateIndex(createOpts.projectID, createOpts.clusterName, index).Return(nil).
 		Times(1)
 
-	err = listOpts.Run()
+	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

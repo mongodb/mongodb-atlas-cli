@@ -24,21 +24,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsProcessOpts struct {
+type OpsManagerMeasurementsProcessOpts struct {
 	*globalOpts
 	pageNum         int
 	itemsPerPage    int
-	host            string
-	port            int
+	hostID          string
 	granularity     string
 	period          string
 	start           string
 	end             string
 	measurementType string
-	store           store.ProcessMeasurementLister
+	store           store.HostMeasurementLister
 }
 
-func (opts *atlasMeasurementsProcessOpts) init() error {
+func (opts *OpsManagerMeasurementsProcessOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -48,9 +47,9 @@ func (opts *atlasMeasurementsProcessOpts) init() error {
 	return err
 }
 
-func (opts *atlasMeasurementsProcessOpts) Run() error {
+func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
+	result, err := opts.store.HostMeasurements(opts.ProjectID(), opts.hostID, listOpts)
 
 	if err != nil {
 		return err
@@ -59,7 +58,7 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
+func (opts *OpsManagerMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
 	return &atlas.ProcessMeasurementListOptions{
 		ListOptions: &atlas.ListOptions{
 			PageNum:      opts.pageNum,
@@ -73,9 +72,9 @@ func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *at
 	}
 }
 
-// mongocli atlas measurements process(es) host:port [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
-func AtlasMeasurementsProcessBuilder() *cobra.Command {
-	opts := &atlasMeasurementsProcessOpts{
+// mongocli om|cm measurements process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
+func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
+	opts := &OpsManagerMeasurementsProcessOpts{
 		globalOpts: newGlobalOpts(),
 	}
 	cmd := &cobra.Command{
@@ -87,12 +86,7 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var err error
-			opts.host, opts.port, err = GetHostNameAndPort(args[0])
-			if err != nil {
-				return err
-			}
-
+			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}

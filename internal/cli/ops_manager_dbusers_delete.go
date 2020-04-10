@@ -17,6 +17,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
@@ -51,9 +52,11 @@ func (opts *opsManagerDBUsersDeleteOpts) Run() error {
 		return err
 	}
 
-	convert.RemoveUser(current, opts.entry, opts.authDB)
+	if err := atmcfg.RemoveUser(current, opts.entry, opts.authDB); err != nil {
+		return err
+	}
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

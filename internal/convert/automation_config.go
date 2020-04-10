@@ -17,8 +17,9 @@ package convert
 import (
 	"fmt"
 
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/go-client-mongodb-ops-manager/search"
 )
 
 const (
@@ -53,35 +54,6 @@ func FromAutomationConfig(in *om.AutomationConfig) (out []ClusterConfig) {
 	}
 
 	return
-}
-
-func setDisabledByClusterName(out *om.AutomationConfig, name string, disabled bool) {
-	// This value may not be present and is mandatory
-	if out.Auth.DeploymentAuthMechanisms == nil {
-		out.Auth.DeploymentAuthMechanisms = make([]string, 0)
-	}
-	for _, rs := range out.ReplicaSets {
-		if rs.ID == name {
-			for _, m := range rs.Members {
-				for k, p := range out.Processes {
-					if p.Name == m.Host {
-						out.Processes[k].Disabled = disabled
-					}
-				}
-			}
-			break
-		}
-	}
-}
-
-// Shutdown a cluster processes
-func Shutdown(out *om.AutomationConfig, name string) {
-	setDisabledByClusterName(out, name, true)
-}
-
-// Startup a cluster processes
-func Startup(out *om.AutomationConfig, name string) {
-	setDisabledByClusterName(out, name, false)
 }
 
 func EnableMechanism(out *om.AutomationConfig, m []string) error {
@@ -119,7 +91,7 @@ func addMonitoringUser(out *om.AutomationConfig) {
 		return user.Username == monitoringAgentName
 	})
 	if !exists {
-		AddUser(out, newMonitoringUser(out.Auth.AutoPwd))
+		atmcfg.AddUser(out, newMonitoringUser(out.Auth.AutoPwd))
 	}
 }
 
@@ -128,7 +100,7 @@ func addBackupUser(out *om.AutomationConfig) {
 		return user.Username == backupAgentName
 	})
 	if !exists {
-		AddUser(out, newBackupUser(out.Auth.AutoPwd))
+		atmcfg.AddUser(out, newBackupUser(out.Auth.AutoPwd))
 	}
 }
 
@@ -140,21 +112,6 @@ func setAutoUser(out *om.AutomationConfig) error {
 	}
 
 	return nil
-}
-
-// AddUser adds a MongoDBUser to the config
-func AddUser(out *om.AutomationConfig, u *om.MongoDBUser) {
-	out.Auth.Users = append(out.Auth.Users, u)
-}
-
-// RemoveUser removes a MongoDBUser from the config
-func RemoveUser(out *om.AutomationConfig, username string, database string) {
-	pos, found := search.MongoDBUsers(out.Auth.Users, func(p *om.MongoDBUser) bool {
-		return p.Username == username && p.Database == database
-	})
-	if found {
-		out.Auth.Users = append(out.Auth.Users[:pos], out.Auth.Users[pos+1:]...)
-	}
 }
 
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig

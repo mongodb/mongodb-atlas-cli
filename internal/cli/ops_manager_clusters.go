@@ -19,20 +19,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CloudManagerClustersBuilder() *cobra.Command {
+func OpsManagerClustersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "clusters",
 		Aliases: []string{"cluster"},
 		Short:   description.Clusters,
 	}
 
-	cmd.AddCommand(CloudManagerClustersListBuilder())
-	cmd.AddCommand(CloudManagerClustersDescribeBuilder())
-	cmd.AddCommand(CloudManagerClustersCreateBuilder())
-	cmd.AddCommand(CloudManagerClustersShutdownBuilder())
-	cmd.AddCommand(CloudManagerClustersStartupBuilder())
-	cmd.AddCommand(CloudManagerClustersUpdateBuilder())
-	cmd.AddCommand(CloudManagerClustersApplyBuilder())
+	cmd.AddCommand(OpsManagerClustersListBuilder())
+	cmd.AddCommand(OpsManagerManagerClustersDescribeBuilder())
+	cmd.AddCommand(OpsManagerManagerClustersCreateBuilder())
+	cmd.AddCommand(OpsManagerClustersShutdownBuilder())
+	cmd.AddCommand(OpsManagerClustersStartupBuilder())
+	cmd.AddCommand(OpsManagerClustersUpdateBuilder())
+	cmd.AddCommand(OpsManagerClustersApplyBuilder())
 
 	return cmd
 }

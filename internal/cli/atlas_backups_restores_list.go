@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,11 +24,10 @@ import (
 )
 
 type atlasBackupsRestoresListOpts struct {
-	*globalOpts
-	clusterName  string
-	pageNum      int
-	itemsPerPage int
-	store        store.ContinuousJobLister
+	globalOpts
+	listOpts
+	clusterName string
+	store       store.ContinuousJobLister
 }
 
 func (opts *atlasBackupsRestoresListOpts) init() error {
@@ -53,18 +51,9 @@ func (opts *atlasBackupsRestoresListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasBackupsRestoresListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas backup(s) restore(s) job(s) list [clusterName|clusterId] [--page N] [--limit N]
 func AtlasBackupsRestoresListBuilder() *cobra.Command {
-	opts := &atlasBackupsRestoresListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasBackupsRestoresListOpts)
 	cmd := &cobra.Command{
 		Use:     "list [clusterName|clusterId]",
 		Aliases: []string{"ls"},

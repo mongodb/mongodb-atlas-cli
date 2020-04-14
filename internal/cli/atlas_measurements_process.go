@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,17 +24,11 @@ import (
 )
 
 type atlasMeasurementsProcessOpts struct {
-	*globalOpts
-	pageNum         int
-	itemsPerPage    int
-	host            string
-	port            int
-	granularity     string
-	period          string
-	start           string
-	end             string
-	measurementType string
-	store           store.ProcessMeasurementLister
+	globalOpts
+	measurementsOpts
+	host  string
+	port  int
+	store store.ProcessMeasurementLister
 }
 
 func (opts *atlasMeasurementsProcessOpts) init() error {
@@ -59,25 +52,9 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
-	return &atlas.ProcessMeasurementListOptions{
-		ListOptions: &atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-		Granularity: opts.granularity,
-		Period:      opts.period,
-		Start:       opts.start,
-		End:         opts.end,
-		M:           opts.measurementType,
-	}
-}
-
 // mongocli atlas measurements process(es) host:port [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func AtlasMeasurementsProcessBuilder() *cobra.Command {
-	opts := &atlasMeasurementsProcessOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasMeasurementsProcessOpts{}
 	cmd := &cobra.Command{
 		Use:     "process",
 		Short:   description.ProcessMeasurements,
@@ -96,6 +73,8 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
 	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)

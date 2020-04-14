@@ -31,8 +31,7 @@ func TestAtlasAlertsConfigCreate_Run(t *testing.T) {
 	expected := fixtures.AlertConfig()
 
 	createOpts := &atlasAlertsConfigCreateOpts{
-		globalOpts: newGlobalOpts(),
-		atlasAlertsConfigOpts: &atlasAlertsConfigOpts{
+		atlasAlertsConfigOpts: atlasAlertsConfigOpts{
 			event:                     "OUTSIDE_METRIC_THRESHOLD",
 			enabled:                   true,
 			matcherFieldName:          "HOSTNAME_AND_PORT",

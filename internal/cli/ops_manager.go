@@ -26,7 +26,7 @@ func OpsManagerBuilder() *cobra.Command {
 		Short:   description.OpsManager,
 	}
 
-	cmd.AddCommand(CloudManagerClustersBuilder())
+	cmd.AddCommand(OpsManagerClustersBuilder())
 	cmd.AddCommand(AtlasAlertsBuilder())
 	cmd.AddCommand(AtlasBackupsBuilder())
 	cmd.AddCommand(OpsManagerServersBuilder())

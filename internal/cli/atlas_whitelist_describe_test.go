@@ -31,9 +31,8 @@ func TestAtlasWhitelistDescribe_Run(t *testing.T) {
 	expected := fixtures.IPWhiteList()
 
 	describeOpts := &atlasWhitelistDescribeOpts{
-		globalOpts: newGlobalOpts(),
-		name:       "test",
-		store:      mockStore,
+		name:  "test",
+		store: mockStore,
 	}
 
 	mockStore.

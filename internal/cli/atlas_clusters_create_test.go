@@ -33,7 +33,6 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 		expected := fixtures.Cluster()
 
 		createOpts := &atlasClustersCreateOpts{
-			globalOpts:   newGlobalOpts(),
 			name:         "ProjectBar",
 			region:       "US",
 			instanceSize: atlasM2,
@@ -91,10 +90,9 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 		expected := fixtures.Cluster()
 
 		createOpts := &atlasClustersCreateOpts{
-			globalOpts: newGlobalOpts(),
-			filename:   fileName,
-			fs:         appFS,
-			store:      mockStore,
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
 		}
 
 		cluster, _ := createOpts.newCluster()

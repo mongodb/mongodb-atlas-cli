@@ -31,9 +31,8 @@ func TestAtlasAlertsDescribe_Run(t *testing.T) {
 	expected := fixtures.Alert()
 
 	describeOpts := &atlasAlertsDescribeOpts{
-		globalOpts: newGlobalOpts(),
-		alertID:    "533dc40ae4b00835ff81eaee",
-		store:      mockStore,
+		alertID: "533dc40ae4b00835ff81eaee",
+		store:   mockStore,
 	}
 
 	mockStore.

@@ -25,7 +25,7 @@ import (
 )
 
 type configOpts struct {
-	*globalOpts
+	globalOpts
 	Service       string
 	PublicAPIKey  string
 	PrivateAPIKey string
@@ -108,9 +108,7 @@ func (opts *configOpts) Run() error {
 }
 
 func ConfigBuilder() *cobra.Command {
-	opts := &configOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &configOpts{}
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: description.ConfigDescription,

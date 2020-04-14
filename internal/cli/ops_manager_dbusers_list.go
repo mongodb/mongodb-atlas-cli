@@ -24,7 +24,7 @@ import (
 )
 
 type opsManagerDBUsersListOpts struct {
-	*globalOpts
+	globalOpts
 	store store.AutomationGetter
 }
 
@@ -50,9 +50,7 @@ func (opts *opsManagerDBUsersListOpts) Run() error {
 
 // mongocli om|cm dbuser(s) list [--projectId projectId]
 func OpsManagerDBUsersListBuilder() *cobra.Command {
-	opts := &opsManagerDBUsersListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerDBUsersListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListDBUsers,

@@ -24,7 +24,7 @@ import (
 )
 
 type opsManagerAutomationStatusOpts struct {
-	*globalOpts
+	globalOpts
 	store store.AutomationStatusGetter
 }
 
@@ -49,9 +49,7 @@ func (opts *opsManagerAutomationStatusOpts) Run() error {
 
 // mongocli ops-manager automation status [--projectId projectId]
 func OpsManagerAutomationStatusBuilder() *cobra.Command {
-	opts := &opsManagerAutomationStatusOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerAutomationStatusOpts{}
 	cmd := &cobra.Command{
 		Use:   "status",
 		Short: description.ShowAutomationStatus,

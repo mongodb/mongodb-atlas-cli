@@ -31,8 +31,7 @@ func TestOpsManagerAutomationStatus_Run(t *testing.T) {
 	expected := fixtures.AutomationStatus()
 
 	opts := &opsManagerAutomationStatusOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

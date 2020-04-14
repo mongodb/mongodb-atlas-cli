@@ -28,8 +28,7 @@ func TestAtlasDBUsersDelete_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	deleteOpts := &atlasDBUsersDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
+		deleteOpts: deleteOpts{
 			confirm:        true,
 			entry:          "test",
 			successMessage: "DB user '%s' deleted\n",

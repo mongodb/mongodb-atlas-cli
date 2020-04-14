@@ -23,20 +23,21 @@ import (
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
-type cmClustersApplyOpts struct {
-	*globalOpts
+type opsManagerClustersCreateOpts struct {
+	globalOpts
 	filename string
 	fs       afero.Fs
 	store    store.AutomationPatcher
 }
 
-func (opts *cmClustersApplyOpts) init() error {
+func (opts *opsManagerClustersCreateOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -46,7 +47,7 @@ func (opts *cmClustersApplyOpts) init() error {
 	return err
 }
 
-func (opts *cmClustersApplyOpts) Run() error {
+func (opts *opsManagerClustersCreateOpts) Run() error {
 	newConfig := new(convert.ClusterConfig)
 	err := file.Load(opts.fs, opts.filename, newConfig)
 	if err != nil {
@@ -56,6 +57,10 @@ func (opts *cmClustersApplyOpts) Run() error {
 
 	if err != nil {
 		return err
+	}
+
+	if search.ClusterExists(current, newConfig.Name) {
+		return fmt.Errorf("cluster %s already exists", newConfig.Name)
 	}
 
 	err = newConfig.PatchAutomationConfig(current)
@@ -73,15 +78,14 @@ func (opts *cmClustersApplyOpts) Run() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml
-func CloudManagerClustersApplyBuilder() *cobra.Command {
-	opts := &cmClustersApplyOpts{
-		globalOpts: newGlobalOpts(),
-		fs:         afero.NewOsFs(),
+// mongocli cloud-manager cluster(s) create --projectId projectId --file myfile.yaml
+func OpsManagerManagerClustersCreateBuilder() *cobra.Command {
+	opts := &opsManagerClustersCreateOpts{
+		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "apply",
-		Short: description.ApplyCluster,
+		Use:   "create",
+		Short: description.CreateCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
@@ -90,7 +94,7 @@ func CloudManagerClustersApplyBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to change the automation config")
+	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to create the cluster")
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

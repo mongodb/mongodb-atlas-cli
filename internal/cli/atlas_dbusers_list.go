@@ -14,7 +14,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -24,10 +23,9 @@ import (
 )
 
 type atlasDBUsersListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	store        store.DatabaseUserLister
+	globalOpts
+	listOpts
+	store store.DatabaseUserLister
 }
 
 func (opts *atlasDBUsersListOpts) init() error {
@@ -51,18 +49,9 @@ func (opts *atlasDBUsersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasDBUsersListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
 func AtlasDBUsersListBuilder() *cobra.Command {
-	opts := &atlasDBUsersListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasDBUsersListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListDBUsers,

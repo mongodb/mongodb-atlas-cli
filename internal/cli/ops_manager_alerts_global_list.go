@@ -25,10 +25,9 @@ import (
 )
 
 type opsManagerAlertsGlobalListOpts struct {
-	store        store.GlobalAlertLister
-	pageNum      int
-	itemsPerPage int
-	status       string
+	listOpts
+	status string
+	store  store.GlobalAlertLister
 }
 
 func (opts *opsManagerAlertsGlobalListOpts) init() error {

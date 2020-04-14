@@ -26,13 +26,12 @@ import (
 )
 
 type atlasEventsListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	eventType    string
-	minDate      string
-	maxDate      string
-	store        store.EventsStore
+	globalOpts
+	listOpts
+	eventType string
+	minDate   string
+	maxDate   string
+	store     store.EventsStore
 }
 
 func (opts *atlasEventsListOpts) init() error {
@@ -63,7 +62,6 @@ func (opts *atlasEventsListOpts) Run() error {
 }
 
 func (opts *atlasEventsListOpts) newEventListOptions() *atlas.EventListOptions {
-
 	return &atlas.EventListOptions{
 		ListOptions: atlas.ListOptions{
 			PageNum:      opts.pageNum,
@@ -77,9 +75,7 @@ func (opts *atlasEventsListOpts) newEventListOptions() *atlas.EventListOptions {
 
 // mongocli atlas event(s) list [--projectId projectId] [--source source][--type type] [--page N] [--limit N] [--mindate minDate] [--maxDate maxDate]
 func AtlasEventsListBuilder() *cobra.Command {
-	opts := &atlasEventsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasEventsListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListEvents,

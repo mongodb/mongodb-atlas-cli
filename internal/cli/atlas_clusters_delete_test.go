@@ -28,8 +28,7 @@ func TestAtlasClustersDelete_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	deleteOpts := &atlasClustersDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
+		deleteOpts: deleteOpts{
 			confirm:        true,
 			entry:          "test",
 			successMessage: "Cluster '%s' deleted\n",

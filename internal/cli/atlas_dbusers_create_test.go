@@ -31,11 +31,10 @@ func TestAtlasDBUserCreate_Run(t *testing.T) {
 	expected := fixtures.DatabaseUser()
 
 	createOpts := &atlasDBUsersCreateOpts{
-		globalOpts: newGlobalOpts(),
-		username:   "ProjectBar",
-		password:   "US",
-		roles:      []string{"admin@admin"},
-		store:      mockStore,
+		username: "ProjectBar",
+		password: "US",
+		roles:    []string{"admin@admin"},
+		store:    mockStore,
 	}
 
 	mockStore.

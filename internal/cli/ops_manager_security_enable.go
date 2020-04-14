@@ -34,7 +34,7 @@ const (
 )
 
 type opsManagerSecurityEnableOpts struct {
-	*globalOpts
+	globalOpts
 	mechanisms []string
 	store      store.AutomationPatcher
 }
@@ -69,9 +69,7 @@ func (opts *opsManagerSecurityEnableOpts) Run() error {
 
 // mongocli ops-manager security enable[MONGODB-CR|SCRAM-SHA-256]  [--projectId projectId]
 func OpsManagerSecurityEnableBuilder() *cobra.Command {
-	opts := &opsManagerSecurityEnableOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerSecurityEnableOpts{}
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
 		Short:     description.EnableSecurity,

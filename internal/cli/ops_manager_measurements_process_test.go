@@ -30,12 +30,12 @@ func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 	expected := fixtures.ProcessMeasurements()
 
 	listOpts := &OpsManagerMeasurementsProcessOpts{
-		globalOpts:  newGlobalOpts(),
-		hostID:      "hard-00-00.mongodb.net",
-		granularity: "PT1M",
-		period:      "PT1M",
-		store:       mockStore,
+		hostID: "hard-00-00.mongodb.net",
+
+		store: mockStore,
 	}
+	listOpts.granularity = "PT1M"
+	listOpts.period = "PT1M"
 
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.

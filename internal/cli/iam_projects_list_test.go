@@ -39,8 +39,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &iamProjectsListOpts{
-			store:      mockStore,
-			globalOpts: newGlobalOpts(),
+			store: mockStore,
 		}
 		err := listOpts.Run()
 		if err != nil {
@@ -56,8 +55,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &iamProjectsListOpts{
-			globalOpts: newGlobalOpts(),
-			store:      mockStore,
+			store: mockStore,
 		}
 		listOpts.orgID = "1"
 		config.SetService(config.OpsManagerService)
@@ -75,8 +73,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 			Times(1)
 
 		listOpts := &iamProjectsListOpts{
-			globalOpts: newGlobalOpts(),
-			store:      mockStore,
+			store: mockStore,
 		}
 		listOpts.orgID = "1"
 		config.SetService(config.CloudService)

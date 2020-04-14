@@ -36,11 +36,6 @@ type globalOpts struct {
 	projectID string
 }
 
-// newGlobalOpts returns an globalOpts
-func newGlobalOpts() *globalOpts {
-	return new(globalOpts)
-}
-
 // ProjectID returns the project id.
 // If the id is empty, it caches it after querying config.
 func (opts *globalOpts) ProjectID() string {
@@ -124,11 +119,6 @@ func (opts *deleteOpts) FailMessage() string {
 		return opts.failMessage
 	}
 	return fallbackFailMessage
-}
-
-// newAtlasAlertsConfigOpts returns an atlasAlertsConfigOpts
-func newAtlasAlertsConfigOpts() *atlasAlertsConfigOpts {
-	return new(atlasAlertsConfigOpts)
 }
 
 // atlasAlertsConfigOpts contains all the information and functions to manage an alert configuration
@@ -250,6 +240,18 @@ func (opts *atlasAlertsConfigOpts) newMatcher() *atlas.Matcher {
 		FieldName: strings.ToUpper(opts.matcherFieldName),
 		Operator:  strings.ToUpper(opts.matcherOperator),
 		Value:     strings.ToUpper(opts.matcherValue),
+	}
+}
+
+type listOpts struct {
+	pageNum      int
+	itemsPerPage int
+}
+
+func (opts *listOpts) newListOptions() *atlas.ListOptions {
+	return &atlas.ListOptions{
+		PageNum:      opts.pageNum,
+		ItemsPerPage: opts.itemsPerPage,
 	}
 }
 

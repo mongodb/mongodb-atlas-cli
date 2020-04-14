@@ -24,8 +24,8 @@ import (
 )
 
 type atlasAlertsConfigUpdateOpts struct {
-	*globalOpts
-	*atlasAlertsConfigOpts
+	globalOpts
+	atlasAlertsConfigOpts
 	store   store.AlertConfigurationUpdater
 	alertID string
 }
@@ -57,10 +57,7 @@ func (opts *atlasAlertsConfigUpdateOpts) Run() error {
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 // [--projectId projectId]
 func AtlasAlertsConfigUpdateBuilder() *cobra.Command {
-	opts := &atlasAlertsConfigUpdateOpts{
-		globalOpts:            newGlobalOpts(),
-		atlasAlertsConfigOpts: newAtlasAlertsConfigOpts(),
-	}
+	opts := new(atlasAlertsConfigUpdateOpts)
 	cmd := &cobra.Command{
 		Use:     "update",
 		Short:   description.UpdateAlertsConfig,

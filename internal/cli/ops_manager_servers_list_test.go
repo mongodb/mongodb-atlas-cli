@@ -31,12 +31,10 @@ func TestOpsManagerAgentsList_Run(t *testing.T) {
 
 	expected := fixtures.Agents()
 
-	listOpts := OpsManagerServersListOpts{
-		globalOpts: &globalOpts{
-			projectID: "1",
-		},
+	listOpts := opsManagerServersListOpts{
 		store: mockStore,
 	}
+	listOpts.projectID = "1"
 
 	mockStore.
 		EXPECT().

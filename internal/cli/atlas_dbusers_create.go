@@ -29,7 +29,7 @@ import (
 )
 
 type atlasDBUsersCreateOpts struct {
-	*globalOpts
+	globalOpts
 	username string
 	password string
 	authDB   string
@@ -80,9 +80,7 @@ func (opts *atlasDBUsersCreateOpts) Prompt() error {
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func AtlasDBUsersCreateBuilder() *cobra.Command {
-	opts := &atlasDBUsersCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasDBUsersCreateOpts{}
 	cmd := &cobra.Command{
 		Use:       "create",
 		Short:     description.CreateDBUser,

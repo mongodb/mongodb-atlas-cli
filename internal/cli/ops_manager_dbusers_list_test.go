@@ -31,8 +31,7 @@ func TestOpsManagerDBUserList_Run(t *testing.T) {
 	expected := fixtures.AutomationConfig()
 
 	createOpts := &opsManagerDBUsersListOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

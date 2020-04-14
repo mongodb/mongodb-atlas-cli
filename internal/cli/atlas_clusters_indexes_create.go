@@ -27,7 +27,7 @@ import (
 )
 
 type atlasClustersIndexesCreateOpts struct {
-	*globalOpts
+	globalOpts
 	clusterName string
 	name        string
 	db          string
@@ -99,9 +99,7 @@ func (opts *atlasClustersIndexesCreateOpts) indexKeys() ([]map[string]string, er
 // AtlasClustersIndexesCreateBuilder builds a cobra.Command that can run as:
 // mcli atlas clusters index create [name] --clusterName clusterName  --collectionName collectionName --dbName dbName [--key field:type]
 func AtlasClustersIndexesCreateBuilder() *cobra.Command {
-	opts := &atlasClustersIndexesCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasClustersIndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: description.CreateCluster,

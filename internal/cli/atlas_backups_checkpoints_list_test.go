@@ -31,7 +31,6 @@ func TestAtlasBackupsCheckpointsList_Run(t *testing.T) {
 	expected := fixtures.Checkpoints()
 
 	listOpts := &atlasBackupsCheckpointsListOpts{
-		globalOpts:  newGlobalOpts(),
 		store:       mockStore,
 		clusterName: "Cluster0",
 	}

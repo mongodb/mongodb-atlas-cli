@@ -30,8 +30,7 @@ func TestAtlasDBUserList_Run(t *testing.T) {
 	expected := fixtures.DatabaseUsers()
 
 	listOpts := &atlasDBUsersListOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

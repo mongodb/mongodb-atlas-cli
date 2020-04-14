@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,16 +24,10 @@ import (
 )
 
 type OpsManagerMeasurementsProcessOpts struct {
-	*globalOpts
-	pageNum         int
-	itemsPerPage    int
-	hostID          string
-	granularity     string
-	period          string
-	start           string
-	end             string
-	measurementType string
-	store           store.HostMeasurementLister
+	globalOpts
+	measurementsOpts
+	hostID string
+	store  store.HostMeasurementLister
 }
 
 func (opts *OpsManagerMeasurementsProcessOpts) init() error {
@@ -58,25 +51,9 @@ func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *OpsManagerMeasurementsProcessOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
-	return &atlas.ProcessMeasurementListOptions{
-		ListOptions: &atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-		Granularity: opts.granularity,
-		Period:      opts.period,
-		Start:       opts.start,
-		End:         opts.end,
-		M:           opts.measurementType,
-	}
-}
-
 // mongocli om|cm measurements process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
-	opts := &OpsManagerMeasurementsProcessOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &OpsManagerMeasurementsProcessOpts{}
 	cmd := &cobra.Command{
 		Use:     "process",
 		Short:   description.ProcessMeasurements,

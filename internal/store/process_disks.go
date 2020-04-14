@@ -22,15 +22,15 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-type ProcessMeasurementLister interface {
-	ProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+type ProcessDisksLister interface {
+	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
 }
 
-// ProcessMeasurements encapsulate the logic to manage different cloud providers
-func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+// ProcessDisks encapsulate the logic to manage different cloud providers
+func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

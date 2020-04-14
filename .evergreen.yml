@@ -141,7 +141,7 @@ functions:
             --edition ${edition} \
             --version $VERSION \
             --arch x86_64 \
-            --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.rpm
+            --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/${revision}/dist/mongocli_next_${revision}_${version_id}_${created_at}_linux_x86_64.${ext}
 tasks:
   - name: compile
     commands:
@@ -206,6 +206,7 @@ tasks:
         vars:
           edition: enterprise
           distro: rhel70
+          ext: rpm
   - name: push_rhel70_org
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
@@ -225,6 +226,7 @@ tasks:
         vars:
           edition: org
           distro: rhel70
+          ext: rpm
   - name: push_rhel80_enterprise
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
@@ -245,6 +247,7 @@ tasks:
         vars:
           edition: enterprise
           distro: rhel80
+          ext: rpm
   - name: push_rhel80_org
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
@@ -265,6 +268,7 @@ tasks:
         vars:
           edition: org
           distro: rhel80
+          ext: rpm
   - name: push_amazon2_enterprise
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
@@ -280,6 +284,7 @@ tasks:
         vars:
           edition: enterprise
           distro: amazon2
+          ext: rpm
   - name: push_amazon2_org
     # This should prevent this task from running in patch builds, where we
     # don't want to publish packages.
@@ -300,6 +305,254 @@ tasks:
         vars:
           edition: org
           distro: amazon2
+          ext: rpm
+  # DEB Distros
+  - name: push_ubuntu1604_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+  - name: push_ubuntu1604_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
+  - name: push_ubuntu1804_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1804
+          ext: deb
+  - name: push_ubuntu1804_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1804
+          ext: deb
+  - name: push_debian71_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian71
+          ext: deb
+  - name: push_debian71_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian71
+          ext: deb
+  - name: push_debian81_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian81
+          ext: deb
+  - name: push_debian81_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian81
+          ext: deb
+  - name: push_debian92_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+  - name: push_debian92_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+  - name: push_debian10_enterprise
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: compile
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian10
+          ext: deb
+  - name: push_debian10_org
+    # This should prevent this task from running in patch builds, where we
+    # don't want to publish packages.
+    patchable: false
+    stepback: false
+    tags: ["push"]
+    depends_on:
+      - name: package
+    commands:
+      - func: "clone"
+      - func: "set up remote credentials"
+        vars:
+          aws_key_remote: ${repo_aws_key}
+          aws_secret_remote: ${repo_aws_secret}
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
 buildvariants:
   - name: publish
     display_name: "Packaging & Publishing"

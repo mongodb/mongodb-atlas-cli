@@ -31,7 +31,6 @@ func TestAtlasBackupsRestoresListOpts_Run(t *testing.T) {
 	expected := fixtures.ContinuousJobs()
 
 	listOpts := &atlasBackupsRestoresListOpts{
-		globalOpts:  newGlobalOpts(),
 		store:       mockStore,
 		clusterName: "Cluster0",
 	}

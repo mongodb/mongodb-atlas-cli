@@ -25,7 +25,7 @@ import (
 )
 
 type iamProjectsListOpts struct {
-	*globalOpts
+	globalOpts
 	store store.ProjectLister
 }
 
@@ -51,9 +51,7 @@ func (opts *iamProjectsListOpts) Run() error {
 
 // mongocli iam project(s) list [--orgId orgId]
 func IAMProjectsListBuilder() *cobra.Command {
-	opts := &iamProjectsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &iamProjectsListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

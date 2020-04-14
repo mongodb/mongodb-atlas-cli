@@ -24,7 +24,7 @@ import (
 )
 
 type atlasAlertsDescribeOpts struct {
-	*globalOpts
+	globalOpts
 	alertID string
 	store   store.AlertDescriber
 }
@@ -50,9 +50,7 @@ func (opts *atlasAlertsDescribeOpts) Run() error {
 
 // mongocli atlas alerts describe alertID --projectId projectId
 func AtlasAlertsDescribeBuilder() *cobra.Command {
-	opts := &atlasAlertsDescribeOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasAlertsDescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe [alertID]",
 		Short: description.DescribeAlert,

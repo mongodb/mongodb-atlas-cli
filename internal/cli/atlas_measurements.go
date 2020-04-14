@@ -15,16 +15,38 @@
 package cli
 
 import (
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
+
+type measurementsOpts struct {
+	listOpts
+	granularity     string
+	period          string
+	start           string
+	end             string
+	measurementType string
+}
+
+func (opts *measurementsOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
+	o := &atlas.ProcessMeasurementListOptions{
+		ListOptions: opts.newListOptions(),
+	}
+	o.Granularity = opts.granularity
+	o.Period = opts.period
+	o.Start = opts.start
+	o.End = opts.end
+	o.M = opts.measurementType
+
+	return o
+}
 
 func AtlasMeasurementsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "measurements",
 		Short: description.Measurements,
 	}
-
 	cmd.AddCommand(AtlasMeasurementsProcessBuilder())
 
 	return cmd

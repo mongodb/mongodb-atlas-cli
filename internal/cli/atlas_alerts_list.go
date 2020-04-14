@@ -25,11 +25,10 @@ import (
 )
 
 type atlasAlertsListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	status       string
-	store        store.AlertLister
+	globalOpts
+	listOpts
+	status string
+	store  store.AlertLister
 }
 
 func (opts *atlasAlertsListOpts) init() error {
@@ -54,20 +53,17 @@ func (opts *atlasAlertsListOpts) Run() error {
 }
 
 func (opts *atlasAlertsListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
-	return &atlas.AlertsListOptions{
-		Status: opts.status,
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-	}
+	o := new(atlas.AlertsListOptions)
+	o.Status = opts.status
+	o.ItemsPerPage = opts.itemsPerPage
+	o.PageNum = opts.pageNum
+
+	return o
 }
 
 // mongocli atlas alerts list [--status status] [--projectId projectId] [--page N] [--limit N]
 func AtlasAlertsListBuilder() *cobra.Command {
-	opts := &atlasAlertsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasAlertsListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListAlerts,

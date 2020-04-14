@@ -31,8 +31,7 @@ func TestAtlasWhitelistList_Run(t *testing.T) {
 	expected := fixtures.ProjectIPWhitelist()
 
 	listOpts := &atlasWhitelistListOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

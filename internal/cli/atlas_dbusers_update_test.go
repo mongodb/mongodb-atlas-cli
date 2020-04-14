@@ -32,11 +32,10 @@ func TestAtlasDBUserUpdate_Run(t *testing.T) {
 	expected := fixtures.DatabaseUser()
 
 	updateOpts := &atlasDBUsersUpdateOpts{
-		globalOpts: newGlobalOpts(),
-		username:   "test4",
-		password:   "US",
-		roles:      []string{"admin@admin"},
-		store:      mockStore,
+		username: "test4",
+		password: "US",
+		roles:    []string{"admin@admin"},
+		store:    mockStore,
 	}
 
 	dbUser := atlas.DatabaseUser{}

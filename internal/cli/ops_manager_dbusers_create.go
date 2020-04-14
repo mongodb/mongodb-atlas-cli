@@ -33,7 +33,7 @@ import (
 const scransha1 = "SCRAM-SHA-1"
 
 type opsManagerDBUsersCreateOpts struct {
-	*globalOpts
+	globalOpts
 	username   string
 	password   string
 	authDB     string
@@ -93,9 +93,7 @@ func (opts *opsManagerDBUsersCreateOpts) Prompt() error {
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
 func OpsManagerDBUsersCreateBuilder() *cobra.Command {
-	opts := &opsManagerDBUsersCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerDBUsersCreateOpts{}
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   description.CreateDBUser,

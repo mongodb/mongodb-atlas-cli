@@ -22,27 +22,33 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestCloudManagerClustersDescribe_Run(t *testing.T) {
+func TestCloudManagerClustersStartup_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationGetter(ctrl)
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := fixtures.AutomationConfig()
 
-	descOpts := &cmClustersDescribeOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		name:       "myReplicaSet",
+	createOpts := &opsManagerClustersStartupOpts{
+		store:   mockStore,
+		confirm: true,
+		name:    "myReplicaSet",
 	}
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfig(descOpts.projectID).
+		GetAutomationConfig(createOpts.projectID).
 		Return(expected, nil).
 		Times(1)
 
-	err := descOpts.Run()
+	mockStore.
+		EXPECT().
+		UpdateAutomationConfig(createOpts.projectID, expected).
+		Return(nil).
+		Times(1)
+
+	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

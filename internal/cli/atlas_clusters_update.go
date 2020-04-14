@@ -27,7 +27,7 @@ import (
 )
 
 type atlasClustersUpdateOpts struct {
-	*globalOpts
+	globalOpts
 	name         string
 	instanceSize string
 	diskSizeGB   float64
@@ -107,8 +107,7 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 // mongocli atlas cluster(s) update name --projectId projectId [--instanceSize M#] [--diskSizeGB N] [--mdbVersion]
 func AtlasClustersUpdateBuilder() *cobra.Command {
 	opts := &atlasClustersUpdateOpts{
-		globalOpts: newGlobalOpts(),
-		fs:         afero.NewOsFs(),
+		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
 		Use:     "update [name]",

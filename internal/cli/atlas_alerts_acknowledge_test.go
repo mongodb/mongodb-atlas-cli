@@ -31,11 +31,10 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 	expected := fixtures.Alert()
 
 	acknowledgeOpts := &atlasAlertsAcknowledgeOpts{
-		globalOpts: newGlobalOpts(),
-		alertID:    "533dc40ae4b00835ff81eaee",
-		until:      "",
-		comment:    "Test",
-		store:      mockStore,
+		alertID: "533dc40ae4b00835ff81eaee",
+		until:   "",
+		comment: "Test",
+		store:   mockStore,
 	}
 
 	ackReq := acknowledgeOpts.newAcknowledgeRequest()

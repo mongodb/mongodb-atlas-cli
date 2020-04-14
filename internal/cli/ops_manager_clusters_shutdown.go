@@ -17,27 +17,26 @@ package cli
 import (
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
-type cmClustersCreateOpts struct {
-	*globalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationPatcher
+type opsManagerClustersShutdownOpts struct {
+	globalOpts
+	name    string
+	confirm bool
+	store   store.AutomationPatcher
 }
 
-func (opts *cmClustersCreateOpts) init() error {
+func (opts *opsManagerClustersShutdownOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -47,11 +46,9 @@ func (opts *cmClustersCreateOpts) init() error {
 	return err
 }
 
-func (opts *cmClustersCreateOpts) Run() error {
-	newConfig := new(convert.ClusterConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
-	if err != nil {
-		return err
+func (opts *opsManagerClustersShutdownOpts) Run() error {
+	if !opts.confirm {
+		return nil
 	}
 	current, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
@@ -59,15 +56,11 @@ func (opts *cmClustersCreateOpts) Run() error {
 		return err
 	}
 
-	if search.ClusterExists(current, newConfig.Name) {
-		return fmt.Errorf("cluster %s already exists", newConfig.Name)
+	if !search.ClusterExists(current, opts.name) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
 	}
 
-	err = newConfig.PatchAutomationConfig(current)
-
-	if err != nil {
-		return err
-	}
+	atmcfg.Shutdown(current, opts.name)
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
@@ -78,28 +71,38 @@ func (opts *cmClustersCreateOpts) Run() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) create --projectId projectId --file myfile.yaml
-func CloudManagerClustersCreateBuilder() *cobra.Command {
-	opts := &cmClustersCreateOpts{
-		globalOpts: newGlobalOpts(),
-		fs:         afero.NewOsFs(),
+func (opts *opsManagerClustersShutdownOpts) Confirm() error {
+	if opts.confirm {
+		return nil
 	}
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", opts.name),
+	}
+	return survey.AskOne(prompt, &opts.confirm)
+}
+
+// mongocli cloud-manager cluster(s) shutdown [name] --projectId projectId [--force]
+func OpsManagerClustersShutdownBuilder() *cobra.Command {
+	opts := &opsManagerClustersShutdownOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: description.CreateCluster,
+		Use:   "shutdown [name]",
+		Short: description.ShutdownOMCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			if err := opts.init(); err != nil {
+				return err
+			}
+			opts.name = args[0]
+			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to create the cluster")
+	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.File)
 
 	return cmd
 }

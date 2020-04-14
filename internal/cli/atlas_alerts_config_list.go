@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,10 +24,9 @@ import (
 )
 
 type atlasAlertsConfigListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	store        store.AlertConfigurationLister
+	globalOpts
+	listOpts
+	store store.AlertConfigurationLister
 }
 
 func (opts *atlasAlertsConfigListOpts) init() error {
@@ -52,18 +50,9 @@ func (opts *atlasAlertsConfigListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsConfigListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
 func AtlasAlertsConfigListBuilder() *cobra.Command {
-	opts := &atlasAlertsConfigListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasAlertsConfigListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListAlertsConfigs,

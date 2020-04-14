@@ -23,9 +23,9 @@ import (
 	"github.com/spf13/afero"
 )
 
-func TestCloudManagerClustersCreate_Run(t *testing.T) {
+func TestCloudManagerClustersApply_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStore(ctrl)
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
@@ -34,36 +34,34 @@ func TestCloudManagerClustersCreate_Run(t *testing.T) {
 	// create test file
 	fileYML := `
 ---
-name: "cluster_2"
+name: "myReplicaSet"
 version: 4.2.2
 featureCompatibilityVersion: 4.2
 processes:
   - hostname: host0
-    dbPath: /data/cluster_2/rs1
-    logPath: /data/cluster_2/rs1/mongodb.log
+    dbPath: /data/myReplicaSet/rs1
+    logPath: /data/myReplicaSet/rs1/mongodb.log
     priority: 1
     votes: 1
     port: 29010
   - hostname: host1
-    dbPath: /data/cluster_2/rs2
-    logPath: /data/cluster_2/rs2/mongodb.log
+    dbPath: /data/myReplicaSet/rs2
+    logPath: /data/myReplicaSet/rs2/mongodb.log
     priority: 1
     votes: 1
     port: 29020
   - hostname: host2
-    dbPath: /data/cluster_2/rs3
-    logPath: /data/cluster_2/rs3/mongodb.log
+    dbPath: /data/myReplicaSet/rs3
+    logPath: /data/myReplicaSet/rs3/mongodb.log
     priority: 1
     votes: 1
     port: 29030`
 	fileName := "test.yml"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
-
-	createOpts := &cmClustersCreateOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		fs:         appFS,
-		filename:   fileName,
+	createOpts := &opsManagerClustersApplyOpts{
+		store:    mockStore,
+		fs:       appFS,
+		filename: fileName,
 	}
 
 	mockStore.

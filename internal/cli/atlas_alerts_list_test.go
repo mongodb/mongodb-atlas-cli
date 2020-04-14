@@ -31,9 +31,8 @@ func TestAtlasAlertsList_Run(t *testing.T) {
 	expected := fixtures.AlertsResponse()
 
 	listOpts := &atlasAlertsListOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		status:     "OPEN",
+		store:  mockStore,
+		status: "OPEN",
 	}
 
 	mockStore.

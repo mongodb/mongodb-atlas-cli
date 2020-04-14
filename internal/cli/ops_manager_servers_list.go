@@ -26,18 +26,18 @@ const (
 	agentType = "AUTOMATION"
 )
 
-type OpsManagerServersListOpts struct {
-	*globalOpts
+type opsManagerServersListOpts struct {
+	globalOpts
 	store store.AgentLister
 }
 
-func (opts *OpsManagerServersListOpts) init() error {
+func (opts *opsManagerServersListOpts) init() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *OpsManagerServersListOpts) Run() error {
+func (opts *opsManagerServersListOpts) Run() error {
 	servers, err := opts.store.Agents(opts.projectID, agentType)
 
 	if err != nil {
@@ -49,9 +49,7 @@ func (opts *OpsManagerServersListOpts) Run() error {
 
 // mongocli om server(s) list [--projectId projectId]
 func OpsManagerAgentsListBuilder() *cobra.Command {
-	opts := &OpsManagerServersListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerServersListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

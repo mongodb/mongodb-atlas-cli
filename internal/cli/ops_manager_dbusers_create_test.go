@@ -31,11 +31,10 @@ func TestOpsManagerDBUserCreate_Run(t *testing.T) {
 	expected := fixtures.AutomationConfig()
 
 	createOpts := &opsManagerDBUsersCreateOpts{
-		globalOpts: newGlobalOpts(),
-		username:   "ProjectBar",
-		password:   "US",
-		roles:      []string{"admin@admin"},
-		store:      mockStore,
+		username: "ProjectBar",
+		password: "US",
+		roles:    []string{"admin@admin"},
+		store:    mockStore,
 	}
 
 	mockStore.

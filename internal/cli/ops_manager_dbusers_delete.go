@@ -29,8 +29,8 @@ import (
 )
 
 type opsManagerDBUsersDeleteOpts struct {
-	*globalOpts
-	*deleteOpts
+	globalOpts
+	deleteOpts
 	authDB string
 	store  store.AutomationPatcher
 }
@@ -68,8 +68,7 @@ func (opts *opsManagerDBUsersDeleteOpts) Run() error {
 // mongocli atlas dbuser(s) delete <username> [--projectId projectId] [--force]
 func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
 	opts := &opsManagerDBUsersDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
+		deleteOpts: deleteOpts{
 			successMessage: "DB user '%s' deleted\n",
 			failMessage:    "DB user not deleted",
 		},

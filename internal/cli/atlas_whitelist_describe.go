@@ -24,7 +24,7 @@ import (
 )
 
 type atlasWhitelistDescribeOpts struct {
-	*globalOpts
+	globalOpts
 	name  string
 	store store.ProjectIPWhitelistDescriber
 }
@@ -50,9 +50,7 @@ func (opts *atlasWhitelistDescribeOpts) Run() error {
 
 // mongocli atlas whitelist(s) describe [name] --projectId projectId
 func AtlasWhitelistDescribeBuilder() *cobra.Command {
-	opts := &atlasWhitelistDescribeOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasWhitelistDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
 		Short: description.DescribeWhitelist,

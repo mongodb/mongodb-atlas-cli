@@ -23,8 +23,8 @@ import (
 )
 
 type atlasWhitelistDeleteOpts struct {
-	*globalOpts
-	*deleteOpts
+	globalOpts
+	deleteOpts
 	store store.ProjectIPWhitelistDeleter
 }
 
@@ -45,8 +45,7 @@ func (opts *atlasWhitelistDeleteOpts) Run() error {
 // mongocli atlas whitelist delete <entry> --force
 func AtlasWhitelistDeleteBuilder() *cobra.Command {
 	opts := &atlasWhitelistDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
+		deleteOpts: deleteOpts{
 			successMessage: "Project whitelist entry '%s' deleted\n",
 			failMessage:    "Project whitelist entry not deleted",
 		},

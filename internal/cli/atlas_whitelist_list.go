@@ -14,7 +14,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -24,10 +23,9 @@ import (
 )
 
 type atlasWhitelistListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	store        store.ProjectIPWhitelistLister
+	globalOpts
+	listOpts
+	store store.ProjectIPWhitelistLister
 }
 
 func (opts *atlasWhitelistListOpts) init() error {
@@ -51,18 +49,9 @@ func (opts *atlasWhitelistListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasWhitelistListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas whitelist(s) list --projectId projectId [--page N] [--limit N]
 func AtlasWhitelistListBuilder() *cobra.Command {
-	opts := &atlasWhitelistListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasWhitelistListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListWhitelist,

@@ -24,7 +24,7 @@ import (
 )
 
 type atlasClustersDescribeOpts struct {
-	*globalOpts
+	globalOpts
 	name  string
 	store store.ClusterDescriber
 }
@@ -50,9 +50,7 @@ func (opts *atlasClustersDescribeOpts) Run() error {
 
 // mongocli atlas cluster(s) describe [name] --projectId projectId
 func AtlasClustersDescribeBuilder() *cobra.Command {
-	opts := &atlasClustersDescribeOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasClustersDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
 		Short: description.DescribeCluster,

@@ -28,7 +28,6 @@ func TestAtlasClustersIndexesCreate_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	createOpts := &atlasClustersIndexesCreateOpts{
-		globalOpts:  newGlobalOpts(),
 		name:        "ProjectBar",
 		clusterName: "US",
 		db:          "test",

@@ -26,7 +26,7 @@ import (
 )
 
 type atlasDBUsersUpdateOpts struct {
-	*globalOpts
+	globalOpts
 	username string
 	password string
 	roles    []string
@@ -57,7 +57,6 @@ func (opts *atlasDBUsersUpdateOpts) Run() error {
 }
 
 func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
-
 	out.GroupID = opts.ProjectID()
 	out.Username = opts.username
 	if opts.password != "" {
@@ -69,9 +68,7 @@ func (opts *atlasDBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 
 // mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]
 func AtlasDBUsersUpdateBuilder() *cobra.Command {
-	opts := &atlasDBUsersUpdateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasDBUsersUpdateOpts{}
 	cmd := &cobra.Command{
 		Use:     "update [username]",
 		Short:   description.UpdateDBUser,

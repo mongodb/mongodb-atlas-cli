@@ -35,7 +35,7 @@ const (
 )
 
 type atlasBackupsRestoresStartOpts struct {
-	*globalOpts
+	globalOpts
 	method               string
 	clusterName          string
 	clusterID            string
@@ -192,9 +192,7 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 
 // mongocli atlas backup(s) restore(s) job(s) start
 func AtlasBackupsRestoresStartBuilder() *cobra.Command {
-	opts := &atlasBackupsRestoresStartOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasBackupsRestoresStartOpts)
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start [%s|%s]", automatedRestore, httpRestore),
 		Short:     description.StartRestore,

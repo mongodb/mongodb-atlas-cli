@@ -32,7 +32,6 @@ func TestAtlasBackupsRestoresStart_Run(t *testing.T) {
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &atlasBackupsRestoresStartOpts{
-			globalOpts:  newGlobalOpts(),
 			store:       mockStore,
 			method:      automatedRestore,
 			clusterName: "Cluster0",
@@ -52,7 +51,6 @@ func TestAtlasBackupsRestoresStart_Run(t *testing.T) {
 
 	t.Run(httpRestore, func(t *testing.T) {
 		listOpts := &atlasBackupsRestoresStartOpts{
-			globalOpts:  newGlobalOpts(),
 			store:       mockStore,
 			method:      httpRestore,
 			clusterName: "Cluster0",

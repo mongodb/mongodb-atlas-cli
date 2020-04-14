@@ -31,7 +31,7 @@ const (
 )
 
 type atlasWhitelistCreateOpts struct {
-	*globalOpts
+	globalOpts
 	entry     string
 	entryType string
 	comment   string
@@ -77,9 +77,7 @@ func (opts *atlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 
 // mongocli atlas whitelist(s) create value --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
 func AtlasWhitelistCreateBuilder() *cobra.Command {
-	opts := &atlasWhitelistCreateOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasWhitelistCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [entry]",
 		Short: description.CreateWhitelist,

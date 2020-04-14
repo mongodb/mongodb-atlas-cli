@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,10 +24,9 @@ import (
 )
 
 type atlasClustersListOpts struct {
-	*globalOpts
-	pageNum      int
-	itemsPerPage int
-	store        store.ClusterLister
+	globalOpts
+	listOpts
+	store store.ClusterLister
 }
 
 func (opts *atlasClustersListOpts) init() error {
@@ -52,18 +50,9 @@ func (opts *atlasClustersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasClustersListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
 func AtlasClustersListBuilder() *cobra.Command {
-	opts := &atlasClustersListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &atlasClustersListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListClusters,

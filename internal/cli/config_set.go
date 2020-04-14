@@ -24,7 +24,7 @@ import (
 )
 
 type configSetOpts struct {
-	*globalOpts
+	globalOpts
 	prop string
 	val  string
 }
@@ -39,9 +39,7 @@ func (opts *configSetOpts) Run() error {
 }
 
 func ConfigSetBuilder() *cobra.Command {
-	opts := &configSetOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &configSetOpts{}
 	cmd := &cobra.Command{
 		Use:   "set [prop] [val]",
 		Short: description.SetConfig,

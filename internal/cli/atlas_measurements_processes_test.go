@@ -30,13 +30,12 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 	expected := fixtures.ProcessMeasurements()
 
 	listOpts := &atlasMeasurementsProcessOpts{
-		globalOpts:  newGlobalOpts(),
-		host:        "hard-00-00.mongodb.net",
-		port:        27017,
-		granularity: "PT1M",
-		period:      "PT1M",
-		store:       mockStore,
+		host:  "hard-00-00.mongodb.net",
+		port:  27017,
+		store: mockStore,
 	}
+	listOpts.granularity = "PT1M"
+	listOpts.period = "PT1M"
 
 	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
 	if err != nil {

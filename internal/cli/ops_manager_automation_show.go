@@ -23,7 +23,7 @@ import (
 )
 
 type opsManagerAutomationShowOpts struct {
-	*globalOpts
+	globalOpts
 	store store.AutomationGetter
 }
 
@@ -48,9 +48,7 @@ func (opts *opsManagerAutomationShowOpts) Run() error {
 
 // mongocli ops-manager automation show [--projectId projectId]
 func OpsManagerAutomationShowBuilder() *cobra.Command {
-	opts := &opsManagerAutomationShowOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := &opsManagerAutomationShowOpts{}
 	cmd := &cobra.Command{
 		Use:    "show",
 		Args:   cobra.NoArgs,

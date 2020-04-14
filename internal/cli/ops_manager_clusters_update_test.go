@@ -58,11 +58,10 @@ processes:
     port: 29030`
 	fileName := "test.yml"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
-	createOpts := &cmClustersUpdateOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		fs:         appFS,
-		filename:   fileName,
+	createOpts := &opsManagerClustersUpdateOpts{
+		store:    mockStore,
+		fs:       appFS,
+		filename: fileName,
 	}
 
 	mockStore.

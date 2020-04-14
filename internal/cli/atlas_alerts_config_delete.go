@@ -23,8 +23,8 @@ import (
 )
 
 type atlasAlertsConfigDeleteOpts struct {
-	*globalOpts
-	*deleteOpts
+	globalOpts
+	deleteOpts
 	store store.AlertConfigurationDeleter
 }
 
@@ -44,13 +44,9 @@ func (opts *atlasAlertsConfigDeleteOpts) Run() error {
 
 // mongocli atlas alerts config(s) delete id --projectId projectId [--confirm]
 func AtlasAlertsConfigDeleteBuilder() *cobra.Command {
-	opts := &atlasAlertsConfigDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
-			successMessage: "Alert config '%s' deleted\n",
-			failMessage:    "Alert config not deleted",
-		},
-	}
+	opts := new(atlasAlertsConfigDeleteOpts)
+	opts.successMessage = "Alert config '%s' deleted\n"
+	opts.failMessage = "Alert config not deleted"
 	cmd := &cobra.Command{
 		Use:     "delete [id]",
 		Short:   description.DeleteAlertsConfig,

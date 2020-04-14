@@ -20,49 +20,20 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
 )
 
-func TestCloudManagerClustersApply_Run(t *testing.T) {
+func TestCloudManagerClustersShutdown_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := fixtures.AutomationConfig()
-	appFS := afero.NewMemMapFs()
-	// create test file
-	fileYML := `
----
-name: "myReplicaSet"
-version: 4.2.2
-featureCompatibilityVersion: 4.2
-processes:
-  - hostname: host0
-    dbPath: /data/myReplicaSet/rs1
-    logPath: /data/myReplicaSet/rs1/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29010
-  - hostname: host1
-    dbPath: /data/myReplicaSet/rs2
-    logPath: /data/myReplicaSet/rs2/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29020
-  - hostname: host2
-    dbPath: /data/myReplicaSet/rs3
-    logPath: /data/myReplicaSet/rs3/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29030`
-	fileName := "test.yml"
-	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
-	createOpts := &cmClustersApplyOpts{
-		globalOpts: newGlobalOpts(),
-		store:      mockStore,
-		fs:         appFS,
-		filename:   fileName,
+
+	createOpts := &opsManagerClustersShutdownOpts{
+		store:   mockStore,
+		confirm: true,
+		name:    "myReplicaSet",
 	}
 
 	mockStore.

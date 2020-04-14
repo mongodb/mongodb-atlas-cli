@@ -27,7 +27,7 @@ import (
 )
 
 type atlasAlertsAcknowledgeOpts struct {
-	*globalOpts
+	globalOpts
 	alertID string
 	until   string
 	comment string
@@ -73,9 +73,7 @@ func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.Acknowled
 
 // mongocli atlas alerts acknowledge alertID --projectId projectId
 func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
-	opts := &atlasAlertsAcknowledgeOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasAlertsAcknowledgeOpts)
 	cmd := &cobra.Command{
 		Use:     "acknowledge [alertId]",
 		Short:   description.AcknowledgeAlerts,

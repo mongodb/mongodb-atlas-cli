@@ -31,9 +31,8 @@ func TestAtlasClustersDescribe_Run(t *testing.T) {
 	expected := fixtures.Cluster()
 
 	describeOpts := &atlasClustersDescribeOpts{
-		globalOpts: newGlobalOpts(),
-		name:       "test",
-		store:      mockStore,
+		name:  "test",
+		store: mockStore,
 	}
 
 	mockStore.

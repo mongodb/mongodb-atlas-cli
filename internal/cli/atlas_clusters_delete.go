@@ -23,8 +23,8 @@ import (
 )
 
 type atlasClustersDeleteOpts struct {
-	*globalOpts
-	*deleteOpts
+	globalOpts
+	deleteOpts
 	store store.ClusterDeleter
 }
 
@@ -44,13 +44,9 @@ func (opts *atlasClustersDeleteOpts) Run() error {
 
 // mongocli atlas cluster(s) delete name --projectId projectId [--confirm]
 func AtlasClustersDeleteBuilder() *cobra.Command {
-	opts := &atlasClustersDeleteOpts{
-		globalOpts: newGlobalOpts(),
-		deleteOpts: &deleteOpts{
-			successMessage: "Cluster '%s' deleted\n",
-			failMessage:    "Cluster not deleted",
-		},
-	}
+	opts := &atlasClustersDeleteOpts{}
+	opts.successMessage = "Cluster '%s' deleted\n"
+	opts.failMessage = "Cluster not deleted"
 	cmd := &cobra.Command{
 		Use:     "delete [name]",
 		Short:   description.DeleteCluster,

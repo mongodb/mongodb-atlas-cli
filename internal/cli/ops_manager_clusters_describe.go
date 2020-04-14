@@ -26,13 +26,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type cmClustersDescribeOpts struct {
-	*globalOpts
+type opsManagerClustersDescribeOpts struct {
+	globalOpts
 	name  string
 	store store.AutomationGetter
 }
 
-func (opts *cmClustersDescribeOpts) init() error {
+func (opts *opsManagerClustersDescribeOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -42,7 +42,7 @@ func (opts *cmClustersDescribeOpts) init() error {
 	return err
 }
 
-func (opts *cmClustersDescribeOpts) Run() error {
+func (opts *opsManagerClustersDescribeOpts) Run() error {
 	result, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {
@@ -60,10 +60,8 @@ func (opts *cmClustersDescribeOpts) Run() error {
 }
 
 // mongocli cloud-manager cluster(s) describe [name] --projectId projectId
-func CloudManagerClustersDescribeBuilder() *cobra.Command {
-	opts := &cmClustersDescribeOpts{
-		globalOpts: newGlobalOpts(),
-	}
+func OpsManagerManagerClustersDescribeBuilder() *cobra.Command {
+	opts := &opsManagerClustersDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe [name]",
 		Short: description.DescribeCluster,

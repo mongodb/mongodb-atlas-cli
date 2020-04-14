@@ -15,7 +15,6 @@
 package cli
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -25,11 +24,10 @@ import (
 )
 
 type atlasBackupsCheckpointsListOpts struct {
-	*globalOpts
-	clusterName  string
-	pageNum      int
-	itemsPerPage int
-	store        store.CheckpointsLister
+	globalOpts
+	listOpts
+	clusterName string
+	store       store.CheckpointsLister
 }
 
 func (opts *atlasBackupsCheckpointsListOpts) init() error {
@@ -54,18 +52,9 @@ func (opts *atlasBackupsCheckpointsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasBackupsCheckpointsListOpts) newListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
-		PageNum:      opts.pageNum,
-		ItemsPerPage: opts.itemsPerPage,
-	}
-}
-
 // mongocli atlas backup(s) checkpoint(s) list clusterName [--projectId projectId]
 func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
-	opts := &atlasBackupsCheckpointsListOpts{
-		globalOpts: newGlobalOpts(),
-	}
+	opts := new(atlasBackupsCheckpointsListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

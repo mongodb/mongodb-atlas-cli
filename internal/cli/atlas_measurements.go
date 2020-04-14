@@ -47,7 +47,6 @@ func AtlasMeasurementsBuilder() *cobra.Command {
 		Use:   "measurements",
 		Short: description.Measurements,
 	}
-
 	cmd.AddCommand(AtlasMeasurementsProcessBuilder())
 
 	return cmd

@@ -56,9 +56,9 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 func AtlasMeasurementsProcessBuilder() *cobra.Command {
 	opts := &atlasMeasurementsProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "process",
+		Use:     "processes",
 		Short:   description.ProcessMeasurements,
-		Aliases: []string{"processes"},
+		Aliases: []string{"process"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

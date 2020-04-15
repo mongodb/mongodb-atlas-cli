@@ -15,24 +15,33 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func AtlasBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: description.Atlas,
-	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(AtlasEventsBuilder())
-	cmd.AddCommand(AtlasMeasurementsBuilder())
-	// cmd.AddCommand(AtlasLogsBuilder())
-	cmd.AddCommand(AtlasProcessesBuilder())
+func TestAtlasProcessesList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProcessLister(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	expected := fixtures.Processes()
+
+	listOpts := &atlasProcessesListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		Processes(listOpts.projectID, listOpts.newListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

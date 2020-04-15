@@ -12,27 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package fixtures
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func AtlasBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: description.Atlas,
-	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(AtlasEventsBuilder())
-	cmd.AddCommand(AtlasMeasurementsBuilder())
-	// cmd.AddCommand(AtlasLogsBuilder())
-	cmd.AddCommand(AtlasProcessesBuilder())
-
-	return cmd
+func Processes() []*atlas.Process {
+	return []*atlas.Process{}
 }

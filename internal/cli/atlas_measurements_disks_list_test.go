@@ -35,19 +35,13 @@ func TestAtlasMeasurementsDisksListsOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
 	opts := listOpts.newListOptions()
 	mockStore.
-		EXPECT().ProcessDisks(listOpts.projectID, hostName, port, opts).
+		EXPECT().ProcessDisks(listOpts.projectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).
 		Times(1)
 
-	err = listOpts.Run()
-	if err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

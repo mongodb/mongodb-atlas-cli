@@ -23,15 +23,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsProcessOpts struct {
+type atlasMeasurementsDisksDescribeOpts struct {
 	globalOpts
 	measurementsOpts
 	host  string
 	port  int
-	store store.ProcessMeasurementLister
+	name  string
+	store store.ProcessDiskMeasurementsLister
 }
 
-func (opts *atlasMeasurementsProcessOpts) init() error {
+func (opts *atlasMeasurementsDisksDescribeOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -41,9 +42,9 @@ func (opts *atlasMeasurementsProcessOpts) init() error {
 	return err
 }
 
-func (opts *atlasMeasurementsProcessOpts) Run() error {
+func (opts *atlasMeasurementsDisksDescribeOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
+	result, err := opts.store.ProcessDiskMeasurements(opts.ProjectID(), opts.host, opts.port, opts.name, listOpts)
 
 	if err != nil {
 		return err
@@ -52,14 +53,13 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas measurements process(es) host:port [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
-func AtlasMeasurementsProcessBuilder() *cobra.Command {
-	opts := &atlasMeasurementsProcessOpts{}
+// mcli atlas measurements disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+func AtlasMeasurementsDisksDescribeBuilder() *cobra.Command {
+	opts := &atlasMeasurementsDisksDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "processes",
-		Short:   description.ProcessMeasurements,
-		Aliases: []string{"process"},
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe [host:port] [name]",
+		Short: description.ListDisks,
+		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
@@ -69,19 +69,13 @@ func AtlasMeasurementsProcessBuilder() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
+			opts.name = args[1]
 			return opts.Run()
 		},
 	}
+
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.Start)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.End)
-	cmd.Flags().StringVar(&opts.measurementType, flags.MeasurementType, "", usage.MeasurementType)
-
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd

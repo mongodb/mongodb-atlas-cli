@@ -65,7 +65,7 @@ func AtlasMeasurementsDatabasesListBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			if opts.host, opts.port, err = GetHostNameAndPort(args[0]); err != nil {
+			if opts.host, opts.port, err = getHostNameAndPort(args[0]); err != nil {
 				return err
 			}
 

@@ -37,19 +37,13 @@ func TestAtlasMeasurementsProcess_Run(t *testing.T) {
 	listOpts.granularity = "PT1M"
 	listOpts.period = "PT1M"
 
-	hostName, port, err := GetHostNameAndPort("hard-00-00.mongodb.net:27017")
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
 	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().ProcessMeasurements(listOpts.projectID, hostName, port, opts).
+		EXPECT().ProcessMeasurements(listOpts.projectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).
 		Times(1)
 
-	err = listOpts.Run()
-	if err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

@@ -39,6 +39,29 @@ func ProcessDisks() *atlas.ProcessDisksResponse {
 	}
 }
 
+func ProcessDatabases() *atlas.ProcessDatabasesResponse {
+	return &atlas.ProcessDatabasesResponse{
+		Links: []*atlas.Link{
+			{
+				Rel:  "self",
+				Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/12345678/processes/shard-00-00.mongodb.net:27017/databases",
+			},
+		},
+		Results: []*atlas.ProcessDatabase{
+			{
+				Links: []*atlas.Link{
+					{
+						Rel:  "self",
+						Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/12345678/processes/shard-00-00.mongodb.net:27017/databases/test",
+					},
+				},
+				DatabaseName: "test",
+			},
+		},
+		TotalCount: 1,
+	}
+}
+
 func ProcessMeasurements() *atlas.ProcessMeasurements {
 	return &atlas.ProcessMeasurements{
 		End:         "2017-08-22T20:31:14Z",

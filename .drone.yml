@@ -9,7 +9,7 @@ platform:
 
 steps:
   - name: dependencies
-    image: golang:1.13
+    image: golang:1.14
     commands:
       - curl -sL https://deb.nodesource.com/setup_12.x | bash -
       - apt-get install -y nodejs
@@ -25,7 +25,7 @@ steps:
         - push
 
   - name: test
-    image: golang:1.13
+    image: golang:1.14
     commands:
       - make test
     volumes:
@@ -33,12 +33,12 @@ steps:
         path: /go
 
   - name: lint
-    image: golangci/golangci-lint:v1.23.6
+    image: golangci/golangci-lint:v1.24.0
     commands:
       - make lint
 
   - name: e2e
-    image: golang:1.13
+    image: golang:1.14
     commands:
       - make e2e-test
     environment:

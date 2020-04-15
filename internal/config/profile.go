@@ -192,7 +192,6 @@ func (p Profile) Save() error {
 			return err
 		}
 	}
-	// TODO: We can now read but not write, see https://github.com/spf13/viper/pull/813
 	configFile := fmt.Sprintf("%s/%s.toml", p.configDir, Name)
 	return viper.WriteConfigAs(configFile)
 }

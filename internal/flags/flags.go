@@ -36,6 +36,8 @@ const (
 	Period                          = "period"                          // Period flag
 	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag
+	Out                             = "out"                             // Out flag
+	OutShort                        = "o"                               // OutShort flag
 	Status                          = "status"                          // Status flag
 	Start                           = "start"                           // Start flag
 	End                             = "end"                             // End flag

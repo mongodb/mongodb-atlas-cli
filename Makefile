@@ -71,6 +71,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/process_databases.go -destination=internal/mocks/mock_process_databases.go -package=mocks
 	mockgen -source=internal/store/host_measurements.go -destination=internal/mocks/mock_host_measurements.go -package=mocks
 	mockgen -source=internal/store/indexes.go -destination=internal/mocks/mock_indexes.go -package=mocks
+	mockgen -source=internal/store/processes.go -destination=internal/mocks/mock_processes.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

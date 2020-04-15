@@ -35,6 +35,7 @@ const (
 	StartRestore           = "Start a restore job."
 	Snapshots              = "Manage continuous snapshots for your project."
 	ListSnapshots          = "List continuous snapshots for a project."
+	Logs                   = "Download host logs."
 	Clusters               = "Manage clusters for your project."
 	ClustersLong           = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
 	CreateCluster          = "Create a MongoDB cluster."
@@ -43,6 +44,8 @@ const (
 	DescribeCluster        = "Describe a cluster."
 	ListClusters           = "List clusters for a project."
 	UpdateCluster          = "Update a MongoDB cluster in Atlas."
+	Processes              = "Manage processes for your project."
+	ListProcesses          = "List processes for a project."
 	DBUsers                = "Manage database users for your project."
 	DBUsersLong            = `
 The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.

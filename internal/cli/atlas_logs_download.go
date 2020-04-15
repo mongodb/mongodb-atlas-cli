@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"io"
 	"os"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
@@ -48,27 +49,37 @@ func (opts *atlasLogsDownloadOpts) init() error {
 }
 
 func (opts *atlasLogsDownloadOpts) Run() error {
-	r := &atlas.DateRangetOptions{
-		StartDate: opts.start,
-		EndDate:   opts.end,
-	}
-	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
-
-	if opts.out == "" {
-		opts.out = opts.name
-	}
-	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
+	f, err := opts.newWriteCloser()
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
+	r := opts.newDateRangeOpts()
 	if err := opts.store.DownloadLog(opts.ProjectID(), opts.host, opts.name, f, r); err != nil {
 		return err
 	}
+	return nil
+}
 
-	return f.Sync()
+func (opts *atlasLogsDownloadOpts) output() string {
+	if opts.out == "" {
+		opts.out = opts.name
+	}
+	return opts.out
+}
 
+func (opts *atlasLogsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
+	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
+	f, err := opts.fs.OpenFile(opts.output(), ff, 0777)
+	return f, err
+}
+
+func (opts *atlasLogsDownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
+	return &atlas.DateRangetOptions{
+		StartDate: opts.start,
+		EndDate:   opts.end,
+	}
 }
 
 // mongocli atlas logs download [hostname] [logname] [--type type] [--output destination] [--projectId projectId]

@@ -70,6 +70,7 @@ func (opts *atlasLogsDownloadOpts) output() string {
 }
 
 func (opts *atlasLogsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
+	// Create file only if is not there already (don't overwrite)
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
 	f, err := opts.fs.OpenFile(opts.output(), ff, 0777)
 	return f, err

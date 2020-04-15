@@ -55,7 +55,7 @@ A user’s roles apply to all the clusters in the project.`
 	UpdateDBUser         = "Update a MongoDB dbuser in Atlas."
 	ProcessMeasurements  = "Get measurements for a given host."
 	Disks                = "List available disks or disks measurements for a given host."
-	ListDisks            = "List available disks for for a given host."
+	ListDisks            = "List available disks for a given host."
 	Whitelist            = "Manage the IP whitelist for a project."
 	CreateWhitelist      = "Create an IP whitelist for a project."
 	DeleteWhitelist      = "Delete a database user for a project."

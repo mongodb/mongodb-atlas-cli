@@ -27,6 +27,7 @@ func AtlasMeasurementsDisksBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(AtlasMeasurementsDisksListBuilder())
+	cmd.AddCommand(AtlasMeasurementsDisksDescribeBuilder())
 
 	return cmd
 }

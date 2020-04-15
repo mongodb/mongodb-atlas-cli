@@ -67,6 +67,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/events.go -destination=internal/mocks/mock_events.go -package=mocks
 	mockgen -source=internal/store/process_measurements.go -destination=internal/mocks/mock_process_measurements.go -package=mocks
 	mockgen -source=internal/store/process_disks.go -destination=internal/mocks/mock_process_disks.go -package=mocks
+	mockgen -source=internal/store/process_disk_measurements.go -destination=internal/mocks/mock_process_disk_measurements.go -package=mocks
 	mockgen -source=internal/store/process_databases.go -destination=internal/mocks/mock_process_databases.go -package=mocks
 	mockgen -source=internal/store/host_measurements.go -destination=internal/mocks/mock_host_measurements.go -package=mocks
 	mockgen -source=internal/store/indexes.go -destination=internal/mocks/mock_indexes.go -package=mocks

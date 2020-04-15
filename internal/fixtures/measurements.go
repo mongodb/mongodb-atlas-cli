@@ -62,6 +62,47 @@ func ProcessDatabases() *atlas.ProcessDatabasesResponse {
 	}
 }
 
+func DiskMeasurements() *atlas.ProcessDiskMeasurements {
+	m := &atlas.ProcessDiskMeasurements{
+		ProcessMeasurements: &atlas.ProcessMeasurements{},
+		PartitionName:       "test",
+	}
+	m.End = "2017-08-22T20:31:14Z"
+	m.Granularity = "PT1M"
+	m.GroupID = "12345678"
+	m.HostID = "shard-00-00.mongodb.net:27017"
+	m.ProcessID = "shard-00-00.mongodb.net:27017"
+	m.Start = "2017-08-22T20:30:45Z"
+	m.Links = []*atlas.Link{
+		{
+			Rel:  "self",
+			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/12345678/processes/shard-00-00.mongodb.net:27017/disks/data/measurements?granularity=PT1M&period=PT1M",
+		},
+		{
+			Href: "https://cloud.mongodb.com/api/atlas/v1.0/groups/12345678/processes/shard-00-00.mongodb.net:27017",
+			Rel:  "http://mms.mongodb.com/host",
+		},
+	}
+	m.Measurements = []*atlas.Measurements{
+		{
+			DataPoints: []*atlas.DataPoints{
+				{
+					Timestamp: "2017-08-22T20:31:12Z",
+					Value:     nil,
+				},
+				{
+					Timestamp: "2017-08-22T20:31:14Z",
+					Value:     nil,
+				},
+			},
+			Name:  "ASSERT_REGULAR",
+			Units: "SCALAR_PER_SECOND",
+		},
+	}
+
+	return &atlas.ProcessDiskMeasurements{}
+}
+
 func ProcessMeasurements() *atlas.ProcessMeasurements {
 	return &atlas.ProcessMeasurements{
 		End:         "2017-08-22T20:31:14Z",

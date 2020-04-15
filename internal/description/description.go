@@ -56,6 +56,7 @@ A user’s roles apply to all the clusters in the project.`
 	ProcessMeasurements  = "Get measurements for a given host."
 	Disks                = "List available disks or disks measurements for a given host."
 	ListDisks            = "List available disks for a given host."
+	DescribeDisks        = "Describe disks measurements for a given host partition."
 	Databases            = "List available databases or databases measurements for a given host."
 	ListDatabases        = "List available databases for a given host."
 	Whitelist            = "Manage the IP whitelist for a project."

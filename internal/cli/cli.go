@@ -255,8 +255,8 @@ func (opts *listOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// GetHostNameAndPort return the hostname and the port starting from the string hostname:port
-func GetHostNameAndPort(hostInfo string) (string, int, error) {
+// getHostNameAndPort return the hostname and the port starting from the string hostname:port
+func getHostNameAndPort(hostInfo string) (string, int, error) {
 	host := strings.SplitN(hostInfo, ":", -1)
 	if len(host) != 2 {
 		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)

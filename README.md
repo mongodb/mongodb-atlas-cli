@@ -26,7 +26,7 @@ Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.13)](https://golang.org/dl/)
+- [Go (at least Go 1.14)](https://golang.org/dl/)
 
 #### Fetch and Install
 

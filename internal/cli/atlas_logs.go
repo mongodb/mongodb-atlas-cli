@@ -19,20 +19,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasBuilder() *cobra.Command {
+func AtlasLogsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: description.Atlas,
+		Use:     "logs",
+		Aliases: []string{"log"},
+		Short:   description.Logs,
 	}
-	cmd.AddCommand(AtlasClustersBuilder())
-	cmd.AddCommand(AtlasDBUsersBuilder())
-	cmd.AddCommand(AtlasWhitelistBuilder())
-	cmd.AddCommand(AtlasAlertsBuilder())
-	cmd.AddCommand(AtlasBackupsBuilder())
-	cmd.AddCommand(AtlasEventsBuilder())
-	cmd.AddCommand(AtlasMeasurementsBuilder())
-	cmd.AddCommand(AtlasLogsBuilder())
-	cmd.AddCommand(AtlasProcessesBuilder())
+	cmd.AddCommand(AtlasLogsDownloadBuilder())
 
 	return cmd
 }

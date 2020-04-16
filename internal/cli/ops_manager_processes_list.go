@@ -76,6 +76,7 @@ func OpsManagerProcessListBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.clusterID, flags.ClusterID, "", usage.Page)
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 

@@ -38,11 +38,7 @@ type atlasWhitelistCreateOpts struct {
 	store     store.ProjectIPWhitelistCreator
 }
 
-func (opts *atlasWhitelistCreateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasWhitelistCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -83,7 +79,7 @@ func AtlasWhitelistCreateBuilder() *cobra.Command {
 		Short: description.CreateWhitelist,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.entry = args[0]

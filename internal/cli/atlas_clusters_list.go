@@ -29,11 +29,7 @@ type atlasClustersListOpts struct {
 	store store.ClusterLister
 }
 
-func (opts *atlasClustersListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasClustersListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -59,7 +55,7 @@ func AtlasClustersListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

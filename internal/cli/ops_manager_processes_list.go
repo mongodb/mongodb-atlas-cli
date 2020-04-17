@@ -31,11 +31,7 @@ type opsManagerProcessesListOpts struct {
 	store     store.HostLister
 }
 
-func (opts *opsManagerProcessesListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerProcessesListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -69,7 +65,7 @@ func OpsManagerProcessListBuilder() *cobra.Command {
 		Hidden:  true,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

@@ -30,11 +30,7 @@ type atlasBackupsRestoresListOpts struct {
 	store       store.ContinuousJobLister
 }
 
-func (opts *atlasBackupsRestoresListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasBackupsRestoresListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -60,7 +56,7 @@ func AtlasBackupsRestoresListBuilder() *cobra.Command {
 		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.clusterName = args[0]

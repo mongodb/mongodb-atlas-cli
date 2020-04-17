@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"

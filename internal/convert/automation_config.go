@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-
 	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/go-client-mongodb-ops-manager/search"

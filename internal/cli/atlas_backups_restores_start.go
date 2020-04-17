@@ -53,11 +53,7 @@ type atlasBackupsRestoresStartOpts struct {
 	store                store.ContinuousJobCreator
 }
 
-func (opts *atlasBackupsRestoresStartOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasBackupsRestoresStartOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -204,7 +200,7 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 					return err
 				}
 			}
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]

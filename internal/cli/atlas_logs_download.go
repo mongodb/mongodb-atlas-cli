@@ -38,11 +38,7 @@ type atlasLogsDownloadOpts struct {
 	store store.LogsDownloader
 }
 
-func (opts *atlasLogsDownloadOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasLogsDownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -94,7 +90,7 @@ func AtlasLogsDownloadBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]

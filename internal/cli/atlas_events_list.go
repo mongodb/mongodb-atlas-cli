@@ -26,15 +26,16 @@ import (
 )
 
 type atlasEventsListOpts struct {
-	globalOpts
 	listOpts
+	orgID     string
+	projectID string
 	eventType string
 	minDate   string
 	maxDate   string
 	store     store.EventsStore
 }
 
-func (opts *atlasEventsListOpts) init() error {
+func (opts *atlasEventsListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -82,7 +83,7 @@ func AtlasEventsListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

@@ -50,11 +50,7 @@ type atlasClustersCreateOpts struct {
 	store        store.ClusterCreator
 }
 
-func (opts *atlasClustersCreateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasClustersCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -167,7 +163,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 			if len(args) != 0 {
 				opts.name = args[0]
 			}
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

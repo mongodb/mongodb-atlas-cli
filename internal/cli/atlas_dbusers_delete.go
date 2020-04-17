@@ -30,11 +30,7 @@ type atlasDBUsersDeleteOpts struct {
 	store  store.DatabaseUserDeleter
 }
 
-func (opts *atlasDBUsersDeleteOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasDBUsersDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -55,7 +51,7 @@ func AtlasDBUsersDeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			opts.entry = args[0]

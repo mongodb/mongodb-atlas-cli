@@ -37,11 +37,7 @@ type atlasDBUsersCreateOpts struct {
 	store    store.DatabaseUserCreator
 }
 
-func (opts *atlasDBUsersCreateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasDBUsersCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -88,7 +84,7 @@ func AtlasDBUsersCreateBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			if len(args) == 0 && len(opts.roles) == 0 {

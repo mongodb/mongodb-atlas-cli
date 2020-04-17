@@ -27,10 +27,7 @@ type opsManagerAutomationShowOpts struct {
 	store store.AutomationGetter
 }
 
-func (opts *opsManagerAutomationShowOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
+func (opts *opsManagerAutomationShowOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -54,7 +51,7 @@ func OpsManagerAutomationShowBuilder() *cobra.Command {
 		Args:   cobra.NoArgs,
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

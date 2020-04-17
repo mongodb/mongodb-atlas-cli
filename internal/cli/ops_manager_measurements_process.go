@@ -30,11 +30,7 @@ type OpsManagerMeasurementsProcessOpts struct {
 	store  store.HostMeasurementLister
 }
 
-func (opts *OpsManagerMeasurementsProcessOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *OpsManagerMeasurementsProcessOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -60,7 +56,7 @@ func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]

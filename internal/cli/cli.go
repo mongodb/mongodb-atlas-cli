@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -36,6 +37,14 @@ type globalOpts struct {
 	projectID string
 }
 
+func validateObjectID(s string) error {
+	b, err := hex.DecodeString(s)
+	if err != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ObjectID", s)
+	}
+	return nil
+}
+
 // ProjectID returns the project id.
 // If the id is empty, it caches it after querying config.
 func (opts *globalOpts) ProjectID() string {
@@ -44,6 +53,26 @@ func (opts *globalOpts) ProjectID() string {
 	}
 	opts.projectID = config.ProjectID()
 	return opts.projectID
+}
+
+type cmdOpt func() error
+
+// PreRunE is a function to call before running the command,
+// this will validate the project ID and call any additional function pass as a callback
+func (opts *globalOpts) PreRunE(cbs ...cmdOpt) error {
+	if opts.ProjectID() == "" {
+		return errMissingProjectID
+	}
+	if err := validateObjectID(opts.ProjectID()); err != nil {
+		return err
+	}
+	for _, f := range cbs {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // OrgID returns the organization id.

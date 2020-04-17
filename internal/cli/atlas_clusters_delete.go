@@ -28,11 +28,7 @@ type atlasClustersDeleteOpts struct {
 	store store.ClusterDeleter
 }
 
-func (opts *atlasClustersDeleteOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasClustersDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -53,7 +49,7 @@ func AtlasClustersDeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			opts.entry = args[0]

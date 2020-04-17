@@ -28,11 +28,7 @@ type atlasWhitelistDeleteOpts struct {
 	store store.ProjectIPWhitelistDeleter
 }
 
-func (opts *atlasWhitelistDeleteOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasWhitelistDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -56,7 +52,7 @@ func AtlasWhitelistDeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			opts.entry = args[0]

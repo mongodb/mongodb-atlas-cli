@@ -31,11 +31,7 @@ type opsManagerMeasurementsDisksDescribeOpts struct {
 	store  store.HostDiskMeasurementsLister
 }
 
-func (opts *opsManagerMeasurementsDisksDescribeOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerMeasurementsDisksDescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -60,7 +56,7 @@ func OpsManagerMeasurementsDisksDescribeBuilder() *cobra.Command {
 		Short: description.ListDisks,
 		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]

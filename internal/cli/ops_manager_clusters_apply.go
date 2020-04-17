@@ -36,11 +36,7 @@ type opsManagerClustersApplyOpts struct {
 	store    store.AutomationPatcher
 }
 
-func (opts *opsManagerClustersApplyOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerClustersApplyOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -82,7 +78,7 @@ func OpsManagerClustersApplyBuilder() *cobra.Command {
 		Use:   "apply",
 		Short: description.ApplyCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

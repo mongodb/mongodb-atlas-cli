@@ -28,11 +28,7 @@ type atlasAlertsConfigDeleteOpts struct {
 	store store.AlertConfigurationDeleter
 }
 
-func (opts *atlasAlertsConfigDeleteOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasAlertsConfigDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -53,7 +49,7 @@ func AtlasAlertsConfigDeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			opts.entry = args[0]

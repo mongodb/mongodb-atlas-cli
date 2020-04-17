@@ -30,11 +30,7 @@ type atlasAlertsConfigUpdateOpts struct {
 	alertID string
 }
 
-func (opts *atlasAlertsConfigUpdateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasAlertsConfigUpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -64,7 +60,7 @@ func AtlasAlertsConfigUpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

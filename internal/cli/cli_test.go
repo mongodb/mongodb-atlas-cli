@@ -28,3 +28,24 @@ func TestGetHostNameAndPort(t *testing.T) {
 		}
 	})
 }
+
+func TestGlobalOpts_PreRunE(t *testing.T) {
+	t.Run("empty project ID", func(t *testing.T) {
+		o := &globalOpts{}
+		if err := o.PreRunE(); err != errMissingProjectID {
+			t.Errorf("Expected err: %#v, got: %#v\n", errMissingProjectID, err)
+		}
+	})
+	t.Run("invalid project ID", func(t *testing.T) {
+		o := &globalOpts{projectID: "1"}
+		if err := o.PreRunE(); err == nil {
+			t.Errorf("Expected an error\n")
+		}
+	})
+	t.Run("valid project ID", func(t *testing.T) {
+		o := &globalOpts{projectID: "5e98249d937cfc52efdc2a9f"}
+		if err := o.PreRunE(); err != nil {
+			t.Fatalf("PreRunE() unexpected error %v\n", err)
+		}
+	})
+}

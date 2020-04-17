@@ -28,11 +28,7 @@ type opsManagerDBUsersListOpts struct {
 	store store.AutomationGetter
 }
 
-func (opts *opsManagerDBUsersListOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerDBUsersListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -57,7 +53,7 @@ func OpsManagerDBUsersListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

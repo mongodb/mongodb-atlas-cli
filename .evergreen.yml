@@ -293,6 +293,7 @@ tasks:
       - name: package
     commands:
       - func: "clone"
+      - func: "set up notary client credentials"
       - func: "push"
         vars:
           edition: enterprise
@@ -374,6 +375,7 @@ tasks:
       - name: package
     commands:
       - func: "clone"
+      - func: "set up notary client credentials"
       - func: "push"
         vars:
           edition: org

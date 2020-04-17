@@ -15,7 +15,6 @@
 package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -24,14 +23,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerProcessesListOpts struct {
+type opsManagerProcessesDescribeOpts struct {
 	globalOpts
-	listOpts
-	clusterID string
-	store     store.HostLister
+	hostID string
+	store  store.HostDescriber
 }
 
-func (opts *opsManagerProcessesListOpts) init() error {
+func (opts *opsManagerProcessesDescribeOpts) init() error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -41,9 +39,8 @@ func (opts *opsManagerProcessesListOpts) init() error {
 	return err
 }
 
-func (opts *opsManagerProcessesListOpts) Run() error {
-	listOpts := opts.newHostListOptions()
-	result, err := opts.store.Hosts(opts.ProjectID(), listOpts)
+func (opts *opsManagerProcessesDescribeOpts) Run() error {
+	result, err := opts.store.Host(opts.ProjectID(), opts.hostID)
 
 	if err != nil {
 		return err
@@ -52,33 +49,23 @@ func (opts *opsManagerProcessesListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerProcessesListOpts) newHostListOptions() *om.HostListOptions {
-	return &om.HostListOptions{
-		ClusterID:   opts.clusterID,
-		ListOptions: *opts.newListOptions(),
-	}
-}
-
-// mongocli om process(es) list --projectId projectId [--page N] [--limit N]
-func OpsManagerProcessListBuilder() *cobra.Command {
-	opts := &opsManagerProcessesListOpts{}
+// mongocli om process(es) describe [processID] [--projectId projectId]
+func OpsManagerProcessDescribeBuilder() *cobra.Command {
+	opts := &opsManagerProcessesDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "describe [processID]",
 		Short:   description.ListProcesses,
-		Aliases: []string{"ls"},
+		Aliases: []string{"d"},
 		Hidden:  true,
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.clusterID, flags.ClusterID, "", usage.ClusterID)
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

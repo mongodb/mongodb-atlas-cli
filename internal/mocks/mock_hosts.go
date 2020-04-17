@@ -47,3 +47,41 @@ func (mr *MockHostListerMockRecorder) Hosts(arg0, arg1 interface{}) *gomock.Call
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Hosts", reflect.TypeOf((*MockHostLister)(nil).Hosts), arg0, arg1)
 }
+
+// MockHostDescriber is a mock of HostDescriber interface
+type MockHostDescriber struct {
+	ctrl     *gomock.Controller
+	recorder *MockHostDescriberMockRecorder
+}
+
+// MockHostDescriberMockRecorder is the mock recorder for MockHostDescriber
+type MockHostDescriberMockRecorder struct {
+	mock *MockHostDescriber
+}
+
+// NewMockHostDescriber creates a new mock instance
+func NewMockHostDescriber(ctrl *gomock.Controller) *MockHostDescriber {
+	mock := &MockHostDescriber{ctrl: ctrl}
+	mock.recorder = &MockHostDescriberMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockHostDescriber) EXPECT() *MockHostDescriberMockRecorder {
+	return m.recorder
+}
+
+// Host mocks base method
+func (m *MockHostDescriber) Host(arg0, arg1 string) (*opsmngr.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Host", arg0, arg1)
+	ret0, _ := ret[0].(*opsmngr.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Host indicates an expected call of Host
+func (mr *MockHostDescriberMockRecorder) Host(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Host", reflect.TypeOf((*MockHostDescriber)(nil).Host), arg0, arg1)
+}

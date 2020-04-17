@@ -26,11 +26,26 @@ type HostLister interface {
 	Hosts(string, *om.HostListOptions) (*om.Hosts, error)
 }
 
-// HostMeasurements encapsulate the logic to manage different cloud providers
+type HostDescriber interface {
+	Host(string, string) (*om.Host, error)
+}
+
+// Hosts encapsulate the logic to manage different cloud providers
 func (s *Store) Hosts(groupID string, opts *om.HostListOptions) (*om.Hosts, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*om.Client).Hosts.List(context.Background(), groupID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Host encapsulate the logic to manage different cloud providers
+func (s *Store) Host(groupID, hostID string) (*om.Host, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*om.Client).Hosts.Get(context.Background(), groupID, hostID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

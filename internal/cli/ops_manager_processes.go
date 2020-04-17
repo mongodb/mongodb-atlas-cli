@@ -25,8 +25,8 @@ func OpsManagerProcessesBuilder() *cobra.Command {
 		Aliases: []string{"process"},
 		Short:   description.Processes,
 	}
-
 	cmd.AddCommand(OpsManagerProcessListBuilder())
+	cmd.AddCommand(OpsManagerProcessDescribeBuilder())
 
 	return cmd
 }

@@ -41,6 +41,5 @@ func generateRandomASCIIString(length int) (string, error) {
 
 func generateRandomBase64String(length int) (string, error) {
 	result, err := generateRandomASCIIString(length)
-	return base64.URLEncoding.EncodeToString([]byte(result))[:length], err
-
+	return base64.StdEncoding.EncodeToString([]byte(result))[:length], err
 }

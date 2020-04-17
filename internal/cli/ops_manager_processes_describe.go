@@ -49,11 +49,11 @@ func (opts *opsManagerProcessesDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om process(es) list --projectId projectId [--page N] [--limit N]
+// mongocli om process(es) describe [processID] [--projectId projectId]
 func OpsManagerProcessDescribeBuilder() *cobra.Command {
 	opts := &opsManagerProcessesDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe [processID]",
 		Short:   description.ListProcesses,
 		Aliases: []string{"d"},
 		Hidden:  true,

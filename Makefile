@@ -76,6 +76,7 @@ gen-mocks: ## Generate mocks
 	mockgen -source=internal/store/hosts.go -destination=internal/mocks/mock_hosts.go -package=mocks
 	mockgen -source=internal/store/host_databases.go -destination=internal/mocks/mock_host_databases.go -package=mocks
 	mockgen -source=internal/store/host_disks.go -destination=internal/mocks/mock_host_disks.go -package=mocks
+	mockgen -source=internal/store/host_disk_measurements.go -destination=internal/mocks/mock_host_disk_measurements.go -package=mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin

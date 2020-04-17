@@ -19,21 +19,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func OpsManagerClustersBuilder() *cobra.Command {
+func OpsManagerClustersIndexesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "clusters",
-		Aliases: []string{"cluster"},
-		Short:   description.Clusters,
+		Use:     "indexes",
+		Aliases: []string{"index"},
+		Short:   description.ClustersIndexes,
 	}
-
-	cmd.AddCommand(OpsManagerClustersListBuilder())
-	cmd.AddCommand(OpsManagerManagerClustersDescribeBuilder())
-	cmd.AddCommand(OpsManagerManagerClustersCreateBuilder())
-	cmd.AddCommand(OpsManagerClustersShutdownBuilder())
-	cmd.AddCommand(OpsManagerClustersStartupBuilder())
-	cmd.AddCommand(OpsManagerClustersUpdateBuilder())
-	cmd.AddCommand(OpsManagerClustersApplyBuilder())
-	cmd.AddCommand(OpsManagerClustersIndexesBuilder())
+	cmd.AddCommand(OpsManagerClustersIndexesCreateBuilder())
 
 	return cmd
 }

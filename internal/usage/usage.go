@@ -75,14 +75,27 @@ const (
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
 	Database                        = "Database name."
 	Collection                      = "Collection name."
+	Collation                       = "It specifies the language-specific rules to use when sorting and matching strings."
+	RSName                          = "The replica set that the index is built on."
 	Key                             = "Index keys. Should be formatted as field:type."
 	Unique                          = "Create a unique key index."
 	Sparse                          = "Create a sparse index."
-	ClusterName                     = "Name of the cluster."
-	ClusterID                       = "Unique identifier of the cluster."
-	Background                      = "Create the index in the background."
-	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	TargetClusterID                 = `Unique identifier of the target cluster.
+	Options                         = "Index options that the MongoDB Go Driver supports."
+	Locale                          = "Locale that the ICU defines."
+	CaseLevel                       = "If set to true, the index uses case comparison. This field applies only if the strength level is set to 1 or 2."
+	CaseFirst                       = "Determines the sort order of case differences during tertiary level comparisons. "
+	Strength                        = "Level of comparison to perform."
+	Alternate                       = "Determines whether collation should consider whitespace and punctuation as base characters during comparisons."
+	MaxVariable                     = "Determines which characters are are considered ignorable. This field applies only if indexConfigs.collation.alternate is set to shifted."
+	NumericOrdering                 = "If set to true, collation compares numeric strings as numbers. If false, collation compares numeric strings as strings."
+	Normalization                   = "If true, collation checks if text requires normalization and performs normalization to compare text."
+	Backwards                       = "If true, strings with diacritics sort from the back to the front of the string."
+
+	ClusterName     = "Name of the cluster."
+	ClusterID       = "Unique identifier of the cluster."
+	Background      = "Create the index in the background."
+	TargetProjectID = "Unique identifier of the project that contains the destination cluster for the restore job."
+	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.
 For use only with automated restore jobs.`

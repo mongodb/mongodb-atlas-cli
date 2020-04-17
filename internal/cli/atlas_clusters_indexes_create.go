@@ -16,7 +16,6 @@ package cli
 
 import (
 	"fmt"
-	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
@@ -62,7 +61,7 @@ func (opts *atlasClustersIndexesCreateOpts) Run() error {
 }
 
 func (opts *atlasClustersIndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
-	keys, err := opts.indexKeys()
+	keys, err := indexKeys(opts.keys)
 	if err != nil {
 		return nil, err
 	}
@@ -83,21 +82,8 @@ func (opts *atlasClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOption
 	}
 }
 
-func (opts *atlasClustersIndexesCreateOpts) indexKeys() ([]map[string]string, error) {
-	keys := make([]map[string]string, len(opts.keys))
-	for i, key := range opts.keys {
-		value := strings.Split(key, ":")
-		if len(value) != 2 {
-			return nil, fmt.Errorf("unexpected key format: %s", key)
-		}
-		keys[i] = map[string]string{value[0]: value[1]}
-	}
-
-	return keys, nil
-}
-
 // AtlasClustersIndexesCreateBuilder builds a cobra.Command that can run as:
-// mcli atlas clusters index create [name] --clusterName clusterName  --collectionName collectionName --dbName dbName [--key field:type]
+// mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
 func AtlasClustersIndexesCreateBuilder() *cobra.Command {
 	opts := &atlasClustersIndexesCreateOpts{}
 	cmd := &cobra.Command{

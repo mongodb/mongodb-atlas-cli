@@ -37,6 +37,7 @@ const (
 	ListSnapshots          = "List continuous snapshots for a project."
 	Logs                   = "Download host logs."
 	Clusters               = "Manage clusters for your project."
+	ClustersIndexes        = "Manage cluster indexes for your project."
 	ClustersLong           = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
 	CreateCluster          = "Create a MongoDB cluster."
 	ApplyCluster           = "Apply a new cluster configuration."

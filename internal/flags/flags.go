@@ -100,8 +100,21 @@ const (
 	Granularity                     = "granularity"                     // Granularity flag
 	Key                             = "key"                             // Key flag
 	Collection                      = "collection"                      // Collection flag
+	CollectionName                  = "collectionName"                  // CollectionName flag
+	Collation                       = "collation"                       // Collation
 	Database                        = "db"                              // Database flag
 	Unique                          = "unique"                          // Unique flag
+	RSName                          = "rsName"                          // RSName flag
 	Sparse                          = "sparse"                          // Sparse flag
 	Background                      = "background"                      // Background flag
+	Options                         = "options"                         // Options flag
+	Locale                          = "locale"                          // Locale flag
+	CaseLevel                       = "caseLevel"                       // CaseLevel flag
+	CaseFirst                       = "caseFirst"                       // CaseFirst flag
+	Alternate                       = "alternate"                       // Alternate flag
+	MaxVariable                     = "MaxVariable"                     // MaxVariable flag
+	NumericOrdering                 = "numericOrdering"                 // NumericOrdering flag
+	Normalization                   = "normalization"                   // Normalization flag
+	Backwards                       = "backwards"                       // Backwards flag
+	Strength                        = "strength"                        // Strength flag
 )

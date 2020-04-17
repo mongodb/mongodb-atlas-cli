@@ -14,7 +14,9 @@
 
 package fixtures
 
-import "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+import (
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+)
 
 func AutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
@@ -214,6 +216,87 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 	}
 }
 
+func AutomationConfigWithOneReplicaSetAndIndexes(name string, disabled bool) *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Processes: []*opsmngr.Process{
+			{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{
+						Port: 27017,
+					},
+					Replication: &opsmngr.Replication{
+						ReplSetName: name,
+					},
+					Sharding: nil,
+					Storage: &opsmngr.Storage{
+						DBPath: "/data/db/",
+					},
+					SystemLog: opsmngr.SystemLog{
+						Destination: "file",
+						Path:        "/data/db/mongodb.log",
+					},
+				},
+				AuthSchemaVersion:           5,
+				Name:                        name + "_0",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "host0",
+				LogRotate: &opsmngr.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				ProcessType: "mongod",
+				Version:     "4.2.2",
+			},
+		},
+		IndexConfigs: []*map[string]interface{}{
+			{
+				"key": []map[string]interface{}{
+					{
+						"TestKey": "key",
+					},
+				},
+				"rsName":         "name",
+				"dbName":         "dbname",
+				"collectionName": "collection",
+				"collation": map[string]interface{}{
+					"locale":          "loc",
+					"caseLevel":       true,
+					"caseFirst":       "true",
+					"strength":        1,
+					"numericOrdering": true,
+					"alternate":       "test",
+					"maxVariable":     "test",
+					"normalization":   false,
+					"backwards":       false,
+				},
+				"options": []map[string]interface{}{
+					{
+						"TestKey": "key",
+					},
+				},
+			},
+		},
+		ReplicaSets: []*opsmngr.ReplicaSet{
+			{
+				ID:              name,
+				ProtocolVersion: "1",
+				Members: []opsmngr.Member{
+					{
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         name + "_0",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+		},
+	}
+}
+
 func MongoDBUsers() *opsmngr.MongoDBUser {
 	return &opsmngr.MongoDBUser{
 		Mechanisms: []string{"SCRAM-SHA-1"},
@@ -257,4 +340,36 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 		Processes:   make([]*opsmngr.Process, 0),
 		ReplicaSets: make([]*opsmngr.ReplicaSet, 0),
 	}
+}
+
+func Indexes() []*map[string]interface{} {
+
+	return []*map[string]interface{}{
+		{
+			"dbName":         "dbname",
+			"collectionName": "collection",
+			"rsName":         "name",
+			"keys": []map[string]interface{}{
+				{
+					"field": "key",
+				},
+			},
+
+			"options": map[string]interface{}{
+				"name":       "index",
+				"background": true,
+				"unique":     true,
+				"sparse":     true,
+			},
+			"collation": map[string]interface{}{
+				"locale":          "loc",
+				"caseLevel":       true,
+				"caseFirst":       "test",
+				"strength":        1.0,
+				"numericOrdering": true,
+				"alternate":       "test",
+				"maxVariable":     "test",
+				"backwards":       true,
+			},
+		}}
 }

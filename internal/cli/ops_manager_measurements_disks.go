@@ -27,6 +27,7 @@ func OpsManagerMeasurementsDisksBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(OpsManagerMeasurementsDisksListBuilder())
+	cmd.AddCommand(OpsManagerMeasurementsDisksDescribeBuilder())
 
 	return cmd
 }

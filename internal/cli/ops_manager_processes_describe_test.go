@@ -12,12 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fixtures
+package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Hosts() *om.Hosts {
-	return &om.Hosts{}
+func TestOpsManagerProcessesDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockHostDescriber(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := &opsmngr.Host{}
+
+	opts := &opsManagerProcessesDescribeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		Host(opts.projectID, opts.hostID).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

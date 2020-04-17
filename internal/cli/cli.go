@@ -270,7 +270,7 @@ func getHostNameAndPort(hostInfo string) (string, int, error) {
 	return host[0], port, nil
 }
 
-// indexKeys returns a map of properties starting from a []string which contains properties in the format field:type
+// indexKeys  takes a slice of values formatted as key:vale and returns an array of [key]:value
 func indexKeys(properties []string) ([]map[string]string, error) {
 	propertiesMap := make([]map[string]string, len(properties))
 	for i, key := range properties {

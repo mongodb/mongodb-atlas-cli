@@ -112,7 +112,7 @@ func TestAddIndexConfig(t *testing.T) {
 		t.Error("indexConfig has not been added to the AutomationConfig")
 	}
 
-	// Scenario 2: trying to add a index that is already inside the AutomationConfig
+	// Scenario 2: trying to add the same index in the AutomationConfig
 	AddIndexConfig(config, index)
 	if len(config.IndexConfigs) != 2 {
 		t.Error("the same indexConfig has been added to the AutomationConfig")

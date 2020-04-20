@@ -258,3 +258,27 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 		ReplicaSets: make([]*opsmngr.ReplicaSet, 0),
 	}
 }
+
+func AutomationConfigWithIndexConfig() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
+			AutoAuthMechanism: "MONGODB-CR",
+			Disabled:          true,
+			AuthoritativeSet:  false,
+			Users:             make([]*opsmngr.MongoDBUser, 0),
+		},
+		IndexConfigs: []*opsmngr.IndexConfigs{
+			{
+				DBName:         "test",
+				CollectionName: "test",
+				RSName:         "myReplicaSet",
+				Key: [][]string{
+					{
+						"test", "test",
+					},
+				},
+				Options:   nil,
+				Collation: nil,
+			}},
+	}
+}

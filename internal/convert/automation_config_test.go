@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
@@ -86,4 +87,35 @@ func TestEnableMechanism(t *testing.T) {
 	if len(config.Auth.Users) != 2 {
 		t.Error("automation and monitoring users not set\n")
 	}
+}
+
+func TestAddIndexConfig(t *testing.T) {
+	config := fixtures.AutomationConfigWithIndexConfig()
+
+	// Scenario 1: add an index
+	index := &opsmngr.IndexConfigs{
+		DBName:         "test1",
+		CollectionName: "test2",
+		RSName:         "test2",
+		Key: [][]string{
+			{
+				"test", "test",
+			},
+		},
+		Options:   nil,
+		Collation: nil,
+	}
+
+	AddIndexConfig(config, index)
+
+	if len(config.IndexConfigs) != 2 {
+		t.Error("indexConfig has not been added to the AutomationConfig")
+	}
+
+	// Scenario 2: trying to add a index that is already inside the AutomationConfig
+	AddIndexConfig(config, index)
+	if len(config.IndexConfigs) != 2 {
+		t.Error("the same indexConfig has been added to the AutomationConfig")
+	}
+
 }

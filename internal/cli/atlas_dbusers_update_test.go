@@ -19,7 +19,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -29,7 +28,7 @@ func TestAtlasDBUserUpdate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.DatabaseUser()
+	expected := &atlas.DatabaseUser{}
 
 	updateOpts := &atlasDBUsersUpdateOpts{
 		username: "test4",

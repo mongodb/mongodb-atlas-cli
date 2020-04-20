@@ -17,7 +17,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -27,7 +27,7 @@ func TestAtlasMeasurementsDisksListsOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.ProcessDisks()
+	expected := &mongodbatlas.ProcessDisksResponse{}
 
 	listOpts := &atlasMeasurementsDisksListsOpts{
 		host:  "hard-00-00.mongodb.net",

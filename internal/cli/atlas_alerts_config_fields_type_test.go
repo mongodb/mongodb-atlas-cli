@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,7 +27,7 @@ func TestAtlasAlertConfigFieldsType_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.MatcherFieldsType()
+	var expected []string
 
 	listOpts := &atlasAlertsConfigFieldsTypeOpts{
 		store: mockStore,

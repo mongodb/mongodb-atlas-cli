@@ -106,7 +106,6 @@ const (
 	RSName                          = "rsName"                          // RSName flag
 	Sparse                          = "sparse"                          // Sparse flag
 	Background                      = "background"                      // Background flag
-	Options                         = "options"                         // Options flag
 	Locale                          = "locale"                          // Locale flag
 	CaseLevel                       = "caseLevel"                       // CaseLevel flag
 	CaseFirst                       = "caseFirst"                       // CaseFirst flag

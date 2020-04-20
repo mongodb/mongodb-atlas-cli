@@ -15,9 +15,7 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
-	"reflect"
 	"strings"
 
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
@@ -77,15 +75,6 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 
 	current.IndexConfigs = index
 
-	s := reflect.ValueOf(&index).Elem()
-	typeOfT := s.Type()
-
-	for i := 0; i < s.NumField(); i++ {
-		f := s.Field(i)
-		fmt.Printf("%d: %s %s = %v\n", i,
-			typeOfT.Field(i).Name, f.Type(), f.Interface())
-	}
-
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
@@ -101,19 +90,16 @@ func (opts *opsManagerClustersIndexesCreateOpts) newIndex() ([]*om.IndexConfigs,
 		return nil, err
 	}
 
-	b, err := json.MarshalIndent(keys, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	fmt.Print(string(b))
-
 	i := new(om.IndexConfigs)
 	i.DBName = opts.db
 	i.CollectionName = opts.collection
 	i.RSName = opts.rsName
 	i.Key = keys
 	i.Options = opts.newIndexOptions()
-	i.Collation = opts.newCollationOptions()
+
+	if opts.locale != "" {
+		i.Collation = opts.newCollationOptions()
+	}
 
 	return []*om.IndexConfigs{i}, nil
 }
@@ -128,8 +114,6 @@ func (opts *opsManagerClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexO
 }
 
 func (opts *opsManagerClustersIndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
-	fmt.Print("locale " + opts.locale)
-
 	return &atlas.CollationOptions{
 		Locale:          opts.locale,
 		CaseLevel:       opts.caseLevel,
@@ -157,20 +141,6 @@ func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([][]string, error)
 
 	return propertiesList, nil
 }
-
-// indexKeys  takes a slice of values formatted as key:vale and returns an array of [key]:value
-//func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([]map[string]string, error) {
-//	propertiesMap := make([]map[string]string, len(opts.keys))
-//	for i, key := range opts.keys {
-//		value := strings.Split(key, ":")
-//		if len(value) != 2 {
-//			return nil, fmt.Errorf("unexpected key format: %s", key)
-//		}
-//		propertiesMap[i] = map[string]string{value[0]: value[1]}
-//	}
-//
-//	return propertiesMap, nil
-//}
 
 // mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --collection collection --dbName dbName [--key field:type] --projectId projectId
 // --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering

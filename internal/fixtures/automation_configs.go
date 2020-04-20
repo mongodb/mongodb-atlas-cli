@@ -260,33 +260,3 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 		ReplicaSets: make([]*opsmngr.ReplicaSet, 0),
 	}
 }
-
-//func Indexes() []*opsmngr.IndexConfigs {
-//
-//	return []*opsmngr.IndexConfigs{
-//		{
-//			DBName:         "dbname",
-//			CollectionName: "collection",
-//			RSName:         "name",
-//			Keys: []map[string]string{{
-//				"field": "key"},
-//			},
-//			Options: &atlas.IndexOptions{
-//				Background: true,
-//				Unique:     true,
-//				Sparse:     true,
-//				Name:       "index",
-//			},
-//			Collation: &atlas.CollationOptions{
-//				Locale:          "loc",
-//				CaseLevel:       true,
-//				CaseFirst:       "test",
-//				Strength:        1,
-//				NumericOrdering: true,
-//				Alternate:       "test",
-//				MaxVariable:     "test",
-//				Backwards:       false,
-//			},
-//		},
-//	}
-//}

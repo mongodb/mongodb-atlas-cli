@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,7 +28,7 @@ func TestAtlasAlertsDescribe_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Alert()
+	expected := &mongodbatlas.Alert{}
 
 	describeOpts := &atlasAlertsDescribeOpts{
 		alertID: "533dc40ae4b00835ff81eaee",

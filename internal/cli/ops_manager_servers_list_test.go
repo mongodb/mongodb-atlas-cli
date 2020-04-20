@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -29,7 +29,7 @@ func TestOpsManagerAgentsList_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Agents()
+	expected := &opsmngr.Agents{}
 
 	listOpts := opsManagerServersListOpts{
 		store: mockStore,

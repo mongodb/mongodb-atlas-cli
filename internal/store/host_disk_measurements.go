@@ -28,7 +28,7 @@ type HostDiskMeasurementsLister interface {
 }
 
 // HostDiskMeasurements encapsulate the logic to manage different cloud providers
-func (s *Store) HostDiskMeasurements(groupID, hostID string, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
+func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*om.Client).HostDiskMeasurements.List(context.Background(), groupID, hostID, partitionName, opts)

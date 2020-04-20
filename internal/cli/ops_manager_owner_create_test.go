@@ -17,8 +17,9 @@ package cli
 import (
 	"testing"
 
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -32,7 +33,7 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 	password := "Passw0rd!"
 	firstName := "Testy"
 	lastName := "McTestyson"
-	expected := fixtures.OwnerResponse(email, firstName, lastName)
+	expected := &opsmngr.CreateUserResponse{}
 
 	t.Run("no whitelist", func(t *testing.T) {
 		createOpts := &opsManagerOwnerCreateOpts{

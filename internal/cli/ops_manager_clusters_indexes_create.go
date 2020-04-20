@@ -126,7 +126,7 @@ func (opts *opsManagerClustersIndexesCreateOpts) newCollationOptions() *atlas.Co
 	}
 }
 
-//// indexKeys  takes a slice of values formatted as key:vale and returns an array of slice [key]:value
+// indexKeys takes a slice of values formatted as key:vale and returns an array of slice [[key, value][key, value]]
 func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([][]string, error) {
 	propertiesList := make([][]string, len(opts.keys))
 	for i, key := range opts.keys {

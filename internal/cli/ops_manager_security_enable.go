@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
-	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -59,7 +58,7 @@ func (opts *opsManagerSecurityEnableOpts) Run() error {
 		return err
 	}
 
-	fmt.Print(messages.DeploymentStatus(config.OpsManagerURL(), opts.ProjectID()))
+	fmt.Print(deploymentStatus(config.OpsManagerURL(), opts.ProjectID()))
 
 	return nil
 }

@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -29,7 +29,7 @@ func TestIAMProjectsList_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Projects()
+	expected := &mongodbatlas.Projects{}
 
 	t.Run("No OrgID is given", func(t *testing.T) {
 		mockStore.

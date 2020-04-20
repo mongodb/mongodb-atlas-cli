@@ -17,7 +17,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -27,7 +27,7 @@ func TestOpsManagerMeasurementsDisksDescribeOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.DiskMeasurements()
+	expected := &mongodbatlas.ProcessDiskMeasurements{}
 
 	listOpts := &opsManagerMeasurementsDisksDescribeOpts{
 		hostID: "1",

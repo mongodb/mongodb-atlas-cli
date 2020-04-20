@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/spf13/afero"
 )
@@ -27,11 +27,11 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
+	expected := &mongodbatlas.Cluster{}
+
 	defer ctrl.Finish()
 
 	t.Run("flags run", func(t *testing.T) {
-		expected := fixtures.Cluster()
-
 		createOpts := &atlasClustersCreateOpts{
 			name:         "ProjectBar",
 			region:       "US",
@@ -87,7 +87,6 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 }`
 		fileName := "test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
-		expected := fixtures.Cluster()
 
 		createOpts := &atlasClustersCreateOpts{
 			filename: fileName,

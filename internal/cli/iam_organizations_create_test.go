@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,7 +28,7 @@ func TestIAMOrganizationsCreate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Organization
+	expected := &opsmngr.Organization{}
 
 	mockStore.
 		EXPECT().

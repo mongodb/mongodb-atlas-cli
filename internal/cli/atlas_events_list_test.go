@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,7 +28,7 @@ func TestAtlasEventsList_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.Events()
+	expected := &mongodbatlas.EventResponse{}
 
 	t.Run("for a project", func(t *testing.T) {
 		listOpts := &atlasEventsListOpts{

@@ -37,13 +37,7 @@ func (opts *opsManagerAlertsGlobalListOpts) init() error {
 }
 
 func (opts *opsManagerAlertsGlobalListOpts) Run() error {
-	alertOpts := &atlas.AlertsListOptions{
-		Status: opts.status,
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.pageNum,
-			ItemsPerPage: opts.itemsPerPage,
-		},
-	}
+	alertOpts := opts.newAlertsListOptions()
 
 	result, err := opts.store.GlobalAlerts(alertOpts)
 	if err != nil {
@@ -51,6 +45,16 @@ func (opts *opsManagerAlertsGlobalListOpts) Run() error {
 	}
 
 	return json.PrettyPrint(result)
+}
+
+func (opts *opsManagerAlertsGlobalListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
+	return &atlas.AlertsListOptions{
+		Status: opts.status,
+		ListOptions: atlas.ListOptions{
+			PageNum:      opts.pageNum,
+			ItemsPerPage: opts.itemsPerPage,
+		},
+	}
 }
 
 // mongocli om|cm alert(s) global list [--status status]

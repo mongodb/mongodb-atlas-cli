@@ -25,7 +25,6 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mongocli/internal/fixtures"
 )
 
 const (
@@ -196,7 +195,16 @@ func TestAtlasAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if diff := deep.Equal(fields, fixtures.MatcherFieldsType()); diff != nil {
+		expected := []string{
+			"TYPE_NAME",
+			"HOSTNAME",
+			"PORT",
+			"HOSTNAME_AND_PORT",
+			"REPLICA_SET_NAME",
+			"SHARD_NAME",
+			"CLUSTER_NAME",
+		}
+		if diff := deep.Equal(fields, expected); diff != nil {
 			t.Error(diff)
 		}
 

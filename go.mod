@@ -7,12 +7,11 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/Sectorbob/mlab-ns2 v0.0.0-20171030222938-d3aa0c295a8a
 	github.com/go-test/deep v1.0.5
-	github.com/golang/mock v1.4.0
+	github.com/golang/mock v1.4.3
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mongodb/go-client-mongodb-atlas v0.1.4-0.20200413163719-5574d7cba634
 	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200409122000-4fea663b73d0
-	github.com/mwielbut/pointy v1.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect

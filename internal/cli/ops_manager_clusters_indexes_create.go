@@ -18,9 +18,8 @@ import (
 	"fmt"
 	"strings"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"

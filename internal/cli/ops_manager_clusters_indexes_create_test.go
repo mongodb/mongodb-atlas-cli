@@ -17,7 +17,6 @@ package cli
 import (
 	"testing"
 
-	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -47,7 +46,6 @@ func TestOpsManagerClustersIndexesCreate_Run(t *testing.T) {
 		normalization:   false,
 		backwards:       false,
 		keys:            []string{"field:key", "field:key", "field:key"},
-		options:         []string{"field:key", "field:key", "field:key"},
 		store:           mockStore,
 	}
 
@@ -68,46 +66,4 @@ func TestOpsManagerClustersIndexesCreate_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestOpsManagerClustersIndexesCreate_newIndexMap(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationPatcher(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := fixtures.Indexes()
-
-	createOpts := &opsManagerClustersIndexesCreateOpts{
-		globalOpts:      globalOpts{},
-		name:            "index",
-		db:              "dbname",
-		collection:      "collection",
-		rsName:          "name",
-		locale:          "loc",
-		caseFirst:       "test",
-		alternate:       "test",
-		maxVariable:     "test",
-		strength:        1,
-		caseLevel:       true,
-		background:      true,
-		unique:          true,
-		sparse:          true,
-		numericOrdering: true,
-		backwards:       true,
-		keys:            []string{"field:key"},
-		options:         []string{"field:key"},
-		store:           mockStore,
-	}
-
-	indexMap, err := createOpts.newIndexMap()
-
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	if diff := deep.Equal(indexMap, expected); diff[0] != "slice[0].map[keys]: []interface {} != []map[string]interface {}" {
-		t.Error(diff)
-	}
-
 }

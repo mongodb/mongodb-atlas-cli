@@ -142,7 +142,7 @@ func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([][]string, error)
 	return propertiesList, nil
 }
 
-// mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --collection collection --dbName dbName [--key field:type] --projectId projectId
+// mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --dbName dbName [--key field:type] --projectId projectId
 // --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering
 // --normalization normalization --backwards backwards --unique unique --sparse sparse --background background
 func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {

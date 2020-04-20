@@ -98,7 +98,7 @@ func AtlasClustersIndexesCreateBuilder() *cobra.Command {
 	opts := &atlasClustersIndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: description.CreateCluster,
+		Short: description.CreateIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -40,6 +40,7 @@ const (
 	ClustersIndexes        = "Manage cluster indexes for your project."
 	ClustersLong           = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
 	CreateCluster          = "Create a MongoDB cluster."
+	CreateIndex            = "Create a MongoDB index."
 	ApplyCluster           = "Apply a new cluster configuration."
 	DeleteCluster          = "Delete a cluster."
 	DescribeCluster        = "Describe a cluster."

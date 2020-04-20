@@ -148,7 +148,7 @@ func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {
 	opts := &opsManagerClustersIndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateCluster,
+		Short: description.CreateIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

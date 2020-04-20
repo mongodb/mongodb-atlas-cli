@@ -88,12 +88,11 @@ const (
 	NumericOrdering                 = "If set to true, collation compares numeric strings as numbers. If false, collation compares numeric strings as strings."
 	Normalization                   = "If true, collation checks if text requires normalization and performs normalization to compare text."
 	Backwards                       = "If true, strings with diacritics sort from the back to the front of the string."
-
-	ClusterName     = "Name of the cluster."
-	ClusterID       = "Unique identifier of the cluster."
-	Background      = "Create the index in the background."
-	TargetProjectID = "Unique identifier of the project that contains the destination cluster for the restore job."
-	TargetClusterID = `Unique identifier of the target cluster.
+	ClusterName                     = "Name of the cluster."
+	ClusterID                       = "Unique identifier of the cluster."
+	Background                      = "Create the index in the background."
+	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
+	TargetClusterID                 = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.
 For use only with automated restore jobs.`

@@ -269,17 +269,3 @@ func getHostNameAndPort(hostInfo string) (string, int, error) {
 
 	return host[0], port, nil
 }
-
-// indexKeys  takes a slice of values formatted as key:vale and returns an array of [key]:value
-func indexKeys(properties []string) ([]map[string]string, error) {
-	propertiesMap := make([]map[string]string, len(properties))
-	for i, key := range properties {
-		value := strings.Split(key, ":")
-		if len(value) != 2 {
-			return nil, fmt.Errorf("unexpected key format: %s", key)
-		}
-		propertiesMap[i] = map[string]string{value[0]: value[1]}
-	}
-
-	return propertiesMap, nil
-}

@@ -17,13 +17,15 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
+
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
-	internalJson "github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/messages"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -49,7 +51,6 @@ type opsManagerClustersIndexesCreateOpts struct {
 	sparse          bool
 	background      bool
 	keys            []string
-	options         []string
 	store           store.AutomationPatcher
 }
 
@@ -69,20 +70,21 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 		return err
 	}
 
-	clusterConfigs := convert.FromAutomationConfig(current)
-	for _, rs := range clusterConfigs {
-		if rs.Name == opts.rsName {
-			return internalJson.PrettyPrint(rs)
-		}
-
-	}
-
-	index, err := opts.newIndexMap()
+	index, err := opts.newIndex()
 	if err != nil {
 		return err
 	}
 
 	current.IndexConfigs = index
+
+	s := reflect.ValueOf(&index).Elem()
+	typeOfT := s.Type()
+
+	for i := 0; i < s.NumField(); i++ {
+		f := s.Field(i)
+		fmt.Printf("%d: %s %s = %v\n", i,
+			typeOfT.Field(i).Name, f.Type(), f.Interface())
+	}
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
@@ -93,43 +95,27 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *opsManagerClustersIndexesCreateOpts) newIndexMap() ([]*map[string]interface{}, error) {
-
-	index, err := opts.newIndex()
-
+func (opts *opsManagerClustersIndexesCreateOpts) newIndex() ([]*om.IndexConfigs, error) {
+	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
 
-	var inInterface *map[string]interface{}
-	indexRec, _ := json.Marshal(index)
-	err = json.Unmarshal(indexRec, &inInterface)
+	b, err := json.MarshalIndent(keys, "", "  ")
 	if err != nil {
-		return nil, err
+		fmt.Println("error:", err)
 	}
+	fmt.Print(string(b))
 
-	indexMap := []*map[string]interface{}{
-		inInterface,
-	}
-
-	return indexMap, nil
-}
-
-func (opts *opsManagerClustersIndexesCreateOpts) newIndex() (*convert.IndexConfiguration, error) {
-	keys, err := indexKeys(opts.keys)
-	if err != nil {
-		return nil, err
-	}
-
-	i := new(convert.IndexConfiguration)
+	i := new(om.IndexConfigs)
 	i.DBName = opts.db
 	i.CollectionName = opts.collection
 	i.RSName = opts.rsName
-	i.Keys = keys
+	i.Key = keys
 	i.Options = opts.newIndexOptions()
 	i.Collation = opts.newCollationOptions()
 
-	return i, nil
+	return []*om.IndexConfigs{i}, nil
 }
 
 func (opts *opsManagerClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
@@ -142,6 +128,8 @@ func (opts *opsManagerClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexO
 }
 
 func (opts *opsManagerClustersIndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
+	fmt.Print("locale " + opts.locale)
+
 	return &atlas.CollationOptions{
 		Locale:          opts.locale,
 		CaseLevel:       opts.caseLevel,
@@ -154,6 +142,35 @@ func (opts *opsManagerClustersIndexesCreateOpts) newCollationOptions() *atlas.Co
 		Backwards:       opts.backwards,
 	}
 }
+
+//// indexKeys  takes a slice of values formatted as key:vale and returns an array of slice [key]:value
+func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([][]string, error) {
+	propertiesList := make([][]string, len(opts.keys))
+	for i, key := range opts.keys {
+		value := strings.Split(key, ":")
+		if len(value) != 2 {
+			return nil, fmt.Errorf("unexpected key format: %s", key)
+		}
+		values := []string{value[0], value[1]}
+		propertiesList[i] = values
+	}
+
+	return propertiesList, nil
+}
+
+// indexKeys  takes a slice of values formatted as key:vale and returns an array of [key]:value
+//func (opts *opsManagerClustersIndexesCreateOpts) indexKeys() ([]map[string]string, error) {
+//	propertiesMap := make([]map[string]string, len(opts.keys))
+//	for i, key := range opts.keys {
+//		value := strings.Split(key, ":")
+//		if len(value) != 2 {
+//			return nil, fmt.Errorf("unexpected key format: %s", key)
+//		}
+//		propertiesMap[i] = map[string]string{value[0]: value[1]}
+//	}
+//
+//	return propertiesMap, nil
+//}
 
 // mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --collection collection --dbName dbName [--key field:type] --projectId projectId
 // --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering
@@ -179,7 +196,6 @@ func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.rsName, flags.RSName, "", usage.RSName)
 	cmd.Flags().StringVar(&opts.collection, flags.CollectionName, "", usage.Collection)
 	cmd.Flags().StringArrayVar(&opts.keys, flags.Key, nil, usage.Key)
-	cmd.Flags().StringArrayVar(&opts.options, flags.Options, nil, usage.Options)
 	cmd.Flags().StringVar(&opts.locale, flags.Locale, "", usage.Locale)
 	cmd.Flags().StringVar(&opts.caseFirst, flags.CaseFirst, "", usage.CaseFirst)
 	cmd.Flags().StringVar(&opts.alternate, flags.Alternate, "", usage.Alternate)
@@ -195,12 +211,10 @@ func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.ClusterName)
 	_ = cmd.MarkFlagRequired(flags.RSName)
 	_ = cmd.MarkFlagRequired(flags.Database)
 	_ = cmd.MarkFlagRequired(flags.CollectionName)
 	_ = cmd.MarkFlagRequired(flags.Key)
-	_ = cmd.MarkFlagRequired(flags.Options)
 
 	return cmd
 }

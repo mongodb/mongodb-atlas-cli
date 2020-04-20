@@ -101,7 +101,6 @@ const (
 	Key                             = "key"                             // Key flag
 	Collection                      = "collection"                      // Collection flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
-	Collation                       = "collation"                       // Collation
 	Database                        = "db"                              // Database flag
 	Unique                          = "unique"                          // Unique flag
 	RSName                          = "rsName"                          // RSName flag

@@ -261,34 +261,32 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 	}
 }
 
-func Indexes() []*map[string]interface{} {
-
-	return []*map[string]interface{}{
-		{
-			"dbName":         "dbname",
-			"collectionName": "collection",
-			"rsName":         "name",
-			"keys": []map[string]interface{}{
-				{
-					"field": "key",
-				},
-			},
-
-			"options": map[string]interface{}{
-				"name":       "index",
-				"background": true,
-				"unique":     true,
-				"sparse":     true,
-			},
-			"collation": map[string]interface{}{
-				"locale":          "loc",
-				"caseLevel":       true,
-				"caseFirst":       "test",
-				"strength":        1.0,
-				"numericOrdering": true,
-				"alternate":       "test",
-				"maxVariable":     "test",
-				"backwards":       true,
-			},
-		}}
-}
+//func Indexes() []*opsmngr.IndexConfigs {
+//
+//	return []*opsmngr.IndexConfigs{
+//		{
+//			DBName:         "dbname",
+//			CollectionName: "collection",
+//			RSName:         "name",
+//			Keys: []map[string]string{{
+//				"field": "key"},
+//			},
+//			Options: &atlas.IndexOptions{
+//				Background: true,
+//				Unique:     true,
+//				Sparse:     true,
+//				Name:       "index",
+//			},
+//			Collation: &atlas.CollationOptions{
+//				Locale:          "loc",
+//				CaseLevel:       true,
+//				CaseFirst:       "test",
+//				Strength:        1,
+//				NumericOrdering: true,
+//				Alternate:       "test",
+//				MaxVariable:     "test",
+//				Backwards:       false,
+//			},
+//		},
+//	}
+//}

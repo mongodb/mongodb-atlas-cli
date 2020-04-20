@@ -17,7 +17,6 @@ package convert
 import (
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/go-client-mongodb-ops-manager/search"
@@ -28,16 +27,6 @@ const (
 	atmAgentWindowsKeyFilePath     = "%SystemDrive%\\MMSAutomation\\versions\\keyfile"
 	atmAgentKeyFilePathInContainer = "/var/lib/mongodb-mms-automation/keyfile"
 )
-
-// IndexConfiguration represents a new index requests for a given database and collection.
-type IndexConfiguration struct {
-	DBName         string                  `json:"dbName"`              // Database that is indexed
-	CollectionName string                  `json:"collectionName"`      // Collection that is indexed
-	RSName         string                  `json:"rsName"`              // The replica set that the index is built on
-	Keys           []map[string]string     `json:"keys"`                // Keys array of keys to index and their type, sorting of keys is important for an index
-	Options        *atlas.IndexOptions     `json:"options,omitempty"`   // Options MongoDB index options
-	Collation      *atlas.CollationOptions `json:"collation,omitempty"` // Collation Mongo collation index options
-}
 
 // FromAutomationConfig convert from cloud format to mCLI format
 func FromAutomationConfig(in *om.AutomationConfig) (out []ClusterConfig) {

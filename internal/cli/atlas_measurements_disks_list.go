@@ -31,11 +31,7 @@ type atlasMeasurementsDisksListsOpts struct {
 	store store.ProcessDisksLister
 }
 
-func (opts *atlasMeasurementsDisksListsOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *atlasMeasurementsDisksListsOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -61,7 +57,7 @@ func AtlasMeasurementsDisksListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error

@@ -35,11 +35,7 @@ type opsManagerDBUsersDeleteOpts struct {
 	store  store.AutomationPatcher
 }
 
-func (opts *opsManagerDBUsersDeleteOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerDBUsersDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -79,7 +75,7 @@ func OpsManagerDBUsersDeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			opts.entry = args[0]

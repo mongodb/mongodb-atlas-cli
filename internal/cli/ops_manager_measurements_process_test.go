@@ -17,7 +17,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -27,12 +27,11 @@ func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.ProcessMeasurements()
+	expected := &mongodbatlas.ProcessMeasurements{}
 
-	listOpts := &OpsManagerMeasurementsProcessOpts{
+	listOpts := &opsManagerMeasurementsProcessOpts{
 		hostID: "hard-00-00.mongodb.net",
-
-		store: mockStore,
+		store:  mockStore,
 	}
 	listOpts.granularity = "PT1M"
 	listOpts.period = "PT1M"

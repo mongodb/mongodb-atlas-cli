@@ -23,24 +23,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type OpsManagerMeasurementsProcessOpts struct {
+type opsManagerMeasurementsProcessOpts struct {
 	globalOpts
 	measurementsOpts
 	hostID string
 	store  store.HostMeasurementLister
 }
 
-func (opts *OpsManagerMeasurementsProcessOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerMeasurementsProcessOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
+func (opts *opsManagerMeasurementsProcessOpts) Run() error {
 	listOpts := opts.newProcessMeasurementListOptions()
 	result, err := opts.store.HostMeasurements(opts.ProjectID(), opts.hostID, listOpts)
 
@@ -53,14 +49,14 @@ func (opts *OpsManagerMeasurementsProcessOpts) Run() error {
 
 // mongocli om|cm measurements process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
-	opts := &OpsManagerMeasurementsProcessOpts{}
+	opts := &opsManagerMeasurementsProcessOpts{}
 	cmd := &cobra.Command{
 		Use:     "process",
 		Short:   description.ProcessMeasurements,
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]

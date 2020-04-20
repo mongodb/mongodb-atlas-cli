@@ -33,10 +33,7 @@ type atlasDBUsersUpdateOpts struct {
 	store    store.DatabaseUserUpdater
 }
 
-func (opts *atlasDBUsersUpdateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
+func (opts *atlasDBUsersUpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -75,7 +72,7 @@ func AtlasDBUsersUpdateBuilder() *cobra.Command {
 		Example: `mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

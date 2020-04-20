@@ -39,7 +39,8 @@ func TestAtlasClustersIndexesCreate_Run(t *testing.T) {
 	index, _ := createOpts.newIndex()
 	mockStore.
 		EXPECT().
-		CreateIndex(createOpts.projectID, createOpts.clusterName, index).Return(nil).
+		CreateIndex(createOpts.projectID, createOpts.clusterName, index).
+		Return(nil).
 		Times(1)
 
 	err := createOpts.Run()

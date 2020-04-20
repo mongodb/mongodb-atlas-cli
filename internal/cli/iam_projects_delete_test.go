@@ -33,14 +33,14 @@ func TestIAMProjectsDelete_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	createOpts := &iamProjectsDeleteOpts{
+	opts := &iamProjectsDeleteOpts{
 		store: mockStore,
 		deleteOpts: &deleteOpts{
 			entry:   "5a0a1e7e0f2912c554080adc",
 			confirm: true,
 		},
 	}
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -39,10 +39,7 @@ type opsManagerSecurityEnableOpts struct {
 	store      store.AutomationPatcher
 }
 
-func (opts *opsManagerSecurityEnableOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
+func (opts *opsManagerSecurityEnableOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -76,7 +73,7 @@ func OpsManagerSecurityEnableBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.mechanisms = args

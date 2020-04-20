@@ -42,11 +42,7 @@ type opsManagerDBUsersCreateOpts struct {
 	store      store.AutomationPatcher
 }
 
-func (opts *opsManagerDBUsersCreateOpts) init() error {
-	if opts.ProjectID() == "" {
-		return errMissingProjectID
-	}
-
+func (opts *opsManagerDBUsersCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -100,7 +96,7 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 		Example: `  mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <>`,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
 			return opts.Prompt()

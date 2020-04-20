@@ -15,7 +15,6 @@
 package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -37,28 +36,20 @@ func (opts *opsManagerClustersListOpts) init() error {
 }
 
 func (opts *opsManagerClustersListOpts) Run() error {
-	result, err := opts.cloudManagerClustersListRun()
+	if opts.ProjectID() == "" {
+		result, err := opts.store.ListAllProjectClusters()
+		if err != nil {
+			return err
+		}
+		return json.PrettyPrint(result)
+	}
 
+	clusterConfigs, err := opts.store.GetAutomationConfig(opts.ProjectID())
 	if err != nil {
 		return err
 	}
-
+	result := convert.FromAutomationConfig(clusterConfigs)
 	return json.PrettyPrint(result)
-}
-
-func (opts *opsManagerClustersListOpts) cloudManagerClustersListRun() (interface{}, error) {
-	var result interface{}
-	var err error
-
-	if opts.ProjectID() == "" {
-		result, err = opts.store.ListAllProjectClusters()
-
-	} else {
-		var clusterConfigs *om.AutomationConfig
-		clusterConfigs, err = opts.store.GetAutomationConfig(opts.ProjectID())
-		result = convert.FromAutomationConfig(clusterConfigs)
-	}
-	return result, err
 }
 
 // mongocli cloud-manager cluster(s) list --projectId projectId

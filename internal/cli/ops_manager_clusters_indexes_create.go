@@ -19,9 +19,9 @@ import (
 	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/messages"
@@ -73,7 +73,10 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 		return err
 	}
 
-	convert.AddIndexConfig(current, index)
+	err = atmcfg.AddIndexConfig(current, index)
+	if err != nil {
+		return err
+	}
 
 	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
@@ -84,13 +87,13 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *opsManagerClustersIndexesCreateOpts) newIndex() (*om.IndexConfigs, error) {
+func (opts *opsManagerClustersIndexesCreateOpts) newIndex() (*om.IndexConfig, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
 
-	i := new(om.IndexConfigs)
+	i := new(om.IndexConfig)
 	i.DBName = opts.db
 	i.CollectionName = opts.collection
 	i.RSName = opts.rsName

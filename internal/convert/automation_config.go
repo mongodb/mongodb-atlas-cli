@@ -86,26 +86,6 @@ func EnableMechanism(out *om.AutomationConfig, m []string) error {
 	return nil
 }
 
-func AddIndexConfig(out *om.AutomationConfig, newIndex *om.IndexConfigs) {
-	_, exists := search.MongoDBIndexes(out.IndexConfigs, func(index *om.IndexConfigs) bool {
-		if index.RSName == newIndex.RSName && index.CollectionName == newIndex.CollectionName && index.DBName == newIndex.DBName && len(index.Key) == len(newIndex.Key) {
-			// if keys are the equal the two indexes are considered to be the same
-			for i := 0; i < len(index.Key); i++ {
-				if index.Key[i][0] != newIndex.Key[i][0] || index.Key[i][1] != newIndex.Key[i][1] {
-					return false
-				}
-			}
-
-			return true
-		}
-
-		return false
-	})
-	if !exists {
-		atmcfg.AddIndexConfig(out, newIndex)
-	}
-}
-
 func addMonitoringUser(out *om.AutomationConfig) {
 	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *om.MongoDBUser) bool {
 		return user.Username == monitoringAgentName

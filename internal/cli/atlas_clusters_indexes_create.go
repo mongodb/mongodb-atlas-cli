@@ -93,12 +93,12 @@ func (opts *atlasClustersIndexesCreateOpts) indexKeys() ([]map[string]string, er
 }
 
 // AtlasClustersIndexesCreateBuilder builds a cobra.Command that can run as:
-// mcli atlas clusters index create [name] --clusterName clusterName  --collectionName collectionName --dbName dbName [--key field:type]
+// mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
 func AtlasClustersIndexesCreateBuilder() *cobra.Command {
 	opts := &atlasClustersIndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: description.CreateCluster,
+		Short: description.CreateIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

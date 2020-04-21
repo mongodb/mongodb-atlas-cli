@@ -22,18 +22,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerAutomationShowOpts struct {
+type opsManagerAutomationDescribeOpts struct {
 	globalOpts
 	store store.AutomationGetter
 }
 
-func (opts *opsManagerAutomationShowOpts) initStore() error {
+func (opts *opsManagerAutomationDescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerAutomationShowOpts) Run() error {
+func (opts *opsManagerAutomationDescribeOpts) Run() error {
 	r, err := opts.store.GetAutomationConfig(opts.projectID)
 
 	if err != nil {
@@ -43,13 +43,14 @@ func (opts *opsManagerAutomationShowOpts) Run() error {
 	return json.PrettyPrint(r)
 }
 
-// mongocli ops-manager automation show [--projectId projectId]
-func OpsManagerAutomationShowBuilder() *cobra.Command {
-	opts := &opsManagerAutomationShowOpts{}
+// mongocli ops-manager automation describe [--projectId projectId]
+func OpsManagerAutomationDescribeBuilder() *cobra.Command {
+	opts := &opsManagerAutomationDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:    "show",
-		Args:   cobra.NoArgs,
-		Hidden: true,
+		Use:     "describe",
+		Aliases: []string{"show", "get"},
+		Args:    cobra.NoArgs,
+		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

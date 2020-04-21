@@ -30,7 +30,7 @@ func TestOpsManagerAutomationShowOpts_Run(t *testing.T) {
 
 	expected := fixtures.AutomationConfig()
 
-	opts := &opsManagerAutomationShowOpts{
+	opts := &opsManagerAutomationDescribeOpts{
 		store: mockStore,
 	}
 

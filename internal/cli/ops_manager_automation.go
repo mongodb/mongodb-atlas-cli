@@ -26,6 +26,8 @@ func OpsManagerAutomationBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(OpsManagerAutomationStatusBuilder())
-	cmd.AddCommand(OpsManagerAutomationShowBuilder())
+	cmd.AddCommand(OpsManagerAutomationDescribeBuilder())
+	cmd.AddCommand(OpsManagerAutomationUpdateBuilder())
+
 	return cmd
 }

@@ -10,8 +10,8 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mongodb/go-client-mongodb-atlas v0.1.4-0.20200413163719-5574d7cba634
-	github.com/mongodb/go-client-mongodb-ops-manager v0.0.2-0.20200421115602-8c56f0878a28
+	github.com/mongodb/go-client-mongodb-atlas v0.2.0
+	github.com/mongodb/go-client-mongodb-ops-manager v0.2.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect

@@ -75,9 +75,9 @@ func AtlasMeasurementsDisksDescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
 	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.Start)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.End)
-	cmd.Flags().StringVar(&opts.measurementType, flags.MeasurementType, "", usage.MeasurementType)
+	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
+	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flags.MeasurementType, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

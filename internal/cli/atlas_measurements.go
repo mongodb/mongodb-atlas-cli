@@ -26,7 +26,7 @@ type measurementsOpts struct {
 	period          string
 	start           string
 	end             string
-	measurementType string
+	measurementType []string
 }
 
 func (opts *measurementsOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {

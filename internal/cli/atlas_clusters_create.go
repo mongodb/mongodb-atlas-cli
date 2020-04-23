@@ -90,7 +90,7 @@ func (opts *atlasClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
 
 func (opts *atlasClustersCreateOpts) applyOpts(out *atlas.Cluster) {
 	replicationSpec := opts.newReplicationSpec()
-	out.BackupEnabled = &opts.backup
+	out.ProviderBackupEnabled = &opts.backup
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
 	out.ProviderSettings = opts.newProviderSettings()

@@ -36,6 +36,7 @@ const (
 	Comment                         = "Optional description or comment for the entry."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
+	LogOut                          = "Optional output filename, if none given will use the log name."
 	LogStart                        = "Beginning of the period for which to retrieve logs."
 	LogEnd                          = "End of the period for which to retrieve logs."
 	MeasurementStart                = "Beginning of the period for which to retrieve measurements."

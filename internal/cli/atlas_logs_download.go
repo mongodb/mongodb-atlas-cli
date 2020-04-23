@@ -100,10 +100,10 @@ func AtlasLogsDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.End)
+	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
 
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.Start)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.End)
+	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.LogStart)
+	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.LogEnd)
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd

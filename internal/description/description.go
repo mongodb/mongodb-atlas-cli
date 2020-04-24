@@ -84,6 +84,7 @@ const (
 	CreateProject          = "Create a project."
 	DeleteProject          = "Delete a project."
 	ListProjects           = "List projects."
+	DownloadLogs           = "Download logs from a log collection job."
 	OpsManager             = "Ops Manager operations."
 	ListGlobalAlerts       = "List global alerts."
 	Automation             = "Manage Ops Manager automation config."

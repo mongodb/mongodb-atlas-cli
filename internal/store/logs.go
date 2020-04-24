@@ -28,6 +28,10 @@ type LogsDownloader interface {
 	DownloadLog(string, string, string, io.Writer, *atlas.DateRangetOptions) error
 }
 
+type LogJobsDownloader interface {
+	DownloadLogJob(string, string, io.Writer) error
+}
+
 type LogCollector interface {
 	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
 }
@@ -63,6 +67,17 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Logs.Get(context.Background(), groupID, host, name, out, opts)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DownloadLogJob encapsulate the logic to manage different cloud providers
+func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*om.Client).Logs.Download(context.Background(), groupID, jobID, out)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

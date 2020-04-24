@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validators"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +66,7 @@ func (opts *configOpts) Run() error {
 		helpLink = "https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
 	}
 
-	var defaultQuestions = []*survey.Question{
+	defaultQuestions := []*survey.Question{
 		{
 			Name: "publicAPIKey",
 			Prompt: &survey.Input{
@@ -89,11 +89,11 @@ func (opts *configOpts) Run() error {
 			{
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
-					Message: "Ops Manager Base URL:",
+					Message: "URL to Access Ops Manage:",
 					Default: config.OpsManagerURL(),
-					Help:    "Ops Manager host URL",
+					Help:    "https://docs.opsmanager.mongodb.com/current/reference/config/ui-settings/#URL-to-Access-Ops-Manager",
 				},
-				Validate: validators.ValidURL,
+				Validate: validate.URL,
 			},
 		}
 		defaultQuestions = append(opsManagerQuestions, defaultQuestions...)
@@ -112,6 +112,7 @@ func ConfigBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: description.ConfigDescription,
+		Long:  description.ConfigLongDescription,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

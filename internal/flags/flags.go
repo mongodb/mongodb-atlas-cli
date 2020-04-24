@@ -114,4 +114,6 @@ const (
 	Normalization                   = "normalization"                   // Normalization flag
 	Backwards                       = "backwards"                       // Backwards flag
 	Strength                        = "strength"                        // Strength flag
+	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
+	Redacted                        = "redacted"                        // Redacted flag
 )

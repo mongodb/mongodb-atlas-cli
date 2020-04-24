@@ -20,11 +20,26 @@ import (
 	"io"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
 type LogsDownloader interface {
 	DownloadLog(string, string, string, io.Writer, *atlas.DateRangetOptions) error
+}
+
+type LogCollector interface {
+	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
+}
+
+func (s *Store) Collect(groupID string, newLog *om.LogCollectionJob) (*om.LogCollectionJob, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*om.Client).LogCollections.Create(context.Background(), groupID, newLog)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // ProcessDisks encapsulate the logic to manage different cloud providers

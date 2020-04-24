@@ -97,6 +97,8 @@ const (
 	EnableSecurity         = "Enable authentication mechanisms for the project."
 	Events                 = "Manage events for your project."
 	Measurements           = "Get measurements on the state of the MongoDB process."
+	LogCollection          = "Manage log collection jobs."
+	StartLogCollectionJob  = "Start a job to collect logs."
 	DBUsersLong            = `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`

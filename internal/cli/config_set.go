@@ -46,13 +46,13 @@ func (opts *configSetOpts) Run() error {
 	if err := opts.store.Save(); err != nil {
 		return err
 	}
-	fmt.Printf("Updated prop '%s'\n", opts.prop)
+	fmt.Printf("Updated property '%s'\n", opts.prop)
 	return nil
 }
 
 func ConfigSetBuilder() *cobra.Command {
 	opts := &configSetOpts{
-		store: config.New(),
+		store: config.Config(),
 	}
 	cmd := &cobra.Command{
 		Use:   "set [property] [value]",

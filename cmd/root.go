@@ -30,9 +30,9 @@ import (
 var (
 	rootCmd = &cobra.Command{
 		Version: version.Version,
-		Use:     config.Name,
+		Use:     config.ToolName,
 		Short:   "CLI tool to manage your MongoDB Cloud",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.Name),
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
 	}
 )
 

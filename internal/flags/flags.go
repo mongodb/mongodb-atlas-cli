@@ -116,4 +116,5 @@ const (
 	Strength                        = "strength"                        // Strength flag
 	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
 	Redacted                        = "redacted"                        // Redacted flag
+	Verbose                         = "verbose"
 )

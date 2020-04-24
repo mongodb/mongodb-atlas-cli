@@ -32,6 +32,22 @@ type LogCollector interface {
 	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
 }
 
+type LogJobLister interface {
+	LogCollectionJobs(string, *om.LogListOptions) (*om.LogCollectionJobs, error)
+}
+
+// LogCollectionJobs encapsulate the logic to manage different cloud providers
+func (s *Store) LogCollectionJobs(groupID string, opts *om.LogListOptions) (*om.LogCollectionJobs, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*om.Client).LogCollections.List(context.Background(), groupID, opts)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Collect encapsulate the logic to manage different cloud providers
 func (s *Store) Collect(groupID string, newLog *om.LogCollectionJob) (*om.LogCollectionJob, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

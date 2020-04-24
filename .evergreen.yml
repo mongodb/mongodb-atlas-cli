@@ -63,12 +63,7 @@ functions:
         working_dir: mongocli
         env:
           <<: *go_options
-        binary: goreleaser
-        args:
-          - "--snapshot"
-          - "--rm-dist"
-          - "-f"
-          - ".goreleaser_evg.yml"
+        command: make package
   "set up notary client credentials":
     - command: shell.exec
       params:
@@ -146,6 +141,7 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
+            - mongocli/dist/*.tar.gz
             - mongocli/dist/*.tgz
             - mongocli/dist/*.zip
             - mongocli/dist/*.deb

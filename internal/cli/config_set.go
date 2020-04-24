@@ -16,39 +16,54 @@ package cli
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 type configSetOpts struct {
 	globalOpts
-	prop string
-	val  string
+	prop  string
+	val   string
+	store config.ProfileSetSaver
 }
 
 func (opts *configSetOpts) Run() error {
-	config.Set(opts.prop, opts.val)
-	if err := config.Save(); err != nil {
+	if strings.HasSuffix(opts.prop, "_url") {
+		if err := validate.URL(opts.val); err != nil {
+			return err
+		}
+	} else if strings.HasSuffix(opts.prop, "_id") {
+		if err := validate.ObjectID(opts.val); err != nil {
+			return err
+		}
+	}
+	opts.store.Set(opts.prop, opts.val)
+	if err := opts.store.Save(); err != nil {
 		return err
 	}
-	fmt.Printf("Updated prop '%s'\n", opts.prop)
+	fmt.Printf("Updated property '%s'\n", opts.prop)
 	return nil
 }
 
 func ConfigSetBuilder() *cobra.Command {
-	opts := &configSetOpts{}
+	opts := &configSetOpts{
+		store: config.Config(),
+	}
 	cmd := &cobra.Command{
-		Use:   "set [prop] [val]",
-		Short: description.SetConfig,
+		Use:   "set [property] [value]",
+		Short: description.ConfigSetDescription,
+		Long:  fmt.Sprintf(description.ConfigSetLongDescription, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
 			}
 			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
-				return fmt.Errorf("invalid prop %q", args[0])
+				return fmt.Errorf("invalid property: %q", args[0])
 			}
 			return nil
 		},

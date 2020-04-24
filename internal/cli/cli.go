@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -25,6 +24,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/prompts"
+	"github.com/mongodb/mongocli/internal/validate"
 )
 
 const (
@@ -35,14 +35,6 @@ const (
 type globalOpts struct {
 	orgID     string
 	projectID string
-}
-
-func validateObjectID(s string) error {
-	b, err := hex.DecodeString(s)
-	if err != nil || len(b) != 12 {
-		return fmt.Errorf("the provided value '%s' is not a valid ObjectID", s)
-	}
-	return nil
 }
 
 func deploymentStatus(baseURL, projectID string) string {
@@ -67,7 +59,7 @@ func (opts *globalOpts) PreRunE(cbs ...cmdOpt) error {
 	if opts.ProjectID() == "" {
 		return errMissingProjectID
 	}
-	if err := validateObjectID(opts.ProjectID()); err != nil {
+	if err := validate.ObjectID(opts.ProjectID()); err != nil {
 		return err
 	}
 	for _, f := range cbs {

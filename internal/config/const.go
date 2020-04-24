@@ -15,7 +15,7 @@
 package config
 
 const (
-	Name                = "mongocli"      // Name of the CLI
+	ToolName            = "mongocli"      // ToolName of the CLI
 	EnvPrefix           = "mcli"          // Prefix for ENV variables
 	DefaultProfile      = "default"       // DefaultProfile default
 	CloudService        = "cloud"         // CloudService setting when using Atlas API

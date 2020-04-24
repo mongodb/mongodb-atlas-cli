@@ -17,10 +17,10 @@ package store
 import (
 	"context"
 	"fmt"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"io"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 

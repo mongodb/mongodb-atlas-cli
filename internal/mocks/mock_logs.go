@@ -86,3 +86,41 @@ func (mr *MockLogCollectorMockRecorder) Collect(arg0, arg1 interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collect", reflect.TypeOf((*MockLogCollector)(nil).Collect), arg0, arg1)
 }
+
+// MockLogsLister is a mock of LogsLister interface
+type MockLogsLister struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogsListerMockRecorder
+}
+
+// MockLogsListerMockRecorder is the mock recorder for MockLogsLister
+type MockLogsListerMockRecorder struct {
+	mock *MockLogsLister
+}
+
+// NewMockLogsLister creates a new mock instance
+func NewMockLogsLister(ctrl *gomock.Controller) *MockLogsLister {
+	mock := &MockLogsLister{ctrl: ctrl}
+	mock.recorder = &MockLogsListerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockLogsLister) EXPECT() *MockLogsListerMockRecorder {
+	return m.recorder
+}
+
+// ListLogJobs mocks base method
+func (m *MockLogsLister) ListLogJobs(arg0 string, arg1 *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListLogJobs", arg0, arg1)
+	ret0, _ := ret[0].(*opsmngr.LogCollectionJobs)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListLogJobs indicates an expected call of ListLogJobs
+func (mr *MockLogsListerMockRecorder) ListLogJobs(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLogJobs", reflect.TypeOf((*MockLogsLister)(nil).ListLogJobs), arg0, arg1)
+}

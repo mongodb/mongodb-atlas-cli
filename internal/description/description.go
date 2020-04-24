@@ -91,6 +91,8 @@ A user’s roles apply to all the clusters in the project.`
 	Automation           = "Manage Ops Manager automation config."
 	ShowAutomationStatus = "Show the current status of the automation config."
 	Global               = "Manage Ops Manager global properties."
+	OMLogs               = "Manage Ops Manager log collection job."
+	CollectOMLogs        = "Start a job to collect logs"
 	Owner                = "Manage Ops Manager owners."
 	CreateOwner          = "Create the first user for Ops Manager."
 	Servers              = "Manage Ops Manager servers."

@@ -7,6 +7,7 @@ package mocks
 import (
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	io "io"
 	reflect "reflect"
 )
@@ -46,4 +47,42 @@ func (m *MockLogsDownloader) DownloadLog(arg0, arg1, arg2 string, arg3 io.Writer
 func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1, arg2, arg3, arg4)
+}
+
+// MockLogs is a mock of Logs interface
+type MockLogs struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogsMockRecorder
+}
+
+// MockLogsMockRecorder is the mock recorder for MockLogs
+type MockLogsMockRecorder struct {
+	mock *MockLogs
+}
+
+// NewMockLogs creates a new mock instance
+func NewMockLogs(ctrl *gomock.Controller) *MockLogs {
+	mock := &MockLogs{ctrl: ctrl}
+	mock.recorder = &MockLogsMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockLogs) EXPECT() *MockLogsMockRecorder {
+	return m.recorder
+}
+
+// Collect mocks base method
+func (m *MockLogs) Collect(arg0 string, arg1 *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Collect", arg0, arg1)
+	ret0, _ := ret[0].(*opsmngr.LogCollectionJob)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Collect indicates an expected call of Collect
+func (mr *MockLogsMockRecorder) Collect(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collect", reflect.TypeOf((*MockLogs)(nil).Collect), arg0, arg1)
 }

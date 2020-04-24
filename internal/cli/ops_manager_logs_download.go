@@ -68,6 +68,7 @@ func OpsManagerLogsDownloadOptsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "download [id]",
 		Short: description.DownloadLogs,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

@@ -85,10 +85,9 @@ func AtlasLogsDownloadBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:     "download [hostname] [logname]",
-		Short:   description.ListDisks,
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(2),
+		Use:   "download [hostname] [logname]",
+		Short: description.ListDisks,
+		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

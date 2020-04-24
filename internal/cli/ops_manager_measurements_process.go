@@ -68,7 +68,7 @@ func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.measurementType, flags.MeasurementType, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

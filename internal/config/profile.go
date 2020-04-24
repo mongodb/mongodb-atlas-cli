@@ -39,6 +39,19 @@ func init() {
 	p = New()
 }
 
+type ProfileSetter interface {
+	Set(string, string)
+}
+
+type ProfileSaver interface {
+	Save() error
+}
+
+type ProfileSetSaver interface {
+	ProfileSetter
+	ProfileSaver
+}
+
 func New() *Profile {
 	configDir, err := configHome()
 	if err != nil {
@@ -55,7 +68,7 @@ func New() *Profile {
 }
 
 func SetName(name *string) { p.SetName(name) }
-func (p *Profile) SetName(name *string) {
+func (p Profile) SetName(name *string) {
 	p.name = name
 }
 

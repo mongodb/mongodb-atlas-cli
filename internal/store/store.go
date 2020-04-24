@@ -30,7 +30,7 @@ import (
 
 var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.Name, version.Version, runtime.GOOS, runtime.GOARCH)
 
-const atlasAPIPath = "/api/atlas/v1.0/"
+const atlasAPIPath = "api/atlas/v1.0/"
 
 type Store struct {
 	service string

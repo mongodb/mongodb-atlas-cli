@@ -41,7 +41,6 @@ const (
 	Status                          = "status"                          // Status flag
 	Start                           = "start"                           // Start flag
 	End                             = "end"                             // End flag
-	MeasurementType                 = "type"                            // MeasurementType flag
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
@@ -115,7 +114,7 @@ const (
 	Normalization                   = "normalization"                   // Normalization flag
 	Backwards                       = "backwards"                       // Backwards flag
 	Strength                        = "strength"                        // Strength flag
-	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       // SizeRequestedPerFileBytes flag
+	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
 	Redacted                        = "redacted"                        // Redacted flag
 	Verbose                         = "verbose"
 	ID = "id" //ID flag

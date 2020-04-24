@@ -94,6 +94,7 @@ A user’s roles apply to all the clusters in the project.`
 	LogCollection         = "Manage log collection jobs."
 	StartLogCollectionJob = "Start a job to collect logs."
 	ListLogCollectionJobs = "List log collect jobs."
+	DownloadLogs		  = "Download logs from a log collection job."
 	Owner                 = "Manage Ops Manager owners."
 	CreateOwner           = "Create the first user for Ops Manager."
 	Servers               = "Manage Ops Manager servers."

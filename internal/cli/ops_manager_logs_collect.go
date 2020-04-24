@@ -62,11 +62,11 @@ func (opts *opsManagerLogsCollectOpts) newLog() *om.LogCollectionJob {
 	}
 }
 
-// mongocli om logs collect resourceType resourceName --sizeRequestedPerFileBytes size --logTypes type --redacted redacted [--projectId projectId]
+// mongocli om logs collect resourceType resourceName --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
 func OpsManagerLogsCollectOptsBuilder() *cobra.Command {
 	opts := &opsManagerLogsCollectOpts{}
 	cmd := &cobra.Command{
-		Use:   "collect",
+		Use:   "collect [resourceType] [resourceName]",
 		Short: description.StartLogCollectionJob,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
@@ -75,7 +75,7 @@ func OpsManagerLogsCollectOptsBuilder() *cobra.Command {
 
 			args[0] = strings.ToLower(args[0])
 			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
-				return fmt.Errorf("invalid Resource Type. The Resource Type must be cluster, process or replicaset but was %q", args[0])
+				return fmt.Errorf("invalid resource type '%s', expected one of %v", args[0], cmd.ValidArgs)
 			}
 			return nil
 		},
@@ -90,12 +90,12 @@ func OpsManagerLogsCollectOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringArrayVar(&opts.logTypes, flags.LogTypes, nil, usage.LogTypes)
+	cmd.Flags().StringArrayVar(&opts.logTypes, flags.Type, nil, usage.LogTypes)
 	cmd.Flags().Int64Var(&opts.sizeRequestedPerFileBytes, flags.SizeRequestedPerFileBytes, 0, usage.SizeRequestedPerFileBytes)
-	cmd.Flags().BoolVar(&opts.redacted, flags.LogRedacted, false, usage.LogRedacted)
+	cmd.Flags().BoolVar(&opts.redacted, flags.Redacted, false, usage.LogRedacted)
 
 	_ = cmd.MarkFlagRequired(flags.SizeRequestedPerFileBytes)
-	_ = cmd.MarkFlagRequired(flags.LogTypes)
+	_ = cmd.MarkFlagRequired(flags.Type)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

@@ -20,7 +20,6 @@ import (
 	"io"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 )
 
@@ -34,6 +33,16 @@ type LogCollector interface {
 
 type LogsLister interface {
 	ListLogJobs(string, *om.LogListOptions) (*om.LogCollectionJobs, error)
+}
+
+func (s *Store) Collect(groupID string, newLog *om.LogCollectionJob) (*om.LogCollectionJob, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*om.Client).LogCollections.Create(context.Background(), groupID, newLog)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 func (s *Store) ListLogJobs(groupID string, opts *om.LogListOptions) (*om.LogCollectionJobs, error) {

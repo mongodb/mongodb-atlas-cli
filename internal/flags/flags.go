@@ -115,8 +115,7 @@ const (
 	Normalization                   = "normalization"                   // Normalization flag
 	Backwards                       = "backwards"                       // Backwards flag
 	Strength                        = "strength"                        // Strength flag
-	LogTypes                        = "logTypes"                        // LogTypes flag
 	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
-	LogRedacted                     = "redacted"                        // LogRedacted flag
-	Verbose                         = "verbose"                         // Verbose flag
+	Redacted                        = "redacted" // Redacted flag
+	Verbose                         = "verbose"
 )

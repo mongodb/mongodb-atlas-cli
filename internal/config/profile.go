@@ -72,7 +72,7 @@ func New() *Profile {
 }
 
 func Name() string { return p.Name() }
-func (p Profile) Name() string {
+func (p *Profile) Name() string {
 	return *p.name
 }
 

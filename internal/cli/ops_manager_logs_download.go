@@ -15,20 +15,23 @@
 package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"io"
+	"os"
+
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
 type opsManagerLogsDownloadOpts struct {
 	globalOpts
-	id string
-	filePath string
-	store store.LogsLister
+	id    string
+	out   string
+	fs    afero.Fs
+	store store.LogJobsDownloader
 }
 
 func (opts *opsManagerLogsDownloadOpts) initStore() error {
@@ -38,23 +41,31 @@ func (opts *opsManagerLogsDownloadOpts) initStore() error {
 }
 
 func (opts *opsManagerLogsDownloadOpts) Run() error {
-	result, err := opts.store.ListLogJobs(opts.ProjectID(), opts.newLogListOptions())
+	out, err := opts.newWriteCloser()
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(result)
+
+	if err := opts.store.DownloadLogJob(opts.ProjectID(), opts.id, out); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (opts *opsManagerLogsDownloadOpts) newLogListOptions() *om.LogListOptions {
-	return &om.LogListOptions{Verbose: opts.Verbose}
+func (opts *opsManagerLogsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
+	// Create file only if is not there already (don't overwrite)
+	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
+	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
+	return f, err
 }
 
-// mongocli om logs download id [--filePath filePath] [--projectId projectId]
+// mongocli om logs download id [--out out] [--projectId projectId]
 func OpsManagerLogsDownloadOptsBuilder() *cobra.Command {
 	opts := &opsManagerLogsDownloadOpts{}
 	cmd := &cobra.Command{
-		Use:     "download",
-		Short:   description.DownloadLogs,
+		Use:   "download [id]",
+		Short: description.DownloadLogs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
@@ -64,10 +75,11 @@ func OpsManagerLogsDownloadOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.id, flags.ID, "", usage.Verbose)
-	cmd.Flags().StringVar(&opts.filePath, flags.FilePath, "", usage.Verbose)
+	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flags.Out)
 
 	return cmd
 }

@@ -12,17 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package validators
+package validate
 
 import (
-	"errors"
+	"encoding/hex"
+	"fmt"
 	"net/url"
+	"strings"
 )
 
-func ValidURL(val interface{}) error {
-	_, err := url.ParseRequestURI(val.(string))
+func URL(val interface{}) error {
+	var u string
+	var ok bool
+	if u, ok = val.(string); !ok {
+		return fmt.Errorf("'%v' is not a valid URL", val)
+	}
+	if !strings.HasSuffix(u, "/") {
+		return fmt.Errorf("'%s' must have a trailing slash", u)
+	}
+	_, err := url.ParseRequestURI(u)
 	if err != nil {
-		return errors.New("the value is not a valid URL")
+		return fmt.Errorf("'%s' is not a valid URL", u)
+	}
+
+	return nil
+}
+
+func ObjectID(s string) error {
+	b, err := hex.DecodeString(s)
+	if err != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid Id", s)
 	}
 	return nil
 }

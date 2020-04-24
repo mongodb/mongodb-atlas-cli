@@ -63,7 +63,12 @@ functions:
         working_dir: mongocli
         env:
           <<: *go_options
-        command: make package
+        command: goreleaser
+        args:
+          - "--snapshot"
+          - "--rm-dist"
+          - "-f"
+          - ".goreleaser_evg.yml"
   "set up notary client credentials":
     - command: shell.exec
       params:
@@ -72,6 +77,7 @@ functions:
         script: |
           set -o errexit
 
+          # curator env variables
           cat <<EOF > notary_env.sh
           export NOTARY_KEY_NAME='server-4.4'
           export NOTARY_TOKEN=${signing_auth_token_44}
@@ -95,9 +101,10 @@ functions:
           curl -L -O http://boxes.10gen.com/build/curator/curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
           tar -zxvf curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
 
-          # We get the raw version string (v1.2.3-45-gabcdef) from git
-          VERSION=$(git describe --abbrev=7 | cut -d "v" -f 2)
-
+          # --version needs to match the mongodb server version to publish to the right repo
+          # 4.X goes to the 4.x repo
+          # any *-rc version goes to testing repo
+          # everything else goes to development repo
           ./curator \
             --level debug \
             repo submit \
@@ -105,7 +112,7 @@ functions:
             --config etc/repo_config.yml \
             --distro ${distro} \
             --edition ${edition} \
-            --version $VERSION \
+            --version ${server_version} \
             --arch x86_64 \
             --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${build_id}/${ext}.tgz
 
@@ -127,13 +134,13 @@ tasks:
           target: mongocli/dist/deb.tgz
           source_dir: mongocli/dist
           include:
-            - "mongocli_next_linux_x86_64.deb"
+            - "*.deb"
       - command: archive.targz_pack
         params:
           target: mongocli/dist/rpm.tgz
           source_dir: mongocli/dist
           include:
-            - "mongocli_next_linux_x86_64.rpm"
+            - "*.rpm"
       - command: s3.put
         params:
           aws_key: ${aws_key}

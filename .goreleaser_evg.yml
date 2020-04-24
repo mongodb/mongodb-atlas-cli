@@ -1,0 +1,47 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+- env:
+    - CGO_ENABLED=0
+  ldflags:
+    - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
+  goos:
+    - darwin
+    - linux
+    - windows
+  goarch:
+    - amd64
+archives:
+- replacements:
+    darwin: macos
+    amd64: x86_64
+  format_overrides:
+    - goos: windows
+      format: zip
+  files:
+    - README.md
+    - LICENSE
+    - third_party_notices/**/*
+nfpms:
+  - id: mongocli
+    package_name: mongocli
+    vendor: MongoDB Inc.
+    homepage: https://www.mongodb.com/
+    maintainer: MongoDB Inc. <support@mongodb.com>
+    description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+    license: Apache 2.0
+    formats:
+      - deb
+      - rpm
+    overrides:
+      deb:
+        file_name_template: mongodb-cli-{{ .Version }}_{{ .Arch }}
+      rpm:
+        file_name_template: mongodb-cli-{{ replace .Version "~" "." }}.{{ .Arch }}
+        replacements:
+          amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Version }}~latest"

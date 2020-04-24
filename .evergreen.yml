@@ -63,7 +63,7 @@ functions:
         working_dir: mongocli
         env:
           <<: *go_options
-        command: goreleaser
+        binary: goreleaser
         args:
           - "--snapshot"
           - "--rm-dist"

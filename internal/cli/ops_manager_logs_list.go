@@ -49,7 +49,7 @@ func (opts *opsManagerLogsListOpts) newLogListOptions() *om.LogListOptions {
 }
 
 // mongocli om logs collect --verbose verbose [--projectId projectId]
-func opsManagerLogsListOptsBuilder() *cobra.Command {
+func OpsManagerLogsListOptsBuilder() *cobra.Command {
 	opts := &opsManagerLogsListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",

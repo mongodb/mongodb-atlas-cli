@@ -27,7 +27,7 @@ func OpsManagerLogsBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(OpsManagerLogsCollectOptsBuilder())
-	cmd.AddCommand(opsManagerLogsListOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsListOptsBuilder())
 
 	return cmd
 }

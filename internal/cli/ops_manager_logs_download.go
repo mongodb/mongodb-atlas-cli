@@ -62,7 +62,9 @@ func (opts *opsManagerLogsDownloadOpts) newWriteCloser() (io.WriteCloser, error)
 
 // mongocli om logs download id [--out out] [--projectId projectId]
 func OpsManagerLogsDownloadOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsDownloadOpts{}
+	opts := &opsManagerLogsDownloadOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "download [id]",
 		Short: description.DownloadLogs,

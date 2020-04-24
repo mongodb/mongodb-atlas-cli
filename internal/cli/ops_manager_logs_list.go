@@ -26,8 +26,8 @@ import (
 
 type opsManagerLogsListOpts struct {
 	globalOpts
-	om.LogListOptions
-	store store.LogsLister
+	verbose bool
+	store   store.LogJobLister
 }
 
 func (opts *opsManagerLogsListOpts) initStore() error {
@@ -37,7 +37,7 @@ func (opts *opsManagerLogsListOpts) initStore() error {
 }
 
 func (opts *opsManagerLogsListOpts) Run() error {
-	result, err := opts.store.ListLogJobs(opts.ProjectID(), opts.newLogListOptions())
+	result, err := opts.store.LogCollectionJobs(opts.ProjectID(), opts.newLogListOptions())
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func (opts *opsManagerLogsListOpts) Run() error {
 }
 
 func (opts *opsManagerLogsListOpts) newLogListOptions() *om.LogListOptions {
-	return &om.LogListOptions{Verbose: opts.Verbose}
+	return &om.LogListOptions{Verbose: opts.verbose}
 }
 
 // mongocli om logs list --verbose verbose [--projectId projectId]
@@ -63,7 +63,7 @@ func OpsManagerLogsListOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Verbose, flags.Verbose, false, usage.Verbose)
+	cmd.Flags().BoolVar(&opts.verbose, flags.Verbose, false, usage.Verbose)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

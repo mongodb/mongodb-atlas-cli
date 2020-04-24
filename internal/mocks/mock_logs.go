@@ -87,40 +87,40 @@ func (mr *MockLogCollectorMockRecorder) Collect(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collect", reflect.TypeOf((*MockLogCollector)(nil).Collect), arg0, arg1)
 }
 
-// MockLogsLister is a mock of LogsLister interface
-type MockLogsLister struct {
+// MockLogJobLister is a mock of LogJobLister interface
+type MockLogJobLister struct {
 	ctrl     *gomock.Controller
-	recorder *MockLogsListerMockRecorder
+	recorder *MockLogJobListerMockRecorder
 }
 
-// MockLogsListerMockRecorder is the mock recorder for MockLogsLister
-type MockLogsListerMockRecorder struct {
-	mock *MockLogsLister
+// MockLogJobListerMockRecorder is the mock recorder for MockLogJobLister
+type MockLogJobListerMockRecorder struct {
+	mock *MockLogJobLister
 }
 
-// NewMockLogsLister creates a new mock instance
-func NewMockLogsLister(ctrl *gomock.Controller) *MockLogsLister {
-	mock := &MockLogsLister{ctrl: ctrl}
-	mock.recorder = &MockLogsListerMockRecorder{mock}
+// NewMockLogJobLister creates a new mock instance
+func NewMockLogJobLister(ctrl *gomock.Controller) *MockLogJobLister {
+	mock := &MockLogJobLister{ctrl: ctrl}
+	mock.recorder = &MockLogJobListerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockLogsLister) EXPECT() *MockLogsListerMockRecorder {
+func (m *MockLogJobLister) EXPECT() *MockLogJobListerMockRecorder {
 	return m.recorder
 }
 
-// ListLogJobs mocks base method
-func (m *MockLogsLister) ListLogJobs(arg0 string, arg1 *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
+// LogCollectionJobs mocks base method
+func (m *MockLogJobLister) LogCollectionJobs(arg0 string, arg1 *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListLogJobs", arg0, arg1)
+	ret := m.ctrl.Call(m, "LogCollectionJobs", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.LogCollectionJobs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListLogJobs indicates an expected call of ListLogJobs
-func (mr *MockLogsListerMockRecorder) ListLogJobs(arg0, arg1 interface{}) *gomock.Call {
+// LogCollectionJobs indicates an expected call of LogCollectionJobs
+func (mr *MockLogJobListerMockRecorder) LogCollectionJobs(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLogJobs", reflect.TypeOf((*MockLogsLister)(nil).ListLogJobs), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogCollectionJobs", reflect.TypeOf((*MockLogJobLister)(nil).LogCollectionJobs), arg0, arg1)
 }

@@ -23,19 +23,19 @@ import (
 
 func TestOpsManagerLogsListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogsLister(ctrl)
+	mockStore := mocks.NewMockLogJobLister(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := &om.LogCollectionJobs{}
 
 	listOpts := &opsManagerLogsListOpts{
-		store:          mockStore,
-		LogListOptions: om.LogListOptions{Verbose: true},
+		store:   mockStore,
+		verbose: true,
 	}
 
 	mockStore.
-		EXPECT().ListLogJobs(listOpts.projectID, &listOpts.LogListOptions).
+		EXPECT().LogCollectionJobs(listOpts.projectID, listOpts.newLogListOptions()).
 		Return(expected, nil).
 		Times(1)
 

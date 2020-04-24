@@ -53,7 +53,7 @@ func OpsManagerMeasurementsDisksDescribeBuilder() *cobra.Command {
 	opts := &opsManagerMeasurementsDisksDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe [hostId] [name]",
-		Short: description.ListDisks,
+		Short: description.DescribeDisks,
 		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -73,7 +73,7 @@ func OpsManagerMeasurementsDisksDescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
 	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
 	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.measurementType, flags.MeasurementType, nil, usage.MeasurementType)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

@@ -49,31 +49,31 @@ func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1, arg2, arg3, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1, arg2, arg3, arg4)
 }
 
-// MockLogs is a mock of Logs interface
-type MockLogs struct {
+// MockLogCollector is a mock of LogCollector interface
+type MockLogCollector struct {
 	ctrl     *gomock.Controller
-	recorder *MockLogsMockRecorder
+	recorder *MockLogCollectorMockRecorder
 }
 
-// MockLogsMockRecorder is the mock recorder for MockLogs
-type MockLogsMockRecorder struct {
-	mock *MockLogs
+// MockLogCollectorMockRecorder is the mock recorder for MockLogCollector
+type MockLogCollectorMockRecorder struct {
+	mock *MockLogCollector
 }
 
-// NewMockLogs creates a new mock instance
-func NewMockLogs(ctrl *gomock.Controller) *MockLogs {
-	mock := &MockLogs{ctrl: ctrl}
-	mock.recorder = &MockLogsMockRecorder{mock}
+// NewMockLogCollector creates a new mock instance
+func NewMockLogCollector(ctrl *gomock.Controller) *MockLogCollector {
+	mock := &MockLogCollector{ctrl: ctrl}
+	mock.recorder = &MockLogCollectorMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockLogs) EXPECT() *MockLogsMockRecorder {
+func (m *MockLogCollector) EXPECT() *MockLogCollectorMockRecorder {
 	return m.recorder
 }
 
 // Collect mocks base method
-func (m *MockLogs) Collect(arg0 string, arg1 *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
+func (m *MockLogCollector) Collect(arg0 string, arg1 *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Collect", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.LogCollectionJob)
@@ -82,7 +82,7 @@ func (m *MockLogs) Collect(arg0 string, arg1 *opsmngr.LogCollectionJob) (*opsmng
 }
 
 // Collect indicates an expected call of Collect
-func (mr *MockLogsMockRecorder) Collect(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockLogCollectorMockRecorder) Collect(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collect", reflect.TypeOf((*MockLogs)(nil).Collect), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collect", reflect.TypeOf((*MockLogCollector)(nil).Collect), arg0, arg1)
 }

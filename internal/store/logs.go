@@ -28,7 +28,7 @@ type LogsDownloader interface {
 	DownloadLog(string, string, string, io.Writer, *atlas.DateRangetOptions) error
 }
 
-type Logs interface {
+type LogCollector interface {
 	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
 	ListLogJobs(string, *om.LogListOptions)(*om.LogCollectionJobs, error)
 }

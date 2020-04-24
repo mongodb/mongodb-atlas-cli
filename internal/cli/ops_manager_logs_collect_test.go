@@ -23,7 +23,7 @@ import (
 
 func TestOpsManagerLogsCollectOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogs(ctrl)
+	mockStore := mocks.NewMockLogCollector(ctrl)
 
 	defer ctrl.Finish()
 

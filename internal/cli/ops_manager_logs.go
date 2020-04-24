@@ -23,9 +23,9 @@ func OpsManagerLogsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "logs",
 		Aliases: []string{"log"},
-		Short:   description.OMLogs,
+		Short:   description.LogCollection,
 	}
-	cmd.AddCommand(opsManagerLogsCollectOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsCollectOptsBuilder())
 
 	return cmd
 }

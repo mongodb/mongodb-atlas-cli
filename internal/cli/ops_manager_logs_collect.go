@@ -15,10 +15,14 @@
 package cli
 
 import (
+	"fmt"
+	"strings"
+
 	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -31,7 +35,7 @@ type opsManagerLogsCollectOpts struct {
 	logTypes                  []string
 	sizeRequestedPerFileBytes int64
 	redacted                  bool
-	store                     store.Logs
+	store                     store.LogCollector
 }
 
 func (opts *opsManagerLogsCollectOpts) initStore() error {
@@ -58,25 +62,40 @@ func (opts *opsManagerLogsCollectOpts) newLog() *om.LogCollectionJob {
 	}
 }
 
-// mongocli om logs collect --resourceType type --resourceName resource --sizeRequestedPerFileBytes size --logTypes type --redacted redacted [--projectId projectId]
-func opsManagerLogsCollectOptsBuilder() *cobra.Command {
+// mongocli om logs collect resourceType resourceName --sizeRequestedPerFileBytes size --logTypes type --redacted redacted [--projectId projectId]
+func OpsManagerLogsCollectOptsBuilder() *cobra.Command {
 	opts := &opsManagerLogsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect",
-		Short: description.CollectOMLogs,
+		Short: description.StartLogCollectionJob,
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
+			}
+
+			args[0] = strings.ToLower(args[0])
+			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
+				return fmt.Errorf("invalid Resource Type. The Resource Type must be cluster, process or replicaset but was %q", args[0])
+			}
+			return nil
+		},
+		ValidArgs: []string{"cluster", "process", "replicaset"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.resourceType = args[0]
+			opts.resourceName = args[1]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.resourceName, flags.ResourceName, "", usage.ResourceName)
-	cmd.Flags().StringVar(&opts.resourceType, flags.ResourceType, "", usage.ResourceType)
 	cmd.Flags().StringArrayVar(&opts.logTypes, flags.LogTypes, nil, usage.LogTypes)
 	cmd.Flags().Int64Var(&opts.sizeRequestedPerFileBytes, flags.SizeRequestedPerFileBytes, 0, usage.SizeRequestedPerFileBytes)
-	cmd.Flags().BoolVar(&opts.redacted, flags.Redacted, false, usage.Redacted)
+	cmd.Flags().BoolVar(&opts.redacted, flags.LogRedacted, false, usage.LogRedacted)
+
+	_ = cmd.MarkFlagRequired(flags.SizeRequestedPerFileBytes)
+	_ = cmd.MarkFlagRequired(flags.LogTypes)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 

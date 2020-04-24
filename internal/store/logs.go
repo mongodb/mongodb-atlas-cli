@@ -30,7 +30,10 @@ type LogsDownloader interface {
 
 type LogCollector interface {
 	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
-	ListLogJobs(string, *om.LogListOptions)(*om.LogCollectionJobs, error)
+}
+
+type LogsLister interface {
+	ListLogJobs(string, *om.LogListOptions) (*om.LogCollectionJobs, error)
 }
 
 func (s *Store) ListLogJobs(groupID string, opts *om.LogListOptions) (*om.LogCollectionJobs, error) {

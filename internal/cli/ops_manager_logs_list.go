@@ -27,7 +27,7 @@ import (
 type opsManagerLogsListOpts struct {
 	globalOpts
 	om.LogListOptions
-	store                     store.Logs
+	store store.LogsLister
 }
 
 func (opts *opsManagerLogsListOpts) initStore() error {
@@ -45,18 +45,16 @@ func (opts *opsManagerLogsListOpts) Run() error {
 }
 
 func (opts *opsManagerLogsListOpts) newLogListOptions() *om.LogListOptions {
-	return &om.LogListOptions{Verbose:opts.Verbose}
+	return &om.LogListOptions{Verbose: opts.Verbose}
 }
 
 // mongocli om logs collect --verbose verbose [--projectId projectId]
 func opsManagerLogsListOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsListOpts{
-
-	}
+	opts := &opsManagerLogsListOpts{}
 	cmd := &cobra.Command{
-		Use:   "list",
+		Use:     "list",
 		Aliases: []string{"ls"},
-		Short: description.CollectOMLogs,
+		Short:   description.ListLogCollectionJobs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

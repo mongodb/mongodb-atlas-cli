@@ -118,5 +118,5 @@ const (
 	LogTypes                        = "logTypes"                        // LogTypes flag
 	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
 	LogRedacted                     = "redacted"                        // LogRedacted flag
-	Verbose                        	= "verbose"                        // Verbose flag
+	Verbose                         = "verbose"                         // Verbose flag
 )

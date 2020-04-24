@@ -95,7 +95,7 @@ const (
 	Normalization                   = "If true, collation checks if text requires normalization and performs normalization to compare text."
 	Backwards                       = "If true, strings with diacritics sort from the back to the front of the string."
 	ClusterName                     = "Name of the cluster."
-	Verbose                        	= "If true, returns all child jobs in the response."
+	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
 	Background                      = "Create the index in the background."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."

@@ -24,23 +24,23 @@ archives:
     - LICENSE
     - third_party_notices/**/*
 nfpms:
-  - id: mongocli
-    package_name: mongocli
-    vendor: MongoDB Inc.
-    homepage: https://www.mongodb.com/
-    maintainer: MongoDB Inc. <support@mongodb.com>
-    description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
-    license: Apache 2.0
-    formats:
-      - deb
-      - rpm
-    overrides:
-      deb:
-        file_name_template: mongodb-cli-unstable_{{ .Version }}_{{ .Arch }}
-      rpm:
-        file_name_template: mongodb-cli-unstable_{{ replace .Version "~" "." }}.{{ .Arch }}
-        replacements:
-          amd64: x86_64
+- package_name: mongocli
+  vendor: MongoDB Inc.
+  homepage: https://www.mongodb.com/
+  maintainer: MongoDB Inc. <support@mongodb.com>
+  description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+  license: Apache 2.0
+  bindir: /usr/bin
+  formats:
+    - deb
+    - rpm
+  overrides:
+    deb:
+      file_name_template: mongodb-cli-unstable_{{ .Version }}_{{ .Arch }}
+    rpm:
+      file_name_template: mongodb-cli-unstable-{{ replace .Version "~" "." }}.{{ .Arch }}
+      replacements:
+        amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
 snapshot:

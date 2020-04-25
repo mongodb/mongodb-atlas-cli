@@ -52,6 +52,8 @@ To run Snyk locally please follow their [CLI reference](https://support.snyk.io/
 
 ## Contributing
 
-Please file issues before filing PRs. For PRs to be accepted, contributors must sign our [CLA](https://www.mongodb.com/legal/contributor-agreement).
+Please creata a [GitHub issue](https://github.com/mongodb/mongocli/issues)
+before submitting a PR. For PRs to be accepted, contributors must sign our
+[CLA](https://www.mongodb.com/legal/contributor-agreement).
 
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).

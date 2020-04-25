@@ -49,6 +49,43 @@ func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1, arg2, arg3, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1, arg2, arg3, arg4)
 }
 
+// MockLogJobsDownloader is a mock of LogJobsDownloader interface
+type MockLogJobsDownloader struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogJobsDownloaderMockRecorder
+}
+
+// MockLogJobsDownloaderMockRecorder is the mock recorder for MockLogJobsDownloader
+type MockLogJobsDownloaderMockRecorder struct {
+	mock *MockLogJobsDownloader
+}
+
+// NewMockLogJobsDownloader creates a new mock instance
+func NewMockLogJobsDownloader(ctrl *gomock.Controller) *MockLogJobsDownloader {
+	mock := &MockLogJobsDownloader{ctrl: ctrl}
+	mock.recorder = &MockLogJobsDownloaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockLogJobsDownloader) EXPECT() *MockLogJobsDownloaderMockRecorder {
+	return m.recorder
+}
+
+// DownloadLogJob mocks base method
+func (m *MockLogJobsDownloader) DownloadLogJob(arg0, arg1 string, arg2 io.Writer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadLogJob", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DownloadLogJob indicates an expected call of DownloadLogJob
+func (mr *MockLogJobsDownloaderMockRecorder) DownloadLogJob(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLogJob", reflect.TypeOf((*MockLogJobsDownloader)(nil).DownloadLogJob), arg0, arg1, arg2)
+}
+
 // MockLogCollector is a mock of LogCollector interface
 type MockLogCollector struct {
 	ctrl     *gomock.Controller

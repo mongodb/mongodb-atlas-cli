@@ -52,6 +52,8 @@ nfpms:
   formats:
     - deb
     - rpm
+  replacements:
+    amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
 snapshot:

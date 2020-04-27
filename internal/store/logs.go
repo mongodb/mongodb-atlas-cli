@@ -40,6 +40,10 @@ type LogJobLister interface {
 	LogCollectionJobs(string, *om.LogListOptions) (*om.LogCollectionJobs, error)
 }
 
+type LogJobDeleter interface {
+	DeleteCollectionJob(string, string) error
+}
+
 // LogCollectionJobs encapsulate the logic to manage different cloud providers
 func (s *Store) LogCollectionJobs(groupID string, opts *om.LogListOptions) (*om.LogCollectionJobs, error) {
 	switch s.service {
@@ -48,6 +52,17 @@ func (s *Store) LogCollectionJobs(groupID string, opts *om.LogListOptions) (*om.
 		return log, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteCollectionJob encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteCollectionJob(groupID, logID string) error {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*om.Client).LogCollections.Delete(context.Background(), groupID, logID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 

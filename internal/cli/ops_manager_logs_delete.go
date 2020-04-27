@@ -42,7 +42,7 @@ func (opts *opsManagerLogsDeleteOpts) Run() error {
 func OpsManagerLogsDeleteOptsBuilder() *cobra.Command {
 	opts := &opsManagerLogsDeleteOpts{
 		deleteOpts: deleteOpts{
-			successMessage: "Log Collection entry '%s' deleted\n",
+			successMessage: "Log collection entry '%s' deleted\n",
 			failMessage:    "Log Collection entry not deleted",
 		},
 	}

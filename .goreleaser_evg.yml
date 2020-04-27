@@ -44,4 +44,4 @@ nfpms:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "unstable-{{ .Version }}~latest"
+  name_template: unstable-{{ .Version }}~latest

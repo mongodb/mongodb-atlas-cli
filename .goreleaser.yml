@@ -35,8 +35,8 @@ brews:
     name: homebrew-mongocli
   skip_upload: auto
   description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
-  homepage: "https://github.com/mongodb/mongocli"
-  url_template: "https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  homepage: https://github.com/mongodb/mongocli
+  url_template: https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}
   install: |
     bin.install "mongocli"
   test: |
@@ -55,9 +55,9 @@ nfpms:
   replacements:
     amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: checksums.txt
 snapshot:
-  name_template: "{{ .Version }}_latest"
+  name_template: {{ .Version }}_unstable
 changelog:
   sort: asc
   filters:

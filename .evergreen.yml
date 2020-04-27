@@ -159,17 +159,7 @@ tasks:
             - mongocli/dist/*.zip
             - mongocli/dist/*.deb
             - mongocli/dist/*.rpm
-          remote_file: ${project}/dist/${build_id}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - mongocli/dist/yum/*.tgz
-            - mongocli/dist/apt/*.tgz
+            - mongocli/dist/*.tgz
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
           permissions: public-read

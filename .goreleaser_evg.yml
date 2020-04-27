@@ -36,12 +36,12 @@ nfpms:
     - rpm
   overrides:
     deb:
-      file_name_template: mongodb-cli-unstable_{{ .Version }}_{{ .Arch }}
+      file_name_template: mongodb-cli-{{ .Version }}_{{ .Arch }}
     rpm:
-      file_name_template: mongodb-cli-unstable-{{ replace .Version "~" "." }}.{{ .Arch }}
+      file_name_template: mongodb-cli-{{ replace .Version "~" "." }}.{{ .Arch }}
       replacements:
         amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Version }}~latest"
+  name_template: "unstable-{{ .Version }}~latest"

@@ -75,8 +75,10 @@ functions:
 
           mkdir {yum,apt}
           # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
-          cp mongocli_next_linux_x86_64.deb yum/mongodb-cli-unstable_$VERSION~latest_amd64.deb
-          cp mongocli_next_linux_x86_64.rpm apt/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
+          cp mongocli_next_linux_x86_64.deb yum/
+          mv yum/mongocli_next_linux_x86_64.deb yum/mongodb-cli-unstable_$VERSION~latest_amd64.deb
+          cp mongocli_next_linux_x86_64.rpm apt/
+          cp apt/mongocli_next_linux_x86_64.rpm apt/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
   "set up notary client credentials":
     - command: shell.exec
       params:

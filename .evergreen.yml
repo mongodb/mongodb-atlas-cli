@@ -64,6 +64,19 @@ functions:
         env:
           <<: *go_options
         command: make package
+  "gen_repo_data":
+    - command: shell.exec
+      params:
+        working_dir: mongocli/dist
+        script: |
+          set -o errexit
+          set -o verbose
+          VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
+
+          mkdir {yum,apt}
+          # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
+          cp mongocli_next_linux_x86_64.deb yum/mongodb-cli-unstable_$VERSION~latest_amd64.deb
+          cp mongocli_next_linux_x86_64.rpm apt/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
   "set up notary client credentials":
     - command: shell.exec
       params:
@@ -124,16 +137,17 @@ tasks:
       - func: "gen-notices"
       - func: "fetch goreleaser"
       - func: "package"
+      - func: "gen_repo_data"
       - command: archive.targz_pack
         params:
           target: mongocli/dist/deb.tgz
-          source_dir: mongocli/dist
+          source_dir: mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
           target: mongocli/dist/rpm.tgz
-          source_dir: mongocli/dist
+          source_dir: mongocli/dist/yum
           include:
             - "*.rpm"
       - command: s3.put
@@ -142,10 +156,20 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - mongocli/dist/*.tar.gz
-            - mongocli/dist/*.tgz
             - mongocli/dist/*.zip
             - mongocli/dist/*.deb
             - mongocli/dist/*.rpm
+          remote_file: ${project}/dist/${build_id}/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_files_include_filter:
+            - mongocli/dist/yum/*.tgz
+            - mongocli/dist/apt/*.tgz
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
           permissions: public-read

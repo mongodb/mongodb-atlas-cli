@@ -19,7 +19,7 @@ builds:
     - amd64
 archives:
 - replacements:
-    darwin: macOS
+    darwin: macos
     amd64: x86_64
   format_overrides:
     - goos: windows
@@ -57,7 +57,7 @@ nfpms:
 checksum:
   name_template: checksums.txt
 snapshot:
-  name_template: {{ .Version }}_unstable
+  name_template: next
 changelog:
   sort: asc
   filters:

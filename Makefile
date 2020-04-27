@@ -104,7 +104,7 @@ gen-notices: ## Generate 3rd party notices
 .PHONY: package
 package: ## Use goreleaser to generate evergreen builds
 	@echo "==> Packaging"
-	goreleaser --rm-dist --snapshot -f .goreleaser_evg.yml
+	goreleaser --rm-dist --snapshot
 
 .PHONY: release
 release: gen-notices ## Use goreleaser to generate builds and publish

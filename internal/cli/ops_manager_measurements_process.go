@@ -51,7 +51,7 @@ func (opts *opsManagerMeasurementsProcessOpts) Run() error {
 func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
 	opts := &opsManagerMeasurementsProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "process",
+		Use:     "process [hostId]",
 		Short:   description.ProcessMeasurements,
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),

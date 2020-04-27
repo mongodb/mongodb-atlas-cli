@@ -161,3 +161,40 @@ func (mr *MockLogJobListerMockRecorder) LogCollectionJobs(arg0, arg1 interface{}
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogCollectionJobs", reflect.TypeOf((*MockLogJobLister)(nil).LogCollectionJobs), arg0, arg1)
 }
+
+// MockLogJobDeleter is a mock of LogJobDeleter interface
+type MockLogJobDeleter struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogJobDeleterMockRecorder
+}
+
+// MockLogJobDeleterMockRecorder is the mock recorder for MockLogJobDeleter
+type MockLogJobDeleterMockRecorder struct {
+	mock *MockLogJobDeleter
+}
+
+// NewMockLogJobDeleter creates a new mock instance
+func NewMockLogJobDeleter(ctrl *gomock.Controller) *MockLogJobDeleter {
+	mock := &MockLogJobDeleter{ctrl: ctrl}
+	mock.recorder = &MockLogJobDeleterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockLogJobDeleter) EXPECT() *MockLogJobDeleterMockRecorder {
+	return m.recorder
+}
+
+// DeleteCollectionJob mocks base method
+func (m *MockLogJobDeleter) DeleteCollectionJob(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCollectionJob", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteCollectionJob indicates an expected call of DeleteCollectionJob
+func (mr *MockLogJobDeleterMockRecorder) DeleteCollectionJob(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollectionJob", reflect.TypeOf((*MockLogJobDeleter)(nil).DeleteCollectionJob), arg0, arg1)
+}

@@ -43,7 +43,8 @@ or check our [online documentation](https://docs.mongodb.com/mongocli/master/) f
 
 ### Getting started
 
-Run `mongocli config` to set up your credentials.
+Run `mongocli config` to set up your credentials, 
+this is optional and you can use [env variables](#environment-variables) instead.
 
 If you're working with Ops Manager or CLoud Manager you need to define the service using `--service`
 

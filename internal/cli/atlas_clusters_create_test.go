@@ -26,10 +26,9 @@ import (
 func TestAtlasClustersCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
+	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Cluster{}
-
-	defer ctrl.Finish()
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &atlasClustersCreateOpts{

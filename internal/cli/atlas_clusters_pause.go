@@ -11,9 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -22,43 +24,44 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	agentType = "AUTOMATION"
-)
-
-type opsManagerServersListOpts struct {
+type atlasClustersPauseOpts struct {
 	globalOpts
-	store store.AgentLister
+	name  string
+	store store.ClusterUpdater
 }
 
-func (opts *opsManagerServersListOpts) initStore() error {
+func (opts *atlasClustersPauseOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerServersListOpts) Run() error {
-	servers, err := opts.store.Agents(opts.ProjectID(), agentType)
+func (opts *atlasClustersPauseOpts) Run() error {
+	paused := true
+	cluster := &atlas.Cluster{
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateCluster(opts.ProjectID(), opts.name, cluster)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(servers)
+	return json.PrettyPrint(result)
 }
 
-// mongocli om server(s) list [--projectId projectId]
-func OpsManagerAgentsListBuilder() *cobra.Command {
-	opts := &opsManagerServersListOpts{}
+// mongocli atlas cluster(s) pause [name] [--projectId projectId]
+func AtlasClustersPauseBuilder() *cobra.Command {
+	opts := &atlasClustersPauseOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
-		Short:   description.ListServer,
+		Use:   "pause [name]",
+		Short: description.PauseCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}

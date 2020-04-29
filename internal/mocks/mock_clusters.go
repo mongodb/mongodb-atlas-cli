@@ -185,18 +185,18 @@ func (m *MockClusterUpdater) EXPECT() *MockClusterUpdaterMockRecorder {
 }
 
 // UpdateCluster mocks base method
-func (m *MockClusterUpdater) UpdateCluster(arg0 *mongodbatlas.Cluster) (*mongodbatlas.Cluster, error) {
+func (m *MockClusterUpdater) UpdateCluster(arg0, arg1 string, arg2 *mongodbatlas.Cluster) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateCluster", arg0)
+	ret := m.ctrl.Call(m, "UpdateCluster", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.Cluster)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateCluster indicates an expected call of UpdateCluster
-func (mr *MockClusterUpdaterMockRecorder) UpdateCluster(arg0 interface{}) *gomock.Call {
+func (mr *MockClusterUpdaterMockRecorder) UpdateCluster(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClusterUpdater)(nil).UpdateCluster), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClusterUpdater)(nil).UpdateCluster), arg0, arg1, arg2)
 }
 
 // MockClusterStore is a mock of ClusterStore interface
@@ -282,16 +282,16 @@ func (mr *MockClusterStoreMockRecorder) DeleteCluster(arg0, arg1 interface{}) *g
 }
 
 // UpdateCluster mocks base method
-func (m *MockClusterStore) UpdateCluster(arg0 *mongodbatlas.Cluster) (*mongodbatlas.Cluster, error) {
+func (m *MockClusterStore) UpdateCluster(arg0, arg1 string, arg2 *mongodbatlas.Cluster) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateCluster", arg0)
+	ret := m.ctrl.Call(m, "UpdateCluster", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.Cluster)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateCluster indicates an expected call of UpdateCluster
-func (mr *MockClusterStoreMockRecorder) UpdateCluster(arg0 interface{}) *gomock.Call {
+func (mr *MockClusterStoreMockRecorder) UpdateCluster(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClusterStore)(nil).UpdateCluster), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClusterStore)(nil).UpdateCluster), arg0, arg1, arg2)
 }

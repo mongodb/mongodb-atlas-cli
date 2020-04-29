@@ -11,35 +11,41 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/spf13/afero"
 )
 
-func TestOpsManagerLogsListOpts_Run(t *testing.T) {
+func TestOpsManagerLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogJobLister(ctrl)
+	mockStore := mocks.NewMockLogJobsDownloader(ctrl)
 
-	defer ctrl.Finish()
+	appFS := afero.NewMemMapFs()
 
-	expected := &om.LogCollectionJobs{}
+	opts := &opsManagerLogsJobsDownloadOpts{
+		id:    "1",
+		fs:    appFS,
+		store: mockStore,
+	}
 
-	listOpts := &opsManagerLogsListOpts{
-		store:   mockStore,
-		verbose: true,
+	f, err := opts.newWriteCloser()
+	if err != nil {
+		t.Fatalf("newWriteCloser() unexpected error: %v", err)
 	}
 
 	mockStore.
-		EXPECT().LogCollectionJobs(listOpts.projectID, listOpts.newLogListOptions()).
-		Return(expected, nil).
+		EXPECT().
+		DownloadLogJob(opts.projectID, opts.id, f).
+		Return(nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

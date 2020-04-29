@@ -19,33 +19,31 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
 )
 
-func TestOpsManagerLogsDownloadOpts_Run(t *testing.T) {
+func TestOpsManagerWhitelistDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogJobsDownloader(ctrl)
+	mockStore := mocks.NewMockLogJobDeleter(ctrl)
 
-	appFS := afero.NewMemMapFs()
+	defer ctrl.Finish()
 
-	opts := &opsManagerLogsDownloadOpts{
-		id:    "1",
-		fs:    appFS,
+	deleteOpts := &opsManagerLogsJobsDeleteOpts{
+		deleteOpts: deleteOpts{
+			confirm:        true,
+			entry:          "test",
+			successMessage: "Project whitelist entry '%s' deleted\n",
+		},
 		store: mockStore,
-	}
-
-	f, err := opts.newWriteCloser()
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
 	}
 
 	mockStore.
 		EXPECT().
-		DownloadLogJob(opts.projectID, opts.id, f).
+		DeleteCollectionJob(deleteOpts.projectID, deleteOpts.entry).
 		Return(nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	err := deleteOpts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

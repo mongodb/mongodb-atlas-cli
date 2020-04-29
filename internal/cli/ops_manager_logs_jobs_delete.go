@@ -22,25 +22,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerLogsDeleteOpts struct {
+type opsManagerLogsJobsDeleteOpts struct {
 	globalOpts
 	deleteOpts
 	store store.LogJobDeleter
 }
 
-func (opts *opsManagerLogsDeleteOpts) initStore() error {
+func (opts *opsManagerLogsJobsDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerLogsDeleteOpts) Run() error {
+func (opts *opsManagerLogsJobsDeleteOpts) Run() error {
 	return opts.store.DeleteCollectionJob(opts.ProjectID(), opts.entry)
 }
 
-// mongocli om logs delete id [--projectId projectId] [--force]
-func OpsManagerLogsDeleteOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsDeleteOpts{
+// mongocli om logs jobs delete id [--projectId projectId] [--force]
+func OpsManagerLogsJobsDeleteOptsBuilder() *cobra.Command {
+	opts := &opsManagerLogsJobsDeleteOpts{
 		deleteOpts: deleteOpts{
 			successMessage: "Log collection entry '%s' deleted\n",
 			failMessage:    "Log collection entry not deleted",

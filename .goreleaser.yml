@@ -1,7 +1,11 @@
 before:
   hooks:
-    # you may remove this if you don't use vgo
     - go mod tidy
+
+release:
+  draft: true
+  prerelease: auto
+
 builds:
 - env:
     - CGO_ENABLED=0
@@ -11,13 +15,11 @@ builds:
     - darwin
     - linux
     - windows
-  ignore:
-    - goos: darwin
-      goarch: 386
+  goarch:
+    - amd64
 archives:
 - replacements:
     darwin: macos
-    386: i386
     amd64: x86_64
   format_overrides:
     - goos: windows
@@ -31,46 +33,31 @@ brews:
   github:
     owner: mongodb-labs
     name: homebrew-mongocli
-  url_template: "https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-  commit_author:
-    name: gustavo.bazan
-    email: gustavo.bazan@mongodb.com
-  homepage: "https://github.com/mongodb/mongocli"
+  skip_upload: auto
   description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
-  skip_upload: true
-  test: |
-    system "#{bin}/mongocli --version"
+  homepage: https://github.com/mongodb/mongocli
+  url_template: https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}
   install: |
     bin.install "mongocli"
+  test: |
+    system "#{bin}/mongocli --version"
 nfpms:
-  - id: mongocli
-    package_name: mongocli
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    replacements:
-      386: i386
-      amd64: x86_64
-    vendor: MongoDB Inc.
-    homepage: https://www.mongodb.com/
-    maintainer: MongoDB Inc. <support@mongodb.com>
-    description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
-    license: Apache 2.0
-    formats:
-      - deb
-      - rpm
+- package_name: mongocli
+  vendor: MongoDB Inc.
+  homepage: https://www.mongodb.com/
+  maintainer: MongoDB Inc. <support@mongodb.com>
+  description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+  license: Apache 2.0
+  bindir: /usr/bin
+  formats:
+    - deb
+    - rpm
+  replacements:
+    amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: checksums.txt
 snapshot:
-  name_template: "next"
-release:
-  # If set to true, will not auto-publish the release.
-  # Default is false.
-  draft: true
-
-  # If set to auto, will mark the release as not ready for production
-  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
-  # If set to true, will mark the release as not ready for production.
-  # Default is false.
-  prerelease: auto
+  name_template: next
 changelog:
   sort: asc
   filters:

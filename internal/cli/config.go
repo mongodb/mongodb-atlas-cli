@@ -30,6 +30,7 @@ type configOpts struct {
 	PublicAPIKey  string
 	PrivateAPIKey string
 	OpsManagerURL string
+	ProjectID     string
 }
 
 func (opts *configOpts) IsCloud() bool {
@@ -54,6 +55,9 @@ func (opts *configOpts) Save() error {
 	}
 	if opts.IsOpsManager() && opts.OpsManagerURL != "" {
 		config.SetOpsManagerURL(opts.OpsManagerURL)
+	}
+	if opts.ProjectID != "" {
+		config.SetProjectID(opts.ProjectID)
 	}
 
 	return config.Save()
@@ -80,6 +84,14 @@ func (opts *configOpts) Run() error {
 			Prompt: &survey.Password{
 				Message: "Private API Key:",
 				Help:    helpLink,
+			},
+		},
+		{
+			Name: "projectId",
+			Prompt: &survey.Input{
+				Message: "Project ID [optional]:",
+				Help:    "This is the ID of an existing project your API keys have access to, you can leave this blank and specify it on every command with --projectId",
+				Default: config.ProjectID(),
 			},
 		},
 	}

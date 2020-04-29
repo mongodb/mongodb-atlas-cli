@@ -29,7 +29,7 @@ func TestOpsManagerLogsCollectOpts_Run(t *testing.T) {
 
 	expected := &om.LogCollectionJob{ID: "1"}
 
-	listOpts := &opsManagerLogsCollectOpts{
+	listOpts := &opsManagerLogsJobsCollectOpts{
 		redacted:                  false,
 		sizeRequestedPerFileBytes: 64,
 		resourceType:              "CLUSTER",

@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerLogsCollectOpts struct {
+type opsManagerLogsJobsCollectOpts struct {
 	globalOpts
 	resourceType              string
 	resourceName              string
@@ -38,13 +38,13 @@ type opsManagerLogsCollectOpts struct {
 	store                     store.LogCollector
 }
 
-func (opts *opsManagerLogsCollectOpts) initStore() error {
+func (opts *opsManagerLogsJobsCollectOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerLogsCollectOpts) Run() error {
+func (opts *opsManagerLogsJobsCollectOpts) Run() error {
 	result, err := opts.store.Collect(opts.ProjectID(), opts.newLog())
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (opts *opsManagerLogsCollectOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerLogsCollectOpts) newLog() *om.LogCollectionJob {
+func (opts *opsManagerLogsJobsCollectOpts) newLog() *om.LogCollectionJob {
 	return &om.LogCollectionJob{
 		ResourceType:              opts.resourceType,
 		ResourceName:              opts.resourceName,
@@ -62,9 +62,9 @@ func (opts *opsManagerLogsCollectOpts) newLog() *om.LogCollectionJob {
 	}
 }
 
-// mongocli om logs collect resourceType resourceName --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
-func OpsManagerLogsCollectOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsCollectOpts{}
+// mongocli om logs jobs collect resourceType resourceName --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
+func OpsManagerLogsJobsCollectOptsBuilder() *cobra.Command {
+	opts := &opsManagerLogsJobsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect [resourceType] [resourceName]",
 		Short: description.StartLogCollectionJob,

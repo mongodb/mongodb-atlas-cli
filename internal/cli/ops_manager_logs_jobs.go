@@ -19,14 +19,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func OpsManagerLogsBuilder() *cobra.Command {
+func OpsManagerLogsJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
+		Use:     "jobs",
+		Aliases: []string{"job"},
 		Short:   description.LogCollection,
 	}
 
-	cmd.AddCommand(OpsManagerLogsJobsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsCollectOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsListOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsDownloadOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsDeleteOptsBuilder())
 
 	return cmd
 }

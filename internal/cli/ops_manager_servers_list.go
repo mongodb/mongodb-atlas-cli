@@ -38,7 +38,7 @@ func (opts *opsManagerServersListOpts) initStore() error {
 }
 
 func (opts *opsManagerServersListOpts) Run() error {
-	servers, err := opts.store.Agents(opts.projectID, agentType)
+	servers, err := opts.store.Agents(opts.ProjectID(), agentType)
 
 	if err != nil {
 		return err

@@ -43,10 +43,23 @@ or check our [online documentation](https://docs.mongodb.com/mongocli/master/) f
 
 ### Getting started
 
-Run `mongocli config` to set up your credentials.
+Run `mongocli config` to set up your credentials, 
+this is optional and you can use [env variables](#environment-variables) instead.
 
-You can also use `MCLI_PUBLIC_API_KEY`, `MCLI_PRIVATE_API_KEY`, and optionally `MCLI_OPS_MANAGER_URL`
-to define some of the authentication variables
+If you're working with Ops Manager or CLoud Manager you need to define the service using `--service`
+
+For Ops Manager, `mongocli config --service ops-manager`.
+For Cloud Manager, `mongocli config --service cloud-manager`.  
+
+### Environment Variables
+
+You can use a combination of the next env variables to override your profile settings
+
+- `MCLI_PUBLIC_API_KEY`
+- `MCLI_PRIVATE_API_KEY`
+- `MCLI_PROJECT_ID`
+- `MCLI_ORG_ID`
+- `MCLI_OPS_MANAGER_URL`
 
 ### ZSH Completion (experimental)
 Add the following to your `.zshrc` file

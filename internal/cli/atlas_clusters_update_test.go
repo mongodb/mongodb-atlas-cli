@@ -34,7 +34,7 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 
 	t.Run("flags run", func(t *testing.T) {
 
-		createOpts := &atlasClustersUpdateOpts{
+		updateOpts := &atlasClustersUpdateOpts{
 			name:         "ProjectBar",
 			instanceSize: atlasM2,
 			diskSizeGB:   10,
@@ -44,18 +44,18 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			Cluster(createOpts.projectID, createOpts.name).
+			Cluster(updateOpts.projectID, updateOpts.name).
 			Return(expected, nil).
 			Times(1)
 
-		createOpts.patchOpts(expected)
+		updateOpts.patchOpts(expected)
 
 		mockStore.
 			EXPECT().
-			UpdateCluster(expected).Return(expected, nil).
+			UpdateCluster(updateOpts.ProjectID(), updateOpts.name, expected).Return(expected, nil).
 			Times(1)
 
-		err := createOpts.Run()
+		err := updateOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
@@ -64,8 +64,7 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 	t.Run("file run", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		// create test file
-		fileYML := `
-{
+		fileYML := `{
   "name": "ProjectBar",
   "diskSizeGB": 10,
   "numShards": 1,
@@ -94,19 +93,20 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 		fileName := "test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-		createOpts := &atlasClustersUpdateOpts{
+		updateOpts := &atlasClustersUpdateOpts{
 			filename: fileName,
 			fs:       appFS,
 			store:    mockStore,
 		}
 
-		cluster, _ := createOpts.cluster()
+		cluster, _ := updateOpts.cluster()
 		mockStore.
 			EXPECT().
-			UpdateCluster(cluster).Return(expected, nil).
+			UpdateCluster(updateOpts.ProjectID(), "ProjectBar", cluster).
+			Return(expected, nil).
 			Times(1)
 
-		err := createOpts.Run()
+		err := updateOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}

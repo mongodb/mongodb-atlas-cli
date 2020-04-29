@@ -90,7 +90,7 @@ func (opts *configOpts) Run() error {
 			Name: "projectId",
 			Prompt: &survey.Input{
 				Message: "Project ID [optional]:",
-				Help:    "This is the ID or an existing project your API keys have access to, You can leave this blank and specify it on every command with --projectId",
+				Help:    "This is the ID of an existing project your API keys have access to, you can leave this blank and specify it on every command with --projectId",
 				Default: config.ProjectID(),
 			},
 		},

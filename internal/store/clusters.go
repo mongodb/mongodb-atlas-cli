@@ -39,7 +39,7 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(*atlas.Cluster) (*atlas.Cluster, error)
+	UpdateCluster(string, string, *atlas.Cluster) (*atlas.Cluster, error)
 }
 
 type ClusterStore interface {
@@ -62,10 +62,10 @@ func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.Update(context.Background(), cluster.GroupID, cluster.Name, cluster)
+		result, _, err := s.client.(*atlas.Client).Clusters.Update(context.Background(), projectID, name, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

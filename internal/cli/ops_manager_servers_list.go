@@ -31,7 +31,7 @@ type opsManagerServersListOpts struct {
 	store store.AgentLister
 }
 
-func (opts *opsManagerServersListOpts) init() error {
+func (opts *opsManagerServersListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
@@ -56,7 +56,7 @@ func OpsManagerAgentsListBuilder() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   description.ListServer,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

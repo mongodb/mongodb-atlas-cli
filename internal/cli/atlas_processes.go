@@ -23,8 +23,7 @@ func AtlasProcessesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "processes",
 		Aliases: []string{"process"},
-		Short:   description.Clusters,
-		Hidden:  true,
+		Short:   description.Processes,
 	}
 	cmd.AddCommand(AtlasProcessListBuilder())
 

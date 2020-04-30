@@ -22,19 +22,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerAutomationDescribeOpts struct {
+type opsManagerAgentsUpgradeOpts struct {
 	globalOpts
-	store store.AutomationGetter
+	store store.AgentUpgrader
 }
 
-func (opts *opsManagerAutomationDescribeOpts) initStore() error {
+func (opts *opsManagerAgentsUpgradeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerAutomationDescribeOpts) Run() error {
-	r, err := opts.store.GetAutomationConfig(opts.ProjectID())
+func (opts *opsManagerAgentsUpgradeOpts) Run() error {
+	r, err := opts.store.UpgradeAgent(opts.ProjectID())
 
 	if err != nil {
 		return err
@@ -43,14 +43,13 @@ func (opts *opsManagerAutomationDescribeOpts) Run() error {
 	return json.PrettyPrint(r)
 }
 
-// mongocli ops-manager automation describe [--projectId projectId]
-func OpsManagerAutomationDescribeBuilder() *cobra.Command {
-	opts := &opsManagerAutomationDescribeOpts{}
+// mongocli ops-manager agents upgrade [--projectId projectId]
+func OpsManagerAgentsUpgradeBuilder() *cobra.Command {
+	opts := &opsManagerAgentsUpgradeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"show", "get"},
+		Use:     "upgrade",
+		Aliases: []string{"upgrade"},
 		Args:    cobra.NoArgs,
-		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

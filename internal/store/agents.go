@@ -40,7 +40,7 @@ func (s *Store) Agents(projectID, agentType string) (*om.Agents, error) {
 	}
 }
 
-// Agents encapsulate the logic to manage different cloud providers
+// UpgradeAgent encapsulate the logic to manage different cloud providers
 func (s *Store) UpgradeAgent(projectID string) (*om.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

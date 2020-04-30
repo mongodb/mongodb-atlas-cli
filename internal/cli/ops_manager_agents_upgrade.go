@@ -48,7 +48,7 @@ func OpsManagerAgentsUpgradeBuilder() *cobra.Command {
 	opts := &opsManagerAgentsUpgradeOpts{}
 	cmd := &cobra.Command{
 		Use:     "upgrade",
-		Aliases: []string{"upgrade"},
+		Aliases: []string{"upgrades"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

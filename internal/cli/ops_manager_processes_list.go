@@ -62,7 +62,6 @@ func OpsManagerProcessListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   description.ListProcesses,
 		Aliases: []string{"ls"},
-		Hidden:  true,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

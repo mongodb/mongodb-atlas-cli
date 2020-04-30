@@ -87,6 +87,7 @@ const (
 	ListProjects           = "List projects."
 	DownloadLogs           = "Download logs from a log collection job."
 	OpsManager             = "Ops Manager operations."
+	Agents                 = "Manage Ops Manager agents."
 	ListGlobalAlerts       = "List global alerts."
 	Automation             = "Manage Ops Manager automation config."
 	ShowAutomationStatus   = "Show the current status of the automation config."

@@ -102,8 +102,8 @@ github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQz
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200427191133-b5e334932f44 h1:PUOc5BwUVOqGVQqX5vs2MPiJJ6PEZ+jA7TYtna1gOLo=
 github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200427191133-b5e334932f44/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
-github.com/mongodb/go-client-mongodb-ops-manager v0.2.2-0.20200429114541-a82d7d125cfd h1:vGYgslrNXKaZIkAIomQ83e6bpaByXIhwNXJgYN+yv8A=
-github.com/mongodb/go-client-mongodb-ops-manager v0.2.2-0.20200429114541-a82d7d125cfd/go.mod h1:RrXnfBx3CyKN64jXkXFEO07CnMBEYa5CdlHOQ/30a5A=
+github.com/mongodb/go-client-mongodb-ops-manager v0.2.2 h1:xQoyeLjRJmOjvCkjCwbnkzIvugpm6eNozDw4Auk84to=
+github.com/mongodb/go-client-mongodb-ops-manager v0.2.2/go.mod h1:RrXnfBx3CyKN64jXkXFEO07CnMBEYa5CdlHOQ/30a5A=
 github.com/mwielbut/pointy v1.1.0 h1:U5/YEfoIkaGCHv0St3CgjduqXID4FNRoyZgLM1kY9vg=
 github.com/mwielbut/pointy v1.1.0/go.mod h1:MvvO+uMFj9T5DMda33HlvogsFBX7pWWKAkFIn4teYwY=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=

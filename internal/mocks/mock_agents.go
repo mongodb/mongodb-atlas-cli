@@ -47,3 +47,41 @@ func (mr *MockAgentListerMockRecorder) Agents(arg0, arg1 interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Agents", reflect.TypeOf((*MockAgentLister)(nil).Agents), arg0, arg1)
 }
+
+// MockAgentUpgrader is a mock of AgentUpgrader interface
+type MockAgentUpgrader struct {
+	ctrl     *gomock.Controller
+	recorder *MockAgentUpgraderMockRecorder
+}
+
+// MockAgentUpgraderMockRecorder is the mock recorder for MockAgentUpgrader
+type MockAgentUpgraderMockRecorder struct {
+	mock *MockAgentUpgrader
+}
+
+// NewMockAgentUpgrader creates a new mock instance
+func NewMockAgentUpgrader(ctrl *gomock.Controller) *MockAgentUpgrader {
+	mock := &MockAgentUpgrader{ctrl: ctrl}
+	mock.recorder = &MockAgentUpgraderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAgentUpgrader) EXPECT() *MockAgentUpgraderMockRecorder {
+	return m.recorder
+}
+
+// UpgradeAgent mocks base method
+func (m *MockAgentUpgrader) UpgradeAgent(arg0 string) (*opsmngr.AutomationConfigAgent, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpgradeAgent", arg0)
+	ret0, _ := ret[0].(*opsmngr.AutomationConfigAgent)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpgradeAgent indicates an expected call of UpgradeAgent
+func (mr *MockAgentUpgraderMockRecorder) UpgradeAgent(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeAgent", reflect.TypeOf((*MockAgentUpgrader)(nil).UpgradeAgent), arg0)
+}

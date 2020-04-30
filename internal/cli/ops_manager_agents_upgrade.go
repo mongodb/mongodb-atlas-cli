@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -23,41 +22,37 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerProcessesDescribeOpts struct {
+type opsManagerAgentsUpgradeOpts struct {
 	globalOpts
-	hostID string
-	store  store.HostDescriber
+	store store.AgentUpgrader
 }
 
-func (opts *opsManagerProcessesDescribeOpts) initStore() error {
+func (opts *opsManagerAgentsUpgradeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerProcessesDescribeOpts) Run() error {
-	result, err := opts.store.Host(opts.ProjectID(), opts.hostID)
+func (opts *opsManagerAgentsUpgradeOpts) Run() error {
+	r, err := opts.store.UpgradeAgent(opts.ProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return json.PrettyPrint(r)
 }
 
-// mongocli om process(es) describe [processID] [--projectId projectId]
-func OpsManagerProcessDescribeBuilder() *cobra.Command {
-	opts := &opsManagerProcessesDescribeOpts{}
+// mongocli ops-manager agents upgrade [--projectId projectId]
+func OpsManagerAgentsUpgradeBuilder() *cobra.Command {
+	opts := &opsManagerAgentsUpgradeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe [processID]",
-		Short:   description.ListProcesses,
-		Aliases: []string{"d"},
-		Args:    cobra.ExactArgs(1),
+		Use:  "upgrade",
+		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}

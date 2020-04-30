@@ -34,7 +34,7 @@ func (opts *opsManagerAutomationDescribeOpts) initStore() error {
 }
 
 func (opts *opsManagerAutomationDescribeOpts) Run() error {
-	r, err := opts.store.GetAutomationConfig(opts.projectID)
+	r, err := opts.store.GetAutomationConfig(opts.ProjectID())
 
 	if err != nil {
 		return err

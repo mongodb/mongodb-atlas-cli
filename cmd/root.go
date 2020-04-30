@@ -33,6 +33,10 @@ var (
 		Use:     config.ToolName,
 		Short:   "CLI tool to manage your MongoDB Cloud",
 		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
+		Example: `
+  Display the help menu for the config command
+  $ mongocli config --help`,
+		SilenceUsage: true,
 	}
 )
 

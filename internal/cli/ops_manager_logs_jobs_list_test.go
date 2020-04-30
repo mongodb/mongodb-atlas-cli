@@ -11,39 +11,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package cli
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerWhitelistDelete_Run(t *testing.T) {
+func TestOpsManagerLogsListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogJobDeleter(ctrl)
+	mockStore := mocks.NewMockLogJobLister(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &opsManagerLogsDeleteOpts{
-		deleteOpts: deleteOpts{
-			confirm:        true,
-			entry:          "test",
-			successMessage: "Project whitelist entry '%s' deleted\n",
-		},
-		store: mockStore,
+	expected := &om.LogCollectionJobs{}
+
+	listOpts := &opsManagerLogsJobsListOpts{
+		store:   mockStore,
+		verbose: true,
 	}
 
 	mockStore.
-		EXPECT().
-		DeleteCollectionJob(deleteOpts.projectID, deleteOpts.entry).
-		Return(nil).
+		EXPECT().LogCollectionJobs(listOpts.projectID, listOpts.newLogListOptions()).
+		Return(expected, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

@@ -19,13 +19,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasClustersIndexesBuilder() *cobra.Command {
+func OpsManagerLogsJobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "indexes",
-		Aliases: []string{"index"},
-		Short:   description.Indexes,
+		Use:     "jobs",
+		Aliases: []string{"job"},
+		Short:   description.LogCollection,
 	}
-	cmd.AddCommand(AtlasClustersIndexesCreateBuilder())
+
+	cmd.AddCommand(OpsManagerLogsJobsCollectOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsListOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsDownloadOptsBuilder())
+	cmd.AddCommand(OpsManagerLogsJobsDeleteOptsBuilder())
 
 	return cmd
 }

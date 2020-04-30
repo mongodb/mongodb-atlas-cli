@@ -149,7 +149,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   description.CreateCluster,
-		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --region US_EAST_1 --members 3 --instanceSize M2 --provider AWS --mdbVersion 4.2 --diskSizeGB 2`,
+		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --instanceSize M10 --mdbVersion 4.2 --diskSizeGB 10`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {

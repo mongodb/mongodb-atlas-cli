@@ -24,19 +24,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerLogsListOpts struct {
+type opsManagerLogsJobsListOpts struct {
 	globalOpts
 	verbose bool
 	store   store.LogJobLister
 }
 
-func (opts *opsManagerLogsListOpts) initStore() error {
+func (opts *opsManagerLogsJobsListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerLogsListOpts) Run() error {
+func (opts *opsManagerLogsJobsListOpts) Run() error {
 	result, err := opts.store.LogCollectionJobs(opts.ProjectID(), opts.newLogListOptions())
 	if err != nil {
 		return err
@@ -44,13 +44,13 @@ func (opts *opsManagerLogsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerLogsListOpts) newLogListOptions() *om.LogListOptions {
+func (opts *opsManagerLogsJobsListOpts) newLogListOptions() *om.LogListOptions {
 	return &om.LogListOptions{Verbose: opts.verbose}
 }
 
-// mongocli om logs list --verbose verbose [--projectId projectId]
-func OpsManagerLogsListOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsListOpts{}
+// mongocli om logs jobs list --verbose verbose [--projectId projectId]
+func OpsManagerLogsJobsListOptsBuilder() *cobra.Command {
+	opts := &opsManagerLogsJobsListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

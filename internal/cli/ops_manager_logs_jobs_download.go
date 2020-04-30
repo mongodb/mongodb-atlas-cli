@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerLogsDownloadOpts struct {
+type opsManagerLogsJobsDownloadOpts struct {
 	globalOpts
 	id    string
 	out   string
@@ -34,13 +34,13 @@ type opsManagerLogsDownloadOpts struct {
 	store store.LogJobsDownloader
 }
 
-func (opts *opsManagerLogsDownloadOpts) initStore() error {
+func (opts *opsManagerLogsJobsDownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerLogsDownloadOpts) Run() error {
+func (opts *opsManagerLogsJobsDownloadOpts) Run() error {
 	out, err := opts.newWriteCloser()
 	if err != nil {
 		return err
@@ -53,16 +53,16 @@ func (opts *opsManagerLogsDownloadOpts) Run() error {
 	return nil
 }
 
-func (opts *opsManagerLogsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
+func (opts *opsManagerLogsJobsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
 	// Create file only if is not there already (don't overwrite)
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
 	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
 	return f, err
 }
 
-// mongocli om logs download id [--out out] [--projectId projectId]
-func OpsManagerLogsDownloadOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsDownloadOpts{
+// mongocli om logs jobs download id [--out out] [--projectId projectId]
+func OpsManagerLogsJobsDownloadOptsBuilder() *cobra.Command {
+	opts := &opsManagerLogsJobsDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{

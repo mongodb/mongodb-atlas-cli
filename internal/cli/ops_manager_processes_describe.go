@@ -52,7 +52,6 @@ func OpsManagerProcessDescribeBuilder() *cobra.Command {
 		Use:     "describe [processID]",
 		Short:   description.ListProcesses,
 		Aliases: []string{"d"},
-		Hidden:  true,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

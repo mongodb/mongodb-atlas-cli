@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -24,6 +25,9 @@ func CloudManagerBuilder() *cobra.Command {
 		Use:     "cloud-manager",
 		Aliases: []string{"cm"},
 		Short:   description.CloudManager,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return validate.Credentials()
+		},
 	}
 
 	cmd.AddCommand(OpsManagerClustersBuilder())

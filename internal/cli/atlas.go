@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,9 @@ func AtlasBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "atlas",
 		Short: description.Atlas,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return validate.Credentials()
+		},
 	}
 	cmd.AddCommand(AtlasClustersBuilder())
 	cmd.AddCommand(AtlasDBUsersBuilder())

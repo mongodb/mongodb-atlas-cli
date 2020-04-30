@@ -16,9 +16,12 @@ package validate
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
+
+	"github.com/mongodb/mongocli/internal/config"
 )
 
 func URL(val interface{}) error {
@@ -42,6 +45,13 @@ func ObjectID(s string) error {
 	b, err := hex.DecodeString(s)
 	if err != nil || len(b) != 12 {
 		return fmt.Errorf("the provided value '%s' is not a valid Id", s)
+	}
+	return nil
+}
+
+func Credentials() error {
+	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
+		return errors.New("missing credentials")
 	}
 	return nil
 }

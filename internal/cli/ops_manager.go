@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -24,6 +25,9 @@ func OpsManagerBuilder() *cobra.Command {
 		Use:     "ops-manager",
 		Aliases: []string{"om"},
 		Short:   description.OpsManager,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return validate.Credentials()
+		},
 	}
 
 	cmd.AddCommand(OpsManagerClustersBuilder())

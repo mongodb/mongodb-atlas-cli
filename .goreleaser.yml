@@ -33,6 +33,7 @@ brews:
   github:
     owner: mongodb
     name: homebrew-brew
+  folder: Formula
   skip_upload: auto
   description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   homepage: https://github.com/mongodb/mongocli

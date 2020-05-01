@@ -18,24 +18,24 @@ import (
 	"context"
 	"fmt"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type OwnerCreator interface {
-	CreateOwner(*om.User, []string) (*om.CreateUserResponse, error)
+	CreateOwner(*opsmngr.User, []string) (*opsmngr.CreateUserResponse, error)
 }
 
 // CreateOwner encapsulate the logic to manage different cloud providers
-func (s *Store) CreateOwner(u *om.User, IPs []string) (*om.CreateUserResponse, error) {
+func (s *Store) CreateOwner(u *opsmngr.User, IPs []string) (*opsmngr.CreateUserResponse, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		var opts *om.WhitelistOpts
+		var opts *opsmngr.WhitelistOpts
 		if len(IPs) > 0 {
-			opts = &om.WhitelistOpts{Whitelist: IPs}
+			opts = &opsmngr.WhitelistOpts{Whitelist: IPs}
 		}
 
-		result, _, err := s.client.(*om.Client).UnauthUsers.CreateFirstUser(context.Background(), u, opts)
+		result, _, err := s.client.(*opsmngr.Client).UnauthUsers.CreateFirstUser(context.Background(), u, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

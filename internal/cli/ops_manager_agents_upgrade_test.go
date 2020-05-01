@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOpsManagerAgentsUpgradeOpts_Run(t *testing.T) {
@@ -28,7 +28,7 @@ func TestOpsManagerAgentsUpgradeOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := new(om.AutomationConfigAgent)
+	expected := new(opsmngr.AutomationConfigAgent)
 
 	opts := &opsManagerAgentsUpgradeOpts{
 		store: mockStore,

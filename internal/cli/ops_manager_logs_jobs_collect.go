@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"strings"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -26,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerLogsJobsCollectOpts struct {
@@ -52,8 +52,8 @@ func (opts *opsManagerLogsJobsCollectOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerLogsJobsCollectOpts) newLog() *om.LogCollectionJob {
-	return &om.LogCollectionJob{
+func (opts *opsManagerLogsJobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
+	return &opsmngr.LogCollectionJob{
 		ResourceType:              opts.resourceType,
 		ResourceName:              opts.resourceName,
 		Redacted:                  &opts.redacted,

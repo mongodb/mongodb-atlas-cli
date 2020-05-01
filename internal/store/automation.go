@@ -18,24 +18,20 @@ import (
 	"context"
 	"fmt"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type AutomationGetter interface {
-	GetAutomationConfig(string) (*om.AutomationConfig, error)
+	GetAutomationConfig(string) (*opsmngr.AutomationConfig, error)
 }
 
 type AutomationUpdater interface {
-	UpdateAutomationConfig(string, *om.AutomationConfig) error
+	UpdateAutomationConfig(string, *opsmngr.AutomationConfig) error
 }
 
 type AutomationStatusGetter interface {
-	GetAutomationStatus(string) (*om.AutomationStatus, error)
-}
-
-type AllClusterLister interface {
-	ListAllProjectClusters() (*om.AllClustersProjects, error)
+	GetAutomationStatus(string) (*opsmngr.AutomationStatus, error)
 }
 
 type AutomationPatcher interface {
@@ -49,15 +45,19 @@ type AutomationStore interface {
 	AutomationStatusGetter
 }
 
+type AllClusterLister interface {
+	ListAllProjectClusters() (*opsmngr.AllClustersProjects, error)
+}
+
 type CloudManagerClustersLister interface {
 	AutomationGetter
 	AllClusterLister
 }
 
-func (s *Store) GetAutomationStatus(projectID string) (*om.AutomationStatus, error) {
+func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).AutomationStatus.Get(context.Background(), projectID)
+		result, _, err := s.client.(*opsmngr.Client).AutomationStatus.Get(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -65,10 +65,10 @@ func (s *Store) GetAutomationStatus(projectID string) (*om.AutomationStatus, err
 }
 
 // GetAutomationConfig encapsulate the logic to manage different cloud providers
-func (s *Store) GetAutomationConfig(projectID string) (*om.AutomationConfig, error) {
+func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).AutomationConfig.Get(context.Background(), projectID)
+		result, _, err := s.client.(*opsmngr.Client).AutomationConfig.Get(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -76,10 +76,10 @@ func (s *Store) GetAutomationConfig(projectID string) (*om.AutomationConfig, err
 }
 
 // UpdateAutomationConfig encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.AutomationConfig) error {
+func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *opsmngr.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*om.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
+		_, err := s.client.(*opsmngr.Client).AutomationConfig.Update(context.Background(), projectID, automationConfig)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -87,10 +87,10 @@ func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *om.Au
 }
 
 // ListAllProjectClusters encapsulate the logic to manage different cloud providers
-func (s *Store) ListAllProjectClusters() (*om.AllClustersProjects, error) {
+func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AllClusters.List(context.Background())
+		result, _, err := s.client.(*opsmngr.Client).AllClusters.List(context.Background())
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

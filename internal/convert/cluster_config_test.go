@@ -18,14 +18,14 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/fixtures"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 	testCases := map[string]struct {
-		current  *om.AutomationConfig
-		expected *om.AutomationConfig
+		current  *opsmngr.AutomationConfig
+		expected *opsmngr.AutomationConfig
 		changes  ClusterConfig
 	}{
 		"add a replica set to an empty config": {
@@ -45,26 +45,26 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &om.AutomationConfig{
-				Auth: om.Auth{
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*om.Process{
+				Processes: []*opsmngr.Process{
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 1},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 1},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "test_config",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -78,11 +78,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*om.ReplicaSet{
+				ReplicaSets: []*opsmngr.ReplicaSet{
 					{
 						ID:              "test_config",
 						ProtocolVersion: "1",
-						Members: []om.Member{
+						Members: []opsmngr.Member{
 							{
 								ID:           0,
 								ArbiterOnly:  false,
@@ -115,27 +115,27 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &om.AutomationConfig{
-				Auth: om.Auth{
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*om.Process{
+				Processes: []*opsmngr.Process{
 					// Old
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 27017},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -150,20 +150,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 1},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 1},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "test_config",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -177,12 +177,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*om.ReplicaSet{
+				ReplicaSets: []*opsmngr.ReplicaSet{
 					// Old
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []om.Member{
+						Members: []opsmngr.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -198,7 +198,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					{
 						ID:              "test_config",
 						ProtocolVersion: "1",
-						Members: []om.Member{
+						Members: []opsmngr.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -237,27 +237,27 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &om.AutomationConfig{
-				Auth: om.Auth{
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*om.Process{
+				Processes: []*opsmngr.Process{
 					// Old
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 27017},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -272,20 +272,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 27017},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -299,12 +299,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*om.ReplicaSet{
+				ReplicaSets: []*opsmngr.ReplicaSet{
 					// Old
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []om.Member{
+						Members: []opsmngr.Member{
 							{
 								ArbiterOnly:  false,
 								BuildIndexes: true,
@@ -346,25 +346,25 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 				},
 			},
-			expected: &om.AutomationConfig{
-				Auth: om.Auth{
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
 					DeploymentAuthMechanisms: []string{},
 				},
-				Processes: []*om.Process{
+				Processes: []*opsmngr.Process{
 					// Old
 					{
-						Args26: om.Args26{
-							NET:         om.Net{Port: 27017},
-							Replication: &om.Replication{},
-							Storage: &om.Storage{
+						Args26: opsmngr.Args26{
+							NET:         opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{},
+							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -379,20 +379,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					},
 					// New
 					{
-						Args26: om.Args26{
-							NET: om.Net{Port: 27017},
-							Replication: &om.Replication{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 27017},
+							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
-							Storage: &om.Storage{
+							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",
 							},
-							SystemLog: om.SystemLog{
+							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
 						},
-						LogRotate: &om.LogRotate{
+						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
 							TimeThresholdHrs: 24,
 						},
@@ -406,12 +406,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Version:                     "4.2.2",
 					},
 				},
-				ReplicaSets: []*om.ReplicaSet{
+				ReplicaSets: []*opsmngr.ReplicaSet{
 					// New
 					{
 						ID:              "replica_set_1",
 						ProtocolVersion: "1",
-						Members: []om.Member{
+						Members: []opsmngr.Member{
 							{
 								ID:           1,
 								ArbiterOnly:  false,

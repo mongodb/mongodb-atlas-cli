@@ -6,7 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 	reflect "reflect"
 )
 
@@ -121,44 +121,6 @@ func (m *MockAutomationStatusGetter) GetAutomationStatus(arg0 string) (*opsmngr.
 func (mr *MockAutomationStatusGetterMockRecorder) GetAutomationStatus(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationStatus", reflect.TypeOf((*MockAutomationStatusGetter)(nil).GetAutomationStatus), arg0)
-}
-
-// MockAllClusterLister is a mock of AllClusterLister interface
-type MockAllClusterLister struct {
-	ctrl     *gomock.Controller
-	recorder *MockAllClusterListerMockRecorder
-}
-
-// MockAllClusterListerMockRecorder is the mock recorder for MockAllClusterLister
-type MockAllClusterListerMockRecorder struct {
-	mock *MockAllClusterLister
-}
-
-// NewMockAllClusterLister creates a new mock instance
-func NewMockAllClusterLister(ctrl *gomock.Controller) *MockAllClusterLister {
-	mock := &MockAllClusterLister{ctrl: ctrl}
-	mock.recorder = &MockAllClusterListerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockAllClusterLister) EXPECT() *MockAllClusterListerMockRecorder {
-	return m.recorder
-}
-
-// ListAllProjectClusters mocks base method
-func (m *MockAllClusterLister) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAllProjectClusters")
-	ret0, _ := ret[0].(*opsmngr.AllClustersProjects)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListAllProjectClusters indicates an expected call of ListAllProjectClusters
-func (mr *MockAllClusterListerMockRecorder) ListAllProjectClusters() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllProjectClusters", reflect.TypeOf((*MockAllClusterLister)(nil).ListAllProjectClusters))
 }
 
 // MockAutomationPatcher is a mock of AutomationPatcher interface
@@ -278,6 +240,44 @@ func (m *MockAutomationStore) GetAutomationStatus(arg0 string) (*opsmngr.Automat
 func (mr *MockAutomationStoreMockRecorder) GetAutomationStatus(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationStatus", reflect.TypeOf((*MockAutomationStore)(nil).GetAutomationStatus), arg0)
+}
+
+// MockAllClusterLister is a mock of AllClusterLister interface
+type MockAllClusterLister struct {
+	ctrl     *gomock.Controller
+	recorder *MockAllClusterListerMockRecorder
+}
+
+// MockAllClusterListerMockRecorder is the mock recorder for MockAllClusterLister
+type MockAllClusterListerMockRecorder struct {
+	mock *MockAllClusterLister
+}
+
+// NewMockAllClusterLister creates a new mock instance
+func NewMockAllClusterLister(ctrl *gomock.Controller) *MockAllClusterLister {
+	mock := &MockAllClusterLister{ctrl: ctrl}
+	mock.recorder = &MockAllClusterListerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockAllClusterLister) EXPECT() *MockAllClusterListerMockRecorder {
+	return m.recorder
+}
+
+// ListAllProjectClusters mocks base method
+func (m *MockAllClusterLister) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAllProjectClusters")
+	ret0, _ := ret[0].(*opsmngr.AllClustersProjects)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAllProjectClusters indicates an expected call of ListAllProjectClusters
+func (mr *MockAllClusterListerMockRecorder) ListAllProjectClusters() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllProjectClusters", reflect.TypeOf((*MockAllClusterLister)(nil).ListAllProjectClusters))
 }
 
 // MockCloudManagerClustersLister is a mock of CloudManagerClustersLister interface

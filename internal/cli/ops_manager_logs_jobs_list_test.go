@@ -17,8 +17,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOpsManagerLogsListOpts_Run(t *testing.T) {
@@ -27,7 +27,7 @@ func TestOpsManagerLogsListOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := &om.LogCollectionJobs{}
+	expected := &opsmngr.LogCollectionJobs{}
 
 	listOpts := &opsManagerLogsJobsListOpts{
 		store:   mockStore,

@@ -15,13 +15,13 @@
 package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerLogsJobsListOpts struct {
@@ -44,8 +44,8 @@ func (opts *opsManagerLogsJobsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerLogsJobsListOpts) newLogListOptions() *om.LogListOptions {
-	return &om.LogListOptions{Verbose: opts.verbose}
+func (opts *opsManagerLogsJobsListOpts) newLogListOptions() *opsmngr.LogListOptions {
+	return &opsmngr.LogListOptions{Verbose: opts.verbose}
 }
 
 // mongocli om logs jobs list --verbose verbose [--projectId projectId]

@@ -17,7 +17,6 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
@@ -25,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
 )
 
 type opsManagerDBUsersDeleteOpts struct {

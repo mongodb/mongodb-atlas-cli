@@ -20,8 +20,8 @@ import (
 	"io"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type LogsDownloader interface {
@@ -33,11 +33,11 @@ type LogJobsDownloader interface {
 }
 
 type LogCollector interface {
-	Collect(string, *om.LogCollectionJob) (*om.LogCollectionJob, error)
+	Collect(string, *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error)
 }
 
 type LogJobLister interface {
-	LogCollectionJobs(string, *om.LogListOptions) (*om.LogCollectionJobs, error)
+	LogCollectionJobs(string, *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error)
 }
 
 type LogJobDeleter interface {
@@ -45,10 +45,10 @@ type LogJobDeleter interface {
 }
 
 // LogCollectionJobs encapsulate the logic to manage different cloud providers
-func (s *Store) LogCollectionJobs(groupID string, opts *om.LogListOptions) (*om.LogCollectionJobs, error) {
+func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*om.Client).LogCollections.List(context.Background(), groupID, opts)
+		log, _, err := s.client.(*opsmngr.Client).LogCollections.List(context.Background(), groupID, opts)
 		return log, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -59,7 +59,7 @@ func (s *Store) LogCollectionJobs(groupID string, opts *om.LogListOptions) (*om.
 func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*om.Client).LogCollections.Delete(context.Background(), groupID, logID)
+		_, err := s.client.(*opsmngr.Client).LogCollections.Delete(context.Background(), groupID, logID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -67,10 +67,10 @@ func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 }
 
 // Collect encapsulate the logic to manage different cloud providers
-func (s *Store) Collect(groupID string, newLog *om.LogCollectionJob) (*om.LogCollectionJob, error) {
+func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*om.Client).LogCollections.Create(context.Background(), groupID, newLog)
+		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(context.Background(), groupID, newLog)
 		return log, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -92,7 +92,7 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*om.Client).Logs.Download(context.Background(), groupID, jobID, out)
+		_, err := s.client.(*opsmngr.Client).Logs.Download(context.Background(), groupID, jobID, out)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

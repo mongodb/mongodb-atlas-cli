@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type ContinuousJobLister interface {
@@ -37,7 +37,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -51,7 +51,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -19,7 +19,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestBuildAtlasRoles(t *testing.T) {

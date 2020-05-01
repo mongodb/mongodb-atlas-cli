@@ -17,7 +17,7 @@ package convert
 import (
 	"fmt"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 // ProcessConfig that belongs to a cluster
@@ -58,7 +58,7 @@ func (p *ProcessConfig) setDefaults(c *ClusterConfig) {
 
 // setProcessName reuse Name from an existing process
 // this is based on hostname:port matching
-func (p *ProcessConfig) setProcessName(clusterName string, processes []*om.Process, i int) {
+func (p *ProcessConfig) setProcessName(clusterName string, processes []*opsmngr.Process, i int) {
 	if p.Name != "" {
 		return
 	}
@@ -72,8 +72,8 @@ func (p *ProcessConfig) setProcessName(clusterName string, processes []*om.Proce
 	}
 }
 
-func (p *ProcessConfig) toCMProcess(replSetName string) *om.Process {
-	process := &om.Process{
+func (p *ProcessConfig) toCMProcess(replSetName string) *opsmngr.Process {
+	process := &opsmngr.Process{
 		AuthSchemaVersion:           5,
 		Disabled:                    p.Disabled,
 		ManualMode:                  false,
@@ -84,22 +84,22 @@ func (p *ProcessConfig) toCMProcess(replSetName string) *om.Process {
 		Name:                        p.Name,
 	}
 
-	process.Args26 = om.Args26{
-		NET: om.Net{
+	process.Args26 = opsmngr.Args26{
+		NET: opsmngr.Net{
 			Port: p.Port,
 		},
-		Replication: &om.Replication{
+		Replication: &opsmngr.Replication{
 			ReplSetName: replSetName,
 		},
-		Storage: &om.Storage{
+		Storage: &opsmngr.Storage{
 			DBPath: p.DBPath,
 		},
-		SystemLog: om.SystemLog{
+		SystemLog: opsmngr.SystemLog{
 			Destination: file,
 			Path:        p.LogPath,
 		},
 	}
-	process.LogRotate = &om.LogRotate{
+	process.LogRotate = &opsmngr.LogRotate{
 		SizeThresholdMB:  1000,
 		TimeThresholdHrs: 24,
 	}
@@ -107,8 +107,8 @@ func (p *ProcessConfig) toCMProcess(replSetName string) *om.Process {
 	return process
 }
 
-func (p *ProcessConfig) toCMMember(i int) om.Member {
-	return om.Member{
+func (p *ProcessConfig) toCMMember(i int) opsmngr.Member {
+	return opsmngr.Member{
 		ID:           i,
 		ArbiterOnly:  p.ArbiterOnly,
 		BuildIndexes: *p.BuildIndexes,

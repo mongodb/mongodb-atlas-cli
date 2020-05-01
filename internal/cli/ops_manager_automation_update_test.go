@@ -18,9 +18,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/spf13/afero"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCloudManagerAutomationUpdate_Run(t *testing.T) {

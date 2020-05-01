@@ -14,7 +14,7 @@
 
 package fixtures
 
-import "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+import "go.mongodb.org/ops-manager/opsmngr"
 
 func AutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{

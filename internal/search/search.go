@@ -15,8 +15,8 @@
 package search
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/go-client-mongodb-ops-manager/search"
+	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/search"
 )
 
 func StringInSlice(a []string, x string) bool {
@@ -29,8 +29,8 @@ func StringInSlice(a []string, x string) bool {
 }
 
 // ClusterExists return true if a cluster exists for the given name
-func ClusterExists(c *om.AutomationConfig, name string) bool {
-	_, found := search.ReplicaSets(c.ReplicaSets, func(r *om.ReplicaSet) bool {
+func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
+	_, found := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == name
 	})
 

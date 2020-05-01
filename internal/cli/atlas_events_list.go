@@ -14,7 +14,7 @@
 package cli
 
 import (
-	"errors"
+	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
@@ -29,10 +29,10 @@ type atlasEventsListOpts struct {
 	listOpts
 	orgID     string
 	projectID string
-	eventType string
+	eventType []string
 	minDate   string
 	maxDate   string
-	store     store.EventsStore
+	store     store.EventLister
 }
 
 func (opts *atlasEventsListOpts) initStore() error {
@@ -50,9 +50,9 @@ func (opts *atlasEventsListOpts) Run() error {
 	if opts.orgID != "" {
 		result, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
 	} else if opts.projectID != "" {
-		result, err = opts.store.ProjectEvents(opts.projectID, &listOpts.ListOptions)
+		result, err = opts.store.ProjectEvents(opts.projectID, listOpts)
 	} else {
-		return errors.New("--projectID or --orgID must be set")
+		return fmt.Errorf("--%s or --%s must be set", flags.ProjectID, flags.OrgID)
 	}
 
 	if err != nil {
@@ -93,7 +93,7 @@ func AtlasEventsListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVar(&opts.eventType, flags.Type, "", usage.Event)
+	cmd.Flags().StringSliceVar(&opts.eventType, flags.Type, nil, usage.Event)
 	cmd.Flags().StringVar(&opts.maxDate, flags.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.minDate, flags.MinDate, "", usage.MinDate)
 

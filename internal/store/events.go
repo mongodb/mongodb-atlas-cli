@@ -28,16 +28,16 @@ type OrganizationEventLister interface {
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(string, *atlas.ListOptions) (*atlas.EventResponse, error)
+	ProjectEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
 }
 
-type EventsStore interface {
+type EventLister interface {
 	OrganizationEventLister
 	ProjectEventLister
 }
 
 // ProjectEvents encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectEvents(projectID string, opts *atlas.ListOptions) (*atlas.EventResponse, error) {
+func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(context.Background(), projectID, opts)

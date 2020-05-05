@@ -23,21 +23,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerMeasurementsProcessOpts struct {
+type opsManagerMetricsProcessOpts struct {
 	globalOpts
-	measurementsOpts
+	metricsOpts
 	hostID string
 	store  store.HostMeasurementLister
 }
 
-func (opts *opsManagerMeasurementsProcessOpts) initStore() error {
+func (opts *opsManagerMetricsProcessOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerMeasurementsProcessOpts) Run() error {
-	listOpts := opts.newProcessMeasurementListOptions()
+func (opts *opsManagerMetricsProcessOpts) Run() error {
+	listOpts := opts.newProcessMetricsListOptions()
 	result, err := opts.store.HostMeasurements(opts.ProjectID(), opts.hostID, listOpts)
 
 	if err != nil {
@@ -47,9 +47,9 @@ func (opts *opsManagerMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om|cm measurements process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
-func OpsManagerMeasurementsProcessBuilder() *cobra.Command {
-	opts := &opsManagerMeasurementsProcessOpts{}
+// mongocli om|cm metric(s) process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
+func OpsManagerMetricsProcessBuilder() *cobra.Command {
+	opts := &opsManagerMetricsProcessOpts{}
 	cmd := &cobra.Command{
 		Use:     "process [hostId]",
 		Short:   description.ProcessMeasurements,

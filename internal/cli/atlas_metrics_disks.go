@@ -19,15 +19,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasMeasurementsDisksBuilder() *cobra.Command {
+func AtlasMetricsDisksBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "disks",
 		Aliases: []string{"disk"},
 		Short:   description.Disks,
 	}
 
-	cmd.AddCommand(AtlasMeasurementsDisksListBuilder())
-	cmd.AddCommand(AtlasMeasurementsDisksDescribeBuilder())
+	cmd.AddCommand(AtlasMetricsDisksListBuilder())
+	cmd.AddCommand(AtlasMetricsDisksDescribeBuilder())
 
 	return cmd
 }

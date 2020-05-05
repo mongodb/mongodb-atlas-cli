@@ -19,15 +19,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func OpsManagerMeasurementsBuilder() *cobra.Command {
+func OpsManagerMetricsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "measurements",
-		Short: description.Measurements,
+		Use:     "metrics",
+		Aliases: []string{"metric", "measurements", "measurement"},
+		Short: description.Metrics,
 	}
 
-	cmd.AddCommand(OpsManagerMeasurementsProcessBuilder())
-	cmd.AddCommand(OpsManagerMeasurementsDisksBuilder())
-	cmd.AddCommand(OpsManagerMeasurementsDatabasesBuilder())
+	cmd.AddCommand(OpsManagerMetricsProcessBuilder())
+	cmd.AddCommand(OpsManagerMetricsDisksBuilder())
+	cmd.AddCommand(OpsManagerMetricsDatabasesBuilder())
 
 	return cmd
 }

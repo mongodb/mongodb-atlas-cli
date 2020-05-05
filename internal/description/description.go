@@ -100,7 +100,7 @@ const (
 	Security                = "Manage clusters security configuration."
 	EnableSecurity          = "Enable authentication mechanisms for the project."
 	Events                  = "Manage events for your project."
-	Measurements            = "Get measurements on the state of the MongoDB process."
+	Metrics                 = "Get measurements on the state of the MongoDB process."
 	LogCollection           = "Manage log collection jobs."
 	StartLogCollectionJob   = "Start a job to collect logs."
 	ListLogCollectionJobs   = "List log collection jobs."

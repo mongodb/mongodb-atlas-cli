@@ -23,23 +23,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsDatabasesListsOpts struct {
+type atlasMetricsDisksDescribeOpts struct {
 	globalOpts
-	listOpts
+	metricsOpts
 	host  string
 	port  int
-	store store.ProcessDatabaseLister
+	name  string
+	store store.ProcessDiskMeasurementsLister
 }
 
-func (opts *atlasMeasurementsDatabasesListsOpts) initStore() error {
+func (opts *atlasMetricsDisksDescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasMeasurementsDatabasesListsOpts) Run() error {
-	listOpts := opts.newListOptions()
-	result, err := opts.store.ProcessDatabases(opts.ProjectID(), opts.host, opts.port, listOpts)
+func (opts *atlasMetricsDisksDescribeOpts) Run() error {
+	listOpts := opts.newProcessMetricsListOptions()
+	result, err := opts.store.ProcessDiskMeasurements(opts.ProjectID(), opts.host, opts.port, opts.name, listOpts)
 
 	if err != nil {
 		return err
@@ -48,30 +49,39 @@ func (opts *atlasMeasurementsDatabasesListsOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas measurements process(es) disks lists [host:port]
-func AtlasMeasurementsDatabasesListBuilder() *cobra.Command {
-	opts := &atlasMeasurementsDatabasesListsOpts{}
+// mcli atlas metric(s) disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+func AtlasMetricsDisksDescribeBuilder() *cobra.Command {
+	opts := &atlasMetricsDisksDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list [host:port]",
-		Short:   description.ListDatabases,
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe [host:port] [name]",
+		Short: description.DescribeDisks,
+		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			if opts.host, opts.port, err = getHostNameAndPort(args[0]); err != nil {
+			opts.host, opts.port, err = getHostNameAndPort(args[0])
+			if err != nil {
 				return err
 			}
-
+			opts.name = args[1]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+
+	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
+	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
+	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
+	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
+
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flags.Granularity)
 
 	return cmd
 }

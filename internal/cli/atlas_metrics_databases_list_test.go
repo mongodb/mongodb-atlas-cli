@@ -21,25 +21,23 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasMeasurementsProcess_Run(t *testing.T) {
+func TestAtlasMetricsDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessMeasurements{}
+	expected := &mongodbatlas.ProcessDatabasesResponse{}
 
-	listOpts := &atlasMeasurementsProcessOpts{
+	listOpts := &atlasMetricsDatabasesListsOpts{
 		host:  "hard-00-00.mongodb.net",
 		port:  27017,
 		store: mockStore,
 	}
-	listOpts.granularity = "PT1M"
-	listOpts.period = "PT1M"
 
-	opts := listOpts.newProcessMeasurementListOptions()
+	opts := listOpts.newListOptions()
 	mockStore.
-		EXPECT().ProcessMeasurements(listOpts.projectID, listOpts.host, listOpts.port, opts).
+		EXPECT().ProcessDatabases(listOpts.projectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).
 		Times(1)
 

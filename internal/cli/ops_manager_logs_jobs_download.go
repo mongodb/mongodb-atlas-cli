@@ -45,6 +45,7 @@ func (opts *opsManagerLogsJobsDownloadOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	defer out.Close()
 
 	if err := opts.store.DownloadLogJob(opts.ProjectID(), opts.id, out); err != nil {
 		return err

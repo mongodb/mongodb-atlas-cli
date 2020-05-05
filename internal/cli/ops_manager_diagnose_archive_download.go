@@ -47,6 +47,7 @@ func (opts *opsManagerDiagnoseArchiveDownloadOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	defer out.Close()
 
 	if err := opts.store.DownloadArchive(opts.ProjectID(), opts.newDiagnosticsListOpts(), out); err != nil {
 		return err

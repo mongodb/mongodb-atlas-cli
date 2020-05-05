@@ -75,7 +75,7 @@ func ObjectID(s string) error {
 	return nil
 }
 
-// Credentials
+// Credentials validates public and private API keys have been set
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
 		return errors.New("missing credentials")

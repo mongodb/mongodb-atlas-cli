@@ -93,6 +93,7 @@ func (opts *configOpts) Run() error {
 				Help:    "This is the ID of an existing project your API keys have access to, you can leave this blank and specify it on every command with --projectId",
 				Default: config.ProjectID(),
 			},
+			Validate: validate.OptionalObjectID,
 		},
 	}
 

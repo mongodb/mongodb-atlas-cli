@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -26,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
 )
 
 type opsManagerClustersStartupOpts struct {
@@ -81,7 +81,7 @@ func OpsManagerClustersStartupBuilder() *cobra.Command {
 	opts := &opsManagerClustersStartupOpts{}
 	cmd := &cobra.Command{
 		Use:   "startup [name]",
-		Short: description.StartUpOMCluster,
+		Short: description.StartUpCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

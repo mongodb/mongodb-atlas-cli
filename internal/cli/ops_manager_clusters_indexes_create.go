@@ -19,14 +19,14 @@ import (
 	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerClustersIndexesCreateOpts struct {
@@ -86,13 +86,13 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *opsManagerClustersIndexesCreateOpts) newIndex() (*om.IndexConfig, error) {
+func (opts *opsManagerClustersIndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
 
-	i := new(om.IndexConfig)
+	i := new(opsmngr.IndexConfig)
 	i.DBName = opts.db
 	i.CollectionName = opts.collection
 	i.RSName = opts.rsName

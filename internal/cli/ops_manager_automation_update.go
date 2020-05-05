@@ -17,15 +17,14 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerAutomationUpdateOpts struct {
@@ -57,14 +56,13 @@ func (opts *opsManagerAutomationUpdateOpts) Run() error {
 	return nil
 }
 
-// mongocli om cluster(s) update --projectId projectId --file myfile.yaml
+// mongocli om automation update --projectId projectId --file myfile.json
 func OpsManagerAutomationUpdateBuilder() *cobra.Command {
 	opts := &opsManagerAutomationUpdateOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
 		Use:    "update",
-		Short:  description.UpdateOMCluster,
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type AlertConfigurationLister interface {
@@ -58,7 +58,7 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AlertConfigurations.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -72,7 +72,7 @@ func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(context.Background(), alertConfig.GroupID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AlertConfigurations.Create(context.Background(), alertConfig.GroupID, alertConfig)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Create(context.Background(), alertConfig.GroupID, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -86,7 +86,7 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 		_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(context.Background(), projectID, id)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*om.Client).AlertConfigurations.Delete(context.Background(), projectID, id)
+		_, err := s.client.(*opsmngr.Client).AlertConfigurations.Delete(context.Background(), projectID, id)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -100,7 +100,7 @@ func (s *Store) MatcherFields() ([]string, error) {
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AlertConfigurations.ListMatcherFields(context.Background())
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -113,7 +113,7 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

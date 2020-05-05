@@ -24,7 +24,7 @@ import (
 
 func TestAtlasEventsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventsStore(ctrl)
+	mockStore := mocks.NewMockEventLister(ctrl)
 
 	defer ctrl.Finish()
 
@@ -53,7 +53,7 @@ func TestAtlasEventsList_Run(t *testing.T) {
 
 		listOpts.projectID = "1"
 		mockStore.
-			EXPECT().ProjectEvents(listOpts.projectID, &listOpts.newEventListOptions().ListOptions).
+			EXPECT().ProjectEvents(listOpts.projectID, listOpts.newEventListOptions()).
 			Return(expected, nil).
 			Times(1)
 

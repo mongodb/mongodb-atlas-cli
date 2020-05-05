@@ -16,10 +16,10 @@ package fixtures
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var Organization = &om.Organization{
+var Organization = &opsmngr.Organization{
 	ID:   "5a0a1e7e0f2912c554080adc",
 	Name: "Organization 0",
 	Links: []*atlas.Link{
@@ -30,15 +30,15 @@ var Organization = &om.Organization{
 	},
 }
 
-func Organizations() *om.Organizations {
-	return &om.Organizations{
+func Organizations() *opsmngr.Organizations {
+	return &opsmngr.Organizations{
 		Links: []*atlas.Link{
 			{
 				Href: "https://cloud.mongodb.com/api/atlas/v1.0/orgs",
 				Rel:  "self",
 			},
 		},
-		Results: []*om.Organization{
+		Results: []*opsmngr.Organization{
 			Organization,
 		},
 		TotalCount: 1,

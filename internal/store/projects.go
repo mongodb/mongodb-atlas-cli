@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type ProjectLister interface {
@@ -50,10 +50,10 @@ type ProjectStore interface {
 func (s *Store) GetAllProjects() (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background())
+		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), nil)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).Projects.GetAllProjects(context.Background())
+		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -64,7 +64,7 @@ func (s *Store) GetAllProjects() (interface{}, error) {
 func (s *Store) GetOrgProjects(orgID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).Organizations.GetProjects(context.Background(), orgID)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.GetProjects(context.Background(), orgID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -79,8 +79,8 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 		result, _, err := s.client.(*atlas.Client).Projects.Create(context.Background(), project)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		project := &om.Project{Name: name, OrgID: orgID}
-		result, _, err := s.client.(*om.Client).Projects.Create(context.Background(), project)
+		project := &opsmngr.Project{Name: name, OrgID: orgID}
+		result, _, err := s.client.(*opsmngr.Client).Projects.Create(context.Background(), project)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -94,7 +94,7 @@ func (s *Store) DeleteProject(projectID string) error {
 		_, err := s.client.(*atlas.Client).Projects.Delete(context.Background(), projectID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*om.Client).Projects.Delete(context.Background(), projectID)
+		_, err := s.client.(*opsmngr.Client).Projects.Delete(context.Background(), projectID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

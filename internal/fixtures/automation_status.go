@@ -14,12 +14,12 @@
 
 package fixtures
 
-import om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+import "go.mongodb.org/ops-manager/opsmngr"
 
-func AutomationStatus() *om.AutomationStatus {
-	return &om.AutomationStatus{
+func AutomationStatus() *opsmngr.AutomationStatus {
+	return &opsmngr.AutomationStatus{
 		GoalVersion: 2,
-		Processes: []om.ProcessStatus{
+		Processes: []opsmngr.ProcessStatus{
 			{
 				Name:                    "shardedCluster_myShard_0_0",
 				Hostname:                "testDeploy-0",

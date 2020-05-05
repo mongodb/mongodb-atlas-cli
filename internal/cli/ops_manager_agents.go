@@ -16,20 +16,16 @@ package cli
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-func IAMBuilder() *cobra.Command {
+func OpsManagerAgentsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "iam",
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
-		},
-		Short: description.IAM,
+		Use:     "agents",
+		Aliases: []string{"agent"},
+		Short:   description.Agents,
 	}
-	cmd.AddCommand(IAMProjectsBuilder())
-	cmd.AddCommand(IAMOrganizationsBuilder())
 
+	cmd.AddCommand(OpsManagerAgentsUpgradeBuilder())
 	return cmd
 }

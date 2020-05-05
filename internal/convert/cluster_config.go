@@ -16,8 +16,8 @@ package convert
 
 import (
 	"github.com/Masterminds/semver"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/go-client-mongodb-ops-manager/search"
+	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/search"
 )
 
 const (
@@ -39,8 +39,8 @@ type ClusterConfig struct {
 
 // PatchAutomationConfig add the ClusterConfig to a cloudmanager.AutomationConfig
 // this method will modify the given AutomationConfig to add the new replica set information
-func (c *ClusterConfig) PatchAutomationConfig(out *om.AutomationConfig) error {
-	newProcesses := make([]*om.Process, len(c.ProcessConfigs))
+func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
+	newProcesses := make([]*opsmngr.Process, len(c.ProcessConfigs))
 
 	newReplicaSet, err := c.toReplicaSet()
 	if err != nil {
@@ -67,15 +67,15 @@ func (c *ClusterConfig) PatchAutomationConfig(out *om.AutomationConfig) error {
 }
 
 // toReplicaSet convert from cli config to cloudmanager.ReplicaSet
-func (c *ClusterConfig) toReplicaSet() (*om.ReplicaSet, error) {
+func (c *ClusterConfig) toReplicaSet() (*opsmngr.ReplicaSet, error) {
 	protocolVer, err := protocolVer(c.FCVersion)
 	if err != nil {
 		return nil, err
 	}
 
-	rs := &om.ReplicaSet{
+	rs := &opsmngr.ReplicaSet{
 		ID:              c.Name,
-		Members:         make([]om.Member, len(c.ProcessConfigs)),
+		Members:         make([]opsmngr.Member, len(c.ProcessConfigs)),
 		ProtocolVersion: protocolVer,
 	}
 
@@ -85,13 +85,13 @@ func (c *ClusterConfig) toReplicaSet() (*om.ReplicaSet, error) {
 // patchProcesses replace replica set processes with new configuration
 // this will disable all existing processes for the given replica set and remove the association
 // Then try to patch then with the new config if one config exists for the same host:port
-func patchProcesses(out *om.AutomationConfig, newReplicaSetID string, newProcesses []*om.Process) {
+func patchProcesses(out *opsmngr.AutomationConfig, newReplicaSetID string, newProcesses []*opsmngr.Process) {
 	for i, oldProcess := range out.Processes {
 		if oldProcess.Args26.Replication != nil && oldProcess.Args26.Replication.ReplSetName == newReplicaSetID {
 			oldProcess.Disabled = true
-			oldProcess.Args26.Replication = new(om.Replication)
+			oldProcess.Args26.Replication = new(opsmngr.Replication)
 		}
-		pos, found := search.Processes(newProcesses, func(p *om.Process) bool {
+		pos, found := search.Processes(newProcesses, func(p *opsmngr.Process) bool {
 			return p.Name == oldProcess.Name
 		})
 		if found {
@@ -105,8 +105,8 @@ func patchProcesses(out *om.AutomationConfig, newReplicaSetID string, newProcess
 }
 
 // patchReplicaSet if the replica set exists try to patch it if not add it
-func patchReplicaSet(out *om.AutomationConfig, newReplicaSet *om.ReplicaSet) {
-	pos, found := search.ReplicaSets(out.ReplicaSets, func(r *om.ReplicaSet) bool {
+func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.ReplicaSet) {
+	pos, found := search.ReplicaSets(out.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == newReplicaSet.ID
 	})
 
@@ -118,7 +118,7 @@ func patchReplicaSet(out *om.AutomationConfig, newReplicaSet *om.ReplicaSet) {
 	oldReplicaSet := out.ReplicaSets[pos]
 	lastID := oldReplicaSet.Members[len(oldReplicaSet.Members)-1].ID
 	for j, newMember := range newReplicaSet.Members {
-		k, found := search.Members(oldReplicaSet.Members, func(m om.Member) bool {
+		k, found := search.Members(oldReplicaSet.Members, func(m opsmngr.Member) bool {
 			return m.Host == newMember.Host
 		})
 		if found {

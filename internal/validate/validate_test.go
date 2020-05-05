@@ -14,7 +14,12 @@
 
 package validate
 
-import "testing"
+import (
+	"os"
+	"testing"
+
+	"github.com/spf13/viper"
+)
 
 func TestURL(t *testing.T) {
 	t.Run("Valid URL", func(t *testing.T) {
@@ -37,6 +42,39 @@ func TestURL(t *testing.T) {
 	})
 }
 
+func TestOptionalObjectID(t *testing.T) {
+	t.Run("Empty value", func(t *testing.T) {
+		err := OptionalObjectID("")
+		if err != nil {
+			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
+		}
+	})
+	t.Run("nil value", func(t *testing.T) {
+		err := OptionalObjectID(nil)
+		if err != nil {
+			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
+		}
+	})
+	t.Run("Valid ObjectID", func(t *testing.T) {
+		err := OptionalObjectID("5e9f088b4797476aa0a5d56a")
+		if err != nil {
+			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
+		}
+	})
+	t.Run("Short ObjectID", func(t *testing.T) {
+		err := OptionalObjectID("5e9f088b4797476aa0a5d56")
+		if err == nil {
+			t.Fatal("OptionalObjectID() expected an error\n")
+		}
+	})
+	t.Run("Invalid ObjectID", func(t *testing.T) {
+		err := OptionalObjectID("5e9f088b4797476aa0a5d56z")
+		if err == nil {
+			t.Fatal("OptionalObjectID() expected an error\n")
+		}
+	})
+}
+
 func TestObjectID(t *testing.T) {
 	t.Run("Valid ObjectID", func(t *testing.T) {
 		err := ObjectID("5e9f088b4797476aa0a5d56a")
@@ -54,6 +92,27 @@ func TestObjectID(t *testing.T) {
 		err := ObjectID("5e9f088b4797476aa0a5d56z")
 		if err == nil {
 			t.Fatal("ObjectID() expected an error\n")
+		}
+	})
+}
+
+func TestCredentials(t *testing.T) {
+	t.Run("no credentials", func(t *testing.T) {
+		err := Credentials()
+		if err == nil {
+			t.Fatal("Credentials() expected an error\n")
+		}
+	})
+	t.Run("with credentials", func(t *testing.T) {
+		// this function depends on the global config (globals are bad I know)
+		// the easiest way we have to test it is via ENV vars
+		viper.AutomaticEnv()
+		_ = os.Setenv("PUBLIC_API_KEY", "test")
+		_ = os.Setenv("PRIVATE_API_KEY", "test")
+
+		err := Credentials()
+		if err != nil {
+			t.Fatalf("Credentials() unexpected error %v\n", err)
 		}
 	})
 }

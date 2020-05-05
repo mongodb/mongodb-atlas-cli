@@ -80,7 +80,7 @@ func OpsManagerClustersUpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update",
-		Short: description.UpdateOMCluster,
+		Short: description.UpdateCluster,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

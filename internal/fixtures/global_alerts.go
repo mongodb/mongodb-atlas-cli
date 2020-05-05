@@ -16,11 +16,11 @@ package fixtures
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func GlobalAlert() *om.GlobalAlert {
-	return &om.GlobalAlert{
+func GlobalAlert() *opsmngr.GlobalAlert {
+	return &opsmngr.GlobalAlert{
 		Alert: atlas.Alert{
 			ID:                    "3b7d2de0a4b02fd2c98146de",
 			GroupID:               "1",
@@ -42,10 +42,10 @@ func GlobalAlert() *om.GlobalAlert {
 	}
 }
 
-func GlobalAlerts() *om.GlobalAlerts {
-	return &om.GlobalAlerts{
+func GlobalAlerts() *opsmngr.GlobalAlerts {
+	return &opsmngr.GlobalAlerts{
 		Links:      []*atlas.Link{},
-		Results:    []*om.GlobalAlert{GlobalAlert()},
+		Results:    []*opsmngr.GlobalAlert{GlobalAlert()},
 		TotalCount: 1,
 	}
 }

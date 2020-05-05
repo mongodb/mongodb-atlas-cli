@@ -19,12 +19,12 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type GlobalAlertLister interface {
-	GlobalAlerts(*atlas.AlertsListOptions) (*om.GlobalAlerts, error)
+	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
 }
 
 type GlobalAlertsStore interface {
@@ -32,10 +32,10 @@ type GlobalAlertsStore interface {
 }
 
 // GlobalAlerts encapsulate the logic to manage different cloud providers
-func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*om.GlobalAlerts, error) {
+func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).GlobalAlerts.List(context.Background(), opts)
+		result, _, err := s.client.(*opsmngr.Client).GlobalAlerts.List(context.Background(), opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

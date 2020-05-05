@@ -102,8 +102,8 @@ github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQz
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200427191133-b5e334932f44 h1:PUOc5BwUVOqGVQqX5vs2MPiJJ6PEZ+jA7TYtna1gOLo=
 github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200427191133-b5e334932f44/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
-github.com/mongodb/go-client-mongodb-ops-manager v0.2.2-0.20200429114541-a82d7d125cfd h1:vGYgslrNXKaZIkAIomQ83e6bpaByXIhwNXJgYN+yv8A=
-github.com/mongodb/go-client-mongodb-ops-manager v0.2.2-0.20200429114541-a82d7d125cfd/go.mod h1:RrXnfBx3CyKN64jXkXFEO07CnMBEYa5CdlHOQ/30a5A=
+github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200503141455-3534bcda655d h1:B21d92Sc/hjCgsqDFzsnLeUbpCc9s2r0ibeFOLrFjtw=
+github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200503141455-3534bcda655d/go.mod h1:LS8O0YLkA+sbtOb3fZLF10yY3tJM+1xATXMJ3oU35LU=
 github.com/mwielbut/pointy v1.1.0 h1:U5/YEfoIkaGCHv0St3CgjduqXID4FNRoyZgLM1kY9vg=
 github.com/mwielbut/pointy v1.1.0/go.mod h1:MvvO+uMFj9T5DMda33HlvogsFBX7pWWKAkFIn4teYwY=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
@@ -168,6 +168,8 @@ github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGr
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
+go.mongodb.org/ops-manager v0.5.0 h1:2T2CxZICAh/Y77Z+WrNT7XN2QlELDr3mSyCfmcPdOo0=
+go.mongodb.org/ops-manager v0.5.0/go.mod h1:PpGSUCpa7ncGGh+JWFKuAeW87V5RdOdFPMsEgH1uyHg=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/multierr v1.1.0/go.mod h1:wR5kodmAFQ0UK8QlbwjlSNy0Z68gJhDJUG5sjR94q/0=
 go.uber.org/zap v1.10.0/go.mod h1:vwi/ZaCAaUcBkycHslxD9B2zi4UTXhF60s6SWpuDF0Q=

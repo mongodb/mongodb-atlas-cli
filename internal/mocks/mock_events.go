@@ -72,7 +72,7 @@ func (m *MockProjectEventLister) EXPECT() *MockProjectEventListerMockRecorder {
 }
 
 // ProjectEvents mocks base method
-func (m *MockProjectEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockProjectEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
@@ -86,31 +86,31 @@ func (mr *MockProjectEventListerMockRecorder) ProjectEvents(arg0, arg1 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockProjectEventLister)(nil).ProjectEvents), arg0, arg1)
 }
 
-// MockEventsStore is a mock of EventsStore interface
-type MockEventsStore struct {
+// MockEventLister is a mock of EventLister interface
+type MockEventLister struct {
 	ctrl     *gomock.Controller
-	recorder *MockEventsStoreMockRecorder
+	recorder *MockEventListerMockRecorder
 }
 
-// MockEventsStoreMockRecorder is the mock recorder for MockEventsStore
-type MockEventsStoreMockRecorder struct {
-	mock *MockEventsStore
+// MockEventListerMockRecorder is the mock recorder for MockEventLister
+type MockEventListerMockRecorder struct {
+	mock *MockEventLister
 }
 
-// NewMockEventsStore creates a new mock instance
-func NewMockEventsStore(ctrl *gomock.Controller) *MockEventsStore {
-	mock := &MockEventsStore{ctrl: ctrl}
-	mock.recorder = &MockEventsStoreMockRecorder{mock}
+// NewMockEventLister creates a new mock instance
+func NewMockEventLister(ctrl *gomock.Controller) *MockEventLister {
+	mock := &MockEventLister{ctrl: ctrl}
+	mock.recorder = &MockEventListerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockEventsStore) EXPECT() *MockEventsStoreMockRecorder {
+func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 	return m.recorder
 }
 
 // OrganizationEvents mocks base method
-func (m *MockEventsStore) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
@@ -119,13 +119,13 @@ func (m *MockEventsStore) OrganizationEvents(arg0 string, arg1 *mongodbatlas.Eve
 }
 
 // OrganizationEvents indicates an expected call of OrganizationEvents
-func (mr *MockEventsStoreMockRecorder) OrganizationEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockEventsStore)(nil).OrganizationEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationEvents", reflect.TypeOf((*MockEventLister)(nil).OrganizationEvents), arg0, arg1)
 }
 
 // ProjectEvents mocks base method
-func (m *MockEventsStore) ProjectEvents(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
@@ -134,7 +134,7 @@ func (m *MockEventsStore) ProjectEvents(arg0 string, arg1 *mongodbatlas.ListOpti
 }
 
 // ProjectEvents indicates an expected call of ProjectEvents
-func (mr *MockEventsStoreMockRecorder) ProjectEvents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockEventListerMockRecorder) ProjectEvents(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockEventsStore)(nil).ProjectEvents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectEvents", reflect.TypeOf((*MockEventLister)(nil).ProjectEvents), arg0, arg1)
 }

@@ -17,8 +17,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOpsManagerLogsCollectOpts_Run(t *testing.T) {
@@ -27,7 +27,7 @@ func TestOpsManagerLogsCollectOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := &om.LogCollectionJob{ID: "1"}
+	expected := &opsmngr.LogCollectionJob{ID: "1"}
 
 	listOpts := &opsManagerLogsJobsCollectOpts{
 		redacted:                  false,

@@ -17,19 +17,34 @@ import (
 	"context"
 	"fmt"
 
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type AgentLister interface {
-	Agents(string, string) (*om.Agents, error)
+	Agents(string, string) (*opsmngr.Agents, error)
+}
+
+type AgentUpgrader interface {
+	UpgradeAgent(string) (*opsmngr.AutomationConfigAgent, error)
 }
 
 // Agents encapsulate the logic to manage different cloud providers
-func (s *Store) Agents(projectID, agentType string) (*om.Agents, error) {
+func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).Agents.List(context.Background(), projectID, agentType)
+		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(context.Background(), projectID, agentType)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpgradeAgent encapsulate the logic to manage different cloud providers
+func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

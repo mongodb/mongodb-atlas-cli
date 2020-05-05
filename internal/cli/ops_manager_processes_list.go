@@ -15,13 +15,13 @@
 package cli
 
 import (
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerProcessesListOpts struct {
@@ -48,8 +48,8 @@ func (opts *opsManagerProcessesListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerProcessesListOpts) newHostListOptions() *om.HostListOptions {
-	return &om.HostListOptions{
+func (opts *opsManagerProcessesListOpts) newHostListOptions() *opsmngr.HostListOptions {
+	return &opsmngr.HostListOptions{
 		ClusterID:   opts.clusterID,
 		ListOptions: *opts.newListOptions(),
 	}
@@ -62,7 +62,6 @@ func OpsManagerProcessListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   description.ListProcesses,
 		Aliases: []string{"ls"},
-		Hidden:  true,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

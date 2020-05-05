@@ -7,7 +7,7 @@ package mocks
 import (
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	opsmngr "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 	reflect "reflect"
 )
 

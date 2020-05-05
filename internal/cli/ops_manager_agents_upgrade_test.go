@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
@@ -21,25 +22,26 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestOpsManagerLogsListOpts_Run(t *testing.T) {
+func TestOpsManagerAgentsUpgradeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogJobLister(ctrl)
+	mockStore := mocks.NewMockAgentUpgrader(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &opsmngr.LogCollectionJobs{}
+	expected := new(opsmngr.AutomationConfigAgent)
 
-	listOpts := &opsManagerLogsJobsListOpts{
-		store:   mockStore,
-		verbose: true,
+	opts := &opsManagerAgentsUpgradeOpts{
+		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().LogCollectionJobs(listOpts.projectID, listOpts.newLogListOptions()).
+		EXPECT().
+		UpgradeAgent(opts.projectID).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	err := opts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

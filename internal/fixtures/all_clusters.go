@@ -15,20 +15,20 @@ package fixtures
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func AllClusters() *om.AllClustersProjects {
-	return &om.AllClustersProjects{
+func AllClusters() *opsmngr.AllClustersProjects {
+	return &opsmngr.AllClustersProjects{
 		Links: []*atlas.Link{},
-		Results: []*om.AllClustersProject{
+		Results: []*opsmngr.AllClustersProject{
 			{
 				GroupName: "AtlasGroup1",
 				OrgName:   "TestAtlasOrg1",
 				PlanType:  "Atlas",
 				GroupID:   "5e5fbc29e76c9a4be2ed3d39",
 				OrgID:     "5e5fbc29e76c9a4be2ed3d36",
-				Clusters: []om.AllClustersCluster{
+				Clusters: []opsmngr.AllClustersCluster{
 					{
 						ClusterID:     "5e5fbc29e76c9a4be2ed3d4d",
 						Name:          "AtlasCluster1",
@@ -64,7 +64,7 @@ func AllClusters() *om.AllClustersProjects {
 				GroupID:   "5e5fbc29e76c9a4be2ed3d38",
 				OrgID:     "5e5fbc29e76c9a4be2ed3d34",
 				Tags:      []string{"some tag 1", "some tag 2"},
-				Clusters: []om.AllClustersCluster{
+				Clusters: []opsmngr.AllClustersCluster{
 					{
 						ClusterID:     "5e5fbc29e76c9a4be2ed3d42",
 						Name:          "cluster1",

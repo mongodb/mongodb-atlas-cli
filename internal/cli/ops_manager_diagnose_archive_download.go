@@ -18,14 +18,13 @@ import (
 	"io"
 	"os"
 
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerDiagnoseArchiveDownloadOpts struct {
@@ -87,13 +86,11 @@ func OpsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "diagnose-archive.tar.gz", usage.LogOut)
 	cmd.Flags().Int64Var(&opts.limit, flags.Limit, 0, usage.ArchiveLimit)
 	cmd.Flags().Int64Var(&opts.minutes, flags.Minutes, 0, usage.ArchiveMinutes)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.Out)
 
 	return cmd
 }

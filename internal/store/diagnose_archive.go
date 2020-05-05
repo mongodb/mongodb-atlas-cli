@@ -19,9 +19,8 @@ import (
 	"fmt"
 	"io"
 
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type ArchivesDownloader interface {

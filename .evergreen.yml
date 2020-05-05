@@ -81,6 +81,18 @@ functions:
           mv apt/mongocli_next_linux_x86_64.deb apt/mongodb-cli-unstable_$VERSION~latest_amd64.deb
           cp mongocli_next_linux_x86_64.rpm yum/
           mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
+  "gen_download_archive":
+    - command: shell.exec
+      params:
+        working_dir: mongocli/dist
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          VERSION=$(git describe | cut -d "v" -f 2)
+
+          go run ../internal/release/main.go "$VERSION"
   "set up notary client credentials":
     - command: shell.exec
       params:
@@ -142,6 +154,7 @@ tasks:
       - func: "fetch goreleaser"
       - func: "package"
       - func: "gen_repo_data"
+      - func: "gen_download_archive"
       - command: archive.targz_pack
         params:
           target: mongocli/dist/deb.tgz
@@ -164,6 +177,7 @@ tasks:
             - mongocli/dist/*.deb
             - mongocli/dist/*.rpm
             - mongocli/dist/*.tgz
+            - mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
           permissions: public-read

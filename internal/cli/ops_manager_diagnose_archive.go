@@ -25,7 +25,7 @@ func OpsManagerDiagnoseArchive() *cobra.Command {
 		Short: description.DiagnoseArchive,
 	}
 
-	cmd.AddCommand(opsManagerDiagnoseArchiveDownloadBuilder())
+	cmd.AddCommand(OpsManagerDiagnoseArchiveDownloadBuilder())
 
 	return cmd
 }

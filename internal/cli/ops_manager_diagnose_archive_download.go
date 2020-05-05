@@ -71,7 +71,7 @@ func (opts *opsManagerDiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *ops
 }
 
 // mongocli om diagnose-archive download [--out out] [--projectId projectId]
-func opsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
+func OpsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
 	opts := &opsManagerDiagnoseArchiveDownloadOpts{
 		fs: afero.NewOsFs(),
 	}

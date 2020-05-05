@@ -81,7 +81,7 @@ func OpsManagerClustersShutdownBuilder() *cobra.Command {
 	opts := &opsManagerClustersShutdownOpts{}
 	cmd := &cobra.Command{
 		Use:   "shutdown [name]",
-		Short: description.ShutdownOMCluster,
+		Short: description.ShutdownCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

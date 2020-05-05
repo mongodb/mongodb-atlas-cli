@@ -24,8 +24,8 @@ import (
 )
 
 type ProjectLister interface {
-	GetAllProjects() (interface{}, error)
-	GetOrgProjects(string) (interface{}, error)
+	GetAllProjects(*atlas.ListOptions) (interface{}, error)
+	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
 }
 
 type OrgProjectLister interface {
@@ -47,13 +47,13 @@ type ProjectStore interface {
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers
-func (s *Store) GetAllProjects() (interface{}, error) {
+func (s *Store) GetAllProjects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), nil)
+		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), nil)
+		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -61,10 +61,10 @@ func (s *Store) GetAllProjects() (interface{}, error) {
 }
 
 // GetOrgProjects encapsulate the logic to manage different cloud providers
-func (s *Store) GetOrgProjects(orgID string) (interface{}, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.GetProjects(context.Background(), orgID)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.GetProjects(context.Background(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

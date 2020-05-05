@@ -26,6 +26,7 @@ import (
 
 type iamProjectsListOpts struct {
 	globalOpts
+	listOpts
 	store store.ProjectLister
 }
 
@@ -38,10 +39,11 @@ func (opts *iamProjectsListOpts) init() error {
 func (opts *iamProjectsListOpts) Run() error {
 	var projects interface{}
 	var err error
+	listOptions := opts.newListOptions()
 	if opts.OrgID() != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.OrgID())
+		projects, err = opts.store.GetOrgProjects(opts.OrgID(), listOptions)
 	} else {
-		projects, err = opts.store.GetAllProjects()
+		projects, err = opts.store.GetAllProjects(listOptions)
 	}
 	if err != nil {
 		return err
@@ -63,6 +65,9 @@ func IAMProjectsListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
 

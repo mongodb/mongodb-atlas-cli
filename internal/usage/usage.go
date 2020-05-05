@@ -39,6 +39,8 @@ const (
 	LogOut                          = "Optional output filename, if none given will use the log name."
 	LogStart                        = "Beginning of the period for which to retrieve logs."
 	LogEnd                          = "End of the period for which to retrieve logs."
+	ArchiveLimit                    = "Max number of entries for the diagnose archive."
+	ArchiveMinutes                  = "Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time. "
 	MeasurementStart                = "Beginning of the period for which to retrieve measurements."
 	MeasurementEnd                  = "End of the period for which to retrieve measurements."
 	MeasurementType                 = "Measurements to return. If it is not specified, all measurements are returned."

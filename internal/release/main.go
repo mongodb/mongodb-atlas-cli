@@ -52,10 +52,9 @@ func newPlatform(version, arch, os, distro, format string) *Platform {
 }
 
 func main() {
-	fmt.Println("test")
-
 	version := os.Args[1]
 	feedFilename := fmt.Sprintf("mongocli_%s.json", version)
+	fmt.Printf("Generating JSON: %s\n", feedFilename)
 	feedFile, err := os.Create(feedFilename)
 	if err != nil {
 		fmt.Println("error creating file")
@@ -87,4 +86,5 @@ func main() {
 		fmt.Println("error encoding file")
 		os.Exit(1)
 	}
+	fmt.Printf("File %s has been generated\n", feedFilename)
 }

@@ -15,20 +15,33 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func OpsManagerAutomationBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "automation",
-		Short: description.Automation,
+func TestOpsManagerAutomationWatch_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := fixtures.AutomationStatus()
+
+	opts := &opsManagerAutomationWatchOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(OpsManagerAutomationStatusBuilder())
-	cmd.AddCommand(OpsManagerAutomationDescribeBuilder())
-	cmd.AddCommand(OpsManagerAutomationUpdateBuilder())
-	cmd.AddCommand(OpsManagerAutomationWatchBuilder())
+	mockStore.
+		EXPECT().
+		GetAutomationStatus(opts.projectID).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

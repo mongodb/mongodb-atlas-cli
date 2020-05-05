@@ -23,7 +23,7 @@ func AtlasClustersIndexesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "indexes",
 		Aliases: []string{"index"},
-		Short:   description.Indexes,
+		Short:   description.ClustersIndexes,
 	}
 	cmd.AddCommand(AtlasClustersIndexesCreateBuilder())
 

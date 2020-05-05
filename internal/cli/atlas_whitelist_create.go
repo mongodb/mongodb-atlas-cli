@@ -71,7 +71,7 @@ func (opts *atlasWhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 	return projectIPWhitelist
 }
 
-// mongocli atlas whitelist(s) create value --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
+// mongocli atlas whitelist(s) create [entry] --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
 func AtlasWhitelistCreateBuilder() *cobra.Command {
 	opts := &atlasWhitelistCreateOpts{}
 	cmd := &cobra.Command{

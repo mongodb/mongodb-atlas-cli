@@ -81,7 +81,7 @@ func OpsManagerClustersStartupBuilder() *cobra.Command {
 	opts := &opsManagerClustersStartupOpts{}
 	cmd := &cobra.Command{
 		Use:   "startup [name]",
-		Short: description.StartUpOMCluster,
+		Short: description.StartUpCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

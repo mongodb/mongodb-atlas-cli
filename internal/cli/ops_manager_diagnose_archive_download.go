@@ -86,7 +86,7 @@ func OpsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "diagnose-archive.tar.gz", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
 	cmd.Flags().Int64Var(&opts.limit, flags.Limit, 0, usage.ArchiveLimit)
 	cmd.Flags().Int64Var(&opts.minutes, flags.Minutes, 0, usage.ArchiveMinutes)
 

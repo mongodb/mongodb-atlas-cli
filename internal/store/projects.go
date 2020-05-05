@@ -50,10 +50,10 @@ type ProjectStore interface {
 func (s *Store) GetAllProjects() (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background())
+		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), nil)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetAllProjects(context.Background())
+		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

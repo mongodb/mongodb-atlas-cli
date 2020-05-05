@@ -33,7 +33,7 @@ type AgentUpgrader interface {
 func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.List(context.Background(), projectID, agentType)
+		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(context.Background(), projectID, agentType)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -44,7 +44,7 @@ func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AutomationConfig.UpdateAgent(context.Background(), projectID)
+		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

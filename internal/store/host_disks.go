@@ -31,7 +31,7 @@ type HostDisksLister interface {
 func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).HostDisks.List(context.Background(), groupID, hostID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Deployments.ListPartitions(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

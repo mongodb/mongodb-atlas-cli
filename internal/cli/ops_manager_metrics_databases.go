@@ -19,14 +19,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AtlasMeasurementsDatabasesBuilder() *cobra.Command {
+func OpsManagerMetricsDatabasesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "databases",
 		Aliases: []string{"database"},
 		Short:   description.Databases,
 	}
 
-	cmd.AddCommand(AtlasMeasurementsDatabasesListBuilder())
+	cmd.AddCommand(OpsManagerMeasurementsDatabasesListBuilder())
 
 	return cmd
 }

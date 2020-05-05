@@ -21,23 +21,24 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerMeasurementsDisksDescribeOpts_Run(t *testing.T) {
+func TestOpsManagerMetricsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostDiskMeasurementsLister(ctrl)
+	mockStore := mocks.NewMockHostMeasurementLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessDiskMeasurements{}
+	expected := &mongodbatlas.ProcessMeasurements{}
 
-	listOpts := &opsManagerMeasurementsDisksDescribeOpts{
-		hostID: "1",
-		name:   "test",
+	listOpts := &opsManagerMetricsProcessOpts{
+		hostID: "hard-00-00.mongodb.net",
 		store:  mockStore,
 	}
+	listOpts.granularity = "PT1M"
+	listOpts.period = "PT1M"
 
-	opts := listOpts.newProcessMeasurementListOptions()
+	opts := listOpts.newProcessMetricsListOptions()
 	mockStore.
-		EXPECT().HostDiskMeasurements(listOpts.projectID, listOpts.hostID, listOpts.name, opts).
+		EXPECT().HostMeasurements(listOpts.projectID, listOpts.hostID, opts).
 		Return(expected, nil).
 		Times(1)
 

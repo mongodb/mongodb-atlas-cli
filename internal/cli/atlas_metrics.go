@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type measurementsOpts struct {
+type metricsOpts struct {
 	listOpts
 	granularity     string
 	period          string
@@ -29,7 +29,7 @@ type measurementsOpts struct {
 	measurementType []string
 }
 
-func (opts *measurementsOpts) newProcessMeasurementListOptions() *atlas.ProcessMeasurementListOptions {
+func (opts *metricsOpts) newProcessMetricsListOptions() *atlas.ProcessMeasurementListOptions {
 	o := &atlas.ProcessMeasurementListOptions{
 		ListOptions: opts.newListOptions(),
 	}
@@ -42,14 +42,15 @@ func (opts *measurementsOpts) newProcessMeasurementListOptions() *atlas.ProcessM
 	return o
 }
 
-func AtlasMeasurementsBuilder() *cobra.Command {
+func AtlasMetricsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "measurements",
-		Short: description.Measurements,
+		Use:     "metrics",
+		Aliases: []string{"metric", "measurements", "measurement"},
+		Short:   description.Metrics,
 	}
-	cmd.AddCommand(AtlasMeasurementsProcessBuilder())
-	cmd.AddCommand(AtlasMeasurementsDisksBuilder())
-	cmd.AddCommand(AtlasMeasurementsDatabasesBuilder())
+	cmd.AddCommand(AtlasMetricsProcessBuilder())
+	cmd.AddCommand(AtlasMetricsDisksBuilder())
+	cmd.AddCommand(AtlasMetricsDatabasesBuilder())
 
 	return cmd
 }

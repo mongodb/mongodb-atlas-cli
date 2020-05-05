@@ -40,7 +40,7 @@ func OpsManagerBuilder() *cobra.Command {
 	cmd.AddCommand(OpsManagerOwnerBuilder())
 	cmd.AddCommand(AtlasEventsBuilder())
 	cmd.AddCommand(OpsManagerProcessesBuilder())
-	cmd.AddCommand(OpsManagerMeasurementsBuilder())
+	cmd.AddCommand(OpsManagerMetricsBuilder())
 	cmd.AddCommand(OpsManagerLogsBuilder())
 	cmd.AddCommand(OpsManagerAgentsBuilder())
 	cmd.AddCommand(OpsManagerDiagnoseArchive())

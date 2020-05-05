@@ -23,24 +23,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsDisksDescribeOpts struct {
+type atlasMetricsDisksListsOpts struct {
 	globalOpts
-	measurementsOpts
+	listOpts
 	host  string
 	port  int
-	name  string
-	store store.ProcessDiskMeasurementsLister
+	store store.ProcessDisksLister
 }
 
-func (opts *atlasMeasurementsDisksDescribeOpts) initStore() error {
+func (opts *atlasMetricsDisksListsOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasMeasurementsDisksDescribeOpts) Run() error {
-	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ProcessDiskMeasurements(opts.ProjectID(), opts.host, opts.port, opts.name, listOpts)
+func (opts *atlasMetricsDisksListsOpts) Run() error {
+	listOpts := opts.newListOptions()
+	result, err := opts.store.ProcessDisks(opts.ProjectID(), opts.host, opts.port, listOpts)
 
 	if err != nil {
 		return err
@@ -49,13 +48,14 @@ func (opts *atlasMeasurementsDisksDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mcli atlas measurements disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
-func AtlasMeasurementsDisksDescribeBuilder() *cobra.Command {
-	opts := &atlasMeasurementsDisksDescribeOpts{}
+// mongocli atlas metric(s) process(es) disks lists [host:port]
+func AtlasMetricsDisksListBuilder() *cobra.Command {
+	opts := &atlasMetricsDisksListsOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [host:port] [name]",
-		Short: description.DescribeDisks,
-		Args:  cobra.ExactArgs(2),
+		Use:     "list [host:port]",
+		Short:   description.ListDisks,
+		Aliases: []string{"ls"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
@@ -65,23 +65,14 @@ func AtlasMeasurementsDisksDescribeBuilder() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			opts.name = args[1]
+
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
-
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.Granularity)
 
 	return cmd
 }

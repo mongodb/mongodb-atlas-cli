@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type HostMeasurementLister interface {
@@ -31,7 +31,7 @@ type HostMeasurementLister interface {
 func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).HostMeasurements.List(context.Background(), groupID, host, opts)
+		result, _, err := s.client.(*opsmngr.Client).HostMeasurements.List(context.Background(), groupID, host, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

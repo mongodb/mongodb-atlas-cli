@@ -18,8 +18,6 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
@@ -27,6 +25,8 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const scransha1 = "SCRAM-SHA-1"
@@ -65,8 +65,8 @@ func (opts *opsManagerDBUsersCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *opsManagerDBUsersCreateOpts) newDBUser() *om.MongoDBUser {
-	return &om.MongoDBUser{
+func (opts *opsManagerDBUsersCreateOpts) newDBUser() *opsmngr.MongoDBUser {
+	return &opsmngr.MongoDBUser{
 		Database:                   opts.authDB,
 		Username:                   opts.username,
 		InitPassword:               opts.password,

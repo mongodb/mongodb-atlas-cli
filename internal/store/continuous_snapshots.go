@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type SnapshotsLister interface {
@@ -43,7 +43,7 @@ func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.Lis
 		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -57,7 +57,7 @@ func (s *Store) ContinuousSnapshot(projectID, clusterID, snapshotID string) (*at
 		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.Get(context.Background(), projectID, clusterID, snapshotID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).ContinuousSnapshots.Get(context.Background(), projectID, clusterID, snapshotID)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.Get(context.Background(), projectID, clusterID, snapshotID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

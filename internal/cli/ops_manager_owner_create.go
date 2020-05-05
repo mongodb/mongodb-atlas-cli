@@ -16,13 +16,13 @@ package cli
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerOwnerCreateOpts struct {
@@ -51,8 +51,8 @@ func (opts *opsManagerOwnerCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *opsManagerOwnerCreateOpts) newOwner() *om.User {
-	user := &om.User{
+func (opts *opsManagerOwnerCreateOpts) newOwner() *opsmngr.User {
+	user := &opsmngr.User{
 		Username:     opts.email,
 		Password:     opts.password,
 		FirstName:    opts.firstName,

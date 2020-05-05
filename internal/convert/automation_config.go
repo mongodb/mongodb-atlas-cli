@@ -17,9 +17,9 @@ package convert
 import (
 	"fmt"
 
-	"github.com/mongodb/go-client-mongodb-ops-manager/atmcfg"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
-	"github.com/mongodb/go-client-mongodb-ops-manager/search"
+	"go.mongodb.org/ops-manager/atmcfg"
+	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/search"
 )
 
 const (
@@ -29,7 +29,7 @@ const (
 )
 
 // FromAutomationConfig convert from cloud format to mCLI format
-func FromAutomationConfig(in *om.AutomationConfig) (out []ClusterConfig) {
+func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
 	out = make([]ClusterConfig, len(in.ReplicaSets))
 
 	for i, rs := range in.ReplicaSets {
@@ -56,7 +56,7 @@ func FromAutomationConfig(in *om.AutomationConfig) (out []ClusterConfig) {
 	return
 }
 
-func EnableMechanism(out *om.AutomationConfig, m []string) error {
+func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
 	out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, m...)
 	out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, m...)
 	out.Auth.Disabled = false
@@ -86,8 +86,8 @@ func EnableMechanism(out *om.AutomationConfig, m []string) error {
 	return nil
 }
 
-func addMonitoringUser(out *om.AutomationConfig) {
-	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *om.MongoDBUser) bool {
+func addMonitoringUser(out *opsmngr.AutomationConfig) {
+	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *opsmngr.MongoDBUser) bool {
 		return user.Username == monitoringAgentName
 	})
 	if !exists {
@@ -95,8 +95,8 @@ func addMonitoringUser(out *om.AutomationConfig) {
 	}
 }
 
-func addBackupUser(out *om.AutomationConfig) {
-	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *om.MongoDBUser) bool {
+func addBackupUser(out *opsmngr.AutomationConfig) {
+	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *opsmngr.MongoDBUser) bool {
 		return user.Username == backupAgentName
 	})
 	if !exists {
@@ -104,7 +104,7 @@ func addBackupUser(out *om.AutomationConfig) {
 	}
 }
 
-func setAutoUser(out *om.AutomationConfig) error {
+func setAutoUser(out *opsmngr.AutomationConfig) error {
 	var err error
 	out.Auth.AutoUser = automationAgentName
 	if out.Auth.AutoPwd, err = generateRandomASCIIString(500); err != nil {
@@ -115,7 +115,7 @@ func setAutoUser(out *om.AutomationConfig) error {
 }
 
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
-func convertCloudMember(out *ProcessConfig, in om.Member) {
+func convertCloudMember(out *ProcessConfig, in opsmngr.Member) {
 	out.Votes = in.Votes
 	out.Priority = in.Priority
 	out.SlaveDelay = in.SlaveDelay
@@ -123,7 +123,7 @@ func convertCloudMember(out *ProcessConfig, in om.Member) {
 }
 
 // convertCloudProcess map cloudmanager.Process -> convert.ProcessConfig
-func convertCloudProcess(out *ProcessConfig, in *om.Process) {
+func convertCloudProcess(out *ProcessConfig, in *opsmngr.Process) {
 	out.DBPath = in.Args26.Storage.DBPath
 	out.LogPath = in.Args26.SystemLog.Path
 	out.Port = in.Args26.NET.Port

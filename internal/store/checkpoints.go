@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type CheckpointsLister interface {
@@ -34,7 +34,7 @@ func (s *Store) List(projectID, clusterID string, opts *atlas.ListOptions) (*atl
 		result, _, err := s.client.(*atlas.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*om.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

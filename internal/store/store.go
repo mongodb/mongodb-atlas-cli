@@ -23,9 +23,9 @@ import (
 
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/version"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
@@ -105,7 +105,7 @@ func (s *Store) setAtlasClient(client *http.Client) {
 }
 
 func (s *Store) setOpsManagerClient(client *http.Client) {
-	cmClient := om.NewClient(client)
+	cmClient := opsmngr.NewClient(client)
 	if s.baseURL != nil {
 		cmClient.BaseURL = s.baseURL
 	}
@@ -118,5 +118,5 @@ func (s *Store) apiPath(baseURL string) string {
 	if s.service == config.CloudService {
 		return baseURL + atlasAPIPath
 	}
-	return baseURL + om.APIPublicV1Path
+	return baseURL + opsmngr.APIPublicV1Path
 }

@@ -17,7 +17,6 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
@@ -26,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type opsManagerAutomationUpdateOpts struct {

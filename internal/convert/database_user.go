@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 // Public constants
@@ -57,8 +57,8 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 
 // BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs
 // r contains roles in the format roleName@dbName
-func BuildOMRoles(r []string) []*om.Role {
-	roles := make([]*om.Role, len(r))
+func BuildOMRoles(r []string) []*opsmngr.Role {
+	roles := make([]*opsmngr.Role, len(r))
 	for i, roleP := range r {
 		role := strings.Split(roleP, roleSep)
 		roleName := role[0]
@@ -67,7 +67,7 @@ func BuildOMRoles(r []string) []*om.Role {
 			databaseName = role[1]
 		}
 
-		roles[i] = &om.Role{
+		roles[i] = &opsmngr.Role{
 			Role:     roleName,
 			Database: databaseName,
 		}
@@ -75,16 +75,16 @@ func BuildOMRoles(r []string) []*om.Role {
 	return roles
 }
 
-func newBackupUser(password string) *om.MongoDBUser {
+func newBackupUser(password string) *opsmngr.MongoDBUser {
 	// roles for Monitoring Agent
 	// https://docs.opsmanager.mongodb.com/current/reference/required-access-monitoring-agent/
-	return &om.MongoDBUser{
+	return &opsmngr.MongoDBUser{
 		Username:                   backupAgentName,
 		Database:                   defaultUserDatabase,
 		AuthenticationRestrictions: []string{},
 		Mechanisms:                 []string{},
 		InitPassword:               password,
-		Roles: []*om.Role{
+		Roles: []*opsmngr.Role{
 			{
 				Database: AdminDB,
 				Role:     "clusterAdmin",
@@ -108,16 +108,16 @@ func newBackupUser(password string) *om.MongoDBUser {
 		},
 	}
 }
-func newMonitoringUser(password string) *om.MongoDBUser {
+func newMonitoringUser(password string) *opsmngr.MongoDBUser {
 	// roles for Monitoring Agent
 	// https://docs.opsmanager.mongodb.com/current/reference/required-access-monitoring-agent/
-	return &om.MongoDBUser{
+	return &opsmngr.MongoDBUser{
 		Username:                   monitoringAgentName,
 		Database:                   defaultUserDatabase,
 		InitPassword:               password,
 		AuthenticationRestrictions: []string{},
 		Mechanisms:                 []string{},
-		Roles: []*om.Role{
+		Roles: []*opsmngr.Role{
 			{
 				Database: AdminDB,
 				Role:     "clusterMonitor",

@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	om "github.com/mongodb/go-client-mongodb-ops-manager/opsmngr"
 	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type HostDatabaseLister interface {
@@ -31,7 +31,7 @@ type HostDatabaseLister interface {
 func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*om.Client).HostDatabases.List(context.Background(), groupID, hostID, opts)
+		result, _, err := s.client.(*opsmngr.Client).HostDatabases.List(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

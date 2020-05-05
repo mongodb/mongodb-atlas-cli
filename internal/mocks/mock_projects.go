@@ -6,6 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	reflect "reflect"
 )
 
@@ -33,33 +34,33 @@ func (m *MockProjectLister) EXPECT() *MockProjectListerMockRecorder {
 }
 
 // GetAllProjects mocks base method
-func (m *MockProjectLister) GetAllProjects() (interface{}, error) {
+func (m *MockProjectLister) GetAllProjects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllProjects")
+	ret := m.ctrl.Call(m, "GetAllProjects", arg0)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAllProjects indicates an expected call of GetAllProjects
-func (mr *MockProjectListerMockRecorder) GetAllProjects() *gomock.Call {
+func (mr *MockProjectListerMockRecorder) GetAllProjects(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProjects", reflect.TypeOf((*MockProjectLister)(nil).GetAllProjects))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProjects", reflect.TypeOf((*MockProjectLister)(nil).GetAllProjects), arg0)
 }
 
 // GetOrgProjects mocks base method
-func (m *MockProjectLister) GetOrgProjects(arg0 string) (interface{}, error) {
+func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrgProjects", arg0)
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrgProjects indicates an expected call of GetOrgProjects
-func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0 interface{}) *gomock.Call {
+func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectLister)(nil).GetOrgProjects), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectLister)(nil).GetOrgProjects), arg0, arg1)
 }
 
 // MockOrgProjectLister is a mock of OrgProjectLister interface
@@ -199,33 +200,33 @@ func (m *MockProjectStore) EXPECT() *MockProjectStoreMockRecorder {
 }
 
 // GetAllProjects mocks base method
-func (m *MockProjectStore) GetAllProjects() (interface{}, error) {
+func (m *MockProjectStore) GetAllProjects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllProjects")
+	ret := m.ctrl.Call(m, "GetAllProjects", arg0)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAllProjects indicates an expected call of GetAllProjects
-func (mr *MockProjectStoreMockRecorder) GetAllProjects() *gomock.Call {
+func (mr *MockProjectStoreMockRecorder) GetAllProjects(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProjects", reflect.TypeOf((*MockProjectStore)(nil).GetAllProjects))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProjects", reflect.TypeOf((*MockProjectStore)(nil).GetAllProjects), arg0)
 }
 
 // GetOrgProjects mocks base method
-func (m *MockProjectStore) GetOrgProjects(arg0 string) (interface{}, error) {
+func (m *MockProjectStore) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrgProjects", arg0)
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrgProjects indicates an expected call of GetOrgProjects
-func (mr *MockProjectStoreMockRecorder) GetOrgProjects(arg0 interface{}) *gomock.Call {
+func (mr *MockProjectStoreMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectStore)(nil).GetOrgProjects), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectStore)(nil).GetOrgProjects), arg0, arg1)
 }
 
 // CreateProject mocks base method

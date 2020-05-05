@@ -15,61 +15,67 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/config"
+	"fmt"
+	"time"
+
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type iamProjectsListOpts struct {
+type opsManagerAutomationWatchOpts struct {
 	globalOpts
-	listOpts
-	store store.ProjectLister
+	store store.AutomationStatusGetter
 }
 
-func (opts *iamProjectsListOpts) init() error {
+func (opts *opsManagerAutomationWatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *iamProjectsListOpts) Run() error {
-	var projects interface{}
-	var err error
-	listOptions := opts.newListOptions()
-	if opts.OrgID() != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.OrgID(), listOptions)
-	} else {
-		projects, err = opts.store.GetAllProjects(listOptions)
+func (opts *opsManagerAutomationWatchOpts) Run() error {
+
+	for {
+		result, err := opts.store.GetAutomationStatus(opts.ProjectID())
+		if err != nil {
+			return err
+		}
+		reachedGoal := true
+		for _, p := range result.Processes {
+			if p.LastGoalVersionAchieved != result.GoalVersion {
+				reachedGoal = false
+				break
+			}
+		}
+		if reachedGoal {
+			break
+		}
+		fmt.Print(".")
+		time.Sleep(4 * time.Second)
 	}
-	if err != nil {
-		return err
-	}
-	return json.PrettyPrint(projects)
+	fmt.Printf("\nChanges deployed successfully\n")
+	return nil
 }
 
-// mongocli iam project(s) list [--orgId orgId]
-func IAMProjectsListBuilder() *cobra.Command {
-	opts := &iamProjectsListOpts{}
+// mongocli ops-manager automation watch [--projectId projectId]
+func OpsManagerAutomationWatchBuilder() *cobra.Command {
+	opts := &opsManagerAutomationWatchOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListProjects,
+		Use:   "watch",
+		Short: description.WatchAutomationStatus,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

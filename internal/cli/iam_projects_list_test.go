@@ -31,16 +31,17 @@ func TestIAMProjectsList_Run(t *testing.T) {
 
 	expected := &mongodbatlas.Projects{}
 
+	listOpts := &iamProjectsListOpts{
+		store: mockStore,
+	}
+
 	t.Run("No OrgID is given", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			GetAllProjects().
+			GetAllProjects(listOpts.newListOptions()).
 			Return(expected, nil).
 			Times(1)
 
-		listOpts := &iamProjectsListOpts{
-			store: mockStore,
-		}
 		err := listOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -48,16 +49,17 @@ func TestIAMProjectsList_Run(t *testing.T) {
 	})
 
 	t.Run("An OrgID is given for OM", func(t *testing.T) {
-		mockStore.
-			EXPECT().
-			GetOrgProjects("1").
-			Return(expected, nil).
-			Times(1)
-
 		listOpts := &iamProjectsListOpts{
 			store: mockStore,
 		}
 		listOpts.orgID = "1"
+
+		mockStore.
+			EXPECT().
+			GetOrgProjects("1", listOpts.newListOptions()).
+			Return(expected, nil).
+			Times(1)
+
 		config.SetService(config.OpsManagerService)
 		err := listOpts.Run()
 		if err != nil {
@@ -66,16 +68,17 @@ func TestIAMProjectsList_Run(t *testing.T) {
 	})
 
 	t.Run("An OrgID is given for Atlas", func(t *testing.T) {
-		mockStore.
-			EXPECT().
-			GetAllProjects().
-			Return(expected, nil).
-			Times(1)
-
 		listOpts := &iamProjectsListOpts{
 			store: mockStore,
 		}
 		listOpts.orgID = "1"
+
+		mockStore.
+			EXPECT().
+			GetAllProjects(listOpts.newListOptions()).
+			Return(expected, nil).
+			Times(1)
+
 		config.SetService(config.CloudService)
 		err := listOpts.Run()
 		if err != nil {

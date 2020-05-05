@@ -24,23 +24,49 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-func URL(val interface{}) error {
+// toString tires to cast an interface to string
+func toString(val interface{}) (string, error) {
 	var u string
 	var ok bool
 	if u, ok = val.(string); !ok {
-		return fmt.Errorf("'%v' is not a valid URL", val)
+		return "", fmt.Errorf("'%v' is not valid", val)
 	}
-	if !strings.HasSuffix(u, "/") {
-		return fmt.Errorf("'%s' must have a trailing slash", u)
-	}
-	_, err := url.ParseRequestURI(u)
+	return u, nil
+}
+
+// URL validates a value is a valid URL for the cli store
+func URL(val interface{}) error {
+	s, err := toString(val)
 	if err != nil {
-		return fmt.Errorf("'%s' is not a valid URL", u)
+		return err
+	}
+	if !strings.HasSuffix(s, "/") {
+		return fmt.Errorf("'%s' must have a trailing slash", s)
+	}
+	_, err = url.ParseRequestURI(s)
+	if err != nil {
+		return fmt.Errorf("'%s' is not a valid URL", s)
 	}
 
 	return nil
 }
 
+// OptionalObjectID validates a value is a valid ObjectID
+func OptionalObjectID(val interface{}) error {
+	if val == nil {
+		return nil
+	}
+	s, err := toString(val)
+	if err != nil {
+		return err
+	}
+	if s == "" {
+		return nil
+	}
+	return ObjectID(s)
+}
+
+// ObjectID validates a value is a valid ObjectID
 func ObjectID(s string) error {
 	b, err := hex.DecodeString(s)
 	if err != nil || len(b) != 12 {
@@ -49,6 +75,7 @@ func ObjectID(s string) error {
 	return nil
 }
 
+// Credentials validates public and private API keys have been set
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
 		return errors.New("missing credentials")

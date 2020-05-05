@@ -23,7 +23,7 @@ func OpsManagerMetricsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "metrics",
 		Aliases: []string{"metric", "measurements", "measurement"},
-		Short: description.Metrics,
+		Short:   description.Metrics,
 	}
 
 	cmd.AddCommand(OpsManagerMetricsProcessBuilder())

@@ -34,7 +34,7 @@ type HostDescriber interface {
 func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.Hosts, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Hosts.List(context.Background(), groupID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Deployments.ListHosts(context.Background(), groupID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -45,7 +45,7 @@ func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.H
 func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Hosts.Get(context.Background(), groupID, hostID)
+		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHost(context.Background(), groupID, hostID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

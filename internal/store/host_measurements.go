@@ -31,7 +31,7 @@ type HostMeasurementLister interface {
 func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).HostMeasurements.List(context.Background(), groupID, host, opts)
+		result, _, err := s.client.(*opsmngr.Client).Measurements.Host(context.Background(), groupID, host, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -10,7 +10,7 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200501091934-11d1f6e5cf4c
+	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200503141455-3534bcda655d
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect
@@ -19,7 +19,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.4.0 // indirect
-	go.mongodb.org/ops-manager v0.3.1
+	go.mongodb.org/ops-manager v0.5.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200413165638-669c56c373c4 // indirect
 	golang.org/x/text v0.3.2 // indirect

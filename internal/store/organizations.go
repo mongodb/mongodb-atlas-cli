@@ -44,7 +44,7 @@ type OrganizationStore interface {
 func (s *Store) GetAllOrganizations() (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.GetAllOrganizations(context.Background())
+		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -24,66 +24,74 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type opsManagerLogsJobsDownloadOpts struct {
+type opsManagerDiagnoseArchiveDownloadOpts struct {
 	globalOpts
-	id    string
-	out   string
-	fs    afero.Fs
-	store store.LogJobsDownloader
+	out     string
+	limit   int64
+	minutes int64
+	fs      afero.Fs
+	store   store.ArchivesDownloader
 }
 
-func (opts *opsManagerLogsJobsDownloadOpts) initStore() error {
+func (opts *opsManagerDiagnoseArchiveDownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerLogsJobsDownloadOpts) Run() error {
+func (opts *opsManagerDiagnoseArchiveDownloadOpts) Run() error {
 	out, err := opts.newWriteCloser()
 	if err != nil {
 		return err
 	}
 	defer out.Close()
 
-	if err := opts.store.DownloadLogJob(opts.ProjectID(), opts.id, out); err != nil {
+	if err := opts.store.DownloadArchive(opts.ProjectID(), opts.newDiagnosticsListOpts(), out); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (opts *opsManagerLogsJobsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
+func (opts *opsManagerDiagnoseArchiveDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
 	// Create file only if is not there already (don't overwrite)
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
 	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
 	return f, err
 }
 
-// mongocli om logs jobs download id [--out out] [--projectId projectId]
-func OpsManagerLogsJobsDownloadOptsBuilder() *cobra.Command {
-	opts := &opsManagerLogsJobsDownloadOpts{
+func (opts *opsManagerDiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *opsmngr.DiagnosticsListOpts {
+	return &opsmngr.DiagnosticsListOpts{
+		Limit:   opts.limit,
+		Minutes: opts.minutes,
+	}
+}
+
+// mongocli om diagnose-archive download [--out out] [--projectId projectId]
+func OpsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
+	opts := &opsManagerDiagnoseArchiveDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "download [id]",
-		Short: description.DownloadLogs,
-		Args:  cobra.ExactArgs(1),
+		Use:     "download",
+		Aliases: []string{"get"},
+		Short:   description.DownloadDiagnoseArchive,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
+	cmd.Flags().Int64Var(&opts.limit, flags.Limit, 0, usage.ArchiveLimit)
+	cmd.Flags().Int64Var(&opts.minutes, flags.Minutes, 0, usage.ArchiveMinutes)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flags.Out)
 
 	return cmd
 }

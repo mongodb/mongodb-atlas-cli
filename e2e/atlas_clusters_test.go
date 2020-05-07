@@ -53,7 +53,7 @@ func TestAtlasClusters(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--members=3",
-			"--instanceSize=M10",
+			"--clusterTier=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
 			"--diskSizeGB=10")

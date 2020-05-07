@@ -26,7 +26,7 @@ const (
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
 	MembersShort                    = "m"                               // MembersShort flag
-	InstanceSize                    = "instanceSize"                    // InstanceSize flag
+	Tier                            = "tier"                            // Tier flag
 	Forever                         = "forever"                         // Forever flag
 	ForeverShort                    = "F"                               // ForeverShort flag
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag

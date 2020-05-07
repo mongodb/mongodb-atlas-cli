@@ -51,8 +51,6 @@ func (opts *atlasEventsListOpts) Run() error {
 		result, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
 	} else if opts.projectID != "" {
 		result, err = opts.store.ProjectEvents(opts.projectID, listOpts)
-	} else {
-		return fmt.Errorf("--%s or --%s must be set", flags.ProjectID, flags.OrgID)
 	}
 
 	if err != nil {
@@ -74,7 +72,7 @@ func (opts *atlasEventsListOpts) newEventListOptions() *atlas.EventListOptions {
 	}
 }
 
-// mongocli atlas event(s) list [--projectId projectId] [--source source][--type type] [--page N] [--limit N] [--mindate minDate] [--maxDate maxDate]
+// mongocli atlas event(s) list [--projectId projectId] [--orgId orgId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate]
 func AtlasEventsListBuilder() *cobra.Command {
 	opts := &atlasEventsListOpts{}
 	cmd := &cobra.Command{
@@ -83,6 +81,12 @@ func AtlasEventsListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.orgID != "" && opts.projectID != "" {
+				return fmt.Errorf("both --%s and --%s set", flags.ProjectID, flags.OrgID)
+			}
+			if opts.orgID == "" && opts.projectID == "" {
+				return fmt.Errorf("--%s or --%s must be set", flags.ProjectID, flags.OrgID)
+			}
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -23,23 +23,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsDisksDescribeOpts struct {
+type atlasMetricsDisksDescribeOpts struct {
 	globalOpts
-	measurementsOpts
+	metricsOpts
 	host  string
 	port  int
 	name  string
 	store store.ProcessDiskMeasurementsLister
 }
 
-func (opts *atlasMeasurementsDisksDescribeOpts) initStore() error {
+func (opts *atlasMetricsDisksDescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasMeasurementsDisksDescribeOpts) Run() error {
-	listOpts := opts.newProcessMeasurementListOptions()
+func (opts *atlasMetricsDisksDescribeOpts) Run() error {
+	listOpts := opts.newProcessMetricsListOptions()
 	result, err := opts.store.ProcessDiskMeasurements(opts.ProjectID(), opts.host, opts.port, opts.name, listOpts)
 
 	if err != nil {
@@ -49,9 +49,9 @@ func (opts *atlasMeasurementsDisksDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mcli atlas measurements disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
-func AtlasMeasurementsDisksDescribeBuilder() *cobra.Command {
-	opts := &atlasMeasurementsDisksDescribeOpts{}
+// mcli atlas metric(s) disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+func AtlasMetricsDisksDescribeBuilder() *cobra.Command {
+	opts := &atlasMetricsDisksDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe [host:port] [name]",
 		Short: description.DescribeDisks,

@@ -21,22 +21,22 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerMeasurementsDatabasesListsOpts_Run(t *testing.T) {
+func TestOpsManagerMetricsDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostDatabaseLister(ctrl)
+	mockStore := mocks.NewMockHostDisksLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessDatabasesResponse{}
+	expected := &mongodbatlas.ProcessDisksResponse{}
 
-	listOpts := &opsManagerMeasurementsDatabasesListsOpts{
+	listOpts := &opsManagerMetricsDisksListsOpts{
 		hostID: "1",
 		store:  mockStore,
 	}
 
 	opts := listOpts.newListOptions()
 	mockStore.
-		EXPECT().HostDatabases(listOpts.projectID, listOpts.hostID, opts).
+		EXPECT().HostDisks(listOpts.projectID, listOpts.hostID, opts).
 		Return(expected, nil).
 		Times(1)
 

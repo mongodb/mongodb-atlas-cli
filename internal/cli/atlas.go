@@ -34,7 +34,7 @@ func AtlasBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasAlertsBuilder())
 	cmd.AddCommand(AtlasBackupsBuilder())
 	cmd.AddCommand(AtlasEventsBuilder())
-	cmd.AddCommand(AtlasMeasurementsBuilder())
+	cmd.AddCommand(AtlasMetricsBuilder())
 	cmd.AddCommand(AtlasLogsBuilder())
 	cmd.AddCommand(AtlasProcessesBuilder())
 

@@ -11,39 +11,37 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/fixtures"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasMeasurementsProcess_Run(t *testing.T) {
+func TestOpsManagerAutomationWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
+	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessMeasurements{}
+	expected := fixtures.AutomationStatus()
 
-	listOpts := &atlasMeasurementsProcessOpts{
-		host:  "hard-00-00.mongodb.net",
-		port:  27017,
+	opts := &opsManagerAutomationWatchOpts{
 		store: mockStore,
 	}
-	listOpts.granularity = "PT1M"
-	listOpts.period = "PT1M"
 
-	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().ProcessMeasurements(listOpts.projectID, listOpts.host, listOpts.port, opts).
+		EXPECT().
+		GetAutomationStatus(opts.projectID).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	err := opts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

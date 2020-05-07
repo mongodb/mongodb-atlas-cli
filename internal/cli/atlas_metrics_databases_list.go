@@ -23,22 +23,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerMeasurementsDisksListsOpts struct {
+type atlasMetricsDatabasesListsOpts struct {
 	globalOpts
 	listOpts
-	hostID string
-	store  store.HostDisksLister
+	host  string
+	port  int
+	store store.ProcessDatabaseLister
 }
 
-func (opts *opsManagerMeasurementsDisksListsOpts) initStore() error {
+func (opts *atlasMetricsDatabasesListsOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerMeasurementsDisksListsOpts) Run() error {
+func (opts *atlasMetricsDatabasesListsOpts) Run() error {
 	listOpts := opts.newListOptions()
-	result, err := opts.store.HostDisks(opts.ProjectID(), opts.hostID, listOpts)
+	result, err := opts.store.ProcessDatabases(opts.ProjectID(), opts.host, opts.port, listOpts)
 
 	if err != nil {
 		return err
@@ -47,19 +48,22 @@ func (opts *opsManagerMeasurementsDisksListsOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om measurements process(es) disks lists [hostId]
-func OpsManagerMeasurementsDisksListBuilder() *cobra.Command {
-	opts := &opsManagerMeasurementsDisksListsOpts{}
+// mongocli atlas metric(s) process(es) disks lists [host:port]
+func AtlasMetricsDatabasesListBuilder() *cobra.Command {
+	opts := &atlasMetricsDatabasesListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list [hostId]",
-		Short:   description.ListDisks,
+		Use:     "list [host:port]",
+		Short:   description.ListDatabases,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
+			var err error
+			if opts.host, opts.port, err = getHostNameAndPort(args[0]); err != nil {
+				return err
+			}
 
 			return opts.Run()
 		},

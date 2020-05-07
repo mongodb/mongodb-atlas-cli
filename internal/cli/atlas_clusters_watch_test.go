@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cli
 
 import (
@@ -21,28 +22,26 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerMeasurementsProcess_Run(t *testing.T) {
+func TestAtlasClustersWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostMeasurementLister(ctrl)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessMeasurements{}
+	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
 
-	listOpts := &opsManagerMeasurementsProcessOpts{
-		hostID: "hard-00-00.mongodb.net",
-		store:  mockStore,
+	describeOpts := &atlasClustersWatchOpts{
+		name:  "test",
+		store: mockStore,
 	}
-	listOpts.granularity = "PT1M"
-	listOpts.period = "PT1M"
 
-	opts := listOpts.newProcessMeasurementListOptions()
 	mockStore.
-		EXPECT().HostMeasurements(listOpts.projectID, listOpts.hostID, opts).
+		EXPECT().
+		Cluster(describeOpts.projectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

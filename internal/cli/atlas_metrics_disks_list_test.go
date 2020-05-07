@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasMeasurementsDisksListsOpts_Run(t *testing.T) {
+func TestAtlasMetricsDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDisksLister(ctrl)
 
@@ -29,7 +29,7 @@ func TestAtlasMeasurementsDisksListsOpts_Run(t *testing.T) {
 
 	expected := &mongodbatlas.ProcessDisksResponse{}
 
-	listOpts := &atlasMeasurementsDisksListsOpts{
+	listOpts := &atlasMetricsDisksListsOpts{
 		host:  "hard-00-00.mongodb.net",
 		port:  27017,
 		store: mockStore,

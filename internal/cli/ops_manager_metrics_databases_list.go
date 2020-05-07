@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -24,52 +23,51 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type iamProjectsListOpts struct {
+type opsManagerMetricsDatabasesListsOpts struct {
 	globalOpts
 	listOpts
-	store store.ProjectLister
+	hostID string
+	store  store.HostDatabaseLister
 }
 
-func (opts *iamProjectsListOpts) init() error {
+func (opts *opsManagerMetricsDatabasesListsOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *iamProjectsListOpts) Run() error {
-	var projects interface{}
-	var err error
-	listOptions := opts.newListOptions()
-	if opts.OrgID() != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.OrgID(), listOptions)
-	} else {
-		projects, err = opts.store.GetAllProjects(listOptions)
-	}
+func (opts *opsManagerMetricsDatabasesListsOpts) Run() error {
+	listOpts := opts.newListOptions()
+	result, err := opts.store.HostDatabases(opts.ProjectID(), opts.hostID, listOpts)
+
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(projects)
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli iam project(s) list [--orgId orgId]
-func IAMProjectsListBuilder() *cobra.Command {
-	opts := &iamProjectsListOpts{}
+// mongocli om metric(s) process(es) disks lists [hostID]
+func OpsManagerMeasurementsDatabasesListBuilder() *cobra.Command {
+	opts := &opsManagerMetricsDatabasesListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list [hostID]",
+		Short:   description.ListDatabases,
 		Aliases: []string{"ls"},
-		Short:   description.ListProjects,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.hostID = args[0]
+
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

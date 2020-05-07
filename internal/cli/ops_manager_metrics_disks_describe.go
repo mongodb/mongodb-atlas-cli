@@ -23,23 +23,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsProcessOpts struct {
+type opsManagerMetricsDisksDescribeOpts struct {
 	globalOpts
-	measurementsOpts
-	host  string
-	port  int
-	store store.ProcessMeasurementLister
+	metricsOpts
+	hostID string
+	name   string
+	store  store.HostDiskMeasurementsLister
 }
 
-func (opts *atlasMeasurementsProcessOpts) initStore() error {
+func (opts *opsManagerMetricsDisksDescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasMeasurementsProcessOpts) Run() error {
-	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.ProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
+func (opts *opsManagerMetricsDisksDescribeOpts) Run() error {
+	listOpts := opts.newProcessMetricsListOptions()
+	result, err := opts.store.HostDiskMeasurements(opts.ProjectID(), opts.hostID, opts.name, listOpts)
 
 	if err != nil {
 		return err
@@ -48,27 +48,24 @@ func (opts *atlasMeasurementsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas measurements process(es) host:port [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
-func AtlasMeasurementsProcessBuilder() *cobra.Command {
-	opts := &atlasMeasurementsProcessOpts{}
+// mcli om metric(s) disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+func OpsManagerMetricsDisksDescribeBuilder() *cobra.Command {
+	opts := &opsManagerMetricsDisksDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "processes [host:port]",
-		Short:   description.ProcessMeasurements,
-		Aliases: []string{"process"},
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe [hostId] [name]",
+		Short: description.DescribeDisks,
+		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var err error
-			opts.host, opts.port, err = getHostNameAndPort(args[0])
-			if err != nil {
-				return err
-			}
+			opts.hostID = args[0]
+			opts.name = args[1]
 
 			return opts.Run()
 		},
 	}
+
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 

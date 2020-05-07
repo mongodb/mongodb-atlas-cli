@@ -21,28 +21,27 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOpsManagerMeasurementsDisksDescribeOpts_Run(t *testing.T) {
+func TestAtlasMetricsDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostDiskMeasurementsLister(ctrl)
+	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessDiskMeasurements{}
+	expected := &mongodbatlas.ProcessDatabasesResponse{}
 
-	listOpts := &opsManagerMeasurementsDisksDescribeOpts{
-		hostID: "1",
-		name:   "test",
-		store:  mockStore,
+	listOpts := &atlasMetricsDatabasesListsOpts{
+		host:  "hard-00-00.mongodb.net",
+		port:  27017,
+		store: mockStore,
 	}
 
-	opts := listOpts.newProcessMeasurementListOptions()
+	opts := listOpts.newListOptions()
 	mockStore.
-		EXPECT().HostDiskMeasurements(listOpts.projectID, listOpts.hostID, listOpts.name, opts).
+		EXPECT().ProcessDatabases(listOpts.projectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

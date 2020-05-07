@@ -15,63 +15,66 @@
 package cli
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type atlasMeasurementsDisksListsOpts struct {
+type opsManagerAutomationWatchOpts struct {
 	globalOpts
-	listOpts
-	host  string
-	port  int
-	store store.ProcessDisksLister
+	store store.AutomationStatusGetter
 }
 
-func (opts *atlasMeasurementsDisksListsOpts) initStore() error {
+func (opts *opsManagerAutomationWatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasMeasurementsDisksListsOpts) Run() error {
-	listOpts := opts.newListOptions()
-	result, err := opts.store.ProcessDisks(opts.ProjectID(), opts.host, opts.port, listOpts)
+func (opts *opsManagerAutomationWatchOpts) Run() error {
 
-	if err != nil {
-		return err
+	for {
+		result, err := opts.store.GetAutomationStatus(opts.ProjectID())
+		if err != nil {
+			return err
+		}
+		reachedGoal := true
+		for _, p := range result.Processes {
+			if p.LastGoalVersionAchieved != result.GoalVersion {
+				reachedGoal = false
+				break
+			}
+		}
+		if reachedGoal {
+			break
+		}
+		fmt.Print(".")
+		time.Sleep(4 * time.Second)
 	}
-
-	return json.PrettyPrint(result)
+	fmt.Printf("\nChanges deployed successfully\n")
+	return nil
 }
 
-// mongocli atlas measurements process(es) disks lists [host:port]
-func AtlasMeasurementsDisksListBuilder() *cobra.Command {
-	opts := &atlasMeasurementsDisksListsOpts{}
+// mongocli ops-manager automation watch [--projectId projectId]
+func OpsManagerAutomationWatchBuilder() *cobra.Command {
+	opts := &opsManagerAutomationWatchOpts{}
 	cmd := &cobra.Command{
-		Use:     "list [host:port]",
-		Short:   description.ListDisks,
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(1),
+		Use:   "watch",
+		Short: description.WatchAutomationStatus,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var err error
-			opts.host, opts.port, err = getHostNameAndPort(args[0])
-			if err != nil {
-				return err
-			}
-
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
 
 	return cmd

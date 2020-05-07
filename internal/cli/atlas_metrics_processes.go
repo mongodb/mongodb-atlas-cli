@@ -23,23 +23,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opsManagerMeasurementsDisksDescribeOpts struct {
+type atlasMetricsProcessOpts struct {
 	globalOpts
-	measurementsOpts
-	hostID string
-	name   string
-	store  store.HostDiskMeasurementsLister
+	metricsOpts
+	host  string
+	port  int
+	store store.ProcessMeasurementLister
 }
 
-func (opts *opsManagerMeasurementsDisksDescribeOpts) initStore() error {
+func (opts *atlasMetricsProcessOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *opsManagerMeasurementsDisksDescribeOpts) Run() error {
-	listOpts := opts.newProcessMeasurementListOptions()
-	result, err := opts.store.HostDiskMeasurements(opts.ProjectID(), opts.hostID, opts.name, listOpts)
+func (opts *atlasMetricsProcessOpts) Run() error {
+	listOpts := opts.newProcessMetricsListOptions()
+	result, err := opts.store.ProcessMeasurements(opts.ProjectID(), opts.host, opts.port, listOpts)
 
 	if err != nil {
 		return err
@@ -48,24 +48,27 @@ func (opts *opsManagerMeasurementsDisksDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mcli om measurements disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
-func OpsManagerMeasurementsDisksDescribeBuilder() *cobra.Command {
-	opts := &opsManagerMeasurementsDisksDescribeOpts{}
+// mongocli atlas metric(s) process(es) host:port [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
+func AtlasMetricsProcessBuilder() *cobra.Command {
+	opts := &atlasMetricsProcessOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [hostId] [name]",
-		Short: description.DescribeDisks,
-		Args:  cobra.ExactArgs(2),
+		Use:     "processes [host:port]",
+		Short:   description.ProcessMeasurements,
+		Aliases: []string{"process"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
-			opts.name = args[1]
+			var err error
+			opts.host, opts.port, err = getHostNameAndPort(args[0])
+			if err != nil {
+				return err
+			}
 
 			return opts.Run()
 		},
 	}
-
 	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
 

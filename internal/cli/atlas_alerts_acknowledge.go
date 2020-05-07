@@ -66,7 +66,7 @@ func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.Acknowled
 
 }
 
-// mongocli atlas alerts acknowledge alertID --projectId projectId --forever forever
+// mongocli atlas alerts acknowledge alertID --projectId projectId --forever
 func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 	opts := new(atlasAlertsAcknowledgeOpts)
 	cmd := &cobra.Command{

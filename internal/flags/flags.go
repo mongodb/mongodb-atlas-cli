@@ -27,6 +27,8 @@ const (
 	Members                         = "members"                         // Members flag
 	MembersShort                    = "m"                               // MembersShort flag
 	InstanceSize                    = "instanceSize"                    // InstanceSize flag
+	Forever                         = "forever"                         // Forever flag
+	ForeverShort                    = "F"                               // ForeverShort flag
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag

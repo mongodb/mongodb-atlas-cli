@@ -26,6 +26,7 @@ const (
 	AuthDB                          = "Authentication database name."
 	Granularity                     = "Duration in ISO 8601 notation that specifies the interval between measurement data points."
 	Page                            = "Page number."
+	Forever                         = "Acknowledge an alert “forever”."
 	Status                          = "Alert's status."
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."

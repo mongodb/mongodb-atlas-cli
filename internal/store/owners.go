@@ -27,12 +27,12 @@ type OwnerCreator interface {
 }
 
 // CreateOwner encapsulate the logic to manage different cloud providers
-func (s *Store) CreateOwner(u *opsmngr.User, IPs []string) (*opsmngr.CreateUserResponse, error) {
+func (s *Store) CreateOwner(u *opsmngr.User, ips []string) (*opsmngr.CreateUserResponse, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		var opts *opsmngr.WhitelistOpts
-		if len(IPs) > 0 {
-			opts = &opsmngr.WhitelistOpts{Whitelist: IPs}
+		if len(ips) > 0 {
+			opts = &opsmngr.WhitelistOpts{Whitelist: ips}
 		}
 
 		result, _, err := s.client.(*opsmngr.Client).UnauthUsers.CreateFirstUser(context.Background(), u, opts)

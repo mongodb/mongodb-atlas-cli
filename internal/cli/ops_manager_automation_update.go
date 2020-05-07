@@ -47,7 +47,7 @@ func (opts *opsManagerAutomationUpdateOpts) Run() error {
 		return err
 	}
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), newConfig); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), newConfig); err != nil {
 		return err
 	}
 

@@ -47,7 +47,6 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
-
 	})
 
 	t.Run("No ProjectID is given", func(t *testing.T) {
@@ -68,5 +67,4 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-
 }

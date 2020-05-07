@@ -31,8 +31,7 @@ func TestAtlasAlertsConfigsDelete_Run(t *testing.T) {
 		store: mockStore,
 	}
 	deleteOpts.confirm = true
-	deleteOpts.entry = "test"
-	deleteOpts.successMessage = "Alert config '%s' deleted\n"
+	deleteOpts.entry = "testAlert"
 
 	mockStore.
 		EXPECT().

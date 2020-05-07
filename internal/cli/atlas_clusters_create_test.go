@@ -84,7 +84,7 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
   "backupEnabled": false,
   "providerBackupEnabled" : false
 }`
-		fileName := "test.json"
+		fileName := "atlas_cluster_create_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
 		createOpts := &atlasClustersCreateOpts{

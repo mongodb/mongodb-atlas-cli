@@ -30,7 +30,7 @@ func TestFromAutomationConfig(t *testing.T) {
 		{
 			Name:     name,
 			MongoURI: "mongodb://host0:27017",
-			ProcessConfigs: []ProcessConfig{
+			ProcessConfigs: []*ProcessConfig{
 				{
 					ArbiterOnly:  false,
 					BuildIndexes: &buildIndexes,

@@ -28,13 +28,13 @@ import (
 
 type atlasClustersUpdateOpts struct {
 	globalOpts
-	name         string
-	instanceSize string
-	diskSizeGB   float64
-	mdbVersion   string
-	filename     string
-	fs           afero.Fs
-	store        store.ClusterStore
+	name        string
+	clusterTier string
+	diskSizeGB  float64
+	mdbVersion  string
+	filename    string
+	fs          afero.Fs
+	store       store.ClusterStore
 }
 
 func (opts *atlasClustersUpdateOpts) initStore() error {
@@ -94,12 +94,12 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
-	if opts.instanceSize != "" {
-		out.ProviderSettings.InstanceSizeName = opts.instanceSize
+	if opts.clusterTier != "" {
+		out.ProviderSettings.InstanceSizeName = opts.clusterTier
 	}
 }
 
-// mongocli atlas cluster(s) update name --projectId projectId [--instanceSize M#] [--diskSizeGB N] [--mdbVersion]
+// mongocli atlas cluster(s) update name --projectId projectId [--clusterTier M#] [--diskSizeGB N] [--mdbVersion]
 func AtlasClustersUpdateBuilder() *cobra.Command {
 	opts := &atlasClustersUpdateOpts{
 		fs: afero.NewOsFs(),
@@ -107,7 +107,7 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [name]",
 		Short:   description.UpdateCluster,
-		Example: `  mongocli atlas cluster update myCluster --projectId=1 --instanceSize M2 --mdbVersion 4.2 --diskSizeGB 2`,
+		Example: `  mongocli atlas cluster update myCluster --projectId=1 --clusterTier M2 --mdbVersion 4.2 --diskSizeGB 2`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
@@ -120,7 +120,7 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, "", usage.InstanceSize)
+	cmd.Flags().StringVar(&opts.clusterTier, flags.ClusterTier, "", usage.ClusterTier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", usage.Filename)

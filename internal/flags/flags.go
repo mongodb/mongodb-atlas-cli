@@ -26,7 +26,7 @@ const (
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
 	MembersShort                    = "m"                               // MembersShort flag
-	InstanceSize                    = "instanceSize"                    // InstanceSize flag
+	ClusterTier                     = "clusterTier"                     // ClusterTier flag
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag

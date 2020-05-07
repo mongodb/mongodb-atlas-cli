@@ -32,14 +32,14 @@ func TestAtlasClustersCreate_Run(t *testing.T) {
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &atlasClustersCreateOpts{
-			name:         "ProjectBar",
-			region:       "US",
-			instanceSize: atlasM2,
-			members:      3,
-			diskSizeGB:   10,
-			backup:       false,
-			mdbVersion:   currentMDBVersion,
-			store:        mockStore,
+			name:        "ProjectBar",
+			region:      "US",
+			clusterTier: atlasM2,
+			members:     3,
+			diskSizeGB:  10,
+			backup:      false,
+			mdbVersion:  currentMDBVersion,
+			store:       mockStore,
 		}
 
 		cluster, _ := createOpts.newCluster()

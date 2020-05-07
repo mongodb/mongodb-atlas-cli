@@ -35,11 +35,11 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 	t.Run("flags run", func(t *testing.T) {
 
 		updateOpts := &atlasClustersUpdateOpts{
-			name:        "ProjectBar",
-			clusterTier: atlasM2,
-			diskSizeGB:  10,
-			mdbVersion:  currentMDBVersion,
-			store:       mockStore,
+			name:       "ProjectBar",
+			tier:       atlasM2,
+			diskSizeGB: 10,
+			mdbVersion: currentMDBVersion,
+			store:      mockStore,
 		}
 
 		mockStore.

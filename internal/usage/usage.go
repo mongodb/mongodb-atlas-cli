@@ -19,7 +19,7 @@ const (
 	OrgID                           = "Organization ID to use. Overrides configuration file or environment variable settings."
 	Profile                         = "Profile to use from your configuration file."
 	Members                         = "Number of members in the replica set."
-	ClusterTier                     = "Tier for each data-bearing server in the cluster."
+	Tier                            = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
 	Backup                          = "If true, uses Atlas Continuous Backups to back up cluster data."
 	MDBVersion                      = "MongoDB version of the cluster to deploy."

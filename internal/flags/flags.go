@@ -26,7 +26,7 @@ const (
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
 	MembersShort                    = "m"                               // MembersShort flag
-	InstanceSize                    = "instanceSize"                    // InstanceSize flag
+	Tier                            = "tier"                            // Tier flag
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag
@@ -115,7 +115,7 @@ const (
 	Normalization                   = "normalization"                   // Normalization flag
 	Backwards                       = "backwards"                       // Backwards flag
 	Strength                        = "strength"                        // Strength flag
-	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       //SizeRequestedPerFileBytes flag
+	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       // SizeRequestedPerFileBytes flag
 	Redacted                        = "redacted"                        // Redacted flag
 	Verbose                         = "verbose"                         // Verbose flag
 )

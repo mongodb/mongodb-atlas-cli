@@ -53,13 +53,11 @@ func (opts *opsManagerClustersApplyOpts) Run() error {
 		return err
 	}
 
-	err = newConfig.PatchAutomationConfig(current)
-
-	if err != nil {
+	if err := newConfig.PatchAutomationConfig(current); err != nil {
 		return err
 	}
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

@@ -4,7 +4,7 @@ SOURCE_FILES?=./...
 BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
-GOLANGCI_VERSION=v1.24.0
+GOLANGCI_VERSION=v1.26.0
 COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)
@@ -38,7 +38,7 @@ test: ## Run tests
 .PHONY: lint
 lint: ## Run linter
 	@echo "==> Linting all packages..."
-	golangci-lint run $(SOURCE_FILES) -E goimports -E golint -E misspell -E unconvert -E maligned --skip-dirs ^internal/mocks/
+	golangci-lint run $(SOURCE_FILES)
 
 .PHONY: check
 check: test lint ## Run tests and linters

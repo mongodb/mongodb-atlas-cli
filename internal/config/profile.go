@@ -62,13 +62,13 @@ func New() *Profile {
 		log.Fatal(err)
 	}
 
-	p := new(Profile)
+	np := new(Profile)
 	name := "default"
-	p.name = &name
-	p.configDir = configDir
-	p.fs = afero.NewOsFs()
+	np.name = &name
+	np.configDir = configDir
+	np.fs = afero.NewOsFs()
 
-	return p
+	return np
 }
 
 func Name() string { return p.Name() }

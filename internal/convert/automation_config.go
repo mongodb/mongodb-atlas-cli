@@ -34,13 +34,13 @@ func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
 
 	for i, rs := range in.ReplicaSets {
 		out[i].Name = rs.ID
-		out[i].ProcessConfigs = make([]ProcessConfig, len(rs.Members))
+		out[i].ProcessConfigs = make([]*ProcessConfig, len(rs.Members))
 
 		for j, m := range rs.Members {
-			convertCloudMember(&out[i].ProcessConfigs[j], m)
+			out[i].ProcessConfigs[j] = convertCloudMember(m)
 			for k, p := range in.Processes {
 				if p.Name == m.Host {
-					convertCloudProcess(&out[i].ProcessConfigs[j], p)
+					convertCloudProcess(out[i].ProcessConfigs[j], p)
 					if out[i].MongoURI == "" {
 						out[i].MongoURI = fmt.Sprintf("mongodb://%s:%d", p.Hostname, p.Args26.NET.Port)
 					} else {
@@ -56,23 +56,24 @@ func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
 	return
 }
 
+const keyLength = 500
+
 func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
 	out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, m...)
 	out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, m...)
 	out.Auth.Disabled = false
 
-	var err error
 	if out.Auth.AutoUser == "" {
 		if err := setAutoUser(out); err != nil {
 			return err
 		}
-
 	}
 	addMonitoringUser(out)
 	addBackupUser(out)
 
+	var err error
 	if out.Auth.Key == "" {
-		if out.Auth.Key, err = generateRandomBase64String(500); err != nil {
+		if out.Auth.Key, err = generateRandomBase64String(keyLength); err != nil {
 			return err
 		}
 	}
@@ -115,11 +116,13 @@ func setAutoUser(out *opsmngr.AutomationConfig) error {
 }
 
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
-func convertCloudMember(out *ProcessConfig, in opsmngr.Member) {
-	out.Votes = in.Votes
-	out.Priority = in.Priority
-	out.SlaveDelay = in.SlaveDelay
-	out.BuildIndexes = &in.BuildIndexes
+func convertCloudMember(in opsmngr.Member) *ProcessConfig {
+	return &ProcessConfig{
+		BuildIndexes: &in.BuildIndexes,
+		Priority:     in.Priority,
+		SlaveDelay:   in.SlaveDelay,
+		Votes:        in.Votes,
+	}
 }
 
 // convertCloudProcess map cloudmanager.Process -> convert.ProcessConfig

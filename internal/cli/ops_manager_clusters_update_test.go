@@ -36,7 +36,7 @@ func TestCloudManagerClustersUpdate_Run(t *testing.T) {
 ---
 name: "myReplicaSet"
 version: 4.2.2
-featureCompatibilityVersion: 4.2
+featureCompatibilityVersion: 4.0
 processes:
   - hostname: host0
     dbPath: /data/myReplicaSet/rs1
@@ -56,7 +56,7 @@ processes:
     priority: 1
     votes: 1
     port: 29030`
-	fileName := "test.yml"
+	fileName := "test_om_update.yml"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 	createOpts := &opsManagerClustersUpdateOpts{
 		store:    mockStore,

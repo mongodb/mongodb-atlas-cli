@@ -20,20 +20,22 @@ import (
 	"math/big"
 )
 
+const asciiMax = 127
+
 func generateRandomASCIIString(length int) (string, error) {
 	result := ""
 	for {
 		if len(result) >= length {
 			return result, nil
 		}
-		num, err := rand.Int(rand.Reader, big.NewInt(int64(127)))
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(asciiMax)))
 		if err != nil {
 			return "", err
 		}
 		n := num.Int64()
 		// Make sure that the number/byte/letter is inside
 		// the range of printable ASCII characters (excluding space and DEL)
-		if n > 64 && n < 127 {
+		if n > 64 && n < asciiMax {
 			result += string(n)
 		}
 	}

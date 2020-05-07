@@ -178,7 +178,6 @@ type atlasAlertsConfigOpts struct {
 }
 
 func (opts *atlasAlertsConfigOpts) newAlertConfiguration(projectID string) *atlas.AlertConfiguration {
-
 	out := new(atlas.AlertConfiguration)
 
 	out.GroupID = projectID
@@ -199,7 +198,6 @@ func (opts *atlasAlertsConfigOpts) newAlertConfiguration(projectID string) *atla
 }
 
 func (opts *atlasAlertsConfigOpts) newNotification() *atlas.Notification {
-
 	out := new(atlas.Notification)
 	out.TypeName = strings.ToUpper(opts.notificationType)
 	out.DelayMin = &opts.notificationDelayMin
@@ -209,7 +207,6 @@ func (opts *atlasAlertsConfigOpts) newNotification() *atlas.Notification {
 	out.ChannelName = opts.notificationChannelName
 
 	switch out.TypeName {
-
 	case victor:
 		out.VictorOpsAPIKey = opts.apiKey
 		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
@@ -244,7 +241,6 @@ func (opts *atlasAlertsConfigOpts) newNotification() *atlas.Notification {
 
 	case pager:
 		out.ServiceKey = opts.notificationServiceKey
-
 	}
 
 	return out
@@ -280,14 +276,14 @@ func (opts *listOpts) newListOptions() *atlas.ListOptions {
 	}
 }
 
-// getHostNameAndPort return the hostname and the port starting from the string hostname:port
-func getHostNameAndPort(hostInfo string) (string, int, error) {
-	host := strings.SplitN(hostInfo, ":", -1)
+// getHostnameAndPort return the hostname and the port starting from the string hostname:port
+func getHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
+	host := strings.Split(hostInfo, ":")
 	if len(host) != 2 {
 		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
 	}
 
-	port, err := strconv.Atoi(host[1])
+	port, err = strconv.Atoi(host[1])
 	if err != nil {
 		return "", 0, fmt.Errorf("invalid port number, got %s", host[1])
 	}

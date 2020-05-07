@@ -56,7 +56,7 @@ func (opts *opsManagerDBUsersCreateOpts) Run() error {
 
 	atmcfg.AddUser(current, opts.newDBUser())
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

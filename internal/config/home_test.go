@@ -29,7 +29,7 @@ func TestConfig_configHome(t *testing.T) {
 		if err != nil {
 			t.Fatalf("configHome() unexpected error: %v", err)
 		}
-		if home != "my_config" {
+		if home != xdgHome {
 			t.Errorf("configHome() = %s; want '%s'", home, xdgHome)
 		}
 		_ = os.Unsetenv("XDG_CONFIG_HOME")

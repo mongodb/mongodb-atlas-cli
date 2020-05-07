@@ -60,5 +60,4 @@ func TestAtlasAlertsConfigCreate_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
 }

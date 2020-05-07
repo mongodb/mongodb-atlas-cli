@@ -50,7 +50,6 @@ func (opts *opsManagerClustersDescribeOpts) Run() error {
 		if rs.Name == opts.name {
 			return json.PrettyPrint(rs)
 		}
-
 	}
 	return fmt.Errorf("replicaset %s not found", opts.name)
 }

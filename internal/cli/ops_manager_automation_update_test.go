@@ -38,7 +38,7 @@ func TestCloudManagerAutomationUpdate_Run(t *testing.T) {
 {
 "version": 1
 }`
-	fileName := "test.json"
+	fileName := "om_automation_test.json"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileJSON), 0600)
 	createOpts := &opsManagerAutomationUpdateOpts{
 		store:    mockStore,

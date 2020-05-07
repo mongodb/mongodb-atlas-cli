@@ -37,7 +37,6 @@ func (opts *opsManagerAutomationWatchOpts) initStore() error {
 }
 
 func (opts *opsManagerAutomationWatchOpts) Run() error {
-
 	for {
 		result, err := opts.store.GetAutomationStatus(opts.ProjectID())
 		if err != nil {

@@ -19,14 +19,14 @@ functions:
     - command: git.get_project
       type: setup
       params:
-        directory: src/mongocli
+        directory: src/github.com/mongodb/mongocli
   "build":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - *go_bin
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         env:
           WORKDIR: ${workdir}
           <<: *go_options
@@ -39,8 +39,8 @@ functions:
         script: |
           set -ex
           export GOROOT="/opt/golang/go1.14"
-          mkdir go-licenses
-          cd go-licenses
+          mkdir -p github.com/google/go-licenses
+          cd github.com/google/go-licenses
           export GOPATH=${working_dir}/go-licenses
           export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
 
@@ -50,7 +50,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         script: |
           set -ex
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
@@ -61,7 +61,7 @@ functions:
         add_to_path:
           - *go_bin
           - ./bin
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
         command: make package
@@ -72,7 +72,7 @@ functions:
         add_to_path:
           - *go_bin
           - ./bin
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         env:
           GITHUB_TOKEN: ${github_token}
           <<: *go_options
@@ -80,7 +80,7 @@ functions:
   "gen_repo_data":
     - command: shell.exec
       params:
-        working_dir: src/mongocli/dist
+        working_dir: src/github.com/mongodb/mongocli/dist
         script: |
           set -o xtrace
           set -o errexit
@@ -97,7 +97,7 @@ functions:
   "gen_download_archive":
     - command: shell.exec
       params:
-        working_dir: src/mongocli/dist
+        working_dir: src/github.com/mongodb/mongocli/dist
         script: |
           set -o xtrace
           set -o errexit
@@ -109,7 +109,7 @@ functions:
   "set up notary client credentials":
     - command: shell.exec
       params:
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         silent: true
         script: |
           set -o errexit
@@ -126,7 +126,7 @@ functions:
   "push":
     - command: shell.exec
       params:
-        working_dir: src/mongocli
+        working_dir: src/github.com/mongodb/mongocli
         script: |
           . ./notary_env.sh
 
@@ -170,14 +170,14 @@ tasks:
       - func: "gen_download_archive"
       - command: archive.targz_pack
         params:
-          target: src/mongocli/dist/deb.tgz
-          source_dir: src/mongocli/dist/apt
+          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/mongocli/dist/rpm.tgz
-          source_dir: src/mongocli/dist/yum
+          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
       - command: s3.put
@@ -185,12 +185,12 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - src/mongocli/dist/*.tar.gz
-            - src/mongocli/dist/*.zip
-            - src/mongocli/dist/*.deb
-            - src/mongocli/dist/*.rpm
-            - src/mongocli/dist/*.tgz
-            - src/mongocli/dist/*.json
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -211,12 +211,12 @@ tasks:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
-            - src/mongocli/dist/*.tar.gz
-            - src/mongocli/dist/*.zip
-            - src/mongocli/dist/*.deb
-            - src/mongocli/dist/*.rpm
-            - src/mongocli/dist/*.tgz
-            - src/mongocli/dist/*.json
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: downloads.mongodb.org
           permissions: public-read

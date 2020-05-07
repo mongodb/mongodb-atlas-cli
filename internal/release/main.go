@@ -57,7 +57,7 @@ func newPlatform(version, arch, system, distro, format string) *Platform { //nol
 		Title: "MongoDB CLI",
 		Links: []Link{
 			{
-				DownloadLink: fmt.Sprintf("https://downloads.mongodb.com/mongocli/mongocli_%s_%s_%s.%s", version, system, arch, format),
+				DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongocli_%s_%s_%s.%s", version, system, arch, format),
 				Name:         format,
 			},
 		},

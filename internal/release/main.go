@@ -48,7 +48,7 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func newPlatform(version, arch, os, distro, format string) *Platform {
+func newPlatform(version, arch, system, distro, format string) *Platform { //nolint:unparam // Arch is x86_64 for now
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
@@ -57,7 +57,7 @@ func newPlatform(version, arch, os, distro, format string) *Platform {
 		Title: "MongoDB CLI",
 		Links: []Link{
 			{
-				DownloadLink: fmt.Sprintf("https://downloads.mongodb.com/on-prem-mms/mcli/mongocli_%s_%s_%s.%s", version, os, arch, format),
+				DownloadLink: fmt.Sprintf("https://downloads.mongodb.com/on-prem-mms/mcli/mongocli_%s_%s_%s.%s", version, system, arch, format),
 				Name:         format,
 			},
 		},
@@ -69,12 +69,21 @@ func main() {
 	version := os.Args[1]
 	feedFilename := fmt.Sprintf("mongocli_%s.json", version)
 	fmt.Printf("Generating JSON: %s\n", feedFilename)
-	feedFile, err := os.Create(feedFilename)
+	err := generateFile(feedFilename, version)
+
 	if err != nil {
-		fmt.Println("error creating file")
+		fmt.Printf("error encoding file: %v\n", err)
+
 		os.Exit(1)
 	}
+	fmt.Printf("File %s has been generated\n", feedFilename)
+}
 
+func generateFile(name, version string) error {
+	feedFile, err := os.Create(name)
+	if err != nil {
+		return err
+	}
 	downloadArchive := &DownloadArchive{
 		ReleaseDate:          time.Now().UTC(),
 		ManualLink:           fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/", version),
@@ -89,16 +98,8 @@ func main() {
 			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", "tar.gz"),
 		},
 	}
-
 	defer feedFile.Close()
-
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
-	err = jsonEncoder.Encode(downloadArchive)
-
-	if err != nil {
-		fmt.Println("error encoding file")
-		os.Exit(1)
-	}
-	fmt.Printf("File %s has been generated\n", feedFilename)
+	return jsonEncoder.Encode(downloadArchive)
 }

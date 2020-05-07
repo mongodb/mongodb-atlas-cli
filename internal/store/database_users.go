@@ -90,7 +90,7 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 	}
 }
 
-func (s *Store) DatabaseUser(authDB string, groupID string, username string) (*atlas.DatabaseUser, error) {
+func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, username)

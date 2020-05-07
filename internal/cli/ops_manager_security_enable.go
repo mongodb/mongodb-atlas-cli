@@ -51,10 +51,10 @@ func (opts *opsManagerSecurityEnableOpts) Run() error {
 		return err
 	}
 
-	if err = convert.EnableMechanism(current, opts.mechanisms); err != nil {
+	if err := convert.EnableMechanism(current, opts.mechanisms); err != nil {
 		return err
 	}
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

@@ -57,7 +57,7 @@ func (opts *opsManagerClustersStartupOpts) Run() error {
 
 	atmcfg.Startup(current, opts.name)
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

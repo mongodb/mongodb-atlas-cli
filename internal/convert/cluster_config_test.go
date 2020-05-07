@@ -34,7 +34,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				FCVersion: "4.2",
 				Name:      "test_config",
 				Version:   "4.2.2",
-				ProcessConfigs: []ProcessConfig{
+				ProcessConfigs: []*ProcessConfig{
 					{
 						DBPath:   "/data",
 						Hostname: "example",
@@ -104,7 +104,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				FCVersion: "4.2",
 				Name:      "test_config",
 				Version:   "4.2.2",
-				ProcessConfigs: []ProcessConfig{
+				ProcessConfigs: []*ProcessConfig{
 					{
 						DBPath:   "/data",
 						Hostname: "example",
@@ -219,7 +219,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				FCVersion: "4.2",
 				Name:      "replica_set_1",
 				Version:   "4.2.2",
-				ProcessConfigs: []ProcessConfig{
+				ProcessConfigs: []*ProcessConfig{
 					{
 						DBPath:   "/data/db/",
 						Hostname: "host0",
@@ -335,7 +335,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				FCVersion: "4.2",
 				Name:      "replica_set_1",
 				Version:   "4.2.2",
-				ProcessConfigs: []ProcessConfig{
+				ProcessConfigs: []*ProcessConfig{
 					{
 						DBPath:   "/data/db/",
 						Hostname: "host1",
@@ -430,12 +430,15 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 	}
 
 	for name, tc := range testCases {
+		changes := tc.changes
+		current := tc.current
+		expected := tc.expected
 		t.Run(name, func(t *testing.T) {
-			err := tc.changes.PatchAutomationConfig(tc.current)
+			err := changes.PatchAutomationConfig(current)
 			if err != nil {
 				t.Fatalf("PatchAutomationConfig() unexpected error: %v\n", err)
 			}
-			if diff := deep.Equal(tc.current, tc.expected); diff != nil {
+			if diff := deep.Equal(current, expected); diff != nil {
 				t.Error(diff)
 			}
 		})
@@ -457,13 +460,15 @@ func TestProtocolVersion(t *testing.T) {
 		},
 	}
 	for name, tc := range testCases {
+		m := tc.mdbVersion
+		expected := tc.protocolVersion
 		t.Run(name, func(t *testing.T) {
-			ver, err := protocolVer(tc.mdbVersion)
+			ver, err := protocolVer(m)
 			if err != nil {
 				t.Fatalf("protocolVer() unexpected error: %v\n", err)
 			}
-			if ver != tc.protocolVersion {
-				t.Errorf("protocolVer() expected: %s but got: %s", tc.protocolVersion, ver)
+			if ver != expected {
+				t.Errorf("protocolVer() expected: %s but got: %s", expected, ver)
 			}
 		})
 	}

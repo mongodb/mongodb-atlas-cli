@@ -31,7 +31,7 @@ const (
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."
 	Username                        = "Username for authenticating to MongoDB."
-	Password                        = "User’s password."
+	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
 	Comment                         = "Optional description or comment for the entry."
@@ -62,7 +62,7 @@ const (
 	MetricThreshold                 = "Threshold value outside of which an alert will be triggered."
 	MetricUnits                     = "The units for the threshold value."
 	MetricMode                      = "Atlas computes the current metric value as an average."
-	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token."
+	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
 	APIKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key."
 	NotificationRegion              = "Region that indicates which API URL to use."

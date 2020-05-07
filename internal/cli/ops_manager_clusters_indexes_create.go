@@ -77,7 +77,7 @@ func (opts *opsManagerClustersIndexesCreateOpts) Run() error {
 		return err
 	}
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

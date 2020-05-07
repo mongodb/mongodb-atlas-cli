@@ -64,10 +64,10 @@ func (s *Store) CreateOrganization(name string) (interface{}, error) {
 }
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteOrganization(ID string) error {
+func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.Delete(context.Background(), ID)
+		_, err := s.client.(*opsmngr.Client).Organizations.Delete(context.Background(), id)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

@@ -56,7 +56,7 @@ processes:
     priority: 1
     votes: 1
     port: 29030`
-	fileName := "test.yml"
+	fileName := "test_om_apply.yml"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 	createOpts := &opsManagerClustersApplyOpts{
 		store:    mockStore,

@@ -21,6 +21,8 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
+const oneMinute = "PT1M"
+
 func TestAtlasMetricsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessMeasurementLister(ctrl)
@@ -34,8 +36,8 @@ func TestAtlasMetricsProcess_Run(t *testing.T) {
 		port:  27017,
 		store: mockStore,
 	}
-	listOpts.granularity = "PT1M"
-	listOpts.period = "PT1M"
+	listOpts.granularity = oneMinute
+	listOpts.period = oneMinute
 
 	opts := listOpts.newProcessMetricsListOptions()
 	mockStore.

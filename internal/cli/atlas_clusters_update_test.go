@@ -33,7 +33,6 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 	}
 
 	t.Run("flags run", func(t *testing.T) {
-
 		updateOpts := &atlasClustersUpdateOpts{
 			name:       "ProjectBar",
 			tier:       atlasM2,
@@ -90,7 +89,7 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
   "backupEnabled": false,
   "providerBackupEnabled" : false
 }`
-		fileName := "test.json"
+		fileName := "atlas_cluster_update_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
 		updateOpts := &atlasClustersUpdateOpts{

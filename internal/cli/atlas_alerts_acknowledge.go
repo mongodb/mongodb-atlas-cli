@@ -42,7 +42,6 @@ func (opts *atlasAlertsAcknowledgeOpts) initStore() error {
 }
 
 func (opts *atlasAlertsAcknowledgeOpts) Run() error {
-
 	body := opts.newAcknowledgeRequest()
 	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
 
@@ -63,7 +62,6 @@ func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.Acknowled
 		AcknowledgedUntil:      opts.until,
 		AcknowledgementComment: opts.comment,
 	}
-
 }
 
 // mongocli atlas alerts acknowledge alertID --projectId projectId --forever

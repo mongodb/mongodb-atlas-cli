@@ -39,10 +39,10 @@ functions:
         script: |
           set -ex
           export GOROOT="/opt/golang/go1.14"
+          export GOPATH=$(pwd)
+          export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
           mkdir -p github.com/google/go-licenses
           cd github.com/google/go-licenses
-          export GOPATH=${working_dir}/go-licenses
-          export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
 
           go get github.com/google/go-licenses
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices

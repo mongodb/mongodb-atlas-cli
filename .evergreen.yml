@@ -528,4 +528,5 @@ buildvariants:
     tasks:
       - name: compile
       - name: package
+      - name: release
       - name: .push

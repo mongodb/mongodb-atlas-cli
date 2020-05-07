@@ -26,7 +26,7 @@ functions:
       params:
         add_to_path:
           - *go_bin
-        working_dir: mongocli
+        working_dir: src/mongocli
         env:
           WORKDIR: ${workdir}
           <<: *go_options
@@ -170,14 +170,14 @@ tasks:
       - func: "gen_download_archive"
       - command: archive.targz_pack
         params:
-          target: mongocli/dist/deb.tgz
-          source_dir: mongocli/dist/apt
+          target: src/mongocli/dist/deb.tgz
+          source_dir: src/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: mongocli/dist/rpm.tgz
-          source_dir: mongocli/dist/yum
+          target: src/mongocli/dist/rpm.tgz
+          source_dir: src/mongocli/dist/yum
           include:
             - "*.rpm"
       - command: s3.put
@@ -185,12 +185,12 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - mongocli/dist/*.tar.gz
-            - mongocli/dist/*.zip
-            - mongocli/dist/*.deb
-            - mongocli/dist/*.rpm
-            - mongocli/dist/*.tgz
-            - mongocli/dist/*.json
+            - src/mongocli/dist/*.tar.gz
+            - src/mongocli/dist/*.zip
+            - src/mongocli/dist/*.deb
+            - src/mongocli/dist/*.rpm
+            - src/mongocli/dist/*.tgz
+            - src/mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -211,12 +211,12 @@ tasks:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
-            - mongocli/dist/*.tar.gz
-            - mongocli/dist/*.zip
-            - mongocli/dist/*.deb
-            - mongocli/dist/*.rpm
-            - mongocli/dist/*.tgz
-            - mongocli/dist/*.json
+            - src/mongocli/dist/*.tar.gz
+            - src/mongocli/dist/*.zip
+            - src/mongocli/dist/*.deb
+            - src/mongocli/dist/*.rpm
+            - src/mongocli/dist/*.tgz
+            - src/mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: downloads.mongodb.org
           permissions: public-read

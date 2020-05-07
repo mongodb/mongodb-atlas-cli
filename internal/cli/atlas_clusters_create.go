@@ -37,17 +37,17 @@ const (
 
 type atlasClustersCreateOpts struct {
 	globalOpts
-	name         string
-	provider     string
-	region       string
-	instanceSize string
-	members      int64
-	diskSizeGB   float64
-	backup       bool
-	mdbVersion   string
-	filename     string
-	fs           afero.Fs
-	store        store.ClusterCreator
+	name       string
+	provider   string
+	region     string
+	tier       string
+	members    int64
+	diskSizeGB float64
+	backup     bool
+	mdbVersion string
+	filename   string
+	fs         afero.Fs
+	store      store.ClusterCreator
 }
 
 func (opts *atlasClustersCreateOpts) initStore() error {
@@ -106,7 +106,7 @@ func (opts *atlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettin
 	}
 
 	return &atlas.ProviderSettings{
-		InstanceSizeName:    opts.instanceSize,
+		InstanceSizeName:    opts.tier,
 		ProviderName:        providerName,
 		RegionName:          opts.region,
 		BackingProviderName: backingProviderName,
@@ -114,7 +114,7 @@ func (opts *atlasClustersCreateOpts) newProviderSettings() *atlas.ProviderSettin
 }
 
 func (opts *atlasClustersCreateOpts) providerName() string {
-	if opts.instanceSize == atlasM2 || opts.instanceSize == atlasM5 {
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
 	return opts.provider
@@ -141,7 +141,7 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec 
 }
 
 // AtlasClustersCreateBuilder builds a cobra.Command that can run as:
-// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--instanceSize M#] [--diskSizeGB N] [--backup] [--mdbVersion]
+// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		fs: afero.NewOsFs(),
@@ -149,7 +149,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create [name]",
 		Short:   description.CreateCluster,
-		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --instanceSize M10 --mdbVersion 4.2 --diskSizeGB 10`,
+		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10`,
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
@@ -173,7 +173,7 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.provider, flags.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flags.Region, flags.RegionShort, "", usage.Region)
 	cmd.Flags().Int64VarP(&opts.members, flags.Members, flags.MembersShort, 3, usage.Members)
-	cmd.Flags().StringVar(&opts.instanceSize, flags.InstanceSize, atlasM2, usage.InstanceSize)
+	cmd.Flags().StringVar(&opts.tier, flags.Tier, atlasM2, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)

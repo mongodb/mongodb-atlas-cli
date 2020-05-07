@@ -33,8 +33,8 @@ func TestOpsManagerMetricsProcess_Run(t *testing.T) {
 		hostID: "hard-00-00.mongodb.net",
 		store:  mockStore,
 	}
-	listOpts.granularity = "PT1M"
-	listOpts.period = "PT1M"
+	listOpts.granularity = oneMinute
+	listOpts.period = oneMinute
 
 	opts := listOpts.newProcessMetricsListOptions()
 	mockStore.

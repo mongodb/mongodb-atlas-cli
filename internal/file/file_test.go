@@ -42,10 +42,10 @@ func TestLoad(t *testing.T) {
 	})
 	t.Run("file with invalid ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test.xml"
+		filename := "test.test"
 		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
 		err := file.Load(appFS, filename, nil)
-		if err == nil || err.Error() != "unsupported file type: xml" {
+		if err == nil || err.Error() != "unsupported file type: test" {
 			t.Errorf("Load() unexpected error: %v", err)
 		}
 	})

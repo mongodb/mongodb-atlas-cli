@@ -38,7 +38,6 @@ func (opts *atlasAlertsListOpts) initStore() error {
 }
 
 func (opts *atlasAlertsListOpts) Run() error {
-
 	listOpts := opts.newAlertsListOptions()
 	result, err := opts.store.Alerts(opts.ProjectID(), listOpts)
 

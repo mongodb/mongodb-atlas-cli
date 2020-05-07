@@ -118,5 +118,4 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
-
 }

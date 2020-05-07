@@ -57,7 +57,7 @@ func (opts *opsManagerClustersShutdownOpts) Run() error {
 
 	atmcfg.Shutdown(current, opts.name)
 
-	if err = opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
+	if err := opts.store.UpdateAutomationConfig(opts.ProjectID(), current); err != nil {
 		return err
 	}
 

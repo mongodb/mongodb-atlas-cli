@@ -96,7 +96,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) ([]at
 }
 
 // Cluster encapsulate the logic to manage different cloud providers
-func (s *Store) Cluster(projectID string, name string) (*atlas.Cluster, error) {
+func (s *Store) Cluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)

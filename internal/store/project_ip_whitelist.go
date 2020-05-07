@@ -77,7 +77,7 @@ func (s *Store) ProjectIPWhitelists(projectID string, opts *atlas.ListOptions) (
 }
 
 // IPWhitelist encapsulate the logic to manage different cloud providers
-func (s *Store) IPWhitelist(projectID string, name string) (*atlas.ProjectIPWhitelist, error) {
+func (s *Store) IPWhitelist(projectID, name string) (*atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Get(context.Background(), projectID, name)

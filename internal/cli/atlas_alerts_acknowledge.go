@@ -41,7 +41,6 @@ func (opts *atlasAlertsAcknowledgeOpts) initStore() error {
 }
 
 func (opts *atlasAlertsAcknowledgeOpts) Run() error {
-
 	body := opts.newAcknowledgeRequest()
 	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
 
@@ -53,7 +52,6 @@ func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 }
 
 func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
-
 	until := opts.until
 
 	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
@@ -65,7 +63,6 @@ func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.Acknowled
 		AcknowledgedUntil:      until,
 		AcknowledgementComment: opts.comment,
 	}
-
 }
 
 // mongocli atlas alerts acknowledge alertID --projectId projectId

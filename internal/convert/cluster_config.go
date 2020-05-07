@@ -30,11 +30,11 @@ const (
 // ClusterConfig configuration for a cluster
 // This cluster can be used to patch an automation config
 type ClusterConfig struct {
-	FCVersion      string          `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	MongoURI       string          `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
-	Name           string          `yaml:"name" json:"name"`
-	ProcessConfigs []ProcessConfig `yaml:"processes" json:"processes"`
-	Version        string          `yaml:"version,omitempty" json:"version,omitempty"`
+	FCVersion      string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	MongoURI       string           `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
+	Name           string           `yaml:"name" json:"name"`
+	ProcessConfigs []*ProcessConfig `yaml:"processes" json:"processes"`
+	Version        string           `yaml:"version,omitempty" json:"version,omitempty"`
 }
 
 // PatchAutomationConfig add the ClusterConfig to a cloudmanager.AutomationConfig
@@ -91,8 +91,9 @@ func patchProcesses(out *opsmngr.AutomationConfig, newReplicaSetID string, newPr
 			oldProcess.Disabled = true
 			oldProcess.Args26.Replication = new(opsmngr.Replication)
 		}
+		oldName := oldProcess.Name
 		pos, found := search.Processes(newProcesses, func(p *opsmngr.Process) bool {
-			return p.Name == oldProcess.Name
+			return p.Name == oldName
 		})
 		if found {
 			out.Processes[i] = newProcesses[pos]
@@ -118,8 +119,9 @@ func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.Repli
 	oldReplicaSet := out.ReplicaSets[pos]
 	lastID := oldReplicaSet.Members[len(oldReplicaSet.Members)-1].ID
 	for j, newMember := range newReplicaSet.Members {
+		newHost := newMember.Host
 		k, found := search.Members(oldReplicaSet.Members, func(m opsmngr.Member) bool {
-			return m.Host == newMember.Host
+			return m.Host == newHost
 		})
 		if found {
 			newMember.ID = oldReplicaSet.Members[k].ID

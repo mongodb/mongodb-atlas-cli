@@ -31,7 +31,7 @@ functions:
           WORKDIR: ${workdir}
           <<: *go_options
         command: make build
-  "gen_notices":
+  "generate notices":
     - command: shell.exec
       type: setup
       params:
@@ -78,7 +78,7 @@ functions:
           GITHUB_TOKEN: ${github_token}
           <<: *go_options
         command: make release
-  "gen_repo_data":
+  "rename bin for curator":
     - command: shell.exec
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
@@ -95,7 +95,7 @@ functions:
           mv apt/mongocli_next_linux_x86_64.deb apt/mongodb-cli-unstable_$VERSION~latest_amd64.deb
           cp mongocli_next_linux_x86_64.rpm yum/
           mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
-  "gen_download_archive":
+  "generate download archive json":
     - command: shell.exec
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
@@ -164,11 +164,11 @@ tasks:
       - name: compile
     commands:
       - func: "clone"
-      - func: "gen_notices"
+      - func: "generate notices"
       - func: "fetch goreleaser"
       - func: "package"
-      - func: "gen_repo_data"
-      - func: "gen_download_archive"
+      - func: "rename bin for curator"
+      - func: "generate download archive json"
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -203,10 +203,10 @@ tasks:
         - name: compile
     commands:
       - func: "clone"
-      - func: "gen_notices"
+      - func: "generate notices"
       - func: "fetch goreleaser"
       - func: "release"
-      - func: "gen_download_archive"
+      - func: "generate download archive json"
       - command: s3.put
         params:
           aws_key: ${download_center_aws_key}

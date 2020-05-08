@@ -36,7 +36,7 @@ type opsManagerAutomationUpdateOpts struct {
 
 func (opts *opsManagerAutomationUpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

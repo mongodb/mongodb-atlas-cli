@@ -39,16 +39,16 @@ type Store struct {
 }
 
 // New get the appropriate client for the profile/service selected
-func New() (*Store, error) {
+func New(c config.Config) (*Store, error) {
 	s := new(Store)
 	s.service = config.Service()
-	client, err := digest.NewTransport(config.PublicAPIKey(), config.PrivateAPIKey()).Client()
+	client, err := digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
 
 	if err != nil {
 		return nil, err
 	}
 
-	configURL := config.OpsManagerURL()
+	configURL := c.OpsManagerURL()
 	if configURL != "" {
 		apiPath := s.apiPath(configURL)
 		baseURL, err := url.Parse(apiPath)
@@ -70,11 +70,11 @@ func New() (*Store, error) {
 	return s, nil
 }
 
-func NewUnauthenticated() (*Store, error) {
+func NewUnauthenticated(c config.Config) (*Store, error) {
 	s := new(Store)
-	s.service = config.Service()
+	s.service = c.Service()
 
-	configURL := config.OpsManagerURL()
+	configURL := c.OpsManagerURL()
 	if configURL != "" {
 		apiPath := s.apiPath(configURL)
 		baseURL, err := url.Parse(apiPath)

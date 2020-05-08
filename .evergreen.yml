@@ -218,7 +218,7 @@ tasks:
             - src/github.com/mongodb/mongocli/dist/*.rpm
             - src/github.com/mongodb/mongocli/dist/*.tgz
             - src/github.com/mongodb/mongocli/dist/*.json
-          remote_file: ${project}/dist/${build_id}/
+          remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}

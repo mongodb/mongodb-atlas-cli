@@ -55,8 +55,7 @@ func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 	if opts.forever {
-		foreverDate := time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
-		opts.until = foreverDate
+		opts.until = time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
 	}
 	return &atlas.AcknowledgeRequest{
 		AcknowledgedUntil:      &opts.until,

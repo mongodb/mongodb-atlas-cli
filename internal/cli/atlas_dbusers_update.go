@@ -16,6 +16,7 @@ package cli
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -35,7 +36,7 @@ type atlasDBUsersUpdateOpts struct {
 
 func (opts *atlasDBUsersUpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

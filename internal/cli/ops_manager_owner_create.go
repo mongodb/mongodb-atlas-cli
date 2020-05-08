@@ -16,6 +16,7 @@ package cli
 
 import (
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -36,7 +37,7 @@ type opsManagerOwnerCreateOpts struct {
 
 func (opts *opsManagerOwnerCreateOpts) init() error {
 	var err error
-	opts.store, err = store.NewUnauthenticated()
+	opts.store, err = store.NewUnauthenticated(config.Default())
 	return err
 }
 

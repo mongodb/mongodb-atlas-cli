@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -35,7 +36,7 @@ func (opts *iamProjectsCreateOpts) init() error {
 	}
 
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

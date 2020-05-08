@@ -29,7 +29,7 @@ type configSetOpts struct {
 	globalOpts
 	prop  string
 	val   string
-	store config.ProfileSetSaver
+	store config.SetSaver
 }
 
 func (opts *configSetOpts) Run() error {
@@ -52,7 +52,7 @@ func (opts *configSetOpts) Run() error {
 
 func ConfigSetBuilder() *cobra.Command {
 	opts := &configSetOpts{
-		store: config.Config(),
+		store: config.Default(),
 	}
 	cmd := &cobra.Command{
 		Use:   "set [property] [value]",

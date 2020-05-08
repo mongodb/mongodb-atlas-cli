@@ -57,7 +57,7 @@ func (opts *opsManagerClustersIndexesCreateOpts) init() error {
 	}
 
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

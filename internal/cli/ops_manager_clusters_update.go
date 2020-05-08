@@ -38,7 +38,7 @@ type opsManagerClustersUpdateOpts struct {
 
 func (opts *opsManagerClustersUpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

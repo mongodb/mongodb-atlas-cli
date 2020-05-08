@@ -19,37 +19,39 @@ functions:
     - command: git.get_project
       type: setup
       params:
-        directory: mongocli
+        directory: src/github.com/mongodb/mongocli
   "build":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - *go_bin
-        working_dir: mongocli
+        working_dir: src/github.com/mongodb/mongocli
         env:
           WORKDIR: ${workdir}
           <<: *go_options
         command: make build
-  "gen-notices":
+  "generate notices":
     - command: shell.exec
       type: setup
       params:
-        working_dir: mongocli
         script: |
           set -ex
           export GOROOT="/opt/golang/go1.14"
-          mkdir go-licenses
-          export GOPATH=${workdir}/go-licenses
+          export GOPATH=$(pwd)
           export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
+          mkdir -p github.com/google/go-licenses
+          pushd github.com/google/go-licenses
 
-          go get -u github.com/google/go-licenses
+          go get github.com/google/go-licenses
+          popd
+          cd src/github.com/mongodb/mongocli
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
   "fetch goreleaser":
     - command: shell.exec
       type: setup
       params:
-        working_dir: mongocli
+        working_dir: src/github.com/mongodb/mongocli
         script: |
           set -ex
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
@@ -60,14 +62,26 @@ functions:
         add_to_path:
           - *go_bin
           - ./bin
-        working_dir: mongocli
+        working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
         command: make package
-  "gen_repo_data":
+  "release":
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - *go_bin
+          - ./bin
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          GITHUB_TOKEN: ${github_token}
+          <<: *go_options
+        command: make release
+  "rename bin for curator":
     - command: shell.exec
       params:
-        working_dir: mongocli/dist
+        working_dir: src/github.com/mongodb/mongocli/dist
         script: |
           set -o xtrace
           set -o errexit
@@ -81,10 +95,10 @@ functions:
           mv apt/mongocli_next_linux_x86_64.deb apt/mongodb-cli-unstable_$VERSION~latest_amd64.deb
           cp mongocli_next_linux_x86_64.rpm yum/
           mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
-  "gen_download_archive":
+  "generate download archive json":
     - command: shell.exec
       params:
-        working_dir: mongocli/dist
+        working_dir: src/github.com/mongodb/mongocli/dist
         script: |
           set -o xtrace
           set -o errexit
@@ -96,7 +110,7 @@ functions:
   "set up notary client credentials":
     - command: shell.exec
       params:
-        working_dir: mongocli
+        working_dir: src/github.com/mongodb/mongocli
         silent: true
         script: |
           set -o errexit
@@ -113,7 +127,7 @@ functions:
   "push":
     - command: shell.exec
       params:
-        working_dir: mongocli
+        working_dir: src/github.com/mongodb/mongocli
         script: |
           . ./notary_env.sh
 
@@ -150,21 +164,21 @@ tasks:
       - name: compile
     commands:
       - func: "clone"
-      - func: "gen-notices"
+      - func: "generate notices"
       - func: "fetch goreleaser"
       - func: "package"
-      - func: "gen_repo_data"
-      - func: "gen_download_archive"
+      - func: "rename bin for curator"
+      - func: "generate download archive json"
       - command: archive.targz_pack
         params:
-          target: mongocli/dist/deb.tgz
-          source_dir: mongocli/dist/apt
+          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: mongocli/dist/rpm.tgz
-          source_dir: mongocli/dist/yum
+          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
       - command: s3.put
@@ -172,14 +186,40 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - mongocli/dist/*.tar.gz
-            - mongocli/dist/*.zip
-            - mongocli/dist/*.deb
-            - mongocli/dist/*.rpm
-            - mongocli/dist/*.tgz
-            - mongocli/dist/*.json
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
           remote_file: ${project}/dist/${build_id}/
           bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+  - name: release
+    stepback: false
+    patch_only: true
+    depends_on:
+        - name: compile
+    commands:
+      - func: "clone"
+      - func: "generate notices"
+      - func: "fetch goreleaser"
+      - func: "release"
+      - func: "generate download archive json"
+      - command: s3.put
+        params:
+          aws_key: ${download_center_aws_key}
+          aws_secret: ${download_center_aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
+          remote_file: ${project}/dist/${build_id}/
+          bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
   # RPM Distros
@@ -490,4 +530,5 @@ buildvariants:
     tasks:
       - name: compile
       - name: package
+      - name: release
       - name: .push

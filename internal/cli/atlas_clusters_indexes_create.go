@@ -127,5 +127,7 @@ func AtlasClustersIndexesCreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flags.Collection)
 	_ = cmd.MarkFlagRequired(flags.Key)
 
+	_ = cmd.Flags().MarkHidden(flags.Background) // Deprecated
+
 	return cmd
 }

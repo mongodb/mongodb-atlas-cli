@@ -188,5 +188,7 @@ func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flags.CollectionName)
 	_ = cmd.MarkFlagRequired(flags.Key)
 
+	_ = cmd.Flags().MarkHidden(flags.Background) // Deprecated
+
 	return cmd
 }

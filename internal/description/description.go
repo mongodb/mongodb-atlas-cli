@@ -17,6 +17,7 @@ const (
 	Atlas                   = "Atlas operations."
 	Alerts                  = "Manage alerts for your project."
 	AcknowledgeAlerts       = "Acknowledge an alert."
+	UnacknowledgeAlerts     = "Unacknowledge an alert."
 	Config                  = "Manage alerts configuration for your project."
 	ConfigLong              = "The configs command provides access to your alerts configurations. You can create, edit, and delete alert configurations."
 	CreateAlertsConfig      = "Create an alert configuration for a project."

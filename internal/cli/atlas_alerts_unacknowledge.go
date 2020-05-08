@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-	"time"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
@@ -27,24 +24,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type atlasAlertsAcknowledgeOpts struct {
+type atlasAlertsUnacknowledgeOpts struct {
 	globalOpts
 	alertID string
-	until   string
 	comment string
-	forever bool
 	store   store.AlertAcknowledger
 }
 
-func (opts *atlasAlertsAcknowledgeOpts) initStore() error {
+func (opts *atlasAlertsUnacknowledgeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New()
 	return err
 }
 
-func (opts *atlasAlertsAcknowledgeOpts) Run() error {
+func (opts *atlasAlertsUnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
 	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
+
 	if err != nil {
 		return err
 	}
@@ -52,30 +48,22 @@ func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
-	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
-	if opts.forever {
-		opts.until = time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
-	}
-
+func (opts *atlasAlertsUnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 	return &atlas.AcknowledgeRequest{
-		AcknowledgedUntil:      &opts.until,
+		AcknowledgedUntil:      nil,
 		AcknowledgementComment: opts.comment,
 	}
 }
 
-// mongocli atlas alerts acknowledge alertID --projectId projectId --forever --comment comment --until until
-func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
-	opts := new(atlasAlertsAcknowledgeOpts)
+// mongocli atlas alerts unacknowledge alertID --projectId projectId --comment comment
+func AtlasAlertsUnacknowledgeBuilder() *cobra.Command {
+	opts := new(atlasAlertsUnacknowledgeOpts)
 	cmd := &cobra.Command{
-		Use:     "acknowledge [alertId]",
-		Short:   description.AcknowledgeAlerts,
-		Aliases: []string{"ack"},
+		Use:     "unacknowledge [alertId]",
+		Short:   description.UnacknowledgeAlerts,
+		Aliases: []string{"unack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.forever && opts.until != "" {
-				return fmt.Errorf("--%s and --%s are exclusive", flags.Forever, flags.Until)
-			}
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,8 +72,6 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(&opts.forever, flags.Forever, flags.ForeverShort, false, usage.Forever)
-	cmd.Flags().StringVar(&opts.until, flags.Until, "", usage.Until)
 	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)

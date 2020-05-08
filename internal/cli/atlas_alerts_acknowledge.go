@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"errors"
 	"time"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
@@ -42,9 +43,11 @@ func (opts *atlasAlertsAcknowledgeOpts) initStore() error {
 }
 
 func (opts *atlasAlertsAcknowledgeOpts) Run() error {
-	body := opts.newAcknowledgeRequest()
+	body, err := opts.newAcknowledgeRequest()
+	if err != nil {
+		return err
+	}
 	result, err := opts.store.AcknowledgeAlert(opts.ProjectID(), opts.alertID, body)
-
 	if err != nil {
 		return err
 	}
@@ -52,18 +55,24 @@ func (opts *atlasAlertsAcknowledgeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
+func (opts *atlasAlertsAcknowledgeOpts) newAcknowledgeRequest() (*atlas.AcknowledgeRequest, error) {
+	if opts.forever && opts.until != "" {
+		return nil, errors.New("--forever and --until are exclusive")
+	}
+
 	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 	if opts.forever {
 		opts.until = time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
 	}
-	return &atlas.AcknowledgeRequest{
+
+	req := &atlas.AcknowledgeRequest{
 		AcknowledgedUntil:      &opts.until,
 		AcknowledgementComment: opts.comment,
 	}
+	return req, nil
 }
 
-// mongocli atlas alerts acknowledge alertID --projectId projectId --forever --comment comment
+// mongocli atlas alerts acknowledge alertID --projectId projectId --forever --comment comment --until until
 func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 	opts := new(atlasAlertsAcknowledgeOpts)
 	cmd := &cobra.Command{

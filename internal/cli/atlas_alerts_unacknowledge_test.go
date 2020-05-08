@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
+func TestAtlasAlertsUnacknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
 
@@ -30,7 +30,7 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 
 	expected := &mongodbatlas.Alert{}
 
-	acknowledgeOpts := &atlasAlertsAcknowledgeOpts{
+	acknowledgeOpts := &atlasAlertsUnacknowledgeOpts{
 		alertID: "533dc40ae4b00835ff81eaee",
 		comment: "Test",
 		store:   mockStore,

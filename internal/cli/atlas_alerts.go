@@ -30,6 +30,7 @@ func AtlasAlertsBuilder() *cobra.Command {
 	cmd.AddCommand(AtlasAlertsDescribeBuilder())
 	cmd.AddCommand(AtlasAlertsListBuilder())
 	cmd.AddCommand(AtlasAlertsAcknowledgeBuilder())
+	cmd.AddCommand(AtlasAlertsUnacknowledgeBuilder())
 	cmd.AddCommand(OpsManagerGlobalBuilder())
 
 	return cmd

@@ -36,10 +36,7 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 		store:   mockStore,
 	}
 
-	ackReq, err := acknowledgeOpts.newAcknowledgeRequest()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	ackReq := acknowledgeOpts.newAcknowledgeRequest()
 
 	mockStore.
 		EXPECT().
@@ -47,7 +44,7 @@ func TestAtlasAlertsAcknowledge_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err = acknowledgeOpts.Run()
+	err := acknowledgeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

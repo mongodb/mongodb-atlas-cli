@@ -17,6 +17,7 @@ import (
 	"fmt"
 
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flags"
 	"github.com/mongodb/mongocli/internal/json"
@@ -37,7 +38,7 @@ type atlasEventsListOpts struct {
 
 func (opts *atlasEventsListOpts) initStore() error {
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

@@ -89,7 +89,7 @@ func (opts *configOpts) Run() error {
 		{
 			Name: "projectId",
 			Prompt: &survey.Input{
-				Message: "Project ID [optional]:",
+				Message: "Default Project ID [optional]:",
 				Help:    "This is the ID of an existing project your API keys have access to, you can leave this blank and specify it on every command with --projectId",
 				Default: config.ProjectID(),
 			},
@@ -98,7 +98,7 @@ func (opts *configOpts) Run() error {
 	}
 
 	if opts.IsOpsManager() {
-		var opsManagerQuestions = []*survey.Question{
+		opsManagerQuestions := []*survey.Question{
 			{
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
@@ -112,8 +112,7 @@ func (opts *configOpts) Run() error {
 		defaultQuestions = append(opsManagerQuestions, defaultQuestions...)
 	}
 
-	err := survey.Ask(defaultQuestions, opts)
-	if err != nil {
+	if err := survey.Ask(defaultQuestions, opts); err != nil {
 		return err
 	}
 

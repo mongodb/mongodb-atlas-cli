@@ -55,7 +55,7 @@ type atlasBackupsRestoresStartOpts struct {
 
 func (opts *atlasBackupsRestoresStartOpts) initStore() error {
 	var err error
-	opts.store, err = store.New()
+	opts.store, err = store.New(config.Default())
 	return err
 }
 

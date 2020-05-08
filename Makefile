@@ -38,11 +38,11 @@ test: ## Run tests
 .PHONY: lint
 lint: ## Run linter
 	@echo "==> Linting all packages..."
-	golangci-lint run $(SOURCE_FILES)
+	golangci-lint run $(SOURCE_FILES) --fix
 
 .PHONY: fix-lint
 fix-lint: ## Fix lint errors
-	@echo "==> Fixing lit errors"
+	@echo "==> Fixing lint errors"
 	golangci-lint run $(SOURCE_FILES) --fix
 
 .PHONY: check

@@ -9,6 +9,8 @@ dist/
 # Test binary, built with `go test -c`
 *.test
 
+.gocache/
+
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 

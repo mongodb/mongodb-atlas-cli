@@ -113,7 +113,7 @@ package: ## Use goreleaser to generate evergreen builds
 	goreleaser --rm-dist --snapshot
 
 .PHONY: release
-release: gen-notices ## Use goreleaser to generate builds and publish
+release: ## Use goreleaser to generate builds and publish
 	@echo "==> Releasing"
 	goreleaser --rm-dist
 

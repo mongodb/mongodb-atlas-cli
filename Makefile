@@ -40,8 +40,13 @@ lint: ## Run linter
 	@echo "==> Linting all packages..."
 	golangci-lint run $(SOURCE_FILES)
 
+.PHONY: fix-lint
+fix-lint: ## Fix lint errors
+	@echo "==> Fixing lint errors"
+	golangci-lint run $(SOURCE_FILES) --fix
+
 .PHONY: check
-check: test lint ## Run tests and linters
+check: test fix-lint ## Run tests and linters
 
 .PHONY: addlicense
 addlicense:
@@ -108,7 +113,7 @@ package: ## Use goreleaser to generate evergreen builds
 	goreleaser --rm-dist --snapshot
 
 .PHONY: release
-release: gen-notices ## Use goreleaser to generate builds and publish
+release: ## Use goreleaser to generate builds and publish
 	@echo "==> Releasing"
 	goreleaser --rm-dist
 

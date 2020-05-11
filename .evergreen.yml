@@ -217,7 +217,7 @@ functions:
             --edition ${edition} \
             --version ${server_version} \
             --arch x86_64 \
-            --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${build_id}/${ext}.tgz
+            --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
 
 tasks:
   - name: compile
@@ -244,7 +244,7 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongocli/dist/*.msi
-          remote_file: ${project}/dist/${build_id}/
+          remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
@@ -283,7 +283,7 @@ tasks:
             - src/github.com/mongodb/mongocli/dist/*.rpm
             - src/github.com/mongodb/mongocli/dist/*.tgz
             - src/github.com/mongodb/mongocli/dist/*.json
-          remote_file: ${project}/dist/${build_id}/
+          remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}

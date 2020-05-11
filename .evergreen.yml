@@ -29,6 +29,30 @@ functions:
           GOROOT: ${go_root}
           <<: *go_options
         command: make build
+  "test":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make test
+  "lint":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make lint
   "generate notices":
     - command: shell.exec
       type: test
@@ -200,14 +224,20 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
+  - name: test
+    commands:
+      - func: "clone"
+      - func: "test"
   - name: package_msi
     tags: ["packaging"]
     depends_on:
       - name: compile
-        variant: "publish"
+        variant: "code_health"
     commands:
       - func: "clone"
+      - func: "install go-msi"
       - func: "generate msi"
+      - func: "uninstall go-msi"
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -222,6 +252,7 @@ tasks:
     tags: ["packaging"]
     depends_on:
       - name: compile
+        variant: "code_health"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -261,6 +292,7 @@ tasks:
     patch_only: true
     depends_on:
       - name: compile
+        variant: "code_health"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -291,7 +323,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -307,7 +341,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
+      - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -324,7 +361,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -341,7 +380,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -358,7 +399,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -375,7 +418,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -393,7 +438,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -410,7 +457,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -427,7 +476,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -444,7 +495,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -461,7 +514,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -478,7 +533,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -495,7 +552,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -512,7 +571,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -529,7 +590,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -546,7 +609,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -563,7 +628,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -580,7 +647,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
+        variant: "code_health"
       - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -590,8 +659,8 @@ tasks:
           distro: debian10
           ext: deb
 buildvariants:
-  - name: publish
-    display_name: "Packaging & Publishing"
+  - name: code_health
+    display_name: "Code Health"
     run_on:
       - rhel70-small
     expansions:
@@ -599,10 +668,26 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: compile
+      - name: test
+  - name: goreleaser_snaphot
+    display_name: "Packaging (goreleaser)"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.14"
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
       - name: package_gorelease
+  - name: repo_publish
+    display_name: "Publishing (yum/apt)"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
       - name: .push
-  - name: windows
-    display_name: "Packaging Windows"
+  - name: go_msi_snapshot
+    display_name: "Packaging (go-msi)"
     run_on:
       - windows-64-vs2017-compile
     expansions:
@@ -611,12 +696,11 @@ buildvariants:
     tasks:
       - name: package_msi
   - name: release
-    display_name: "Releasing"
+    display_name: "Release (goreleaser)"
     run_on:
       - rhel70-small
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
-      - name: compile
       - name: release

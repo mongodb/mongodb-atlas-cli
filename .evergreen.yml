@@ -9,11 +9,8 @@ ignore:
   - "*.txt"
 
 variables:
-  - &go_bin
-      "/opt/golang/go1.14/bin"
   - &go_options
     GO111MODULE: "on"
-    GOROOT: "/opt/golang/go1.14"
 functions:
   "clone":
     - command: git.get_project
@@ -25,18 +22,46 @@ functions:
       type: test
       params:
         add_to_path:
-          - *go_bin
+          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
           WORKDIR: ${workdir}
+          GOROOT: ${go_root}
           <<: *go_options
         command: make build
+  "test":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make test
+  "lint":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make lint
   "generate notices":
     - command: shell.exec
-      type: setup
+      type: test
       params:
         script: |
-          set -ex
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
           export GOROOT="/opt/golang/go1.14"
           export GOPATH=$(pwd)
           export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
@@ -57,27 +82,67 @@ functions:
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
   "package":
     - command: subprocess.exec
-      type: setup
+      type: test
       params:
         add_to_path:
-          - *go_bin
+          - ${go_bin}
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
         env:
+          GOROOT: ${go_root}
           <<: *go_options
         command: make package
   "release":
     - command: subprocess.exec
-      type: setup
+      type: test
       params:
         add_to_path:
-          - *go_bin
+          - ${go_bin}
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
         env:
           GITHUB_TOKEN: ${github_token}
+          GOROOT: ${go_root}
           <<: *go_options
         command: make release
+  "install go-msi":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: choco install -y "go-msi" --force
+  "uninstall go-msi":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: choco uninstall -y "go-msi"
+  "generate msi":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          export GOROOT="c:\\golang\\go1.14"
+          export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
+          export CGO_ENABLED=0
+          export GOMSI="/cygdrive/c/Program Files/go-msi"
+          export PATH="$GOMSI:/cygdrive/c/wixtools/bin:$GOROOT\bin:$PATH"
+
+          go-msi check-env
+
+          VERSION=$(git describe | cut -d "v" -f 2)
+
+          env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=$VERSION" -o mongocli.exe
+
+          mkdir {build,dist}
+
+          go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
+
   "rename bin for curator":
     - command: shell.exec
       params:
@@ -159,9 +224,35 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
-  - name: package
+  - name: test
+    commands:
+      - func: "clone"
+      - func: "test"
+  - name: package_msi
+    tags: ["packaging"]
     depends_on:
       - name: compile
+        variant: "code_health"
+    commands:
+      - func: "clone"
+      - func: "install go-msi"
+      - func: "generate msi"
+      - func: "uninstall go-msi"
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.msi
+          remote_file: ${project}/dist/${build_id}/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+  - name: package_gorelease
+    tags: ["packaging"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -200,7 +291,8 @@ tasks:
     stepback: false
     patch_only: true
     depends_on:
-        - name: compile
+      - name: compile
+        variant: "code_health"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -231,7 +323,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -247,7 +341,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -264,7 +361,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -281,7 +380,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -297,7 +398,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -314,7 +418,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -332,7 +438,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -348,7 +456,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -365,7 +476,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -381,7 +494,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -398,7 +514,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -414,7 +532,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -431,7 +552,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -447,7 +570,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -464,7 +590,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -480,7 +608,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -497,7 +628,9 @@ tasks:
     tags: ["push"]
     depends_on:
       - name: compile
-      - name: package
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -513,7 +646,10 @@ tasks:
     stepback: false
     tags: ["push"]
     depends_on:
-      - name: package
+      - name: compile
+        variant: "code_health"
+      - name: package_gorelease
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -523,12 +659,48 @@ tasks:
           distro: debian10
           ext: deb
 buildvariants:
-  - name: publish
-    display_name: "Packaging & Publishing"
+  - name: code_health
+    display_name: "Code Health"
     run_on:
       - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.14"
+      go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: compile
-      - name: package
-      - name: release
+      - name: test
+  - name: goreleaser_snaphot
+    display_name: "Packaging (goreleaser)"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.14"
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
+      - name: package_gorelease
+  - name: repo_publish
+    display_name: "Publishing (yum/apt)"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
       - name: .push
+  - name: go_msi_snapshot
+    display_name: "Packaging (go-msi)"
+    run_on:
+      - windows-64-vs2017-compile
+    expansions:
+      go_root: "c:\\golang\\go1.14"
+      go_bin: "c:\\golang\\go1.14/bin"
+    tasks:
+      - name: package_msi
+  - name: release
+    display_name: "Release (goreleaser)"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.14"
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
+      - name: release

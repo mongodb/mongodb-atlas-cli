@@ -62,7 +62,7 @@ functions:
           set -o errexit
           set -o verbose
 
-          export GOROOT="/opt/golang/go1.14"
+          export GOROOT="${go_root}"
           export GOPATH=$(pwd)
           export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
           mkdir -p github.com/google/go-licenses
@@ -72,39 +72,103 @@ functions:
           popd
           cd src/github.com/mongodb/mongocli
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
+  "install gon":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          mkdir -p bin
+          cd bin
+
+          curl -sL https://github.com/mitchellh/gon/releases/download/v0.2.3/gon_macos.zip | tar zx
   "fetch goreleaser":
     - command: shell.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
-          set -ex
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+  "set up gon":
+    - command: shell.exec
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        silent: true
+        script: |
+          set -o errexit
+
+          OUTPUT_PATH="./dist/mongocli_macos_signed_x86_64.zip"
+          # gon settings
+          cat <<EOF_GON_JSON > gon.json
+          {
+            "source" : ["./dist/macos_darwin_amd64/mongocli"],
+            "bundle_id" : "com.mongodb.mongocli",
+            "apple_id": {
+              "username": "${ac_username}",
+              "password": "${ac_password}"
+            },
+            "sign" :{
+              "application_identity" : "Developer ID Application: MongoDB, Inc. (4XWMY46275)"
+            },
+            "zip" :{
+              "output_path": "$OUTPUT_PATH"
+            }
+          }
+          EOF_GON_JSON
   "package":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-          - ./bin
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          GOROOT: ${go_root}
-          <<: *go_options
-        command: make package
+        script: |
+          set -o errexit
+
+          cat <<EOF_BUILD_SH > ~/mongocli_package.sh
+          #! /usr/bin/env bash
+
+          cd $(pwd)
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+
+          goreleaser --rm-dist --snapshot
+          EOF_BUILD_SH
+
+          set -o xtrace
+          set -o verbose
+          # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
+          ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
   "release":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-          - ./bin
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          GITHUB_TOKEN: ${github_token}
-          GOROOT: ${go_root}
-          <<: *go_options
-        command: make release
+        script: |
+          set -o errexit
+
+          cat <<EOF_BUILD_SH > ~/mongocli_package.sh
+          #! /usr/bin/env bash
+
+          cd $(pwd)
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+
+          goreleaser --rm-dist --snapshot
+          EOF_BUILD_SH
+
+          set -o xtrace
+          set -o verbose
+
+          ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -127,7 +191,7 @@ functions:
           set -o errexit
           set -o verbose
 
-          export GOROOT="c:\\golang\\go1.14"
+          export GOROOT="${go_root}"
           export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
           export CGO_ENABLED=0
           export GOMSI="/cygdrive/c/Program Files/go-msi"
@@ -142,7 +206,6 @@ functions:
           mkdir {build,dist}
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
-
   "rename bin for curator":
     - command: shell.exec
       params:
@@ -168,6 +231,9 @@ functions:
           set -o xtrace
           set -o errexit
           set -o verbose
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
@@ -218,7 +284,6 @@ functions:
             --version ${server_version} \
             --arch x86_64 \
             --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
-
 tasks:
   - name: compile
     commands:
@@ -233,6 +298,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
+        patch_optional: true
     commands:
       - func: "clone"
       - func: "install go-msi"
@@ -248,18 +314,20 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
-  - name: package_gorelease
+  - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
       - name: compile
         variant: "code_health"
+        patch_optional: true
     commands:
       - func: "clone"
       - func: "generate notices"
       - func: "fetch goreleaser"
+      - func: "install gon"
+      - func: "set up gon"
       - func: "package"
       - func: "rename bin for curator"
-      - func: "generate download archive json"
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -272,6 +340,7 @@ tasks:
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
+      - func: "generate download archive json"
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -324,7 +393,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -343,7 +412,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -362,7 +431,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -381,7 +450,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -400,7 +469,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -419,7 +488,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -439,7 +508,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -458,7 +527,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -477,7 +546,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -496,7 +565,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -515,7 +584,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -534,7 +603,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -553,7 +622,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -572,7 +641,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -591,7 +660,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -610,7 +679,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -629,7 +698,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -648,7 +717,7 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-      - name: package_gorelease
+      - name: package_goreleaser
         variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
@@ -672,20 +741,12 @@ buildvariants:
   - name: goreleaser_snaphot
     display_name: "Packaging (goreleaser)"
     run_on:
-      - rhel70-small
+      - macos-1014-codesign
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
-      - name: package_gorelease
-  - name: repo_publish
-    display_name: "Publishing (yum/apt)"
-    run_on:
-      - rhel70-small
-    expansions:
-      go_bin: "/opt/golang/go1.14/bin"
-    tasks:
-      - name: .push
+      - name: package_goreleaser
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
@@ -695,12 +756,21 @@ buildvariants:
       go_bin: "c:\\golang\\go1.14/bin"
     tasks:
       - name: package_msi
-  - name: release
-    display_name: "Release (goreleaser)"
+  - name: repo_publish
+    display_name: "Publishing (yum/apt)"
     run_on:
       - rhel70-small
     expansions:
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
+      - name: .push
+  - name: release
+    display_name: "Release (goreleaser)"
+    run_on:
+      - macos-1014-codesign
+    expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
+      is_release: true
     tasks:
       - name: release

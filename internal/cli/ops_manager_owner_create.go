@@ -18,7 +18,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -92,15 +92,15 @@ func OpsManagerOwnerCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.email, flags.Email, "", usage.Email)
-	cmd.Flags().StringVarP(&opts.password, flags.Password, flags.PasswordShort, "", usage.Password)
-	cmd.Flags().StringVar(&opts.firstName, flags.FirstName, "", usage.FirstName)
-	cmd.Flags().StringVar(&opts.lastName, flags.LastName, "", usage.LastName)
-	cmd.Flags().StringSliceVar(&opts.whitelistIps, flags.WhitelistIP, []string{}, usage.WhitelistIps)
+	cmd.Flags().StringVar(&opts.email, flag.Email, "", usage.Email)
+	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
+	cmd.Flags().StringVar(&opts.firstName, flag.FirstName, "", usage.FirstName)
+	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
+	cmd.Flags().StringSliceVar(&opts.whitelistIps, flag.WhitelistIP, []string{}, usage.WhitelistIps)
 
-	_ = cmd.MarkFlagRequired(flags.Username)
-	_ = cmd.MarkFlagRequired(flags.FirstName)
-	_ = cmd.MarkFlagRequired(flags.LastName)
+	_ = cmd.MarkFlagRequired(flag.Username)
+	_ = cmd.MarkFlagRequired(flag.FirstName)
+	_ = cmd.MarkFlagRequired(flag.LastName)
 
 	return cmd
 }

@@ -18,12 +18,12 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
-	config := fixtures.AutomationConfigWithOneReplicaSet(name, false)
+	config := fixture.AutomationConfigWithOneReplicaSet(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
@@ -59,7 +59,7 @@ func TestFromAutomationConfig(t *testing.T) {
 }
 
 func TestEnableMechanism(t *testing.T) {
-	config := fixtures.AutomationConfigWithoutMongoDBUsers()
+	config := fixture.AutomationConfigWithoutMongoDBUsers()
 
 	e := EnableMechanism(config, []string{"SCRAM-SHA-256"})
 

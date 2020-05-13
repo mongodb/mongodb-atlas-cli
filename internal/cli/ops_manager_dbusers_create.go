@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -105,15 +105,15 @@ func OpsManagerDBUsersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.username, flags.Username, flags.UsernameShort, "", usage.Username)
-	cmd.Flags().StringVarP(&opts.password, flags.Password, flags.PasswordShort, "", usage.Password)
-	cmd.Flags().StringVar(&opts.authDB, flags.AuthDB, convert.AdminDB, usage.AuthDB)
-	cmd.Flags().StringSliceVar(&opts.roles, flags.Role, []string{}, usage.Roles)
-	cmd.Flags().StringSliceVar(&opts.mechanisms, flags.Mechanisms, []string{scransha1}, usage.Mechanisms)
+	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
+	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+	cmd.Flags().StringSliceVar(&opts.mechanisms, flag.Mechanisms, []string{scransha1}, usage.Mechanisms)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.Username)
+	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

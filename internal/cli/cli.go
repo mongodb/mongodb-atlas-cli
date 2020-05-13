@@ -23,7 +23,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/prompts"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/validate"
 )
 
@@ -126,8 +126,8 @@ func (opts *deleteOpts) Confirm() error {
 		return nil
 	}
 
-	prompt := prompts.NewDeleteConfirm(opts.entry)
-	return survey.AskOne(prompt, &opts.confirm)
+	p := prompt.NewDeleteConfirm(opts.entry)
+	return survey.AskOne(p, &opts.confirm)
 }
 
 // SuccessMessage gets the set success message or the default value

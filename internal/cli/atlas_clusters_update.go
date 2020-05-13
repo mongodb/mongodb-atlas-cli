@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -121,12 +121,12 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.tier, flags.Tier, "", usage.Tier)
-	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 0, usage.DiskSizeGB)
-	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, "", usage.MDBVersion)
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", usage.Filename)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
+	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 0, usage.DiskSizeGB)
+	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

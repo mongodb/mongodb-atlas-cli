@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -65,13 +65,13 @@ func OpsManagerMetricsProcessBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringVar(&opts.granularity, flag.Granularity, "", usage.Granularity)
+	cmd.Flags().StringVar(&opts.period, flag.Period, "", usage.Period)
+	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.MeasurementStart)
+	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.MeasurementEnd)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flag.Type, nil, usage.MeasurementType)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

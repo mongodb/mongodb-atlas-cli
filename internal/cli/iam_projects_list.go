@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -66,10 +66,10 @@ func IAMProjectsListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+	cmd.Flags().IntVar(&opts.pageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -66,7 +66,7 @@ func IAMProjectsCreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

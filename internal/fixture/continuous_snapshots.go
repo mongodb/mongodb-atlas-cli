@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fixtures
+package fixture
 
 import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 

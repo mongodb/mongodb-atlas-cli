@@ -17,7 +17,7 @@ package search_test
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/search"
 )
 
@@ -38,13 +38,13 @@ func TestStringInSlice(t *testing.T) {
 
 func TestClusterExists(t *testing.T) {
 	t.Run("value exists", func(t *testing.T) {
-		if !search.ClusterExists(fixtures.AutomationConfig(), "myReplicaSet") {
+		if !search.ClusterExists(fixture.AutomationConfig(), "myReplicaSet") {
 			t.Error("ClusterExists() should find the value")
 		}
 	})
 
 	t.Run("value not exists", func(t *testing.T) {
-		if search.ClusterExists(fixtures.AutomationConfig(), "X") {
+		if search.ClusterExists(fixture.AutomationConfig(), "X") {
 			t.Error("StringInSlice() should not find the value")
 		}
 	})

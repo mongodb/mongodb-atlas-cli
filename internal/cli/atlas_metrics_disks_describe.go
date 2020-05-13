@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -71,18 +71,18 @@ func AtlasMetricsDisksDescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+	cmd.Flags().IntVar(&opts.pageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVar(&opts.granularity, flags.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.period, flags.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.measurementType, flags.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringVar(&opts.granularity, flag.Granularity, "", usage.Granularity)
+	cmd.Flags().StringVar(&opts.period, flag.Period, "", usage.Period)
+	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.MeasurementStart)
+	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.MeasurementEnd)
+	cmd.Flags().StringSliceVar(&opts.measurementType, flag.Type, nil, usage.MeasurementType)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.Granularity)
+	_ = cmd.MarkFlagRequired(flag.Granularity)
 
 	return cmd
 }

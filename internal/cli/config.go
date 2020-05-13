@@ -18,7 +18,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -129,7 +129,7 @@ func ConfigBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.Service, flags.Service, config.CloudService, usage.Service)
+	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
 	cmd.AddCommand(ConfigSetBuilder())
 
 	return cmd

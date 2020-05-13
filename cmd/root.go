@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
@@ -63,7 +63,7 @@ func init() {
 
 	cobra.EnableCommandSorting = false
 
-	profile := rootCmd.PersistentFlags().StringP(flags.Profile, flags.ProfileShort, config.DefaultProfile, usage.Profile)
+	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, config.DefaultProfile, usage.Profile)
 	config.SetName(profile)
 }
 

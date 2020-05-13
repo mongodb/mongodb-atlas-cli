@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -61,7 +61,7 @@ func IAMOrganizationsDeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 
 	return cmd
 }

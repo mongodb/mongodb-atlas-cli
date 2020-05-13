@@ -21,7 +21,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -100,11 +100,11 @@ func AtlasLogsDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "", usage.LogOut)
 
-	cmd.Flags().StringVar(&opts.start, flags.Start, "", usage.LogStart)
-	cmd.Flags().StringVar(&opts.end, flags.End, "", usage.LogEnd)
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.LogStart)
+	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.LogEnd)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -80,11 +80,11 @@ func OpsManagerLogsJobsDownloadOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "", usage.LogOut)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.Out)
+	_ = cmd.MarkFlagRequired(flag.Out)
 
 	return cmd
 }

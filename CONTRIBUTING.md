@@ -1,22 +1,39 @@
 # Contributing to MongoDB CLI
 
 Thanks for your interest in contributing to `mongocli`, 
-this document describe the necessary steps to get a development environment going and the best way to contribute back to the project
+this document describes some of the guidelines necessary to participate in the comunity 
 
-## Development setup
+## Feature Requests
 
-### Prerequisite Tools 
+We welcome any feedback or feature request, to submit yours
+please head over to our [feedback page](https://feedback.mongodb.com/). 
+ 
+## Reporting Issues
+
+Please create a [GitHub issue](https://github.com/mongodb/mongocli/issues) describing the kind of problem you're facing
+with as much detail as possible, including things like operating system or anything else that may be relevant to the issue.
+
+## Submitting a Patch
+
+Before submitting a patch to the repo please consider opening an [issue first](#reporting-issues)
+
+### Contributor License Agreement
+
+For patches to be accepted, contributors must sign our [CLA](https://www.mongodb.com/legal/contributor-agreement).
+
+### Development Setup
+
+#### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.13)](https://golang.org/dl/)
+- [Go (at least Go 1.14)](https://golang.org/dl/)
 
-### Environment
+#### Environment
 - Fork the repository.
 - Clone your forked repository locally.
 - We use Go Modules to manage dependencies, so you can develop outside of your `$GOPATH`.
+- We use [golangci-lint](https://github.com/golangci/golangci-lint) to lint our code, you can install it locally via `make setup`.
 
-We use [golangci-lint](https://github.com/golangci/golangci-lint) to lint our code, you can install it locally via `make setup`.
-
-## Building and testing
+### Building and Testing
 
 The following is a short list of commands that can be run in the root of the project directory
 
@@ -29,14 +46,12 @@ The following is a short list of commands that can be run in the root of the pro
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 
 
-We run our some packaging and publishing tasks in [Evergreen](https://github.com/evergreen-ci/evergreen).
-
-### Generating mocks
+### Generating Mocks
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests
 If you need a new mock please add a reference on the [Make](Makefile) file and run `make gen-mocks`
 
-### Adding a new command
+### Adding a New Command
 
 `mongocli` uses [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
 in addition to this we have defined a basic structure that should be followed.
@@ -45,15 +60,11 @@ For a `mongocli scope newCommand` command a file `internal/cli/scope_new_command
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.
 
-## Third party dependencies
+### Third Party Dependencies
 
 We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).
 To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI) 
 
-## Contributing
-
-Please creata a [GitHub issue](https://github.com/mongodb/mongocli/issues)
-before submitting a PR. For PRs to be accepted, contributors must sign our
-[CLA](https://www.mongodb.com/legal/contributor-agreement).
+## Maintainer's Guide
 
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).

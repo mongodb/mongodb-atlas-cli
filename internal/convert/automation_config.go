@@ -70,7 +70,6 @@ func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
 		if v == sha256 {
 			out.Auth.AutoAuthMechanism = v
 		}
-		fmt.Println("HERE 1")
 		if !search.StringInSlice(out.Auth.DeploymentAuthMechanisms, v) {
 			out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, v)
 		}

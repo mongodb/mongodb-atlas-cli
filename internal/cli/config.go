@@ -102,7 +102,7 @@ func (opts *configOpts) Run() error {
 			{
 				Name: "opsManagerURL",
 				Prompt: &survey.Input{
-					Message: "URL to Access Ops Manage:",
+					Message: "URL to Access Ops Manager:",
 					Default: config.OpsManagerURL(),
 					Help:    "https://docs.opsmanager.mongodb.com/current/reference/config/ui-settings/#URL-to-Access-Ops-Manager",
 				},

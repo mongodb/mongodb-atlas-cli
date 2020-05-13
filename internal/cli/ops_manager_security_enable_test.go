@@ -31,7 +31,7 @@ func TestOpsManagerSecurityEnableOpts_Run(t *testing.T) {
 	expected := fixtures.AutomationConfig()
 
 	createOpts := &opsManagerSecurityEnableOpts{
-		mechanisms: []string{"something"},
+		mechanisms: []string{sha256},
 		store:      mockStore,
 	}
 

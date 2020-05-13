@@ -17,9 +17,8 @@ package convert
 import (
 	"fmt"
 
-	"go.mongodb.org/ops-manager/atmcfg"
+	"github.com/mongodb/mongocli/internal/search"
 	"go.mongodb.org/ops-manager/opsmngr"
-	"go.mongodb.org/ops-manager/search"
 )
 
 const (
@@ -56,20 +55,35 @@ func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
 	return
 }
 
-const keyLength = 500
+const (
+	keyLength = 500
+	cr        = "MONGODB-CR"
+	sha256    = "SCRAM-SHA-256"
+)
 
 func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
-	out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, m...)
-	out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, m...)
 	out.Auth.Disabled = false
+	for _, v := range m {
+		if v != cr && v != sha256 {
+			return fmt.Errorf("unsupported mechanism %s", v)
+		}
+		if v == sha256 {
+			out.Auth.AutoAuthMechanism = v
+		}
+		fmt.Println("HERE 1")
+		if !search.StringInSlice(out.Auth.DeploymentAuthMechanisms, v) {
+			out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, v)
+		}
+		if !search.StringInSlice(out.Auth.AutoAuthMechanisms, v) {
+			out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, v)
+		}
+	}
 
 	if out.Auth.AutoUser == "" {
 		if err := setAutoUser(out); err != nil {
 			return err
 		}
 	}
-	addMonitoringUser(out)
-	addBackupUser(out)
 
 	var err error
 	if out.Auth.Key == "" {
@@ -85,24 +99,6 @@ func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
 	}
 
 	return nil
-}
-
-func addMonitoringUser(out *opsmngr.AutomationConfig) {
-	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *opsmngr.MongoDBUser) bool {
-		return user.Username == monitoringAgentName
-	})
-	if !exists {
-		atmcfg.AddUser(out, newMonitoringUser(out.Auth.AutoPwd))
-	}
-}
-
-func addBackupUser(out *opsmngr.AutomationConfig) {
-	_, exists := search.MongoDBUsers(out.Auth.Users, func(user *opsmngr.MongoDBUser) bool {
-		return user.Username == backupAgentName
-	})
-	if !exists {
-		atmcfg.AddUser(out, newBackupUser(out.Auth.AutoPwd))
-	}
 }
 
 func setAutoUser(out *opsmngr.AutomationConfig) error {

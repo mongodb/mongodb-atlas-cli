@@ -38,7 +38,7 @@ type globalOpts struct {
 }
 
 func deploymentStatus(baseURL, projectID string) string {
-	return fmt.Sprintf("Changes are being applied, please check %s/v2/%s#deployment/topology for status\n", baseURL, projectID)
+	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
 }
 
 // ProjectID returns the project id.

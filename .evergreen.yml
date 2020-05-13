@@ -162,7 +162,7 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
 
-          goreleaser --rm-dist --snapshot
+          goreleaser --rm-dist
           EOF_BUILD_SH
 
           set -o xtrace
@@ -206,7 +206,7 @@ functions:
           mkdir {build,dist}
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
-  "rename bin for curator":
+  "rename pkg unstable":
     - command: shell.exec
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
@@ -223,6 +223,24 @@ functions:
           mv apt/mongocli_next_linux_x86_64.deb apt/mongodb-cli-unstable_$VERSION~latest_amd64.deb
           cp mongocli_next_linux_x86_64.rpm yum/
           mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
+  "rename pkg stable":
+    - command: shell.exec
+      params:
+        working_dir: src/github.com/mongodb/mongocli/dist
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          VERSION=$(git describe | cut -d "v" -f 2)
+
+          mkdir {yum,apt}
+          # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
+          cp mongocli_next_linux_x86_64.deb apt/
+          mv apt/mongocli_$VERSION_linux_x86_64.deb apt/mongodb-cli_$VERSION_amd64.deb
+
+          cp mongocli_next_linux_x86_64.rpm yum/
+          mv yum/mongocli_$VERSION_linux_x86_64.rpm yum/mongodb-cli-$VERSION.x86_64.rpm
   "generate download archive json":
     - command: shell.exec
       params:
@@ -327,7 +345,7 @@ tasks:
       - func: "install gon"
       - func: "set up gon"
       - func: "package"
-      - func: "rename bin for curator"
+      - func: "rename pkg unstable"
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -366,7 +384,10 @@ tasks:
       - func: "clone"
       - func: "generate notices"
       - func: "fetch goreleaser"
+      - func: "install gon"
+      - func: "set up gon"
       - func: "release"
+      - func: "rename pkg stable"
       - func: "generate download archive json"
       - command: s3.put
         params:
@@ -760,11 +781,9 @@ buildvariants:
     display_name: "Publishing (yum/apt)"
     run_on:
       - rhel70-small
-    expansions:
-      go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: .push
-  - name: release
+  - name: release_github
     display_name: "Release (goreleaser)"
     run_on:
       - macos-1014-codesign

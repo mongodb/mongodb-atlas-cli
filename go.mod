@@ -7,12 +7,12 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/Sectorbob/mlab-ns2 v0.0.0-20171030222938-d3aa0c295a8a
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-test/deep v1.0.5
+	github.com/go-test/deep v1.0.6
 	github.com/golang/mock v1.4.3
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.3.0 // indirect
-	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200508084339-6a882622cd80
+	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200508151240-fe2a21ab5a46
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect
@@ -20,8 +20,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
-	github.com/stretchr/testify v1.4.0 // indirect
-	go.mongodb.org/ops-manager v0.5.1
+	go.mongodb.org/ops-manager v0.5.2-0.20200513091426-cb751656afa4
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200511232937-7e40ca221e25 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect

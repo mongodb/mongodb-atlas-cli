@@ -83,7 +83,7 @@ func TestEnableMechanism(t *testing.T) {
 		t.Error("config.Auth.Key* not set\n")
 	}
 
-	if len(config.Auth.Users) != 2 {
-		t.Error("automation and monitoring users not set\n")
+	if len(config.Auth.Users) != 0 {
+		t.Errorf("expected 0 user got: %d\n", len(config.Auth.Users))
 	}
 }

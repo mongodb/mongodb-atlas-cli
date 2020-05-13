@@ -30,8 +30,6 @@ const (
 const (
 	roleSep             = "@"
 	automationAgentName = "mms-automation"
-	monitoringAgentName = "mms-monitoring-agent"
-	backupAgentName     = "mms-backup-agent"
 	defaultUserDatabase = "admin"
 )
 
@@ -73,55 +71,4 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 		}
 	}
 	return roles
-}
-
-func newBackupUser(password string) *opsmngr.MongoDBUser {
-	// roles for Monitoring Agent
-	// https://docs.opsmanager.mongodb.com/current/reference/required-access-monitoring-agent/
-	return &opsmngr.MongoDBUser{
-		Username:                   backupAgentName,
-		Database:                   defaultUserDatabase,
-		AuthenticationRestrictions: []string{},
-		Mechanisms:                 []string{},
-		InitPassword:               password,
-		Roles: []*opsmngr.Role{
-			{
-				Database: AdminDB,
-				Role:     "clusterAdmin",
-			},
-			{
-				Database: AdminDB,
-				Role:     "readAnyDatabase",
-			},
-			{
-				Database: AdminDB,
-				Role:     "userAdminAnyDatabase",
-			},
-			{
-				Database: AdminDB,
-				Role:     "readWrite",
-			},
-			{
-				Database: AdminDB,
-				Role:     "readWrite",
-			},
-		},
-	}
-}
-func newMonitoringUser(password string) *opsmngr.MongoDBUser {
-	// roles for Monitoring Agent
-	// https://docs.opsmanager.mongodb.com/current/reference/required-access-monitoring-agent/
-	return &opsmngr.MongoDBUser{
-		Username:                   monitoringAgentName,
-		Database:                   defaultUserDatabase,
-		InitPassword:               password,
-		AuthenticationRestrictions: []string{},
-		Mechanisms:                 []string{},
-		Roles: []*opsmngr.Role{
-			{
-				Database: AdminDB,
-				Role:     "clusterMonitor",
-			},
-		},
-	}
 }

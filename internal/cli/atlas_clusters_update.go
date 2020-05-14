@@ -98,6 +98,8 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	if opts.tier != "" {
 		out.ProviderSettings.InstanceSizeName = opts.tier
 	}
+
+	updateLabels(out)
 }
 
 // mongocli atlas cluster(s) update name --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]

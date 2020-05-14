@@ -85,13 +85,13 @@ func (opts *atlasClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.Name = opts.name
 	}
 
-	opts.updateLabels(cluster)
+	updateLabels(cluster)
 
 	cluster.GroupID = opts.ProjectID()
 	return cluster, nil
 }
 
-func (opts *atlasClustersCreateOpts) updateLabels(out *atlas.Cluster) {
+func updateLabels(out *atlas.Cluster) {
 	found := false
 	for _, v := range out.Labels {
 		if v.Key == labelKey && v.Value == labelValue {

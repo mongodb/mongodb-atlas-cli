@@ -99,24 +99,7 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 		out.ProviderSettings.InstanceSizeName = opts.tier
 	}
 
-	opts.updateLabels(out)
-}
-
-func (opts *atlasClustersUpdateOpts) updateLabels(out *atlas.Cluster) {
-	found := false
-	for _, v := range out.Labels {
-		if v.Key == labelKey && v.Value == labelValue {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		out.Labels = append(out.Labels, atlas.Label{
-			Key:   labelKey,
-			Value: labelValue,
-		})
-	}
+	updateLabels(out)
 }
 
 // mongocli atlas cluster(s) update name --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]

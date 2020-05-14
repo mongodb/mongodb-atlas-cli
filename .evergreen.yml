@@ -725,7 +725,7 @@ buildvariants:
       - name: compile
       - name: test
   - name: goreleaser_snaphot
-    display_name: "Packaging (goreleaser)"
+    display_name: "Daily Builds (goreleaser, yum, apt)"
     run_on:
       - macos-1014-codesign
     expansions:
@@ -734,7 +734,7 @@ buildvariants:
     tasks:
       - name: package_goreleaser
       - name: .push
-        run_on:
+        distros:
           - rhel70-small
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"

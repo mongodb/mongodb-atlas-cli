@@ -47,17 +47,14 @@ func TestAtlasClustersUpdate_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		err := updateOpts.patchOpts(expected)
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		updateOpts.patchOpts(expected)
 
 		mockStore.
 			EXPECT().
 			UpdateCluster(updateOpts.ProjectID(), updateOpts.name, expected).Return(expected, nil).
 			Times(1)
 
-		err = updateOpts.Run()
+		err := updateOpts.Run()
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}

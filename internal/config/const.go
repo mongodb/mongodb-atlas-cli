@@ -29,4 +29,6 @@ const (
 	privateAPIKey       = "private_api_key"
 	opsManagerURL       = "ops_manager_url"
 	baseURL             = "base_url"
+	LabelKey            = "Infrastructure Tool"
+	LabelValue          = "mongoCLI"
 )

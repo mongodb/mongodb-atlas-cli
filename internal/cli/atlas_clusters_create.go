@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-	"strings"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -50,7 +47,6 @@ type atlasClustersCreateOpts struct {
 	backup     bool
 	mdbVersion string
 	filename   string
-	labels     []string
 	fs         afero.Fs
 	store      store.ClusterCreator
 }
@@ -89,12 +85,11 @@ func (opts *atlasClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.Name = opts.name
 	}
 
-	if opts.labels != nil {
-		if label, err := opts.newLabels(); err == nil {
-			cluster.Labels = label
-		} else {
-			return nil, err
-		}
+	cluster.Labels = []atlas.Label{
+		{
+			Key:   config.LabelKey,
+			Value: config.LabelValue,
+		},
 	}
 
 	cluster.GroupID = opts.ProjectID()
@@ -153,22 +148,8 @@ func (opts *atlasClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec 
 	return replicationSpec
 }
 
-func (opts *atlasClustersCreateOpts) newLabels() ([]atlas.Label, error) {
-	labels := make([]atlas.Label, len(opts.labels))
-	for i, key := range opts.labels {
-		value := strings.Split(key, ":")
-		if len(value) != 2 {
-			return nil, fmt.Errorf("unexpected label format: %s", key)
-		}
-
-		labels[i] = atlas.Label{Key: value[0], Value: value[1]}
-	}
-
-	return labels, nil
-}
-
 // AtlasClustersCreateBuilder builds a cobra.Command that can run as:
-// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion] [--labels key:value]
+// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion]
 func AtlasClustersCreateBuilder() *cobra.Command {
 	opts := &atlasClustersCreateOpts{
 		fs: afero.NewOsFs(),
@@ -205,7 +186,6 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
-	cmd.Flags().StringArrayVar(&opts.labels, flag.Labels, nil, usage.Labels)
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 

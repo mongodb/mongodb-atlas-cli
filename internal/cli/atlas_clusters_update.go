@@ -15,9 +15,6 @@
 package cli
 
 import (
-	"fmt"
-	"strings"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -37,7 +34,6 @@ type atlasClustersUpdateOpts struct {
 	diskSizeGB float64
 	mdbVersion string
 	filename   string
-	labels     []string
 	fs         afero.Fs
 	store      store.ClusterStore
 }
@@ -54,10 +50,7 @@ func (opts *atlasClustersUpdateOpts) Run() error {
 		return err
 	}
 	if opts.filename == "" {
-		err = opts.patchOpts(cluster)
-		if err != nil {
-			return err
-		}
+		opts.patchOpts(cluster)
 	}
 
 	result, err := opts.store.UpdateCluster(opts.ProjectID(), opts.name, cluster)
@@ -84,7 +77,7 @@ func (opts *atlasClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
 	return cluster, err
 }
 
-func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) error {
+func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	// There can only be one
 	if out.ReplicationSpecs != nil {
 		out.ReplicationSpec = nil
@@ -106,28 +99,23 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) error {
 		out.ProviderSettings.InstanceSizeName = opts.tier
 	}
 
-	if opts.labels != nil {
-		if label, err := opts.newLabels(); err == nil {
-			out.Labels = label
-		} else {
-			return err
-		}
-	}
-
-	return nil
+	opts.updateLabels(out)
 }
 
-func (opts *atlasClustersUpdateOpts) newLabels() ([]atlas.Label, error) {
-	labels := make([]atlas.Label, len(opts.labels))
-	for i, key := range opts.labels {
-		value := strings.Split(key, ":")
-		if len(value) != 2 {
-			return nil, fmt.Errorf("unexpected label format: %s", key)
+func (opts *atlasClustersUpdateOpts) updateLabels(out *atlas.Cluster) {
+	found := false
+	for _, v := range out.Labels {
+		if v.Key == config.LabelKey && v.Value == config.LabelValue {
+			found = true
 		}
-		labels[i] = atlas.Label{Key: value[0], Value: value[1]}
 	}
 
-	return labels, nil
+	if !found {
+		out.Labels = append(out.Labels, atlas.Label{
+			Key:   config.LabelKey,
+			Value: config.LabelValue,
+		})
+	}
 }
 
 // mongocli atlas cluster(s) update name --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]
@@ -155,7 +143,6 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
-	cmd.Flags().StringArrayVar(&opts.labels, flag.Labels, nil, usage.Labels)
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 

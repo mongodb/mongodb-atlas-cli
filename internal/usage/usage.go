@@ -84,7 +84,6 @@ const (
 	Collection                      = "Collection name."
 	RSName                          = "The replica set that the index is built on."
 	Key                             = "Index keys. Should be formatted as field:type."
-	Labels                          = "Array containing key-value pairs that tag and categorize the cluster."
 	Unique                          = "Create a unique key index."
 	LogTypes                        = "Array of strings specifying the types of logs to collect."
 	SizeRequestedPerFileBytes       = "Size for each log file in bytes."

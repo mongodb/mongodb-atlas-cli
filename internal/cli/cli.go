@@ -30,6 +30,8 @@ import (
 const (
 	fallbackSuccessMessage = "'%s' deleted\n"
 	fallbackFailMessage    = "entry not deleted"
+	labelKey               = "Infrastructure Tool"
+	labelValue             = "mongoCLI"
 )
 
 type globalOpts struct {

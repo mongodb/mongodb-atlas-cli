@@ -105,7 +105,7 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 func (opts *atlasClustersUpdateOpts) updateLabels(out *atlas.Cluster) {
 	found := false
 	for _, v := range out.Labels {
-		if v.Key == config.LabelKey && v.Value == config.LabelValue {
+		if v.Key == labelKey && v.Value == labelValue {
 			found = true
 			break
 		}
@@ -113,8 +113,8 @@ func (opts *atlasClustersUpdateOpts) updateLabels(out *atlas.Cluster) {
 
 	if !found {
 		out.Labels = append(out.Labels, atlas.Label{
-			Key:   config.LabelKey,
-			Value: config.LabelValue,
+			Key:   labelKey,
+			Value: labelValue,
 		})
 	}
 }

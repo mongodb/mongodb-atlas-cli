@@ -18,7 +18,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -74,11 +74,11 @@ func AtlasAlertsListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
-	cmd.Flags().StringVar(&opts.status, flags.Status, "", usage.Status)
+	cmd.Flags().IntVar(&opts.pageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringVar(&opts.status, flag.Status, "", usage.Status)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,10 +28,10 @@ func TestOpsManagerSecurityEnableOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.AutomationConfig()
+	expected := fixture.AutomationConfig()
 
 	createOpts := &opsManagerSecurityEnableOpts{
-		mechanisms: []string{"something"},
+		mechanisms: []string{sha256},
 		store:      mockStore,
 	}
 

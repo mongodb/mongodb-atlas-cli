@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -82,11 +82,11 @@ func OpsManagerClustersApplyBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use to change the automation config")
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use to change the automation config")
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.File)
+	_ = cmd.MarkFlagRequired(flag.File)
 
 	return cmd
 }

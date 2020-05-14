@@ -7,7 +7,7 @@
 
 ## Installing
 
-### Hombrew on macOS or Linux
+### Hombrew on macOS
 
 ```bash
 brew tap mongodb/brew
@@ -22,7 +22,7 @@ This works well for shared hosts and other systems where you don't have a privil
 
 Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/bin` is the most probable location.
 
-### Build from Source 
+### Build From Source 
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
@@ -41,7 +41,7 @@ make install
 Run `mongocli help` for a list of available commands
 or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details
 
-### Getting started
+### Getting Started
 
 Run `mongocli config` to set up your credentials, 
 this is optional and you can use [env variables](#environment-variables) instead.

@@ -17,13 +17,13 @@ package search_test
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/search"
 )
 
 // This example demonstrates searching a cluster in an automation config.
 func ExampleClusterExists() {
-	a := fixtures.AutomationConfig()
+	a := fixture.AutomationConfig()
 	x := "myReplicaSet"
 	found := search.ClusterExists(a, x)
 	if found {

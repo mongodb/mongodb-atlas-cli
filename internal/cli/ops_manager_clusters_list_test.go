@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -30,7 +30,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	t.Run("ProjectID is given", func(t *testing.T) {
-		expected := fixtures.AutomationConfig()
+		expected := fixture.AutomationConfig()
 
 		listOpts := &opsManagerClustersListOpts{
 			store: mockStore,
@@ -50,7 +50,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 	})
 
 	t.Run("No ProjectID is given", func(t *testing.T) {
-		expected := fixtures.AllClusters()
+		expected := fixture.AllClusters()
 		config.SetService(config.OpsManagerService)
 		mockStore.
 			EXPECT().

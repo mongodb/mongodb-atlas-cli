@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
@@ -91,14 +91,14 @@ func OpsManagerLogsJobsCollectOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringArrayVar(&opts.logTypes, flags.Type, nil, usage.LogTypes)
-	cmd.Flags().Int64Var(&opts.sizeRequestedPerFileBytes, flags.SizeRequestedPerFileBytes, 0, usage.SizeRequestedPerFileBytes)
-	cmd.Flags().BoolVar(&opts.redacted, flags.Redacted, false, usage.LogRedacted)
+	cmd.Flags().StringArrayVar(&opts.logTypes, flag.Type, nil, usage.LogTypes)
+	cmd.Flags().Int64Var(&opts.sizeRequestedPerFileBytes, flag.SizeRequestedPerFileBytes, 0, usage.SizeRequestedPerFileBytes)
+	cmd.Flags().BoolVar(&opts.redacted, flag.Redacted, false, usage.LogRedacted)
 
-	_ = cmd.MarkFlagRequired(flags.SizeRequestedPerFileBytes)
-	_ = cmd.MarkFlagRequired(flags.Type)
+	_ = cmd.MarkFlagRequired(flag.SizeRequestedPerFileBytes)
+	_ = cmd.MarkFlagRequired(flag.Type)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

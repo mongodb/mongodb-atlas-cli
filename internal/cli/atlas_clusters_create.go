@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -154,8 +154,8 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 		Args:    cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
-				_ = cmd.MarkFlagRequired(flags.Provider)
-				_ = cmd.MarkFlagRequired(flags.Region)
+				_ = cmd.MarkFlagRequired(flag.Provider)
+				_ = cmd.MarkFlagRequired(flag.Region)
 
 				if len(args) == 0 {
 					return errMissingClusterName
@@ -171,16 +171,16 @@ func AtlasClustersCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flags.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.region, flags.Region, flags.RegionShort, "", usage.Region)
-	cmd.Flags().Int64VarP(&opts.members, flags.Members, flags.MembersShort, 3, usage.Members)
-	cmd.Flags().StringVar(&opts.tier, flags.Tier, atlasM2, usage.Tier)
-	cmd.Flags().Float64Var(&opts.diskSizeGB, flags.DiskSizeGB, 2, usage.DiskSizeGB)
-	cmd.Flags().StringVar(&opts.mdbVersion, flags.MDBVersion, currentMDBVersion, usage.MDBVersion)
-	cmd.Flags().BoolVar(&opts.backup, flags.Backup, false, usage.Backup)
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", usage.Filename)
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
+	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().Int64VarP(&opts.members, flag.Members, flag.MembersShort, 3, usage.Members)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
+	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 2, usage.DiskSizeGB)
+	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
+	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

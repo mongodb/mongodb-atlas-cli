@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -72,11 +72,11 @@ func OpsManagerAutomationUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flags.File, flags.FileShort, "", "Filename to use")
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use")
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.File)
+	_ = cmd.MarkFlagRequired(flag.File)
 
 	return cmd
 }

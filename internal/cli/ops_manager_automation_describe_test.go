@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -28,7 +28,7 @@ func TestOpsManagerAutomationShowOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := fixtures.AutomationConfig()
+	expected := fixture.AutomationConfig()
 
 	opts := &opsManagerAutomationDescribeOpts{
 		store: mockStore,

@@ -19,7 +19,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -83,10 +83,10 @@ func AtlasEventsListBuilder() *cobra.Command {
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.orgID != "" && opts.projectID != "" {
-				return fmt.Errorf("both --%s and --%s set", flags.ProjectID, flags.OrgID)
+				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
 			}
 			if opts.orgID == "" && opts.projectID == "" {
-				return fmt.Errorf("--%s or --%s must be set", flags.ProjectID, flags.OrgID)
+				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			return opts.initStore()
 		},
@@ -95,15 +95,15 @@ func AtlasEventsListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flags.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flags.Limit, 0, usage.Limit)
+	cmd.Flags().IntVar(&opts.pageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.itemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringSliceVar(&opts.eventType, flags.Type, nil, usage.Event)
-	cmd.Flags().StringVar(&opts.maxDate, flags.MaxDate, "", usage.MaxDate)
-	cmd.Flags().StringVar(&opts.minDate, flags.MinDate, "", usage.MinDate)
+	cmd.Flags().StringSliceVar(&opts.eventType, flag.Type, nil, usage.Event)
+	cmd.Flags().StringVar(&opts.maxDate, flag.MaxDate, "", usage.MaxDate)
+	cmd.Flags().StringVar(&opts.minDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.orgID, flags.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

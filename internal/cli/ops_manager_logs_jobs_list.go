@@ -17,7 +17,7 @@ package cli
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -64,9 +64,9 @@ func OpsManagerLogsJobsListOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.verbose, flags.Verbose, false, usage.Verbose)
+	cmd.Flags().BoolVar(&opts.verbose, flag.Verbose, false, usage.Verbose)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

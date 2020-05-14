@@ -21,7 +21,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -164,29 +164,31 @@ func OpsManagerClustersIndexesCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.db, flags.Database, "", usage.Database)
-	cmd.Flags().StringVar(&opts.rsName, flags.RSName, "", usage.RSName)
-	cmd.Flags().StringVar(&opts.collection, flags.CollectionName, "", usage.Collection)
-	cmd.Flags().StringArrayVar(&opts.keys, flags.Key, nil, usage.Key)
-	cmd.Flags().StringVar(&opts.locale, flags.Locale, "", usage.Locale)
-	cmd.Flags().StringVar(&opts.caseFirst, flags.CaseFirst, "", usage.CaseFirst)
-	cmd.Flags().StringVar(&opts.alternate, flags.Alternate, "", usage.Alternate)
-	cmd.Flags().StringVar(&opts.maxVariable, flags.MaxVariable, "", usage.MaxVariable)
-	cmd.Flags().BoolVar(&opts.caseLevel, flags.CaseLevel, false, usage.CaseLevel)
-	cmd.Flags().BoolVar(&opts.numericOrdering, flags.NumericOrdering, false, usage.NumericOrdering)
-	cmd.Flags().BoolVar(&opts.normalization, flags.Normalization, false, usage.Normalization)
-	cmd.Flags().BoolVar(&opts.backwards, flags.Backwards, false, usage.Backwards)
-	cmd.Flags().IntVar(&opts.strength, flags.Strength, 0, usage.Strength)
-	cmd.Flags().BoolVar(&opts.unique, flags.Unique, false, usage.Unique)
-	cmd.Flags().BoolVar(&opts.sparse, flags.Sparse, false, usage.Sparse)
-	cmd.Flags().BoolVar(&opts.background, flags.Background, false, usage.Background)
+	cmd.Flags().StringVar(&opts.db, flag.Database, "", usage.Database)
+	cmd.Flags().StringVar(&opts.rsName, flag.RSName, "", usage.RSName)
+	cmd.Flags().StringVar(&opts.collection, flag.CollectionName, "", usage.Collection)
+	cmd.Flags().StringArrayVar(&opts.keys, flag.Key, nil, usage.Key)
+	cmd.Flags().StringVar(&opts.locale, flag.Locale, "", usage.Locale)
+	cmd.Flags().StringVar(&opts.caseFirst, flag.CaseFirst, "", usage.CaseFirst)
+	cmd.Flags().StringVar(&opts.alternate, flag.Alternate, "", usage.Alternate)
+	cmd.Flags().StringVar(&opts.maxVariable, flag.MaxVariable, "", usage.MaxVariable)
+	cmd.Flags().BoolVar(&opts.caseLevel, flag.CaseLevel, false, usage.CaseLevel)
+	cmd.Flags().BoolVar(&opts.numericOrdering, flag.NumericOrdering, false, usage.NumericOrdering)
+	cmd.Flags().BoolVar(&opts.normalization, flag.Normalization, false, usage.Normalization)
+	cmd.Flags().BoolVar(&opts.backwards, flag.Backwards, false, usage.Backwards)
+	cmd.Flags().IntVar(&opts.strength, flag.Strength, 0, usage.Strength)
+	cmd.Flags().BoolVar(&opts.unique, flag.Unique, false, usage.Unique)
+	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
+	cmd.Flags().BoolVar(&opts.background, flag.Background, false, usage.Background)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.RSName)
-	_ = cmd.MarkFlagRequired(flags.Database)
-	_ = cmd.MarkFlagRequired(flags.CollectionName)
-	_ = cmd.MarkFlagRequired(flags.Key)
+	_ = cmd.MarkFlagRequired(flag.RSName)
+	_ = cmd.MarkFlagRequired(flag.Database)
+	_ = cmd.MarkFlagRequired(flag.CollectionName)
+	_ = cmd.MarkFlagRequired(flag.Key)
+
+	_ = cmd.Flags().MarkHidden(flag.Background) // Deprecated
 
 	return cmd
 }

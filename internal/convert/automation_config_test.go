@@ -18,12 +18,12 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
-	config := fixtures.AutomationConfigWithOneReplicaSet(name, false)
+	config := fixture.AutomationConfigWithOneReplicaSet(name, false)
 
 	buildIndexes := true
 	expected := []ClusterConfig{
@@ -59,7 +59,7 @@ func TestFromAutomationConfig(t *testing.T) {
 }
 
 func TestEnableMechanism(t *testing.T) {
-	config := fixtures.AutomationConfigWithoutMongoDBUsers()
+	config := fixture.AutomationConfigWithoutMongoDBUsers()
 
 	e := EnableMechanism(config, []string{"SCRAM-SHA-256"})
 
@@ -83,7 +83,7 @@ func TestEnableMechanism(t *testing.T) {
 		t.Error("config.Auth.Key* not set\n")
 	}
 
-	if len(config.Auth.Users) != 2 {
-		t.Error("automation and monitoring users not set\n")
+	if len(config.Auth.Users) != 0 {
+		t.Errorf("expected 0 user got: %d\n", len(config.Auth.Users))
 	}
 }

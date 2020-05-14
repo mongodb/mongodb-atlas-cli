@@ -21,7 +21,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -75,7 +75,7 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.forever && opts.until != "" {
-				return fmt.Errorf("--%s and --%s are exclusive", flags.Forever, flags.Until)
+				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)
 			}
 			return opts.PreRunE(opts.initStore)
 		},
@@ -85,11 +85,11 @@ func AtlasAlertsAcknowledgeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(&opts.forever, flags.Forever, flags.ForeverShort, false, usage.Forever)
-	cmd.Flags().StringVar(&opts.until, flags.Until, "", usage.Until)
-	cmd.Flags().StringVar(&opts.comment, flags.Comment, "", usage.Comment)
+	cmd.Flags().BoolVarP(&opts.forever, flag.Forever, flag.ForeverShort, false, usage.Forever)
+	cmd.Flags().StringVar(&opts.until, flag.Until, "", usage.Until)
+	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

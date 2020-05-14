@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -88,11 +88,11 @@ func OpsManagerDiagnoseArchiveDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flags.Out, flags.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
-	cmd.Flags().Int64Var(&opts.limit, flags.Limit, 0, usage.ArchiveLimit)
-	cmd.Flags().Int64Var(&opts.minutes, flags.Minutes, 0, usage.ArchiveMinutes)
+	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
+	cmd.Flags().Int64Var(&opts.limit, flag.Limit, 0, usage.ArchiveLimit)
+	cmd.Flags().Int64Var(&opts.minutes, flag.Minutes, 0, usage.ArchiveMinutes)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

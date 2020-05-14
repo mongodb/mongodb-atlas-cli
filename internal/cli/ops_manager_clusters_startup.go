@@ -20,7 +20,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -95,9 +95,9 @@ func OpsManagerClustersStartupBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.confirm, flags.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

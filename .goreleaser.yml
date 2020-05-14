@@ -2,34 +2,49 @@ before:
   hooks:
     - go mod tidy
 
-release:
-  draft: true
-  prerelease: auto
-
 builds:
-- env:
-    - CGO_ENABLED=0
-  ldflags:
-    - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
-  goos:
-    - darwin
-    - linux
-    - windows
-  goarch:
-    - amd64
+  - <<: &build_defaults
+      ldflags:
+        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
+    id: macos
+    goos: [darwin]
+    goarch: [amd64]
+    hooks:
+      post: gon -log-level=error gon.json
+  - <<: *build_defaults
+    id: linux
+    goos: [linux]
+    goarch: [amd64]
+  - <<: *build_defaults
+    id: windows
+    goos: [windows]
+    goarch: [amd64]
 archives:
-- replacements:
-    darwin: macos
-    amd64: x86_64
-  format_overrides:
-    - goos: windows
-      format: zip
-  files:
-    - README.md
-    - LICENSE
-    - third_party_notices/**/*
+- id: linux
+  builds: [linux]
+  <<: &archive_defaults
+    files:
+      - README.md
+      - LICENSE
+      - third_party_notices/**/*
+    replacements:
+      darwin: macos
+      amd64: x86_64
+  wrap_in_directory: true
+  format: tar.gz
+- id: macos
+  builds: [macos]
+  <<: *archive_defaults
+  format: zip
+  wrap_in_directory: false
+- id: windows
+  builds: [windows]
+  <<: *archive_defaults
+  wrap_in_directory: false
+  format: zip
 brews:
 - name: mongocli
+  ids: [macos]
   github:
     owner: mongodb
     name: homebrew-brew
@@ -37,7 +52,6 @@ brews:
   skip_upload: auto
   description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   homepage: https://github.com/mongodb/mongocli
-  url_template: https://github.com/mongodb/mongocli/releases/download/{{ .Tag }}/{{ .ArtifactName }}
   install: |
     bin.install "mongocli"
   test: |
@@ -50,9 +64,8 @@ nfpms:
   description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   license: Apache 2.0
   bindir: /usr/bin
-  formats:
-    - deb
-    - rpm
+  builds: [linux]
+  formats: [deb,rpm]
   replacements:
     amd64: x86_64
 checksum:
@@ -65,3 +78,8 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+release:
+  draft: true
+  prerelease: auto
+  extra_files:
+    - glob: ./dist/mongocli_macos_signed_x86_64.zip

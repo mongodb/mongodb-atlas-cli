@@ -107,16 +107,6 @@ gen-notices: ## Generate 3rd party notices
 	@rm -Rf third_party_notices
 	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
 
-.PHONY: package
-package: ## Use goreleaser to generate evergreen builds
-	@echo "==> Packaging"
-	goreleaser --rm-dist --snapshot
-
-.PHONY: release
-release: ## Use goreleaser to generate builds and publish
-	@echo "==> Releasing"
-	goreleaser --rm-dist
-
 .PHONY: list
 list: ## List all make targets
 	@${MAKE} -pRrn : -f $(MAKEFILE_LIST) 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sort

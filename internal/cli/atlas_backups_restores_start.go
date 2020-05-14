@@ -21,7 +21,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -148,42 +148,42 @@ func (opts *atlasBackupsRestoresStartOpts) validateParams() error {
 
 func (opts *atlasBackupsRestoresStartOpts) httpRestoreOnlyFlags() error {
 	if opts.expires != "" {
-		return fmt.Errorf(onlyFor, flags.Expires, httpRestore)
+		return fmt.Errorf(onlyFor, flag.Expires, httpRestore)
 	}
 	if opts.maxDownloads > 0 {
-		return fmt.Errorf(onlyFor, flags.MaxDownloads, httpRestore)
+		return fmt.Errorf(onlyFor, flag.MaxDownloads, httpRestore)
 	}
 	if opts.expirationHours > 0 {
-		return fmt.Errorf(onlyFor, flags.ExpirationHours, httpRestore)
+		return fmt.Errorf(onlyFor, flag.ExpirationHours, httpRestore)
 	}
 	return nil
 }
 
 func (opts *atlasBackupsRestoresStartOpts) automatedRestoreOnlyFlags() error {
 	if opts.checkpointID != "" {
-		return fmt.Errorf(onlyFor, flags.CheckpointID, automatedRestore)
+		return fmt.Errorf(onlyFor, flag.CheckpointID, automatedRestore)
 	}
 	if opts.oplogTs != "" {
-		return fmt.Errorf(onlyFor, flags.OplogTs, automatedRestore)
+		return fmt.Errorf(onlyFor, flag.OplogTs, automatedRestore)
 	}
 	if opts.oplogInc > 0 {
-		return fmt.Errorf(onlyFor, flags.OplogInc, automatedRestore)
+		return fmt.Errorf(onlyFor, flag.OplogInc, automatedRestore)
 	}
 	if opts.pointInTimeUTCMillis > 0 {
-		return fmt.Errorf(onlyFor, flags.PointInTimeUTCMillis, automatedRestore)
+		return fmt.Errorf(onlyFor, flag.PointInTimeUTCMillis, automatedRestore)
 	}
 	return nil
 }
 
 func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
-	if err := cmd.MarkFlagRequired(flags.TargetProjectID); err != nil {
+	if err := cmd.MarkFlagRequired(flag.TargetProjectID); err != nil {
 		return err
 	}
 
 	if config.Service() == config.CloudService {
-		return cmd.MarkFlagRequired(flags.ClusterName)
+		return cmd.MarkFlagRequired(flag.ClusterName)
 	}
-	return cmd.MarkFlagRequired(flags.ClusterID)
+	return cmd.MarkFlagRequired(flag.ClusterID)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) start
@@ -213,29 +213,29 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.snapshotID, flags.SnapshotID, "", usage.SnapshotID)
+	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
 	// Atlas uses cluster name
-	cmd.Flags().StringVar(&opts.clusterName, flags.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	// C/OM uses cluster ID
-	cmd.Flags().StringVar(&opts.clusterID, flags.ClusterID, "", usage.ClusterID)
+	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 
 	// For Automatic restore
-	cmd.Flags().StringVar(&opts.targetProjectID, flags.TargetProjectID, "", usage.TargetProjectID)
+	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// C/OM uses cluster ID
-	cmd.Flags().StringVar(&opts.targetClusterID, flags.TargetClusterID, "", usage.TargetClusterID)
+	cmd.Flags().StringVar(&opts.targetClusterID, flag.TargetClusterID, "", usage.TargetClusterID)
 	// Atlas uses cluster name
-	cmd.Flags().StringVar(&opts.targetClusterName, flags.TargetClusterName, "", usage.TargetClusterName)
-	cmd.Flags().StringVar(&opts.checkpointID, flags.CheckpointID, "", usage.CheckpointID)
-	cmd.Flags().StringVar(&opts.oplogTs, flags.OplogTs, "", usage.OplogTs)
-	cmd.Flags().Int64Var(&opts.oplogInc, flags.OplogInc, 0, usage.OplogInc)
-	cmd.Flags().Float64Var(&opts.pointInTimeUTCMillis, flags.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
+	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
+	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
+	cmd.Flags().StringVar(&opts.oplogTs, flag.OplogTs, "", usage.OplogTs)
+	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
+	cmd.Flags().Float64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
 	// For http restore
-	cmd.Flags().StringVar(&opts.expires, flags.Expires, "", usage.Expires)
-	cmd.Flags().Int64Var(&opts.maxDownloads, flags.MaxDownloads, 0, usage.MaxDownloads)
-	cmd.Flags().Int64Var(&opts.expirationHours, flags.ExpirationHours, 0, usage.ExpirationHours)
+	cmd.Flags().StringVar(&opts.expires, flag.Expires, "", usage.Expires)
+	cmd.Flags().Int64Var(&opts.maxDownloads, flag.MaxDownloads, 0, usage.MaxDownloads)
+	cmd.Flags().Int64Var(&opts.expirationHours, flag.ExpirationHours, 0, usage.ExpirationHours)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

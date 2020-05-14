@@ -21,7 +21,7 @@ import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flags"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -112,20 +112,22 @@ func AtlasClustersIndexesCreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.clusterName, flags.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.db, flags.Database, "", usage.Database)
-	cmd.Flags().StringVar(&opts.collection, flags.Collection, "", usage.Collection)
-	cmd.Flags().StringArrayVar(&opts.keys, flags.Key, nil, usage.Key)
-	cmd.Flags().BoolVar(&opts.unique, flags.Unique, false, usage.Unique)
-	cmd.Flags().BoolVar(&opts.sparse, flags.Sparse, false, usage.Sparse)
-	cmd.Flags().BoolVar(&opts.background, flags.Background, false, usage.Background)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.db, flag.Database, "", usage.Database)
+	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
+	cmd.Flags().StringArrayVar(&opts.keys, flag.Key, nil, usage.Key)
+	cmd.Flags().BoolVar(&opts.unique, flag.Unique, false, usage.Unique)
+	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
+	cmd.Flags().BoolVar(&opts.background, flag.Background, false, usage.Background)
 
-	cmd.Flags().StringVar(&opts.projectID, flags.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flags.ClusterName)
-	_ = cmd.MarkFlagRequired(flags.Database)
-	_ = cmd.MarkFlagRequired(flags.Collection)
-	_ = cmd.MarkFlagRequired(flags.Key)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.Database)
+	_ = cmd.MarkFlagRequired(flag.Collection)
+	_ = cmd.MarkFlagRequired(flag.Key)
+
+	_ = cmd.Flags().MarkHidden(flag.Background) // Deprecated
 
 	return cmd
 }

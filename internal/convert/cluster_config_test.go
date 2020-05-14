@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixtures"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -29,7 +29,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		changes  ClusterConfig
 	}{
 		"add a replica set to an empty config": {
-			current: fixtures.EmptyAutomationConfig(),
+			current: fixture.EmptyAutomationConfig(),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "test_config",
@@ -99,7 +99,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"add a replica set to a config with an existing replica set": {
-			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "test_config",
@@ -214,7 +214,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"add a process to a config with an existing replica set": {
-			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "replica_set_1",
@@ -330,7 +330,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			},
 		},
 		"replace a process to a config with an existing replica set": {
-			current: fixtures.AutomationConfigWithOneReplicaSet("replica_set_1", false),
+			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: ClusterConfig{
 				FCVersion: "4.2",
 				Name:      "replica_set_1",

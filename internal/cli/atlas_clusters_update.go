@@ -107,6 +107,7 @@ func (opts *atlasClustersUpdateOpts) updateLabels(out *atlas.Cluster) {
 	for _, v := range out.Labels {
 		if v.Key == config.LabelKey && v.Value == config.LabelValue {
 			found = true
+			break
 		}
 	}
 

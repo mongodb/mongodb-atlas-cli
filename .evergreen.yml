@@ -398,6 +398,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -416,6 +417,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -434,6 +436,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -452,6 +455,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -470,6 +474,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -488,6 +493,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -507,6 +513,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -525,6 +532,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -543,6 +551,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -561,6 +570,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -579,6 +589,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -597,6 +608,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -615,6 +627,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -633,6 +646,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -651,6 +665,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -669,6 +684,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -687,6 +703,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -705,6 +722,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
+        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -725,7 +743,7 @@ buildvariants:
       - name: compile
       - name: test
   - name: goreleaser_snaphot
-    display_name: "Daily Builds (goreleaser, yum, apt)"
+    display_name: "Packaging (goreleaser)"
     run_on:
       - macos-1014-codesign
     expansions:
@@ -733,9 +751,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: package_goreleaser
-      - name: .push
-        distros:
-          - rhel70-small
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
@@ -745,6 +760,12 @@ buildvariants:
       go_bin: "c:\\golang\\go1.14/bin"
     tasks:
       - name: package_msi
+  - name: repo_publish
+    display_name: "Publishing (yum/apt)"
+    run_on:
+      - rhel70-small
+    tasks:
+      - name: .push
   - name: release_github
     display_name: "Release (goreleaser)"
     run_on:

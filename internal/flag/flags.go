@@ -101,6 +101,7 @@ const (
 	MinDate                         = "minDate"                         // MinDate flag
 	Granularity                     = "granularity"                     // Granularity flag
 	Key                             = "key"                             // Key flag
+	Labels                          = "labels"                          // Labels flag
 	Collection                      = "collection"                      // Collection flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
 	Database                        = "db"                              // Database flag

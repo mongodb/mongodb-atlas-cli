@@ -15,6 +15,9 @@
 package cli
 
 import (
+	"fmt"
+	"strings"
+
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -34,6 +37,7 @@ type atlasClustersUpdateOpts struct {
 	diskSizeGB float64
 	mdbVersion string
 	filename   string
+	labels     []string
 	fs         afero.Fs
 	store      store.ClusterStore
 }
@@ -50,7 +54,10 @@ func (opts *atlasClustersUpdateOpts) Run() error {
 		return err
 	}
 	if opts.filename == "" {
-		opts.patchOpts(cluster)
+		err = opts.patchOpts(cluster)
+		if err != nil {
+			return err
+		}
 	}
 
 	result, err := opts.store.UpdateCluster(opts.ProjectID(), opts.name, cluster)
@@ -77,7 +84,7 @@ func (opts *atlasClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
 	return cluster, err
 }
 
-func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
+func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) error {
 	// There can only be one
 	if out.ReplicationSpecs != nil {
 		out.ReplicationSpec = nil
@@ -98,6 +105,29 @@ func (opts *atlasClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	if opts.tier != "" {
 		out.ProviderSettings.InstanceSizeName = opts.tier
 	}
+
+	if opts.labels != nil {
+		if label, err := opts.newLabels(); err == nil {
+			out.Labels = label
+		} else {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *atlasClustersUpdateOpts) newLabels() ([]atlas.Label, error) {
+	labels := make([]atlas.Label, len(opts.labels))
+	for i, key := range opts.labels {
+		value := strings.Split(key, ":")
+		if len(value) != 2 {
+			return nil, fmt.Errorf("unexpected label format: %s", key)
+		}
+		labels[i] = atlas.Label{Key: value[0], Value: value[1]}
+	}
+
+	return labels, nil
 }
 
 // mongocli atlas cluster(s) update name --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]
@@ -125,6 +155,7 @@ func AtlasClustersUpdateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 0, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
+	cmd.Flags().StringArrayVar(&opts.labels, flag.Labels, nil, usage.Labels)
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 

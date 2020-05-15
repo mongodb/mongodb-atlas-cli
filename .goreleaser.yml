@@ -9,8 +9,8 @@ builds:
     id: macos
     goos: [darwin]
     goarch: [amd64]
-#    hooks:
-#      post: gon -log-level=error gon.json
+    hooks:
+      post: gon -log-level=error gon.json
   - <<: *build_defaults
     id: linux
     goos: [linux]

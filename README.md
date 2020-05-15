@@ -8,7 +8,7 @@
 `mongocli` is a tool for managing your MongoDB cloud services
 
 <p align="center">
-  <img width="150" height="150" src="https://user-images.githubusercontent.com/461027/78688122-d3d83b80-78ec-11ea-84f9-06a24ed7f75a.png" alt="MongoCLI Terminal">
+  <img src="https://user-images.githubusercontent.com/461027/78688122-d3d83b80-78ec-11ea-84f9-06a24ed7f75a.png" alt="MongoCLI Terminal">
 </p>
 
 ## Installing

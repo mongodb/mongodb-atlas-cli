@@ -7,7 +7,6 @@ pre_error_fails_task: true
 ignore:
   - "*.md"
   - "*.txt"
-
 variables:
   - &go_options
     GO111MODULE: "on"
@@ -97,6 +96,17 @@ functions:
           set -o verbose
 
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+  "install curator":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
   "set up gon":
     - command: shell.exec
       params:
@@ -183,7 +193,7 @@ functions:
           mkdir {build,dist}
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
-  "rename pkg unstable":
+  "rename pkg":
     - command: shell.exec
       type: test
       params:
@@ -194,32 +204,17 @@ functions:
           set -o verbose
 
           VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
+          FILENAME=mongocli_"$VERSION"_linux_x86_64
+          if [[ "${unstable}" == "unstable" ]]; then
+            FILENAME="mongocli_next_linux_x86_64"
+          fi
 
           mkdir {yum,apt}
           # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
-          cp mongocli_next_linux_x86_64.deb apt/
-          mv apt/mongocli_next_linux_x86_64.deb apt/mongodb-cli-unstable_$VERSION~latest_amd64.deb
-          cp mongocli_next_linux_x86_64.rpm yum/
-          mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
-  "rename pkg stable":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongocli/dist
-        script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          VERSION=$(git describe | cut -d "v" -f 2)
-
-          mkdir {yum,apt}
-          # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
-          cp mongocli_next_linux_x86_64.deb apt/
-          mv apt/mongocli_$VERSION_linux_x86_64.deb apt/mongodb-cli_$VERSION_amd64.deb
-
-          cp mongocli_next_linux_x86_64.rpm yum/
-          mv yum/mongocli_$VERSION_linux_x86_64.rpm yum/mongodb-cli-$VERSION.x86_64.rpm
+          cp "$FILENAME.deb" apt/
+          mv "apt/$FILENAME.deb" apt/mongodb-cli-${unstable}_$VERSION${latest_deb}_amd64.deb
+          cp "$FILENAME.rpm" yum/
+          mv "yum/$FILENAME.rpm" yum/mongodb-cli-${unstable}-$VERSION{latest_rpm}.x86_64.rpm
   "generate download archive json":
     - command: shell.exec
       type: test
@@ -264,10 +259,6 @@ functions:
           set -o xtrace
           set -o errexit
           set -o verbose
-
-          CURATOR_RELEASE=${curator_release|"latest"}
-          curl -L -O http://boxes.10gen.com/build/curator/curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
-          tar -zxvf curator-dist-rhel70-$CURATOR_RELEASE.tar.gz
 
           # --version needs to match the mongodb server version to publish to the right repo
           # 4.X goes to the 4.x repo
@@ -326,7 +317,11 @@ tasks:
       - func: "install gon"
       - func: "set up gon"
       - func: "package"
-      - func: "rename pkg unstable"
+      - func: "rename pkg"
+        vars:
+          unstable: unstable
+          latets_deb: ~latest
+          latest_rpm: .latest
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -369,9 +364,37 @@ tasks:
       - func: "set up gon"
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --rm-dist
-      - func: "rename pkg stable"
+          goreleaser_cmd: goreleaser --rm-dist --skip-publish --skip-validate
+      - func: "rename pkg"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/apt
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/yum
+          include:
+            - "*.rpm"
       - func: "generate download archive json"
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
+            - src/github.com/mongodb/mongocli/dist/*.rb
+          remote_file: ${project}/dist/${revision}_${created_at}/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
       - command: s3.put
         params:
           aws_key: ${download_center_aws_key}
@@ -387,6 +410,8 @@ tasks:
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
+  ################################################################
+  # Unstable Publish
   # RPM Distros
   - name: push_rhel70_enterprise
     <<: &default_push_def
@@ -403,6 +428,7 @@ tasks:
     commands:
         - func: "clone"
         - func: "set up notary client credentials"
+        - func: "install curator"
         - func: "push"
           vars:
             edition: enterprise
@@ -413,6 +439,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -420,13 +447,10 @@ tasks:
           ext: rpm
   - name: push_rhel80_enterprise
     <<: *default_push_def
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -447,6 +471,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -457,6 +482,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -468,6 +494,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -478,6 +505,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -488,6 +516,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -498,6 +527,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -508,6 +538,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -518,6 +549,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -528,6 +560,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -538,6 +571,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -558,6 +592,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
@@ -568,6 +603,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: enterprise
@@ -578,11 +614,238 @@ tasks:
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
+      - func: "install curator"
       - func: "push"
         vars:
           edition: org
           distro: debian10
           ext: deb
+  ################################################################
+  # Stable Publish
+  # RPM Distros
+  - name: push_rhel70_enterprise_44
+    <<: &default_push_stable_def
+      patch_only: true
+      stepback: false
+      tags: ["push_stable"]
+      depends_on:
+        - name: compile
+          variant: "code_health"
+        - name: release
+          variant: "release_publish"
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: "4.4.0-rc0"
+  - name: push_rhel70_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: "4.4.0-rc0"
+  - name: push_rhel80_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel80
+          ext: rpm
+          server_version: "4.4.0-rc0"
+  - name: push_rhel80_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel80
+          ext: rpm
+          server_version: "4.4.0-rc0"
+  - name: push_amazon2_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: amazon2
+          ext: rpm
+          server_version: "4.4.0-rc0"
+  - name: push_amazon2_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: amazon2
+          ext: rpm
+          server_version: "4.4.0-rc"
+  # DEB Distros
+  - name: push_ubuntu1604_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_ubuntu1604_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_ubuntu1804_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1804
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_ubuntu1804_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1804
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian71_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian71
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian71_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian71
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian81_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian81
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian81_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian81
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian92_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian92_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian10_enterprise_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian10
+          ext: deb
+          server_version: "4.4.0-rc0"
+  - name: push_debian10_org_44
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+          server_version: "4.4.0-rc0"
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -604,7 +867,7 @@ buildvariants:
     tasks:
       - name: package_goreleaser
       - name: .push
-        distros:
+        run_on:
           - rhel70-small
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
@@ -615,7 +878,7 @@ buildvariants:
       go_bin: "c:\\golang\\go1.14/bin"
     tasks:
       - name: package_msi
-  - name: release_github
+  - name: release_publish
     display_name: "Release (goreleaser)"
     run_on:
       - macos-1014-codesign
@@ -625,3 +888,6 @@ buildvariants:
       is_release: true
     tasks:
       - name: release
+      - name: .push_stable
+        run_on:
+          - rhel70-small

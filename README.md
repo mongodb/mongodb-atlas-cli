@@ -1,4 +1,5 @@
-# MongoDB CLI
+![#MongoDB CLI Logo](https://raw.github.com/mongodb/mongocli/master/mongocli.png)
+
 [![Build Status](https://cloud.drone.io/api/badges/mongodb/mongocli/status.svg)](https://cloud.drone.io/mongodb/mongocli)
 
 `mongocli` is a tool for managing your MongoDB cloud services

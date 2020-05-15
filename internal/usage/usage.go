@@ -109,7 +109,7 @@ For use only with automated restore jobs.`
 For use only with automated restore jobs.`
 	CheckpointID = `Unique identifier for the sharded cluster checkpoint that represents the point in time to which your data will be restored.
 If you set checkpointId, you cannot set oplogInc, oplogTs, snapshotId, or pointInTimeUTCMillis.`
-	OplogTs = `Oplog timestamp given as a timestamp in the number of seconds that have elapsed since the UNIX epoch. 
+	OplogTS = `Oplog timestamp given as a timestamp in the number of seconds that have elapsed since the UNIX epoch. 
 When paired with oplogInc, they represent the point in time to which your data will be restored.`
 	OplogInc = `32-bit incrementing ordinal that represents operations within a given second. 
 When paired with oplogTs, they represent the point in time to which your data will be restored.`

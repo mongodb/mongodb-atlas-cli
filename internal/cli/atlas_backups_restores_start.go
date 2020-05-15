@@ -43,7 +43,7 @@ type atlasBackupsRestoresStartOpts struct {
 	targetClusterID      string
 	targetClusterName    string
 	checkpointID         string
-	oplogTs              string
+	oplogTS              string
 	oplogInc             int64
 	snapshotID           string
 	expirationHours      int64
@@ -80,8 +80,8 @@ func (opts *atlasBackupsRestoresStartOpts) newContinuousJobRequest() *atlas.Cont
 		request.Delivery.TargetGroupID = opts.targetProjectID
 		opts.setTargetCluster(request)
 
-		if opts.oplogTs != "" && opts.oplogInc != 0 {
-			request.OplogTs = opts.oplogTs
+		if opts.oplogTS != "" && opts.oplogInc != 0 {
+			request.OplogTs = opts.oplogTS
 			request.OplogInc = opts.oplogInc
 		}
 		if opts.pointInTimeUTCMillis != 0 {
@@ -163,8 +163,8 @@ func (opts *atlasBackupsRestoresStartOpts) automatedRestoreOnlyFlags() error {
 	if opts.checkpointID != "" {
 		return fmt.Errorf(onlyFor, flag.CheckpointID, automatedRestore)
 	}
-	if opts.oplogTs != "" {
-		return fmt.Errorf(onlyFor, flag.OplogTs, automatedRestore)
+	if opts.oplogTS != "" {
+		return fmt.Errorf(onlyFor, flag.OplogTS, automatedRestore)
 	}
 	if opts.oplogInc > 0 {
 		return fmt.Errorf(onlyFor, flag.OplogInc, automatedRestore)
@@ -226,7 +226,7 @@ func AtlasBackupsRestoresStartBuilder() *cobra.Command {
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
 	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
-	cmd.Flags().StringVar(&opts.oplogTs, flag.OplogTs, "", usage.OplogTs)
+	cmd.Flags().StringVar(&opts.oplogTS, flag.OplogTS, "", usage.OplogTS)
 	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
 	cmd.Flags().Float64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 

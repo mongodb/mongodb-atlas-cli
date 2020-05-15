@@ -43,7 +43,7 @@ func (opts *iamOrganizationsCreateOpts) Run() error {
 	return json.PrettyPrint(projects)
 }
 
-// mongocli iam organization(s) create name [--orgId orgId]
+// mongocli iam organization(s) create [name]
 func IAMOrganizationsCreateBuilder() *cobra.Command {
 	opts := new(iamOrganizationsCreateOpts)
 	cmd := &cobra.Command{

@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150" height="150" src="https://raw.github.com/mongodb/mongocli/master/mongocli.png" alt="MongoDB CLI Logo">
+  <img width="100" height="100" src="https://raw.github.com/mongodb/mongocli/master/mongocli.png" alt="MongoDB CLI Logo">
 </p>
 
 

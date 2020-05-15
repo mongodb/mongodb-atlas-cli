@@ -364,7 +364,7 @@ tasks:
       - func: "set up gon"
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --rm-dist --skip-publish --skip-validate
+          goreleaser_cmd: goreleaser --rm-dist
       - func: "rename pkg"
       - command: archive.targz_pack
         params:

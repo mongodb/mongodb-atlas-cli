@@ -72,8 +72,8 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.ID, alertID)
 		}
 
-		if alert.Status != closed {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, closed)
+		if alert.Status != open {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
 		if alert.EventTypeName != users_without_multi_factor_auth {

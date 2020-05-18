@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package atlas_test
+package cloud_manager_test
 
 import (
 	"encoding/json"
@@ -32,7 +32,7 @@ const (
 	roleReadWrite = "readWrite"
 )
 
-func TestAtlasDBUsers(t *testing.T) {
+func TestCloudManagerDBUsers(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -45,16 +45,16 @@ func TestAtlasDBUsers(t *testing.T) {
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	atlasEntity := "atlas"
+	entity := "cloud-manager"
 	dbusersEntity := "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			dbusersEntity,
 			"create",
-			"atlasAdmin",
+			"admin",
 			"--username", username,
 			"--password=passW0rd")
 		cmd.Env = os.Environ()
@@ -76,7 +76,7 @@ func TestAtlasDBUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "ls")
+		cmd := exec.Command(cliPath, entity, dbusersEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -90,11 +90,12 @@ func TestAtlasDBUsers(t *testing.T) {
 		if len(users) == 0 {
 			t.Fatalf("unexpected error: %v, expected len(users) = 0, got: %v", 0, len(users))
 		}
+
 	})
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			dbusersEntity,
 			"update",
 			username,
@@ -132,7 +133,7 @@ func TestAtlasDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath, entity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

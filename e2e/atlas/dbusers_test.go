@@ -88,7 +88,7 @@ func TestAtlasDBUsers(t *testing.T) {
 		err = json.Unmarshal(resp, &users)
 
 		if len(users) == 0 {
-			t.Fatalf("unexpected error: %v, expected len(users) = 0, got: %v", 0, len(users))
+			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})
 

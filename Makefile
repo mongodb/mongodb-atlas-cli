@@ -95,11 +95,6 @@ e2e-test-atlas: build ## Run Atlas E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
 	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/atlas...
-
-.PHONY: e2e-test-iam
-e2e-test-iam: build ## Run IAM E2E tests
-	@echo "==> Running E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
 	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
 
 .PHONY: e2e-test-cloud

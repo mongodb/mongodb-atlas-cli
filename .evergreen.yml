@@ -330,9 +330,13 @@ tasks:
       - func: "test"
   - name: atlas_e2e
     commands:
+      - func: "clone"
+      - func: "build"
       - func: "atlas e2e"
   - name: iam_e2e
     commands:
+      - func: "clone"
+      - func: "build"
       - func: "iam e2e"
   - name: package_msi
     tags: ["packaging"]
@@ -644,7 +648,6 @@ buildvariants:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
-      - name: compile
       - name: atlas_e2e
       - name: iam_e2e
   - name: goreleaser_snaphot

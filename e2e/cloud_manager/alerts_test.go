@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package atlas_test
+package cloud_manager_test
 
 import (
 	"encoding/json"
@@ -30,7 +30,7 @@ const (
 	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
-func TestAtlasAlerts(t *testing.T) {
+func TestCloudManagerAlerts(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

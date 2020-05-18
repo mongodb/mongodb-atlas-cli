@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package e2e_test
+package iam_test
 
 import (
 	"encoding/json"
@@ -28,8 +28,8 @@ import (
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestAtlasWhitelist(t *testing.T) {
-	cliPath, err := filepath.Abs("../bin/mongocli")
+func TestAtlasIAMProjects(t *testing.T) {
+	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -39,18 +39,15 @@ func TestAtlasWhitelist(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	atlasEntity := "atlas"
-	whitelistEntity := "whitelist"
+	iamEntity := "iam"
+	projectEntity := "projects"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
+	projectName := fmt.Sprintf("e2e-proj-%v", r.Uint32())
 
+	var projectID string
 	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			whitelistEntity,
-			"create",
-			entry,
-			"--comment=test")
+		// This depends on a ORG_ID ENV
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, "create", projectName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -58,35 +55,20 @@ func TestAtlasWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
-		err = json.Unmarshal(resp, &entries)
+		project := mongodbatlas.Project{}
+		err = json.Unmarshal(resp, &project)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		found := false
-		for i := range entries {
-			if entries[i].IPAddress == entry {
-				found = true
-				break
-			}
+
+		if project.Name != projectName {
+			t.Errorf("got=%#v\nwant=%#v\n", project.Name, projectName)
 		}
-		if !found {
-			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
-		}
+		projectID = project.ID
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "ls")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-	})
-
-	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "describe", entry)
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -96,7 +78,7 @@ func TestAtlasWhitelist(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "delete", entry, "--force")
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, "delete", projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -104,7 +86,7 @@ func TestAtlasWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("Project whitelist entry '%s' deleted\n", entry)
+		expected := fmt.Sprintf("Project '%s' deleted\n", projectID)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

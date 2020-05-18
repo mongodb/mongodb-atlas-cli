@@ -47,7 +47,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli/e2e/atlas
+        working_dir: src/github.com/mongodb/mongocli
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
@@ -58,14 +58,14 @@ functions:
           MCLI_PROJECT_ID: ${mcli_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
           MCLI_SERVICE: ${mcli_service}
-        command: ../../make e2e-test-atlas
+        command: make e2e-test-atlas
   "iam e2e":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli/e2e/iam
+        working_dir: src/github.com/mongodb/mongocli
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
@@ -76,7 +76,7 @@ functions:
           MCLI_PROJECT_ID: ${mcli_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
           MCLI_SERVICE: ${mcli_service}
-        command: ../../make e2e-test-iam
+        command: make e2e-test-iam
   "lint":
     - command: subprocess.exec
       type: test

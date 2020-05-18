@@ -74,7 +74,7 @@ functions:
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
   "install gon":
     - command: shell.exec
-      type: test
+      type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
@@ -86,7 +86,7 @@ functions:
           cd bin
 
           curl -sL https://github.com/mitchellh/gon/releases/download/v0.2.3/gon_macos.zip | tar zx
-  "fetch goreleaser":
+  "install goreleaser":
     - command: shell.exec
       type: setup
       params:
@@ -139,35 +139,12 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
 
-          goreleaser --rm-dist --snapshot
+          ${goreleaser_cmd|goreleaser --rm-dist --snapshot}
           EOF_BUILD_SH
 
           set -o xtrace
           set -o verbose
           # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
-          ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
-  "release":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -o errexit
-
-          cat <<EOF_BUILD_SH > ~/mongocli_package.sh
-          #! /usr/bin/env bash
-
-          cd $(pwd)
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          goreleaser --rm-dist
-          EOF_BUILD_SH
-
-          set -o xtrace
-          set -o verbose
-
           ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
   "install go-msi":
     - command: subprocess.exec
@@ -208,6 +185,7 @@ functions:
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
   "rename pkg unstable":
     - command: shell.exec
+      type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         script: |
@@ -225,6 +203,7 @@ functions:
           mv yum/mongocli_next_linux_x86_64.rpm yum/mongodb-cli-unstable-$VERSION.latest.x86_64.rpm
   "rename pkg stable":
     - command: shell.exec
+      type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         script: |
@@ -243,6 +222,7 @@ functions:
           mv yum/mongocli_$VERSION_linux_x86_64.rpm yum/mongodb-cli-$VERSION.x86_64.rpm
   "generate download archive json":
     - command: shell.exec
+      type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         script: |
@@ -275,6 +255,7 @@ functions:
           echo "${signing_auth_token_44}" > ./signing_auth_token
   "push":
     - command: shell.exec
+      type: test
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
@@ -341,7 +322,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "generate notices"
-      - func: "fetch goreleaser"
+      - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
       - func: "package"
@@ -383,10 +364,12 @@ tasks:
     commands:
       - func: "clone"
       - func: "generate notices"
-      - func: "fetch goreleaser"
+      - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
-      - func: "release"
+      - func: "package"
+        vars:
+          goreleaser_cmd: goreleaser --rm-dist
       - func: "rename pkg stable"
       - func: "generate download archive json"
       - command: s3.put
@@ -406,35 +389,27 @@ tasks:
           content_type: ${content_type|application/x-gzip}
   # RPM Distros
   - name: push_rhel70_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: &default_push_def
+      # This should prevent this task from running in patch builds, where we
+      # don't want to publish packages.
+      patchable: false
+      stepback: false
+      tags: ["push"]
+      depends_on:
+        - name: compile
+          variant: "code_health"
+        - name: package_goreleaser
+          variant: "goreleaser_snaphot"
     commands:
-      - func: "clone"
-      - func: "set up notary client credentials"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: rhel70
-          ext: rpm
+        - func: "clone"
+        - func: "set up notary client credentials"
+        - func: "push"
+          vars:
+            edition: enterprise
+            distro: rhel70
+            ext: rpm
   - name: push_rhel70_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -444,16 +419,11 @@ tasks:
           distro: rhel70
           ext: rpm
   - name: push_rhel80_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
+    <<: *default_push_def
     depends_on:
       - name: compile
         variant: "code_health"
       - name: package_goreleaser
-        variant: "goreleaser_snaphot"
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -463,16 +433,7 @@ tasks:
           distro: rhel80
           ext: rpm
   - name: push_rhel80_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -482,16 +443,7 @@ tasks:
           distro: rhel80
           ext: rpm
   - name: push_amazon2_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -501,16 +453,7 @@ tasks:
           distro: amazon2
           ext: rpm
   - name: push_amazon2_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -521,16 +464,7 @@ tasks:
           ext: rpm
   # DEB Distros
   - name: push_ubuntu1604_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -540,16 +474,7 @@ tasks:
           distro: ubuntu1604
           ext: deb
   - name: push_ubuntu1604_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -559,16 +484,7 @@ tasks:
           distro: ubuntu1604
           ext: deb
   - name: push_ubuntu1804_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -578,16 +494,7 @@ tasks:
           distro: ubuntu1804
           ext: deb
   - name: push_ubuntu1804_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -597,16 +504,7 @@ tasks:
           distro: ubuntu1804
           ext: deb
   - name: push_debian71_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -616,16 +514,7 @@ tasks:
           distro: debian71
           ext: deb
   - name: push_debian71_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -635,16 +524,7 @@ tasks:
           distro: debian71
           ext: deb
   - name: push_debian81_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -654,16 +534,7 @@ tasks:
           distro: debian81
           ext: deb
   - name: push_debian81_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -673,16 +544,7 @@ tasks:
           distro: debian81
           ext: deb
   - name: push_debian92_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -692,16 +554,7 @@ tasks:
           distro: debian92
           ext: deb
   - name: push_debian92_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -711,16 +564,7 @@ tasks:
           distro: debian92
           ext: deb
   - name: push_debian10_enterprise
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -730,16 +574,7 @@ tasks:
           distro: debian10
           ext: deb
   - name: push_debian10_org
-    # This should prevent this task from running in patch builds, where we
-    # don't want to publish packages.
-    patchable: false
-    stepback: false
-    tags: ["push"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-      - name: package_goreleaser
-        variant: "goreleaser_snaphot"
+    <<: *default_push_def
     commands:
       - func: "clone"
       - func: "set up notary client credentials"
@@ -760,7 +595,7 @@ buildvariants:
       - name: compile
       - name: test
   - name: goreleaser_snaphot
-    display_name: "Packaging (goreleaser)"
+    display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:
       - macos-1014-codesign
     expansions:
@@ -768,6 +603,9 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: package_goreleaser
+      - name: .push
+        distros:
+          - rhel70-small
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
@@ -777,12 +615,6 @@ buildvariants:
       go_bin: "c:\\golang\\go1.14/bin"
     tasks:
       - name: package_msi
-  - name: repo_publish
-    display_name: "Publishing (yum/apt)"
-    run_on:
-      - rhel70-small
-    tasks:
-      - name: .push
   - name: release_github
     display_name: "Release (goreleaser)"
     run_on:

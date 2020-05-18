@@ -1,9 +1,15 @@
-# MongoDB CLI
+<p align="center">
+  <img width="80" height="80" src="https://raw.github.com/mongodb/mongocli/master/mongocli.png" alt="MongoDB CLI Logo">
+</p>
+
+
 [![Build Status](https://cloud.drone.io/api/badges/mongodb/mongocli/status.svg)](https://cloud.drone.io/mongodb/mongocli)
 
 `mongocli` is a tool for managing your MongoDB cloud services
 
-![Screenshot 2020-04-07 at 16 27 14](https://user-images.githubusercontent.com/461027/78688122-d3d83b80-78ec-11ea-84f9-06a24ed7f75a.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/461027/78688122-d3d83b80-78ec-11ea-84f9-06a24ed7f75a.png" alt="MongoCLI Terminal">
+</p>
 
 ## Installing
 

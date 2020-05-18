@@ -91,7 +91,7 @@ const (
 	TargetClusterID                 = "targetClusterId"                 // TargetClusterID flag
 	TargetClusterName               = "targetClusterName"               // TargetClusterName flag
 	CheckpointID                    = "checkpointId"                    // CheckpointID flag
-	OplogTs                         = "oplogTs"                         // OplogTs flag
+	OplogTS                         = "oplogTs"                         // OplogTS flag
 	OplogInc                        = "oplogInc"                        // OplogInc flag
 	PointInTimeUTCMillis            = "pointInTimeUTCMillis"            // PointInTimeUTCMillis flag
 	Expires                         = "expires"                         // Expires flag

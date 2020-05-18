@@ -40,6 +40,42 @@ functions:
           GOROOT: ${go_root}
           <<: *go_options
         command: make test
+  "atlas e2e":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: ${atlas_service}
+          <<: *go_options
+        command: make e2e-test-atlas
+  "cloud manager e2e":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: ${cloud_manager_service}
+          <<: *go_options
+        command: make e2e-test-cloud
   "lint":
     - command: subprocess.exec
       type: test
@@ -283,6 +319,16 @@ tasks:
     commands:
       - func: "clone"
       - func: "test"
+  - name: atlas_e2e
+    commands:
+      - func: "clone"
+      - func: "build"
+      - func: "atlas e2e"
+  - name: cloud_manager_e2e
+    commands:
+      - func: "clone"
+      - func: "build"
+      - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -839,6 +885,16 @@ buildvariants:
     tasks:
       - name: compile
       - name: test
+  - name: e2e
+    display_name: "E2E"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.14"
+      go_bin: "/opt/golang/go1.14/bin"
+    tasks:
+      - name: atlas_e2e
+      - name: cloud_manager_e2e
   - name: goreleaser_snaphot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

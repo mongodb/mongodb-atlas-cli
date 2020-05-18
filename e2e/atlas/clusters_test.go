@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package e2e_test
+package atlas_test
 
 import (
 	"encoding/json"
@@ -29,7 +29,7 @@ import (
 )
 
 func TestAtlasClusters(t *testing.T) {
-	cliPath, err := filepath.Abs("../bin/mongocli")
+	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

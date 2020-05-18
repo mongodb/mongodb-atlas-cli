@@ -38,7 +38,7 @@ func (opts *iamOrganizationsDeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOrganization)
 }
 
-// mongocli iam organization(s) delete [id] [--orgId orgId]
+// mongocli iam organization(s) delete [id] [--force]
 func IAMOrganizationsDeleteBuilder() *cobra.Command {
 	opts := &iamOrganizationsDeleteOpts{
 		deleteOpts: &deleteOpts{

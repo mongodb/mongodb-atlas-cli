@@ -37,30 +37,6 @@ steps:
     commands:
       - make lint
 
-  - name: e2e
-    image: golang:1.14
-    commands:
-      - make e2e-test
-    environment:
-      MCLI_OPS_MANAGER_URL:
-        from_secret: mcli_ops_manager_url
-      MCLI_ORG_ID:
-        from_secret: mcli_org_id
-      MCLI_PRIVATE_API_KEY:
-        from_secret: mcli_private_api_key
-      MCLI_PROJECT_ID:
-        from_secret: mcli_project_id
-      MCLI_PUBLIC_API_KEY:
-        from_secret: mcli_public_api_key
-      MCLI_SERVICE:
-        from_secret: mcli_service
-    volumes:
-      - name: deps
-        path: /go
-    depends_on:
-      - test
-      - lint
-
 volumes:
   - name: deps
     temp: {}

@@ -4,7 +4,7 @@ SOURCE_FILES?=./...
 BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
-GOLANGCI_VERSION=v1.26.0
+GOLANGCI_VERSION=v1.27.0
 COVERAGE=coverage.out
 
 VERSION=$(shell git describe --always --tags)
@@ -89,6 +89,20 @@ gen-mocks: ## Generate mocks
 build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
+
+.PHONY: e2e-test-atlas
+e2e-test-atlas: build ## Run Atlas E2E tests
+	@echo "==> Running Atlas E2E tests..."
+	# the target assumes the MCLI-* environment variables are exported
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/atlas...
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
+
+.PHONY: e2e-test-cloud
+e2e-test-cloud: build ## Run IAM E2E tests
+	@echo "==> Running Cloud Manger E2E tests..."
+	# the target assumes the MCLI-* environment variables are exported
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/cloud_manager...
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests

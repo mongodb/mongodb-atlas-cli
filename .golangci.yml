@@ -19,10 +19,9 @@ linters-settings:
     check-shadowing: true
   maligned:
     suggest-new: true
-
+  misspell:
+    locale: US
 linters:
-  # please, do not use `enable-all`: it's deprecated and will be removed soon.
-  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
   disable-all: true
   enable:
     - bodyclose

@@ -43,28 +43,28 @@ functions:
         command: make test
   "atlas e2e":
     - command: subprocess.exec
-        type: test
-        params:
-          add_to_path:
-            - ${go_bin}
-          working_dir: src/github.com/mongodb/mongocli/e2e/atlas
-          env:
-            WORKDIR: ${workdir}
-            GOROOT: ${go_root}
-            <<: *go_options
-          command: make e2e-test-atlas
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli/e2e/atlas
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make e2e-test-atlas
   "iam e2e":
     - command: subprocess.exec
-        type: test
-        params:
-          add_to_path:
-            - ${go_bin}
-          working_dir: src/github.com/mongodb/mongocli/e2e/iam
-          env:
-            WORKDIR: ${workdir}
-            GOROOT: ${go_root}
-            <<: *go_options
-          command: make e2e-test-iam
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli/e2e/iam
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make e2e-test-iam
   "lint":
     - command: subprocess.exec
       type: test
@@ -317,23 +317,25 @@ tasks:
       - func: "clone"
       - func: "test"
   - name: atlas_e2e
-    commands: "atlas e2e"
-    params:
-      MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-      MCLI_ORG_ID: ${mcli_org_id}
-      MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-      MCLI_PROJECT_ID: ${mcli_project_id}
-      MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
-      MCLI_SERVICE: ${mcli_service}
+    commands:
+      - func: "atlas e2e"
+        params:
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
+          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          MCLI_SERVICE: ${mcli_service}
   - name: iam_e2e
-    commands: "iam e2e"
-    params:
-      MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-      MCLI_ORG_ID: ${mcli_org_id}
-      MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-      MCLI_PROJECT_ID: ${mcli_project_id}
-      MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
-      MCLI_SERVICE: ${mcli_service}
+    commands:
+      - func: "iam e2e"
+        params:
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
+          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          MCLI_SERVICE: ${mcli_service}
   - name: package_msi
     tags: ["packaging"]
     depends_on:

@@ -52,9 +52,9 @@ functions:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
           <<: *go_options
         command: make e2e-test-atlas
@@ -69,12 +69,29 @@ functions:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
           <<: *go_options
         command: make e2e-test-iam
+  "cloud manager e2e":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          WORKDIR: ${workdir}
+          GOROOT: ${go_root}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          <<: *go_options
+        command: make e2e-test-cloud
   "lint":
     - command: subprocess.exec
       type: test
@@ -336,6 +353,11 @@ tasks:
       - func: "clone"
       - func: "build"
       - func: "iam e2e"
+  - name: cloud_manager_e2e
+    commands:
+      - func: "clone"
+      - func: "build"
+      - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -648,6 +670,7 @@ buildvariants:
     tasks:
       - name: atlas_e2e
       - name: iam_e2e
+      - name: cloud_manager_e2e
   - name: goreleaser_snaphot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

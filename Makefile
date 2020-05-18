@@ -102,6 +102,12 @@ e2e-test-iam: build ## Run IAM E2E tests
 	# the target assumes the MCLI-* environment variables are exported
 	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
 
+.PHONY: e2e-test-cloud
+e2e-test-cloud: build ## Run IAM E2E tests
+	@echo "==> Running Cloud Manger E2E tests..."
+	# the target assumes the MCLI-* environment variables are exported
+	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/cloud_manager...
+
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."

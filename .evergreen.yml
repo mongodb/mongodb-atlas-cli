@@ -52,6 +52,12 @@ functions:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
           <<: *go_options
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
+          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          MCLI_SERVICE: ${mcli_service}
         command: make e2e-test-atlas
   "iam e2e":
     - command: subprocess.exec
@@ -64,6 +70,12 @@ functions:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
           <<: *go_options
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_ORG_ID: ${mcli_org_id}
+          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
+          MCLI_PROJECT_ID: ${mcli_project_id}
+          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          MCLI_SERVICE: ${mcli_service}
         command: make e2e-test-iam
   "lint":
     - command: subprocess.exec
@@ -319,23 +331,9 @@ tasks:
   - name: atlas_e2e
     commands:
       - func: "atlas e2e"
-        params:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${mcli_org_id}
-          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-          MCLI_PROJECT_ID: ${mcli_project_id}
-          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
-          MCLI_SERVICE: ${mcli_service}
   - name: iam_e2e
     commands:
       - func: "iam e2e"
-        params:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${mcli_org_id}
-          MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
-          MCLI_PROJECT_ID: ${mcli_project_id}
-          MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
-          MCLI_SERVICE: ${mcli_service}
   - name: package_msi
     tags: ["packaging"]
     depends_on:

@@ -51,12 +51,12 @@ functions:
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
-          <<: *go_options
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${mcli_org_id}
           MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
           MCLI_PROJECT_ID: ${mcli_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          <<: *go_options
         command: make e2e-test-atlas
   "iam e2e":
     - command: subprocess.exec
@@ -68,12 +68,12 @@ functions:
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
-          <<: *go_options
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${mcli_org_id}
           MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
           MCLI_PROJECT_ID: ${mcli_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
+          <<: *go_options
         command: make e2e-test-iam
   "lint":
     - command: subprocess.exec

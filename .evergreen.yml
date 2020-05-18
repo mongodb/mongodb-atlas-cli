@@ -53,9 +53,10 @@ functions:
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: ${atlas_service}
           <<: *go_options
         command: make e2e-test-atlas
   "iam e2e":
@@ -70,9 +71,10 @@ functions:
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: ${atlas_service}
           <<: *go_options
         command: make e2e-test-iam
   "cloud manager e2e":
@@ -87,9 +89,10 @@ functions:
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: ${cloud_manager_service}
           <<: *go_options
         command: make e2e-test-cloud
   "lint":

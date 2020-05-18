@@ -56,7 +56,8 @@ func TestCloudManagerDBUsers(t *testing.T) {
 			"create",
 			"--username", username,
 			"--password=passW0rd",
-			"--role readWriteAnyDatabase,clusterMonitor")
+			"--role readWriteAnyDatabase,clusterMonitor"+
+				"--mechanisms SCRAM-SHA-256")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

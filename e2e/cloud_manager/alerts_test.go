@@ -41,14 +41,14 @@ func TestCloudManagerAlerts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	atlasEntity := "cloud-manager"
+	entity := "cloud-manager"
 	alertsEntity := "alerts"
 
 	t.Run("Describe", func(t *testing.T) {
 		alertID := "5ec2ac941271767f21cbaefe"
 
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			alertsEntity,
 			"describe",
 			alertID,
@@ -85,7 +85,7 @@ func TestCloudManagerAlerts(t *testing.T) {
 	t.Run("List with no status", func(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			alertsEntity,
 			"list",
 		)
@@ -112,7 +112,7 @@ func TestCloudManagerAlerts(t *testing.T) {
 	t.Run("List with status OPEN", func(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			alertsEntity,
 			"list",
 			"--status",
@@ -141,7 +141,7 @@ func TestCloudManagerAlerts(t *testing.T) {
 	t.Run("List with status CLOSED", func(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			alertsEntity,
 			"list",
 			"--status",

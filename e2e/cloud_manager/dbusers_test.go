@@ -54,9 +54,9 @@ func TestCloudManagerDBUsers(t *testing.T) {
 			entity,
 			dbusersEntity,
 			"create",
-			"admin",
 			"--username", username,
-			"--password=passW0rd")
+			"--password=passW0rd",
+			"--role readWriteAnyDatabase,clusterMonitor")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -89,45 +89,6 @@ func TestCloudManagerDBUsers(t *testing.T) {
 
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
-		}
-
-	})
-
-	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			dbusersEntity,
-			"update",
-			username,
-			"--role",
-			roleReadWrite)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
-		}
-
-		if len(user.Roles) != 1 {
-			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
-		}
-
-		if user.Roles[0].DatabaseName != "admin" {
-			t.Errorf("got=%#v\nwant=%#v\n", "admin", user.Roles[0].DatabaseName)
-		}
-
-		if user.Roles[0].RoleName != roleReadWrite {
-			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
 		}
 
 	})

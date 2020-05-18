@@ -26,8 +26,8 @@ import (
 )
 
 const (
-	closed                               = "CLOSED"
-	replication_oplog_window_running_out = "REPLICATION_OPLOG_WINDOW_RUNNING_OUT"
+	open                            = "OPEN"
+	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAtlasAlerts(t *testing.T) {
@@ -45,7 +45,7 @@ func TestAtlasAlerts(t *testing.T) {
 	alertsEntity := "alerts"
 
 	t.Run("Describe", func(t *testing.T) {
-		alertID := "5e4d20ff5cc174527c22c606"
+		alertID := "5ec2ac941271767f21cbaefe"
 
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -76,8 +76,8 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, closed)
 		}
 
-		if alert.EventTypeName != replication_oplog_window_running_out {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, replication_oplog_window_running_out)
+		if alert.EventTypeName != users_without_multi_factor_auth {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, users_without_multi_factor_auth)
 		}
 
 	})
@@ -133,7 +133,7 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts.Results) > 0 {
+		if len(alerts.Results) == 0 {
 			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
 		}
 
@@ -162,7 +162,7 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(alerts.Results) == 0 {
+		if len(alerts.Results) > 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
 

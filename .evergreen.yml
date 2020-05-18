@@ -317,7 +317,7 @@ tasks:
       - func: "clone"
       - func: "test"
   - name: atlas_e2e
-    command: "atlas e2e"
+    commands: "atlas e2e"
     params:
       MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
       MCLI_ORG_ID: ${mcli_org_id}
@@ -326,7 +326,7 @@ tasks:
       MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
       MCLI_SERVICE: ${mcli_service}
   - name: iam_e2e
-    command: "iam e2e"
+    commands: "iam e2e"
     params:
       MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
       MCLI_ORG_ID: ${mcli_org_id}

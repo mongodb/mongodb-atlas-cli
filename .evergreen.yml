@@ -74,7 +74,7 @@ functions:
           MCLI_PRIVATE_API_KEY: ${mcli_private_api_key}
           MCLI_PROJECT_ID: ${mcli_project_id}
           MCLI_PUBLIC_API_KEY: ${mcli_public_api_key}
-        command: cmake e2e-test-iam
+        command: make e2e-test-iam
   "lint":
     - command: subprocess.exec
       type: test

@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build e2e
 
-package atlas_test
+package cloud_manager_test
 
 import (
 	"encoding/json"
@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -32,7 +33,7 @@ const (
 	roleReadWrite = "readWrite"
 )
 
-func TestAtlasDBUsers(t *testing.T) {
+func TestCloudManagerDBUsers(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -45,18 +46,19 @@ func TestAtlasDBUsers(t *testing.T) {
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	atlasEntity := "atlas"
+	entity := "cloud-manager"
 	dbusersEntity := "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
+			entity,
 			dbusersEntity,
 			"create",
-			"atlasAdmin",
-			"--username", username,
-			"--password=passW0rd")
+			"--username="+username,
+			"--password=passW0rd",
+			"--role=readWriteAnyDatabase",
+			"--mechanisms=SCRAM-SHA-256 ")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -64,19 +66,13 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
+		if !strings.Contains(string(resp), "Changes are being applied") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
 		}
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "ls")
+		cmd := exec.Command(cliPath, entity, dbusersEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -90,49 +86,11 @@ func TestAtlasDBUsers(t *testing.T) {
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
-	})
-
-	t.Run("Update", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			dbusersEntity,
-			"update",
-			username,
-			"--role",
-			roleReadWrite)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
-		}
-
-		if len(user.Roles) != 1 {
-			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
-		}
-
-		if user.Roles[0].DatabaseName != "admin" {
-			t.Errorf("got=%#v\nwant=%#v\n", "admin", user.Roles[0].DatabaseName)
-		}
-
-		if user.Roles[0].RoleName != roleReadWrite {
-			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
-		}
 
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath, entity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -140,9 +98,8 @@ func TestAtlasDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		if !strings.Contains(string(resp), "Changes are being applied") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
 		}
 	})
 

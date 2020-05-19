@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -64,6 +65,10 @@ func TestCloudManagerDBUsers(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+
+		if !strings.Contains(string(resp), "Changes are being applied") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -93,9 +98,8 @@ func TestCloudManagerDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := "Changes are being applied, please check https://cloud-dev.mongodb.com/v2/5ec2839e74c5aa25f02ff8ee#deployment/topology for status\n"
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		if !strings.Contains(string(resp), "Changes are being applied") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
 		}
 	})
 

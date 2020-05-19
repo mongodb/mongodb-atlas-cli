@@ -54,25 +54,15 @@ func TestCloudManagerDBUsers(t *testing.T) {
 			entity,
 			dbusersEntity,
 			"create",
-			"--username", username,
+			"--username="+username,
 			"--password=passW0rd",
-			"--role readWriteAnyDatabase,clusterMonitor"+
-				"--mechanisms SCRAM-SHA-256")
+			"--role=readWriteAnyDatabase",
+			"--mechanisms=SCRAM-SHA-256 ")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
 		}
 	})
 
@@ -103,7 +93,7 @@ func TestCloudManagerDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
+		expected := "Changes are being applied, please check https://cloud-dev.mongodb.com/v2/5ec2839e74c5aa25f02ff8ee#deployment/topology for status\n"
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

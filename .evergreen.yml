@@ -405,21 +405,6 @@ tasks:
       - func: "clone"
       - func: "build"
       - func: "cloud manager e2e"
-  - name: deploy_spawn_host
-    commands:
-      - command: host.create
-        params:
-          provider: ec2
-          distro: rhel70-small
-          num_hosts: 1
-      - command: host.list
-        params:
-          wait: true
-          timeout_seconds: 300
-          num_hosts: 1
-          path: ${spawn_host_list_file}
-      - func: ssh-ready
-      - func: "install automation agent"
   - name: package_msi
     tags: ["packaging"]
     depends_on:

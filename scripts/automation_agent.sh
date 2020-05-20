@@ -29,8 +29,8 @@ curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-aut
 sudo rpm -U mongodb-mms-automation-agent-manager-10.15.0.6396-1.x86_64.rhel7.rpm
 
 echo "Replacing mmsGroupId and mmsApiKey properties"
-replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsGroupId" "5ec2839e74c5aa25f02ff8ee"
-replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsApiKey" "5ec51babe380d40ec2710bd95cf2f39c01fb6ad8647a82da5228dde8"
+replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsGroupId" ""
+replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsApiKey" ""
 
 echo "Preparing the /data directory to store your MongoDB data. This directory must be owned by the mongod user"
 sudo mkdir -p /data

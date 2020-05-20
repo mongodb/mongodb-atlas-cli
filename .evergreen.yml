@@ -139,6 +139,7 @@ functions:
           done
   "deploy spawn host":
     - command: host.create
+      type: system
       params:
         provider: ec2
         distro: rhel70-small

@@ -144,6 +144,7 @@ functions:
         provider: ec2
         distro: rhel70-small
         num_hosts: 1
+        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB replication
     - command: host.list
       params:
         wait: true

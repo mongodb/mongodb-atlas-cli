@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mmsGroupId=$1
+mmsApiKey=$2
 replace_property_in_file() {
     # Parameter check
     if [[ "$#" -lt 3 ]]; then
@@ -29,8 +31,8 @@ curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-aut
 sudo rpm -U mongodb-mms-automation-agent-manager-10.15.0.6396-1.x86_64.rhel7.rpm
 
 echo "Replacing mmsGroupId and mmsApiKey properties"
-replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsGroupId" ""
-replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsApiKey" ""
+replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsGroupId" "$mmsGroupId"
+replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsApiKey" "$mmsApiKey"
 
 echo "Preparing the /data directory to store your MongoDB data. This directory must be owned by the mongod user"
 sudo mkdir -p /data

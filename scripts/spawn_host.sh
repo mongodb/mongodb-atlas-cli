@@ -1,6 +1,8 @@
 #!/bin/bash
 
 spawn_host_list_file=$1
+apiGroupId=$2
+apiKey=$3
 
 set -ex
 
@@ -25,6 +27,6 @@ EOF
 for host in $hosts; do
     set +e
     echo "installing the automation agent on $host"
-    ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" \  < scripts/automation_agent.sh
+    ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" \  < scripts/automation_agent.sh apiGroupId apiKey
     set -e
 done

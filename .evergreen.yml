@@ -1,7 +1,6 @@
 stepback: true
 command_type: system
 pre_error_fails_task: true
-work_dir: src/github.com/mongodb/mongocli
 
 # Files that match an ignore-list pattern will not trigger a build, if they're the only modified
 # files in the patch.
@@ -12,6 +11,7 @@ variables:
   - &go_options
     GO111MODULE: "on"
     spawn_host_list_file: hosts.json
+    work_dir: src/github.com/mongodb/mongocli
 functions:
   "clone":
     - command: git.get_project
@@ -90,7 +90,7 @@ functions:
       type: setup
       params:
         binary: ${work_dir}/scripts/evergreen/spawn_host.sh
-        args: ['${work_dir}/${spawn_host_list_file}', ${automation_agent_mms_group_id}, ${automation_agent_mms_api_key}]
+        args: ['${work_dir}/${spawn_host_list_file}', '${automation_agent_mms_group_id}', '${automation_agent_mms_api_key}']
   "deploy spawn host":
     - command: host.create
       type: system

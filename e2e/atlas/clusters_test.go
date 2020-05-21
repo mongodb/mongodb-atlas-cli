@@ -74,7 +74,7 @@ func TestAtlasClusters(t *testing.T) {
 		ensureCluster(t, cluster, clusterName, "4.0", 10)
 	})
 
-	t.Run("Watch cluster deployment", func(t *testing.T) {
+	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -88,7 +88,7 @@ func TestAtlasClusters(t *testing.T) {
 		}
 
 		if !strings.Contains(string(resp), "Cluster available at:") {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:d")
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:")
 		}
 	})
 

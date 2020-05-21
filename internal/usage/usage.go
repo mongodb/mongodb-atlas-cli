@@ -21,7 +21,7 @@ const (
 	Members                         = "Number of members in the replica set."
 	Tier                            = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
-	Backup                          = "If true, enables Cloud Continuous Backup for your cluster."
+	Backup                          = "If true, enables Continuous Cloud Backup for your cluster."
 	MDBVersion                      = "MongoDB version of the cluster to deploy."
 	AuthDB                          = "Authentication database name."
 	Granularity                     = "Duration in ISO 8601 notation that specifies the interval between measurement data points."

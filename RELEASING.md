@@ -14,4 +14,4 @@ To generate a new stable release you must follow the following steps:
 
 1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
 2. Publish the new tag, ie `git push origin v1.0.0`
-3. Run the evergreen releasing task, ie: `evergreen patch -p mongocli-master -y -d "Release v1.0.0" -v release -t release`
+3. Run the evergreen releasing task, ie: `evergreen patch -p mongocli-master -y -d "Release v1.0.0" -v release_publish -t release`

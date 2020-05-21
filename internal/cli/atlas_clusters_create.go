@@ -110,7 +110,11 @@ func updateLabels(out *atlas.Cluster) {
 
 func (opts *atlasClustersCreateOpts) applyOpts(out *atlas.Cluster) {
 	replicationSpec := opts.newReplicationSpec()
-	out.ProviderBackupEnabled = &opts.backup
+	if opts.backup {
+		out.ProviderBackupEnabled = &opts.backup
+		out.PitEnabled = &opts.backup
+	}
+
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
 	out.ProviderSettings = opts.newProviderSettings()

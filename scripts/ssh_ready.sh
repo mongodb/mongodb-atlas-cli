@@ -1,14 +1,16 @@
 #!/bin/bash
 set -ex
 
-hostsfile=$1
-connection_attempts=$2
+declare -i attempts
+declare -i connection_attempts
+declare -ri timeout=10
 
 while getopts 'i:h:t:u:' opt; do
     case $opt in
-        i) keyfile="$OPTARG";;      # SSH identity file
-        u) user="$OPTARG";;         # Username on the remote host
-        h) hostsfile="$OPTARG";;    # Output of Evergreen host.list
+        i) keyfile="$OPTARG";;              # SSH identity file
+        u) user="$OPTARG";;                 # Username on the remote host
+        h) hostsfile="$OPTARG";;            # Output of Evergreen host.list
+        t) connection_attempts="$OPTARG";;  # How many times to attempt to connect via SSH
         *) exit 1;;
     esac
 done
@@ -23,16 +25,22 @@ with open(sys.argv[1]) as hostsfile:
 EOF
 )
 
-echo "$hosts"
+attempts=0
+connection_attempts=${connection_attempts:-60} # Total timeout = timeout * timeout_attempts
+
 for host in $hosts; do
     set +e
+    echo "Waiting for $host to become available..."
+    while ! ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" exit 2> /dev/null; do
+        if [ "$attempts" -ge "$connection_attempts" ]; then
+            echo 'Connect to spawn host failed'
+            exit 1
+        fi
+        ((attempts++))
 
-    while ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "root@$host" != 0;
-      do
-       [ "$attempts" -ge "$connection_attempts" ] && exit 1
-          ((attempts++))
-          printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
-          # sleep for Permission denied (publickey) errors
-          sleep 10
-      done
+        echo "SSH connection attempt $attempts/$connection_attempts failed. Retrying ($host)..."
+        # sleep for Permission denied (publickey) errors
+        sleep "$timeout"
+    done
+    set -e
 done

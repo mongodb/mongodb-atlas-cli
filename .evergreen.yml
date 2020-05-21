@@ -84,7 +84,7 @@ functions:
       type: setup
       params:
         binary: src/github.com/mongodb/mongocli/scripts/ssh_ready.sh
-        args: ['src/github.com/mongodb/mongocli/hosts.json', '25']
+        args: ['-u', 'root', '-i', '$src/github.com/mongodb/mongocli/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
   "install automation agent":
     - command: subprocess.exec
       type: setup

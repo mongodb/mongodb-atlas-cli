@@ -10,7 +10,7 @@ ignore:
 variables:
   - &go_options
     GO111MODULE: "on"
-    spawn_host_list_file: hosts.yml
+    spawn_host_list_file: hosts.json
 functions:
   "clone":
     - command: git.get_project
@@ -79,64 +79,17 @@ functions:
         command: make e2e-test-cloud
   # Check SSH availability
   ssh-ready:
-    command: shell.exec
-    params:
-      script: |
-        user=root
-        hostname=$(tr -d '"[]{}' < ${spawn_host_list_file} | cut -d , -f 1 | awk -F : '{print $2}')
-        identity_file=~/.ssh/mcipacker.pem
-
-        attempts=0
-        connection_attempts=${connection_attempts|25}
-
-        # Check for remote connectivity
-        while ! ssh \
-          -i "$identity_file" \
-          -o ConnectTimeout=10 \
-          -o ForwardAgent=yes \
-          -o IdentitiesOnly=yes \
-          -o StrictHostKeyChecking=no \
-          "$(printf "%s@%s" "$user" "$hostname")" \
-          exit 2> /dev/null
-        do
-          [ "$attempts" -ge "$connection_attempts" ] && exit 1
-          ((attempts++))
-          printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
-          # sleep for Permission denied (publickey) errors
-          sleep 10
-        done
-      shell: bash
-  "install automation agent":
-    - command: shell.exec
+    - command: subprocess.exec
       type: setup
       params:
-        script: |
-          set -ex
-
-          while getopts 'i:h:t:u:' opt; do
-              case $opt in
-                  i) keyfile="$OPTARG";;      # SSH identity file
-                  u) user="$OPTARG";;         # Username on the remote host
-                  h) hostsfile="$OPTARG";;    # Output of Evergreen host.list
-                  *) exit 1;;
-              esac
-          done
-
-          hosts=$(cat << EOF | python - ${spawn_host_list_file}"
-          import sys
-          import json
-          with open(sys.argv[1]) as hostsfile:
-              hosts = json.load(hostsfile)
-              for host in hosts:
-                  print(host["dns_name"])
-          EOF
-          )
-          for host in $hosts; do
-              set +e
-              echo "installing the automation agent on $host"
-              ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" \  < scripts/automation_agent.sh
-              set -e
-          done
+        binary: scripts/ssh_ready.sh
+        args: ['${spawn_host_list_file}', '25']
+  "install automation agent":
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: scripts/evergreen/spawn_host.sh
+        args: ['${spawn_host_list_file}']
   "deploy spawn host":
     - command: host.create
       type: system

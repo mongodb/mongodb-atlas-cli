@@ -355,11 +355,11 @@ tasks:
       - func: "atlas e2e"
   - name: cloud_manager_e2e
     commands:
+      - func: "clone"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install automation agent"
-      - func: "clone"
-      - func: "build"
       - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]

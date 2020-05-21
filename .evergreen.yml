@@ -83,13 +83,13 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        binary: ${work_dir}/scripts/ssh_ready.sh
+        binary: src/github.com/mongodb/mongocli/scripts/ssh_ready.sh
         args: ['${spawn_host_list_file}', '25']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
-        binary: ${work_dir}/scripts/evergreen/spawn_host.sh
+        binary: src/github.com/mongodb/mongocli/scripts/evergreen/spawn_host.sh
         args: ['${spawn_host_list_file}']
   "deploy spawn host":
     - command: host.create

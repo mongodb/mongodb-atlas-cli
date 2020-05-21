@@ -1,6 +1,7 @@
 stepback: true
 command_type: system
 pre_error_fails_task: true
+work_dir: src/github.com/mongodb/mongocli
 
 # Files that match an ignore-list pattern will not trigger a build, if they're the only modified
 # files in the patch.
@@ -82,13 +83,13 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        binary: scripts/ssh_ready.sh
+        binary: ${work_dir}/scripts/ssh_ready.sh
         args: ['${spawn_host_list_file}', '25']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
-        binary: scripts/evergreen/spawn_host.sh
+        binary: ${work_dir}/scripts/evergreen/spawn_host.sh
         args: ['${spawn_host_list_file}']
   "deploy spawn host":
     - command: host.create

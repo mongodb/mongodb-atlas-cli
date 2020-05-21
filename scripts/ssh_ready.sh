@@ -22,20 +22,17 @@ with open(sys.argv[1]) as hostsfile:
         print(host["dns_name"])
 EOF
 )
+
+echo "$hosts"
 for host in $hosts; do
     set +e
-    echo "Ensuring the /data directory exists on $host and that it has the appropriate permissions; this is a NO-OP on Windows hosts!"
 
-    while  0!= ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "root@host"; do
+    while ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "root@$host" != 0;
+      do
        [ "$attempts" -ge "$connection_attempts" ] && exit 1
           ((attempts++))
           printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
           # sleep for Permission denied (publickey) errors
           sleep 10
-        done
-
-
-    ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" \
-        'test "Windows_NT" = "${OS-POSIX}" || sudo -S bash -c "mkdir -v -m 0775 -p /data; chown -R '"$user"' /data; chmod -R 0775 /data; echo Permissions updated..."'
-    set -e
+      done
 done

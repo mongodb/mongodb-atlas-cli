@@ -84,13 +84,13 @@ functions:
       type: setup
       params:
         binary: src/github.com/mongodb/mongocli/scripts/ssh_ready.sh
-        args: ['src/github.com/mongodb/mongocli/${spawn_host_list_file}', '25']
+        args: ['src/github.com/mongodb/mongocli/hosts.json', '25']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
         binary: src/github.com/mongodb/mongocli/scripts/evergreen/spawn_host.sh
-        args: ['src/github.com/mongodb/mongocli/${spawn_host_list_file}', '${automation_agent_mms_group_id}', '${automation_agent_mms_api_key}']
+        args: ['src/github.com/mongodb/mongocli/hosts.json', '${automation_agent_mms_group_id}', '${automation_agent_mms_api_key}']
   "deploy spawn host":
     - command: host.create
       type: system
@@ -104,7 +104,7 @@ functions:
         wait: true
         timeout_seconds: 300
         num_hosts: 1
-        path: ${spawn_host_list_file}
+        path: src/github.com/mongodb/mongocli/hosts.json
   "lint":
     - command: subprocess.exec
       type: test

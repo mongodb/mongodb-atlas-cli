@@ -47,6 +47,7 @@ functions:
         add_to_path:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
+        timeout_secs: 1200
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}
@@ -65,6 +66,7 @@ functions:
         add_to_path:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
+        timeout_secs: 1200
         env:
           WORKDIR: ${workdir}
           GOROOT: ${go_root}

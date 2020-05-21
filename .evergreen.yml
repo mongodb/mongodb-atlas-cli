@@ -10,7 +10,7 @@ ignore:
 variables:
   - &go_options
     GO111MODULE: "on"
-    spawn_host_list_file: hosts.json
+    spawn_host_list_file: hosts.yml
 functions:
   "clone":
     - command: git.get_project

@@ -248,16 +248,16 @@ functions:
 
           VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
           FILENAME=mongocli_"$VERSION"_linux_x86_64
-          if [[ "${unstable}" == "unstable" ]]; then
+          if [[ "${unstable}" == "-unstable" ]]; then
             FILENAME="mongocli_next_linux_x86_64"
           fi
 
           mkdir {yum,apt}
           # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
           cp "$FILENAME.deb" apt/
-          mv "apt/$FILENAME.deb" apt/mongodb-cli-${unstable}_$VERSION${latest_deb}_amd64.deb
+          mv "apt/$FILENAME.deb" apt/mongodb-cli"${unstable}"_"$VERSION"${latest_deb}_amd64.deb
           cp "$FILENAME.rpm" yum/
-          mv "yum/$FILENAME.rpm" yum/mongodb-cli-${unstable}-$VERSION{latest_rpm}.x86_64.rpm
+          mv "yum/$FILENAME.rpm" yum/mongodb-cli"${unstable}"-"$VERSION"${latest_rpm}.x86_64.rpm
   "generate download archive json":
     - command: shell.exec
       type: test
@@ -314,7 +314,7 @@ functions:
             --config etc/repo_config.yml \
             --distro ${distro} \
             --edition ${edition} \
-            --version ${server_version} \
+            --version ${server_version|1.0.0} \
             --arch x86_64 \
             --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
 tasks:
@@ -372,7 +372,7 @@ tasks:
       - func: "package"
       - func: "rename pkg"
         vars:
-          unstable: unstable
+          unstable: -unstable
           latets_deb: ~latest
           latest_rpm: .latest
       - command: archive.targz_pack
@@ -448,6 +448,7 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
+          display_name: inernal-bucket-
       - command: s3.put
         params:
           aws_key: ${download_center_aws_key}
@@ -463,6 +464,7 @@ tasks:
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
   ################################################################
   # Unstable Publish
   # RPM Distros
@@ -934,7 +936,6 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      is_release: true
       server_version: "4.4.0-rc0"
     tasks:
       - name: release

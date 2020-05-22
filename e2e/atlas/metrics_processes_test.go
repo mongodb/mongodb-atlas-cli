@@ -42,7 +42,12 @@ func TestAtlasMetrics(t *testing.T) {
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
 	clusterName := "myReplicaSet"
-	deployCluster(cliPath, atlasEntity, clusterName)
+
+	err = deployCluster(cliPath, atlasEntity, clusterName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
 	hostname, err := getHostnameAndPort(cliPath, atlasEntity)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

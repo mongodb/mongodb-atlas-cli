@@ -57,7 +57,6 @@ functions:
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: ${atlas_service}
-          GO_TEST_TIMEOUT_SCALE: "5" # This property change the go default timeout which is 10 minutes (https://github.com/golang/go/issues/25886)
           <<: *go_options
         command: make e2e-test-atlas
   "cloud manager e2e":
@@ -76,7 +75,6 @@ functions:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: ${cloud_manager_service}
-          GO_TEST_TIMEOUT_SCALE: "5" # This property change the go default timeout which is 10 minutes (https://github.com/golang/go/issues/25886)
           <<: *go_options
         command: make e2e-test-cloud
   "lint":

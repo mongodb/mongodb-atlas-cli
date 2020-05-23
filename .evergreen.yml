@@ -34,12 +34,35 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
+          - ${workdir}/bin
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           <<: *go_options
         command: make test
+  "generate html coverage":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+          - ${workdir}/bin
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          GOROOT: ${go_root}
+          <<: *go_options
+        command: make coverage
+  "upload html coverage":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongocli/coverage.html
+        remote_file: ${project}/coverage/internal/${task_id}.html
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: text/html
+        display_name: internal-html-coverage
   "atlas e2e":
     - command: subprocess.exec
       type: test
@@ -55,7 +78,7 @@ functions:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: ${atlas_service}
+          MCLI_SERVICE: cloud
           <<: *go_options
         command: make e2e-test-atlas
   "cloud manager e2e":
@@ -73,7 +96,7 @@ functions:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: ${cloud_manager_service}
+          MCLI_SERVICE: cloud-manager
           <<: *go_options
         command: make e2e-test-cloud
   "lint":
@@ -326,6 +349,8 @@ tasks:
     commands:
       - func: "clone"
       - func: "test"
+      - func: "generate html coverage"
+      - func: "upload html coverage"
   - name: atlas_e2e
     commands:
       - func: "clone"

@@ -6,6 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.27.0
 COVERAGE=coverage.out
+COVERAGE_HTML=coverage.html
 
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
@@ -34,6 +35,11 @@ fmt: ## Format code
 test: ## Run tests
 	@echo "==> Running tests..."
 	go test -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+
+.PHONY: coverage
+coverage: ## Generate coverage report
+	@echo "==> generating coverage..."
+	go tool cover -html=${COVERAGE} -o ${COVERAGE_HTML}
 
 .PHONY: lint
 lint: ## Run linter

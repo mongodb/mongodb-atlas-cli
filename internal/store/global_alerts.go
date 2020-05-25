@@ -23,12 +23,10 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen  -destination=../mocks/mock_global_alerts.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAlertLister
+
 type GlobalAlertLister interface {
 	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
-}
-
-type GlobalAlertsStore interface {
-	GlobalAlertLister
 }
 
 // GlobalAlerts encapsulate the logic to manage different cloud providers

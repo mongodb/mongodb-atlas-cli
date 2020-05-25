@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessLister
+
 type ProcessLister interface {
 	Processes(string, *atlas.ListOptions) ([]*atlas.Process, error)
 }

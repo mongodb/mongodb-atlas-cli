@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,ClusterStore
+
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) ([]atlas.Cluster, error)
 }

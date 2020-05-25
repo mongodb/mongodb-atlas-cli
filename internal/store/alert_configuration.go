@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongocli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister
+
 type AlertConfigurationLister interface {
 	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
 }
@@ -41,14 +43,6 @@ type AlertConfigurationUpdater interface {
 
 type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
-}
-
-type AlertConfigurationStore interface {
-	AlertConfigurationLister
-	AlertConfigurationCreator
-	AlertConfigurationDeleter
-	AlertConfigurationUpdater
-	MatcherFieldsLister
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers

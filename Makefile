@@ -6,10 +6,11 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.27.0
 COVERAGE=coverage.out
-COVERAGE_HTML=coverage.html
-
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
+
+E2E_CMD?=go test
+E2E_TAGS?=e2e
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
@@ -18,7 +19,6 @@ export GO111MODULE := on
 setup:  ## Install dev tools
 	@echo "==> Installing dependencies..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
-	curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks
@@ -35,11 +35,6 @@ fmt: ## Format code
 test: ## Run tests
 	@echo "==> Running tests..."
 	go test -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
-
-.PHONY: coverage
-coverage: ## Generate coverage report
-	@echo "==> generating coverage..."
-	go tool cover -html=${COVERAGE} -o ${COVERAGE_HTML}
 
 .PHONY: lint
 lint: ## Run linter
@@ -96,25 +91,11 @@ build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
 
-.PHONY: e2e-test-atlas
-e2e-test-atlas: build ## Run Atlas E2E tests
-	@echo "==> Running Atlas E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/atlas...
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
-
-.PHONY: e2e-test-cloud
-e2e-test-cloud: build ## Run IAM E2E tests
-	@echo "==> Running Cloud Manger E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/cloud_manager...
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
-
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e...
+	$(E2E_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

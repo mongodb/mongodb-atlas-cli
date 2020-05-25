@@ -23,7 +23,7 @@ import (
 
 func TestConfigSet_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProfileSetSaver(ctrl)
+	mockStore := mocks.NewMockSetSaver(ctrl)
 	defer ctrl.Finish()
 
 	t.Run("valid prop", func(t *testing.T) {

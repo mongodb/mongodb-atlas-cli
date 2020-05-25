@@ -22,6 +22,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_automation.go -package=mocks github.com/mongodb/mongocli/internal/store AutomationGetter,AutomationUpdater,AutomationStatusGetter,AutomationPatcher,CloudManagerClustersLister
+
 type AutomationGetter interface {
 	GetAutomationConfig(string) (*opsmngr.AutomationConfig, error)
 }
@@ -37,12 +39,6 @@ type AutomationStatusGetter interface {
 type AutomationPatcher interface {
 	AutomationGetter
 	AutomationUpdater
-}
-
-type AutomationStore interface {
-	AutomationGetter
-	AutomationUpdater
-	AutomationStatusGetter
 }
 
 type AllClusterLister interface {

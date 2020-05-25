@@ -22,6 +22,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter
+
 type OrganizationLister interface {
 	GetAllOrganizations() (interface{}, error)
 }
@@ -32,12 +34,6 @@ type OrganizationCreator interface {
 
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error
-}
-
-type OrganizationStore interface {
-	OrganizationLister
-	OrganizationCreator
-	OrganizationDeleter
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers

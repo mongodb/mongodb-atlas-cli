@@ -23,8 +23,13 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store HostMeasurementLister,HostDiskMeasurementsLister
+
 type HostMeasurementLister interface {
 	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+}
+type HostDiskMeasurementsLister interface {
+	HostDiskMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error)
 }
 
 // HostMeasurements encapsulate the logic to manage different cloud providers
@@ -32,6 +37,17 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Host(context.Background(), groupID, host, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// HostDiskMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Measurements.Disk(context.Background(), groupID, hostID, partitionName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

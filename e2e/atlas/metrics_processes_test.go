@@ -117,6 +117,7 @@ func TestAtlasMetrics(t *testing.T) {
 			"disks",
 			"describe",
 			hostname,
+			"data",
 			"--granularity=PT30M",
 			"--period=P1DT12H")
 

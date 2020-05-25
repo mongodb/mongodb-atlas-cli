@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e
+// +build e2e,atlas
 
 package atlas_test
 
@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -71,6 +72,24 @@ func TestAtlasClusters(t *testing.T) {
 		}
 
 		ensureCluster(t, cluster, clusterName, "4.0", 10)
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			clusterName)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		if !strings.Contains(string(resp), "Cluster available at:") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:")
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {

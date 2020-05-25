@@ -9,6 +9,9 @@ COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
+E2E_CMD?=go test
+E2E_TAGS?=e2e
+
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
 
@@ -88,25 +91,11 @@ build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
 
-.PHONY: e2e-test-atlas
-e2e-test-atlas: build ## Run Atlas E2E tests
-	@echo "==> Running Atlas E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -timeout 0 -tags=e2e ./e2e/atlas...
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
-
-.PHONY: e2e-test-cloud
-e2e-test-cloud: build ## Run IAM E2E tests
-	@echo "==> Running Cloud Manger E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -timeout 0 -tags=e2e ./e2e/cloud_manager...
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e/iam...
-
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	go test -v -p 1 -parallel 1 -tags=e2e ./e2e...
+	$(E2E_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

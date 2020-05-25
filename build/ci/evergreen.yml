@@ -10,6 +10,7 @@ ignore:
 variables:
   - &go_options
     GO111MODULE: "on"
+    GOROOT: ${go_root}
 functions:
   "clone":
     - command: git.get_project
@@ -24,8 +25,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
-          GOROOT: ${go_root}
           <<: *go_options
         command: make build
   "test":
@@ -50,7 +49,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           <<: *go_options
         command: go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":

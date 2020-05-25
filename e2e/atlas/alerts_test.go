@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	closed                               = "CLOSED"
-	replication_oplog_window_running_out = "REPLICATION_OPLOG_WINDOW_RUNNING_OUT"
+	open          = "OPEN"
+	eventTypeName = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAtlasAlerts(t *testing.T) {
@@ -73,11 +73,11 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.ID, alertID)
 		}
 
-		if alert.Status != closed {
+		if alert.Status != open {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, closed)
 		}
 
-		if alert.EventTypeName != replication_oplog_window_running_out {
+		if alert.EventTypeName != eventTypeName {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, replication_oplog_window_running_out)
 		}
 

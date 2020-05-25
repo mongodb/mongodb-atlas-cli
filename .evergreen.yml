@@ -30,6 +30,20 @@ functions:
           <<: *go_options
         command: make build
   "test":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+
+          gotestsum --junitfile unit-tests.xml -- -race -cover -count=1 -coverprofile coverage.out ./internal...
+  "generate html coverage":
     - command: subprocess.exec
       type: test
       params:
@@ -37,10 +51,20 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           <<: *go_options
-        command: make test
+        command: go tool cover -html=coverage.out -o coverage.html
+  "upload html coverage":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongocli/coverage.html
+        remote_file: ${project}/coverage/internal/${task_id}.html
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: text/html
+        display_name: internal-html-coverage
   "atlas e2e":
     - command: subprocess.exec
       type: test
@@ -49,14 +73,13 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: ${atlas_service}
+          MCLI_SERVICE: cloud
           <<: *go_options
         command: make e2e-test-atlas
   "cloud manager e2e":
@@ -67,28 +90,28 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${cloud_manager_org_id}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: ${cloud_manager_service}
+          MCLI_SERVICE: cloud-manager
           <<: *go_options
         command: make e2e-test-cloud
   "lint":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          WORKDIR: ${workdir}
-          GOROOT: ${go_root}
-          <<: *go_options
-        command: make lint
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          golangci-lint run --out-format junit-xml > lint-tests.xml
   "generate notices":
     - command: shell.exec
       type: test
@@ -108,18 +131,32 @@ functions:
           popd
           cd src/github.com/mongodb/mongocli
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
-  "install gon":
+  "install gotestsum":
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/bin
         script: |
           set -o xtrace
           set -o errexit
           set -o verbose
 
-          mkdir -p bin
-          cd bin
+          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v0.4.2/gotestsum_0.4.2_linux_amd64.tar.gz | tar zx
+  "install golangci-lint":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: make setup
+  "install gon":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/bin
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
 
           curl -sL https://github.com/mitchellh/gon/releases/download/v0.2.3/gon_macos.zip | tar zx
   "install goreleaser":
@@ -234,7 +271,7 @@ functions:
 
           env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=$VERSION" -o mongocli.exe
 
-          mkdir {build,dist}
+          mkdir -p build
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
   "rename pkg":
@@ -249,16 +286,16 @@ functions:
 
           VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
           FILENAME=mongocli_"$VERSION"_linux_x86_64
-          if [[ "${unstable}" == "unstable" ]]; then
+          if [[ "${unstable}" == "-unstable" ]]; then
             FILENAME="mongocli_next_linux_x86_64"
           fi
 
           mkdir {yum,apt}
           # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
           cp "$FILENAME.deb" apt/
-          mv "apt/$FILENAME.deb" apt/mongodb-cli-${unstable}_$VERSION${latest_deb}_amd64.deb
+          mv "apt/$FILENAME.deb" apt/mongodb-cli"${unstable}"_"$VERSION"${latest_deb}_amd64.deb
           cp "$FILENAME.rpm" yum/
-          mv "yum/$FILENAME.rpm" yum/mongodb-cli-${unstable}-$VERSION{latest_rpm}.x86_64.rpm
+          mv "yum/$FILENAME.rpm" yum/mongodb-cli"${unstable}"-"$VERSION"${latest_rpm}.x86_64.rpm
   "generate download archive json":
     - command: shell.exec
       type: test
@@ -315,24 +352,43 @@ functions:
             --config etc/repo_config.yml \
             --distro ${distro} \
             --edition ${edition} \
-            --version ${server_version} \
+            --version ${server_version|1.0.0} \
             --arch x86_64 \
             --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
+
+post:
+  - command: attach.xunit_results
+    params:
+      files: ["src/github.com/mongodb/mongocli/*.xml"]
+
 tasks:
   - name: compile
+    tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "build"
-  - name: test
+  - name: unit_test
+    tags: ["code_health"]
     commands:
       - func: "clone"
+      - func: "install gotestsum"
       - func: "test"
+      - func: "generate html coverage"
+      - func: "upload html coverage"
+  - name: lint
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install golangci-lint"
+      - func: "lint"
   - name: atlas_e2e
+    tags: ["e2e"]
     commands:
       - func: "clone"
       - func: "build"
       - func: "atlas e2e"
   - name: cloud_manager_e2e
+    tags: ["e2e"]
     commands:
       - func: "clone"
       - func: "build"
@@ -373,7 +429,7 @@ tasks:
       - func: "package"
       - func: "rename pkg"
         vars:
-          unstable: unstable
+          unstable: -unstable
           latets_deb: ~latest
           latest_rpm: .latest
       - command: archive.targz_pack
@@ -449,6 +505,7 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
+          display_name: inernal-bucket-
       - command: s3.put
         params:
           aws_key: ${download_center_aws_key}
@@ -464,6 +521,7 @@ tasks:
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
   ################################################################
   # Unstable Publish
   # RPM Distros
@@ -896,7 +954,8 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: compile
-      - name: test
+      - name: unit_test
+      - name: lint
   - name: e2e
     display_name: "E2E"
     run_on:
@@ -935,7 +994,6 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      is_release: true
       server_version: "4.4.0-rc0"
     tasks:
       - name: release

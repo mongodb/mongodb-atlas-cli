@@ -6,7 +6,6 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 GOLANGCI_VERSION=v1.27.0
 COVERAGE=coverage.out
-
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
@@ -17,7 +16,6 @@ export GO111MODULE := on
 setup:  ## Install dev tools
 	@echo "==> Installing dependencies..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
-	curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

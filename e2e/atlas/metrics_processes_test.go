@@ -99,7 +99,7 @@ func getHostnameAndPort(cliPath, atlasEntity string) (string, error) {
 	err = json.Unmarshal(resp, &processes)
 
 	if err != nil {
-		return "", fmt.Errorf("unexpected error: %v", err)
+		return err
 	}
 
 	if len(processes) == 0 {

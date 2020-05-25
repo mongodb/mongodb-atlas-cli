@@ -136,15 +136,11 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 		"watch",
 		clusterName)
 	cmd.Env = os.Environ()
-	_, err = cmd.CombinedOutput()
-
-	return err
+	return cmd.Run()
 }
 
 func deleteCluster(cliPath, atlasEntity, clusterName string) error {
 	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
-	_, err := cmd.CombinedOutput()
-
-	return err
+	return cmd.Run()
 }

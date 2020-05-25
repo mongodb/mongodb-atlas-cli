@@ -5,7 +5,7 @@ set -Eeou pipefail
 export GOPATH="${workdir:?}"
 export PATH="$GOPATH/bin:$PATH"
 
-pushd ${GOPATH}
+pushd "${GOPATH}"
 
 go get github.com/google/go-licenses
 

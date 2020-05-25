@@ -80,8 +80,10 @@ functions:
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
+          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
+          E2E_TAGS: e2e,atlas
           <<: *go_options
-        command: make e2e-test-atlas
+        command: make e2e-test
   "cloud manager e2e":
     - command: subprocess.exec
       type: test
@@ -97,8 +99,10 @@ functions:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
+          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
+          E2E_TAGS: e2e,cloudmanager
           <<: *go_options
-        command: make e2e-test-cloud
+        command: make e2e-test
   "lint":
     - command: shell.exec
       type: test
@@ -383,15 +387,23 @@ tasks:
       - func: "lint"
   - name: atlas_e2e
     tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "clone"
-      - func: "build"
+      - func: "install gotestsum"
       - func: "atlas e2e"
   - name: cloud_manager_e2e
     tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "clone"
-      - func: "build"
+      - func: "install gotestsum"
       - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]
@@ -953,9 +965,7 @@ buildvariants:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
-      - name: compile
-      - name: unit_test
-      - name: lint
+      - name: .code_health
   - name: e2e
     display_name: "E2E"
     run_on:
@@ -964,8 +974,7 @@ buildvariants:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
-      - name: atlas_e2e
-      - name: cloud_manager_e2e
+      - name: .e2e
   - name: goreleaser_snaphot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

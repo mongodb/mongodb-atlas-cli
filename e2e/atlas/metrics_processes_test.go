@@ -124,7 +124,7 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 		"--mdbVersion=4.0",
 		"--diskSizeGB=10")
 	cmd.Env = os.Environ()
-	_, err := cmd.CombinedOutput()
+	err := cmd.Run()
 
 	if err != nil {
 		return err

@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_project_ip_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectIPWhitelistDescriber,ProjectIPWhitelistLister,ProjectIPWhitelistCreator,ProjectIPWhitelistDeleter
+
 type ProjectIPWhitelistDescriber interface {
 	IPWhitelist(string, string) (*atlas.ProjectIPWhitelist, error)
 }
@@ -35,12 +37,6 @@ type ProjectIPWhitelistCreator interface {
 
 type ProjectIPWhitelistDeleter interface {
 	DeleteProjectIPWhitelist(string, string) error
-}
-
-type ProjectIPWhitelistStore interface {
-	ProjectIPWhitelistLister
-	ProjectIPWhitelistCreator
-	ProjectIPWhitelistDeleter
 }
 
 // CreateProjectIPWhitelist encapsulate the logic to manage different cloud providers

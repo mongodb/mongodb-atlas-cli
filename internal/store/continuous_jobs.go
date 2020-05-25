@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_continuous_jobs.go -package=mocks github.com/mongodb/mongocli/internal/store ContinuousJobLister,ContinuousJobCreator
+
 type ContinuousJobLister interface {
 	ContinuousRestoreJobs(string, string, *atlas.ListOptions) (*atlas.ContinuousJobs, error)
 }

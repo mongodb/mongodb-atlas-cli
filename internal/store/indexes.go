@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongocli/internal/store IndexCreator
+
 type IndexCreator interface {
 	CreateIndex(string, string, *atlas.IndexConfiguration) error
 }

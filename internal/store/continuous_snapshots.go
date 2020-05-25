@@ -23,17 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_continuous_snapshots.go -package=mocks github.com/mongodb/mongocli/internal/store SnapshotsLister,SnapshotDescriber
+
 type SnapshotsLister interface {
 	ContinuousSnapshots(string, string, *atlas.ListOptions) (*atlas.ContinuousSnapshots, error)
 }
 
 type SnapshotDescriber interface {
 	ContinuousSnapshot(string, string, string) (*atlas.ContinuousSnapshot, error)
-}
-
-type SnapshotsStore interface {
-	SnapshotsLister
-	SnapshotDescriber
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers

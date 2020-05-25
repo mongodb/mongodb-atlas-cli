@@ -24,7 +24,7 @@ import (
 
 func TestAtlasDBUserUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserStore(ctrl)
+	mockStore := mocks.NewMockDatabaseUserUpdater(ctrl)
 
 	defer ctrl.Finish()
 

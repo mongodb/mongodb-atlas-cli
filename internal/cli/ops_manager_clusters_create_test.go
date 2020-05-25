@@ -25,7 +25,7 @@ import (
 
 func TestCloudManagerClustersCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStore(ctrl)
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 

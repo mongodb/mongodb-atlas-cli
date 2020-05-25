@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter
+
 type ProjectLister interface {
 	GetAllProjects(*atlas.ListOptions) (interface{}, error)
 	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
@@ -38,12 +40,6 @@ type ProjectCreator interface {
 
 type ProjectDeleter interface {
 	DeleteProject(string) error
-}
-
-type ProjectStore interface {
-	ProjectLister
-	ProjectCreator
-	ProjectDeleter
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers

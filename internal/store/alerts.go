@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongocli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
+
 type AlertDescriber interface {
 	Alert(string, string) (*atlas.Alert, error)
 }
@@ -33,12 +35,6 @@ type AlertLister interface {
 
 type AlertAcknowledger interface {
 	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
-}
-
-type AlertsStore interface {
-	AlertDescriber
-	AlertLister
-	AlertAcknowledger
 }
 
 // Alert encapsulate the logic to manage different cloud providers

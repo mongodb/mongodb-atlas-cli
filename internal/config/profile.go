@@ -23,6 +23,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config Setter,Saver,SetSaver,Getter,Config
+
 type profile struct {
 	name      *string
 	configDir string

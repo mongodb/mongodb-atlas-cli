@@ -87,6 +87,29 @@ func TestAtlasMetrics(t *testing.T) {
 		}
 	})
 
+	t.Run("databases list", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			metricsEntity,
+			"databases",
+			"list",
+			hostname)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		databases := &mongodbatlas.ProcessDatabasesResponse{}
+		err = json.Unmarshal(resp, &databases)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if databases.TotalCount != 2 {
+			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, 2)
+		}
+	})
+
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

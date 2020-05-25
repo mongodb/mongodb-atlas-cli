@@ -4,6 +4,8 @@
 *.dll
 *.so
 *.dylib
+bin/**
+dist/**
 
 # Test binary, built with `go test -c`
 *.test
@@ -18,3 +20,4 @@ third_party_notices/
 # Evergreen generated files
 .gocache/
 gon.json
+*.xml

@@ -362,10 +362,12 @@ post:
 
 tasks:
   - name: compile
+    tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "build"
   - name: unit_test
+    tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "install gotestsum"
@@ -373,16 +375,19 @@ tasks:
       - func: "generate html coverage"
       - func: "upload html coverage"
   - name: lint
+    tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
   - name: atlas_e2e
+    tags: ["e2e"]
     commands:
       - func: "clone"
       - func: "build"
       - func: "atlas e2e"
   - name: cloud_manager_e2e
+    tags: ["e2e"]
     commands:
       - func: "clone"
       - func: "build"

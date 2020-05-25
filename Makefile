@@ -73,13 +73,6 @@ e2e-test: build ## Run E2E tests
 install: ## Install a binary in $GOPATH/bin
 	go install -ldflags "${LINKER_FLAGS}"
 
-.PHONY: gen-notices
-gen-notices: ## Generate 3rd party notices
-	@echo "==> Generating 3rd party notices"
-	@chmod -R 777 ./third_party_notices
-	@rm -Rf third_party_notices
-	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
-
 .PHONY: list
 list: ## List all make targets
 	@${MAKE} -pRrn : -f $(MAKEFILE_LIST) 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sort

@@ -1,3 +1,4 @@
+exec_timeout_secs: 3600 # automatically fail any task if it takes longer than 60 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true
@@ -70,7 +71,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}
@@ -89,7 +89,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${cloud_manager_org_id}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
@@ -113,25 +112,6 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           golangci-lint run --out-format junit-xml > lint-tests.xml
-  "generate notices":
-    - command: shell.exec
-      type: test
-      params:
-        script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          export GOROOT="${go_root}"
-          export GOPATH=$(pwd)
-          export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
-          mkdir -p github.com/google/go-licenses
-          pushd github.com/google/go-licenses
-
-          go get github.com/google/go-licenses
-          popd
-          cd src/github.com/mongodb/mongocli
-          go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -208,6 +188,18 @@ functions:
             }
           }
           EOF_GON_JSON
+  "generate notices":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - workdir
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/package/generate-notices.sh
   "package":
     - command: shell.exec
       type: test

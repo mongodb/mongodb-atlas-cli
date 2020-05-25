@@ -95,7 +95,7 @@ build: ## Generate a binary in ./bin
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	$(E2E_CMD) -v -p 1 -parallel 1  -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
+	$(E2E_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

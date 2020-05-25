@@ -67,7 +67,63 @@ func TestAtlasMetrics(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		metrics := &mongodbatlas.ProcessMeasurements{}
+		err = json.Unmarshal(resp, &metrics)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if metrics.Measurements == nil {
+			t.Errorf("there are no measurements")
+		}
+
+		if len(metrics.Measurements) == 0 {
+			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+		}
+	})
+
+	t.Run("disks list", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			metricsEntity,
+			"disks",
+			"list",
+			hostname)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		disks := &mongodbatlas.ProcessDisksResponse{}
+		err = json.Unmarshal(resp, &disks)
+
+		if disks.TotalCount != 1 {
+			t.Errorf("got=%#v\nwant=%#v\n", disks.TotalCount, 1)
+		}
+	})
+
+	t.Run("disks describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			metricsEntity,
+			"disks",
+			"describe",
+			hostname,
+			"--granularity=PT30M",
+			"--period=P1DT12H")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		metrics := &mongodbatlas.ProcessDiskMeasurements{}
 		err = json.Unmarshal(resp, &metrics)
 
 		if err != nil {

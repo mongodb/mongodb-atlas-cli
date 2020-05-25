@@ -138,11 +138,7 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 	cmd.Env = os.Environ()
 	_, err = cmd.CombinedOutput()
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func deleteCluster(cliPath, atlasEntity, clusterName string) error {
@@ -150,9 +146,5 @@ func deleteCluster(cliPath, atlasEntity, clusterName string) error {
 	cmd.Env = os.Environ()
 	_, err := cmd.CombinedOutput()
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }

@@ -18,12 +18,13 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"testing"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -41,7 +42,8 @@ func TestAtlasMetrics(t *testing.T) {
 
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
-	clusterName := "myReplicaSet"
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	err = deployCluster(cliPath, atlasEntity, clusterName)
 	if err != nil {
@@ -79,11 +81,9 @@ func TestAtlasMetrics(t *testing.T) {
 		if len(metrics.Measurements) == 0 {
 			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
 		}
-
 	})
 
 	deleteCluster(cliPath, atlasEntity, clusterName)
-
 }
 
 func getHostnameAndPort(cliPath, atlasEntity string) (string, error) {
@@ -106,8 +106,9 @@ func getHostnameAndPort(cliPath, atlasEntity string) (string, error) {
 		return "", fmt.Errorf("got=%#v\nwant=%#v\n", 0, "len(processes) > 0")
 	}
 
+	// The first element may not be the created cluster but that is fine since
+	// we just need one cluster up and running
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
-
 }
 
 func deployCluster(cliPath, atlasEntity, clusterName string) error {
@@ -123,10 +124,10 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 		"--mdbVersion=4.0",
 		"--diskSizeGB=10")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	_, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return fmt.Errorf("unexpected error: %v, resp: %v", err, string(resp))
+		return err
 	}
 
 	cmd = exec.Command(cliPath,
@@ -135,14 +136,10 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 		"watch",
 		clusterName)
 	cmd.Env = os.Environ()
-	resp, err = cmd.CombinedOutput()
+	_, err = cmd.CombinedOutput()
 
 	if err != nil {
-		return fmt.Errorf("unexpected error: %v, resp: %v", err, string(resp))
-	}
-
-	if !strings.Contains(string(resp), "Cluster available at:") {
-		return fmt.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:")
+		return err
 	}
 
 	return nil
@@ -151,15 +148,11 @@ func deployCluster(cliPath, atlasEntity, clusterName string) error {
 func deleteCluster(cliPath, atlasEntity, clusterName string) error {
 	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	_, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return fmt.Errorf("unexpected error: %v, resp: %v", err, string(resp))
+		return err
 	}
 
-	expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
-	if string(resp) != expected {
-		return fmt.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
-	}
 	return nil
 }

@@ -1,4 +1,4 @@
-exec_timeout_secs: 7200 # automatically fail any task if it takes longer than 120 minutes to finish.
+exec_timeout_secs: 3600 # automatically fail any task if it takes longer than 60 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true

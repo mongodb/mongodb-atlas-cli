@@ -29,29 +29,30 @@ functions:
           <<: *go_options
         command: make build
   "test":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
-          - ${workdir}/bin
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          GOROOT: ${go_root}
-          <<: *go_options
-        command: make test
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+
+          gotestsum --junitfile unit-tests.xml -- -race -cover -count=1 -coverprofile coverage.out ./internal...
   "generate html coverage":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - ${go_bin}
-          - ${workdir}/bin
         working_dir: src/github.com/mongodb/mongocli
         env:
           GOROOT: ${go_root}
           <<: *go_options
-        command: make coverage
+        command: go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":
     - command: s3.put
       params:
@@ -71,7 +72,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
@@ -89,7 +89,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
           GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${cloud_manager_org_id}
@@ -100,17 +99,18 @@ functions:
           <<: *go_options
         command: make e2e-test-cloud
   "lint":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          WORKDIR: ${workdir}
-          GOROOT: ${go_root}
-          <<: *go_options
-        command: make lint
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          golangci-lint run --out-format junit-xml > lint-tests.xml
   "generate notices":
     - command: shell.exec
       type: test
@@ -130,18 +130,32 @@ functions:
           popd
           cd src/github.com/mongodb/mongocli
           go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
-  "install gon":
+  "install gotestsum":
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/bin
         script: |
           set -o xtrace
           set -o errexit
           set -o verbose
 
-          mkdir -p bin
-          cd bin
+          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v0.4.2/gotestsum_0.4.2_linux_amd64.tar.gz | tar zx
+  "install golangci-lint":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: make setup
+  "install gon":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/bin
+        script: |
+          set -o xtrace
+          set -o errexit
+          set -o verbose
 
           curl -sL https://github.com/mitchellh/gon/releases/download/v0.2.3/gon_macos.zip | tar zx
   "install goreleaser":
@@ -256,7 +270,7 @@ functions:
 
           env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=$VERSION" -o mongocli.exe
 
-          mkdir {build,dist}
+          mkdir -p build
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
   "rename pkg":
@@ -340,17 +354,29 @@ functions:
             --version ${server_version|1.0.0} \
             --arch x86_64 \
             --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
+
+post:
+  - command: attach.xunit_results
+    params:
+      files: ["src/github.com/mongodb/mongocli/*.xml"]
+
 tasks:
   - name: compile
     commands:
       - func: "clone"
       - func: "build"
-  - name: test
+  - name: unit_test
     commands:
       - func: "clone"
+      - func: "install gotestsum"
       - func: "test"
       - func: "generate html coverage"
       - func: "upload html coverage"
+  - name: lint
+    commands:
+      - func: "clone"
+      - func: "install golangci-lint"
+      - func: "lint"
   - name: atlas_e2e
     commands:
       - func: "clone"
@@ -922,7 +948,8 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: compile
-      - name: test
+      - name: unit_test
+      - name: lint
   - name: e2e
     display_name: "E2E"
     run_on:

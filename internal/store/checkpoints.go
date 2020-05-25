@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_checkpoints.go -package=mocks github.com/mongodb/mongocli/internal/store CheckpointsLister
+
 type CheckpointsLister interface {
 	List(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
 }

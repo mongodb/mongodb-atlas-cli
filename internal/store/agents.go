@@ -21,6 +21,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader
+
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
 }

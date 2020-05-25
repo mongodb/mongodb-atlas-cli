@@ -1,4 +1,3 @@
-exec_timeout_secs: 3600 # automatically fail any task if it takes longer than 60 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true
@@ -353,7 +352,7 @@ functions:
             --level debug \
             repo submit \
             --service ${barque_url} \
-            --config etc/repo_config.yml \
+            --config build/ci/repo_config.yml \
             --distro ${distro} \
             --edition ${edition} \
             --version ${server_version|1.0.0} \

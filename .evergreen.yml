@@ -79,7 +79,7 @@ functions:
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
-          E2E_CMD: gotestsum --junitfile unit-tests.xml --
+          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
           E2E_TAGS: e2e,atlas
           <<: *go_options
         command: make e2e-test
@@ -98,7 +98,7 @@ functions:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
-          E2E_CMD: gotestsum --junitfile unit-tests.xml --
+          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
           E2E_TAGS: e2e,cloudmanager
           <<: *go_options
         command: make e2e-test

@@ -9,7 +9,7 @@ COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
-E2E_CMD?=go test
+TEST_CMD?=go test
 E2E_TAGS?=e2e
 
 export PATH := ./bin:$(PATH)
@@ -34,7 +34,7 @@ fmt: ## Format code
 .PHONY: test
 test: ## Run tests
 	@echo "==> Running tests..."
-	go test -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+	$(TEST_CMD) -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: lint
 lint: ## Run linter
@@ -67,7 +67,7 @@ build: ## Generate a binary in ./bin
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	$(E2E_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
+	$(TEST_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

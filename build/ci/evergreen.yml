@@ -104,7 +104,7 @@ functions:
         script: |
           set -e
           echo "$keyfile"
-          keyfile="${workdir}/${e2e_remote_ssh_identity}"
+          keyfile="${workdir}/ssh_id"
           echo '${__project_aws_ssh_key_value}' > "$keyfile"
           cat "$keyfile"
           chmod 600 "$keyfile"

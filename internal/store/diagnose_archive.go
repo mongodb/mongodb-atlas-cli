@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_diagnose_archive.go -package=mocks github.com/mongodb/mongocli/internal/store ArchivesDownloader
+
 type ArchivesDownloader interface {
 	DownloadArchive(string, *opsmngr.DiagnosticsListOpts, io.Writer) error
 }

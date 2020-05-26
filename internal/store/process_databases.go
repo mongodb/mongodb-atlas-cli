@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessDatabaseLister
+
 type ProcessDatabaseLister interface {
 	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)
 }

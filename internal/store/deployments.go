@@ -18,9 +18,12 @@ import (
 	"context"
 	"fmt"
 
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
+
+//go:generate mockgen -destination=../mocks/mock_deployments.go -package=mocks github.com/mongodb/mongocli/internal/store HostLister,HostDescriber,HostDatabaseLister,HostDisksLister
 
 type HostLister interface {
 	Hosts(string, *opsmngr.HostListOptions) (*opsmngr.Hosts, error)
@@ -28,6 +31,36 @@ type HostLister interface {
 
 type HostDescriber interface {
 	Host(string, string) (*opsmngr.Host, error)
+}
+
+type HostDatabaseLister interface {
+	HostDatabases(string, string, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)
+}
+
+type HostDisksLister interface {
+	HostDisks(string, string, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
+}
+
+// HostDatabases encapsulate the logic to manage different cloud providers
+func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Deployments.ListDatabases(context.Background(), groupID, hostID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// HostDisks encapsulate the logic to manage different cloud providers
+func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Deployments.ListPartitions(context.Background(), groupID, hostID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // Hosts encapsulate the logic to manage different cloud providers

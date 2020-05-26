@@ -9,7 +9,7 @@ COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
-E2E_CMD?=go test
+TEST_CMD?=go test
 E2E_TAGS?=e2e
 
 export PATH := ./bin:$(PATH)
@@ -34,7 +34,7 @@ fmt: ## Format code
 .PHONY: test
 test: ## Run tests
 	@echo "==> Running tests..."
-	go test -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+	$(TEST_CMD) -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: lint
 lint: ## Run linter
@@ -56,35 +56,7 @@ addlicense:
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
-	mockgen -source=internal/config/profile.go -destination=internal/mocks/mock_profile.go -package=mocks
-	mockgen -source=internal/store/alert_configuration.go -destination=internal/mocks/mock_alert_configuration.go -package=mocks
-	mockgen -source=internal/store/automation.go -destination=internal/mocks/mock_automation.go -package=mocks
-	mockgen -source=internal/store/clusters.go -destination=internal/mocks/mock_clusters.go -package=mocks
-	mockgen -source=internal/store/database_users.go -destination=internal/mocks/mock_database_users.go -package=mocks
-	mockgen -source=internal/store/project_ip_whitelist.go -destination=internal/mocks/mock_project_ip_whitelist.go -package=mocks
-	mockgen -source=internal/store/projects.go -destination=internal/mocks/mock_projects.go -package=mocks
-	mockgen -source=internal/store/organizations.go -destination=internal/mocks/mock_organizations.go -package=mocks
-	mockgen -source=internal/store/owners.go -destination=internal/mocks/mock_owners.go -package=mocks
-	mockgen -source=internal/store/continuous_snapshots.go -destination=internal/mocks/mock_continuous_snapshots.go -package=mocks
-	mockgen -source=internal/store/continuous_jobs.go -destination=internal/mocks/mock_continuous_jobs.go -package=mocks
-	mockgen -source=internal/store/agents.go -destination=internal/mocks/mock_agents.go -package=mocks
-	mockgen -source=internal/store/checkpoints.go -destination=internal/mocks/mock_checkpoints.go -package=mocks
-	mockgen -source=internal/store/alerts.go -destination=internal/mocks/mock_alerts.go -package=mocks
-	mockgen -source=internal/store/global_alerts.go -destination=internal/mocks/mock_global_alerts.go -package=mocks
-	mockgen -source=internal/store/events.go -destination=internal/mocks/mock_events.go -package=mocks
-	mockgen -source=internal/store/process_measurements.go -destination=internal/mocks/mock_process_measurements.go -package=mocks
-	mockgen -source=internal/store/process_disks.go -destination=internal/mocks/mock_process_disks.go -package=mocks
-	mockgen -source=internal/store/process_disk_measurements.go -destination=internal/mocks/mock_process_disk_measurements.go -package=mocks
-	mockgen -source=internal/store/process_databases.go -destination=internal/mocks/mock_process_databases.go -package=mocks
-	mockgen -source=internal/store/host_measurements.go -destination=internal/mocks/mock_host_measurements.go -package=mocks
-	mockgen -source=internal/store/indexes.go -destination=internal/mocks/mock_indexes.go -package=mocks
-	mockgen -source=internal/store/processes.go -destination=internal/mocks/mock_processes.go -package=mocks
-	mockgen -source=internal/store/logs.go -destination=internal/mocks/mock_logs.go -package=mocks
-	mockgen -source=internal/store/hosts.go -destination=internal/mocks/mock_hosts.go -package=mocks
-	mockgen -source=internal/store/host_databases.go -destination=internal/mocks/mock_host_databases.go -package=mocks
-	mockgen -source=internal/store/host_disks.go -destination=internal/mocks/mock_host_disks.go -package=mocks
-	mockgen -source=internal/store/host_disk_measurements.go -destination=internal/mocks/mock_host_disk_measurements.go -package=mocks
-	mockgen -source=internal/store/diagnose_archive.go -destination=internal/mocks/mock_diagnose_archive.go -package=mocks
+	go generate ./internal...
 
 .PHONY: build
 build: ## Generate a binary in ./bin
@@ -95,18 +67,11 @@ build: ## Generate a binary in ./bin
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	$(E2E_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
+	$(TEST_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
 	go install -ldflags "${LINKER_FLAGS}"
-
-.PHONY: gen-notices
-gen-notices: ## Generate 3rd party notices
-	@echo "==> Generating 3rd party notices"
-	@chmod -R 777 ./third_party_notices
-	@rm -Rf third_party_notices
-	go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
 
 .PHONY: list
 list: ## List all make targets

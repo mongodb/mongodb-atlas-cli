@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_process_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessMeasurementLister
+
 type ProcessMeasurementLister interface {
 	ProcessMeasurements(string, string, int, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }

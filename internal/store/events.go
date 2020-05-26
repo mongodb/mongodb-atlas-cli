@@ -23,6 +23,8 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongocli/internal/store EventLister
+
 type OrganizationEventLister interface {
 	OrganizationEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
 }

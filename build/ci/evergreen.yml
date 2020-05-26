@@ -101,7 +101,6 @@ functions:
       type: setup
       params:
         shell: bash
-        silent: true
         script: |
           set -e
           keyfile="${workdir}/ssh_id"

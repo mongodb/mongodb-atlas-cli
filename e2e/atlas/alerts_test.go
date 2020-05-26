@@ -28,7 +28,7 @@ import (
 
 const (
 	open          = "OPEN"
-	eventTypeName = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAtlasAlerts(t *testing.T) {
@@ -77,8 +77,8 @@ func TestAtlasAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
-		if alert.EventTypeName != eventTypeName {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, eventTypeName)
+		if alert.EventTypeName != users_without_multi_factor_auth {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, users_without_multi_factor_auth)
 		}
 
 	})

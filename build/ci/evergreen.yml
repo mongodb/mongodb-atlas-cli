@@ -96,6 +96,36 @@ functions:
           E2E_TAGS: e2e,cloudmanager
           <<: *go_options
         command: make e2e-test
+  "deploy spawn host":
+    - command: shell.exec
+      type: setup
+      params:
+        shell: bash
+        silent: true
+        script: |
+          set -e
+          keyfile="${workdir}/ssh_id"
+          echo '${__project_aws_ssh_key_value}' > "$keyfile"
+          chmod 600 "$keyfile"
+    - command: host.create
+      type: system
+      params:
+        provider: ec2
+        distro: rhel70-small
+        num_hosts: 1
+        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
+    - command: host.list
+      params:
+        wait: true
+        timeout_seconds: 300
+        num_hosts: 1
+        path: src/github.com/mongodb/mongocli/hosts.json
+  ssh-ready:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: src/github.com/mongodb/mongocli/scripts/ssh_ready.sh
+        args: ['-u', 'root', '-i', '$src/github.com/mongodb/mongocli/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
   "lint":
     - command: shell.exec
       type: test
@@ -347,6 +377,8 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
+      - func: "deploy spawn host"
+      - func: ssh-ready
       - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]

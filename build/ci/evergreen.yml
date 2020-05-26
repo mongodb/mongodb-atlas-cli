@@ -103,8 +103,10 @@ functions:
         shell: bash
         script: |
           set -e
-          keyfile="${workdir}/ssh_id"
+          echo "$keyfile"
+          keyfile="${workdir}/${e2e_remote_ssh_identity}"
           echo '${__project_aws_ssh_key_value}' > "$keyfile"
+          cat "$keyfile"
           chmod 600 "$keyfile"
     - command: host.create
       type: system

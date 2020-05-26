@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -43,9 +44,9 @@ func TestCloudManagerAlerts(t *testing.T) {
 
 	entity := "cloud-manager"
 	alertsEntity := "alerts"
+	alertID := "5ec2ac941271767f21cbaefe"
 
 	t.Run("Describe", func(t *testing.T) {
-		alertID := "5ec2ac941271767f21cbaefe"
 
 		cmd := exec.Command(cliPath,
 			entity,
@@ -134,7 +135,7 @@ func TestCloudManagerAlerts(t *testing.T) {
 		}
 
 		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
+			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
 
 	})
@@ -163,8 +164,93 @@ func TestCloudManagerAlerts(t *testing.T) {
 		}
 
 		if len(alerts.Results) > 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
+			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
 		}
 
 	})
+
+	t.Run("Acknowledge", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			entity,
+			alertsEntity,
+			"ack",
+			alertID,
+			"--until",
+			time.Now().Format(time.RFC3339))
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alert := mongodbatlas.Alert{}
+		err = json.Unmarshal(resp, &alert)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if alert.ID != alertID {
+			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		}
+	})
+
+	t.Run("Acknowledge Forever", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			entity,
+			alertsEntity,
+			"ack",
+			alertID,
+			"--forever")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alert := mongodbatlas.Alert{}
+		err = json.Unmarshal(resp, &alert)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if alert.ID != alertID {
+			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		}
+	})
+
+	t.Run("UnaAcknowledge", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			entity,
+			alertsEntity,
+			"unack",
+			alertID)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		alert := mongodbatlas.Alert{}
+		err = json.Unmarshal(resp, &alert)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if alert.ID != alertID {
+			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		}
+	})
+
 }

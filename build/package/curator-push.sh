@@ -8,7 +8,7 @@ set -Eeou pipefail
 # 4.X goes to the 4.x repo
 # any *-rc version goes to testing repo
 # everything else goes to development repo
-./curator \
+curator \
     --level debug \
     repo submit \
     --service "${barque_url}" \

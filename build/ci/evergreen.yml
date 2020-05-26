@@ -144,7 +144,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/bin
         script: |
           set -Eeou pipefail
 
@@ -296,7 +296,9 @@ functions:
           - revision
           - created_at
           - ext
-        working_dir: src/github.com/mongodb/mongocli/dist
+        add_to_path:
+          - ./bin
+        working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
         binary: build/package/curator-push.sh
@@ -923,6 +925,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
+      server_version: "0.9.9"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -944,7 +947,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "4.4.0-rc0"
+      server_version: "4.4.0-rc2"
     tasks:
       - name: release
       - name: .push_stable

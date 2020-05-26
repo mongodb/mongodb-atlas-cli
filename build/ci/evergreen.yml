@@ -383,7 +383,7 @@ tasks:
       - func: "rename pkg"
         vars:
           unstable: -unstable
-          latets_deb: ~latest
+          latest_deb: ~latest
           latest_rpm: .latest
       - command: archive.targz_pack
         params:

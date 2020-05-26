@@ -248,7 +248,7 @@ functions:
           - unstable
           - latest_deb
           - latest_rpm
-        working_dir: src/github.com/mongodb/mongocli/dist
+        working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
         binary: build/package/rename-pkg.sh

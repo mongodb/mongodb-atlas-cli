@@ -8,6 +8,8 @@ if [[ "${unstable}" == "-unstable" ]]; then
     FILENAME="mongocli_next_linux_x86_64"
 fi
 
+cd dist
+
 mkdir yum apt
 
 # we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later

@@ -125,7 +125,7 @@ functions:
       type: setup
       params:
         binary: src/github.com/mongodb/mongocli/build/package/ssh_ready.sh
-        args: ['-u', 'root', '-i', '$src/github.com/mongodb/mongocli/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
+        args: ['-u', 'root', '-i', 'src/github.com/mongodb/mongocli/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
   "lint":
     - command: shell.exec
       type: test

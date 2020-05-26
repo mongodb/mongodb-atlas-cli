@@ -103,7 +103,7 @@ functions:
         shell: bash
         script: |
           set -e
-          keyfile="${workdir}/ssh_id"
+          keyfile="src/github.com/mongodb/mongocli/build/package/ssh_id"
           echo '${__project_aws_ssh_key_value}' > "$keyfile"
           chmod 600 "$keyfile"
     - command: host.create
@@ -124,7 +124,7 @@ functions:
       type: setup
       params:
         binary: src/github.com/mongodb/mongocli/build/package/ssh_ready.sh
-        args: ['-u', 'root', '-i', 'src/github.com/mongodb/mongocli/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
+        args: ['-u', 'root', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
   "lint":
     - command: shell.exec
       type: test

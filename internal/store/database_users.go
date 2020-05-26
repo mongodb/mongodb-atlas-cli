@@ -22,6 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongocli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber
+
 type DatabaseUserLister interface {
 	DatabaseUsers(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
 }
@@ -40,13 +42,6 @@ type DatabaseUserUpdater interface {
 
 type DatabaseUserDescriber interface {
 	DatabaseUser(string, string, string) (*atlas.DatabaseUser, error)
-}
-
-type DatabaseUserStore interface {
-	DatabaseUserCreator
-	DatabaseUserDeleter
-	DatabaseUserUpdater
-	DatabaseUserDescriber
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers

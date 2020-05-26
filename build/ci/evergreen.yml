@@ -11,6 +11,7 @@ ignore:
 variables:
   - &go_options
     GO111MODULE: "on"
+    GOROOT: ${go_root}
 functions:
   "clone":
     - command: git.get_project
@@ -25,24 +26,19 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          WORKDIR: ${workdir}
-          GOROOT: ${go_root}
           <<: *go_options
         command: make build
   "test":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
+        add_to_path:
+          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:$GOROOT/bin:$PATH"
-
-          gotestsum --junitfile unit-tests.xml -- -race -cover -count=1 -coverprofile coverage.out ./internal...
+        env:
+          TEST_CMD: gotestsum --junitfile unit-tests.xml --
+          <<: *go_options
+        command: make test
   "generate html coverage":
     - command: subprocess.exec
       type: test
@@ -51,7 +47,6 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           <<: *go_options
         command: go tool cover -html=coverage.out -o coverage.html
   "upload html coverage":
@@ -73,14 +68,13 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${atlas_org_id}
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
-          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
           E2E_TAGS: e2e,atlas
           <<: *go_options
         command: make e2e-test
@@ -92,14 +86,13 @@ functions:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         env:
-          GOROOT: ${go_root}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_ORG_ID: ${cloud_manager_org_id}
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
-          E2E_CMD: gotestsum --junitfile e2e-tests.xml --
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
           E2E_TAGS: e2e,cloudmanager
           <<: *go_options
         command: make e2e-test
@@ -109,43 +102,20 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           golangci-lint run --out-format junit-xml > lint-tests.xml
-  "generate notices":
-    - command: shell.exec
-      type: test
-      params:
-        script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          export GOROOT="${go_root}"
-          export GOPATH=$(pwd)
-          export PATH="$GOPATH/bin:$GOROOT/bin:$PATH"
-          mkdir -p github.com/google/go-licenses
-          pushd github.com/google/go-licenses
-
-          go get github.com/google/go-licenses
-          popd
-          cd src/github.com/mongodb/mongocli
-          go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
   "install gotestsum":
     - command: shell.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli/bin
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
-          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v0.4.2/gotestsum_0.4.2_linux_amd64.tar.gz | tar zx
+          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
   "install golangci-lint":
     - command: subprocess.exec
       type: setup
@@ -158,59 +128,53 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli/bin
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
-          curl -sL https://github.com/mitchellh/gon/releases/download/v0.2.3/gon_macos.zip | tar zx
+          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip | tar zx
   "install goreleaser":
     - command: shell.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
   "install curator":
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/bin
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
           curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
   "set up gon":
-    - command: shell.exec
+    - command: subprocess.exec
+      type: test
       params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - ac_username
+          - ac_password
         working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
         silent: true
-        script: |
-          set -o errexit
-
-          OUTPUT_PATH="./dist/mongocli_macos_signed_x86_64.zip"
-          # gon settings
-          cat <<EOF_GON_JSON > gon.json
-          {
-            "source" : ["./dist/macos_darwin_amd64/mongocli"],
-            "bundle_id" : "com.mongodb.mongocli",
-            "apple_id": {
-              "username": "${ac_username}",
-              "password": "${ac_password}"
-            },
-            "sign" :{
-              "application_identity" : "Developer ID Application: MongoDB, Inc. (4XWMY46275)"
-            },
-            "zip" :{
-              "output_path": "$OUTPUT_PATH"
-            }
-          }
-          EOF_GON_JSON
+        binary: build/package/set-up-gon.sh
+  "generate notices":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - workdir
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/package/generate-notices.sh
   "package":
     - command: shell.exec
       type: test
@@ -236,9 +200,7 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
-          set -o errexit
-          set -o xtrace
-          set -o verbose
+          set -Eeou pipefail
           # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
           ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
   "install go-msi":
@@ -259,9 +221,7 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
           export GOROOT="${go_root}"
           export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
@@ -279,36 +239,26 @@ functions:
 
           go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
   "rename pkg":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli/dist
-        script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
-          FILENAME=mongocli_"$VERSION"_linux_x86_64
-          if [[ "${unstable}" == "-unstable" ]]; then
-            FILENAME="mongocli_next_linux_x86_64"
-          fi
-
-          mkdir {yum,apt}
-          # we could generate a similar name with goreleaser but we want to keep the vars evg compatibale to use later
-          cp "$FILENAME.deb" apt/
-          mv "apt/$FILENAME.deb" apt/mongodb-cli"${unstable}"_"$VERSION"${latest_deb}_amd64.deb
-          cp "$FILENAME.rpm" yum/
-          mv "yum/$FILENAME.rpm" yum/mongodb-cli"${unstable}"-"$VERSION"${latest_rpm}.x86_64.rpm
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - unstable
+          - latest_deb
+          - latest_rpm
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/package/rename-pkg.sh
   "generate download archive json":
     - command: shell.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         script: |
-          set -o xtrace
-          set -o errexit
-          set -o verbose
+          set -Eeou pipefail
 
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
@@ -334,31 +284,24 @@ functions:
 
           echo "${signing_auth_token_44}" > ./signing_auth_token
   "push":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
+        include_expansions_in_env:
+          - barque_url
+          - distro
+          - edition
+          - server_version
+          - project
+          - revision
+          - created_at
+          - ext
+        add_to_path:
+          - ./bin
         working_dir: src/github.com/mongodb/mongocli
-        script: |
-          . ./notary_env.sh
-
-          set -o xtrace
-          set -o errexit
-          set -o verbose
-
-          # --version needs to match the mongodb server version to publish to the right repo
-          # 4.X goes to the 4.x repo
-          # any *-rc version goes to testing repo
-          # everything else goes to development repo
-          ./curator \
-            --level debug \
-            repo submit \
-            --service ${barque_url} \
-            --config etc/repo_config.yml \
-            --distro ${distro} \
-            --edition ${edition} \
-            --version ${server_version|1.0.0} \
-            --arch x86_64 \
-            --packages https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz
+        env:
+          <<: *go_options
+        binary: build/package/curator-push.sh
 
 post:
   - command: attach.xunit_results
@@ -442,7 +385,7 @@ tasks:
       - func: "rename pkg"
         vars:
           unstable: -unstable
-          latets_deb: ~latest
+          latest_deb: ~latest
           latest_rpm: .latest
       - command: archive.targz_pack
         params:
@@ -982,6 +925,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
+      server_version: "0.9.9"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1003,7 +947,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "4.4.0-rc0"
+      server_version: "4.4.0-rc2"
     tasks:
       - name: release
       - name: .push_stable

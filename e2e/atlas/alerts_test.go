@@ -74,11 +74,11 @@ func TestAtlasAlerts(t *testing.T) {
 		}
 
 		if alert.Status != open {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, closed)
+			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
 		if alert.EventTypeName != eventTypeName {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, replication_oplog_window_running_out)
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, eventTypeName)
 		}
 
 	})

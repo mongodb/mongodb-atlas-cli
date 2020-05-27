@@ -1,4 +1,5 @@
 #!/bin/bash
+set x
 
 mmsGroupId=$1
 mmsApiKey=$2

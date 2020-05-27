@@ -2,7 +2,7 @@
 
 set -ex
 
-while getopts 'i:h:t:u:' opt; do
+while getopts 'i:h:t:u:v:' opt; do
     case $opt in
         i) keyfile="$OPTARG";;      # SSH identity file
         u) user="$OPTARG";;         # Username on the remote host

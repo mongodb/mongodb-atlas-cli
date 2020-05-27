@@ -2,8 +2,6 @@
 
 set -ex
 
-PATH="$PATH":/bin:/usr/bin:/usr/local/bin
-
 mmsGroupId=$1
 mmsApiKey=$2
 

@@ -15,15 +15,20 @@
 # limitations under the License.
 
 
-set -Eeou pipefail
+set -euo pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
+find_files() {
+  find . -not \( \
+    \( \
+      -wholename '*mock*' \
+      -o -wholename '*third_party*' \
+    \) -prune \
+  \) \
+  \( -name '*.go' -o -name '*.sh' \)
+}
 
-pushd "${GOPATH}"
-
-go get github.com/google/go-licenses
-
-popd
-
-go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
+echo "==> Adding copy notice..."
+for FILE in $(find_files); do
+    addlicense -c "MongoDB Inc" "${FILE}"
+done
+echo "Done..."

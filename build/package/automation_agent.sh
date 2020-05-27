@@ -4,6 +4,8 @@ set -ex
 
 mmsGroupId=$1
 mmsApiKey=$2
+
+
 replace_property_in_file() {
     # Parameter check
     if [[ "$#" -lt 3 ]]; then
@@ -35,7 +37,13 @@ echo "Preparing the /data directory to store your MongoDB data. This directory m
 sudo mkdir -p /data
 sudo chown mongod:mongod /data
 
-echo echo "$(/etc/mongodb-mms/automation-agent.config)"
-echo "Starting the agent"
-sudo systemctl start mongodb-mms-automation-agent.service
 
+
+
+echo "Starting the agent"
+
+sudo systemctl start mongodb-mms-automation-agent.service
+# shellcheck disable=SC2005
+echo "$(/var/log/mongodb-mms-automation/automation-agent.log)"
+# shellcheck disable=SC2005
+echo "$(/etc/mongodb-mms/automation-agent.config)"

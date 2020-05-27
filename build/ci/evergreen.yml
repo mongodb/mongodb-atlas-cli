@@ -125,6 +125,12 @@ functions:
       params:
         binary: src/github.com/mongodb/mongocli/build/package/ssh_ready.sh
         args: ['-u', 'root', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
+  "install automation agent":
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: src/github.com/mongodb/mongocli/build/package/install_agent_spawn_host.sh
+        args: ['-u', 'root', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json', '-t', '${automation_agent_mms_group_id}', 'v', '${automation_agent_mms_api_key}']
   "lint":
     - command: shell.exec
       type: test
@@ -378,6 +384,7 @@ tasks:
       - func: "install gotestsum"
       - func: "deploy spawn host"
       - func: ssh-ready
+      - func: "install automation agent"
       - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]

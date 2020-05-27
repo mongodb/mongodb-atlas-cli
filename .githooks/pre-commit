@@ -1,4 +1,4 @@
-$!/usr/bin/env bash
+#!/usr/bin/env bash
 
 STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$")
 

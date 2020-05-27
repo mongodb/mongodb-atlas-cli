@@ -27,4 +27,5 @@ for host in $hosts; do
     echo "installing the automation agent on $host"
     ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" \  < src/github.com/mongodb/mongocli/build/package/automation_agent.sh "$groupid" "$apiKey"
     set -e
+    sleep 5m
 done

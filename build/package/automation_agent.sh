@@ -21,6 +21,8 @@ replace_property_in_file() {
     echo "${2}=${3}" >> "${temp_file}"                # Set the new property value
     cat "${temp_file}" > "${1}"                       # Replace the contents of the original file, while preserving any permissions
     rm "${temp_file}"
+
+    echo "property correctly set!"
 }
 
 clear
@@ -38,12 +40,11 @@ sudo mkdir -p /data
 sudo chown mongod:mongod /data
 
 
-
-
 echo "Starting the agent"
-
 sudo systemctl start mongodb-mms-automation-agent.service
 # shellcheck disable=SC2005
 echo "$(/var/log/mongodb-mms-automation/automation-agent.log)"
 # shellcheck disable=SC2005
 echo "$(/etc/mongodb-mms/automation-agent.config)"
+
+sleep 5m

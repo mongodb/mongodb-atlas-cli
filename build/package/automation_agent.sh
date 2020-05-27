@@ -20,16 +20,10 @@ replace_property_in_file() {
 }
 
 clear
-echo "Installing dependeces"
-sudo yum -y install cyrus-sasl cyrus-sasl-gssapi \
-     cyrus-sasl-plain krb5-libs libcurl \
-     lm_sensors-libs net-snmp net-snmp-agent-libs \
-     openldap openssl tcp_wrappers-libs xz-libs \
-     gcc intltool gperf glib2-devel
 
 echo "Download and extract the automation agent"
-curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager-10.15.0.6396-1.x86_64.rhel7.rpm
-sudo rpm -U mongodb-mms-automation-agent-manager-10.15.0.6396-1.x86_64.rhel7.rpm
+curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
+sudo dpkg -i mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
 
 echo "Replacing mmsGroupId and mmsApiKey properties"
 replace_property_in_file "/etc/mongodb-mms/automation-agent.config" "mmsGroupId" "$mmsGroupId"
@@ -40,9 +34,4 @@ sudo mkdir -p /data
 sudo chown mongod:mongod /data
 
 echo "Starting the agent"
-# shellcheck disable=SC2046
-# shellcheck disable=SC2005
-echo $(ls)
-systemctl --version
-
-sudo /sbin/service mongodb-mms-automation-agent start
+sudo systemctl start mongodb-mms-automation-agent.service

@@ -35,7 +35,7 @@ echo "Preparing the /data directory to store your MongoDB data. This directory m
 sudo mkdir -p /data
 sudo chown mongod:mongod /data
 
-echo echo "$(</etc/mongodb-mms/automation-agent.config )"
+echo echo "$(/etc/mongodb-mms/automation-agent.config)"
 echo "Starting the agent"
 sudo systemctl start mongodb-mms-automation-agent.service
 

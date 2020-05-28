@@ -25,15 +25,13 @@ EOF
 for host in $hosts; do
     set +e
     echo "installing the automation agent on $host"
-
     ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
+        free -m
         echo "Installing dependeces"
-        sudo apt-get -y install libcurl3 libgssapi-krb5-2 \
-             libkrb5-dbg libldap-2.4-2 libpci3 libsasl2-2 snmp \
-             liblzma5 openssl
-
-        clear
-
+        sudo apt-get install -y --no-install-recommends ca-certificates curl logrotate openssl snmp && exit
+ENDSSH
+    ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
+        free -m
         echo "Downloadind and extracting the automation agent"
         curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
         sudo dpkg -i mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb

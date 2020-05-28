@@ -251,28 +251,19 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         command: choco uninstall -y "go-msi"
   "generate msi":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
-          export CGO_ENABLED=0
-          export GOMSI="/cygdrive/c/Program Files/go-msi"
-          export PATH="$GOMSI:/cygdrive/c/wixtools/bin:$GOROOT\bin:$PATH"
-
-          go-msi check-env
-
-          VERSION=$(git describe | cut -d "v" -f 2)
-
-          env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=$VERSION" -o mongocli.exe
-
-          mkdir -p build
-
-          go-msi make --msi "dist/mongocli_$VERSION.msi" --version $VERSION
+        add_to_path:
+          - ${go_bin}
+          - "/cygdrive/c/Program Files/go-msi"
+          - "/cygdrive/c/wixtools/bin"
+        include_expansions_in_env:
+          - workdir
+        env:
+          <<: *go_options
+        command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
       type: test
@@ -301,6 +292,25 @@ functions:
           VERSION=$(git describe | cut -d "v" -f 2)
 
           go run ../internal/release/main.go "$VERSION"
+  "upload dist":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongocli/dist/*.tar.gz
+          - src/github.com/mongodb/mongocli/dist/*.zip
+          - src/github.com/mongodb/mongocli/dist/*.deb
+          - src/github.com/mongodb/mongocli/dist/*.rpm
+          - src/github.com/mongodb/mongocli/dist/*.tgz
+          - src/github.com/mongodb/mongocli/dist/*.json
+          - src/github.com/mongodb/mongocli/dist/*.rb
+          - src/github.com/mongodb/mongocli/dist/*.msi
+        remote_file: ${project}/dist/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/x-gzip}
+        display_name: inernal-bucket
   "set up notary client credentials":
     - command: shell.exec
       params:
@@ -438,21 +448,7 @@ tasks:
           include:
             - "*.rpm"
       - func: "generate download archive json"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
+      - func: "upload dist"
   - name: release
     stepback: false
     patch_only: true
@@ -482,23 +478,7 @@ tasks:
           include:
             - "*.rpm"
       - func: "generate download archive json"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
-            - src/github.com/mongodb/mongocli/dist/*.rb
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: inernal-bucket-
+      - func: "upload dist"
       - command: s3.put
         params:
           aws_key: ${download_center_aws_key}
@@ -510,6 +490,29 @@ tasks:
             - src/github.com/mongodb/mongocli/dist/*.rpm
             - src/github.com/mongodb/mongocli/dist/*.tgz
             - src/github.com/mongodb/mongocli/dist/*.json
+          remote_file: mongocli/
+          bucket: downloads.mongodb.org
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
+  - name: release_msi
+    stepback: false
+    patch_only: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+    commands:
+      - func: "clone"
+      - func: "install go-msi"
+      - func: "generate msi"
+      - func: "uninstall go-msi"
+      - func: "upload dist"
+      - command: s3.put
+        params:
+          aws_key: ${download_center_aws_key}
+          aws_secret: ${download_center_aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.msi
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
@@ -991,3 +994,12 @@ buildvariants:
       - name: .push_stable
         run_on:
           - rhel70-small
+  - name: release_msi
+    display_name: "Release (go-msi)"
+    run_on:
+      - windows-64-vs2017-compile
+    expansions:
+      go_root: "c:\\golang\\go1.14"
+      go_bin: "c:\\golang\\go1.14/bin"
+    tasks:
+      - name: release_msi

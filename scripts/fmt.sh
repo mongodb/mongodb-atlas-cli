@@ -15,15 +15,21 @@
 # limitations under the License.
 
 
-set -Eeou pipefail
+set -euo pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
+find_files() {
+  find . -not \( \
+    \( \
+      -wholename '*mock*' \
+      -o -wholename '*third_party*' \
+    \) -prune \
+  \) \
+  \( -name '*.go' \)
+}
 
-pushd "${GOPATH}"
-
-go get github.com/google/go-licenses
-
-popd
-
-go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
+echo "==> Formatting all files..."
+for FILE in $(find_files); do
+    gofmt -w -s "${FILE}"
+    goimports -w "${FILE}"
+done
+echo "Done..."

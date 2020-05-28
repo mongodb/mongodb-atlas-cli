@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Copyright 2020 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +16,13 @@
 
 set -Eeou pipefail
 
-export GOPATH="${workdir:?}"
-export PATH="$GOPATH/bin:$PATH"
+export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
+export CGO_ENABLED=0
 
-pushd "${GOPATH}"
+go-msi check-env
 
-go get github.com/google/go-licenses
+VERSION=$(git describe | cut -d "v" -f 2)
 
-popd
+env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION}" -o ./bin/mongocli.exe
 
-go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
+go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version ${VERSION}

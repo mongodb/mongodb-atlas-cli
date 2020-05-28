@@ -52,9 +52,10 @@ ENDSSH
         curl -OL https://cloud.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
         sudo dpkg -i mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
 
-        echo "Replacing mmsGroupId and mmsApiKey properties"
+        echo "Replacing mmsGroupId, mmsApiKey and mmsBaseUrl"
         sudo sed -i "s/\(mmsGroupId *= *\).*/\1$ARG1/" /etc/mongodb-mms/automation-agent.config
         sudo sed -i "s/\(mmsApiKey *= *\).*/\1$ARG2/" /etc/mongodb-mms/automation-agent.config
+        sudo sed -i "s/\(mmsBaseUrl *= *\).*/\1https://api-agents-dev.mongodb.com/" /etc/mongodb-mms/automation-agent.config
 
         echo "Preparing the /data directory to store your MongoDB data"
         sudo mkdir -p /data

@@ -9,6 +9,11 @@ if [[ -z "${VERSION}" ]]; then
     exit 1
 fi
 
+if [[ "${VERSION}" == v* ]]; then
+    echo "Please omit the 'v' when using this script"
+    exit 1
+fi
+
 read -p "Are you sure to release v${VERSION}? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then

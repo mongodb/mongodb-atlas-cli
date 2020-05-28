@@ -19,7 +19,7 @@ set -Eeou pipefail
 
 VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
 FILENAME=mongocli_"${VERSION}"_linux_x86_64
-if [[ "${unstable}" == "-unstable" ]]; then
+if [[ "${unstable-}" == "-unstable" ]]; then
     FILENAME="mongocli_next_linux_x86_64"
 fi
 

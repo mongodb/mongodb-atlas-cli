@@ -50,7 +50,7 @@ ENDSSH
   ssh "${ssh_opts[@]}" -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
         echo "Downloadind and extracting the automation agent"
         curl -OL https://cloud.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
-        sudo dpkg -i mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
+        sudo dpkg -i mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
 
         echo "Replacing mmsGroupId and mmsApiKey properties"
         sudo sed -i "s/\(mmsGroupId *= *\).*/\1$ARG1/" /etc/mongodb-mms/automation-agent.config

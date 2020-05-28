@@ -11,9 +11,9 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mitchellh/mapstructure v1.3.0 // indirect
+	github.com/mitchellh/mapstructure v1.3.1 // indirect
 	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200508151240-fe2a21ab5a46
-	github.com/pelletier/go-toml v1.7.0 // indirect
+	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v1.0.0
@@ -22,7 +22,7 @@ require (
 	github.com/spf13/viper v1.7.0
 	go.mongodb.org/ops-manager v0.5.2-0.20200513091426-cb751656afa4
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
-	golang.org/x/sys v0.0.0-20200511232937-7e40ca221e25 // indirect
-	gopkg.in/ini.v1 v1.56.0 // indirect
+	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
+	gopkg.in/ini.v1 v1.57.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )

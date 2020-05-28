@@ -15,7 +15,6 @@
 package store
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -64,7 +63,7 @@ func New(c config.Config) (*Store, error) {
 	case config.CloudManagerService, config.OpsManagerService:
 		s.setOpsManagerClient(client)
 	default:
-		return nil, errors.New("unsupported service")
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 
 	return s, nil
@@ -88,7 +87,7 @@ func NewUnauthenticated(c config.Config) (*Store, error) {
 	case config.OpsManagerService:
 		s.setOpsManagerClient(nil)
 	default:
-		return nil, errors.New("unsupported service")
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 
 	return s, nil

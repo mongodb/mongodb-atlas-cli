@@ -10,8 +10,15 @@ these tasks are run on master and can be patched at any time.
 
 ## Stable release
 
-To generate a new stable release you must follow the following steps:
+To generate a new stable release you can run:
 
+```bash
+./scripts/release.sh 1.0.0
+```
+
+**Note:** Please omit the `v` from the version to release 
+
+This will do the following things:
 1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
 2. Publish the new tag, ie `git push origin v1.0.0`
-3. Run the evergreen releasing task, ie: `evergreen patch -p mongocli-master -y -d "Release v1.0.0" -v release_publish -v release_msi -t all`
+3. Run the evergreen releasing task, ie: `evergreen patch -p mongocli-master -y -d "Release v1.0.0" -v release_publish -v release_msi -t all -f`

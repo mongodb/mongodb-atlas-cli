@@ -24,12 +24,12 @@ EOF
 )
 for host in $hosts; do
     set +e
-    echo "installing the automation agent on $host"
+    echo "Installing dependeces on $host"
     ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" 'bash -s' <<'ENDSSH'
         free -m
-        echo "Installing dependeces"
         sudo apt-get install -y --no-install-recommends ca-certificates curl logrotate openssl snmp && exit
 ENDSSH
+    echo "Installing the automation agent on $host"
     ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
         free -m
         echo "Downloadind and extracting the automation agent"
@@ -48,6 +48,6 @@ ENDSSH
         sudo systemctl start mongodb-mms-automation-agent.service
         exit
 ENDSSH
-    echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.properties"
+    echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env"
     sudo sed -i "s/\(hostname *= *\).*/\1$host/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
 done

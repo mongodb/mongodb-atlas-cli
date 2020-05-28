@@ -14,8 +14,10 @@
 
 package main
 
-import "github.com/mongodb/mongocli/cmd"
+import (
+	"github.com/mongodb/mongocli/cmd/mongocli"
+)
 
 func main() {
-	cmd.Execute()
+	mongocli.Execute()
 }

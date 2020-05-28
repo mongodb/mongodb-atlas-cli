@@ -3,17 +3,35 @@
 set -ex
 
 while getopts 'i:h:t:u:v:' opt; do
-    case $opt in
-        i) keyfile="$OPTARG";;      # SSH identity file
-        u) user="$OPTARG";;         # Username on the remote host
-        h) hostsfile="$OPTARG";;    # Output of Evergreen host.list
-        t) groupid="$OPTARG";;      # APIGroupId
-        v) apiKey="$OPTARG";;       # APIKey
-        *) exit 1;;
-    esac
+  case $opt in
+  i) keyfile="$OPTARG" ;; # SSH identity file
+  u) user="$OPTARG" ;; # Username on the remote host
+  h) hostsfile="$OPTARG" ;; # Output of Evergreen host.list
+  t) groupid="$OPTARG" ;; # APIGroupId
+  v) apiKey="$OPTARG" ;; # APIKey
+  *) exit 1 ;;
+  esac
 done
 
-hosts=$(cat << EOF | python - "$hostsfile"
+declare -a ssh_opts
+ssh_opts[0]="-o"
+ssh_opts[1]="UserKnownHostsFile=/dev/null"
+ssh_opts[2]="-o"
+ssh_opts[3]="StrictHostKeyChecking=no"
+ssh_opts[4]="-q"
+ssh_opts[5]="-o"
+ssh_opts[6]="ConnectTimeout=30"
+ssh_opts[7]="-o"
+ssh_opts[8]="TCPKeepAlive=yes"
+ssh_opts[9]="-o"
+ssh_opts[10]="ServerAliveInterval=15"
+ssh_opts[11]="-o"
+ssh_opts[12]="ServerAliveCountMax=20"
+ssh_opts[13]="-i"
+ssh_opts[14]="$keyfile"
+
+hosts=$(
+  cat <<EOF | python - "$hostsfile"
 import sys
 import json
 with open(sys.argv[1]) as hostsfile:
@@ -23,17 +41,15 @@ with open(sys.argv[1]) as hostsfile:
 EOF
 )
 for host in $hosts; do
-    set +e
-    echo "Installing dependeces on $host"
-    ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" 'bash -s' <<'ENDSSH'
-        free -m
+  set +e
+  echo "Installing dependeces on $host"
+  ssh "${ssh_opts[@]}" -tt "$user@$host" 'bash -s' <<'ENDSSH'
         sudo apt-get install -y --no-install-recommends ca-certificates curl logrotate openssl snmp && exit
 ENDSSH
-    echo "Installing the automation agent on $host"
-    ssh -i "$keyfile" -o ConnectTimeout=50 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
-        free -m
+  echo "Installing the automation agent on $host"
+  ssh "${ssh_opts[@]}" -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" 'bash -s' <<'ENDSSH'
         echo "Downloadind and extracting the automation agent"
-        curl -OL https://cloud-dev.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
+        curl -OL https://cloud.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
         sudo dpkg -i mongodb-mms-automation-agent-manager_10.15.0.6409-1_amd64.ubuntu1604.deb
 
         echo "Replacing mmsGroupId and mmsApiKey properties"
@@ -48,6 +64,6 @@ ENDSSH
         sudo systemctl start mongodb-mms-automation-agent.service
         exit
 ENDSSH
-    echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env"
-    sudo sed -i "s/\(hostname *= *\).*/\1$host/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
+  echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env"
+  sudo sed -i "s/\(hostname *= *\).*/\1$host/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
 done

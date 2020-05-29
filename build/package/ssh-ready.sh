@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -euo pipefail
 
 declare -i attempts
 declare -i connection_attempts

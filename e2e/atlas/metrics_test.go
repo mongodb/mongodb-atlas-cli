@@ -42,18 +42,15 @@ func TestAtlasMetrics(t *testing.T) {
 
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
-	clusterName := ""
 
-	// Deploy a cluster only if there is not one available
-	if !atlas.ExistCluster(cliPath) {
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-		err = atlas.DeployCluster(cliPath, clusterName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+	err = atlas.DeployCluster(cliPath, clusterName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
+
 
 	hostname, err := atlas.GetHostnameAndPort(cliPath)
 	if err != nil {

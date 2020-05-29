@@ -50,7 +50,7 @@ ENDSSH
   echo "Installing the automation agent on $host"
   ssh "${ssh_opts[@]}" -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" ARG3="$base_url"  'bash -s' <<'ENDSSH'
         echo "Downloadind and extracting the automation agent"
-        curl -OL $ARG3/download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
+        curl -OL $ARG3download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
         sudo dpkg -i mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
 
         echo "Replacing mmsGroupId and mmsApiKey"

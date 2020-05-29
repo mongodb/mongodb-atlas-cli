@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
 const (
@@ -59,7 +58,7 @@ func ExistCluster(cliPath string) bool {
 		return false
 	}
 
-	var clusters []atlas.Cluster
+	var clusters []mongodbatlas.Cluster
 	err = json.Unmarshal(resp, &clusters)
 
 	if err != nil {
@@ -71,7 +70,6 @@ func ExistCluster(cliPath string) bool {
 	}
 
 	return false
-
 }
 
 func DeployCluster(cliPath, clusterName string) error {

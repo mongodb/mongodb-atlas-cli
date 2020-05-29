@@ -60,13 +60,21 @@ func TestAtlasLogs(t *testing.T) {
 	}
 
 	t.Run("Download mongodb.gz", func(t *testing.T) {
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
 		logFile := "mongodb.gz"
+		filepath := dir + logFile
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
 			hostname,
 			logFile,
+			"--out",
+			filepath,
 		)
 
 		cmd.Env = os.Environ()
@@ -76,24 +84,28 @@ func TestAtlasLogs(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err := os.Stat(dir + logFile); err != nil {
-			t.Fatalf("%v has not been downloaded", err)
+		if _, err := os.Stat(filepath); err != nil {
+			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
 
 	t.Run("Download mongos.gz", func(t *testing.T) {
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		logFile := "mongos.gz"
+		filepath := dir + logFile
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
 			hostname,
 			logFile,
+			"--out",
+			filepath,
 		)
 
 		cmd.Env = os.Environ()
@@ -103,24 +115,28 @@ func TestAtlasLogs(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err := os.Stat(dir + logFile); err != nil {
-			t.Fatalf("%v has not been downloaded", err)
+		if _, err := os.Stat(filepath); err != nil {
+			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
 
 	t.Run("Download mongodb-audit-log.gz", func(t *testing.T) {
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		logFile := "mongodb-audit-log.gz"
+		filepath := dir + logFile
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
 			hostname,
 			logFile,
+			"--out",
+			filepath,
 		)
 
 		cmd.Env = os.Environ()
@@ -130,24 +146,28 @@ func TestAtlasLogs(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err := os.Stat(dir + logFile); err != nil {
-			t.Fatalf("%v has not been downloaded", err)
+		if _, err := os.Stat(filepath); err != nil {
+			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
 
 	t.Run("Download mongos-audit-log.gz", func(t *testing.T) {
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		logFile := "mongos-audit-log.gz"
+		filepath := dir + logFile
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
 			hostname,
 			logFile,
+			"--out",
+			filepath,
 		)
 
 		cmd.Env = os.Environ()
@@ -157,13 +177,8 @@ func TestAtlasLogs(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err := os.Stat(dir + logFile); err != nil {
-			t.Fatalf("%v has not been downloaded", err)
+		if _, err := os.Stat(filepath); err != nil {
+			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
 

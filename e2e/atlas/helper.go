@@ -45,7 +45,7 @@ func GetHostnameAndPort(cliPath string) (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-// ExistCluster returns true if there is at least a cluster deployed, false otherwise
+// ExistCluster returns true if there is at least a cluster is deployed, false otherwise
 func ExistCluster(cliPath string) bool {
 	cmd := exec.Command(cliPath,
 		atlasEntity,

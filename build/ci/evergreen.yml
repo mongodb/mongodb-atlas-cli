@@ -96,6 +96,41 @@ functions:
           E2E_TAGS: e2e,cloudmanager
           <<: *go_options
         command: make e2e-test
+  "deploy spawn host":
+    - command: shell.exec
+      type: setup
+      params:
+        shell: bash
+        script: |
+          set -e
+          keyfile="src/github.com/mongodb/mongocli/build/package/ssh_id"
+          echo '${__project_aws_ssh_key_value}' > "$keyfile"
+          chmod 600 "$keyfile"
+    - command: host.create
+      type: system
+      params:
+        provider: ec2
+        distro: ubuntu1604-small
+        num_hosts: 1
+        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
+    - command: host.list
+      params:
+        wait: true
+        timeout_seconds: 300
+        num_hosts: 1
+        path: src/github.com/mongodb/mongocli/hosts.json
+  ssh-ready:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: src/github.com/mongodb/mongocli/build/package/ssh-ready.sh
+        args: ['-u', 'ubuntu', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
+  "install automation agent":
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: src/github.com/mongodb/mongocli/build/package/install-agent-spawn-host.sh
+        args: ['-u', 'ubuntu', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json', '-g', '${automation_agent_mms_group_id}', '-a', '${automation_agent_mms_api_key}', '-b','${mcli_ops_manager_url}']
   "lint":
     - command: shell.exec
       type: test
@@ -357,6 +392,9 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install automation agent"
       - func: "cloud manager e2e"
   - name: package_msi
     tags: ["packaging"]

@@ -7,10 +7,6 @@
 
 `mongocli` is a tool for managing your MongoDB cloud services
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/461027/78688122-d3d83b80-78ec-11ea-84f9-06a24ed7f75a.png" alt="MongoCLI Terminal">
-</p>
-
 ## Installing
 
 ### Hombrew on macOS
@@ -52,9 +48,10 @@ or check our [online documentation](https://docs.mongodb.com/mongocli/master/) f
 Run `mongocli config` to set up your credentials, 
 this is optional and you can use [env variables](#environment-variables) instead.
 
-If you're working with Ops Manager or CLoud Manager you need to define the service using `--service`
+If you're working with Ops Manager or Cloud Manager you need to define the service using `--service`
 
 For Ops Manager, `mongocli config --service ops-manager`.
+
 For Cloud Manager, `mongocli config --service cloud-manager`.  
 
 ### Environment Variables

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Copyright 2020 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +16,13 @@
 
 set -Eeou pipefail
 
-VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
-FILENAME=mongocli_"${VERSION}"_linux_x86_64
-if [[ "${unstable-}" == "-unstable" ]]; then
-    FILENAME="mongocli_next_linux_x86_64"
-fi
+export GOCACHE="$(cygpath --mixed "${workdir}\.gocache")"
+export CGO_ENABLED=0
 
-cd dist
+go-msi check-env
 
-mkdir yum apt
+VERSION=$(git describe | cut -d "v" -f 2)
 
-# we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later
-cp "$FILENAME.deb" apt/
-mv "apt/$FILENAME.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-cp "$FILENAME.rpm" yum/
-mv "yum/$FILENAME.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION}" -o ./bin/mongocli.exe
+
+go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version ${VERSION}

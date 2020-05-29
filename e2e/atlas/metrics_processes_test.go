@@ -42,15 +42,20 @@ func TestAtlasMetrics(t *testing.T) {
 
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	clusterName := ""
 
-	err = atlas.DeployCluster(cliPath, atlasEntity, clusterName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	// Deploy a cluster only if there is not one available
+	if !atlas.ExistCluster(cliPath) {
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+
+		err = atlas.DeployCluster(cliPath, clusterName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 	}
 
-	hostname, err := atlas.GetHostnameAndPort(cliPath, atlasEntity)
+	hostname, err := atlas.GetHostnameAndPort(cliPath)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -163,5 +168,7 @@ func TestAtlasMetrics(t *testing.T) {
 		}
 	})
 
-	atlas.DeleteCluster(cliPath, atlasEntity, clusterName)
+	if clusterName != "" {
+		atlas.DeleteCluster(cliPath, clusterName)
+	}
 }

@@ -9,9 +9,15 @@ import (
 	"strings"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func GetHostnameAndPort(cliPath, atlasEntity string) (string, error) {
+const (
+	atlasEntity    = "atlas"
+	clustersEntity = "clusters"
+)
+
+func GetHostnameAndPort(cliPath string) (string, error) {
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		"processes",
@@ -40,10 +46,38 @@ func GetHostnameAndPort(cliPath, atlasEntity string) (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func DeployCluster(cliPath, atlasEntity, clusterName string) error {
+// ExistCluster returns true if there is at least a cluster deployed, false otherwise
+func ExistCluster(cliPath string) bool {
 	cmd := exec.Command(cliPath,
 		atlasEntity,
-		"clusters",
+		clustersEntity,
+		"list")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return false
+	}
+
+	var clusters []atlas.Cluster
+	err = json.Unmarshal(resp, &clusters)
+
+	if err != nil {
+		return false
+	}
+
+	if len(clusters) > 0 {
+		return true
+	}
+
+	return false
+
+}
+
+func DeployCluster(cliPath, clusterName string) error {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
 		"create",
 		clusterName,
 		"--region=US_EAST_1",
@@ -61,21 +95,21 @@ func DeployCluster(cliPath, atlasEntity, clusterName string) error {
 
 	cmd = exec.Command(cliPath,
 		"atlas",
-		"clusters",
+		clustersEntity,
 		"watch",
 		clusterName)
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }
 
-func DeleteCluster(cliPath, atlasEntity, clusterName string) error {
+func DeleteCluster(cliPath, clusterName string) error {
 	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }
 
-func GetHostname(cliPath, atlasEntity string) (string, error) {
-	hostnamePort, err := GetHostnameAndPort(cliPath, atlasEntity)
+func GetHostname(cliPath string) (string, error) {
+	hostnamePort, err := GetHostnameAndPort(cliPath)
 	if err != nil {
 		return "", err
 	}

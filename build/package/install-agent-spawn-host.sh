@@ -66,5 +66,5 @@ ENDSSH
         exit
 ENDSSH
   echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env"
-  sudo sed -i "s/\(hostname *= *\).*/\1$host/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
+  sudo sed "s/\(HOSTNAME *= *\).*/\1${host}/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env.example > src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
 done

@@ -94,7 +94,7 @@ func generateFile(name, version string) error {
 			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04", "deb"),
 			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", "rpm"),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", "zip"),
-			*newPlatform(version, "x86_64", "macos", "macOS", "tar.gz"),
+			*newPlatform(version, "x86_64", "macos", "macOS", "zip"),
 			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", "tar.gz"),
 		},
 	}

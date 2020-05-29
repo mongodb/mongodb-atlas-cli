@@ -12,15 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package alerts
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func TestConfigFieldsType_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	defer ctrl.Finish()
+
+	var expected []string
+
+	listOpts := &ConfigFieldsTypeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		MatcherFields().
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

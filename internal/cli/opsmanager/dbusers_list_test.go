@@ -12,15 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package opsmanager
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func TestDBUserList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	defer ctrl.Finish()
+
+	expected := fixture.AutomationConfig()
+
+	createOpts := &DBUsersListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		GetAutomationConfig(createOpts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

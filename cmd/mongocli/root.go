@@ -19,7 +19,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas"
+	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
+	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
+	"github.com/mongodb/mongocli/internal/cli/iam"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -51,15 +55,15 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	// config commands
-	rootCmd.AddCommand(cli.ConfigBuilder())
+	rootCmd.AddCommand(cliconfig.Builder())
 	// Atlas commands
-	rootCmd.AddCommand(cli.AtlasBuilder())
+	rootCmd.AddCommand(atlas.Builder())
 	// CM commands
-	rootCmd.AddCommand(cli.CloudManagerBuilder())
+	rootCmd.AddCommand(cloudmanager.Builder())
 	// OM commands
-	rootCmd.AddCommand(cli.OpsManagerBuilder())
+	rootCmd.AddCommand(opsmanager.Builder())
 	// IAM commands
-	rootCmd.AddCommand(cli.IAMBuilder())
+	rootCmd.AddCommand(iam.Builder())
 
 	cobra.EnableCommandSorting = false
 

@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func ClustersIndexesBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "indexes",
+		Aliases: []string{"index"},
+		Short:   description.ClustersIndexes,
+	}
+	cmd.AddCommand(ClustersIndexesCreateBuilder())
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	return cmd
+}

@@ -65,11 +65,7 @@ func ExistCluster(cliPath string) bool {
 		return false
 	}
 
-	if len(clusters) > 0 {
-		return true
-	}
-
-	return false
+	return len(clusters) > 0
 }
 
 func DeployCluster(cliPath, clusterName string) error {

@@ -20,6 +20,10 @@ func GetHostnameAndPort(cliPath, atlasEntity string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 
+	if err != nil {
+		return "", err
+	}
+
 	var processes []*mongodbatlas.Process
 	err = json.Unmarshal(resp, &processes)
 
@@ -28,7 +32,7 @@ func GetHostnameAndPort(cliPath, atlasEntity string) (string, error) {
 	}
 
 	if len(processes) == 0 {
-		return "", fmt.Errorf("got=%#v\nwant=%#v\n", 0, "len(processes) > 0")
+		return "", fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
 	// The first element may not be the created cluster but that is fine since

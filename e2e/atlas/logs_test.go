@@ -16,8 +16,8 @@
 package atlas_test
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -25,11 +25,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/e2e/atlas"
 )
 
-func TestAtlasMetrics(t *testing.T) {
+func TestAtlasLogs(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -41,7 +40,8 @@ func TestAtlasMetrics(t *testing.T) {
 	}
 
 	atlasEntity := "atlas"
-	metricsEntity := "metrics"
+	logsEntity := "logs"
+
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
@@ -50,118 +50,119 @@ func TestAtlasMetrics(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	hostname, err := atlas.GetHostnameAndPort(cliPath, atlasEntity)
+	hostname, err := atlas.GetHostname(cliPath, atlasEntity)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("processes", func(t *testing.T) {
+	t.Run("Download mongodb.gz", func(t *testing.T) {
+		logFile := "mongodb.gz"
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			metricsEntity,
-			"processes",
+			logsEntity,
+			"download",
 			hostname,
-			"--granularity=PT30M",
-			"--period=P1DT12H")
+			logFile,
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		metrics := &mongodbatlas.ProcessMeasurements{}
-		err = json.Unmarshal(resp, &metrics)
-
+		dir, err := os.Getwd()
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			log.Fatal(err)
 		}
 
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
-		}
-
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+		if _, err := os.Stat(dir + logFile); err != nil {
+			t.Fatalf("%v has not been downloaded", err)
 		}
 	})
 
-	t.Run("databases list", func(t *testing.T) {
+	t.Run("Download mongos.gz", func(t *testing.T) {
+		logFile := "mongos.gz"
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			metricsEntity,
-			"databases",
-			"list",
-			hostname)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		databases := &mongodbatlas.ProcessDatabasesResponse{}
-		err = json.Unmarshal(resp, &databases)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if databases.TotalCount != 2 {
-			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, 2)
-		}
-	})
-
-	t.Run("disks list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			metricsEntity,
-			"disks",
-			"list",
-			hostname)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		disks := &mongodbatlas.ProcessDisksResponse{}
-		err = json.Unmarshal(resp, &disks)
-
-		if disks.TotalCount != 1 {
-			t.Errorf("got=%#v\nwant=%#v\n", disks.TotalCount, 1)
-		}
-	})
-
-	t.Run("disks describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			metricsEntity,
-			"disks",
-			"describe",
+			logsEntity,
+			"download",
 			hostname,
-			"data",
-			"--granularity=PT30M",
-			"--period=P1DT12H")
+			logFile,
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		metrics := &mongodbatlas.ProcessDiskMeasurements{}
-		err = json.Unmarshal(resp, &metrics)
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, err := os.Stat(dir + logFile); err != nil {
+			t.Fatalf("%v has not been downloaded", err)
+		}
+	})
+
+	t.Run("Download mongodb-audit-log.gz", func(t *testing.T) {
+		logFile := "mongodb-audit-log.gz"
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			logsEntity,
+			"download",
+			hostname,
+			logFile,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
 		}
 
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+		if _, err := os.Stat(dir + logFile); err != nil {
+			t.Fatalf("%v has not been downloaded", err)
+		}
+	})
+
+	t.Run("Download mongos-audit-log.gz", func(t *testing.T) {
+		logFile := "mongos-audit-log.gz"
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			logsEntity,
+			"download",
+			hostname,
+			logFile,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		dir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, err := os.Stat(dir + logFile); err != nil {
+			t.Fatalf("%v has not been downloaded", err)
 		}
 	})
 
 	atlas.DeleteCluster(cliPath, atlasEntity, clusterName)
+
 }

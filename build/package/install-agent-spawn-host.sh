@@ -9,7 +9,7 @@ while getopts 'i:h:g:u:a:b:' opt; do
   h) hostsfile="$OPTARG" ;; # Output of Evergreen host.list
   g) groupid="$OPTARG" ;; # APIGroupId
   a) apiKey="$OPTARG" ;; # APIKey
-  b) base_url="$OPTARG";; #Cloud Manager URL
+  b) baseUrl="$OPTARG";; #Cloud Manager URL
   *) exit 1 ;;
   esac
 done
@@ -48,9 +48,9 @@ for host in $hosts; do
         sudo apt-get install -y --no-install-recommends ca-certificates curl logrotate openssl snmp && exit
 ENDSSH
   echo "Installing the automation agent on $host"
-  ssh "${ssh_opts[@]}" -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" ARG3="$base_url"  'bash -s' <<'ENDSSH'
+  ssh "${ssh_opts[@]}" -tt "$user@$host" ARG1="$groupid" ARG2="$apiKey" ARG3="$baseUrl" 'bash -s' <<'ENDSSH'
         echo "Downloadind and extracting the automation agent"
-        curl -OL $ARG3download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
+        curl -OL ${ARG3}download/agent/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
         sudo dpkg -i mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb
 
         echo "Replacing mmsGroupId and mmsApiKey"

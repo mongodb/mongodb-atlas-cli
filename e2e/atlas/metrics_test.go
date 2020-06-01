@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e,atlas,metrics
 
 package atlas_test
 
@@ -21,7 +21,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -30,11 +29,7 @@ import (
 )
 
 func TestAtlasMetrics(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
+	_, err := os.Stat(atlas.CliPath)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -42,23 +37,26 @@ func TestAtlasMetrics(t *testing.T) {
 
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
+	clusterName := ""
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	// Deploy a cluster only if there is not one available
+	if !atlas.AnyCluster() {
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	err = atlas.DeployCluster(cliPath, clusterName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		err = atlas.DeployCluster(clusterName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 	}
 
-
-	hostname, err := atlas.GetHostnameAndPort(cliPath)
+	hostname, err := atlas.GetHostnameAndPort()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	t.Run("processes", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			metricsEntity,
 			"processes",
@@ -90,7 +88,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("databases list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			metricsEntity,
 			"databases",
@@ -113,7 +111,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("disks list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			metricsEntity,
 			"disks",
@@ -136,7 +134,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("disks describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			metricsEntity,
 			"disks",
@@ -166,6 +164,6 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	if clusterName != "" {
-		atlas.DeleteCluster(cliPath, clusterName)
+		atlas.DeleteCluster(clusterName)
 	}
 }

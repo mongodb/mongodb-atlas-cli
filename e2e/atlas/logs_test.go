@@ -21,7 +21,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -29,11 +28,7 @@ import (
 )
 
 func TestAtlasLogs(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
+	_, err := os.Stat(atlas.CliPath)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -44,17 +39,17 @@ func TestAtlasLogs(t *testing.T) {
 	clusterName := ""
 
 	// Deploy a cluster only if there is not one available
-	if !atlas.ExistCluster(cliPath) {
+	if !atlas.AnyCluster() {
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-		err = atlas.DeployCluster(cliPath, clusterName)
+		err = atlas.DeployCluster(clusterName)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	}
 
-	hostname, err := atlas.GetHostname(cliPath)
+	hostname, err := atlas.GetHostname()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -67,7 +62,7 @@ func TestAtlasLogs(t *testing.T) {
 		logFile := "mongodb.gz"
 		filepath := dir + logFile
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
@@ -98,7 +93,7 @@ func TestAtlasLogs(t *testing.T) {
 		logFile := "mongos.gz"
 		filepath := dir + logFile
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
@@ -129,7 +124,7 @@ func TestAtlasLogs(t *testing.T) {
 		logFile := "mongodb-audit-log.gz"
 		filepath := dir + logFile
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
@@ -160,7 +155,7 @@ func TestAtlasLogs(t *testing.T) {
 		logFile := "mongos-audit-log.gz"
 		filepath := dir + logFile
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(atlas.CliPath,
 			atlasEntity,
 			logsEntity,
 			"download",
@@ -183,6 +178,6 @@ func TestAtlasLogs(t *testing.T) {
 	})
 
 	if clusterName != "" {
-		atlas.DeleteCluster(cliPath, clusterName)
+		atlas.DeleteCluster(clusterName)
 	}
 }

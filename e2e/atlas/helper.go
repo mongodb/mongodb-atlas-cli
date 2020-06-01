@@ -77,11 +77,7 @@ func AnyCluster() bool {
 		return false
 	}
 
-	if len(clusters) > 0 {
-		return true
-	}
-
-	return false
+	return len(clusters) > 0
 }
 
 func DeployCluster(clusterName string) error {

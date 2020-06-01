@@ -25,7 +25,7 @@ import (
 )
 
 func TestAtlasEvents(t *testing.T) {
-	_, err = os.Stat(cliPath)
+	_, err := os.Stat(cliPath)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

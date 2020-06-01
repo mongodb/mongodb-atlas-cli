@@ -25,11 +25,10 @@ import (
 	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	"github.com/mongodb/mongocli/e2e/atlas"
 )
 
 func TestAtlasMetrics(t *testing.T) {
-	_, err := os.Stat(atlas.CliPath)
+	_, err := os.Stat(cliPath)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -40,18 +39,18 @@ func TestAtlasMetrics(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	err = atlas.DeployCluster(clusterName)
+	err = deployCluster(clusterName)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	hostname, err := atlas.GetHostnameAndPort()
+	hostname, err := getHostnameAndPort()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	t.Run("processes", func(t *testing.T) {
-		cmd := exec.Command(atlas.CliPath,
+		cmd := exec.Command(cliPath,
 			atlasEntity,
 			metricsEntity,
 			"processes",
@@ -83,7 +82,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("databases list", func(t *testing.T) {
-		cmd := exec.Command(atlas.CliPath,
+		cmd := exec.Command(cliPath,
 			atlasEntity,
 			metricsEntity,
 			"databases",
@@ -106,7 +105,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("disks list", func(t *testing.T) {
-		cmd := exec.Command(atlas.CliPath,
+		cmd := exec.Command(cliPath,
 			atlasEntity,
 			metricsEntity,
 			"disks",
@@ -129,7 +128,7 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	t.Run("disks describe", func(t *testing.T) {
-		cmd := exec.Command(atlas.CliPath,
+		cmd := exec.Command(cliPath,
 			atlasEntity,
 			metricsEntity,
 			"disks",
@@ -159,6 +158,6 @@ func TestAtlasMetrics(t *testing.T) {
 	})
 
 	if clusterName != "" {
-		atlas.DeleteCluster(clusterName)
+		deleteCluster(clusterName)
 	}
 }

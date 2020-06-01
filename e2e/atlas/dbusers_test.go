@@ -21,7 +21,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -33,10 +32,6 @@ const (
 )
 
 func TestAtlasDBUsers(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
 	_, err = os.Stat(cliPath)
 
 	if err != nil {

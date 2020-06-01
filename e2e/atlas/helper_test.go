@@ -1,4 +1,19 @@
-package atlas
+// Copyright 2020 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// +build e2e
+
+package atlas_test
 
 import (
 	"encoding/json"
@@ -18,18 +33,18 @@ const (
 	mongoCliPath   = "../../bin/mongocli"
 )
 
-var CliPath string
+var cliPath string
 
 func init() {
-	cliPath, err := filepath.Abs(mongoCliPath)
+	path, err := filepath.Abs(mongoCliPath)
 	if err != nil {
 		panic(err)
 	}
-	CliPath = cliPath
+	cliPath = path
 }
 
-func GetHostnameAndPort() (string, error) {
-	cmd := exec.Command(CliPath,
+func getHostnameAndPort() (string, error) {
+	cmd := exec.Command(cliPath,
 		atlasEntity,
 		"processes",
 		"list")
@@ -57,9 +72,9 @@ func GetHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-// AnyCluster returns true if there is at least a cluster is deployed, false otherwise
-func AnyCluster() bool {
-	cmd := exec.Command(CliPath,
+// anyCluster returns true if there is at least a cluster is deployed, false otherwise
+func anyCluster() bool {
+	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"list")
@@ -80,8 +95,8 @@ func AnyCluster() bool {
 	return len(clusters) > 0
 }
 
-func DeployCluster(clusterName string) error {
-	cmd := exec.Command(CliPath,
+func deployCluster(clusterName string) error {
+	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
@@ -99,7 +114,7 @@ func DeployCluster(clusterName string) error {
 		return err
 	}
 
-	cmd = exec.Command(CliPath,
+	cmd = exec.Command(cliPath,
 		"atlas",
 		clustersEntity,
 		"watch",
@@ -108,14 +123,14 @@ func DeployCluster(clusterName string) error {
 	return cmd.Run()
 }
 
-func DeleteCluster(clusterName string) error {
-	cmd := exec.Command(CliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
+func deleteCluster(clusterName string) error {
+	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }
 
-func GetHostname() (string, error) {
-	hostnamePort, err := GetHostnameAndPort()
+func getHostname() (string, error) {
+	hostnamePort, err := getHostnameAndPort()
 	if err != nil {
 		return "", err
 	}

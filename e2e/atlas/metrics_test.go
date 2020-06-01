@@ -38,7 +38,7 @@ func TestAtlasMetrics(t *testing.T) {
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	err = atlas.DeployCluster(clusterName)
 	if err != nil {

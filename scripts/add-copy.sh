@@ -31,4 +31,4 @@ echo "==> Adding copy notice..."
 for FILE in $(find_files); do
     addlicense -c "MongoDB Inc" "${FILE}"
 done
-echo "Done..."
+echo "==> Done..."

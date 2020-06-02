@@ -31,7 +31,7 @@ func TestAtlasLogs(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	err = deployCluster(clusterName)
+	err := deployCluster(clusterName)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

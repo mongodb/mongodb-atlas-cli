@@ -32,4 +32,4 @@ for FILE in $(find_files); do
     gofmt -w -s "${FILE}"
     goimports -w "${FILE}"
 done
-echo "Done..."
+echo "==> Done..."

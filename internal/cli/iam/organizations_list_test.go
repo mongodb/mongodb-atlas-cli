@@ -12,15 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package iam
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func TestOrganizationsList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationLister(ctrl)
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.Organizations{}
+
+	mockStore.
+		EXPECT().
+		GetAllOrganizations().
+		Return(expected, nil).
+		Times(1)
+
+	listOpts := &OrganizationsListOpts{store: mockStore}
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

@@ -12,15 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package opsmanager
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func ClustersBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "clusters",
+		Aliases: []string{"cluster"},
+		Short:   description.Clusters,
+	}
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	cmd.AddCommand(ClustersListBuilder())
+	cmd.AddCommand(ClustersDescribeBuilder())
+	cmd.AddCommand(ClustersCreateBuilder())
+	cmd.AddCommand(ClustersShutdownBuilder())
+	cmd.AddCommand(ClustersStartupBuilder())
+	cmd.AddCommand(ClustersUpdateBuilder())
+	cmd.AddCommand(ClustersApplyBuilder())
+	cmd.AddCommand(ClustersIndexesBuilder())
+
+	return cmd
+}

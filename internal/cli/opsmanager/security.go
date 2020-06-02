@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package opsmanager
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func SecurityBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "security",
+		Short: description.Security,
+	}
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	cmd.AddCommand(SecurityEnableBuilder())
+	return cmd
+}

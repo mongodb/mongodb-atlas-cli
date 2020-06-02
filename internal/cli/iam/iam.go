@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package iam
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "iam",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return validate.Credentials()
+		},
+		Short: description.IAM,
+	}
+	cmd.AddCommand(ProjectsBuilder())
+	cmd.AddCommand(OrganizationsBuilder())
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	return cmd
+}

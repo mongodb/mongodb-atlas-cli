@@ -52,10 +52,10 @@ The resulting `mongocli` binary is placed in `./bin`.
 To install the `mongocli` binary in `$GOPATH/bin`, run:
 
 ```bash
-make build
+make install
 ```
 
-Note that `make install` builds the binary - running `make build` is not needed.
+**Note:** running `make build` is not needed when running `make install`.
 
 ## Usage
 

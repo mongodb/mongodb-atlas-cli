@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestAtlasIAMProjects(t *testing.T) {
+func TestIAMProjects(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

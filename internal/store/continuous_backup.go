@@ -26,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongocli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,SnapshotsLister,SnapshotDescriber
 
 type CheckpointsLister interface {
-	List(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
+	Checkpoints(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
 }
 
 type ContinuousJobLister interface {
@@ -45,8 +45,8 @@ type SnapshotDescriber interface {
 	ContinuousSnapshot(string, string, string) (*atlas.ContinuousSnapshot, error)
 }
 
-// List encapsulate the logic to manage different cloud providers
-func (s *Store) List(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
+// Checkpoints encapsulate the logic to manage different cloud providers
+func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
@@ -59,6 +59,7 @@ func (s *Store) List(projectID, clusterID string, opts *atlas.ListOptions) (*atl
 	}
 }
 
+// ContinuousRestoreJobs encapsulate the logic to manage different cloud providers
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
@@ -86,7 +87,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 	}
 }
 
-// ProjectClusters encapsulate the logic to manage different cloud providers
+// ContinuousSnapshots encapsulate the logic to manage different cloud providers
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
 	switch s.service {
 	case config.CloudService:
@@ -100,7 +101,7 @@ func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.Lis
 	}
 }
 
-// Cluster encapsulate the logic to manage different cloud providers
+// ContinuousSnapshot encapsulate the logic to manage different cloud providers
 func (s *Store) ContinuousSnapshot(projectID, clusterID, snapshotID string) (*atlas.ContinuousSnapshot, error) {
 	switch s.service {
 	case config.CloudService:

@@ -41,7 +41,7 @@ func (opts *CheckpointsListOpts) initStore() error {
 func (opts *CheckpointsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 
-	result, err := opts.store.List(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	result, err := opts.store.Checkpoints(opts.ConfigProjectID(), opts.clusterName, listOpts)
 
 	if err != nil {
 		return err

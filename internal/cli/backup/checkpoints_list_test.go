@@ -37,7 +37,7 @@ func TestCheckpointsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		List(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		Checkpoints(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

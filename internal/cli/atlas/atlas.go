@@ -31,11 +31,15 @@ func Builder() *cobra.Command {
 			return validate.Credentials()
 		},
 	}
+	// hide old backup until we have a better name for it
+	b := backup.Builder()
+	b.Hidden = true
+
 	cmd.AddCommand(ClustersBuilder())
 	cmd.AddCommand(DBUsersBuilder())
 	cmd.AddCommand(WhitelistBuilder())
 	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(backup.Builder())
+	cmd.AddCommand(b)
 	cmd.AddCommand(events.Builder())
 	cmd.AddCommand(MetricsBuilder())
 	cmd.AddCommand(LogsBuilder())

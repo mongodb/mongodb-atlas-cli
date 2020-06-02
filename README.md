@@ -17,12 +17,13 @@ brew install mongocli
 ```
 
 ### Pre-built Binaries
+
 Download the appropriate version for your platform from [mongocli releases](https://github.com/mongodb/mongocli/releases). 
 Once downloaded, the binary can be run from anywhere.
 You don't need to install it into a global location. 
 This works well for shared hosts and other systems where you don't have a privileged account.
 
-Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/bin` is the most probable location.
+Ideally, you should place this binary somewhere in your `PATH` for easy use. `/usr/local/bin` is the most probable location.
 
 ### Build From Source 
 

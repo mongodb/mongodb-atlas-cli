@@ -40,6 +40,12 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	_, err = os.Stat(cliPath)
+	if err != nil {
+		panic(err)
+	}
+
 	cliPath = path
 }
 

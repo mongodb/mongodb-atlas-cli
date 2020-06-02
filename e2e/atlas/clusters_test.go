@@ -29,12 +29,6 @@ import (
 )
 
 func TestAtlasClusters(t *testing.T) {
-	_, err := os.Stat(cliPath)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	atlasEntity := "atlas"

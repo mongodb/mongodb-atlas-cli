@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package backup
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func CheckpointsBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "checkpoints",
+		Aliases: []string{"checkpoint"},
+		Short:   description.Checkpoints,
+	}
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	cmd.AddCommand(AtlasBackupsCheckpointsListBuilder())
+
+	return cmd
+}

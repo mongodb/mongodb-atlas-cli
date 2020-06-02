@@ -12,7 +12,7 @@ require (
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.3.1 // indirect
-	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200508151240-fe2a21ab5a46
+	github.com/mongodb/go-client-mongodb-atlas v0.2.1-0.20200528234639-43725135f76d
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect
@@ -20,7 +20,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
-	go.mongodb.org/ops-manager v0.5.2-0.20200513091426-cb751656afa4
+	go.mongodb.org/ops-manager v0.6.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

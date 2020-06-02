@@ -12,15 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cli
+package alerts
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-const requiredF = `required flag(s) "%s" not set`
+func ConfigBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "configs",
+		Aliases: []string{"config"},
+		Short:   description.Config,
+		Long:    description.ConfigLong,
+	}
 
-var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+	cmd.AddCommand(ConfigCreateBuilder())
+	cmd.AddCommand(ConfigListBuilder())
+	cmd.AddCommand(ConfigDeleteBuilder())
+	cmd.AddCommand(ConfigsFieldsBuilder())
+	cmd.AddCommand(ConfigUpdateBuilder())
+
+	return cmd
+}

@@ -19,23 +19,12 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
 func TestAtlasEvents(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	atlasEntity := "atlas"
 	eventsEntity := "events"
 

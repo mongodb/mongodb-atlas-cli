@@ -15,6 +15,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -117,7 +119,16 @@ func (opts *configOpts) Run() error {
 		return err
 	}
 
-	return opts.Save()
+	if err := opts.Save(); err != nil {
+		return err
+	}
+
+	fmt.Printf("%s is all set now\n", config.ToolName)
+	fmt.Printf("You can use [%s config set] to change more settings. \n", config.ToolName)
+	if config.Name() != config.DefaultProfile {
+		fmt.Printf("To use this profile remember to set the flag [-%s %s]\n", flag.ProfileShort, config.Name())
+	}
+	return nil
 }
 
 func Builder() *cobra.Command {

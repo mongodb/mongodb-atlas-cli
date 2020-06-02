@@ -34,17 +34,12 @@ func TestAtlasLogs(t *testing.T) {
 
 	atlasEntity := "atlas"
 	logsEntity := "logs"
-	clusterName := ""
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	// Deploy a cluster only if there is not one available
-	if !anyCluster() {
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		clusterName = fmt.Sprintf("e2e-cluster-%v", r.Uint32())
-
-		err = deployCluster(clusterName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+	err = deployCluster(clusterName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 
 	hostname, err := getHostname()
@@ -175,7 +170,5 @@ func TestAtlasLogs(t *testing.T) {
 		}
 	})
 
-	if clusterName != "" {
-		deleteCluster(clusterName)
-	}
+	deleteCluster(clusterName)
 }

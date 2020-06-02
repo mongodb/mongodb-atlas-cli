@@ -157,7 +157,5 @@ func TestAtlasMetrics(t *testing.T) {
 		}
 	})
 
-	if clusterName != "" {
-		deleteCluster(clusterName)
-	}
+	deleteCluster(clusterName)
 }

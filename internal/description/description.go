@@ -76,7 +76,7 @@ const (
 	StartUpCluster          = "Start up a cluster."
 	ConfigDescription       = "Configure a profile. This let you store access settings to your cloud."
 	ConfigSetDescription    = "Configure specific properties of the profile."
-	IAM                     = "Authentication operations."
+	IAM                     = "Organization and projects operations."
 	Organization            = "Organization operations."
 	OrganizationLong        = "Create, list and manage your MongoDB organizations."
 	CreateOrganization      = "Create an organization."

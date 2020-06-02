@@ -41,7 +41,7 @@ func init() {
 		panic(err)
 	}
 
-	_, err = os.Stat(cliPath)
+	_, err = os.Stat(path)
 	if err != nil {
 		panic(err)
 	}

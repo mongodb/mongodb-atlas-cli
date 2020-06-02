@@ -80,6 +80,6 @@ ENDSSH
         sudo systemctl start mongodb-mms-automation-agent.service
         exit
 ENDSSH
-  echo "Storing $host in src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env"
-  sudo sed "s/\(HOSTNAME *= *\).*/\1${host}/" src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env.example > src/github.com/mongodb/mongocli/e2e/cloud_manager/e2e.env
+  echo "Storing ${host} in e2e/cloud_manager/e2e.env"
+  sudo sed "s/\(HOSTNAME *= *\).*/\1${host}/" e2e/cloud_manager/e2e.env.example > e2e/cloud_manager/e2e.env
 done

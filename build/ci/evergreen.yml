@@ -193,7 +193,7 @@ functions:
         shell: bash
         script: |
           set -e
-          keyfile="src/github.com/mongodb/mongocli/build/package/ssh_id"
+          keyfile="src/github.com/mongodb/mongocli/build/ci/ssh_id"
           echo '${__project_aws_ssh_key_value}' > "$keyfile"
           chmod 600 "$keyfile"
     - command: host.create
@@ -213,14 +213,16 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        binary: src/github.com/mongodb/mongocli/build/package/ssh-ready.sh
-        args: ['-u', 'ubuntu', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json']
+        working_dir: src/github.com/mongodb/mongocli
+        binary: build/ci/ssh-ready.sh
+        args: ['-u', 'ubuntu', '-i', 'build/ci/ssh_id', '-h', 'hosts.json']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
-        binary: src/github.com/mongodb/mongocli/build/package/install-agent-spawn-host.sh
-        args: ['-u', 'ubuntu', '-i', 'src/github.com/mongodb/mongocli/build/package/ssh_id', '-h', 'src/github.com/mongodb/mongocli/hosts.json', '-g', '${automation_agent_mms_group_id}', '-a', '${automation_agent_mms_api_key}', '-b','${mcli_ops_manager_url}']
+        working_dir: src/github.com/mongodb/mongocli
+        binary: build/ci/install-agent-spawn-host.sh
+        args: ['-u', 'ubuntu', '-i', 'build/ci/ssh_id', '-h', 'hosts.json', '-g', '${automation_agent_mms_group_id}', '-a', '${automation_agent_mms_api_key}', '-b','${mcli_ops_manager_url}']
   "lint":
     - command: shell.exec
       type: test
@@ -672,7 +674,7 @@ tasks:
         - name: compile
           variant: "code_health"
         - name: package_goreleaser
-          variant: "goreleaser_snaphot"
+          variant: "goreleaser_snapshot"
     commands:
         - func: "clone"
         - func: "set up notary client credentials"
@@ -1099,14 +1101,14 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: .e2e
-  - name: goreleaser_snaphot
+  - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:
       - macos-1014-codesign
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "0.9.9"
+      server_version: "1.0.1"
     tasks:
       - name: package_goreleaser
       - name: .push

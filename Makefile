@@ -43,7 +43,7 @@ lint: ## Run linter
 	golangci-lint run ${SOURCE_FILES}
 
 .PHONY: fix-lint
-fix-lint: ## Fix lint errors
+fix-lint: ## Fix linting errors
 	@echo "==> Fixing lint errors"
 	golangci-lint run ${SOURCE_FILES} --fix
 

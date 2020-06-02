@@ -30,13 +30,32 @@ Ideally, you should install it somewhere in your PATH for easy use. `/usr/local/
 - [Git](https://git-scm.com/)
 - [Go (at least Go 1.14)](https://golang.org/dl/)
 
-#### Fetch and Install
+#### Fetch Source
 
 ```bash
 git clone https://github.com/mongodb/mongocli.git
 cd mongocli
-make install
 ```
+
+#### Build
+
+To build `mongocli`, run:
+
+```bash
+make build
+```
+
+The resulting `mongocli` binary is placed in `./bin`.
+
+#### Install
+
+To install the `mongocli` binary in `$GOPATH/bin`, run:
+
+```bash
+make build
+```
+
+Note that `make install` builds the binary - running `make build` is not needed.
 
 ## Usage
 

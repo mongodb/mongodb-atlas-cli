@@ -78,11 +78,11 @@ func (opts *ClustersShutdownOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) shutdown [name] --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) shutdown <name> --projectId projectId [--force]
 func ClustersShutdownBuilder() *cobra.Command {
 	opts := &ClustersShutdownOpts{}
 	cmd := &cobra.Command{
-		Use:   "shutdown [name]",
+		Use:   "shutdown <name>",
 		Short: description.ShutdownCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

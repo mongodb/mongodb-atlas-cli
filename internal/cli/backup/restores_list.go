@@ -49,11 +49,11 @@ func (opts *RestoresListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) list [clusterName|clusterId] [--page N] [--limit N]
+// mongocli atlas backup(s) restore(s) job(s) list <clusterName|clusterID> [--page N] [--limit N]
 func RestoresListBuilder() *cobra.Command {
 	opts := new(RestoresListOpts)
 	cmd := &cobra.Command{
-		Use:     "list [clusterName|clusterId]",
+		Use:     "list <clusterName|clusterID>",
 		Aliases: []string{"ls"},
 		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),

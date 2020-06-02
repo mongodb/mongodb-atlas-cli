@@ -39,13 +39,13 @@ func (opts *ProjectsDeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteProject)
 }
 
-// mongocli iam project(s) delete [id] [--orgId orgId]
+// mongocli iam project(s) delete <ID> [--orgId orgId]
 func ProjectsDeleteBuilder() *cobra.Command {
 	opts := &ProjectsDeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Project '%s' deleted\n", "Project not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete [id]",
+		Use:   "delete <ID>",
 		Short: description.DeleteProject,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

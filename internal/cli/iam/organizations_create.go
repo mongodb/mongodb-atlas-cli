@@ -43,11 +43,11 @@ func (opts *OrganizationsCreateOpts) Run() error {
 	return json.PrettyPrint(projects)
 }
 
-// mongocli iam organization(s) create [name]
+// mongocli iam organization(s) create <name>
 func OrganizationsCreateBuilder() *cobra.Command {
 	opts := new(OrganizationsCreateOpts)
 	cmd := &cobra.Command{
-		Use:   "create [name]",
+		Use:   "create <name>",
 		Short: description.CreateOrganization,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

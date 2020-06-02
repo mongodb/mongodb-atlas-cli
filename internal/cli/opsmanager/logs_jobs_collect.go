@@ -69,7 +69,7 @@ func (opts *LogsJobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
 func LogsJobsCollectOptsBuilder() *cobra.Command {
 	opts := &LogsJobsCollectOpts{}
 	cmd := &cobra.Command{
-		Use:   "collect [resourceType] [resourceName]",
+		Use:   "collect <resourceType> <resourceName>",
 		Short: description.StartLogCollectionJob,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {

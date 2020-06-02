@@ -68,7 +68,7 @@ func DBUsersDeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("DB user '%s' deleted\n", "DB user not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [username]",
+		Use:     "delete <username>",
 		Short:   description.DeleteDBUser,
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),

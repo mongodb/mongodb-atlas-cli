@@ -50,11 +50,11 @@ func (opts *MetricsDisksDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mcli om metric(s) disk(s) describe [host:port] [name] --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+// mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
 func MetricsDisksDescribeBuilder() *cobra.Command {
 	opts := &MetricsDisksDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [hostId] [name]",
+		Use:   "describe <hostId> <name>",
 		Short: description.DescribeDisks,
 		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

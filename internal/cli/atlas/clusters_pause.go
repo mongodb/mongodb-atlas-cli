@@ -52,11 +52,11 @@ func (opts *ClustersPauseOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) pause [name] [--projectId projectId]
+// mongocli atlas cluster(s) pause <name> [--projectId projectId]
 func ClustersPauseBuilder() *cobra.Command {
 	opts := &ClustersPauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause [name]",
+		Use:   "pause <name>",
 		Short: description.PauseCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

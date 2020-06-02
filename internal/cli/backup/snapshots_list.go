@@ -49,11 +49,11 @@ func (opts *SnapshotsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas backups snapshots list <clusterId|clusterName> --projectId projectId [--page N] [--limit N]
+// mongocli atlas backups snapshots list <clusterId|clusterName> [--projectId projectId] [--page N] [--limit N]
 func SnapshotsListBuilder() *cobra.Command {
 	opts := new(SnapshotsListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list <clusterId|clusterName>",
 		Short:   description.ListSnapshots,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),

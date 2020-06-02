@@ -57,11 +57,11 @@ func (opts *ClustersDescribeOpts) Run() error {
 	return fmt.Errorf("replicaset %s not found", opts.name)
 }
 
-// mongocli cloud-manager cluster(s) describe [name] --projectId projectId
+// mongocli cloud-manager cluster(s) describe <name> --projectId projectId
 func ClustersDescribeBuilder() *cobra.Command {
 	opts := &ClustersDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [name]",
+		Use:   "describe <name>",
 		Short: description.DescribeCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

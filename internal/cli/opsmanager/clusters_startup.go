@@ -78,11 +78,11 @@ func (opts *ClustersStartupOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) startup [name] --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force]
 func ClustersStartupBuilder() *cobra.Command {
 	opts := &ClustersStartupOpts{}
 	cmd := &cobra.Command{
-		Use:   "startup [name]",
+		Use:   "startup <name>",
 		Short: description.StartUpCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

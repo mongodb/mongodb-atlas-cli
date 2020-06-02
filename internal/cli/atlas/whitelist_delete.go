@@ -46,7 +46,7 @@ func WhitelistDeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Project whitelist entry '%s' deleted\n", "Project whitelist entry not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [entry]",
+		Use:     "delete <entry>",
 		Short:   description.DeleteWhitelist,
 		Aliases: []string{"rm"},
 		Args:    cobra.ExactArgs(1),

@@ -64,13 +64,13 @@ func (opts *LogsJobsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
 	return f, err
 }
 
-// mongocli om logs jobs download id [--out out] [--projectId projectId]
+// mongocli om logs jobs download <ID> [--out out] [--projectId projectId]
 func LogsJobsDownloadOptsBuilder() *cobra.Command {
 	opts := &LogsJobsDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "download [id]",
+		Use:   "download <ID>",
 		Short: description.DownloadLogs,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

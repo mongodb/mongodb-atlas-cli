@@ -51,11 +51,11 @@ func (opts *ProjectsCreateOpts) Run() error {
 	return json.PrettyPrint(projects)
 }
 
-// mongocli iam project(s) create name [--orgId orgId]
+// mongocli iam project(s) create <name> [--orgId orgId]
 func ProjectsCreateBuilder() *cobra.Command {
 	opts := &ProjectsCreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create [name]",
+		Use:   "create <name>",
 		Short: description.CreateProject,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

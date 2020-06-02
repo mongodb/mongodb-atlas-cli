@@ -66,11 +66,11 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 	}
 }
 
-// mongocli atlas alerts acknowledge alertID --projectId projectId --forever --comment comment --until until
+// mongocli atlas alerts acknowledge <ID> --projectId projectId --forever --comment comment --until until
 func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
 	cmd := &cobra.Command{
-		Use:     "acknowledge [alertId]",
+		Use:     "acknowledge <ID>",
 		Short:   description.AcknowledgeAlerts,
 		Aliases: []string{"ack"},
 		Args:    cobra.ExactArgs(1),

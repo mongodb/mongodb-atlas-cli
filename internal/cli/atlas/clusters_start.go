@@ -52,11 +52,11 @@ func (opts *ClustersStartOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) start [name] [--projectId projectId]
+// mongocli atlas cluster(s) start <name> [--projectId projectId]
 func ClustersStartBuilder() *cobra.Command {
 	opts := &ClustersStartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start [name]",
+		Use:   "start <name>",
 		Short: description.StartCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

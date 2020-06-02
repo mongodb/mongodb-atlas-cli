@@ -49,11 +49,11 @@ func (opts *MetricsProcessOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om|cm metric(s) process(es) hostId [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
+// mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func MetricsProcessBuilder() *cobra.Command {
 	opts := &MetricsProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "process [hostId]",
+		Use:     "process <ID>",
 		Short:   description.ProcessMeasurements,
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),

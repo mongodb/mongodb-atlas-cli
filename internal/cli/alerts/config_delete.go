@@ -40,14 +40,14 @@ func (opts *ConfigDeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteAlertConfiguration, opts.ConfigProjectID())
 }
 
-// mongocli atlas alerts config(s) delete id --projectId projectId [--confirm]
+// mongocli atlas alerts config(s) delete <ID> --projectId projectId [--confirm]
 func ConfigDeleteBuilder() *cobra.Command {
 	opts := &ConfigDeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Alert config '%s' deleted\n", "Alert config not deleted"),
 	}
 
 	cmd := &cobra.Command{
-		Use:     "delete [id]",
+		Use:     "delete <ID>",
 		Short:   description.DeleteAlertsConfig,
 		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),

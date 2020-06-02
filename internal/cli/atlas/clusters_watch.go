@@ -57,11 +57,11 @@ func (opts *ClustersWatchOpts) Run() error {
 	return nil
 }
 
-// mongocli atlas cluster(s) watch [name] [--projectId projectId]
+// mongocli atlas cluster(s) watch <name> [--projectId projectId]
 func ClustersWatchBuilder() *cobra.Command {
 	opts := &ClustersWatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch [name]",
+		Use:   "watch <name>",
 		Short: description.WatchCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

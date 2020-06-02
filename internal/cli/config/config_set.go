@@ -57,7 +57,7 @@ func SetBuilder() *cobra.Command {
 		store: config.Default(),
 	}
 	cmd := &cobra.Command{
-		Use:   "set [property] [value]",
+		Use:   "set <property> <value>",
 		Short: description.ConfigSetDescription,
 		Long:  fmt.Sprintf(description.ConfigSetLongDescription, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {

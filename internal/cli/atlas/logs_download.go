@@ -82,13 +82,13 @@ func (opts *LogsDownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
-// mongocli atlas logs download [hostname] [logname] [--type type] [--output destination] [--projectId projectId]
+// mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
 func LogsDownloadBuilder() *cobra.Command {
 	opts := &LogsDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "download [hostname] [logname]",
+		Use:   "download <hostname> <logname>",
 		Short: description.ListDisks,
 		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

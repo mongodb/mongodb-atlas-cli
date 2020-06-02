@@ -191,7 +191,7 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{
-		Use:       fmt.Sprintf("start [%s|%s]", automatedRestore, httpRestore),
+		Use:       fmt.Sprintf("start <%s|%s>", automatedRestore, httpRestore),
 		Short:     description.StartRestore,
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},

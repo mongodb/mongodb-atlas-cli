@@ -50,11 +50,11 @@ func (opts *atlasMetricsDisksListsOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas metric(s) process(es) disks lists [host:port]
+// mongocli atlas metric(s) process(es) disks lists <hostname:port>
 func MetricsDisksListBuilder() *cobra.Command {
 	opts := &atlasMetricsDisksListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list [host:port]",
+		Use:     "list <hostname:port>",
 		Short:   description.ListDisks,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),

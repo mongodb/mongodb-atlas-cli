@@ -47,11 +47,11 @@ func (opts *ProcessesDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli om process(es) describe [processID] [--projectId projectId]
+// mongocli om process(es) describe <ID> [--projectId projectId]
 func ProcessDescribeBuilder() *cobra.Command {
 	opts := &ProcessesDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe [processID]",
+		Use:     "describe <ID>",
 		Short:   description.ListProcesses,
 		Aliases: []string{"d"},
 		Args:    cobra.ExactArgs(1),

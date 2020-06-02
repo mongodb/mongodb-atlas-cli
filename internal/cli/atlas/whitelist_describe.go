@@ -47,11 +47,11 @@ func (opts *WhitelistDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas whitelist(s) describe [name] --projectId projectId
+// mongocli atlas whitelist(s) describe <name> --projectId projectId
 func WhitelistDescribeBuilder() *cobra.Command {
 	opts := &WhitelistDescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [name]",
+		Use:   "describe <name>",
 		Short: description.DescribeWhitelist,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

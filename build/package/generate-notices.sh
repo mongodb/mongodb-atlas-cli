@@ -26,4 +26,4 @@ go get github.com/google/go-licenses
 
 popd
 
-go-licenses save "github.com/mongodb/mongocli" --save_path=third_party_notices
+go-licenses save "github.com/mongodb/mongocli/cmd/mongocli" --save_path=third_party_notices

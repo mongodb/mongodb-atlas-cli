@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package mongocli
+package main
 
 import (
 	"fmt"
@@ -42,6 +42,19 @@ var (
   $ mongocli config --help`,
 		SilenceUsage: true,
 	}
+
+	completionCmd = &cobra.Command{
+		Use:       "completion <name>",
+		Args:      cobra.ExactValidArgs(1),
+		ValidArgs: []string{"bash", "zsh"},
+		Hidden:    true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if args[0] == "bash" {
+				return rootCmd.GenBashCompletion(os.Stdout)
+			}
+			return rootCmd.GenZshCompletion(os.Stdout)
+		},
+	}
 )
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -65,6 +78,8 @@ func init() {
 	// IAM commands
 	rootCmd.AddCommand(iam.Builder())
 
+	rootCmd.AddCommand(completionCmd)
+
 	cobra.EnableCommandSorting = false
 
 	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, config.DefaultProfile, usage.Profile)
@@ -76,4 +91,8 @@ func initConfig() {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+}
+
+func main() {
+	Execute()
 }

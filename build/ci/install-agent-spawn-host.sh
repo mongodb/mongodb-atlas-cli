@@ -60,6 +60,7 @@ for host in $hosts; do
   set +e
   echo "Installing dependeces on $host"
   ssh "${ssh_opts[@]}" -tt "$user@$host" 'bash -s' <<'ENDSSH'
+        sudo apt-get update && \
         sudo apt-get install -y --no-install-recommends ca-certificates curl logrotate openssl snmp && exit
 ENDSSH
   echo "Installing the automation agent on $host"

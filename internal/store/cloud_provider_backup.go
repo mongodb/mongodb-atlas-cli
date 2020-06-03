@@ -22,8 +22,22 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongocli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister
+
+type RestoreJobsLister interface {
+	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
+}
+
+type RestoreJobsCreator interface {
+	CreateRestoreJobs(string, string, *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error)
+}
+
+type SnapshotsLister interface {
+	Snapshots(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error)
+}
+
 // SnapshotRestoreJobs encapsulate the logic to manage different cloud providers
-func (s *Store) SnapshotRestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
+func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
 		ClusterName: clusterName,
@@ -38,7 +52,7 @@ func (s *Store) SnapshotRestoreJobs(projectID, clusterName string, opts *atlas.L
 }
 
 // CreateSnapshotRestoreJobs encapsulate the logic to manage different cloud providers
-func (s *Store) CreateSnapshotRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
+func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
 		ClusterName: clusterName,
@@ -53,7 +67,7 @@ func (s *Store) CreateSnapshotRestoreJobs(projectID, clusterName string, request
 }
 
 // ContinuousSnapshots encapsulate the logic to manage different cloud providers
-func (s *Store) CloudProviderSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
+func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
 		ClusterName: clusterName,
@@ -61,22 +75,6 @@ func (s *Store) CloudProviderSnapshots(projectID, clusterName string, opts *atla
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// CloudProviderSnapshot encapsulate the logic to manage different cloud providers
-func (s *Store) CloudProviderSnapshot(projectID, clusterName, snapshotID string) (*atlas.CloudProviderSnapshot, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-		SnapshotID:  snapshotID,
-	}
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

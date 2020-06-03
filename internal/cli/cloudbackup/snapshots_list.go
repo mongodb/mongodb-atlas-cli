@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package cloudbackup
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -29,7 +29,7 @@ type SnapshotsListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	clusterName string
-	store       store.ContinuousSnapshotsLister
+	store       store.SnapshotsLister
 }
 
 func (opts *SnapshotsListOpts) initStore() error {
@@ -40,7 +40,7 @@ func (opts *SnapshotsListOpts) initStore() error {
 
 func (opts *SnapshotsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	result, err := opts.store.ContinuousSnapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	result, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
 
 	if err != nil {
 		return err
@@ -49,11 +49,11 @@ func (opts *SnapshotsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas backups snapshots list <clusterId|clusterName> [--projectId projectId] [--page N] [--limit N]
+// mongocli atlas backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N]
 func SnapshotsListBuilder() *cobra.Command {
 	opts := new(SnapshotsListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterId|clusterName>",
+		Use:     "list <clusterName>",
 		Short:   description.ListSnapshots,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),

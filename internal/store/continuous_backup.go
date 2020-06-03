@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongocli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,SnapshotsLister,SnapshotDescriber
+//go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongocli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
 
 type CheckpointsLister interface {
 	Checkpoints(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
@@ -37,12 +37,8 @@ type ContinuousJobCreator interface {
 	CreateContinuousRestoreJob(string, string, *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error)
 }
 
-type SnapshotsLister interface {
+type ContinuousSnapshotsLister interface {
 	ContinuousSnapshots(string, string, *atlas.ListOptions) (*atlas.ContinuousSnapshots, error)
-}
-
-type SnapshotDescriber interface {
-	ContinuousSnapshot(string, string, string) (*atlas.ContinuousSnapshot, error)
 }
 
 // Checkpoints encapsulate the logic to manage different cloud providers
@@ -95,20 +91,6 @@ func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.Lis
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// ContinuousSnapshot encapsulate the logic to manage different cloud providers
-func (s *Store) ContinuousSnapshot(projectID, clusterID, snapshotID string) (*atlas.ContinuousSnapshot, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.Get(context.Background(), projectID, clusterID, snapshotID)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.Get(context.Background(), projectID, clusterID, snapshotID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

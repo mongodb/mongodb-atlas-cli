@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package cloudbackup
 
 import (
 	"testing"
@@ -24,11 +24,11 @@ import (
 
 func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
+	mockStore := mocks.NewMockSnapshotsLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ContinuousSnapshots{}
+	expected := &mongodbatlas.CloudProviderSnapshots{}
 
 	listOpts := &SnapshotsListOpts{
 		store:       mockStore,
@@ -37,7 +37,7 @@ func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ContinuousSnapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

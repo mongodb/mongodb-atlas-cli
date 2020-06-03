@@ -200,7 +200,7 @@ functions:
       type: system
       params:
         provider: ec2
-        distro: ubuntu1604-small
+        distro: ubuntu1804-small
         num_hosts: 1
         security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
     - command: host.list
@@ -1093,7 +1093,7 @@ buildvariants:
     tasks:
       - name: .code_health
   - name: e2e
-    display_name: "E2E"
+    display_name: "E2E Tests"
     run_on:
       - rhel70-small
     expansions:

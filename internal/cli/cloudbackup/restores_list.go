@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package cloudbackup
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,22 +25,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SnapshotsListOpts struct {
+type RestoresListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	clusterName string
-	store       store.ContinuousSnapshotsLister
+	store       store.RestoreJobsLister
 }
 
-func (opts *SnapshotsListOpts) initStore() error {
+func (opts *RestoresListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *SnapshotsListOpts) Run() error {
+func (opts *RestoresListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	result, err := opts.store.ContinuousSnapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	result, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 
 	if err != nil {
 		return err
@@ -49,13 +49,13 @@ func (opts *SnapshotsListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas backups snapshots list <clusterId|clusterName> [--projectId projectId] [--page N] [--limit N]
-func SnapshotsListBuilder() *cobra.Command {
-	opts := new(SnapshotsListOpts)
+// mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N]
+func RestoresListBuilder() *cobra.Command {
+	opts := new(RestoresListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterId|clusterName>",
-		Short:   description.ListSnapshots,
+		Use:     "list <clusterName>",
 		Aliases: []string{"ls"},
+		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

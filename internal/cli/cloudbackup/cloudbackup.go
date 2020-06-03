@@ -12,34 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package cloudbackup
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/alerts"
-	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
-	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
-		Short: description.Atlas,
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
-		},
+		Use:     "backups",
+		Aliases: []string{"backup"},
+		Short:   description.Backup,
 	}
-	cmd.AddCommand(ClustersBuilder())
-	cmd.AddCommand(DBUsersBuilder())
-	cmd.AddCommand(WhitelistBuilder())
-	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(cloudbackup.Builder())
-	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(MetricsBuilder())
-	cmd.AddCommand(LogsBuilder())
-	cmd.AddCommand(ProcessesBuilder())
+
+	cmd.AddCommand(SnapshotsBuilder())
+	cmd.AddCommand(RestoresBuilder())
 
 	return cmd
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package cloudbackup
 
 import (
 	"testing"
@@ -22,22 +22,22 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
+func TestRestoresListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
+	mockStore := mocks.NewMockRestoreJobsLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ContinuousSnapshots{}
+	expected := &mongodbatlas.CloudProviderSnapshotRestoreJobs{}
 
-	listOpts := &SnapshotsListOpts{
+	listOpts := &RestoresListOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
 	}
 
 	mockStore.
 		EXPECT().
-		ContinuousSnapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		RestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

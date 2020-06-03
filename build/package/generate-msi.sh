@@ -21,8 +21,10 @@ export CGO_ENABLED=0
 
 go-msi check-env
 
+SOURCE_FILES=./cmd/mongocli
+
 VERSION=$(git describe | cut -d "v" -f 2)
 
-env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION}" -o ./bin/mongocli.exe
+env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION}" -o ./bin/mongocli.exe "${SOURCE_FILES}"
 
 go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version ${VERSION}

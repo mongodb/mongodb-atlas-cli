@@ -4,6 +4,7 @@ before:
 
 builds:
   - <<: &build_defaults
+      main: ./cmd/mongocli/mongocli.go
       ldflags:
         - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
     id: macos

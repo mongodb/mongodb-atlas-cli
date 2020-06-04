@@ -597,6 +597,8 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
+      - name: release_msi
+        variant: "release_msi"
     commands:
       - func: "clone"
       - func: "generate notices"

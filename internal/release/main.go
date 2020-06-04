@@ -67,7 +67,7 @@ func newPlatform(version, arch, system, distro, format string) *Platform { //nol
 
 func main() {
 	version := os.Args[1]
-	feedFilename := fmt.Sprintf("mongocli_%s.json", version)
+	feedFilename := "mongocli.json"
 	fmt.Printf("Generating JSON: %s\n", feedFilename)
 	err := generateFile(feedFilename, version)
 

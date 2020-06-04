@@ -112,6 +112,10 @@ Each user has a set of roles that provide access to the project’s databases.
 A user’s roles apply to all the clusters in the project.`
 	ConfigLongDescription = `Setting API keys is optional and env variables can be used instead.
 Leaving any option empty won't override existing stored values.`
-	ConfigSetLongDescription = `Configure specific properties of the profile.
+	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
+	CreateClusterLong = `You can create MongoDB clusters using this command.
+To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
+this will create a 3 member replica set with the latest available mongodb server version available.
+Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`
 )

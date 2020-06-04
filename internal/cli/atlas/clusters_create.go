@@ -176,10 +176,20 @@ func ClustersCreateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:     "create [name]",
-		Short:   description.CreateCluster,
-		Example: `  mongocli atlas cluster create myCluster --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10`,
-		Args:    cobra.MaximumNArgs(1),
+		Use:   "create [name]",
+		Short: description.CreateCluster,
+		Long:  description.CreateClusterLong,
+		Example: `  
+  Deploy a 3 members replica set in AWS 
+  $ mongocli atlas cluster create <clusterName> --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
+
+  Deploy a 3 members replica set in AZURE 
+  $ mongocli atlas clusters create <clusterName> --projectId=<projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+  
+  Deploy a 3 members replica set in GCP
+  $ mongocli atlas clusters create <clusterName> --projectId=<projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+`,
+		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)

@@ -59,7 +59,7 @@ func SetBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set <property> <value>",
 		Short: description.ConfigSetDescription,
-		Long:  fmt.Sprintf(description.ConfigSetLongDescription, config.Properties()),
+		Long:  fmt.Sprintf(description.ConfigSetLong, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))

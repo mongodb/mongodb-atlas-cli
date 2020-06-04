@@ -103,7 +103,7 @@ func (opts *ClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 	updateLabels(out)
 }
 
-// mongocli atlas cluster(s) update name --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]
+// mongocli atlas cluster(s) update [name] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]
 func ClustersUpdateBuilder() *cobra.Command {
 	opts := &ClustersUpdateOpts{
 		fs: afero.NewOsFs(),

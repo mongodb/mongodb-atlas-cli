@@ -45,9 +45,10 @@ func ProjectsDeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Project '%s' deleted\n", "Project not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete <ID>",
-		Short: description.DeleteProject,
-		Args:  cobra.ExactArgs(1),
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteProject,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
 				return err

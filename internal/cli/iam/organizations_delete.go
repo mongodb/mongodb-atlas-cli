@@ -45,9 +45,10 @@ func OrganizationsDeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Organization '%s' deleted\n", "Organization not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete <ID>",
-		Short: description.DeleteOrganization,
-		Args:  cobra.ExactArgs(1),
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteOrganization,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {
 				return err

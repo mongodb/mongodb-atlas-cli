@@ -47,8 +47,8 @@ func ClustersDeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
-		Short:   description.DeleteCluster,
 		Aliases: []string{"rm"},
+		Short:   description.DeleteCluster,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

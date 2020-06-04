@@ -48,8 +48,8 @@ func ConfigDeleteBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
 		Short:   description.DeleteAlertsConfig,
-		Aliases: []string{"rm", "Delete", "Remove"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

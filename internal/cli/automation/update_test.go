@@ -12,34 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package automation
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/spf13/afero"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestSecurityEnableOpts_Run(t *testing.T) {
+func TestAutomationUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationPatcher(ctrl)
+	mockStore := mocks.NewMockAutomationUpdater(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := fixture.AutomationConfig()
-
-	createOpts := &SecurityEnableOpts{
-		mechanisms: []string{sha256},
-		store:      mockStore,
+	expected := &opsmngr.AutomationConfig{
+		Version: 1,
 	}
-
-	mockStore.
-		EXPECT().
-		GetAutomationConfig(createOpts.ProjectID).
-		Return(expected, nil).
-		Times(1)
+	appFS := afero.NewMemMapFs()
+	// create test file
+	fileJSON := `
+{
+"version": 1
+}`
+	fileName := "om_automation_test.json"
+	_ = afero.WriteFile(appFS, fileName, []byte(fileJSON), 0600)
+	createOpts := &UpdateOpts{
+		store:    mockStore,
+		fs:       appFS,
+		filename: fileName,
+	}
 
 	mockStore.
 		EXPECT().

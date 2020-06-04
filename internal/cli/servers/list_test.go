@@ -12,35 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package servers
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAutomationWatch_Run(t *testing.T) {
+func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
+	mockStore := mocks.NewMockAgentLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := fixture.AutomationStatus()
+	expected := &opsmngr.Agents{}
 
-	opts := &AutomationWatchOpts{
+	listOpts := ListOpts{
 		store: mockStore,
 	}
+	listOpts.ProjectID = "1"
 
 	mockStore.
 		EXPECT().
-		GetAutomationStatus(opts.ProjectID).
+		Agents(listOpts.ProjectID, agentType).
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
+	config.SetService(config.OpsManagerService)
+
+	err := listOpts.Run()
+
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

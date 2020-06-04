@@ -12,23 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package security
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func AutomationBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "automation",
-		Short: description.Automation,
+		Use:   "security",
+		Short: description.Security,
 	}
 
-	cmd.AddCommand(AutomationStatusBuilder())
-	cmd.AddCommand(AutomationDescribeBuilder())
-	cmd.AddCommand(AutomationUpdateBuilder())
-	cmd.AddCommand(AutomationWatchBuilder())
-
+	cmd.AddCommand(EnableBuilder())
 	return cmd
 }

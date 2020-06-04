@@ -12,19 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package automation
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func OwnerBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "owner",
-		Short: description.Owner,
+func TestAutomationStatus_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := fixture.AutomationStatus()
+
+	opts := &StatusOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(OwnerCreateBuilder())
-	return cmd
+	mockStore.
+		EXPECT().
+		GetAutomationStatus(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

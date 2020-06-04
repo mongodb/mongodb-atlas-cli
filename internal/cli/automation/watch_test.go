@@ -12,47 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package automation
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAutomationUpdate_Run(t *testing.T) {
+func TestAutomationWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationUpdater(ctrl)
+	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &opsmngr.AutomationConfig{
-		Version: 1,
-	}
-	appFS := afero.NewMemMapFs()
-	// create test file
-	fileJSON := `
-{
-"version": 1
-}`
-	fileName := "om_automation_test.json"
-	_ = afero.WriteFile(appFS, fileName, []byte(fileJSON), 0600)
-	createOpts := &AutomationUpdateOpts{
-		store:    mockStore,
-		fs:       appFS,
-		filename: fileName,
+	expected := fixture.AutomationStatus()
+
+	opts := &WatchOpts{
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		UpdateAutomationConfig(createOpts.ProjectID, expected).
-		Return(nil).
+		GetAutomationStatus(opts.ProjectID).
+		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

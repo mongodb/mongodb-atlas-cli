@@ -12,72 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package agents
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-const (
-	cr     = "MONGODB-CR"
-	sha1   = "SCRAM-SHA-1"
-	sha256 = "SCRAM-SHA-256"
-)
-
-type SecurityEnableOpts struct {
+type UpgradeOpts struct {
 	cli.GlobalOpts
-	mechanisms []string
-	store      store.AutomationPatcher
+	store store.AgentUpgrader
 }
 
-func (opts *SecurityEnableOpts) initStore() error {
+func (opts *UpgradeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *SecurityEnableOpts) Run() error {
-	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+func (opts *UpgradeOpts) Run() error {
+	r, err := opts.store.UpgradeAgent(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	if err := convert.EnableMechanism(current, opts.mechanisms); err != nil {
-		return err
-	}
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
-		return err
-	}
-
-	fmt.Print(deploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+	return json.PrettyPrint(r)
 }
 
-// mongocli ops-manager security enable[MONGODB-CR|SCRAM-SHA-256]  [--projectId projectId]
-func SecurityEnableBuilder() *cobra.Command {
-	opts := &SecurityEnableOpts{}
+// mongocli ops-manager agents upgrade [--projectId projectId]
+func UpgradeBuilder() *cobra.Command {
+	opts := &UpgradeOpts{}
 	cmd := &cobra.Command{
-		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
-		Short:     description.EnableSecurity,
-		Args:      cobra.OnlyValidArgs,
-		ValidArgs: []string{cr, sha1, sha256},
+		Use:  "upgrade",
+		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.mechanisms = args
 			return opts.Run()
 		},
 	}

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package owner
 
 import (
 	"github.com/AlecAivazis/survey/v2"
@@ -26,7 +26,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type OwnerCreateOpts struct {
+type CreateOpts struct {
 	email        string
 	password     string
 	firstName    string
@@ -35,13 +35,13 @@ type OwnerCreateOpts struct {
 	store        store.OwnerCreator
 }
 
-func (opts *OwnerCreateOpts) init() error {
+func (opts *CreateOpts) init() error {
 	var err error
 	opts.store, err = store.NewUnauthenticated(config.Default())
 	return err
 }
 
-func (opts *OwnerCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	user := opts.newOwner()
 	result, err := opts.store.CreateOwner(user, opts.whitelistIps)
 
@@ -52,7 +52,7 @@ func (opts *OwnerCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *OwnerCreateOpts) newOwner() *opsmngr.User {
+func (opts *CreateOpts) newOwner() *opsmngr.User {
 	user := &opsmngr.User{
 		Username:     opts.email,
 		Password:     opts.password,
@@ -64,7 +64,7 @@ func (opts *OwnerCreateOpts) newOwner() *opsmngr.User {
 	return user
 }
 
-func (opts *OwnerCreateOpts) Prompt() error {
+func (opts *CreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
@@ -75,8 +75,8 @@ func (opts *OwnerCreateOpts) Prompt() error {
 }
 
 // mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --whitelistIps whitelistIp
-func OwnerCreateBuilder() *cobra.Command {
-	opts := new(OwnerCreateOpts)
+func CreateBuilder() *cobra.Command {
+	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: description.CreateOwner,

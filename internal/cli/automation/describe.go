@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package opsmanager
+
+package automation
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
@@ -24,39 +24,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	agentType = "AUTOMATION"
-)
-
-type ServersListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	store store.AgentLister
+	store store.AutomationGetter
 }
 
-func (opts *ServersListOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ServersListOpts) Run() error {
-	servers, err := opts.store.Agents(opts.ConfigProjectID(), agentType)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(servers)
+	return json.PrettyPrint(r)
 }
 
-// mongocli om server(s) list [--projectId projectId]
-func AgentsListBuilder() *cobra.Command {
-	opts := &ServersListOpts{}
+// mongocli ops-manager automation describe [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
+		Use:     "describe",
+		Aliases: []string{"show", "get"},
 		Args:    cobra.NoArgs,
-		Short:   description.ListServer,
+		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

@@ -12,62 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package automation
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type AutomationWatchOpts struct {
+type StatusOpts struct {
 	cli.GlobalOpts
 	store store.AutomationStatusGetter
 }
 
-func (opts *AutomationWatchOpts) initStore() error {
+func (opts *StatusOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *AutomationWatchOpts) Run() error {
-	for {
-		result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
-		if err != nil {
-			return err
-		}
-		reachedGoal := true
-		for _, p := range result.Processes {
-			if p.LastGoalVersionAchieved != result.GoalVersion {
-				reachedGoal = false
-				break
-			}
-		}
-		if reachedGoal {
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(4 * time.Second)
+func (opts *StatusOpts) Run() error {
+	result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
+
+	if err != nil {
+		return err
 	}
-	fmt.Printf("\nChanges deployed successfully\n")
-	return nil
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli ops-manager automation watch [--projectId projectId]
-func AutomationWatchBuilder() *cobra.Command {
-	opts := &AutomationWatchOpts{}
+// mongocli ops-manager automation status [--projectId projectId]
+func StatusBuilder() *cobra.Command {
+	opts := &StatusOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch",
-		Short: description.WatchAutomationStatus,
+		Use:   "status",
+		Short: description.ShowAutomationStatus,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

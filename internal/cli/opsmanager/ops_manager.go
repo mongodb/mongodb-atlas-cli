@@ -15,11 +15,14 @@
 package opsmanager
 
 import (
-	"fmt"
-
+	"github.com/mongodb/mongocli/internal/cli/agents"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
+	"github.com/mongodb/mongocli/internal/cli/automation"
 	"github.com/mongodb/mongocli/internal/cli/backup"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/owner"
+	"github.com/mongodb/mongocli/internal/cli/security"
+	"github.com/mongodb/mongocli/internal/cli/servers"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -38,21 +41,17 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(ClustersBuilder())
 	cmd.AddCommand(alerts.Builder())
 	cmd.AddCommand(backup.Builder())
-	cmd.AddCommand(ServersBuilder())
-	cmd.AddCommand(AutomationBuilder())
-	cmd.AddCommand(SecurityBuilder())
+	cmd.AddCommand(servers.Builder())
+	cmd.AddCommand(automation.Builder())
+	cmd.AddCommand(security.Builder())
 	cmd.AddCommand(DBUsersBuilder())
-	cmd.AddCommand(OwnerBuilder())
+	cmd.AddCommand(owner.Builder())
 	cmd.AddCommand(events.Builder())
 	cmd.AddCommand(ProcessesBuilder())
 	cmd.AddCommand(MetricsBuilder())
 	cmd.AddCommand(LogsBuilder())
-	cmd.AddCommand(AgentsBuilder())
+	cmd.AddCommand(agents.Builder())
 	cmd.AddCommand(DiagnoseArchive())
 
 	return cmd
-}
-
-func deploymentStatus(baseURL, projectID string) string {
-	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
 }

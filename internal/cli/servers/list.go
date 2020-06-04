@@ -11,61 +11,52 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package opsmanager
+package servers
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type AutomationUpdateOpts struct {
+const (
+	agentType = "AUTOMATION"
+)
+
+type ListOpts struct {
 	cli.GlobalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationUpdater
+	store store.AgentLister
 }
 
-func (opts *AutomationUpdateOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *AutomationUpdateOpts) Run() error {
-	newConfig := new(opsmngr.AutomationConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
+func (opts *ListOpts) Run() error {
+	servers, err := opts.store.Agents(opts.ConfigProjectID(), agentType)
+
 	if err != nil {
 		return err
 	}
 
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), newConfig); err != nil {
-		return err
-	}
-
-	fmt.Print(deploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+	return json.PrettyPrint(servers)
 }
 
-// mongocli om automation update --projectId projectId --file myfile.json
-func AutomationUpdateBuilder() *cobra.Command {
-	opts := &AutomationUpdateOpts{
-		fs: afero.NewOsFs(),
-	}
+// mongocli om server(s) list [--projectId projectId]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:    "update",
-		Hidden: true,
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
+		Short:   description.ListServer,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
@@ -74,11 +65,7 @@ func AutomationUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use")
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flag.File)
 
 	return cmd
 }

@@ -18,9 +18,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -79,7 +78,7 @@ func (opts *ClustersIndexesCreateOpts) Run() error {
 		return err
 	}
 
-	fmt.Print(deploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
+	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
 
 	return nil
 }

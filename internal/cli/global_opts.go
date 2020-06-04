@@ -15,6 +15,8 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 )
@@ -62,4 +64,8 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	}
 
 	return nil
+}
+
+func DeploymentStatus(baseURL, projectID string) string {
+	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
 }

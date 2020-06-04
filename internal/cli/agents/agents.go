@@ -12,36 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package agents
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixture"
-	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestAutomationStatus_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := fixture.AutomationStatus()
-
-	opts := &AutomationStatusOpts{
-		store: mockStore,
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "agents",
+		Aliases: []string{"agent"},
+		Short:   description.Agents,
 	}
 
-	mockStore.
-		EXPECT().
-		GetAutomationStatus(opts.ProjectID).
-		Return(expected, nil).
-		Times(1)
-
-	err := opts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	cmd.AddCommand(UpgradeBuilder())
+	return cmd
 }

@@ -12,40 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package security
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAgentsList_Run(t *testing.T) {
+func TestSecurityEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAgentLister(ctrl)
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Agents{}
+	expected := fixture.AutomationConfig()
 
-	listOpts := ServersListOpts{
-		store: mockStore,
+	createOpts := &EnableOpts{
+		mechanisms: []string{sha256},
+		store:      mockStore,
 	}
-	listOpts.ProjectID = "1"
 
 	mockStore.
 		EXPECT().
-		Agents(listOpts.ProjectID, agentType).
+		GetAutomationConfig(createOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
-	config.SetService(config.OpsManagerService)
+	mockStore.
+		EXPECT().
+		UpdateAutomationConfig(createOpts.ProjectID, expected).
+		Return(nil).
+		Times(1)
 
-	err := listOpts.Run()
-
+	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

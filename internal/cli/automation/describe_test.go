@@ -12,19 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package automation
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func SecurityBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "security",
-		Short: description.Security,
+func TestAutomationShowOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAutomationGetter(ctrl)
+
+	defer ctrl.Finish()
+
+	expected := fixture.AutomationConfig()
+
+	opts := &DescribeOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(SecurityEnableBuilder())
-	return cmd
+	mockStore.
+		EXPECT().
+		GetAutomationConfig(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

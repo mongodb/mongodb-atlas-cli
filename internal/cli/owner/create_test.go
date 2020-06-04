@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package owner
 
 import (
 	"testing"
@@ -35,7 +35,7 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 	expected := &opsmngr.CreateUserResponse{}
 
 	t.Run("no whitelist", func(t *testing.T) {
-		createOpts := &OwnerCreateOpts{
+		createOpts := &CreateOpts{
 			email:     email,
 			password:  password,
 			firstName: firstName,
@@ -55,7 +55,7 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 	})
 
 	t.Run("with whitelist", func(t *testing.T) {
-		createOpts := &OwnerCreateOpts{
+		createOpts := &CreateOpts{
 			email:        email,
 			password:     password,
 			firstName:    firstName,

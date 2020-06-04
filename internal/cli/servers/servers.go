@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package servers
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func ServersBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "servers",
 		Short: description.Servers,
 	}
 
-	cmd.AddCommand(AgentsListBuilder())
+	cmd.AddCommand(ListBuilder())
 	return cmd
 }

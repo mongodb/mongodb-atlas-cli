@@ -21,8 +21,8 @@ import (
 
 func ConfigBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "configs",
-		Aliases: []string{"config"},
+		Use:     "settings",
+		Aliases: []string{"settings", "config"},
 		Short:   description.Config,
 		Long:    description.ConfigLong,
 	}

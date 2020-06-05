@@ -36,7 +36,7 @@ const (
 func TestAtlasAlertConfig(t *testing.T) {
 	atlasEntity := "atlas"
 	alertsEntity := "alerts"
-	configEntity := "configs"
+	configEntity := "settings"
 
 	var alertID string
 

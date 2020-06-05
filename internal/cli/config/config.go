@@ -137,6 +137,16 @@ func Builder() *cobra.Command {
 		Use:   "config",
 		Short: description.ConfigDescription,
 		Long:  description.ConfigLongDescription,
+		Example: `
+  To configure the tool to work with Atlas
+  $ mongocli config
+  
+  To configure the tool to work with Cloud Manager
+  $ mongocli config --service cloud-manager
+
+  To configure the tool to work with Ops Manager
+  $ mongocli config --service ops-manager
+`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

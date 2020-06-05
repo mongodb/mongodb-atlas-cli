@@ -26,15 +26,13 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobsDownloader(ctrl)
 
-	appFS := afero.NewMemMapFs()
-
 	opts := &LogsJobsDownloadOpts{
 		id:    "1",
-		fs:    appFS,
 		store: mockStore,
 	}
+	opts.Fs = afero.NewMemMapFs()
+	f, err := opts.NewWriteCloser()
 
-	f, err := opts.newWriteCloser()
 	if err != nil {
 		t.Fatalf("newWriteCloser() unexpected error: %v", err)
 	}

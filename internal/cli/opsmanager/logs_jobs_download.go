@@ -15,11 +15,7 @@
 package opsmanager
 
 import (
-	"io"
-	"os"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -31,9 +27,8 @@ import (
 
 type LogsJobsDownloadOpts struct {
 	cli.GlobalOpts
+	cli.DownloaderOpts
 	id    string
-	out   string
-	fs    afero.Fs
 	store store.LogJobsDownloader
 }
 
@@ -44,34 +39,26 @@ func (opts *LogsJobsDownloadOpts) initStore() error {
 }
 
 func (opts *LogsJobsDownloadOpts) Run() error {
-	out, err := opts.newWriteCloser()
+	out, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
 	}
-	defer out.Close()
 
 	if err := opts.store.DownloadLogJob(opts.ConfigProjectID(), opts.id, out); err != nil {
+		_ = opts.OnError(out)
 		return err
 	}
 
-	return nil
-}
-
-func (opts *LogsJobsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
-	// Create file only if is not there already (don't overwrite)
-	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
-	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
-	return f, err
+	return out.Close()
 }
 
 // mongocli om logs jobs download <ID> [--out out] [--projectId projectId]
 func LogsJobsDownloadOptsBuilder() *cobra.Command {
-	opts := &LogsJobsDownloadOpts{
-		fs: afero.NewOsFs(),
-	}
+	opts := &LogsJobsDownloadOpts{}
+	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download <ID>",
-		Short: description.DownloadLogs,
+		Short: description.DownloadLogCollectionJob,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -82,7 +69,7 @@ func LogsJobsDownloadOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVarP(&opts.Out, flag.Out, flag.OutShort, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

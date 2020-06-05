@@ -15,11 +15,7 @@
 package opsmanager
 
 import (
-	"io"
-	"os"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -32,10 +28,9 @@ import (
 
 type DiagnoseArchiveDownloadOpts struct {
 	cli.GlobalOpts
-	out     string
+	cli.DownloaderOpts
 	limit   int64
 	minutes int64
-	fs      afero.Fs
 	store   store.ArchivesDownloader
 }
 
@@ -46,24 +41,17 @@ func (opts *DiagnoseArchiveDownloadOpts) initStore() error {
 }
 
 func (opts *DiagnoseArchiveDownloadOpts) Run() error {
-	out, err := opts.newWriteCloser()
+	out, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
 	}
-	defer out.Close()
 
 	if err := opts.store.DownloadArchive(opts.ConfigProjectID(), opts.newDiagnosticsListOpts(), out); err != nil {
+		_ = opts.OnError(out)
 		return err
 	}
 
-	return nil
-}
-
-func (opts *DiagnoseArchiveDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
-	// Create file only if is not there already (don't overwrite)
-	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
-	f, err := opts.fs.OpenFile(opts.out, ff, 0777)
-	return f, err
+	return out.Close()
 }
 
 func (opts *DiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *opsmngr.DiagnosticsListOpts {
@@ -75,9 +63,8 @@ func (opts *DiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *opsmngr.Diagn
 
 // mongocli om diagnose-archive download [--out out] [--projectId projectId]
 func DiagnoseArchiveDownloadBuilder() *cobra.Command {
-	opts := &DiagnoseArchiveDownloadOpts{
-		fs: afero.NewOsFs(),
-	}
+	opts := &DiagnoseArchiveDownloadOpts{}
+	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:     "download",
 		Aliases: []string{"get"},
@@ -90,7 +77,7 @@ func DiagnoseArchiveDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
+	cmd.Flags().StringVarP(&opts.Out, flag.Out, flag.OutShort, "diagnose-archive.tar.gz", usage.DiagnoseOut)
 	cmd.Flags().Int64Var(&opts.limit, flag.Limit, 0, usage.ArchiveLimit)
 	cmd.Flags().Int64Var(&opts.minutes, flag.Minutes, 0, usage.ArchiveMinutes)
 

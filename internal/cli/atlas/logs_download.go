@@ -15,15 +15,16 @@
 package atlas
 
 import (
+	"fmt"
 	"io"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -52,13 +53,13 @@ func (opts *LogsDownloadOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	r := opts.newDateRangeOpts()
 	if err := opts.store.DownloadLog(opts.ConfigProjectID(), opts.host, opts.name, f, r); err != nil {
+		_ = opts.handleError(f)
 		return err
 	}
-	return nil
+	return f.Close()
 }
 
 func (opts *LogsDownloadOpts) output() string {
@@ -66,6 +67,11 @@ func (opts *LogsDownloadOpts) output() string {
 		opts.out = opts.name
 	}
 	return opts.out
+}
+
+func (opts *LogsDownloadOpts) handleError(f io.Closer) error {
+	_ = f.Close()
+	return opts.fs.Remove(opts.output())
 }
 
 func (opts *LogsDownloadOpts) newWriteCloser() (io.WriteCloser, error) {
@@ -82,6 +88,8 @@ func (opts *LogsDownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
+var logNames = []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"}
+
 // mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
 func LogsDownloadBuilder() *cobra.Command {
 	opts := &LogsDownloadOpts{
@@ -89,7 +97,8 @@ func LogsDownloadBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "download <hostname> <logname>",
-		Short: description.ListDisks,
+		Short: description.LogsDownload,
+		Long:  description.LogsDownloadLong,
 		Args:  cobra.ExactArgs(2),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -97,7 +106,9 @@ func LogsDownloadBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
-
+			if !search.StringInSlice(logNames, opts.name) {
+				return fmt.Errorf("<logname> must be one of %s", logNames)
+			}
 			return opts.Run()
 		},
 	}

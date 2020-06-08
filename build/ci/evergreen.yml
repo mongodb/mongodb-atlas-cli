@@ -678,14 +678,14 @@ tasks:
         - name: package_goreleaser
           variant: "goreleaser_snapshot"
     commands:
-        - func: "clone"
-        - func: "set up notary client credentials"
-        - func: "install curator"
-        - func: "push"
-          vars:
-            edition: enterprise
-            distro: rhel70
-            ext: rpm
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel70
+          ext: rpm
   - name: push_rhel70_org
     <<: *default_push_def
     commands:
@@ -896,6 +896,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel70_org_44
     <<: *default_push_stable_def
     commands:
@@ -907,6 +908,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel80_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -918,6 +920,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel80_org_44
     <<: *default_push_stable_def
     commands:
@@ -929,6 +932,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_amazon2_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -940,6 +944,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_amazon2_org_44
     <<: *default_push_stable_def
     commands:
@@ -951,6 +956,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          server_version: ${server_44_version}
   # DEB Distros
   - name: push_ubuntu1604_enterprise_44
     <<: *default_push_stable_def
@@ -963,6 +969,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1604
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1604_org_44
     <<: *default_push_stable_def
     commands:
@@ -974,6 +981,7 @@ tasks:
           edition: org
           distro: ubuntu1604
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1804_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -985,6 +993,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1804_org_44
     <<: *default_push_stable_def
     commands:
@@ -996,6 +1005,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian71_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -1007,6 +1017,7 @@ tasks:
           edition: enterprise
           distro: debian71
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian71_org_44
     <<: *default_push_stable_def
     commands:
@@ -1018,6 +1029,7 @@ tasks:
           edition: org
           distro: debian71
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian81_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -1029,6 +1041,7 @@ tasks:
           edition: enterprise
           distro: debian81
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian81_org_44
     <<: *default_push_stable_def
     commands:
@@ -1040,6 +1053,7 @@ tasks:
           edition: org
           distro: debian81
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian92_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -1051,6 +1065,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian92_org_44
     <<: *default_push_stable_def
     commands:
@@ -1062,6 +1077,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian10_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -1073,6 +1089,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian10_org_44
     <<: *default_push_stable_def
     commands:
@@ -1084,6 +1101,225 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          server_version: ${server_44_version}
+  # 42 RPM
+  - name: push_rhel70_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel70_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel80_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel80
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel80_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel80
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_amazon2_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: amazon2
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_amazon2_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: amazon2
+          ext: rpm
+          server_version: ${server_42_version}
+  # DEB Distros
+  - name: push_ubuntu1604_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1604_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1804_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1804
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1804_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1804
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian71_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian71
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian71_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian71
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian81_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian81
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian81_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian81
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian92_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian92_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian10_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian10
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian10_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+          server_version: ${server_42_version}
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1110,7 +1346,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "1.0.1"
+      server_version: "1.0.2"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1132,7 +1368,8 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "4.4.0-rc2"
+      server_42_version: "4.2.0"
+      server_44_version: "4.4.0"
     tasks:
       - name: release
       - name: .push_stable

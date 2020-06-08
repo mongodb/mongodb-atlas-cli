@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e atlas,generic
 
 package atlas_test
 
@@ -30,7 +30,7 @@ const (
 	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
-func TestAtlasAlerts(t *testing.T) {
+func TestAlerts(t *testing.T) {
 	atlasEntity := "atlas"
 	alertsEntity := "alerts"
 	alertID := "5ecbef6b2359825e889837a7"

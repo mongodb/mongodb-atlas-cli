@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas,logs
+// +build e2e atlas,logs
 
 package atlas_test
 
@@ -25,7 +25,7 @@ import (
 	"time"
 )
 
-func TestAtlasLogs(t *testing.T) {
+func TestLogs(t *testing.T) {
 	atlasEntity := "atlas"
 	logsEntity := "logs"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))

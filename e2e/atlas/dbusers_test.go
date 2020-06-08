@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e atlas,generic
 
 package atlas_test
 
@@ -31,7 +31,7 @@ const (
 	roleReadWrite = "readWrite"
 )
 
-func TestAtlasDBUsers(t *testing.T) {
+func TestDBUsers(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	atlasEntity := "atlas"

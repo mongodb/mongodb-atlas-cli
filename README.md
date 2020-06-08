@@ -61,7 +61,7 @@ make install
 ## Usage
 
 Run `mongocli help` for a list of available commands
-or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details
+or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
 ### Getting Started
 

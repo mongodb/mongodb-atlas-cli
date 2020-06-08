@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e atlas,generic
 
 package atlas_test
 
@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestAtlasEvents(t *testing.T) {
+func TestEvents(t *testing.T) {
 	atlasEntity := "atlas"
 	eventsEntity := "events"
 
@@ -86,5 +86,4 @@ func TestAtlasEvents(t *testing.T) {
 		}
 
 	})
-
 }

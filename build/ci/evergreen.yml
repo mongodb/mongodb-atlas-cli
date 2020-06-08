@@ -60,130 +60,24 @@ functions:
         permissions: public-read
         content_type: text/html
         display_name: internal-html-coverage
-  "atlas e2e":
+  "e2e test":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - ${go_bin}
+        include_expansions_in_env:
+          - MCLI_ORG_ID
+          - MCLI_PROJECT_ID
+          - MCLI_PRIVATE_API_KEY
+          - MCLI_PUBLIC_API_KEY
+          - MCLI_SERVICE
+          - TEST_CMD
+          - E2E_TAGS
         working_dir: src/github.com/mongodb/mongocli
         env:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,atlas
-          <<: *go_options
-        command: make e2e-test
-  "atlas logs e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,atlas,logs
-          <<: *go_options
-        command: make e2e-test
-  "atlas metrics e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,atlas,metrics
-          <<: *go_options
-        command: make e2e-test
-  "atlas clusters e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,atlas,clusters
-          <<: *go_options
-        command: make e2e-test
-  "iam atlas e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,iam
-          <<: *go_options
-        command: make e2e-test
-  "iam cloud manager e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: cloud-manager
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,iam
-          <<: *go_options
-        command: make e2e-test
-  "cloud manager e2e":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: cloud-manager
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,cloudmanager
           <<: *go_options
         command: make e2e-test
   "deploy spawn host":
@@ -474,27 +368,14 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "atlas e2e"
-  - name: iam_atlas_e2e
-    tags: ["e2e"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "iam atlas e2e"
-  - name: iam_cloud_manager_e2e
-    tags: ["e2e"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "iam cloud manager e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,generic
   - name: atlas_logs_e2e
     tags: ["e2e"]
     depends_on:
@@ -504,7 +385,14 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "atlas logs e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,logs
   - name: atlas_metrics_e2e
     tags: ["e2e"]
     depends_on:
@@ -514,7 +402,14 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "atlas metrics e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,metrics
   - name: atlas_clusters_e2e
     tags: ["e2e"]
     depends_on:
@@ -524,7 +419,48 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "atlas clusters e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters
+  - name: iam_atlas_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: iam
+  - name: iam_cloud_manager_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: iam
   - name: cloud_manager_e2e
     tags: ["e2e"]
     depends_on:
@@ -537,7 +473,14 @@ tasks:
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install automation agent"
-      - func: "cloud manager e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,generic
   - name: package_msi
     tags: ["packaging"]
     depends_on:

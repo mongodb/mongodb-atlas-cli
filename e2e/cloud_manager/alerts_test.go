@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,cloudmanager
+// +build e2e cloudmanager,generic
 
 package cloud_manager_test
 
@@ -31,7 +31,7 @@ const (
 	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
-func TestCloudManagerAlerts(t *testing.T) {
+func TestAlerts(t *testing.T) {
 	cliPath, err := filepath.Abs("../../bin/mongocli")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

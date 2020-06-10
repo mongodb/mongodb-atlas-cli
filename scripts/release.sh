@@ -37,4 +37,4 @@ fi
 
 git tag -a -s "v${VERSION}" -m "v${VERSION}"
 git push origin "v${VERSION}"
-evergreen patch -p mongocli-master -y -d "Release ${VERSION}" -v release_publish -v release_msi -t all -f
+evergreen patch -p mongocli-master -y -d "Release ${VERSION}" -v release_github -v release_msi -v release_publish_42 -v release_publish_44 -t all -f

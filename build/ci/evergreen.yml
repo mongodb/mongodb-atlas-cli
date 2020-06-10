@@ -1,4 +1,4 @@
-exec_timeout_secs: 3600 # automatically fail any task if it takes longer than 60 minutes to finish.
+exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true
@@ -77,7 +77,7 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         env:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
         command: make e2e-test
   "deploy spawn host":
@@ -85,6 +85,7 @@ functions:
       type: setup
       params:
         shell: bash
+        silent: true
         script: |
           set -e
           keyfile="src/github.com/mongodb/mongocli/build/ci/ssh_id"
@@ -102,21 +103,25 @@ functions:
         wait: true
         timeout_seconds: 300
         num_hosts: 1
-        path: src/github.com/mongodb/mongocli/hosts.json
+        path: src/github.com/mongodb/mongocli/build/ci/hosts.json
   ssh-ready:
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
-        binary: build/ci/ssh-ready.sh
-        args: ['-u', 'ubuntu', '-i', 'build/ci/ssh_id', '-h', 'hosts.json']
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./ssh-ready.sh
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
-        binary: build/ci/install-agent-spawn-host.sh
-        args: ['-u', 'ubuntu', '-i', 'build/ci/ssh_id', '-h', 'hosts.json', '-g', '${automation_agent_mms_group_id}', '-a', '${automation_agent_mms_api_key}', '-b','${mcli_ops_manager_url}']
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./install-agent-spawn-host.sh
+        env:
+          LC_AGENT_KEY: ${automation_agent_mms_api_key}
+          LC_GROUP_ID: ${automation_agent_mms_group_id}
+          BASE_URL: ${mcli_ops_manager_url}
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "lint":
     - command: shell.exec
       type: test
@@ -359,7 +364,7 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
-  - name: atlas_e2e
+  - name: atlas_generic_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
@@ -427,7 +432,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
-  - name: iam_atlas_e2e
+  - name: atlas_iam_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
@@ -444,7 +449,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: iam
-  - name: iam_cloud_manager_e2e
+  - name: cloud_manager_iam_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
@@ -461,7 +466,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: iam
-  - name: cloud_manager_e2e
+  - name: cloud_manager_generic_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile

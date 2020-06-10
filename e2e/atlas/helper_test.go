@@ -18,11 +18,13 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -36,17 +38,14 @@ const (
 var cliPath string
 
 func init() {
-	path, err := filepath.Abs(mongoCliPath)
+	cliPath, err := filepath.Abs(mongoCliPath)
 	if err != nil {
 		panic(err)
 	}
 
-	_, err = os.Stat(path)
-	if err != nil {
+	if _, err := os.Stat(cliPath); err != nil {
 		panic(err)
 	}
-
-	cliPath = path
 }
 
 func getHostnameAndPort() (string, error) {
@@ -78,55 +77,33 @@ func getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-// anyCluster returns true if there is at least a cluster is deployed, false otherwise
-func anyCluster() bool {
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		clustersEntity,
-		"list")
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return false
-	}
-
-	var clusters []mongodbatlas.Cluster
-	err = json.Unmarshal(resp, &clusters)
-
-	if err != nil {
-		return false
-	}
-
-	return len(clusters) > 0
-}
-
-func deployCluster(clusterName string) error {
-	cmd := exec.Command(cliPath,
+func deployCluster() (string, error) {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
 		"--region=US_EAST_1",
-		"--members=3",
 		"--tier=M10",
 		"--provider=AWS",
-		"--mdbVersion=4.0",
 		"--diskSizeGB=10")
-	cmd.Env = os.Environ()
-	err := cmd.Run()
-
-	if err != nil {
-		return err
+	create.Env = os.Environ()
+	if err := create.Run(); err != nil {
+		return "", fmt.Errorf("error creating cluster %w", err)
 	}
 
-	cmd = exec.Command(cliPath,
+	watch := exec.Command(cliPath,
 		"atlas",
 		clustersEntity,
 		"watch",
 		clusterName)
-	cmd.Env = os.Environ()
-	return cmd.Run()
+	watch.Env = os.Environ()
+	if err := watch.Run(); err != nil {
+		return "", fmt.Errorf("error watching cluster %w", err)
+	}
+	return clusterName, nil
 }
 
 func deleteCluster(clusterName string) error {

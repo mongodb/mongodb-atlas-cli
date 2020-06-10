@@ -16,25 +16,21 @@
 package atlas_test
 
 import (
-	"fmt"
 	"log"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 )
 
 func TestLogs(t *testing.T) {
 	atlasEntity := "atlas"
 	logsEntity := "logs"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	err := deployCluster(clusterName)
+	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	defer deleteCluster(clusterName)
 
 	hostname, err := getHostname()
 	if err != nil {
@@ -163,6 +159,4 @@ func TestLogs(t *testing.T) {
 			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
-
-	deleteCluster(clusterName)
 }

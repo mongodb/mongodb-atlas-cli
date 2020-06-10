@@ -17,12 +17,9 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -30,14 +27,12 @@ import (
 func TestMetrics(t *testing.T) {
 	atlasEntity := "atlas"
 	metricsEntity := "metrics"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	err := deployCluster(clusterName)
+	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
+	defer deleteCluster(clusterName)
 	hostname, err := getHostnameAndPort()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -150,6 +145,4 @@ func TestMetrics(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
 		}
 	})
-
-	deleteCluster(clusterName)
 }

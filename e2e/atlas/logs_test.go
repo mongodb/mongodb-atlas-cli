@@ -37,6 +37,10 @@ func TestLogs(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Download mongodb.gz", func(t *testing.T) {
 		dir, err := os.Getwd()
 		if err != nil {

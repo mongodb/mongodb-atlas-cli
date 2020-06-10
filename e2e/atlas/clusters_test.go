@@ -35,6 +35,10 @@ func TestClusters(t *testing.T) {
 	clustersEntity := "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Create via params", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

@@ -35,8 +35,11 @@ func TestAlerts(t *testing.T) {
 	alertsEntity := "alerts"
 	alertID := "5ecbef6b2359825e889837a7"
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Describe", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,

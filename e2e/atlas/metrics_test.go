@@ -38,6 +38,11 @@ func TestMetrics(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
 	t.Run("processes", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

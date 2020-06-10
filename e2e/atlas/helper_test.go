@@ -35,20 +35,23 @@ const (
 	mongoCliPath   = "../../bin/mongocli"
 )
 
-var cliPath string
-
-func init() {
+func cli() (string, error) {
 	cliPath, err := filepath.Abs(mongoCliPath)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	if _, err := os.Stat(cliPath); err != nil {
-		panic(err)
+		return "", err
 	}
+	return cliPath, nil
 }
 
 func getHostnameAndPort() (string, error) {
+	cliPath, err := cli()
+	if err != nil {
+		return "", err
+	}
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		"processes",
@@ -78,6 +81,10 @@ func getHostnameAndPort() (string, error) {
 }
 
 func deployCluster() (string, error) {
+	cliPath, err := cli()
+	if err != nil {
+		return "", fmt.Errorf("error creating cluster %w", err)
+	}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 	create := exec.Command(cliPath,
@@ -107,6 +114,10 @@ func deployCluster() (string, error) {
 }
 
 func deleteCluster(clusterName string) error {
+	cliPath, err := cli()
+	if err != nil {
+		return err
+	}
 	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
 	return cmd.Run()

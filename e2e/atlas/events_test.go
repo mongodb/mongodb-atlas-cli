@@ -28,8 +28,11 @@ func TestEvents(t *testing.T) {
 	atlasEntity := "atlas"
 	eventsEntity := "events"
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("ListProjectEvent", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			eventsEntity,

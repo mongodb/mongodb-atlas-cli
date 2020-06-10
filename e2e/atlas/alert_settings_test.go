@@ -40,6 +40,10 @@ func TestAlertConfig(t *testing.T) {
 
 	var alertID string
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -196,6 +200,5 @@ func TestAlertConfig(t *testing.T) {
 		if diff := deep.Equal(fields, expected); diff != nil {
 			t.Error(diff)
 		}
-
 	})
 }

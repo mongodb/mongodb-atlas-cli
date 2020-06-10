@@ -38,6 +38,10 @@ func TestDBUsers(t *testing.T) {
 	dbusersEntity := "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

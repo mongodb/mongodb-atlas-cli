@@ -109,7 +109,7 @@ func TestWhitelist(t *testing.T) {
 			whitelistEntity,
 			"create",
 			entry,
-			"--deleteAfter="+time.Now().Add(time.Minute * time.Duration(5)).Format(time.RFC3339),
+			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
 			"--comment=test")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

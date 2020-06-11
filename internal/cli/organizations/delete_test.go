@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestOrganizationsDelete_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationDeleter(ctrl)
 
@@ -35,7 +35,7 @@ func TestOrganizationsDelete_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	deleteOpts := &OrganizationsDeleteOpts{
+	deleteOpts := &DeleteOpts{
 		store: mockStore,
 		DeleteOpts: &cli.DeleteOpts{
 			Entry:   "5a0a1e7e0f2912c554080adc",

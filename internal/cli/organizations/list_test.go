@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"testing"
@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestOrganizationsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationLister(ctrl)
 
@@ -32,11 +32,11 @@ func TestOrganizationsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		GetAllOrganizations().
+		Organizations().
 		Return(expected, nil).
 		Times(1)
 
-	listOpts := &OrganizationsListOpts{store: mockStore}
+	listOpts := &ListOpts{store: mockStore}
 	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

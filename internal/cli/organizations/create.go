@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
@@ -22,18 +22,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type OrganizationsCreateOpts struct {
+type CreateOpts struct {
 	name  string
 	store store.OrganizationCreator
 }
 
-func (opts *OrganizationsCreateOpts) init() error {
+func (opts *CreateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *OrganizationsCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	projects, err := opts.store.CreateOrganization(opts.name)
 
 	if err != nil {
@@ -44,8 +44,8 @@ func (opts *OrganizationsCreateOpts) Run() error {
 }
 
 // mongocli iam organization(s) create <name>
-func OrganizationsCreateBuilder() *cobra.Command {
-	opts := new(OrganizationsCreateOpts)
+func CreateBuilder() *cobra.Command {
+	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: description.CreateOrganization,

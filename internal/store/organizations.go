@@ -22,22 +22,26 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber
 
 type OrganizationLister interface {
-	GetAllOrganizations() (interface{}, error)
+	Organizations() (*opsmngr.Organizations, error)
+}
+
+type OrganizationDescriber interface {
+	Organization(string) (*opsmngr.Organization, error)
 }
 
 type OrganizationCreator interface {
-	CreateOrganization(string) (interface{}, error)
+	CreateOrganization(string) (*opsmngr.Organization, error)
 }
 
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error
 }
 
-// GetAllProjects encapsulate the logic to manage different cloud providers
-func (s *Store) GetAllOrganizations() (interface{}, error) {
+// Organizations encapsulate the logic to manage different cloud providers
+func (s *Store) Organizations() (*opsmngr.Organizations, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), nil)
@@ -47,8 +51,19 @@ func (s *Store) GetAllOrganizations() (interface{}, error) {
 	}
 }
 
+// Organization encapsulate the logic to manage different cloud providers
+func (s *Store) Organization(id string) (*opsmngr.Organization, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(context.Background(), id)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
 // CreateOrganization encapsulate the logic to manage different cloud providers
-func (s *Store) CreateOrganization(name string) (interface{}, error) {
+func (s *Store) CreateOrganization(name string) (*opsmngr.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		org := &opsmngr.Organization{Name: name}

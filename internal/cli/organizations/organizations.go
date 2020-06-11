@@ -12,35 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestOrganizationsCreate_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationCreator(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := &opsmngr.Organization{}
-
-	mockStore.
-		EXPECT().
-		CreateOrganization(gomock.Eq("Org 0")).Return(expected, nil).
-		Times(1)
-
-	createOpts := &OrganizationsCreateOpts{
-		store: mockStore,
-		name:  "Org 0",
+func Builder() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:     "organizations",
+		Short:   description.Organization,
+		Long:    description.OrganizationLong,
+		Aliases: []string{"organization", "orgs", "org"},
 	}
-	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
+
+	return cmd
 }

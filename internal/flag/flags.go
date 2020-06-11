@@ -50,6 +50,7 @@ const (
 	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag
+	DeleteAfter                     = "deleteAfter"                     // DeleteAfter flag
 	Until                           = "until"                           // Until flag
 	Page                            = "page"                            // Page flag
 	Limit                           = "limit"                           // Limit flag

@@ -18,6 +18,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/whitelist"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(ClustersBuilder())
 	cmd.AddCommand(DBUsersBuilder())
-	cmd.AddCommand(WhitelistBuilder())
+	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(alerts.Builder())
 	cmd.AddCommand(cloudbackup.Builder())
 	cmd.AddCommand(events.Builder())

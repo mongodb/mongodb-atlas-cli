@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package whitelist
 
 import (
 	"testing"
@@ -30,7 +30,7 @@ func TestWhitelistCreate_Run(t *testing.T) {
 
 	var expected []mongodbatlas.ProjectIPWhitelist
 
-	createOpts := &WhitelistCreateOpts{
+	createOpts := &CreateOpts{
 		entry:     "37.228.254.100",
 		entryType: ipAddress,
 		store:     mockStore,

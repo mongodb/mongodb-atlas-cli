@@ -37,7 +37,7 @@ func TestWhitelist(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	t.Run("Create", func(t *testing.T) {
+	t.Run("Create Forever", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			whitelistEntity,
@@ -100,6 +100,38 @@ func TestWhitelist(t *testing.T) {
 		expected := fmt.Sprintf("Project whitelist entry '%s' deleted\n", entry)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		}
+	})
+
+	t.Run("Create Delete After", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			whitelistEntity,
+			"create",
+			entry,
+			"--deleteAfter="+time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
+			"--comment=test")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
+		err = json.Unmarshal(resp, &entries)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		found := false
+		for i := range entries {
+			if entries[i].IPAddress == entry {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
 		}
 	})
 }

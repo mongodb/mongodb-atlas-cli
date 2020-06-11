@@ -17,10 +17,9 @@ package projects
 import (
 	"testing"
 
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribe_Run(t *testing.T) {

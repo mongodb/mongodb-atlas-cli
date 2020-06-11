@@ -12,56 +12,62 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ProjectsDeleteOpts struct {
-	*cli.DeleteOpts
-	store store.ProjectDeleter
+type CreateOpts struct {
+	cli.GlobalOpts
+	name  string
+	store store.ProjectCreator
 }
 
-func (opts *ProjectsDeleteOpts) init() error {
+func (opts *CreateOpts) init() error {
+	if opts.ConfigOrgID() == "" {
+		return cli.ErrMissingOrgID
+	}
+
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ProjectsDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProject)
+func (opts *CreateOpts) Run() error {
+	projects, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID())
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(projects)
 }
 
-// mongocli iam project(s) delete <ID> [--orgId orgId]
-func ProjectsDeleteBuilder() *cobra.Command {
-	opts := &ProjectsDeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Project '%s' deleted\n", "Project not deleted"),
-	}
+// mongocli iam project(s) create <name> [--orgId orgId]
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   description.DeleteProject,
-		Args:    cobra.ExactArgs(1),
+		Use:   "create <name>",
+		Short: description.CreateProject,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
+
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

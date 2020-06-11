@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package projects
 
 import (
 	"testing"
@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestProjectsCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 
@@ -35,7 +35,7 @@ func TestProjectsCreate_Run(t *testing.T) {
 		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(expected, nil).
 		Times(1)
 
-	createOpts := &ProjectsCreateOpts{
+	createOpts := &CreateOpts{
 		store: mockStore,
 		name:  "ProjectBar",
 	}

@@ -32,7 +32,7 @@ type profile struct {
 }
 
 func Properties() []string {
-	return []string{projectID, orgID, service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
+	return []string{projectID, orgID, service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL, opsManagerCACertificate}
 }
 
 var p = newProfile()
@@ -61,6 +61,7 @@ type Config interface {
 	Service() string
 	PublicAPIKey() string
 	OpsManagerURL() string
+	OpsManagerCACertificate() string
 	PrivateAPIKey() string
 }
 
@@ -162,6 +163,12 @@ func (p *profile) OpsManagerURL() string {
 func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
 func (p *profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
+}
+
+// v get configured ops manager CA certificate location
+func OpsManagerCACertificate() string { return p.OpsManagerCACertificate() }
+func (p *profile) OpsManagerCACertificate() string {
+	return p.GetString(opsManagerCACertificate)
 }
 
 // ProjectID get configured project ID

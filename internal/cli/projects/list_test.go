@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package projects
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestProjectsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectLister(ctrl)
 
@@ -31,7 +31,7 @@ func TestProjectsList_Run(t *testing.T) {
 
 	expected := &mongodbatlas.Projects{}
 
-	listOpts := &ProjectsListOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
@@ -49,7 +49,7 @@ func TestProjectsList_Run(t *testing.T) {
 	})
 
 	t.Run("An ConfigOrgID is given for OM", func(t *testing.T) {
-		listOpts := &ProjectsListOpts{
+		listOpts := &ListOpts{
 			store: mockStore,
 		}
 		listOpts.OrgID = "1"
@@ -68,7 +68,7 @@ func TestProjectsList_Run(t *testing.T) {
 	})
 
 	t.Run("An ConfigOrgID is given for Atlas", func(t *testing.T) {
-		listOpts := &ProjectsListOpts{
+		listOpts := &ListOpts{
 			store: mockStore,
 		}
 		listOpts.OrgID = "1"

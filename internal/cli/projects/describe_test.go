@@ -12,22 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package projects
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"go.mongodb.org/ops-manager/opsmngr"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func ProjectsBuilder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
-		Aliases: []string{"project"},
+func TestDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectDescriber(ctrl)
+
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(&opsmngr.Project{}, nil).
+		Times(1)
+
+	opts := &DescribeOpts{
+		store: mockStore,
+		id:    "5a0a1e7e0f2912c554080adc",
 	}
-	cmd.AddCommand(ProjectsListBuilder())
-	cmd.AddCommand(ProjectsCreateBuilder())
-	cmd.AddCommand(ProjectsDeleteBuilder())
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

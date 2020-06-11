@@ -12,53 +12,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package organizations
+package projects
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
-	id    string
-	store store.OrganizationDescriber
+type ListOpts struct {
+	cli.GlobalOpts
+	cli.ListOpts
+	store store.ProjectLister
 }
 
-func (opts *DescribeOpts) init() error {
+func (opts *ListOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	org, err := opts.store.Organization(opts.id)
-
+func (opts *ListOpts) Run() error {
+	var projects interface{}
+	var err error
+	listOptions := opts.NewListOptions()
+	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
+		projects, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), listOptions)
+	} else {
+		projects, err = opts.store.GetAllProjects(listOptions)
+	}
 	if err != nil {
 		return err
 	}
-
-	return json.PrettyPrint(org)
+	return json.PrettyPrint(projects)
 }
 
-// mongocli iam organizations(s) describe <ID>
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli iam project(s) list [--orgId orgId]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
-		Aliases: []string{"show"},
-		Args:    cobra.ExactArgs(1),
-		Short:   description.DescribeOrganizations,
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   description.ListProjects,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

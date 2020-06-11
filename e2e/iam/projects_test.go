@@ -77,6 +77,16 @@ func TestProjects(t *testing.T) {
 		}
 	})
 
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, "describe", projectID)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity, projectEntity, "delete", projectID, "--force")
 		cmd.Env = os.Environ()

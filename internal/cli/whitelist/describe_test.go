@@ -12,38 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package whitelist
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestWhitelistDelete_Run(t *testing.T) {
+func TestWhitelistDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPWhitelistDeleter(ctrl)
+	mockStore := mocks.NewMockProjectIPWhitelistDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &WhitelistDeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Confirm: true,
-			Entry:   "test",
-		},
+	expected := &mongodbatlas.ProjectIPWhitelist{}
+
+	describeOpts := &DescribeOpts{
+		name:  "test",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteProjectIPWhitelist(deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(nil).
+		IPWhitelist(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

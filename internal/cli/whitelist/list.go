@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package atlas
+package whitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,19 +24,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type WhitelistListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	store store.ProjectIPWhitelistLister
 }
 
-func (opts *WhitelistListOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WhitelistListOpts) Run() error {
+func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	result, err := opts.store.ProjectIPWhitelists(opts.ConfigProjectID(), listOpts)
 
@@ -48,8 +48,8 @@ func (opts *WhitelistListOpts) Run() error {
 }
 
 // mongocli atlas whitelist(s) list --projectId projectId [--page N] [--limit N]
-func WhitelistListBuilder() *cobra.Command {
-	opts := &WhitelistListOpts{}
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   description.ListWhitelist,

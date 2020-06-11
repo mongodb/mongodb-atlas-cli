@@ -12,57 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package whitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type WhitelistDeleteOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
-	store store.ProjectIPWhitelistDeleter
+	name  string
+	store store.ProjectIPWhitelistDescriber
 }
 
-func (opts *WhitelistDeleteOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WhitelistDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProjectIPWhitelist, opts.ConfigProjectID())
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.IPWhitelist(opts.ConfigProjectID(), opts.name)
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas whitelist delete <entry> --force
-func WhitelistDeleteBuilder() *cobra.Command {
-	opts := &WhitelistDeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Project whitelist entry '%s' deleted\n", "Project whitelist entry not deleted"),
-	}
+// mongocli atlas whitelist(s) describe <name> --projectId projectId
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <entry>",
-		Aliases: []string{"rm"},
-		Short:   description.DeleteWhitelist,
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe <name>",
+		Short: description.DescribeWhitelist,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

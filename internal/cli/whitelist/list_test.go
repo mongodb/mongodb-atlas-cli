@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package whitelist
 
 import (
 	"testing"
@@ -22,26 +22,25 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestWhitelistDescribe_Run(t *testing.T) {
+func TestWhitelistList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPWhitelistDescriber(ctrl)
+	mockStore := mocks.NewMockProjectIPWhitelistLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProjectIPWhitelist{}
+	var expected []mongodbatlas.ProjectIPWhitelist
 
-	describeOpts := &WhitelistDescribeOpts{
-		name:  "test",
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		IPWhitelist(describeOpts.ProjectID, describeOpts.name).
+		ProjectIPWhitelists(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

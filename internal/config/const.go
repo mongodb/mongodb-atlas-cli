@@ -15,18 +15,19 @@
 package config
 
 const (
-	ToolName            = "mongocli"      // ToolName of the CLI
-	EnvPrefix           = "mcli"          // Prefix for ENV variables
-	DefaultProfile      = "default"       // DefaultProfile default
-	CloudService        = "cloud"         // CloudService setting when using Atlas API
-	CloudManagerService = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
-	OpsManagerService   = "ops-manager"   // OpsManagerService settings when using Ops Manager API
-	projectID           = "project_id"
-	orgID               = "org_id"
-	configType          = "toml"
-	service             = "service"
-	publicAPIKey        = "public_api_key"
-	privateAPIKey       = "private_api_key"
-	opsManagerURL       = "ops_manager_url"
-	baseURL             = "base_url"
+	ToolName                = "mongocli"      // ToolName of the CLI
+	EnvPrefix               = "mcli"          // Prefix for ENV variables
+	DefaultProfile          = "default"       // DefaultProfile default
+	CloudService            = "cloud"         // CloudService setting when using Atlas API
+	CloudManagerService     = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
+	OpsManagerService       = "ops-manager"   // OpsManagerService settings when using Ops Manager API
+	projectID               = "project_id"
+	orgID                   = "org_id"
+	configType              = "toml"
+	service                 = "service"
+	publicAPIKey            = "public_api_key"
+	privateAPIKey           = "private_api_key"
+	opsManagerURL           = "ops_manager_url"
+	baseURL                 = "base_url"
+	opsManagerCACertificate = "ops_manager_ca_certificate"
 )

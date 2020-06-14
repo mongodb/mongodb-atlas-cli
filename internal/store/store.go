@@ -29,12 +29,16 @@ import (
 
 var userAgent = fmt.Sprintf("%s/%s", config.ToolName, version.Version)
 
-const atlasAPIPath = "api/atlas/v1.0/"
+const (
+	atlasAPIPath = "api/atlas/v1.0/"
+	yes          = "yes"
+)
 
 type Store struct {
 	service       string
 	baseURL       string
 	caCertificate string
+	skipVerify    string
 	client        interface{}
 }
 
@@ -76,6 +80,9 @@ func New(c config.Config) (*Store, error) {
 	}
 	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
 		s.caCertificate = caCertificate
+	}
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		s.skipVerify = skipVerify
 	}
 
 	switch s.service {
@@ -122,6 +129,9 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 	}
 	if s.caCertificate != "" {
 		opts = append(opts, opsmngr.OptionCAValidate(s.caCertificate))
+	}
+	if s.skipVerify == yes {
+		opts = append(opts, opsmngr.OptionSkipVerify())
 	}
 	c, err := opsmngr.New(client, opts...)
 

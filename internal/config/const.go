@@ -30,4 +30,5 @@ const (
 	opsManagerURL           = "ops_manager_url"
 	baseURL                 = "base_url"
 	opsManagerCACertificate = "ops_manager_ca_certificate"
+	opsManagerSkipVerify    = "ops_manager_skip_verify"
 )

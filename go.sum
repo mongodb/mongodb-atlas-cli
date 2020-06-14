@@ -247,6 +247,8 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.mongodb.org/ops-manager v0.6.1 h1:0kRBwaYjcMUV81wGIqmz5A0CG+XvF/YIWcYy41wCNfQ=
 go.mongodb.org/ops-manager v0.6.1/go.mod h1:RONjQG5y1oKLZzCF/KqtdTzVgKgYu3gH0qDomYyWWbk=
+go.mongodb.org/ops-manager v0.6.2-0.20200611174723-567be248ca6b h1:PShnRolYoRyh7sTmVla+F2fpS6ZmbMLw/KPu0XJ0Q5Y=
+go.mongodb.org/ops-manager v0.6.2-0.20200611174723-567be248ca6b/go.mod h1:RONjQG5y1oKLZzCF/KqtdTzVgKgYu3gH0qDomYyWWbk=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

@@ -1,9 +1,11 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-SOURCE_FILES?=./...
+SOURCE_FILES?=./cmd/mongocli
 BINARY_NAME=mongocli
 
 DESTINATION=./bin/${BINARY_NAME}
+INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
+
 GOLANGCI_VERSION=v1.27.0
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
@@ -33,17 +35,17 @@ fmt: ## Format code
 .PHONY: test
 test: ## Run tests
 	@echo "==> Running tests..."
-	$(TEST_CMD) -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+	${TEST_CMD} -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: lint
 lint: ## Run linter
 	@echo "==> Linting all packages..."
-	golangci-lint run $(SOURCE_FILES)
+	golangci-lint run
 
 .PHONY: fix-lint
-fix-lint: ## Fix lint errors
+fix-lint: ## Fix linting errors
 	@echo "==> Fixing lint errors"
-	golangci-lint run $(SOURCE_FILES) --fix
+	golangci-lint run --fix
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters
@@ -60,17 +62,19 @@ gen-mocks: ## Generate mocks
 .PHONY: build
 build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
-	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION}
+	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ${SOURCE_FILES}
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	$(TEST_CMD) -v -p 1 -parallel 1 -timeout 0 -tags="$(E2E_TAGS)" ./e2e...
+	${TEST_CMD} -v -p 1 -parallel 1 -timeout 15m -tags="${E2E_TAGS}" ./e2e...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
-	go install -ldflags "${LINKER_FLAGS}"
+	@echo "==> Installing to $(INSTALL_PATH)"
+	go install -ldflags "${LINKER_FLAGS}" ${SOURCE_FILES}
+	@echo "==> Done..."
 
 .PHONY: list
 list: ## List all make targets

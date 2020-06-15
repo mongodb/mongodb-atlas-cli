@@ -67,7 +67,7 @@ func newPlatform(version, arch, system, distro, format string) *Platform { //nol
 
 func main() {
 	version := os.Args[1]
-	feedFilename := fmt.Sprintf("mongocli_%s.json", version)
+	feedFilename := "mongocli.json"
 	fmt.Printf("Generating JSON: %s\n", feedFilename)
 	err := generateFile(feedFilename, version)
 
@@ -84,8 +84,10 @@ func generateFile(name, version string) error {
 	if err != nil {
 		return err
 	}
+	defer feedFile.Close()
 	downloadArchive := &DownloadArchive{
 		ReleaseDate:          time.Now().UTC(),
+		Version:              version,
 		ManualLink:           fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/", version),
 		PreviousReleasesLink: "https://github.com/mongodb/mongocli/releases",
 		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
@@ -98,7 +100,6 @@ func generateFile(name, version string) error {
 			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", "tar.gz"),
 		},
 	}
-	defer feedFile.Close()
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(downloadArchive)

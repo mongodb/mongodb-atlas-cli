@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/flag"
@@ -24,5 +23,4 @@ import (
 const requiredF = `required flag(s) "%s" not set`
 
 var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
-var errMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
-var errMissingClusterName = errors.New("cluster name missing")
+var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)

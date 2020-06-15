@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e atlas,generic
 
 package atlas_test
 
@@ -21,30 +21,23 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestAtlasWhitelist(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+func TestWhitelist(t *testing.T) {
 	atlasEntity := "atlas"
 	whitelistEntity := "whitelist"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
 
-	t.Run("Create", func(t *testing.T) {
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	t.Run("Create Forever", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			whitelistEntity,
@@ -107,6 +100,38 @@ func TestAtlasWhitelist(t *testing.T) {
 		expected := fmt.Sprintf("Project whitelist entry '%s' deleted\n", entry)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		}
+	})
+
+	t.Run("Create Delete After", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			whitelistEntity,
+			"create",
+			entry,
+			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
+			"--comment=test")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
+		err = json.Unmarshal(resp, &entries)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		found := false
+		for i := range entries {
+			if entries[i].IPAddress == entry {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
 		}
 	})
 }

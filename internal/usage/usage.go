@@ -35,6 +35,7 @@ const (
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
 	Comment                         = "Optional description or comment for the entry."
+	DeleteAfter                     = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
 	LogOut                          = "Optional output filename, if none given will use the log name."
@@ -124,7 +125,7 @@ For use only with download restore jobs.`
 	Mechanisms = `Authentication mechanism. 
 Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
 	WhitelistType = `Type of whitelist entry.
-Valid values: cidrBlock|ipAddress`
+Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 	Service = `Type of MongoDB service.
 Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.

@@ -21,3 +21,6 @@ third_party_notices/
 .gocache/
 gon.json
 *.xml
+
+# We don't want to commit env variables
+*.env

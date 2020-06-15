@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e,atlas
+// +build e2e atlas,clusters
 
 package atlas_test
 
@@ -21,7 +21,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -29,23 +28,17 @@ import (
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-func TestAtlasClusters(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+func TestClusters(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	atlasEntity := "atlas"
 	clustersEntity := "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
+	cliPath, err := cli()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	t.Run("Create via params", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

@@ -1,4 +1,4 @@
-exec_timeout_secs: 3600 # automatically fail any task if it takes longer than 60 minutes to finish.
+exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true
@@ -60,42 +60,68 @@ functions:
         permissions: public-read
         content_type: text/html
         display_name: internal-html-coverage
-  "atlas e2e":
+  "e2e test":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - ${go_bin}
+        include_expansions_in_env:
+          - MCLI_ORG_ID
+          - MCLI_PROJECT_ID
+          - MCLI_PRIVATE_API_KEY
+          - MCLI_PUBLIC_API_KEY
+          - MCLI_SERVICE
+          - TEST_CMD
+          - E2E_TAGS
         working_dir: src/github.com/mongodb/mongocli
         env:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,atlas
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
         command: make e2e-test
-  "cloud manager e2e":
-    - command: subprocess.exec
-      type: test
+  "deploy spawn host":
+    - command: shell.exec
+      type: setup
       params:
-        add_to_path:
-          - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        shell: bash
+        silent: true
+        script: |
+          set -e
+          keyfile="src/github.com/mongodb/mongocli/build/ci/ssh_id"
+          echo '${__project_aws_ssh_key_value}' > "$keyfile"
+          chmod 600 "$keyfile"
+    - command: host.create
+      type: system
+      params:
+        provider: ec2
+        distro: ubuntu1804-small
+        num_hosts: 1
+        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
+    - command: host.list
+      params:
+        wait: true
+        timeout_seconds: 300
+        num_hosts: 1
+        path: src/github.com/mongodb/mongocli/build/ci/hosts.json
+  ssh-ready:
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./ssh-ready.sh
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+  "install automation agent":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./install-agent-spawn-host.sh
         env:
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: cloud-manager
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --
-          E2E_TAGS: e2e,cloudmanager
-          <<: *go_options
-        command: make e2e-test
+          LC_AGENT_KEY: ${automation_agent_mms_api_key}
+          LC_GROUP_ID: ${automation_agent_mms_group_id}
+          BASE_URL: ${mcli_ops_manager_url}
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "lint":
     - command: shell.exec
       type: test
@@ -338,7 +364,7 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
-  - name: atlas_e2e
+  - name: atlas_generic_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
@@ -347,8 +373,15 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "atlas e2e"
-  - name: cloud_manager_e2e
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,generic
+  - name: atlas_logs_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
@@ -357,7 +390,102 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "cloud manager e2e"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,logs
+  - name: atlas_metrics_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,metrics
+  - name: atlas_clusters_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters
+  - name: atlas_iam_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: iam
+  - name: cloud_manager_iam_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: iam
+  - name: cloud_manager_generic_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,generic
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -417,6 +545,8 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
+      - name: release_msi
+        variant: "release_msi"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -494,16 +624,16 @@ tasks:
         - name: compile
           variant: "code_health"
         - name: package_goreleaser
-          variant: "goreleaser_snaphot"
+          variant: "goreleaser_snapshot"
     commands:
-        - func: "clone"
-        - func: "set up notary client credentials"
-        - func: "install curator"
-        - func: "push"
-          vars:
-            edition: enterprise
-            distro: rhel70
-            ext: rpm
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel70
+          ext: rpm
   - name: push_rhel70_org
     <<: *default_push_def
     commands:
@@ -714,6 +844,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel70_org_44
     <<: *default_push_stable_def
     commands:
@@ -725,6 +856,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel80_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -736,6 +868,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_rhel80_org_44
     <<: *default_push_stable_def
     commands:
@@ -747,6 +880,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_amazon2_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -758,6 +892,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          server_version: ${server_44_version}
   - name: push_amazon2_org_44
     <<: *default_push_stable_def
     commands:
@@ -769,6 +904,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          server_version: ${server_44_version}
   # DEB Distros
   - name: push_ubuntu1604_enterprise_44
     <<: *default_push_stable_def
@@ -781,6 +917,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1604
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1604_org_44
     <<: *default_push_stable_def
     commands:
@@ -792,6 +929,7 @@ tasks:
           edition: org
           distro: ubuntu1604
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1804_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -803,6 +941,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          server_version: ${server_44_version}
   - name: push_ubuntu1804_org_44
     <<: *default_push_stable_def
     commands:
@@ -814,6 +953,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian71_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -825,6 +965,7 @@ tasks:
           edition: enterprise
           distro: debian71
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian71_org_44
     <<: *default_push_stable_def
     commands:
@@ -836,6 +977,7 @@ tasks:
           edition: org
           distro: debian71
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian81_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -847,6 +989,7 @@ tasks:
           edition: enterprise
           distro: debian81
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian81_org_44
     <<: *default_push_stable_def
     commands:
@@ -858,6 +1001,7 @@ tasks:
           edition: org
           distro: debian81
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian92_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -869,6 +1013,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian92_org_44
     <<: *default_push_stable_def
     commands:
@@ -880,6 +1025,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian10_enterprise_44
     <<: *default_push_stable_def
     commands:
@@ -891,6 +1037,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          server_version: ${server_44_version}
   - name: push_debian10_org_44
     <<: *default_push_stable_def
     commands:
@@ -902,6 +1049,225 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          server_version: ${server_44_version}
+  # 42 RPM
+  - name: push_rhel70_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel70_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel80_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel80
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_rhel80_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel80
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_amazon2_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: amazon2
+          ext: rpm
+          server_version: ${server_42_version}
+  - name: push_amazon2_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: amazon2
+          ext: rpm
+          server_version: ${server_42_version}
+  # DEB Distros
+  - name: push_ubuntu1604_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1604_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1804_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1804
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_ubuntu1804_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1804
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian71_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian71
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian71_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian71
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian81_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian81
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian81_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian81
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian92_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian92_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian10_enterprise_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian10
+          ext: deb
+          server_version: ${server_42_version}
+  - name: push_debian10_org_42
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "set up notary client credentials"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+          server_version: ${server_42_version}
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -913,7 +1279,7 @@ buildvariants:
     tasks:
       - name: .code_health
   - name: e2e
-    display_name: "E2E"
+    display_name: "E2E Tests"
     run_on:
       - rhel70-small
     expansions:
@@ -921,14 +1287,14 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: .e2e
-  - name: goreleaser_snaphot
+  - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:
       - macos-1014-codesign
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "0.9.9"
+      server_version: "1.0.2"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -950,7 +1316,8 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "4.4.0-rc2"
+      server_42_version: "4.2.0"
+      server_44_version: "4.4.0"
     tasks:
       - name: release
       - name: .push_stable

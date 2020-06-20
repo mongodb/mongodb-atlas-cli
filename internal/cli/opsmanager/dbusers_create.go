@@ -91,10 +91,12 @@ func (opts *DBUsersCreateOpts) Prompt() error {
 func DBUsersCreateBuilder() *cobra.Command {
 	opts := &DBUsersCreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create",
-		Short:   description.CreateDBUser,
-		Example: `mongocli om dbuser create --username User1 --password passW0rd --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <>`,
-		Args:    cobra.NoArgs,
+		Use:   "create",
+		Short: description.CreateDBUser,
+		Example: `
+  Create a user with readWriteAnyDatabase and clusterMonitor access
+  $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
+		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err

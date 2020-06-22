@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,34 +24,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type WhitelistDeleteOpts struct {
-	cli.GlobalOpts
+type DeleteOpts struct {
 	*cli.DeleteOpts
-	store store.ProjectIPWhitelistDeleter
+	store store.ProjectDeleter
 }
 
-func (opts *WhitelistDeleteOpts) initStore() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WhitelistDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProjectIPWhitelist, opts.ConfigProjectID())
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteProject)
 }
 
-// mongocli atlas whitelist delete <entry> --force
-func WhitelistDeleteBuilder() *cobra.Command {
-	opts := &WhitelistDeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Project whitelist entry '%s' deleted\n", "Project whitelist entry not deleted"),
+// mongocli iam project(s) delete <ID> [--orgId orgId]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Project '%s' deleted\n", "Project not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <entry>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   description.DeleteWhitelist,
+		Short:   description.DeleteProject,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
+			if err := opts.init(); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -63,8 +62,6 @@ func WhitelistDeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

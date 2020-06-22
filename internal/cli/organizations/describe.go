@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
@@ -22,37 +22,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type OrganizationsListOpts struct {
-	store store.OrganizationLister
+type DescribeOpts struct {
+	id    string
+	store store.OrganizationDescriber
 }
 
-func (opts *OrganizationsListOpts) init() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *OrganizationsListOpts) Run() error {
-	orgs, err := opts.store.GetAllOrganizations()
+func (opts *DescribeOpts) Run() error {
+	org, err := opts.store.Organization(opts.id)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(orgs)
+	return json.PrettyPrint(org)
 }
 
-// mongocli iam organizations(s) list
-func OrganizationsListBuilder() *cobra.Command {
-	opts := new(OrganizationsListOpts)
+// mongocli iam organizations(s) describe <ID>
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListOrganizations,
+		Use:     "describe <ID>",
+		Aliases: []string{"show"},
+		Args:    cobra.ExactArgs(1),
+		Short:   description.DescribeOrganizations,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}

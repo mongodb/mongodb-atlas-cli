@@ -180,14 +180,17 @@ func ClustersCreateBuilder() *cobra.Command {
 		Short: description.CreateCluster,
 		Long:  description.CreateClusterLong,
 		Example: `  
-  Deploy a 3 members replica set in AWS 
-  $ mongocli atlas cluster create <clusterName> --projectId=<projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
+  Deploy a 3 members replica set in AWS
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
 
-  Deploy a 3 members replica set in AZURE 
-  $ mongocli atlas clusters create <clusterName> --projectId=<projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+  Deploy a 3 members replica set in AZURE
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
   
   Deploy a 3 members replica set in GCP
-  $ mongocli atlas clusters create <clusterName> --projectId=<projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+
+  Deploy a cluster from a config file
+  $ mongocli atlas cluster create --projectId <projectId> --file <path/to/cluster.json>
 `,
 		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

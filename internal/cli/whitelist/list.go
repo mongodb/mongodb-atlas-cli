@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package iam
+package whitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,42 +24,39 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ProjectsListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.ProjectLister
+	store store.ProjectIPWhitelistLister
 }
 
-func (opts *ProjectsListOpts) init() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ProjectsListOpts) Run() error {
-	var projects interface{}
-	var err error
-	listOptions := opts.NewListOptions()
-	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), listOptions)
-	} else {
-		projects, err = opts.store.GetAllProjects(listOptions)
-	}
+func (opts *ListOpts) Run() error {
+	listOpts := opts.NewListOptions()
+	result, err := opts.store.ProjectIPWhitelists(opts.ConfigProjectID(), listOpts)
+
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(projects)
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli iam project(s) list [--orgId orgId]
-func ProjectsListBuilder() *cobra.Command {
-	opts := &ProjectsListOpts{}
+// mongocli atlas whitelist(s) list --projectId projectId [--page N] [--limit N]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
+		Short:   description.ListWhitelist,
 		Aliases: []string{"ls"},
-		Short:   description.ListProjects,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -70,7 +66,7 @@ func ProjectsListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

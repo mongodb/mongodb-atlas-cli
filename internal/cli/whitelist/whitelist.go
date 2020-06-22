@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package whitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func ProjectsBuilder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
-		Aliases: []string{"project"},
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "whitelist",
+		Short: description.Whitelist,
 	}
-	cmd.AddCommand(ProjectsListBuilder())
-	cmd.AddCommand(ProjectsCreateBuilder())
-	cmd.AddCommand(ProjectsDeleteBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
+
 	return cmd
 }

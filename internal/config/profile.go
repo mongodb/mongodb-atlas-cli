@@ -32,7 +32,17 @@ type profile struct {
 }
 
 func Properties() []string {
-	return []string{projectID, orgID, service, publicAPIKey, privateAPIKey, opsManagerURL, baseURL}
+	return []string{
+		projectID,
+		orgID,
+		service,
+		publicAPIKey,
+		privateAPIKey,
+		opsManagerURL,
+		baseURL,
+		opsManagerCACertificate,
+		opsManagerSkipVerify,
+	}
 }
 
 var p = newProfile()
@@ -60,8 +70,10 @@ type Config interface {
 	Saver
 	Service() string
 	PublicAPIKey() string
-	OpsManagerURL() string
 	PrivateAPIKey() string
+	OpsManagerURL() string
+	OpsManagerCACertificate() string
+	OpsManagerSkipVerify() string
 }
 
 func Default() Config {
@@ -162,6 +174,18 @@ func (p *profile) OpsManagerURL() string {
 func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
 func (p *profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
+}
+
+// OpsManagerCACertificate get configured ops manager CA certificate location
+func OpsManagerCACertificate() string { return p.OpsManagerCACertificate() }
+func (p *profile) OpsManagerCACertificate() string {
+	return p.GetString(opsManagerCACertificate)
+}
+
+// SkipVerify get configured ops manager CA certificate location
+func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
+func (p *profile) OpsManagerSkipVerify() string {
+	return p.GetString(opsManagerSkipVerify)
 }
 
 // ProjectID get configured project ID

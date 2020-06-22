@@ -16,9 +16,9 @@ package store
 
 import (
 	"fmt"
+	"net"
 	"net/http"
-	"net/url"
-	"runtime"
+	"time"
 
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
@@ -27,90 +27,116 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+var userAgent = fmt.Sprintf("%s/%s", config.ToolName, version.Version)
 
-const atlasAPIPath = "api/atlas/v1.0/"
+const (
+	atlasAPIPath = "api/atlas/v1.0/"
+	yes          = "yes"
+)
 
 type Store struct {
-	service string
-	baseURL *url.URL
-	client  interface{}
+	service       string
+	baseURL       string
+	caCertificate string
+	skipVerify    string
+	client        interface{}
+}
+
+func newTransport(c config.Config) *digest.Transport {
+	t := &digest.Transport{
+		Username: c.PublicAPIKey(),
+		Password: c.PrivateAPIKey(),
+	}
+	t.Transport = &http.Transport{
+		ResponseHeaderTimeout: 10 * time.Minute,
+		TLSHandshakeTimeout:   10 * time.Second,
+		DialContext: (&net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		MaxIdleConns:          100,
+		MaxIdleConnsPerHost:   4,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       90 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+
+	return t
 }
 
 // New get the appropriate client for the profile/service selected
 func New(c config.Config) (*Store, error) {
 	s := new(Store)
-	s.service = config.Service()
-	client, err := digest.NewTransport(c.PublicAPIKey(), c.PrivateAPIKey()).Client()
+	s.service = c.Service()
+
+	client, err := newTransport(c).Client()
 
 	if err != nil {
 		return nil, err
 	}
 
-	configURL := c.OpsManagerURL()
-	if configURL != "" {
-		apiPath := s.apiPath(configURL)
-		baseURL, err := url.Parse(apiPath)
-		if err != nil {
-			return nil, err
-		}
-		s.baseURL = baseURL
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		s.baseURL = s.apiPath(configURL)
+	}
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		s.caCertificate = caCertificate
+	}
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		s.skipVerify = skipVerify
 	}
 
 	switch s.service {
 	case config.CloudService:
-		s.setAtlasClient(client)
+		err = s.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
-		s.setOpsManagerClient(client)
+		err = s.setOpsManagerClient(client)
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 
-	return s, nil
+	return s, err
 }
 
 func NewUnauthenticated(c config.Config) (*Store, error) {
+	if c.Service() != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", c.Service())
+	}
 	s := new(Store)
 	s.service = c.Service()
 
-	configURL := c.OpsManagerURL()
-	if configURL != "" {
-		apiPath := s.apiPath(configURL)
-		baseURL, err := url.Parse(apiPath)
-		if err != nil {
-			return nil, err
-		}
-		s.baseURL = baseURL
-	}
+	err := s.setOpsManagerClient(nil)
 
-	switch s.service {
-	case config.OpsManagerService:
-		s.setOpsManagerClient(nil)
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-
-	return s, nil
+	return s, err
 }
 
-func (s *Store) setAtlasClient(client *http.Client) {
-	atlasClient := atlas.NewClient(client)
-	if s.baseURL != nil {
-		atlasClient.BaseURL = s.baseURL
+func (s *Store) setAtlasClient(client *http.Client) error {
+	opts := make([]atlas.ClientOpt, 0)
+	opts = append(opts, atlas.SetUserAgent(userAgent))
+	if s.baseURL != "" {
+		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
-	atlasClient.UserAgent = userAgent
+	c, err := atlas.New(client, opts...)
 
-	s.client = atlasClient
+	s.client = c
+	return err
 }
 
-func (s *Store) setOpsManagerClient(client *http.Client) {
-	cmClient := opsmngr.NewClient(client)
-	if s.baseURL != nil {
-		cmClient.BaseURL = s.baseURL
+func (s *Store) setOpsManagerClient(client *http.Client) error {
+	opts := make([]opsmngr.ClientOpt, 0)
+	opts = append(opts, opsmngr.SetUserAgent(userAgent))
+	if s.baseURL != "" {
+		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
-	cmClient.UserAgent = userAgent
+	if s.caCertificate != "" {
+		opts = append(opts, opsmngr.OptionCAValidate(s.caCertificate))
+	}
+	if s.skipVerify == yes {
+		opts = append(opts, opsmngr.OptionSkipVerify())
+	}
+	c, err := opsmngr.New(client, opts...)
 
-	s.client = cmClient
+	s.client = c
+	return err
 }
 
 func (s *Store) apiPath(baseURL string) string {

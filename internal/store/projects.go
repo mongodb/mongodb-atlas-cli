@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber
 
 type ProjectLister interface {
 	GetAllProjects(*atlas.ListOptions) (interface{}, error)
@@ -40,6 +40,10 @@ type ProjectCreator interface {
 
 type ProjectDeleter interface {
 	DeleteProject(string) error
+}
+
+type ProjectDescriber interface {
+	Project(string) (interface{}, error)
 }
 
 // GetAllProjects encapsulate the logic to manage different cloud providers
@@ -61,6 +65,19 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.GetProjects(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+func (s *Store) Project(id string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(context.Background(), id)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.Get(context.Background(), id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -12,37 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package whitelist
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestIAMProjectsDelete_Run(t *testing.T) {
+func TestWhitelistDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectDeleter(ctrl)
+	mockStore := mocks.NewMockProjectIPWhitelistDescriber(ctrl)
 
 	defer ctrl.Finish()
 
+	expected := &mongodbatlas.ProjectIPWhitelist{}
+
+	describeOpts := &DescribeOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
 	mockStore.
 		EXPECT().
-		DeleteProject(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(nil).
+		IPWhitelist(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
 		Times(1)
 
-	opts := &ProjectsDeleteOpts{
-		store: mockStore,
-		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "5a0a1e7e0f2912c554080adc",
-			Confirm: true,
-		},
-	}
-	err := opts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

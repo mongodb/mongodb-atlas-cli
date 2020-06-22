@@ -12,35 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestProjectsCreate_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Project{}
-
 	mockStore.
 		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(expected, nil).
+		Organization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(&opsmngr.Organization{}, nil).
 		Times(1)
 
-	createOpts := &ProjectsCreateOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
-		name:  "ProjectBar",
+		id:    "5a0a1e7e0f2912c554080adc",
 	}
-	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -69,10 +69,12 @@ func (opts *DBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 func DBUsersUpdateBuilder() *cobra.Command {
 	opts := &DBUsersUpdateOpts{}
 	cmd := &cobra.Command{
-		Use:     "update <username>",
-		Short:   description.UpdateDBUser,
-		Example: `mongocli atlas dbuser(s) update username [--password password] [--role roleName@dbName] [--projectId projectId]`,
-		Args:    cobra.ExactArgs(1),
+		Use:   "update <username>",
+		Short: description.UpdateDBUser,
+		Example: `
+  Update roles for a user
+  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
+		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

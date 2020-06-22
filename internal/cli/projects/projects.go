@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func WhitelistBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "whitelist",
-		Short: description.Whitelist,
+func Builder() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:     "projects",
+		Short:   description.Projects,
+		Long:    description.ProjectsLong,
+		Aliases: []string{"project"},
 	}
-	cmd.AddCommand(WhitelistDescribeBuilder())
-	cmd.AddCommand(WhitelistListBuilder())
-	cmd.AddCommand(WhitelistCreateBuilder())
-	cmd.AddCommand(WhitelistDeleteBuilder())
-
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(DescribeBuilder())
 	return cmd
 }

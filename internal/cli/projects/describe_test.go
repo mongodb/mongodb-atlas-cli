@@ -12,37 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package projects
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestOrganizationsDelete_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationDeleter(ctrl)
+	mockStore := mocks.NewMockProjectDescriber(ctrl)
 
 	defer ctrl.Finish()
 
 	mockStore.
 		EXPECT().
-		DeleteOrganization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(nil).
+		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(&opsmngr.Project{}, nil).
 		Times(1)
 
-	deleteOpts := &OrganizationsDeleteOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
-		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "5a0a1e7e0f2912c554080adc",
-			Confirm: true,
-		},
+		id:    "5a0a1e7e0f2912c554080adc",
 	}
-	err := deleteOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -81,9 +81,17 @@ func (opts *DBUsersCreateOpts) Prompt() error {
 func DBUsersCreateBuilder() *cobra.Command {
 	opts := &DBUsersCreateOpts{}
 	cmd := &cobra.Command{
-		Use:       "create",
-		Short:     description.CreateDBUser,
-		Example:   `  mongocli atlas dbuser create --username User1 --password passW0rd --role atlasAdmin,readWriteAnyDatabase --projectId <>`,
+		Use:   "create",
+		Short: description.CreateDBUser,
+		Example: `  
+  Create an Atlas admin user
+  $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>
+
+  Create user with read/write access to any database
+  $ mongocli atlas dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
+
+  Create user with multiple roles
+  $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>`,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -11,62 +11,54 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package atlas
+
+package projects
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type WhitelistListOpts struct {
-	cli.GlobalOpts
-	cli.ListOpts
-	store store.ProjectIPWhitelistLister
+type DescribeOpts struct {
+	id    string
+	store store.ProjectDescriber
 }
 
-func (opts *WhitelistListOpts) initStore() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WhitelistListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.ProjectIPWhitelists(opts.ConfigProjectID(), listOpts)
+func (opts *DescribeOpts) Run() error {
+	org, err := opts.store.Project(opts.id)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return json.PrettyPrint(org)
 }
 
-// mongocli atlas whitelist(s) list --projectId projectId [--page N] [--limit N]
-func WhitelistListBuilder() *cobra.Command {
-	opts := &WhitelistListOpts{}
+// mongocli iam projects(s) describe <ID>
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListWhitelist,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "describe <ID>",
+		Aliases: []string{"show"},
+		Args:    cobra.ExactArgs(1),
+		Short:   description.DescribeProject,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package whitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,49 +25,45 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ProjectsCreateOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ProjectCreator
+	store store.ProjectIPWhitelistDescriber
 }
 
-func (opts *ProjectsCreateOpts) init() error {
-	if opts.ConfigOrgID() == "" {
-		return cli.ErrMissingOrgID
-	}
-
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ProjectsCreateOpts) Run() error {
-	projects, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID())
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.IPWhitelist(opts.ConfigProjectID(), opts.name)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(projects)
+	return json.PrettyPrint(result)
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId]
-func ProjectsCreateBuilder() *cobra.Command {
-	opts := &ProjectsCreateOpts{}
+// mongocli atlas whitelist(s) describe <name> --projectId projectId
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: description.CreateProject,
+		Use:   "describe <name>",
+		Short: description.DescribeWhitelist,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
-
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

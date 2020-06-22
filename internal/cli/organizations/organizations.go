@@ -12,26 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/organizations"
-	"github.com/mongodb/mongocli/internal/cli/projects"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "iam",
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
-		},
-		Short: description.IAM,
+	var cmd = &cobra.Command{
+		Use:     "organizations",
+		Short:   description.Organization,
+		Long:    description.OrganizationLong,
+		Aliases: []string{"organization", "orgs", "org"},
 	}
-	cmd.AddCommand(projects.Builder())
-	cmd.AddCommand(organizations.Builder())
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
 
 	return cmd
 }

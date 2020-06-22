@@ -109,10 +109,18 @@ func ClustersUpdateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:     "update [name]",
-		Short:   description.UpdateCluster,
-		Example: `  mongocli atlas cluster update myCluster --projectId=1 --tier M2 --mdbVersion 4.2 --diskSizeGB 2`,
-		Args:    cobra.MaximumNArgs(1),
+		Use:   "update [name]",
+		Short: description.UpdateCluster,
+		Example: `
+  Update tier for a cluster
+  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50
+
+  Update disk size for a cluster
+  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --diskSizeGB 20
+
+  Update MongoDB version for a cluster
+  $ mongocli atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
+		Args: cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
 				opts.name = args[0]

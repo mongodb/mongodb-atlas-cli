@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package organizations
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,24 +24,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type OrganizationsDeleteOpts struct {
+type DeleteOpts struct {
 	*cli.DeleteOpts
 	store store.OrganizationDeleter
 }
 
-func (opts *OrganizationsDeleteOpts) init() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *OrganizationsDeleteOpts) Run() error {
+func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOrganization)
 }
 
 // mongocli iam organization(s) delete <ID> [--force]
-func OrganizationsDeleteBuilder() *cobra.Command {
-	opts := &OrganizationsDeleteOpts{
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Organization '%s' deleted\n", "Organization not deleted"),
 	}
 	cmd := &cobra.Command{

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package whitelist
 
 import (
 	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
@@ -32,21 +32,22 @@ const (
 	awsSecurityGroup = "awsSecurityGroup"
 )
 
-type WhitelistCreateOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
-	entry     string
-	entryType string
-	comment   string
-	store     store.ProjectIPWhitelistCreator
+	entry       string
+	entryType   string
+	comment     string
+	deleteAfter string
+	store       store.ProjectIPWhitelistCreator
 }
 
-func (opts *WhitelistCreateOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WhitelistCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	entry := opts.newWhitelist()
 	result, err := opts.store.CreateProjectIPWhitelist(entry)
 
@@ -57,10 +58,11 @@ func (opts *WhitelistCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *WhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
+func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 	projectIPWhitelist := &atlas.ProjectIPWhitelist{
-		GroupID: opts.ConfigProjectID(),
-		Comment: opts.comment,
+		GroupID:         opts.ConfigProjectID(),
+		Comment:         opts.comment,
+		DeleteAfterDate: opts.deleteAfter,
 	}
 	switch opts.entryType {
 	case cidrBlock:
@@ -73,9 +75,9 @@ func (opts *WhitelistCreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
 	return projectIPWhitelist
 }
 
-// mongocli atlas whitelist(s) create <entry> --type cidrBlock|ipAddress [--comment comment] [--projectId projectId]
-func WhitelistCreateBuilder() *cobra.Command {
-	opts := &WhitelistCreateOpts{}
+// mongocli atlas whitelist(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId]
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <entry>",
 		Short: description.CreateWhitelist,
@@ -92,6 +94,7 @@ func WhitelistCreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.WhitelistType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
+	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.DeleteAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

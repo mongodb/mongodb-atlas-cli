@@ -236,7 +236,7 @@ func TestClusters(t *testing.T) {
 	})
 
 	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
-	t.Run("Create cluster", func(t *testing.T) {
+	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -248,7 +248,7 @@ func TestClusters(t *testing.T) {
 			"--members=3",
 			"--tier=M10",
 			"--provider=AWS",
-			"--mdbVersion=4.0",
+			"--mdbVersion=4.2",
 			"--diskSizeGB=10")
 
 		cmd.Env = os.Environ()
@@ -267,7 +267,7 @@ func TestClusters(t *testing.T) {
 		ensureCluster(t, cluster, shardedClusterName, "4.2", 10)
 	})
 
-	t.Run("Delete shard creation", func(t *testing.T) {
+	t.Run("Delete sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

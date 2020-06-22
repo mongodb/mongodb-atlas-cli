@@ -314,9 +314,7 @@ functions:
           cat <<EOF > notary_env.sh
           export NOTARY_KEY_NAME=${notary_key_name|'server-4.4'}
 
-
-
-          case "$NOTARY_KEY_NAME" in
+          case "${notary_key_name|'server-4.4'}" in
             server-4.2)
                 export NOTARY_TOKEN=${signing_auth_token_42}
                 ;;
@@ -331,6 +329,17 @@ functions:
           export BARQUE_USERNAME=${barque_user}
           export BARQUE_PASSWORD=${barque_password}
           EOF
+          case "${notary_key_name|'server-4.4'}" in
+            server-4.2)
+                echo "${signing_auth_token_42}" > ./signing_auth_token
+                ;;
+            server-4.4)
+                echo "${signing_auth_token_44}" > ./signing_auth_token
+                ;;
+            server-4.6)
+                echo "${signing_auth_token_46}" > ./signing_auth_token
+                ;;
+          esac
   "push":
     - command: subprocess.exec
       type: test
@@ -889,7 +898,6 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
-          server_version: ${server_44_version}
   - name: push_amazon2_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -912,7 +920,6 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
-          server_version: ${server_44_version}
   # DEB Distros
   - name: push_ubuntu1604_enterprise_stable
     <<: *default_push_stable_def
@@ -1074,7 +1081,6 @@ buildvariants:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
       server_version: "1.0.2"
-      signing_auth_token: ${signing_auth_token_44}
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1114,7 +1120,6 @@ buildvariants:
     expansions:
       server_version: "4.2.1"
       notary_key_name: "server-4.2"
-      signing_auth_token: ${signing_auth_token_42}
     tasks:
       - name: .push_stable
   - name: release_publish_44
@@ -1124,6 +1129,5 @@ buildvariants:
     expansions:
       server_version: "4.4.1"
       notary_key_name: "server-4.4"
-      signing_auth_token: ${signing_auth_token_44}
     tasks:
       - name: .push_stable

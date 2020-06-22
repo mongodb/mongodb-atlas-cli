@@ -19,6 +19,7 @@ const (
 	OrgID                           = "Organization ID to use. Overrides configuration file or environment variable settings."
 	Profile                         = "Profile to use from your configuration file."
 	Members                         = "Number of members in the replica set."
+	Shards                          = "Number of shards in the cluster."
 	Tier                            = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
 	Backup                          = "If true, enables Continuous Cloud Backup for your cluster."
@@ -130,6 +131,8 @@ Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
+	ClusterTypes = `Type of the cluster that you want to create.
+Valid values: REPLICASET|SHARDED.`
 	Region = `Physical location of your MongoDB cluster.
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
 For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure

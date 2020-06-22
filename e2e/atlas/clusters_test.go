@@ -234,6 +234,53 @@ func TestClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+
+	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	t.Run("Create cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"create",
+			shardedClusterName,
+			"--region=US_EAST_1",
+			"--type=SHARDED",
+			"--shards=2",
+			"--members=3",
+			"--tier=M10",
+			"--provider=AWS",
+			"--mdbVersion=4.0",
+			"--diskSizeGB=10")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		cluster := new(mongodbatlas.Cluster)
+		err = json.Unmarshal(resp, cluster)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		ensureCluster(t, cluster, shardedClusterName, "4.2", 10)
+	})
+
+	t.Run("Delete shard creation", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
+		}
+	})
 }
 
 func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName string, version string, diskSizeGB float64) {

@@ -313,12 +313,24 @@ functions:
           # curator env variables
           cat <<EOF > notary_env.sh
           export NOTARY_KEY_NAME=${notary_key_name|'server-4.4'}
-          export NOTARY_TOKEN=${signing_auth_token}
+
+
+
+          case "$NOTARY_KEY_NAME" in
+            server-4.2)
+                export NOTARY_TOKEN=${signing_auth_token_42}
+                ;;
+            server-4.4)
+                export NOTARY_TOKEN=${signing_auth_token_44}
+                ;;
+            server-4.6)
+                export NOTARY_TOKEN=${signing_auth_token_46}
+                ;;
+          esac
+
           export BARQUE_USERNAME=${barque_user}
           export BARQUE_PASSWORD=${barque_password}
           EOF
-
-          echo "${signing_auth_token}" > ./signing_auth_token
   "push":
     - command: subprocess.exec
       type: test

@@ -19,6 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/whitelist"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -29,6 +30,7 @@ func Builder() *cobra.Command {
 		Use:   "atlas",
 		Short: description.Atlas,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			config.SetService(config.CloudService)
 			return validate.Credentials()
 		},
 	}

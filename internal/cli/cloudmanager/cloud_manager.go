@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/cli/security"
 	"github.com/mongodb/mongocli/internal/cli/servers"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -34,6 +35,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"cm"},
 		Short:   description.CloudManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			config.SetService(config.CloudManagerService)
 			return validate.Credentials()
 		},
 	}

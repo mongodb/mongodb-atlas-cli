@@ -98,13 +98,24 @@ func New(c config.Config) (*Store, error) {
 }
 
 func NewUnauthenticated(c config.Config) (*Store, error) {
-	if c.Service() != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", c.Service())
-	}
 	s := new(Store)
 	s.service = c.Service()
 
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		s.baseURL = s.apiPath(configURL)
+	}
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		s.caCertificate = caCertificate
+	}
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		s.skipVerify = skipVerify
+	}
+
 	err := s.setOpsManagerClient(nil)
+
+	if s.service != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 
 	return s, err
 }

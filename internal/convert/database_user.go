@@ -21,15 +21,9 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-// Public constants
 const (
-	AdminDB = "admin"
-)
-
-// Private constants
-const (
+	AdminDB             = "admin"
 	roleSep             = "@"
-	automationAgentName = "mms-automation"
 	defaultUserDatabase = "admin"
 )
 

@@ -245,8 +245,6 @@ github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGr
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
-go.mongodb.org/ops-manager v0.6.1 h1:0kRBwaYjcMUV81wGIqmz5A0CG+XvF/YIWcYy41wCNfQ=
-go.mongodb.org/ops-manager v0.6.1/go.mod h1:RONjQG5y1oKLZzCF/KqtdTzVgKgYu3gH0qDomYyWWbk=
 go.mongodb.org/ops-manager v0.6.2-0.20200611174723-567be248ca6b h1:PShnRolYoRyh7sTmVla+F2fpS6ZmbMLw/KPu0XJ0Q5Y=
 go.mongodb.org/ops-manager v0.6.2-0.20200611174723-567be248ca6b/go.mod h1:RONjQG5y1oKLZzCF/KqtdTzVgKgYu3gH0qDomYyWWbk=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

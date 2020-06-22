@@ -17,14 +17,11 @@ package convert
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/search"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
-	mongod                         = "mongod"
-	atmAgentWindowsKeyFilePath     = "%SystemDrive%\\MMSAutomation\\versions\\keyfile"
-	atmAgentKeyFilePathInContainer = "/var/lib/mongodb-mms-automation/keyfile"
+	mongod = "mongod"
 )
 
 // FromAutomationConfig convert from cloud format to mCLI format
@@ -53,61 +50,6 @@ func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
 	}
 
 	return
-}
-
-const (
-	keyLength = 500
-	cr        = "MONGODB-CR"
-	sha256    = "SCRAM-SHA-256"
-)
-
-func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
-	out.Auth.Disabled = false
-	for _, v := range m {
-		if v != cr && v != sha256 {
-			return fmt.Errorf("unsupported mechanism %s", v)
-		}
-		if v == sha256 {
-			out.Auth.AutoAuthMechanism = v
-		}
-		if !search.StringInSlice(out.Auth.DeploymentAuthMechanisms, v) {
-			out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, v)
-		}
-		if !search.StringInSlice(out.Auth.AutoAuthMechanisms, v) {
-			out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, v)
-		}
-	}
-
-	if out.Auth.AutoUser == "" {
-		if err := setAutoUser(out); err != nil {
-			return err
-		}
-	}
-
-	var err error
-	if out.Auth.Key == "" {
-		if out.Auth.Key, err = generateRandomBase64String(keyLength); err != nil {
-			return err
-		}
-	}
-	if out.Auth.KeyFile == "" {
-		out.Auth.KeyFile = atmAgentKeyFilePathInContainer
-	}
-	if out.Auth.KeyFileWindows == "" {
-		out.Auth.KeyFileWindows = atmAgentWindowsKeyFilePath
-	}
-
-	return nil
-}
-
-func setAutoUser(out *opsmngr.AutomationConfig) error {
-	var err error
-	out.Auth.AutoUser = automationAgentName
-	if out.Auth.AutoPwd, err = generateRandomASCIIString(500); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // convertCloudMember map cloudmanager.Member -> convert.ProcessConfig

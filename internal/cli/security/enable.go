@@ -19,12 +19,12 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
 )
 
 const (
@@ -52,7 +52,7 @@ func (opts *EnableOpts) Run() error {
 		return err
 	}
 
-	if err := convert.EnableMechanism(current, opts.mechanisms); err != nil {
+	if err := atmcfg.EnableMechanism(current, opts.mechanisms); err != nil {
 		return err
 	}
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {

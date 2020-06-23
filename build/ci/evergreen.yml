@@ -302,44 +302,7 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
         display_name: inernal-bucket
-  "set up notary client credentials":
-    - command: shell.exec
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        silent: true
-        script: |
-          set -o errexit
 
-          # curator env variables
-          cat <<EOF > notary_env.sh
-          export NOTARY_KEY_NAME=${notary_key_name|'server-4.4'}
-
-          case "${notary_key_name|'server-4.4'}" in
-            server-4.2)
-                export NOTARY_TOKEN=${signing_auth_token_42}
-                ;;
-            server-4.4)
-                export NOTARY_TOKEN=${signing_auth_token_44}
-                ;;
-            server-4.6)
-                export NOTARY_TOKEN=${signing_auth_token_46}
-                ;;
-          esac
-
-          export BARQUE_USERNAME=${barque_user}
-          export BARQUE_PASSWORD=${barque_password}
-          EOF
-          case "${notary_key_name|'server-4.4'}" in
-            server-4.2)
-                echo "${signing_auth_token_42}" > ./signing_auth_token
-                ;;
-            server-4.4)
-                echo "${signing_auth_token_44}" > ./signing_auth_token
-                ;;
-            server-4.6)
-                echo "${signing_auth_token_46}" > ./signing_auth_token
-                ;;
-          esac
   "push":
     - command: subprocess.exec
       type: test
@@ -353,11 +316,17 @@ functions:
           - revision
           - created_at
           - ext
+          - signing_auth_token_42
+          - signing_auth_token_44
+          - signing_auth_token_46
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
+          NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
+          BARQUE_USERNAME: ${barque_user}
+          BARQUE_PASSWORD: ${barque_password}
         binary: build/package/curator-push.sh
 
 post:
@@ -648,7 +617,6 @@ tasks:
           variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -659,7 +627,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -670,7 +637,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -681,7 +647,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -692,7 +657,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -703,7 +667,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -715,7 +678,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -726,7 +688,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -737,7 +698,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -748,7 +708,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -759,7 +718,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -770,7 +728,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -781,7 +738,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -792,7 +748,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -803,7 +758,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -814,7 +768,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -825,7 +778,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -836,7 +788,6 @@ tasks:
     <<: *default_push_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -858,7 +809,6 @@ tasks:
           variant: "release_github"
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -869,7 +819,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -880,7 +829,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -891,7 +839,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -902,7 +849,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -913,7 +859,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -925,7 +870,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -936,7 +880,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -947,7 +890,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -958,7 +900,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -969,7 +910,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -980,7 +920,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -991,7 +930,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -1002,7 +940,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -1013,7 +950,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -1024,7 +960,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -1035,7 +970,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:
@@ -1046,7 +980,6 @@ tasks:
     <<: *default_push_stable_def
     commands:
       - func: "clone"
-      - func: "set up notary client credentials"
       - func: "install curator"
       - func: "push"
         vars:

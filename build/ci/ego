@@ -345,7 +345,6 @@ scenario_install_agent() {
     replace_property_in_file /etc/mongodb-mms/automation-agent.config mmsGroupId "${LC_GROUP_ID}"
     replace_property_in_file /etc/mongodb-mms/automation-agent.config mmsApiKey "${LC_AGENT_KEY}"
 
-
     echo "Preparing the /data directory to store your MongoDB data"
     mkdir -p /data
     chown -R mongodb:mongodb /data

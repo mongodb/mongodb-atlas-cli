@@ -43,17 +43,19 @@ const (
 
 type ClustersCreateOpts struct {
 	cli.GlobalOpts
-	name       string
-	provider   string
-	region     string
-	tier       string
-	members    int64
-	diskSizeGB float64
-	backup     bool
-	mdbVersion string
-	filename   string
-	fs         afero.Fs
-	store      store.ClusterCreator
+	name        string
+	provider    string
+	region      string
+	tier        string
+	members     int64
+	shards      int64
+	clusterType string
+	diskSizeGB  float64
+	backup      bool
+	mdbVersion  string
+	filename    string
+	fs          afero.Fs
+	store       store.ClusterCreator
 }
 
 func (opts *ClustersCreateOpts) initStore() error {
@@ -82,7 +84,6 @@ func (opts *ClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
 			return nil, err
 		}
 	} else {
-		cluster.ClusterType = replicaSet
 		opts.applyOpts(cluster)
 	}
 
@@ -119,7 +120,7 @@ func (opts *ClustersCreateOpts) applyOpts(out *atlas.Cluster) {
 		out.ProviderBackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
-
+	out.ClusterType = opts.clusterType
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
 	out.ProviderSettings = opts.newProviderSettings()
@@ -152,11 +153,10 @@ func (opts *ClustersCreateOpts) providerName() string {
 func (opts *ClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec {
 	var (
 		readOnlyNodes int64 = 0
-		NumShards     int64 = 1
 		Priority      int64 = 7
 	)
 	replicationSpec := atlas.ReplicationSpec{
-		NumShards: &NumShards,
+		NumShards: &opts.shards,
 		ZoneName:  zoneName,
 		RegionsConfig: map[string]atlas.RegionsConfig{
 			opts.region: {
@@ -220,6 +220,8 @@ func ClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
+	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
+	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

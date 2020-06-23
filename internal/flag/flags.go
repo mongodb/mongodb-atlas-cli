@@ -25,7 +25,9 @@ const (
 	Region                          = "region"                          // Region flag
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
+	Shards                          = "shards"                          // Shards flag
 	MembersShort                    = "m"                               // MembersShort flag
+	ShardsShort                     = "s"                               // ShardsShort flag
 	Tier                            = "tier"                            // Tier flag
 	Forever                         = "forever"                         // Forever flag
 	ForeverShort                    = "F"                               // ForeverShort flag

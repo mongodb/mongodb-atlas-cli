@@ -44,15 +44,26 @@ var (
 	}
 
 	completionCmd = &cobra.Command{
-		Use:       "completion <name>",
-		Args:      cobra.ExactValidArgs(1),
-		ValidArgs: []string{"bash", "zsh"},
-		Hidden:    true,
+		Use:   "completion <shell>",
+		Args:  cobra.ExactValidArgs(1),
+		Short: "Generate shell completion scripts",
+		Long: `Generate shell completion scripts for MongoDB CLI commands.
+The output of this command will be computer code and is meant to be saved to a
+file or immediately evaluated by an interactive shell.`,
+		ValidArgs: []string{"bash", "zsh", "powershell", "fish"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if args[0] == "bash" {
-				return rootCmd.GenBashCompletion(os.Stdout)
+			switch args[0] {
+			case "bash":
+				return rootCmd.GenBashCompletion(cmd.OutOrStdout())
+			case "zsh":
+				return rootCmd.GenZshCompletion(cmd.OutOrStdout())
+			case "powershell":
+				return rootCmd.GenPowerShellCompletion(cmd.OutOrStdout())
+			case "fish":
+				return rootCmd.GenFishCompletion(cmd.OutOrStdout(), true)
+			default:
+				return fmt.Errorf("unsupported shell type %q", args[0])
 			}
-			return rootCmd.GenZshCompletion(os.Stdout)
 		},
 	}
 )

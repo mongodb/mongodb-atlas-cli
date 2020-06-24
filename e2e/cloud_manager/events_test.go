@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
@@ -45,7 +46,7 @@ func TestEvents(t *testing.T) {
 			cloudManagerEntity,
 			eventsEntity,
 			"list",
-			"--projectId=5ec2839e74c5aa25f02ff8ee",
+			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
 		)
 
 		cmd.Env = os.Environ()
@@ -74,8 +75,8 @@ func TestEvents(t *testing.T) {
 			cloudManagerEntity,
 			eventsEntity,
 			"list",
-			"--orgId=5ec2836d74c5aa25f02ff8c9",
-			"--minDate=2020-04-01",
+			"--orgId="+os.Getenv("MCLI_ORG_ID"),
+			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
 		)
 
 		cmd.Env = os.Environ()

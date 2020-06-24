@@ -49,7 +49,10 @@ var (
 		Short: "Generate shell completion scripts",
 		Long: `Generate shell completion scripts for MongoDB CLI commands.
 The output of this command will be computer code and is meant to be saved to a
-file or immediately evaluated by an interactive shell.`,
+file or immediately evaluated by an interactive shell.
+
+When installing MongoDB CLI through brew, it's possible that
+no additional shell configuration is necessary, see https://docs.brew.sh/Shell-Completion.`,
 		ValidArgs: []string{"bash", "zsh", "powershell", "fish"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			switch args[0] {

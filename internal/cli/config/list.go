@@ -26,7 +26,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ConfigSetDescription,
+		Short:   description.ConfigList,
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Available profiles:")
 			profiles := config.List()

@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/Masterminds/semver/v3"
-
 	"go.mongodb.org/ops-manager/opsmngr"
 	"go.mongodb.org/ops-manager/search"
 )

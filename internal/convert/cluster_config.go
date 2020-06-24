@@ -66,7 +66,7 @@ func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
 func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
 	// A replica set should be just a list of processes
 	if c.ProcessConfigs != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
-		return c.pathReplicaSet(out)
+		return c.patchReplicaSet(out)
 	}
 	// a sharded cluster will be a a list of mongos (processes),
 	// shards, each with a list of process (replica sets)
@@ -84,14 +84,14 @@ func (c *ClusterConfig) pathSharding(out *opsmngr.AutomationConfig) error {
 	for i, s := range c.Shards {
 		s.Version = c.Version
 		s.FCVersion = c.FCVersion
-		if err := s.pathShard(out, c.Name); err != nil {
+		if err := s.patchShard(out, c.Name); err != nil {
 			return err
 		}
 		newCluster.Shards[i] = newShard(s)
 	}
 	c.Config.Version = c.Version
 	c.Config.FCVersion = c.FCVersion
-	if err := c.Config.pathConfigServer(out, c.Name); err != nil {
+	if err := c.Config.patchConfigServer(out, c.Name); err != nil {
 		return err
 	}
 
@@ -200,11 +200,14 @@ func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.Repli
 }
 
 func patchSharding(out *opsmngr.AutomationConfig, s *opsmngr.ShardingConfig) {
-	_, found := search.ShardingConfig(out.Sharding, func(r *opsmngr.ShardingConfig) bool {
+	pos, found := search.ShardingConfig(out.Sharding, func(r *opsmngr.ShardingConfig) bool {
 		return r.Name == s.Name
 	})
 	if !found {
 		out.Sharding = append(out.Sharding, s)
 		return
 	}
+
+	// TODO: test this with CLOUDP-65971
+	out.Sharding[pos] = s
 }

@@ -19,34 +19,35 @@ import (
 )
 
 // FromAutomationConfig convert from opsmngr.AutomationConfig format to []*ClusterConfig
-func FromAutomationConfig(in *opsmngr.AutomationConfig) []*ClusterConfig {
-	out := make([]*ClusterConfig, 0, len(in.ReplicaSets))
+// the given opsmngr.AutomationConfig will be modified
+func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
+	out := make([]*ClusterConfig, 0, len(c.ReplicaSets))
 
-	for i, s := range in.Sharding {
+	for i, s := range c.Sharding {
 		out = append(out, newShardedCluster(s))
 		for j, ss := range s.Shards {
 			id := ss.ID
-			out[i].Shards[j] = newRSConfig(in, id)
+			out[i].Shards[j] = newRSConfig(c, id)
 		}
 
-		out[i].Config = newRSConfig(in, s.ConfigServerReplica)
-		for j, p := range in.Processes {
+		out[i].Config = newRSConfig(c, s.ConfigServerReplica)
+		for j, p := range c.Processes {
 			if p.Cluster == s.Name {
 				out[i].Mongos = append(out[i].Mongos, newMongosProcessConfig(p))
 				out[i].addToMongoURI(p)
-				in.Processes = removeProcess(in.Processes, j)
+				c.Processes = removeProcess(c.Processes, j)
 				break
 			}
 		}
 	}
-	for i, rs := range in.ReplicaSets {
+	for i, rs := range c.ReplicaSets {
 		out = append(out, newReplicaSetCluster(rs.ID, len(rs.Members)))
 		for j, m := range rs.Members {
-			for k, p := range in.Processes {
+			for k, p := range c.Processes {
 				if p.Name == m.Host {
 					out[i].ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
 					out[i].addToMongoURI(p)
-					in.Processes = removeProcess(in.Processes, k)
+					c.Processes = removeProcess(c.Processes, k)
 					break
 				}
 			}

@@ -19,8 +19,9 @@ type RSConfig struct {
 
 type patcher func(*ProcessConfig, string) *opsmngr.Process
 
-// path is a generic replica set patcher, you'll need to provide a function that
-func (c *RSConfig) path(out *opsmngr.AutomationConfig, f patcher, names ...string) error {
+// patch is a generic replica set patcher, you'll need to provide a function of the type patcher
+// which will define how a process is patched
+func (c *RSConfig) patch(out *opsmngr.AutomationConfig, f patcher, names ...string) error {
 	newProcesses := make([]*opsmngr.Process, len(c.ProcessConfigs))
 	rs, err := newReplicaSet(c)
 	if err != nil {
@@ -44,16 +45,19 @@ func (c *RSConfig) path(out *opsmngr.AutomationConfig, f patcher, names ...strin
 	return nil
 }
 
-func (c *RSConfig) pathReplicaSet(out *opsmngr.AutomationConfig) error {
-	return c.path(out, newReplicaSetProcess)
+// patchReplicaSet patches a opsmngr.AutomationConfig using a replica set approach
+func (c *RSConfig) patchReplicaSet(out *opsmngr.AutomationConfig) error {
+	return c.patch(out, newReplicaSetProcess)
 }
 
-func (c *RSConfig) pathShard(out *opsmngr.AutomationConfig, name string) error {
-	return c.path(out, newReplicaSetProcess, name)
+// patchShard patches a opsmngr.AutomationConfig using a sharded cluster approach
+func (c *RSConfig) patchShard(out *opsmngr.AutomationConfig, name string) error {
+	return c.patch(out, newReplicaSetProcess, name)
 }
 
-func (c *RSConfig) pathConfigServer(out *opsmngr.AutomationConfig, name string) error {
-	return c.path(out, newConfigRSProcess, name)
+// patchConfigServer patches a opsmngr.AutomationConfig using a config server/replica set approach
+func (c *RSConfig) patchConfigServer(out *opsmngr.AutomationConfig, name string) error {
+	return c.patch(out, newConfigRSProcess, name)
 }
 
 // protocolVer determines the appropriate protocol based on FCV

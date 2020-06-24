@@ -9,8 +9,10 @@ do
 done
 
 if [[ -n "${STAGED_GO_FILES}" ]]; then
+    set -o errexit
     go test -race ./internal...
     make fix-lint
+    set +o errexit
 fi
 
 STAGED_EVG_FILES=$(git diff --cached --name-only | grep "evergreen.yml$")

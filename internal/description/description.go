@@ -118,7 +118,7 @@ The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-lo
 	DBUsersLong = `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
-	ConfigLongDescription = `Configure default values in a user profile.
+	ConfigLongDescription = `Configure settings in a user profile.
 All settings are optional, and can be set individually, to find out how run: 
   $ mongocli config set --help 
 

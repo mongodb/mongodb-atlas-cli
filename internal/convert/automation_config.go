@@ -15,61 +15,48 @@
 package convert
 
 import (
-	"fmt"
-
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const (
-	mongod = "mongod"
-)
+// FromAutomationConfig convert from opsmngr.AutomationConfig format to []*ClusterConfig
+// the given opsmngr.AutomationConfig will be modified
+func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
+	out := make([]*ClusterConfig, 0, len(c.ReplicaSets))
 
-// FromAutomationConfig convert from cloud format to mCLI format
-func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
-	out = make([]ClusterConfig, len(in.ReplicaSets))
+	for i, s := range c.Sharding {
+		out = append(out, newShardedCluster(s))
+		for j, ss := range s.Shards {
+			id := ss.ID
+			out[i].Shards[j] = newRSConfig(c, id)
+		}
 
-	for i, rs := range in.ReplicaSets {
-		out[i].Name = rs.ID
-		out[i].ProcessConfigs = make([]*ProcessConfig, len(rs.Members))
-
+		out[i].Config = newRSConfig(c, s.ConfigServerReplica)
+		for j, p := range c.Processes {
+			if p.Cluster == s.Name {
+				out[i].Mongos = append(out[i].Mongos, newMongosProcessConfig(p))
+				out[i].addToMongoURI(p)
+				c.Processes = removeProcess(c.Processes, j)
+				break
+			}
+		}
+	}
+	for i, rs := range c.ReplicaSets {
+		out = append(out, newReplicaSetCluster(rs.ID, len(rs.Members)))
 		for j, m := range rs.Members {
-			out[i].ProcessConfigs[j] = convertCloudMember(m)
-			for k, p := range in.Processes {
+			for k, p := range c.Processes {
 				if p.Name == m.Host {
-					convertCloudProcess(out[i].ProcessConfigs[j], p)
-					if out[i].MongoURI == "" {
-						out[i].MongoURI = fmt.Sprintf("mongodb://%s:%d", p.Hostname, p.Args26.NET.Port)
-					} else {
-						out[i].MongoURI = fmt.Sprintf("%s,%s:%d", out[i].MongoURI, p.Hostname, p.Args26.NET.Port)
-					}
-					in.Processes = append(in.Processes[:k], in.Processes[k+1:]...)
+					out[i].ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
+					out[i].addToMongoURI(p)
+					c.Processes = removeProcess(c.Processes, k)
 					break
 				}
 			}
 		}
 	}
 
-	return
+	return out
 }
 
-// convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
-func convertCloudMember(in opsmngr.Member) *ProcessConfig {
-	return &ProcessConfig{
-		BuildIndexes: &in.BuildIndexes,
-		Priority:     in.Priority,
-		SlaveDelay:   in.SlaveDelay,
-		Votes:        in.Votes,
-	}
-}
-
-// convertCloudProcess map cloudmanager.Process -> convert.ProcessConfig
-func convertCloudProcess(out *ProcessConfig, in *opsmngr.Process) {
-	out.DBPath = in.Args26.Storage.DBPath
-	out.LogPath = in.Args26.SystemLog.Path
-	out.Port = in.Args26.NET.Port
-	out.ProcessType = in.ProcessType
-	out.Version = in.Version
-	out.FCVersion = in.FeatureCompatibilityVersion
-	out.Hostname = in.Hostname
-	out.Name = in.Name
+func removeProcess(in []*opsmngr.Process, i int) []*opsmngr.Process {
+	return append(in[:i], in[i+1:]...)
 }

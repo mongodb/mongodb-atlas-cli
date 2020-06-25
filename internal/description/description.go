@@ -119,7 +119,7 @@ The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-lo
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
 	ConfigLongDescription = `Configure settings in a user profile.
-All settings are optional, and can be set individually, to find out how run: 
+All settings are optional. You can specify settings individually by running: 
   $ mongocli config set --help 
 
 You can always use environment variables (MCLI_*) when running the tool,

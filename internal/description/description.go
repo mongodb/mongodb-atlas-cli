@@ -122,8 +122,8 @@ A user’s roles apply to all the clusters in the project.`
 All settings are optional. You can specify settings individually by running: 
   $ mongocli config set --help 
 
-You can always use environment variables (MCLI_*) when running the tool,
-To find out more check, https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
+You can also use environment variables (MCLI_*) when running the tool.
+To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
 	CreateClusterLong = `You can create MongoDB clusters using this command.

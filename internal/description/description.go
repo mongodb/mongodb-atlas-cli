@@ -75,7 +75,7 @@ const (
 	CloudManager             = "Cloud Manager operations."
 	ShutdownCluster          = "Shutdown a cluster."
 	StartUpCluster           = "Start up a cluster."
-	ConfigDescription        = "Configure a profile. This let you store default settings."
+	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
 	ConfigSetDescription     = "Configure specific properties of a profile."
 	ConfigList               = "List available profiles."
 	IAM                      = "Organization and projects operations."

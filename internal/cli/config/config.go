@@ -69,6 +69,9 @@ func (opts *configOpts) Save() error {
 	if opts.ProjectID != "" {
 		config.SetProjectID(opts.ProjectID)
 	}
+	if opts.OrgID != "" {
+		config.SetOrgID(opts.OrgID)
+	}
 
 	return config.Save()
 }
@@ -96,11 +99,11 @@ Enter [?] on any option to get help.
 		return err
 	}
 
-	fmt.Printf("\nYour profile is now configured.\n", config.ToolName)
-	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	fmt.Printf("\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
 		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
+	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
 	return nil
 }
 

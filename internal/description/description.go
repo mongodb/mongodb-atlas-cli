@@ -75,8 +75,8 @@ const (
 	CloudManager             = "Cloud Manager operations."
 	ShutdownCluster          = "Shutdown a cluster."
 	StartUpCluster           = "Start up a cluster."
-	ConfigDescription        = "Configure a profile. This let you store access settings to your cloud."
-	ConfigSetDescription     = "Configure specific properties of the profile."
+	ConfigDescription        = "Configure a profile. This let you store default settings."
+	ConfigSetDescription     = "Configure specific properties of a profile."
 	ConfigList               = "List available profiles."
 	IAM                      = "Organization and projects operations."
 	Organization             = "Organization operations."
@@ -118,8 +118,12 @@ The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-lo
 	DBUsersLong = `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
-	ConfigLongDescription = `Setting API keys is optional and env variables can be used instead.
-Leaving any option empty won't override existing stored values.`
+	ConfigLongDescription = `Configure default values in a user profile.
+All settings are optional, and can be set individually, to find out how run: 
+  $ mongocli config set --help 
+
+You can always use environment variables (MCLI_*) when running the tool,
+To find out more check, https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
 	CreateClusterLong = `You can create MongoDB clusters using this command.

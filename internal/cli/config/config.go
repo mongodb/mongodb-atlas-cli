@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -27,13 +26,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	atlasAPIHelp  = "Please provide your API keys, to get new keys follow: https://docs.atlas.mongodb.com/configure-api-access/"
+	omAPIHelp     = "Please provide your API keys, to get new keys follow: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
+	omBaseURLHelp = "FQDN and port number of the Ops Manager Application."
+	projectHelp   = "ID of an existing project, your API keys should have access to it. Leaving this blank means using --projectId for every command that requires it."
+	orgHelp       = "ID of an existing organization, your API keys should have access to it. Leaving this blank means using --orgId for every command that requires it."
+)
+
 type configOpts struct {
-	cli.GlobalOpts
 	Service       string
 	PublicAPIKey  string
 	PrivateAPIKey string
 	OpsManagerURL string
 	ProjectID     string
+	OrgID         string
 }
 
 func (opts *configOpts) IsCloud() bool {
@@ -67,13 +74,47 @@ func (opts *configOpts) Save() error {
 }
 
 func (opts *configOpts) Run() error {
-	helpLink := "https://docs.atlas.mongodb.com/configure-api-access/"
+	fmt.Printf(`You are setting up %s
 
-	if opts.IsOpsManager() {
-		helpLink = "https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
+All values are optional and you can use environment variables (MCLI_*) instead.
+
+Enter [?] on any option to get help.
+
+`, config.ToolName)
+
+	q := opts.accessQuestions()
+	if err := survey.Ask(q, opts); err != nil {
+		return err
 	}
 
-	defaultQuestions := []*survey.Question{
+	q = opts.defaultQuestions()
+	if err := survey.Ask(q, opts); err != nil {
+		return err
+	}
+
+	if err := opts.Save(); err != nil {
+		return err
+	}
+
+	fmt.Printf("\n%s is all set now\n", config.ToolName)
+	fmt.Printf("You can use [%s config set] to change more settings. \n", config.ToolName)
+	if config.Name() != config.DefaultProfile {
+		fmt.Printf("To use this profile remember to set the flag [-%s %s]\n", flag.ProfileShort, config.Name())
+	}
+	return nil
+}
+
+func (opts *configOpts) apiKeyHelp() string {
+	if opts.IsOpsManager() {
+		return omAPIHelp
+	}
+	return atlasAPIHelp
+}
+
+func (opts *configOpts) accessQuestions() []*survey.Question {
+	helpLink := opts.apiKeyHelp()
+
+	q := []*survey.Question{
 		{
 			Name: "publicAPIKey",
 			Prompt: &survey.Input{
@@ -89,17 +130,7 @@ func (opts *configOpts) Run() error {
 				Help:    helpLink,
 			},
 		},
-		{
-			Name: "projectId",
-			Prompt: &survey.Input{
-				Message: "Default Project ID [optional]:",
-				Help:    "This is the ID of an existing project your API keys have access to, you can leave this blank and specify it on every command with --projectId",
-				Default: config.ProjectID(),
-			},
-			Validate: validate.OptionalObjectID,
-		},
 	}
-
 	if opts.IsOpsManager() {
 		opsManagerQuestions := []*survey.Question{
 			{
@@ -107,28 +138,38 @@ func (opts *configOpts) Run() error {
 				Prompt: &survey.Input{
 					Message: "URL to Access Ops Manager:",
 					Default: config.OpsManagerURL(),
-					Help:    "https://docs.opsmanager.mongodb.com/current/reference/config/ui-settings/#URL-to-Access-Ops-Manager",
+					Help:    omBaseURLHelp,
 				},
 				Validate: validate.URL,
 			},
 		}
-		defaultQuestions = append(opsManagerQuestions, defaultQuestions...)
+		q = append(opsManagerQuestions, q...)
 	}
+	return q
+}
 
-	if err := survey.Ask(defaultQuestions, opts); err != nil {
-		return err
+func (opts *configOpts) defaultQuestions() []*survey.Question {
+	q := []*survey.Question{
+		{
+			Name: "projectId",
+			Prompt: &survey.Input{
+				Message: "Default Project ID:",
+				Help:    projectHelp,
+				Default: config.ProjectID(),
+			},
+			Validate: validate.OptionalObjectID,
+		},
+		{
+			Name: "orgId",
+			Prompt: &survey.Input{
+				Message: "Default Org ID:",
+				Help:    orgHelp,
+				Default: config.OrgID(),
+			},
+			Validate: validate.OptionalObjectID,
+		},
 	}
-
-	if err := opts.Save(); err != nil {
-		return err
-	}
-
-	fmt.Printf("%s is all set now\n", config.ToolName)
-	fmt.Printf("You can use [%s config set] to change more settings. \n", config.ToolName)
-	if config.Name() != config.DefaultProfile {
-		fmt.Printf("To use this profile remember to set the flag [-%s %s]\n", flag.ProfileShort, config.Name())
-	}
-	return nil
+	return q
 }
 
 func Builder() *cobra.Command {

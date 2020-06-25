@@ -74,7 +74,7 @@ func (opts *configOpts) Save() error {
 }
 
 func (opts *configOpts) Run() error {
-	fmt.Printf(`You are setting up %s
+	fmt.Printf(`You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MCLI_*) instead.
 

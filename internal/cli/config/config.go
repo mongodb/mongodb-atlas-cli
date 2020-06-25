@@ -31,7 +31,7 @@ const (
 	omAPIHelp     = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
 	omBaseURLHelp = "FQDN and port number of the Ops Manager Application."
 	projectHelp   = "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it."
-	orgHelp       = "ID of an existing organization, your API keys should have access to it. Leaving this blank means using --orgId for every command that requires it."
+	orgHelp       = "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it."
 )
 
 type configOpts struct {

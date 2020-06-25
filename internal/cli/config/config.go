@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	atlasAPIHelp  = "Please provide your API keys, to get new keys follow: https://docs.atlas.mongodb.com/configure-api-access/"
+	atlasAPIHelp  = "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
 	omAPIHelp     = "Please provide your API keys, to get new keys follow: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
 	omBaseURLHelp = "FQDN and port number of the Ops Manager Application."
 	projectHelp   = "ID of an existing project, your API keys should have access to it. Leaving this blank means using --projectId for every command that requires it."

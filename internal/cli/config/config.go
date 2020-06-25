@@ -96,7 +96,7 @@ Enter [?] on any option to get help.
 		return err
 	}
 
-	fmt.Printf("\n%s is all set now\n", config.ToolName)
+	fmt.Printf("\nYour profile is now configured.\n", config.ToolName)
 	fmt.Printf("You can use [%s config set] to change more settings. \n", config.ToolName)
 	if config.Name() != config.DefaultProfile {
 		fmt.Printf("To use this profile remember to set the flag [-%s %s]\n", flag.ProfileShort, config.Name())

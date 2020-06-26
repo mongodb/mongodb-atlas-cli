@@ -204,6 +204,34 @@ func (mr *MockConfigMockRecorder) GetString(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetString", reflect.TypeOf((*MockConfig)(nil).GetString), arg0)
 }
 
+// OpsManagerCACertificate mocks base method
+func (m *MockConfig) OpsManagerCACertificate() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OpsManagerCACertificate")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// OpsManagerCACertificate indicates an expected call of OpsManagerCACertificate
+func (mr *MockConfigMockRecorder) OpsManagerCACertificate() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerCACertificate", reflect.TypeOf((*MockConfig)(nil).OpsManagerCACertificate))
+}
+
+// OpsManagerSkipVerify mocks base method
+func (m *MockConfig) OpsManagerSkipVerify() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OpsManagerSkipVerify")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// OpsManagerSkipVerify indicates an expected call of OpsManagerSkipVerify
+func (mr *MockConfigMockRecorder) OpsManagerSkipVerify() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerSkipVerify", reflect.TypeOf((*MockConfig)(nil).OpsManagerSkipVerify))
+}
+
 // OpsManagerURL mocks base method
 func (m *MockConfig) OpsManagerURL() string {
 	m.ctrl.T.Helper()

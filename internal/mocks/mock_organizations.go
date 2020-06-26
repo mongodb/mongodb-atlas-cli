@@ -6,6 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 	reflect "reflect"
 )
@@ -34,18 +35,18 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method
-func (m *MockOrganizationLister) Organizations() (*opsmngr.Organizations, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.ListOptions) (*opsmngr.Organizations, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Organizations")
+	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*opsmngr.Organizations)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Organizations indicates an expected call of Organizations
-func (mr *MockOrganizationListerMockRecorder) Organizations() *gomock.Call {
+func (mr *MockOrganizationListerMockRecorder) Organizations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Organizations", reflect.TypeOf((*MockOrganizationLister)(nil).Organizations))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Organizations", reflect.TypeOf((*MockOrganizationLister)(nil).Organizations), arg0)
 }
 
 // MockOrganizationCreator is a mock of OrganizationCreator interface

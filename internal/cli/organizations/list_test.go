@@ -30,13 +30,14 @@ func TestList_Run(t *testing.T) {
 
 	expected := &opsmngr.Organizations{}
 
+	listOpts := &ListOpts{store: mockStore}
+
 	mockStore.
 		EXPECT().
-		Organizations().
+		Organizations(listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	listOpts := &ListOpts{store: mockStore}
 	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

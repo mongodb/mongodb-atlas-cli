@@ -33,21 +33,6 @@ func (m *MockProjectLister) EXPECT() *MockProjectListerMockRecorder {
 	return m.recorder
 }
 
-// GetAllProjects mocks base method
-func (m *MockProjectLister) GetAllProjects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllProjects", arg0)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetAllProjects indicates an expected call of GetAllProjects
-func (mr *MockProjectListerMockRecorder) GetAllProjects(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProjects", reflect.TypeOf((*MockProjectLister)(nil).GetAllProjects), arg0)
-}
-
 // GetOrgProjects mocks base method
 func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
@@ -61,6 +46,21 @@ func (m *MockProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListO
 func (mr *MockProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectLister)(nil).GetOrgProjects), arg0, arg1)
+}
+
+// Projects mocks base method
+func (m *MockProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Projects", arg0)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Projects indicates an expected call of Projects
+func (mr *MockProjectListerMockRecorder) Projects(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Projects", reflect.TypeOf((*MockProjectLister)(nil).Projects), arg0)
 }
 
 // MockOrgProjectLister is a mock of OrgProjectLister interface

@@ -38,7 +38,7 @@ func TestList_Run(t *testing.T) {
 	t.Run("No ConfigOrgID is given", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			GetAllProjects(listOpts.NewListOptions()).
+			Projects(listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 
@@ -75,7 +75,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetAllProjects(listOpts.NewListOptions()).
+			Projects(listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 

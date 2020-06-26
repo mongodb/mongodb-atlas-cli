@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 
+	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -25,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber
 
 type OrganizationLister interface {
-	Organizations() (*opsmngr.Organizations, error)
+	Organizations(*atlas.ListOptions) (*opsmngr.Organizations, error)
 }
 
 type OrganizationDescriber interface {
@@ -41,10 +42,10 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers
-func (s *Store) Organizations() (*opsmngr.Organizations, error) {
+func (s *Store) Organizations(opts *atlas.ListOptions) (*opsmngr.Organizations, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), nil)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

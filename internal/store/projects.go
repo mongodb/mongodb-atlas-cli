@@ -26,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber
 
 type ProjectLister interface {
-	GetAllProjects(*atlas.ListOptions) (interface{}, error)
+	Projects(*atlas.ListOptions) (interface{}, error)
 	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
 }
 
@@ -46,8 +46,8 @@ type ProjectDescriber interface {
 	Project(string) (interface{}, error)
 }
 
-// GetAllProjects encapsulate the logic to manage different cloud providers
-func (s *Store) GetAllProjects(opts *atlas.ListOptions) (interface{}, error) {
+// Projects encapsulate the logic to manage different cloud providers
+func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), opts)

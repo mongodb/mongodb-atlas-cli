@@ -26,8 +26,8 @@ import (
 )
 
 const (
-	open                            = "OPEN"
-	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open                        = "OPEN"
+	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAlerts(t *testing.T) {
@@ -69,8 +69,8 @@ func TestAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
-		if alert.EventTypeName != users_without_multi_factor_auth {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, users_without_multi_factor_auth)
+		if alert.EventTypeName != usersWithoutMultiFactorAuth {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
 		}
 
 	})

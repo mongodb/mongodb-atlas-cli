@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -64,7 +64,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.GetProjects(context.Background(), orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(context.Background(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

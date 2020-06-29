@@ -19,7 +19,6 @@ import (
 	"io"
 	"os"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -29,6 +28,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type LogsDownloadOpts struct {

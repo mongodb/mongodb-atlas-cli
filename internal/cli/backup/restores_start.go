@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -27,6 +26,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -82,7 +82,7 @@ func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobReq
 		opts.setTargetCluster(request)
 
 		if opts.oplogTS != "" && opts.oplogInc != 0 {
-			request.OplogTs = opts.oplogTS
+			request.OplogTS = opts.oplogTS
 			request.OplogInc = opts.oplogInc
 		}
 		if opts.pointInTimeUTCMillis != 0 {

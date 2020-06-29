@@ -18,9 +18,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {

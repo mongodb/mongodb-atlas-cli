@@ -18,9 +18,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/spf13/afero"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestClustersCreate_Run(t *testing.T) {

@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
@@ -28,7 +28,7 @@ func TestList_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Organizations{}
+	expected := &mongodbatlas.Organizations{}
 
 	listOpts := &ListOpts{store: mockStore}
 

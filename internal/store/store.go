@@ -21,9 +21,9 @@ import (
 	"time"
 
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/version"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

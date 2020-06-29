@@ -6,8 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
-	opsmngr "go.mongodb.org/ops-manager/opsmngr"
+	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	reflect "reflect"
 )
 
@@ -35,10 +34,10 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method
-func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.ListOptions) (*opsmngr.Organizations, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.ListOptions) (*mongodbatlas.Organizations, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
-	ret0, _ := ret[0].(*opsmngr.Organizations)
+	ret0, _ := ret[0].(*mongodbatlas.Organizations)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +72,10 @@ func (m *MockOrganizationCreator) EXPECT() *MockOrganizationCreatorMockRecorder 
 }
 
 // CreateOrganization mocks base method
-func (m *MockOrganizationCreator) CreateOrganization(arg0 string) (*opsmngr.Organization, error) {
+func (m *MockOrganizationCreator) CreateOrganization(arg0 string) (*mongodbatlas.Organization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganization", arg0)
-	ret0, _ := ret[0].(*opsmngr.Organization)
+	ret0, _ := ret[0].(*mongodbatlas.Organization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +147,10 @@ func (m *MockOrganizationDescriber) EXPECT() *MockOrganizationDescriberMockRecor
 }
 
 // Organization mocks base method
-func (m *MockOrganizationDescriber) Organization(arg0 string) (*opsmngr.Organization, error) {
+func (m *MockOrganizationDescriber) Organization(arg0 string) (*mongodbatlas.Organization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*opsmngr.Organization)
+	ret0, _ := ret[0].(*mongodbatlas.Organization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -16,6 +16,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
@@ -28,16 +29,13 @@ type ListOpts struct {
 
 func (opts *ListOpts) Run() error {
 	config.SetName(&opts.name)
-	if err := config.LoadRawConfig(); err != nil {
+	configDescription, err := config.GetConfigDescription()
+	if err != nil {
 		return err
 	}
 
-	for _, v := range config.Properties() {
-		val := opts.store.GetString(v)
-		if len(val) > 0 {
-			continue
-		}
-		fmt.Printf("%v: %v\n", v, opts.store.GetString(v))
+	for k, v := range configDescription {
+		fmt.Printf("%v = %v\n", k, v)
 	}
 
 	return nil

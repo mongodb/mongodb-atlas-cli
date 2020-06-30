@@ -226,8 +226,32 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
-// LoadRawConfig loads the configuration file, but without reading environment variables
-func LoadRawConfig() error { return p.Load(false) }
+// GetConfigDescription returns a map describing the configuration
+func GetConfigDescription() (map[string]string, error) {
+	if err := p.Load(false); err != nil {
+		return nil, err
+	}
+
+	m := make(map[string]string)
+
+	for _, v := range Properties() {
+		// dont show api keys
+		if v == privateAPIKey || v == publicAPIKey {
+			continue
+		}
+
+		val := GetString(v)
+
+		// dont show empty properties
+		if val == "" {
+			continue
+		}
+
+		m[v] = val
+	}
+
+	return m, nil
+}
 
 // Load loads the configuration from disk
 func Load() error { return p.Load(false) }

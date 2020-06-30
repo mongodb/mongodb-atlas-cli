@@ -199,6 +199,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(SetBuilder())
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(RenameBuilder())
 
 	return cmd
 }

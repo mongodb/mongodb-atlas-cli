@@ -27,7 +27,7 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	configDescription := config.GetConfigDescription(opts.name)
+	configDescription := config.GetConfigDescription(opts.name, true)
 
 	if len(configDescription) == 0 {
 		return fmt.Errorf("no profile with name '%s'", opts.name)

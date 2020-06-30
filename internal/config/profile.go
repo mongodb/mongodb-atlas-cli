@@ -18,7 +18,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"sort"
+
+	"github.com/pelletier/go-toml"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -226,20 +229,65 @@ func (p *profile) SetOrgID(v string) {
 }
 
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription(name string) map[string]string {
-	redactedValue := "redacted"
+func GetConfigDescription(name string, redact bool) map[string]string {
+	settings := viper.GetStringMapString(name)
+	newSettings := make(map[string]string)
 
-	m := viper.GetStringMapString(name)
+	fmt.Printf("key %s\n", settings)
 
-	if _, ok := m[privateAPIKey]; ok {
-		m[privateAPIKey] = redactedValue
+	for k, v := range settings {
+		fmt.Printf("key %v val %v\n", k, v)
+		if redact && (k == privateAPIKey || k == publicAPIKey) {
+			newSettings[k] = "redacted"
+		} else {
+			newSettings[k] = v
+		}
 	}
 
-	if _, ok := m[publicAPIKey]; ok {
-		m[publicAPIKey] = redactedValue
+	return newSettings
+}
+
+// DeleteConfig deletes an existing configuration
+func DeleteConfig(name string) error {
+	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
+	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
+	configurationAfterDelete := viper.AllSettings()
+
+	t, err := toml.TreeFromMap(configurationAfterDelete)
+	if err != nil {
+		return err
 	}
 
-	return m
+	// Delete from the toml manually
+	err = t.Delete(name)
+	if err != nil {
+		return err
+	}
+
+	s := t.String()
+
+	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), flags, 0600)
+	if err != nil {
+		return err
+	}
+
+	if _, err := f.WriteString(s); err != nil {
+		return err
+	}
+
+	// Force reload, so that viper has the new configuration
+	return Load()
+}
+
+func SetConfig(name string, newConfig map[string]string) error {
+	p.SetName(&name)
+
+	for k, v := range newConfig {
+		p.Set(k, v)
+	}
+
+	return p.Save()
 }
 
 // Load loads the configuration from disk

@@ -75,9 +75,10 @@ const (
 	CloudManager             = "Cloud Manager operations."
 	ShutdownCluster          = "Shutdown a cluster."
 	StartUpCluster           = "Start up a cluster."
-	ConfigDescription        = "Configure a profile. This let you store access settings to your cloud."
+	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
+	ConfigSetDescription     = "Configure specific properties of a profile."
+	ConfigList               = "List available profiles."
 	ConfigDescribe           = "Return a specific profile"
-	ConfigSetDescription     = "Configure specific properties of the profile."
 	IAM                      = "Organization and projects operations."
 	Organization             = "Organization operations."
 	OrganizationLong         = "Create, list and manage your MongoDB organizations."
@@ -118,12 +119,15 @@ The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-lo
 	DBUsersLong = `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
-	ConfigLongDescription = `Setting API keys is optional and env variables can be used instead.
-Leaving any option empty won't override existing stored values.`
+	ConfigLongDescription = `Configure settings in a user profile.
+All settings are optional. You can specify settings individually by running: 
+  $ mongocli config set --help 
+
+You can also use environment variables (MCLI_*) when running the tool.
+To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
-	ConfigDescribeLong = `Return a specific profile`
-	CreateClusterLong  = `You can create MongoDB clusters using this command.
+	CreateClusterLong = `You can create MongoDB clusters using this command.
 To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
 this will create a 3 member replica set with the latest available mongodb server version available.
 Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`

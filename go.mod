@@ -20,9 +20,11 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
-	go.mongodb.org/ops-manager v0.6.2-0.20200622160728-972e95aef812
+	go.mongodb.org/atlas v0.3.1-0.20200626205920-3b1571e934d6
+	go.mongodb.org/ops-manager v0.6.2-0.20200629081151-66e6462f556a
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
+	golang.org/x/tools v0.0.0-20200630145137-aa3d50130bb9 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )

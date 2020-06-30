@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -31,7 +31,7 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		Organization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&opsmngr.Organization{}, nil).
+		Return(&mongodbatlas.Organization{}, nil).
 		Times(1)
 
 	opts := &DescribeOpts{

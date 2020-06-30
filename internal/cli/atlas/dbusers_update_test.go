@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDBUserUpdate_Run(t *testing.T) {

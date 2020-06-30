@@ -23,25 +23,29 @@ import (
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
+	var one float64 = 1
+
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
-		changes  ClusterConfig
+		changes  *ClusterConfig
 	}{
 		"add a replica set to an empty config": {
 			current: fixture.EmptyAutomationConfig(),
-			changes: ClusterConfig{
-				FCVersion: "4.2",
-				Name:      "test_config",
-				Version:   "4.2.2",
-				ProcessConfigs: []*ProcessConfig{
-					{
-						DBPath:   "/data",
-						Hostname: "example",
-						LogPath:  "/log",
-						Port:     1,
-						Priority: 1,
-						Votes:    1,
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "test_config",
+					Version:   "4.2.2",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data",
+							Hostname: "example",
+							LogPath:  "/log",
+							Port:     1,
+							Priority: &one,
+							Votes:    &one,
+						},
 					},
 				},
 			},
@@ -96,22 +100,25 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						},
 					},
 				},
+				Sharding: []*opsmngr.ShardingConfig{},
 			},
 		},
 		"add a replica set to a config with an existing replica set": {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
-			changes: ClusterConfig{
-				FCVersion: "4.2",
-				Name:      "test_config",
-				Version:   "4.2.2",
-				ProcessConfigs: []*ProcessConfig{
-					{
-						DBPath:   "/data",
-						Hostname: "example",
-						LogPath:  "/log",
-						Port:     1,
-						Priority: 1,
-						Votes:    1,
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "test_config",
+					Version:   "4.2.2",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data",
+							Hostname: "example",
+							LogPath:  "/log",
+							Port:     1,
+							Priority: &one,
+							Votes:    &one,
+						},
 					},
 				},
 			},
@@ -215,25 +222,27 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		},
 		"add a process to a config with an existing replica set": {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
-			changes: ClusterConfig{
-				FCVersion: "4.2",
-				Name:      "replica_set_1",
-				Version:   "4.2.2",
-				ProcessConfigs: []*ProcessConfig{
-					{
-						DBPath:   "/data/db/",
-						Hostname: "host0",
-						LogPath:  "/data/db/mongodb.log",
-						Port:     27017,
-						Priority: 1,
-						Votes:    1,
-					}, {
-						DBPath:   "/data/db/",
-						Hostname: "host1",
-						LogPath:  "/data/db/mongodb.log",
-						Port:     27017,
-						Priority: 1,
-						Votes:    1,
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "replica_set_1",
+					Version:   "4.2.2",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data/db/",
+							Hostname: "host0",
+							LogPath:  "/data/db/mongodb.log",
+							Port:     27017,
+							Priority: &one,
+							Votes:    &one,
+						}, {
+							DBPath:   "/data/db/",
+							Hostname: "host1",
+							LogPath:  "/data/db/mongodb.log",
+							Port:     27017,
+							Priority: &one,
+							Votes:    &one,
+						},
 					},
 				},
 			},
@@ -331,18 +340,20 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		},
 		"replace a process to a config with an existing replica set": {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
-			changes: ClusterConfig{
-				FCVersion: "4.2",
-				Name:      "replica_set_1",
-				Version:   "4.2.2",
-				ProcessConfigs: []*ProcessConfig{
-					{
-						DBPath:   "/data/db/",
-						Hostname: "host1",
-						LogPath:  "/data/db/mongodb.log",
-						Port:     27017,
-						Priority: 1,
-						Votes:    1,
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "replica_set_1",
+					Version:   "4.2.2",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data/db/",
+							Hostname: "host1",
+							LogPath:  "/data/db/mongodb.log",
+							Port:     27017,
+							Priority: &one,
+							Votes:    &one,
+						},
 					},
 				},
 			},
@@ -427,6 +438,185 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				},
 			},
 		},
+		"add a sharded cluster set to an empty config": {
+			current: fixture.EmptyAutomationConfig(),
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "test_config",
+					Version:   "4.2.2",
+				},
+				Shards: []*RSConfig{
+					{
+						Name: "myShard_0",
+						ProcessConfigs: []*ProcessConfig{
+							{
+								DBPath:   "/data/myShard_0",
+								Hostname: "example",
+								LogPath:  "/log/myShard_0",
+								Port:     1,
+								Priority: &one,
+								Votes:    &one,
+							},
+						},
+					},
+				},
+				Config: &RSConfig{
+					Name: "configRS",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data/configRS",
+							Hostname: "example",
+							LogPath:  "/log/configRS",
+							Port:     2,
+							Priority: &one,
+							Votes:    &one,
+						},
+					},
+				},
+				Mongos: []*ProcessConfig{
+					{
+						Hostname: "example",
+						LogPath:  "/log/mongos",
+						Port:     3,
+					},
+				},
+			},
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
+					DeploymentAuthMechanisms: []string{},
+				},
+				Processes: []*opsmngr.Process{
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 1},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "myShard_0",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/myShard_0",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/myShard_0",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_myShard_0_0",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 2},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "configRS",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/configRS",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/configRS",
+							},
+							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_configRS_1",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 3},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/mongos",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						Cluster:                     "test_config",
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_mongos_2",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongos",
+						Version:                     "4.2.2",
+					},
+				},
+				ReplicaSets: []*opsmngr.ReplicaSet{
+					{
+						ID:              "myShard_0",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           0,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "test_config_myShard_0_0",
+								Priority:     1,
+								SlaveDelay:   0,
+								Votes:        1,
+							},
+						},
+					},
+					{
+						ID:              "configRS",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           0,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "test_config_configRS_1",
+								Priority:     1,
+								SlaveDelay:   0,
+								Votes:        1,
+							},
+						},
+					},
+				},
+				Sharding: []*opsmngr.ShardingConfig{
+					{
+						ConfigServerReplica: "configRS",
+						Name:                "test_config",
+						Collections:         make([]*map[string]interface{}, 0),
+						Draining:            make([]string, 0),
+						Tags:                make([]string, 0),
+						Shards: []*opsmngr.Shard{
+							{
+								ID:   "myShard_0",
+								RS:   "myShard_0",
+								Tags: make([]string, 0),
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for name, tc := range testCases {
@@ -434,41 +624,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		current := tc.current
 		expected := tc.expected
 		t.Run(name, func(t *testing.T) {
-			err := changes.PatchAutomationConfig(current)
-			if err != nil {
+			if err := changes.PatchAutomationConfig(current); err != nil {
 				t.Fatalf("PatchAutomationConfig() unexpected error: %v\n", err)
 			}
 			if diff := deep.Equal(current, expected); diff != nil {
 				t.Error(diff)
-			}
-		})
-	}
-}
-
-func TestProtocolVersion(t *testing.T) {
-	testCases := map[string]struct {
-		mdbVersion      string
-		protocolVersion string
-	}{
-		"post 4.0": {
-			mdbVersion:      "4.0",
-			protocolVersion: "1",
-		},
-		"pre 4.0": {
-			mdbVersion:      "3.6",
-			protocolVersion: "0",
-		},
-	}
-	for name, tc := range testCases {
-		m := tc.mdbVersion
-		expected := tc.protocolVersion
-		t.Run(name, func(t *testing.T) {
-			ver, err := protocolVer(m)
-			if err != nil {
-				t.Fatalf("protocolVer() unexpected error: %v\n", err)
-			}
-			if ver != expected {
-				t.Errorf("protocolVer() expected: %s but got: %s", expected, ver)
 			}
 		})
 	}

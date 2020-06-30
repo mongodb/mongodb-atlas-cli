@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_ip_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectIPWhitelistDescriber,ProjectIPWhitelistLister,ProjectIPWhitelistCreator,ProjectIPWhitelistDeleter

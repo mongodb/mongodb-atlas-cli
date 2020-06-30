@@ -14,7 +14,7 @@
 
 package cli
 
-import "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+import "go.mongodb.org/atlas/mongodbatlas"
 
 type ListOpts struct {
 	PageNum      int

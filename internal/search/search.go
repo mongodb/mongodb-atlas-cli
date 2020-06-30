@@ -30,9 +30,13 @@ func StringInSlice(a []string, x string) bool {
 
 // ClusterExists return true if a cluster exists for the given name
 func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
-	_, found := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
+	_, rsFound := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == name
 	})
 
-	return found
+	_, shardedFound := search.ShardingConfig(c.Sharding, func(r *opsmngr.ShardingConfig) bool {
+		return r.Name == name
+	})
+
+	return rsFound || shardedFound
 }

@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -78,6 +79,18 @@ type Config interface {
 
 func Default() Config {
 	return p
+}
+
+// List returns the names of available profiles
+func List() []string {
+	m := viper.AllSettings()
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	// keys in maps are non deterministic, trying to give users a consistent output
+	sort.Strings(keys)
+	return keys
 }
 
 func newProfile() *profile {

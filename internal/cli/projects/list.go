@@ -44,7 +44,7 @@ func (opts *ListOpts) Run() error {
 	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
 		projects, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), listOptions)
 	} else {
-		projects, err = opts.store.GetAllProjects(listOptions)
+		projects, err = opts.store.Projects(listOptions)
 	}
 	if err != nil {
 		return err

@@ -32,6 +32,10 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
+	if len(configDescription) == 0 {
+		fmt.Printf("There is no config with name '%v'\n", opts.name)
+	}
+
 	for k, v := range configDescription {
 		fmt.Printf("%v = %v\n", k, v)
 	}

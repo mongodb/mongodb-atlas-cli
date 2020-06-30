@@ -226,27 +226,17 @@ func (p *profile) SetOrgID(v string) {
 }
 
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription() (map[string]string, error) {
-	if err := p.Load(false); err != nil {
-		return nil, err
+func GetConfigDescription(name string) (map[string]string, error) {
+	redactedValue := "redacted"
+
+	m := viper.GetStringMapString(name)
+
+	if _, ok := m[privateAPIKey]; ok {
+		m[privateAPIKey] = redactedValue
 	}
 
-	m := make(map[string]string)
-
-	for _, v := range Properties() {
-		// dont show api keys
-		if v == privateAPIKey || v == publicAPIKey {
-			continue
-		}
-
-		val := GetString(v)
-
-		// dont show empty properties
-		if val == "" {
-			continue
-		}
-
-		m[v] = val
+	if _, ok := m[publicAPIKey]; ok {
+		m[publicAPIKey] = redactedValue
 	}
 
 	return m, nil

@@ -23,13 +23,11 @@ import (
 )
 
 type ListOpts struct {
-	name  string
-	store config.Config
+	name string
 }
 
 func (opts *ListOpts) Run() error {
-	config.SetName(&opts.name)
-	configDescription, err := config.GetConfigDescription()
+	configDescription, err := config.GetConfigDescription(opts.name)
 	if err != nil {
 		return err
 	}
@@ -42,9 +40,7 @@ func (opts *ListOpts) Run() error {
 }
 
 func DescribeBuilder() *cobra.Command {
-	opts := &ListOpts{
-		store: config.Default(),
-	}
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: description.ConfigDescribe,

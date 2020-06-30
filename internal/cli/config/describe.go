@@ -30,7 +30,7 @@ func (opts *ListOpts) Run() error {
 	configDescription := config.GetConfigDescription(opts.name)
 
 	if len(configDescription) == 0 {
-		return fmt.Errorf("no profile with name '%s'\n", opts.name)
+		return fmt.Errorf("no profile with name '%s'", opts.name)
 	}
 
 	for k, v := range configDescription {

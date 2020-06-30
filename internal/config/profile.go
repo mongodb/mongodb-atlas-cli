@@ -252,11 +252,14 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 
 	if readEnvironmentVars {
 		viper.SetEnvPrefix(EnvPrefix)
-		viper.AutomaticEnv()
 	}
 
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
+
+	if readEnvironmentVars {
+		viper.AutomaticEnv()
+	}
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {

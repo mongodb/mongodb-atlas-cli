@@ -34,7 +34,7 @@ func (opts *ListOpts) Run() error {
 	}
 
 	for k, v := range configDescription {
-		fmt.Printf("%v = %v\n", k, v)
+		fmt.Printf("%s = %s\n", k, v)
 	}
 
 	return nil

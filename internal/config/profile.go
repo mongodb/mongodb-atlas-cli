@@ -225,18 +225,38 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
+// GetConfigDescription returns a map describing the configuration
+func GetConfigDescription(name string) map[string]string {
+	redactedValue := "redacted"
+
+	m := viper.GetStringMapString(name)
+
+	if _, ok := m[privateAPIKey]; ok {
+		m[privateAPIKey] = redactedValue
+	}
+
+	if _, ok := m[publicAPIKey]; ok {
+		m[publicAPIKey] = redactedValue
+	}
+
+	return m
+}
+
 // Load loads the configuration from disk
-func Load() error { return p.Load() }
-func (p *profile) Load() error {
+func Load() error { return p.Load(true) }
+func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
 
-	viper.SetEnvPrefix(EnvPrefix)
+	if readEnvironmentVars {
+		viper.SetEnvPrefix(EnvPrefix)
+		viper.AutomaticEnv()
+	}
+
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
-	viper.AutomaticEnv()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {

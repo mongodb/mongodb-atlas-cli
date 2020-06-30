@@ -198,6 +198,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
 	cmd.AddCommand(SetBuilder())
 	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
 
 	return cmd
 }

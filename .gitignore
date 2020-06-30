@@ -6,6 +6,7 @@
 *.dylib
 bin/**
 dist/**
+.idea/
 
 # Test binary, built with `go test -c`
 *.test

@@ -76,6 +76,7 @@ const (
 	ShutdownCluster          = "Shutdown a cluster."
 	StartUpCluster           = "Start up a cluster."
 	ConfigDescription        = "Configure a profile. This let you store access settings to your cloud."
+	ConfigDescribe           = "Return a specific profile"
 	ConfigSetDescription     = "Configure specific properties of the profile."
 	IAM                      = "Organization and projects operations."
 	Organization             = "Organization operations."
@@ -121,7 +122,8 @@ A user’s roles apply to all the clusters in the project.`
 Leaving any option empty won't override existing stored values.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
-	CreateClusterLong = `You can create MongoDB clusters using this command.
+	ConfigDescribeLong = `Return a specific profile`
+	CreateClusterLong  = `You can create MongoDB clusters using this command.
 To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
 this will create a 3 member replica set with the latest available mongodb server version available.
 Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`

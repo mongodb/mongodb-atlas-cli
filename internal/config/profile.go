@@ -100,6 +100,7 @@ func (p *profile) Name() string {
 	return *p.name
 }
 
+// Maybe a more intuitive way of doing this
 func SetName(name *string) { p.SetName(name) }
 func (p *profile) SetName(name *string) {
 	p.name = name
@@ -212,18 +213,27 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
+// LoadRawConfig loads the configuration file, but without reading environment variables
+func LoadRawConfig() error { return p.Load(false) }
+
 // Load loads the configuration from disk
-func Load() error { return p.Load() }
-func (p *profile) Load() error {
+func Load() error { return p.Load(false) }
+func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
 
-	viper.SetEnvPrefix(EnvPrefix)
+	if readEnvironmentVars {
+		viper.SetEnvPrefix(EnvPrefix)
+	}
+
 	// TODO: review why this is not working as expected
 	viper.RegisterAlias(baseURL, opsManagerURL)
-	viper.AutomaticEnv()
+
+	if readEnvironmentVars {
+		viper.AutomaticEnv()
+	}
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {

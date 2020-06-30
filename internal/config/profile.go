@@ -226,7 +226,7 @@ func (p *profile) SetOrgID(v string) {
 }
 
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription(name string) (map[string]string, error) {
+func GetConfigDescription(name string) map[string]string {
 	redactedValue := "redacted"
 
 	m := viper.GetStringMapString(name)
@@ -239,7 +239,7 @@ func GetConfigDescription(name string) (map[string]string, error) {
 		m[publicAPIKey] = redactedValue
 	}
 
-	return m, nil
+	return m
 }
 
 // Load loads the configuration from disk

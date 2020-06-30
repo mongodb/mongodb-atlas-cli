@@ -27,10 +27,7 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	configDescription, err := config.GetConfigDescription(opts.name)
-	if err != nil {
-		return err
-	}
+	configDescription := config.GetConfigDescription(opts.name)
 
 	if len(configDescription) == 0 {
 		fmt.Printf("There is no config with name '%v'\n", opts.name)

@@ -303,7 +303,6 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 		}
 		return err
 	}
-
 	return nil
 }
 

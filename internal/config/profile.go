@@ -229,15 +229,12 @@ func (p *profile) SetOrgID(v string) {
 }
 
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription(name string, redact bool) map[string]string {
+func GetConfigDescription(name string) map[string]string {
 	settings := viper.GetStringMapString(name)
 	newSettings := make(map[string]string)
 
-	fmt.Printf("key %s\n", settings)
-
 	for k, v := range settings {
-		fmt.Printf("key %v val %v\n", k, v)
-		if redact && (k == privateAPIKey || k == publicAPIKey) {
+		if k == privateAPIKey || k == publicAPIKey {
 			newSettings[k] = "redacted"
 		} else {
 			newSettings[k] = v
@@ -247,8 +244,9 @@ func GetConfigDescription(name string, redact bool) map[string]string {
 	return newSettings
 }
 
-// DeleteConfig deletes an existing configuration
-func DeleteConfig(name string) error {
+// Delete deletes an existing configuration
+func Delete() error { return p.Delete() }
+func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	configurationAfterDelete := viper.AllSettings()
@@ -259,7 +257,7 @@ func DeleteConfig(name string) error {
 	}
 
 	// Delete from the toml manually
-	err = t.Delete(name)
+	err = t.Delete(*p.name)
 	if err != nil {
 		return err
 	}
@@ -278,16 +276,6 @@ func DeleteConfig(name string) error {
 
 	// Force reload, so that viper has the new configuration
 	return Load()
-}
-
-func SetConfig(name string, newConfig map[string]string) error {
-	p.SetName(&name)
-
-	for k, v := range newConfig {
-		p.Set(k, v)
-	}
-
-	return p.Save()
 }
 
 // Load loads the configuration from disk

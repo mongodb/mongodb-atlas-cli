@@ -26,54 +26,42 @@ import (
 )
 
 type RenameOpts struct {
-	oldName string
-	newName string
+	name string
 }
 
 func (opts *RenameOpts) Run() error {
-	oldProfile := config.GetConfigDescription(opts.oldName, false)
-	if len(oldProfile) == 0 {
-		return fmt.Errorf("profile %v does not exist", opts.oldName)
+	profile := config.GetConfigDescription(opts.name)
+	if len(profile) == 0 {
+		return fmt.Errorf("profile %v does not exist", opts.name)
 	}
 
 	shouldReplace := false
-	newProfile := config.GetConfigDescription(opts.newName, false)
-	if len(newProfile) > 0 {
-		p := prompt.NewProfileReplaceConfirm(opts.newName)
-		if err := survey.AskOne(p, &shouldReplace); err != nil {
-			return err
-		}
-
-		if !shouldReplace {
-			return nil
-		}
-	}
-
-	if err := config.DeleteConfig(opts.oldName); err != nil {
+	p := prompt.NewDeleteConfirm(opts.name)
+	if err := survey.AskOne(p, &shouldReplace); err != nil {
 		return err
 	}
 
-	if err := config.DeleteConfig(opts.newName); err != nil {
-		return err
+	if !shouldReplace {
+		return nil
 	}
 
-	if err := config.SetConfig(opts.newName, oldProfile); err != nil {
+	config.SetName(&opts.name)
+	if err := config.Delete(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func RenameBuilder() *cobra.Command {
+func DeleteBuilder() *cobra.Command {
 	opts := &RenameOpts{}
 	cmd := &cobra.Command{
-		Use:   "rename <oldName> <newName>",
-		Short: description.ConfigRenameDescription,
-		Long:  fmt.Sprintf(description.ConfigRenameLong),
-		Args:  cobra.ExactArgs(2),
+		Use:     "delete <name>",
+		Aliases: []string{"rm"},
+		Short:   description.ConfigDeleteDescription,
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.oldName = args[0]
-			opts.newName = args[1]
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}

@@ -62,7 +62,6 @@ func RenameBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "rename <oldName> <newName>",
 		Short: description.ConfigRenameDescription,
-		Long:  fmt.Sprintf(description.ConfigRenameLong),
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.oldName = args[0]

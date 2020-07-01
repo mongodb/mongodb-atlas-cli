@@ -129,7 +129,6 @@ You can also use environment variables (MCLI_*) when running the tool.
 To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
-	ConfigRenameLong  = `Rename a profile, overwriting any existing profile.`
 	CreateClusterLong = `You can create MongoDB clusters using this command.
 To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
 this will create a 3 member replica set with the latest available mongodb server version available.

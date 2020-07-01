@@ -100,7 +100,7 @@ func newProfile() *profile {
 	if err != nil {
 		log.Fatal(err)
 	}
-	name := "default"
+	name := DefaultProfile
 	np := &profile{
 		name:      &name,
 		configDir: configDir,
@@ -304,17 +304,7 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 		return err
 	}
 
-	p.setDefaultProfile()
-
 	return nil
-}
-
-// setDefaultProfile will figure out the name of the default profile to use after Loading.
-func (p *profile) setDefaultProfile() {
-	availableProfiles := List()
-	if len(availableProfiles) == 1 {
-		p.SetName(&availableProfiles[0])
-	}
 }
 
 // Save the configuration to disk

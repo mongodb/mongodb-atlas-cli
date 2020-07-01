@@ -53,9 +53,6 @@ func (opts *SetOpts) Run() error {
 }
 
 func SetBuilder() *cobra.Command {
-	opts := &SetOpts{
-		store: config.Default(),
-	}
 	cmd := &cobra.Command{
 		Use:   "set <property> <value>",
 		Short: description.ConfigSetDescription,
@@ -71,8 +68,11 @@ func SetBuilder() *cobra.Command {
 		},
 		ValidArgs: config.Properties(),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.prop = args[0]
-			opts.val = args[1]
+			opts := &SetOpts{
+				store: config.Default(),
+				prop:  args[0],
+				val:   args[1],
+			}
 			return opts.Run()
 		},
 	}

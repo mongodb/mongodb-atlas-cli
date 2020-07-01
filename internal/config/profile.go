@@ -49,7 +49,6 @@ func Properties() []string {
 }
 
 var p = newProfile()
-var isDefaultProfileSet = false
 
 type Setter interface {
 	Set(string, string)
@@ -81,16 +80,6 @@ type Config interface {
 }
 
 func Default() Config {
-	if !isDefaultProfileSet {
-		profileNames := List()
-
-		// if only one profile is present, use that as the default
-		if len(profileNames) == 1 {
-			p.SetName(&profileNames[0])
-			isDefaultProfileSet = true
-		}
-	}
-
 	return p
 }
 
@@ -117,7 +106,6 @@ func newProfile() *profile {
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
 	}
-	np.SetService(CloudService)
 	return np
 }
 
@@ -315,7 +303,18 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 		}
 		return err
 	}
+
+	p.setDefaultProfile()
+
 	return nil
+}
+
+// setDefaultProfile will figure out the name of the default profile to use after Loading.
+func (p *profile) setDefaultProfile() {
+	availableProfiles := List()
+	if len(availableProfiles) == 1 {
+		p.SetName(&availableProfiles[0])
+	}
 }
 
 // Save the configuration to disk

@@ -285,6 +285,7 @@ func (p *profile) Delete() error {
 	return p.Load(true)
 }
 
+// Rename replaces the profile to a new profile name, overwriting any profile that existed before.
 func Rename(newProfileName string) error { return p.Rename(newProfileName) }
 func (p *profile) Rename(newProfileName string) error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
@@ -294,10 +295,6 @@ func (p *profile) Rename(newProfileName string) error {
 	t, err := toml.TreeFromMap(configurationAfterDelete)
 	if err != nil {
 		return err
-	}
-
-	if t.Has(newProfileName) {
-		return fmt.Errorf("there is already a profile at %v", newProfileName)
 	}
 
 	t.Set(newProfileName, t.Get(p.Name()))

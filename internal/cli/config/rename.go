@@ -17,6 +17,9 @@ package config
 import (
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/prompt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
@@ -35,7 +38,15 @@ func (opts *RenameOpts) Run() error {
 
 	config.SetName(&opts.newName)
 	if !config.IsProfileEmpty() {
-		return fmt.Errorf("a profile already exists at %v; it should be deleted first", opts.newName)
+		replaceExistingProfile := false
+		p := prompt.NewProfileReplaceConfirm(opts.newName)
+		if err := survey.AskOne(p, &replaceExistingProfile); err != nil {
+			return err
+		}
+
+		if !replaceExistingProfile {
+			return nil
+		}
 	}
 
 	config.SetName(&opts.oldName)

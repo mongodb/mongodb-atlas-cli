@@ -17,45 +17,42 @@ package config
 import (
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-type RenameOpts struct {
-	oldName string
-	newName string
+type DeleteOpts struct {
+	*cli.DeleteOpts
 }
 
-func (opts *RenameOpts) Run() error {
-	config.SetName(&opts.oldName)
-	if config.IsProfileEmpty() {
-		return fmt.Errorf("profile %v does not exist", opts.oldName)
-	}
-
-	config.SetName(&opts.newName)
-	if !config.IsProfileEmpty() {
-		return fmt.Errorf("a profile already exists at %v; it should be deleted first", opts.newName)
-	}
-
-	config.SetName(&opts.oldName)
-	if err := config.Rename(opts.newName); err != nil {
-		return err
-	}
-
-	return nil
+func (opts *DeleteOpts) Run() error {
+	return config.Delete()
 }
 
-func RenameBuilder() *cobra.Command {
-	opts := &RenameOpts{}
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Profile '%s' deleted\n", "Profile not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:   "rename <oldName> <newName>",
-		Short: description.ConfigRenameDescription,
-		Long:  fmt.Sprintf(description.ConfigRenameLong),
-		Args:  cobra.ExactArgs(2),
+		Use:     "delete <name>",
+		Aliases: []string{"rm"},
+		Short:   description.ConfigDeleteDescription,
+		Args:    cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
+
+			config.SetName(&opts.Entry)
+			profile := config.GetConfigDescription()
+			if len(profile) == 0 {
+				return fmt.Errorf("profile %v does not exist", opts.Entry)
+			}
+
+			return opts.Prompt()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.oldName = args[0]
-			opts.newName = args[1]
 			return opts.Run()
 		},
 	}

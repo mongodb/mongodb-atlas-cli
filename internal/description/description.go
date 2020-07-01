@@ -78,6 +78,7 @@ const (
 	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
 	ConfigSetDescription     = "Configure specific properties of a profile."
 	ConfigRenameDescription  = "Rename a profile."
+	ConfigDeleteDescription  = "Delete a profile."
 	ConfigList               = "List available profiles."
 	ConfigDescribe           = "Return a specific profile"
 	IAM                      = "Organization and projects operations."

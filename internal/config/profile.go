@@ -22,7 +22,6 @@ import (
 	"sort"
 
 	"github.com/pelletier/go-toml"
-
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 )
@@ -228,16 +227,20 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
+// IsProfileEmpty returns true if there is no configuration for the current name.
+func IsProfileEmpty() bool { return p.IsProfileEmpty() }
+func (p *profile) IsProfileEmpty() bool {
+	return len(viper.GetStringMap(p.Name())) == 0
+}
+
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription(name string, redact bool) map[string]string {
-	settings := viper.GetStringMapString(name)
+func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
+func (p *profile) GetConfigDescription() map[string]string {
+	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string)
 
-	fmt.Printf("key %s\n", settings)
-
 	for k, v := range settings {
-		fmt.Printf("key %v val %v\n", k, v)
-		if redact && (k == privateAPIKey || k == publicAPIKey) {
+		if k == privateAPIKey || k == publicAPIKey {
 			newSettings[k] = "redacted"
 		} else {
 			newSettings[k] = v
@@ -247,8 +250,10 @@ func GetConfigDescription(name string, redact bool) map[string]string {
 	return newSettings
 }
 
-// DeleteConfig deletes an existing configuration
-func DeleteConfig(name string) error {
+// Delete deletes an existing configuration. The profiles are reloaded afterwards, as
+// this edits the file directly.
+func Delete() error { return p.Delete() }
+func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	configurationAfterDelete := viper.AllSettings()
@@ -259,7 +264,7 @@ func DeleteConfig(name string) error {
 	}
 
 	// Delete from the toml manually
-	err = t.Delete(name)
+	err = t.Delete(p.Name())
 	if err != nil {
 		return err
 	}
@@ -277,17 +282,45 @@ func DeleteConfig(name string) error {
 	}
 
 	// Force reload, so that viper has the new configuration
-	return Load()
+	return p.Load(true)
 }
 
-func SetConfig(name string, newConfig map[string]string) error {
-	p.SetName(&name)
+func Rename(newProfileName string) error { return p.Rename(newProfileName) }
+func (p *profile) Rename(newProfileName string) error {
+	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
+	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
+	configurationAfterDelete := viper.AllSettings()
 
-	for k, v := range newConfig {
-		p.Set(k, v)
+	t, err := toml.TreeFromMap(configurationAfterDelete)
+	if err != nil {
+		return err
 	}
 
-	return p.Save()
+	if t.Has(newProfileName) {
+		return fmt.Errorf("there is already a profile at %v", newProfileName)
+	}
+
+	t.Set(newProfileName, t.Get(p.Name()))
+
+	err = t.Delete(p.Name())
+	if err != nil {
+		return err
+	}
+
+	s := t.String()
+
+	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), flags, 0600)
+	if err != nil {
+		return err
+	}
+
+	if _, err := f.WriteString(s); err != nil {
+		return err
+	}
+
+	// Force reload, so that viper has the new configuration
+	return p.Load(true)
 }
 
 // Load loads the configuration from disk

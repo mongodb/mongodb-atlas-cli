@@ -49,6 +49,7 @@ func Properties() []string {
 }
 
 var p = newProfile()
+var isDefaultProfileSet = false
 
 type Setter interface {
 	Set(string, string)
@@ -80,6 +81,16 @@ type Config interface {
 }
 
 func Default() Config {
+	if !isDefaultProfileSet {
+		profileNames := List()
+
+		// if only one profile is present, use that as the default
+		if len(profileNames) == 1 {
+			p.SetName(&profileNames[0])
+			isDefaultProfileSet = true
+		}
+	}
+
 	return p
 }
 

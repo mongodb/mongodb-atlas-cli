@@ -18,10 +18,9 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/prompt"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/spf13/cobra"
 )
 

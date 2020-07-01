@@ -25,27 +25,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type RenameOpts struct {
+type DeleteOpts struct {
 	name string
 }
 
-func (opts *RenameOpts) Run() error {
-	profile := config.GetConfigDescription(opts.name)
+func (opts *DeleteOpts) Run() error {
+	config.SetName(&opts.name)
+
+	profile := config.GetConfigDescription()
 	if len(profile) == 0 {
 		return fmt.Errorf("profile %v does not exist", opts.name)
 	}
 
-	shouldReplace := false
+	shouldDelete := false
 	p := prompt.NewDeleteConfirm(opts.name)
-	if err := survey.AskOne(p, &shouldReplace); err != nil {
+	if err := survey.AskOne(p, &shouldDelete); err != nil {
 		return err
 	}
 
-	if !shouldReplace {
+	if !shouldDelete {
 		return nil
 	}
 
-	config.SetName(&opts.name)
 	if err := config.Delete(); err != nil {
 		return err
 	}
@@ -54,7 +55,7 @@ func (opts *RenameOpts) Run() error {
 }
 
 func DeleteBuilder() *cobra.Command {
-	opts := &RenameOpts{}
+	opts := &DeleteOpts{}
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},

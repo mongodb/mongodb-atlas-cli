@@ -229,8 +229,9 @@ func (p *profile) SetOrgID(v string) {
 }
 
 // GetConfigDescription returns a map describing the configuration
-func GetConfigDescription(name string) map[string]string {
-	settings := viper.GetStringMapString(name)
+func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
+func (p *profile) GetConfigDescription() map[string]string {
+	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string)
 
 	for k, v := range settings {
@@ -257,7 +258,7 @@ func (p *profile) Delete() error {
 	}
 
 	// Delete from the toml manually
-	err = t.Delete(*p.name)
+	err = t.Delete(p.Name())
 	if err != nil {
 		return err
 	}

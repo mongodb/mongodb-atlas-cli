@@ -22,7 +22,6 @@ import (
 	"sort"
 
 	"github.com/pelletier/go-toml"
-
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 )
@@ -245,7 +244,8 @@ func (p *profile) GetConfigDescription() map[string]string {
 	return newSettings
 }
 
-// Delete deletes an existing configuration
+// Delete deletes an existing configuration. The profiles are reloaded afterwards, as
+// this edits the file directly.
 func Delete() error { return p.Delete() }
 func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
@@ -276,7 +276,7 @@ func (p *profile) Delete() error {
 	}
 
 	// Force reload, so that viper has the new configuration
-	return Load()
+	return p.Load(true)
 }
 
 // Load loads the configuration from disk

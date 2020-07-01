@@ -17,8 +17,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/prompt"
+	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -26,43 +25,34 @@ import (
 )
 
 type DeleteOpts struct {
-	name string
+	*cli.DeleteOpts
 }
 
 func (opts *DeleteOpts) Run() error {
-	config.SetName(&opts.name)
-
-	profile := config.GetConfigDescription()
-	if len(profile) == 0 {
-		return fmt.Errorf("profile %v does not exist", opts.name)
-	}
-
-	shouldDelete := false
-	p := prompt.NewDeleteConfirm(opts.name)
-	if err := survey.AskOne(p, &shouldDelete); err != nil {
-		return err
-	}
-
-	if !shouldDelete {
-		return nil
-	}
-
-	if err := config.Delete(); err != nil {
-		return err
-	}
-
-	return nil
+	return config.Delete()
 }
 
 func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{}
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Profile '%s' deleted\n", "Profile not deleted"),
+	}
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
 		Short:   description.ConfigDeleteDescription,
 		Args:    cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
+
+			config.SetName(&opts.Entry)
+			profile := config.GetConfigDescription()
+			if len(profile) == 0 {
+				return fmt.Errorf("profile %v does not exist", opts.Entry)
+			}
+
+			return opts.Prompt()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}

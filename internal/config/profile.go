@@ -230,7 +230,7 @@ func (p *profile) SetOrgID(v string) {
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool { return p.Exists(name) }
 func (p *profile) Exists(name string) bool {
-	return len(viper.GetStringMap(name)) == 0
+	return len(viper.GetStringMap(name)) > 0
 }
 
 // GetConfigDescription returns a map describing the configuration

@@ -34,7 +34,7 @@ func (opts *RenameOpts) Run() error {
 		return fmt.Errorf("profile %v does not exist", opts.oldName)
 	}
 
-	if !config.Exists(opts.newName) {
+	if config.Exists(opts.newName) {
 		replaceExistingProfile := false
 		p := prompt.NewProfileReplaceConfirm(opts.newName)
 		if err := survey.AskOne(p, &replaceExistingProfile); err != nil {

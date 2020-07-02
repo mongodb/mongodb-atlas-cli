@@ -39,6 +39,7 @@ func TestAlerts(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	// This test should be run before all other tests to grab an alert ID for all other tests
 	t.Run("List", func(t *testing.T) {
 		t.Run("with no status", func(t *testing.T) {
 			cmd := exec.Command(cliPath,

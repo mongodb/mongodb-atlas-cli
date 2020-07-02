@@ -100,13 +100,12 @@ func newProfile() *profile {
 	if err != nil {
 		log.Fatal(err)
 	}
-	name := "default"
+	name := DefaultProfile
 	np := &profile{
 		name:      &name,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
 	}
-	np.SetService(CloudService)
 	return np
 }
 

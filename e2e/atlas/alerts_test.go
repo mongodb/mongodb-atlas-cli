@@ -33,12 +33,90 @@ const (
 func TestAlerts(t *testing.T) {
 	atlasEntity := "atlas"
 	alertsEntity := "alerts"
-	alertID := "5ecbef6b2359825e889837a7"
+	var alertID string
 
 	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	// This test should be run before all other tests to grab an alert ID for all other tests
+	t.Run("List", func(t *testing.T) {
+		t.Run("with no status", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			alerts := mongodbatlas.AlertsResponse{}
+			err = json.Unmarshal(resp, &alerts)
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if len(alerts.Results) == 0 {
+				t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
+			}
+			alertID = alerts.Results[0].ID
+		})
+
+		t.Run("with status OPEN", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+				"--status",
+				"OPEN",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			alerts := mongodbatlas.AlertsResponse{}
+			err = json.Unmarshal(resp, &alerts)
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+
+		t.Run("List with status CLOSED", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+				"--status",
+				"CLOSED",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			alerts := mongodbatlas.AlertsResponse{}
+			err = json.Unmarshal(resp, &alerts)
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -72,98 +150,9 @@ func TestAlerts(t *testing.T) {
 		if alert.EventTypeName != usersWithoutMultiFactorAuth {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
 		}
-
-	})
-
-	t.Run("List with no status", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
-
-	})
-	t.Run("List with status OPEN", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-			"--status",
-			"OPEN",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=0\nwant>0\n")
-		}
-
-	})
-
-	t.Run("List with status CLOSED", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-			"--status",
-			"CLOSED",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
-
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,
@@ -192,7 +181,6 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,
@@ -219,7 +207,7 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("UnaAcknowledge", func(t *testing.T) {
+	t.Run("UnAcknowledge", func(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
 			atlasEntity,

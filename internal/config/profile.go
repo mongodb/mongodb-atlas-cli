@@ -20,6 +20,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
@@ -29,7 +30,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config Setter,Saver,SetSaver,Getter,Config
 
 type profile struct {
-	name      *string
+	name      string
 	configDir string
 	fs        afero.Fs
 }
@@ -100,28 +101,32 @@ func newProfile() *profile {
 	if err != nil {
 		log.Fatal(err)
 	}
-	name := DefaultProfile
 	np := &profile{
-		name:      &name,
+		name:      DefaultProfile,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
 	}
 	return np
 }
 
-func Name() string { return p.Name() }
-func (p *profile) Name() string {
-	return *p.name
+func SetConfigPath(name string) { p.SetConfigPath(name) }
+func (p *profile) SetConfigPath(name string) {
+	p.configDir = name
 }
 
-func SetName(name *string) { p.SetName(name) }
-func (p *profile) SetName(name *string) {
-	p.name = name
+func Name() string { return p.Name() }
+func (p *profile) Name() string {
+	return p.name
+}
+
+func SetName(name string) { p.SetName(name) }
+func (p *profile) SetName(name string) {
+	p.name = strings.ToLower(name)
 }
 
 func Set(name, value string) { p.Set(name, value) }
 func (p *profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", *p.name, name), value)
+	viper.Set(fmt.Sprintf("%s.%s", p.name, name), value)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -129,8 +134,8 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	if p.name != nil {
-		return viper.GetString(fmt.Sprintf("%s.%s", *p.name, name))
+	if p.name != "" {
+		return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
 	}
 	return ""
 }
@@ -141,7 +146,7 @@ func (p *profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", *p.name, service)
+	serviceKey := fmt.Sprintf("%s.%s", p.name, service)
 	if viper.IsSet(serviceKey) {
 		return viper.GetString(serviceKey)
 	}

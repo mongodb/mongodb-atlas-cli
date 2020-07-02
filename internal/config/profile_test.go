@@ -21,29 +21,29 @@ import (
 	"testing"
 
 	"github.com/spf13/viper"
-
 	"github.com/stretchr/testify/assert"
 )
 
-var testConfigDir = ""
+const (
+	atlasProfile   = "atlas"
+	newProfileName = "newProfileName"
+)
 
-const atlasProfile = "atlas"
-const newProfileName = "newProfileName"
+var testConfigDir = ""
 
 func TestMain(m *testing.M) {
 	var err error
 	testConfigDir, err = ioutil.TempDir("", "")
 	if err != nil {
-		log.Fatalf("failed to set up for test %v", err)
+		log.Fatalf("failed to set up test directory: %v", err)
 	}
 
 	SetConfigPath(testConfigDir)
-	fmt.Printf("set config path to %v\n", testConfigDir)
 
 	code := m.Run()
 
 	if err := os.RemoveAll(testConfigDir); err != nil {
-		log.Fatalf("failed to clean up after test: %v", err)
+		log.Fatalf("failed to remove test directory: %v", err)
 	}
 
 	os.Exit(code)

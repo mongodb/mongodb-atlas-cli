@@ -27,3 +27,11 @@ func NewDeleteConfirm(entry string) *survey.Confirm {
 	}
 	return prompt
 }
+
+// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced
+func NewProfileReplaceConfirm(entry string) *survey.Confirm {
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("There is already a profile called %s. Do you want to replace it?", entry),
+	}
+	return prompt
+}

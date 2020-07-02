@@ -30,13 +30,11 @@ type RenameOpts struct {
 }
 
 func (opts *RenameOpts) Run() error {
-	config.SetName(&opts.oldName)
-	if config.IsProfileEmpty() {
+	if config.Exists(opts.oldName) {
 		return fmt.Errorf("profile %v does not exist", opts.oldName)
 	}
 
-	config.SetName(&opts.newName)
-	if !config.IsProfileEmpty() {
+	if !config.Exists(opts.newName) {
 		replaceExistingProfile := false
 		p := prompt.NewProfileReplaceConfirm(opts.newName)
 		if err := survey.AskOne(p, &replaceExistingProfile); err != nil {
@@ -44,6 +42,7 @@ func (opts *RenameOpts) Run() error {
 		}
 
 		if !replaceExistingProfile {
+			fmt.Printf("Profile was not renamed.\n")
 			return nil
 		}
 	}
@@ -53,6 +52,7 @@ func (opts *RenameOpts) Run() error {
 		return err
 	}
 
+	fmt.Printf("The profile %v was renamed to %v.\n", opts.oldName, opts.newName)
 	return nil
 }
 

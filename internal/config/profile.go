@@ -227,10 +227,10 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
-// IsProfileEmpty returns true if there is no configuration for the current name.
-func IsProfileEmpty() bool { return p.IsProfileEmpty() }
-func (p *profile) IsProfileEmpty() bool {
-	return len(viper.GetStringMap(p.Name())) == 0
+// Exists returns true if there are any set settings for the profile name.
+func Exists(name string) bool { return p.Exists(name) }
+func (p *profile) Exists(name string) bool {
+	return len(viper.GetStringMap(name)) == 0
 }
 
 // GetConfigDescription returns a map describing the configuration

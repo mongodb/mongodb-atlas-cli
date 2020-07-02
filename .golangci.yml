@@ -74,5 +74,6 @@ linters:
   # - wsl
 
 run:
+  tests: true
   skip-dirs:
     - internal/mocks

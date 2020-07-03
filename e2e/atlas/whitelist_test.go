@@ -28,8 +28,7 @@ import (
 )
 
 func TestWhitelist(t *testing.T) {
-	atlasEntity := "atlas"
-	whitelistEntity := "whitelist"
+	const whitelistEntity = "whitelist"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
 

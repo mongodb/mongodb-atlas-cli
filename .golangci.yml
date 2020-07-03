@@ -75,5 +75,15 @@ linters:
 
 run:
   tests: true
+  build-tags:
+    - e2e
   skip-dirs:
     - internal/mocks
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Don't check for cyclomatic complexity on e2e file.
+    - path: e2e
+      linters:
+        - gocyclo

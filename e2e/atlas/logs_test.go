@@ -23,8 +23,7 @@ import (
 )
 
 func TestLogs(t *testing.T) {
-	atlasEntity := "atlas"
-	logsEntity := "logs"
+	const logsEntity = "logs"
 
 	clusterName, err := deployCluster()
 	if err != nil {

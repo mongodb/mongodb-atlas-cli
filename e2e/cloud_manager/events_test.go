@@ -31,12 +31,11 @@ func TestEvents(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const cloudManagerEntity = "cm"
-	eventsEntity := "events"
+	const eventsEntity = "events"
 
 	t.Run("ListProjectEvent", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			cloudManagerEntity,
+			entity,
 			eventsEntity,
 			"list",
 			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
@@ -63,7 +62,7 @@ func TestEvents(t *testing.T) {
 
 	t.Run("ListOrganizationEvent", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			cloudManagerEntity,
+			entity,
 			eventsEntity,
 			"list",
 			"--orgId="+os.Getenv("MCLI_ORG_ID"),

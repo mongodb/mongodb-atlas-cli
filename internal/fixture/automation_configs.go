@@ -156,8 +156,7 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				},
 			},
 		},
-		Version:   1,
-		UIBaseURL: "",
+		Version: 1,
 	}
 }
 

@@ -54,10 +54,6 @@ func TestEvents(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
-		}
 	})
 
 	t.Run("ListOrganizationEvent", func(t *testing.T) {
@@ -81,10 +77,6 @@ func TestEvents(t *testing.T) {
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
 		}
 	})
 }

@@ -83,5 +83,7 @@ func DiagnoseArchiveDownloadBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
+	_ = cmd.MarkFlagFilename(flag.Out)
+
 	return cmd
 }

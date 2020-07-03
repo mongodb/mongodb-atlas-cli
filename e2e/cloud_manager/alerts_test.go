@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -27,27 +26,20 @@ import (
 )
 
 const (
-	open                            = "OPEN"
-	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open                        = "OPEN"
+	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAlerts(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
+	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	entity := "cloud-manager"
-	alertsEntity := "alerts"
+	const alertsEntity = "alerts"
 	alertID := "5ec2ac941271767f21cbaefe"
 
 	t.Run("Describe", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -77,14 +69,12 @@ func TestAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
-		if alert.EventTypeName != users_without_multi_factor_auth {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, users_without_multi_factor_auth)
+		if alert.EventTypeName != usersWithoutMultiFactorAuth {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
 		}
-
 	})
 
 	t.Run("List with no status", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -108,10 +98,8 @@ func TestAlerts(t *testing.T) {
 		if len(alerts.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
-
 	})
 	t.Run("List with status OPEN", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -137,10 +125,8 @@ func TestAlerts(t *testing.T) {
 		if len(alerts.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
 		}
-
 	})
 	t.Run("List with status CLOSED", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -166,11 +152,9 @@ func TestAlerts(t *testing.T) {
 		if len(alerts.Results) > 0 {
 			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
 		}
-
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -199,7 +183,6 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -227,7 +210,6 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("UnaAcknowledge", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
@@ -252,5 +234,4 @@ func TestAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
 		}
 	})
-
 }

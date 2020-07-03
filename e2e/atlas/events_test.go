@@ -58,11 +58,9 @@ func TestEvents(t *testing.T) {
 		if len(events.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
 		}
-
 	})
 
 	t.Run("ListOrganizationEvent", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			eventsEntity,
@@ -88,6 +86,5 @@ func TestEvents(t *testing.T) {
 		if len(events.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
 		}
-
 	})
 }

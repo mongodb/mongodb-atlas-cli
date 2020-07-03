@@ -21,7 +21,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -29,31 +28,21 @@ import (
 	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 )
 
-const (
-	roleReadWrite = "readWrite"
-)
-
 func TestDBUsers(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
+	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	entity := "cloud-manager"
-	dbusersEntity := "dbusers"
+	const dbUsersEntity = "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
-			dbusersEntity,
+			dbUsersEntity,
 			"create",
 			"--username="+username,
 			"--password=passW0rd",
@@ -72,7 +61,7 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, entity, dbusersEntity, "ls")
+		cmd := exec.Command(cliPath, entity, dbUsersEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -80,17 +69,20 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		users := []mongodbatlas.DatabaseUser{}
+		var users []mongodbatlas.DatabaseUser
 		err = json.Unmarshal(resp, &users)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
-
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, entity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath, entity, dbUsersEntity, "delete", username, "--force", "--authDB", "admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -102,5 +94,4 @@ func TestDBUsers(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
 		}
 	})
-
 }

@@ -31,8 +31,7 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
-	atlasEntity := "atlas"
-	alertsEntity := "alerts"
+	const alertsEntity = "alerts"
 	var alertID string
 
 	cliPath, err := cli()
@@ -208,7 +207,6 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,

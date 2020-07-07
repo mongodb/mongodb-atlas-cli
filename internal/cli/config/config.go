@@ -140,7 +140,7 @@ Enter [?] on any option to get help.
 	return nil
 }
 
-// askProject will try to to construct a select based on fetched projects.
+// askProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID
 func (opts *configOpts) askProject() (string, error) {
 	pMap, pSlice, err := opts.projects()
@@ -178,7 +178,7 @@ func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err
 	return pMap, pSlice, nil
 }
 
-// askOrg will try to to construct a select based on fetched organizations.
+// askOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID
 func (opts *configOpts) askOrg() (string, error) {
 	oMap, oSlice, err := opts.orgs()

@@ -107,15 +107,10 @@ Enter [?] on any option to get help.
 	}
 
 	if config.IsAccessSet() {
-		var err error
-
-		opts.OrgID, err = opts.askOrg()
-		if err != nil {
+		if err := opts.askOrg(); err != nil {
 			return err
 		}
-
-		opts.ProjectID, err = opts.askProject()
-		if err != nil {
+		if err := opts.askProject(); err != nil {
 			return err
 		}
 	} else {
@@ -142,22 +137,20 @@ Enter [?] on any option to get help.
 
 // askProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID
-func (opts *configOpts) askProject() (string, error) {
+func (opts *configOpts) askProject() error {
 	pMap, pSlice, err := opts.projects()
 	var projectID string
 	if err != nil || len(pSlice) == 0 {
 		prompt := newProjectIDInput()
-		if err := survey.AskOne(prompt, &projectID, survey.WithValidator(validate.OptionalObjectID)); err != nil {
-			return projectID, err
-		}
-		return projectID, nil
+		return survey.AskOne(prompt, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
 	prompt := newProjectSelect(pSlice)
 	if err := survey.AskOne(prompt, &projectID); err != nil {
-		return "", err
+		return err
 	}
-	return pMap[projectID], nil
+	opts.ProjectID = pMap[projectID]
+	return nil
 }
 
 // projects fetches projects and returns then as a slice of the format `nameIDFormat`,
@@ -180,22 +173,20 @@ func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err
 
 // askOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID
-func (opts *configOpts) askOrg() (string, error) {
+func (opts *configOpts) askOrg() error {
 	oMap, oSlice, err := opts.orgs()
 	var orgID string
 	if err != nil || len(oSlice) == 0 {
 		prompt := newOrgIDInput()
-		if err := survey.AskOne(prompt, &orgID, survey.WithValidator(validate.OptionalObjectID)); err != nil {
-			return orgID, err
-		}
-		return orgID, nil
+		return survey.AskOne(prompt, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
 	prompt := newOrgSelect(oSlice)
 	if err := survey.AskOne(prompt, &orgID); err != nil {
-		return "", err
+		return err
 	}
-	return oMap[orgID], nil
+	opts.OrgID = oMap[orgID]
+	return nil
 }
 
 // orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,

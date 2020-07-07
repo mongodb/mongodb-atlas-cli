@@ -30,10 +30,10 @@ func newOrgIDInput() survey.Prompt {
 	}
 }
 
-func newOrgSelect(a []string) survey.Prompt {
+func newOrgSelect(options []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default organization:",
-		Options: a,
+		Options: options,
 	}
 }
 
@@ -45,10 +45,10 @@ func newProjectIDInput() survey.Prompt {
 	}
 }
 
-func newProjectSelect(a []string) survey.Prompt {
+func newProjectSelect(options []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default project:",
-		Options: a,
+		Options: options,
 	}
 }
 

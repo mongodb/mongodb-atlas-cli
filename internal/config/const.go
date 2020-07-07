@@ -14,6 +14,8 @@
 
 package config
 
+import "os"
+
 const (
 	ToolName                = "mongocli"      // ToolName of the CLI
 	EnvPrefix               = "mcli"          // Prefix for ENV variables
@@ -31,4 +33,5 @@ const (
 	baseURL                 = "base_url"
 	opsManagerCACertificate = "ops_manager_ca_certificate"
 	opsManagerSkipVerify    = "ops_manager_skip_verify"
+	fileFlags               = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 )

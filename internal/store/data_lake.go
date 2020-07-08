@@ -33,7 +33,7 @@ type DataLakeDescriber interface {
 }
 
 type DataLakeCreator interface {
-	CreateDataLake(request *atlas.DataLakeCreateRequest) (*atlas.DataLake, error)
+	CreateDataLake(string, *atlas.DataLakeCreateRequest) (*atlas.DataLake, error)
 }
 
 type DataLakeDeleter interface {

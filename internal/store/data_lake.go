@@ -41,7 +41,7 @@ type DataLakeDeleter interface {
 }
 
 type DataLakeUpdater interface {
-	UpdateDataLake(string, string, *atlas.DataLake) (*atlas.DataLake, error)
+	UpdateDataLake(string, string, *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error)
 }
 
 type DataLakeStore interface {

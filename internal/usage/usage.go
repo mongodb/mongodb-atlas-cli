@@ -35,6 +35,8 @@ const (
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
+	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
+	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	Comment                         = "Optional description or comment for the entry."
 	DeleteAfter                     = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
 	Force                           = "Don't ask for confirmation."
@@ -132,6 +134,8 @@ Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
 	ClusterTypes = `Type of the cluster that you want to create.
+Valid values: REPLICASET|SHARDED.`
+	DataLakeTestBucket = `Type of the cluster that you want to create.
 Valid values: REPLICASET|SHARDED.`
 	Region = `Physical location of your MongoDB cluster.
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws

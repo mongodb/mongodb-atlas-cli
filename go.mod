@@ -2,6 +2,8 @@ module github.com/mongodb/mongocli
 
 go 1.14
 
+replace go.mongodb.org/atlas => /Users/rob/repos/mongodb/go-client-mongodb-atlas
+
 require (
 	github.com/AlecAivazis/survey/v2 v2.0.7
 	github.com/Masterminds/semver/v3 v3.1.0

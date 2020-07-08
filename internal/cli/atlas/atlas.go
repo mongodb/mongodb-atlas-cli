@@ -35,6 +35,7 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(ClustersBuilder())
+	cmd.AddCommand(DataLakeBuilder())
 	cmd.AddCommand(DBUsersBuilder())
 	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(alerts.Builder())

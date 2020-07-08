@@ -326,7 +326,7 @@ functions:
           <<: *go_options
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
           BARQUE_USERNAME: ${barque_user}
-          BARQUE_PASSWORD: ${barque_password}
+          BARQUE_API_KEY: ${barque_api_key}
         binary: build/package/curator-push.sh
 
 post:

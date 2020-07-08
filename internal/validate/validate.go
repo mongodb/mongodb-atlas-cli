@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-// toString tires to cast an interface to string
+// toString tries to cast an interface to string
 func toString(val interface{}) (string, error) {
 	var u string
 	var ok bool
@@ -49,6 +49,22 @@ func URL(val interface{}) error {
 	}
 
 	return nil
+}
+
+// OptionalURL validates a value is a valid URL for the cli store
+func OptionalURL(val interface{}) error {
+	if val == nil {
+		return nil
+	}
+	s, err := toString(val)
+	if err != nil {
+		return err
+	}
+	if s == "" {
+		return nil
+	}
+
+	return URL(val)
 }
 
 // OptionalObjectID validates a value is a valid ObjectID

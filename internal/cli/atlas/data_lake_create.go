@@ -57,7 +57,7 @@ func DataLakeCreateBuilder() *cobra.Command {
 	opts := &DataLakeCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateDataLakes,
+		Short: description.CreateDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Name = args[0]

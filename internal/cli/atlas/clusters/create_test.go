@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersCreate_Run(t *testing.T) {
+func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 	defer ctrl.Finish()
@@ -31,7 +31,7 @@ func TestClustersCreate_Run(t *testing.T) {
 	expected := &mongodbatlas.Cluster{}
 
 	t.Run("flags run", func(t *testing.T) {
-		createOpts := &ClustersCreateOpts{
+		createOpts := &CreateOpts{
 			name:       "ProjectBar",
 			region:     "US",
 			tier:       atlasM2,
@@ -87,7 +87,7 @@ func TestClustersCreate_Run(t *testing.T) {
 		fileName := "atlas_cluster_create_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-		createOpts := &ClustersCreateOpts{
+		createOpts := &CreateOpts{
 			filename: fileName,
 			fs:       appFS,
 			store:    mockStore,

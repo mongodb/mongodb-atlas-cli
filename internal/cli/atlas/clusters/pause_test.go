@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersPause_Run(t *testing.T) {
+func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterUpdater(ctrl)
 
@@ -33,7 +33,7 @@ func TestClustersPause_Run(t *testing.T) {
 		Paused: &paused,
 	}
 
-	updateOpts := &ClustersPauseOpts{
+	updateOpts := &PauseOpts{
 		name:  "ProjectBar",
 		store: mockStore,
 	}

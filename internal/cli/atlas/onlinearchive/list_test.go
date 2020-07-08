@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
@@ -22,26 +22,25 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersDescribe_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveLister(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{}
-
-	describeOpts := &ClustersDescribeOpts{
-		name:  "test",
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
+	var expected []*mongodbatlas.OnlineArchive
+
 	mockStore.
 		EXPECT().
-		Cluster(describeOpts.ProjectID, describeOpts.name).
+		OnlineArchives(listOpts.ProjectID, listOpts.clusterName).
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -12,20 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func ClustersIndexesBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "indexes",
-		Aliases: []string{"index"},
-		Short:   description.ClustersIndexes,
-	}
-	cmd.AddCommand(ClustersIndexesCreateBuilder())
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterLister(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.Cluster
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

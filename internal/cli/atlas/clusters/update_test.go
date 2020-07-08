@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersUpdate_Run(t *testing.T) {
+func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStore(ctrl)
 
@@ -33,7 +33,7 @@ func TestClustersUpdate_Run(t *testing.T) {
 	}
 
 	t.Run("flags run", func(t *testing.T) {
-		updateOpts := &ClustersUpdateOpts{
+		updateOpts := &UpdateOpts{
 			name:       "ProjectBar",
 			tier:       atlasM2,
 			diskSizeGB: 10,
@@ -92,7 +92,7 @@ func TestClustersUpdate_Run(t *testing.T) {
 		fileName := "atlas_cluster_update_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-		updateOpts := &ClustersUpdateOpts{
+		updateOpts := &UpdateOpts{
 			filename: fileName,
 			fs:       appFS,
 			store:    mockStore,

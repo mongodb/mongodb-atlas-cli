@@ -15,22 +15,30 @@
 package atlas
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func DataLakeBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "datalake",
-		Aliases: []string{"dataLakes", "dataLake", "datalakes"},
-		Short:   description.DataLakes,
-		Long:    description.DataLakesLong,
+func TestDataLakeDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockDataLakeDeleter(ctrl)
+
+	defer ctrl.Finish()
+
+	deleteOpts := &DataLakeDeleteOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(DataLakeListBuilder())
-	cmd.AddCommand(DataLakeDescribeBuilder())
-	cmd.AddCommand(DataLakeCreateBuilder())
-	cmd.AddCommand(DataLakeDeleteBuilder())
+	mockStore.
+		EXPECT().
+		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.Name).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

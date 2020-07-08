@@ -16,7 +16,7 @@
 
 export NOTARY_KEY_NAME
 export BARQUE_USERNAME
-export BARQUE_PASSWORD
+export BARQUE_API_KEY
 case "${NOTARY_KEY_NAME}" in
     server-4.2)
         export NOTARY_TOKEN=${signing_auth_token_42}

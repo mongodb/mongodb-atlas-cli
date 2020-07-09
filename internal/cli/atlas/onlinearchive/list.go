@@ -62,7 +62,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.Page)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
 	return cmd
 }

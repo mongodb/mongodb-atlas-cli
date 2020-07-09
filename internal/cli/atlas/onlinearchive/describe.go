@@ -49,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) describe <name> --projectId projectId
+// mongocli atlas cluster(s) describe <name> [--clusterName name][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

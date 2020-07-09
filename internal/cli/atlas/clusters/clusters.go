@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func ClustersBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:        "clusters",
 		Aliases:    []string{"cluster"},
@@ -27,15 +28,16 @@ func ClustersBuilder() *cobra.Command {
 		Short:      description.Clusters,
 		Long:       description.ClustersLong,
 	}
-	cmd.AddCommand(ClustersListBuilder())
-	cmd.AddCommand(ClustersDescribeBuilder())
-	cmd.AddCommand(ClustersCreateBuilder())
-	cmd.AddCommand(ClustersWatchBuilder())
-	cmd.AddCommand(ClustersUpdateBuilder())
-	cmd.AddCommand(ClustersPauseBuilder())
-	cmd.AddCommand(ClustersStartBuilder())
-	cmd.AddCommand(ClustersDeleteBuilder())
-	cmd.AddCommand(ClustersIndexesBuilder())
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(WatchBuilder())
+	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(PauseBuilder())
+	cmd.AddCommand(StartBuilder())
+	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(IndexesBuilder())
+	cmd.AddCommand(onlinearchive.Builder())
 
 	return cmd
 }

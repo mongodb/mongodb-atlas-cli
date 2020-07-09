@@ -33,7 +33,7 @@ func TestDataLakeDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.Name).
+		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.name).
 		Return(nil).
 		Times(1)
 

@@ -12,57 +12,60 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ClustersDeleteOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
-	store store.ClusterDeleter
+	cli.ListOpts
+	store store.ClusterLister
 }
 
-func (opts *ClustersDeleteOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+func (opts *ListOpts) Run() error {
+	listOpts := opts.NewListOptions()
+	result, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) delete <name> --projectId projectId [--confirm]
-func ClustersDeleteBuilder() *cobra.Command {
-	opts := &ClustersDeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Cluster '%s' deleted\n", "Cluster not deleted"),
-	}
+// mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
-		Aliases: []string{"rm"},
-		Short:   description.DeleteCluster,
-		Args:    cobra.ExactArgs(1),
+		Use:     "list",
+		Short:   description.ListClusters,
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,19 +25,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ClustersDescribeOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	name  string
 	store store.ClusterDescriber
 }
 
-func (opts *ClustersDescribeOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersDescribeOpts) Run() error {
+func (opts *DescribeOpts) Run() error {
 	result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
 
 	if err != nil {
@@ -48,8 +48,8 @@ func (opts *ClustersDescribeOpts) Run() error {
 }
 
 // mongocli atlas cluster(s) describe <name> --projectId projectId
-func ClustersDescribeBuilder() *cobra.Command {
-	opts := &ClustersDescribeOpts{}
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: description.DescribeCluster,

@@ -326,7 +326,7 @@ functions:
           <<: *go_options
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
           BARQUE_USERNAME: ${barque_user}
-          BARQUE_PASSWORD: ${barque_password}
+          BARQUE_API_KEY: ${barque_api_key}
         binary: build/package/curator-push.sh
 
 post:
@@ -439,6 +439,23 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: iam
+  - name: atlas_data_lake_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datalake
   - name: cloud_manager_iam_e2e
     tags: ["e2e"]
     depends_on:
@@ -714,6 +731,26 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+  - name: push_ubuntu2004_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
   - name: push_debian71_enterprise
     <<: *default_push_def
     commands:
@@ -906,6 +943,26 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+  - name: push_ubuntu2004_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
   - name: push_debian71_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1013,7 +1070,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "1.0.2"
+      server_version: "1.0.3"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1051,16 +1108,16 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.2.1"
+      server_version: "4.2.2"
       notary_key_name: "server-4.2"
     tasks:
       - name: .push_stable
   - name: release_publish_44
-    display_name: "Release (yum/apt) 4.4"
+    display_name: "Publish yum/apt 4.4"
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.4.1"
+      server_version: "4.4.2"
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable

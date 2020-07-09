@@ -29,17 +29,17 @@ func TestDataLakeList_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.DataLake
-	describeOpts := &DataLakeListOpts{
+	listOpts := &DataLakeListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DataLakes(describeOpts.ProjectID).
+		DataLakes(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

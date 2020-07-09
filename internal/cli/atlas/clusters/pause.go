@@ -12,46 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DataLakeDeleteOpts struct {
+type PauseOpts struct {
 	cli.GlobalOpts
-	store store.DataLakeDeleter
 	name  string
+	store store.ClusterUpdater
 }
 
-func (opts *DataLakeDeleteOpts) initStore() error {
+func (opts *PauseOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DataLakeDeleteOpts) Run() error {
-	return opts.store.DeleteDataLake(opts.ProjectID, opts.name)
+func (opts *PauseOpts) Run() error {
+	paused := true
+	cluster := &atlas.Cluster{
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) delete name --projectId projectId
-func DataLakeDeleteBuilder() *cobra.Command {
-	opts := &DataLakeDeleteOpts{}
+// mongocli atlas cluster(s) pause <name> [--projectId projectId]
+func PauseBuilder() *cobra.Command {
+	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "delete <name>",
-		Short: description.DeleteDataLake,
+		Use:   "pause <name>",
+		Short: description.PauseCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}

@@ -36,7 +36,7 @@ func TestProcessesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.NewListOptions()).
+		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
 		Return(expected, nil).
 		Times(1)
 

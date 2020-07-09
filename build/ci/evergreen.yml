@@ -714,6 +714,26 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+  - name: push_ubuntu2004_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
   - name: push_debian71_enterprise
     <<: *default_push_def
     commands:
@@ -905,6 +925,26 @@ tasks:
         vars:
           edition: org
           distro: ubuntu1804
+          ext: deb
+  - name: push_ubuntu2004_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
           ext: deb
   - name: push_debian71_enterprise_stable
     <<: *default_push_stable_def

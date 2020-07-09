@@ -46,7 +46,7 @@ func (opts *DataLakeListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) list --projectId projectId [--page N] [--limit N]
+// mongocli atlas datalake(s) list --projectId projectId
 func DataLakeListBuilder() *cobra.Command {
 	opts := &DataLakeListOpts{}
 	cmd := &cobra.Command{

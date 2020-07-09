@@ -24,8 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/magiconair/properties/assert"
-
+	"github.com/go-test/deep"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -59,7 +58,9 @@ func TestDatalake(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, datalake.Name, datalakeName)
+		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -81,7 +82,9 @@ func TestDatalake(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, datalake.Name, datalakeName)
+		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {

@@ -47,7 +47,7 @@ func (opts *DataLakeDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) describe name --projectId projectId [--page N] [--limit N]
+// mongocli atlas datalake(s) describe name --projectId projectId
 func DataLakeDescribeBuilder() *cobra.Command {
 	opts := &DataLakeDescribeOpts{}
 	cmd := &cobra.Command{

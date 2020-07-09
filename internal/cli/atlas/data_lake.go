@@ -28,6 +28,7 @@ func DataLakeBuilder() *cobra.Command {
 	}
 
 	cmd.AddCommand(DataLakeListBuilder())
+	cmd.AddCommand(DataLakeDescribeBuilder())
 
 	return cmd
 }

@@ -41,6 +41,7 @@ const (
 	DataLakes                = "Manage data lakes for your project."
 	DataLakesLong            = "The datalakes command provides access to your projects data lakes. You can create, edit, and delete data lakes."
 	ListDataLakes            = "List data lakes for your project."
+	DescribeDataLake         = "Return a specific data lake."
 	Clusters                 = "Manage clusters for your project."
 	ClustersIndexes          = "Manage cluster rolling indexes for your project."
 	ClustersLong             = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."

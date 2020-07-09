@@ -44,7 +44,7 @@ func TestDataLakeDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DataLake(describeOpts.ProjectID, describeOpts.Name).
+		DataLake(describeOpts.ProjectID, describeOpts.name).
 		Return(&expected, nil).
 		Times(1)
 

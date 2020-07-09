@@ -1053,7 +1053,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "1.0.2"
+      server_version: "1.0.3"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1091,16 +1091,16 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.2.1"
+      server_version: "4.2.2"
       notary_key_name: "server-4.2"
     tasks:
       - name: .push_stable
   - name: release_publish_44
-    display_name: "Release (yum/apt) 4.4"
+    display_name: "Publish yum/apt 4.4"
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.4.1"
+      server_version: "4.4.2"
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable

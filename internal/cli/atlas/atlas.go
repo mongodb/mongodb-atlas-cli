@@ -35,6 +35,7 @@ func Builder() *cobra.Command {
 			return validate.Credentials()
 		},
 	}
+	cmd.AddCommand(DataLakeBuilder())
 	cmd.AddCommand(clusters.Builder())
 	cmd.AddCommand(DBUsersBuilder())
 	cmd.AddCommand(whitelist.Builder())

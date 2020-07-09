@@ -84,12 +84,45 @@ You can use a combination of the next env variables to override your profile set
 - `MCLI_ORG_ID`
 - `MCLI_OPS_MANAGER_URL`
 
-### ZSH Completion (experimental)
-Add the following to your `.zshrc` file
+### Shell Completions
+
+If you install via [homebrew](#hombrew-on-macos) there's nothing else to do. 
+For other installations please refer to your preferred shell instructions.
+
+#### Bash
+
+```bash
+$ source <(mongocli completion bash)
+```
+
+To load completions for each session, execute once:
+
+Linux:
+```bash
+mongocli completion bash > /etc/bash_completion.d/mongocli
+```
+  
+macOS:
+```bash
+mongocli completion bash > /usr/local/etc/bash_completion.d/mongocli
+```
+
+#### Zsh
 
 ```bash
 source <(mongocli completion zsh)
-compdef _mongocli mongocli
+``` 
+
+To load completions for each session, execute once:
+
+```bash
+mongocli completion zsh > "${fpath[1]}/_mongocli"
+```
+
+#### Fish
+
+```bash
+mongocli completion fish | source
 ```
 
 ## Contributing

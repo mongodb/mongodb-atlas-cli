@@ -98,13 +98,7 @@ func TestDatalake(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, datalakeName, "delete", datalakeName)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var state *os.ProcessState
-		state, err = cmd.Process.Wait()
+		state, err := cmd.Process.Wait()
 		if err != nil {
 			t.Fatalf("unexpceted error: %v", err)
 		}

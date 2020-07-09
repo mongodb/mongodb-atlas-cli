@@ -111,18 +111,18 @@ func (m *MockDataLakeCreator) EXPECT() *MockDataLakeCreatorMockRecorder {
 }
 
 // CreateDataLake mocks base method
-func (m *MockDataLakeCreator) CreateDataLake(arg0 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeCreator) CreateDataLake(arg0, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDataLake", arg0)
+	ret := m.ctrl.Call(m, "CreateDataLake", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateDataLake indicates an expected call of CreateDataLake
-func (mr *MockDataLakeCreatorMockRecorder) CreateDataLake(arg0 interface{}) *gomock.Call {
+func (mr *MockDataLakeCreatorMockRecorder) CreateDataLake(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDataLake", reflect.TypeOf((*MockDataLakeCreator)(nil).CreateDataLake), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDataLake", reflect.TypeOf((*MockDataLakeCreator)(nil).CreateDataLake), arg0, arg1)
 }
 
 // MockDataLakeDeleter is a mock of DataLakeDeleter interface
@@ -224,18 +224,18 @@ func (m *MockDataLakeStore) EXPECT() *MockDataLakeStoreMockRecorder {
 }
 
 // CreateDataLake mocks base method
-func (m *MockDataLakeStore) CreateDataLake(arg0 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeStore) CreateDataLake(arg0, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDataLake", arg0)
+	ret := m.ctrl.Call(m, "CreateDataLake", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateDataLake indicates an expected call of CreateDataLake
-func (mr *MockDataLakeStoreMockRecorder) CreateDataLake(arg0 interface{}) *gomock.Call {
+func (mr *MockDataLakeStoreMockRecorder) CreateDataLake(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDataLake", reflect.TypeOf((*MockDataLakeStore)(nil).CreateDataLake), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDataLake", reflect.TypeOf((*MockDataLakeStore)(nil).CreateDataLake), arg0, arg1)
 }
 
 // DataLake mocks base method

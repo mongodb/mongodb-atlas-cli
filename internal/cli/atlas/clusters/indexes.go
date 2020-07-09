@@ -12,36 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestDataLakeDescribe_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeDescriber(ctrl)
-
-	defer ctrl.Finish()
-
-	expected := mongodbatlas.DataLake{}
-
-	describeOpts := &DataLakeDescribeOpts{
-		store: mockStore,
+func IndexesBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "indexes",
+		Aliases: []string{"index"},
+		Short:   description.ClustersIndexes,
 	}
+	cmd.AddCommand(IndexesCreateBuilder())
 
-	mockStore.
-		EXPECT().
-		DataLake(describeOpts.ProjectID, describeOpts.name).
-		Return(&expected, nil).
-		Times(1)
-
-	err := describeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

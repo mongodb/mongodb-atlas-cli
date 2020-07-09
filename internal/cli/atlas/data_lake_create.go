@@ -29,7 +29,7 @@ import (
 type DataLakeCreateOpts struct {
 	cli.GlobalOpts
 	store store.DataLakeCreator
-	Name  string
+	name  string
 }
 
 func (opts *DataLakeCreateOpts) initStore() error {
@@ -40,7 +40,7 @@ func (opts *DataLakeCreateOpts) initStore() error {
 
 func (opts *DataLakeCreateOpts) Run() error {
 	createRequest := mongodbatlas.DataLakeCreateRequest{
-		Name: opts.Name,
+		Name: opts.name,
 	}
 
 	result, err := opts.store.CreateDataLake(opts.ProjectID, &createRequest)
@@ -57,10 +57,10 @@ func DataLakeCreateBuilder() *cobra.Command {
 	opts := &DataLakeCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateDataLakes,
+		Short: description.CreateDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.Name = args[0]
+			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

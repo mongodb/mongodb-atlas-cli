@@ -28,7 +28,7 @@ import (
 type DataLakeDescribeOpts struct {
 	cli.GlobalOpts
 	store store.DataLakeDescriber
-	Name  string
+	name  string
 }
 
 func (opts *DataLakeDescribeOpts) initStore() error {
@@ -38,8 +38,7 @@ func (opts *DataLakeDescribeOpts) initStore() error {
 }
 
 func (opts *DataLakeDescribeOpts) Run() error {
-	result, err := opts.store.DataLake(opts.ConfigProjectID(), opts.Name)
-
+	result, err := opts.store.DataLake(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
@@ -47,15 +46,15 @@ func (opts *DataLakeDescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) describe name --projectId projectId [--page N] [--limit N]
+// mongocli atlas datalake(s) describe name --projectId projectId
 func DataLakeDescribeBuilder() *cobra.Command {
 	opts := &DataLakeDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: description.DescribeDataLakes,
+		Short: description.DescribeDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.Name = args[0]
+			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

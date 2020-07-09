@@ -44,7 +44,7 @@ var (
 	}
 
 	completionCmd = &cobra.Command{
-		Use:   "completion <shell>",
+		Use:   "completion <bash|zsh|fish|powershell>",
 		Args:  cobra.ExactValidArgs(1),
 		Short: "Generate shell completion scripts",
 		Long: `Generate shell completion scripts for MongoDB CLI commands.

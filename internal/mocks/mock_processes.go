@@ -5,9 +5,10 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
 // MockProcessLister is a mock of ProcessLister interface
@@ -34,7 +35,7 @@ func (m *MockProcessLister) EXPECT() *MockProcessListerMockRecorder {
 }
 
 // Processes mocks base method
-func (m *MockProcessLister) Processes(arg0 string, arg1 *mongodbatlas.ListOptions) ([]*mongodbatlas.Process, error) {
+func (m *MockProcessLister) Processes(arg0 string, arg1 *mongodbatlas.ProcessesListOptions) ([]*mongodbatlas.Process, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Processes", arg0, arg1)
 	ret0, _ := ret[0].([]*mongodbatlas.Process)

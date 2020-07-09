@@ -37,13 +37,14 @@ func TestDataLakeDescribe_Run(t *testing.T) {
 		State:               "",
 		Storage:             mongodbatlas.Storage{},
 	}
+
 	describeOpts := &DataLakeDescribeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DataLake(describeOpts.ProjectID, describeOpts.Name).
+		DataLake(describeOpts.ProjectID, describeOpts.name).
 		Return(&expected, nil).
 		Times(1)
 

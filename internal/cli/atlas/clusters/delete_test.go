@@ -12,39 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersPause_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterUpdater(ctrl)
+	mockStore := mocks.NewMockClusterDeleter(ctrl)
 
 	defer ctrl.Finish()
 
-	paused := true
-	expected := &mongodbatlas.Cluster{
-		Paused: &paused,
-	}
-
-	updateOpts := &ClustersPauseOpts{
-		name:  "ProjectBar",
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).
-		Return(expected, nil).
+		DeleteCluster(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := updateOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

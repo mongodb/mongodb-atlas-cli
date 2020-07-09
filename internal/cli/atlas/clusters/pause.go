@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,21 +23,27 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DataLakeListOpts struct {
+type PauseOpts struct {
 	cli.GlobalOpts
-	store store.DataLakeLister
+	name  string
+	store store.ClusterUpdater
 }
 
-func (opts *DataLakeListOpts) initStore() error {
+func (opts *PauseOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DataLakeListOpts) Run() error {
-	result, err := opts.store.DataLakes(opts.ConfigProjectID())
+func (opts *PauseOpts) Run() error {
+	paused := true
+	cluster := &atlas.Cluster{
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 
 	if err != nil {
 		return err
@@ -46,18 +52,18 @@ func (opts *DataLakeListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) list --projectId projectId
-func DataLakeListBuilder() *cobra.Command {
-	opts := &DataLakeListOpts{}
+// mongocli atlas cluster(s) pause <name> [--projectId projectId]
+func PauseBuilder() *cobra.Command {
+	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListDataLakes,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "pause <name>",
+		Short: description.PauseCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}

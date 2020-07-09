@@ -20,10 +20,10 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
-	go.mongodb.org/atlas v0.3.1-0.20200626205920-3b1571e934d6
-	go.mongodb.org/ops-manager v0.6.2-0.20200703132932-531e44288db7
+	go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04
+	go.mongodb.org/ops-manager v0.7.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

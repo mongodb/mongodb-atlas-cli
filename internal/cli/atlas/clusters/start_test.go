@@ -12,38 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersIndexesCreate_Run(t *testing.T) {
+func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIndexCreator(ctrl)
+	mockStore := mocks.NewMockClusterUpdater(ctrl)
 
 	defer ctrl.Finish()
 
-	createOpts := &ClustersIndexesCreateOpts{
-		name:        "ProjectBar",
-		clusterName: "US",
-		db:          "test",
-		collection:  "test",
-		keys:        []string{"name:1"},
-		store:       mockStore,
+	paused := false
+	expected := &mongodbatlas.Cluster{
+		Paused: &paused,
 	}
 
-	index, _ := createOpts.newIndex()
+	updateOpts := &StartOpts{
+		name:  "ProjectBar",
+		store: mockStore,
+	}
+
 	mockStore.
 		EXPECT().
-		CreateIndex(createOpts.ProjectID, createOpts.clusterName, index).
-		Return(nil).
+		UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).
+		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := updateOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

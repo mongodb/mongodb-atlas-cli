@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
@@ -30,7 +30,7 @@ func TestClustersList_Run(t *testing.T) {
 
 	var expected []mongodbatlas.Cluster
 
-	listOpts := &ClustersListOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 

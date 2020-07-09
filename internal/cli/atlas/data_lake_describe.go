@@ -39,7 +39,6 @@ func (opts *DataLakeDescribeOpts) initStore() error {
 
 func (opts *DataLakeDescribeOpts) Run() error {
 	result, err := opts.store.DataLake(opts.ConfigProjectID(), opts.Name)
-
 	if err != nil {
 		return err
 	}

@@ -27,7 +27,7 @@ import (
 type DataLakeDeleteOpts struct {
 	cli.GlobalOpts
 	store store.DataLakeDeleter
-	Name  string
+	name  string
 }
 
 func (opts *DataLakeDeleteOpts) initStore() error {
@@ -37,7 +37,7 @@ func (opts *DataLakeDeleteOpts) initStore() error {
 }
 
 func (opts *DataLakeDeleteOpts) Run() error {
-	return opts.store.DeleteDataLake(opts.ProjectID, opts.Name)
+	return opts.store.DeleteDataLake(opts.ProjectID, opts.name)
 }
 
 // mongocli atlas datalake(s) delete name --projectId projectId
@@ -48,7 +48,7 @@ func DataLakeDeleteBuilder() *cobra.Command {
 		Short: description.DeleteDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.Name = args[0]
+			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

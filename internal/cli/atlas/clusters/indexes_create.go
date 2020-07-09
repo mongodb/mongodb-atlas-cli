@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersIndexesCreateOpts struct {
+type IndexesCreateOpts struct {
 	cli.GlobalOpts
 	clusterName string
 	name        string
@@ -41,13 +41,13 @@ type ClustersIndexesCreateOpts struct {
 	store       store.IndexCreator
 }
 
-func (opts *ClustersIndexesCreateOpts) initStore() error {
+func (opts *IndexesCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersIndexesCreateOpts) Run() error {
+func (opts *IndexesCreateOpts) Run() error {
 	req, err := opts.newIndex()
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (opts *ClustersIndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *ClustersIndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
+func (opts *IndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (opts *ClustersIndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, er
 	return i, nil
 }
 
-func (opts *ClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
+func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	return &atlas.IndexOptions{
 		Background: opts.background,
 		Unique:     opts.unique,
@@ -81,7 +81,7 @@ func (opts *ClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	}
 }
 
-func (opts *ClustersIndexesCreateOpts) indexKeys() ([]map[string]string, error) {
+func (opts *IndexesCreateOpts) indexKeys() ([]map[string]string, error) {
 	keys := make([]map[string]string, len(opts.keys))
 	for i, key := range opts.keys {
 		value := strings.Split(key, ":")
@@ -94,10 +94,10 @@ func (opts *ClustersIndexesCreateOpts) indexKeys() ([]map[string]string, error) 
 	return keys, nil
 }
 
-// ClustersIndexesCreateBuilder builds a cobra.Command that can run as:
+// IndexesCreateBuilder builds a cobra.Command that can run as:
 // mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
-func ClustersIndexesCreateBuilder() *cobra.Command {
-	opts := &ClustersIndexesCreateOpts{}
+func IndexesCreateBuilder() *cobra.Command {
+	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: description.CreateIndex,

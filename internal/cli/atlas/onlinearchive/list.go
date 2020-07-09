@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package atlas
+package onlinearchive
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,27 +22,22 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersStartOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
-	name  string
-	store store.ClusterUpdater
+	clusterName string
+	store       store.OnlineArchiveLister
 }
 
-func (opts *ClustersStartOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersStartOpts) Run() error {
-	paused := false
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+func (opts *ListOpts) Run() error {
+	result, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
 
 	if err != nil {
 		return err
@@ -52,23 +46,23 @@ func (opts *ClustersStartOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) start <name> [--projectId projectId]
-func ClustersStartBuilder() *cobra.Command {
-	opts := &ClustersStartOpts{}
+// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <name>",
-		Short: description.StartCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Short:   description.ListOnlineArchive,
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
 	return cmd
 }

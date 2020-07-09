@@ -12,60 +12,66 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ClustersListOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.ClusterLister
+	name  string
+	store store.ClusterDescriber
 }
 
-func (opts *ClustersListOpts) initStore() error {
+func (opts *WatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
-
-	if err != nil {
-		return err
+func (opts *WatchOpts) Run() error {
+	for {
+		result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return err
+		}
+		if result.StateName == "IDLE" {
+			fmt.Printf("\nCluster available at: %s\n", result.MongoURIWithOptions)
+			break
+		}
+		fmt.Print(".")
+		time.Sleep(4 * time.Second)
 	}
 
-	return json.PrettyPrint(result)
+	return nil
 }
 
-// mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
-func ClustersListBuilder() *cobra.Command {
-	opts := &ClustersListOpts{}
+// mongocli atlas cluster(s) watch <name> [--projectId projectId]
+func WatchBuilder() *cobra.Command {
+	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListClusters,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "watch <name>",
+		Short: description.WatchCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

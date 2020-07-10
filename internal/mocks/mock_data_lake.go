@@ -110,7 +110,7 @@ func (m *MockDataLakeCreator) EXPECT() *MockDataLakeCreatorMockRecorder {
 }
 
 // CreateDataLake mocks base method
-func (m *MockDataLakeCreator) CreateDataLake(arg0, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeCreator) CreateDataLake(arg0 string, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDataLake", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)
@@ -223,7 +223,7 @@ func (m *MockDataLakeStore) EXPECT() *MockDataLakeStoreMockRecorder {
 }
 
 // CreateDataLake mocks base method
-func (m *MockDataLakeStore) CreateDataLake(arg0, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeStore) CreateDataLake(arg0 string, arg1 *mongodbatlas.DataLakeCreateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDataLake", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)

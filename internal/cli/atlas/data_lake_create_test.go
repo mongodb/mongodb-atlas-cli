@@ -22,25 +22,30 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDataLakeDescribe_Run(t *testing.T) {
+func TestDataLakeCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeDescriber(ctrl)
+	mockStore := mocks.NewMockDataLakeCreator(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := mongodbatlas.DataLake{}
 
-	describeOpts := &DataLakeDescribeOpts{
+	createOpts := &DataLakeCreateOpts{
 		store: mockStore,
+		name:  "new_data_lake",
+	}
+
+	createRequest := &mongodbatlas.DataLakeCreateRequest{
+		Name: "new_data_lake",
 	}
 
 	mockStore.
 		EXPECT().
-		DataLake(describeOpts.ProjectID, describeOpts.name).
+		CreateDataLake(createOpts.ProjectID, createRequest).
 		Return(&expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
+	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

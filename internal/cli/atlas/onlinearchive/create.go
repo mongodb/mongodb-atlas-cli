@@ -80,7 +80,7 @@ func (opts *CreateOpts) partitionFields() ([]*atlas.PartitionFields, error) {
 	for i, p := range opts.partitions {
 		f := strings.Split(p, ":")
 		if len(f) != 2 {
-			return nil, fmt.Errorf("invalid partition, got: %s", p)
+			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
 		order := float64(i)
 		fields[i] = &atlas.PartitionFields{
@@ -92,14 +92,17 @@ func (opts *CreateOpts) partitionFields() ([]*atlas.PartitionFields, error) {
 	return fields, nil
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--projectId projectId]
+// mongocli atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--partition fieldName:fieldType][--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: description.CreateOnlineArchive,
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(opts.partitions) > 2 {
+				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))
+			}
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

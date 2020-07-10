@@ -120,7 +120,7 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		datalake := atlas.DataLake{}

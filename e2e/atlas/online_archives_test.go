@@ -16,9 +16,12 @@
 package atlas_test
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"testing"
+
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -46,6 +49,76 @@ func TestOnlineArchives(t *testing.T) {
 		cmd.Env = os.Environ()
 		_, err := cmd.CombinedOutput()
 
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+	})
+
+	var archiveID string
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			onlineArchiveEntity,
+			"create",
+			"--clusterName="+clusterName,
+			"--db=test",
+			"--collection=test",
+			"--dateField=test",
+			"--archiveAfter=3",
+			"--partition=test:date")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		var archive mongodbatlas.OnlineArchive
+		err = json.Unmarshal(resp, &archive)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		archiveID = archive.ID
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			onlineArchiveEntity,
+			"describe",
+			archiveID,
+			"--clusterName="+clusterName)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		var archive mongodbatlas.OnlineArchive
+		err = json.Unmarshal(resp, &archive)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if archiveID != archive.ID {
+			t.Errorf("expected: %s, got: %s", archiveID, archive.ID)
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			onlineArchiveEntity,
+			"rm",
+			archiveID,
+			"--clusterName="+clusterName,
+			"--force")
+
+		cmd.Env = os.Environ()
+		_, err := cmd.CombinedOutput()
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

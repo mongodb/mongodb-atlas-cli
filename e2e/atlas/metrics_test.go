@@ -21,7 +21,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestMetrics(t *testing.T) {

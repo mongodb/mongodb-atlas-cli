@@ -63,6 +63,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

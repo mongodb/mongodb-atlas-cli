@@ -28,15 +28,7 @@ func TestDataLakeUpdate_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	expected := mongodbatlas.DataLake{
-		CloudProviderConfig: mongodbatlas.CloudProviderConfig{},
-		DataProcessRegion:   mongodbatlas.DataProcessRegion{},
-		GroupID:             "",
-		Hostnames:           nil,
-		Name:                "",
-		State:               "",
-		Storage:             mongodbatlas.Storage{},
-	}
+	expected := mongodbatlas.DataLake{}
 
 	createOpts := &DataLakeUpdateOpts{
 		store:      mockStore,

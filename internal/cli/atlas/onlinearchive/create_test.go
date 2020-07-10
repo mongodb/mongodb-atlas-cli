@@ -17,10 +17,9 @@ package onlinearchive
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreateOpts_Run(t *testing.T) {

@@ -71,7 +71,7 @@ func (opts *DataLakeUpdateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) update name --projectId projectId
+// mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region]
 func DataLakeUpdateBuilder() *cobra.Command {
 	opts := &DataLakeUpdateOpts{}
 	cmd := &cobra.Command{

@@ -47,13 +47,13 @@ func TestDataLakeUpdate_Run(t *testing.T) {
 	}
 
 	updateRequest := &mongodbatlas.DataLakeUpdateRequest{
-		CloudProviderConfig: mongodbatlas.CloudProviderConfig{
+		CloudProviderConfig: &mongodbatlas.CloudProviderConfig{
 			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
 				IAMAssumedRoleARN: "some::arn",
 				TestS3Bucket:      "some_bucket",
 			},
 		},
-		DataProcessRegion: mongodbatlas.DataProcessRegion{
+		DataProcessRegion: &mongodbatlas.DataProcessRegion{
 			CloudProvider: AWS,
 			Region:        "some_region",
 		},

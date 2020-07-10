@@ -97,7 +97,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateCluster,
+		Short: description.CreateOnlineArchive,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -110,9 +110,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ClusterName)
-	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.ClusterName)
-	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.DateField)
+	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

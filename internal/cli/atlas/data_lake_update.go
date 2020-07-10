@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const AWS = "AWS"
+const aws = "AWS"
 
 type DataLakeUpdateOpts struct {
 	cli.GlobalOpts
@@ -50,7 +50,7 @@ func (opts *DataLakeUpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateR
 
 	if opts.region != "" {
 		updateRequest.DataProcessRegion = &mongodbatlas.DataProcessRegion{
-			CloudProvider: AWS,
+			CloudProvider: aws,
 			Region:        opts.region,
 		}
 	}

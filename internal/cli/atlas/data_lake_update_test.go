@@ -46,7 +46,7 @@ func TestDataLakeUpdate_Run(t *testing.T) {
 			},
 		},
 		DataProcessRegion: &mongodbatlas.DataProcessRegion{
-			CloudProvider: AWS,
+			CloudProvider: aws,
 			Region:        "some_region",
 		},
 	}

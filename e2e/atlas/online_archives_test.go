@@ -22,7 +22,8 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
-	const entity = "clusters onlineArchives"
+	const clustersEntity = "clusters"
+	const onlineArchiveEntity = "onlineArchives"
 
 	clusterName, err := deployCluster()
 	if err != nil {
@@ -37,7 +38,8 @@ func TestOnlineArchives(t *testing.T) {
 	t.Run("list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			entity,
+			clustersEntity,
+			onlineArchiveEntity,
 			"list",
 			"--clusterName="+clusterName)
 

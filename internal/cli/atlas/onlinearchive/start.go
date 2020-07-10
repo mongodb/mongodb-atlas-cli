@@ -58,7 +58,7 @@ func (opts *StartOpts) Run() error {
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <id>",
+		Use:   "start <ID>",
 		Short: description.StartOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -135,8 +135,7 @@ Valid values: cloud|cloud-manager|ops-manager`
 Valid values: AWS|AZURE|GCP.`
 	ClusterTypes = `Type of the cluster that you want to create.
 Valid values: REPLICASET|SHARDED.`
-	DataLakeTestBucket = `Type of the cluster that you want to create.
-Valid values: REPLICASET|SHARDED.`
+	DataLakeTestBucket = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
 	Region = `Physical location of your MongoDB cluster.
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
 For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure

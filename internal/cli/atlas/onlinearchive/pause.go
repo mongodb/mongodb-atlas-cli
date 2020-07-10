@@ -46,7 +46,6 @@ func (opts *PauseOpts) Run() error {
 		Paused: &paused,
 	}
 	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, cluster)
-
 	if err != nil {
 		return err
 	}

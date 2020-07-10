@@ -17,30 +17,34 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
 	"time"
 
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/go-test/deep"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestEvents(t *testing.T) {
-	atlasEntity := "atlas"
-	eventsEntity := "events"
+func TestDatalake(t *testing.T) {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	const datalakeEntity = "datalake"
+	datalakeName := fmt.Sprintf("e2e-data-lake-%v", r.Uint32())
 
 	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	t.Run("ListProjectEvent", func(t *testing.T) {
+
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			eventsEntity,
-			"list",
-			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
-		)
-
+			datalakeEntity,
+			"create",
+			datalakeName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -48,27 +52,23 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
+		datalake := atlas.DataLake{}
+		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
+		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
+			t.Error(err)
 		}
 	})
 
-	t.Run("ListOrganizationEvent", func(t *testing.T) {
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			eventsEntity,
-			"list",
-			"--orgId="+os.Getenv("MCLI_ORG_ID"),
-			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
-		)
-
+			datalakeEntity,
+			"describe",
+			datalakeName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -76,15 +76,34 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
+		datalake := atlas.DataLake{}
+		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
+		if datalake.Name != datalakeName {
+			t.Fatalf("expected name %v, got %v", datalakeName, datalake.Name)
+		}
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "ls")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, datalakeName, "delete", datalakeName)
+		cmd.Env = os.Environ()
+
+		err := cmd.Run()
+		if err != nil {
+			t.Fatalf("unexpceted error: %v", err)
 		}
 	})
 }

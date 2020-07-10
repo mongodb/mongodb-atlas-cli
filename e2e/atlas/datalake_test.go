@@ -74,17 +74,17 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		datalake := atlas.DataLake{}
 		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Errorf("unexpected error: %v", err)
 		}
 
 		if datalake.Name != datalakeName {
-			t.Fatalf("expected name %v, got %v", datalakeName, datalake.Name)
+			t.Errorf("expected name %v, got %v", datalakeName, datalake.Name)
 		}
 	})
 
@@ -94,7 +94,7 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 	})
 
@@ -104,7 +104,7 @@ func TestDatalake(t *testing.T) {
 
 		err := cmd.Run()
 		if err != nil {
-			t.Fatalf("unexpceted error: %v", err)
+			t.Errorf("unexpceted error: %v", err)
 		}
 	})
 
@@ -120,13 +120,13 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		datalake := atlas.DataLake{}
 		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Errorf("unexpected error: %v", err)
 		}
 
 		if err := deep.Equal(datalake.DataProcessRegion.Region, updateRegion); err != nil {

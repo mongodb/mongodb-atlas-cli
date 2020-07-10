@@ -56,7 +56,7 @@ func TestDatalake(t *testing.T) {
 		datalake := atlas.DataLake{}
 		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
-			t.Errorf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
@@ -80,7 +80,7 @@ func TestDatalake(t *testing.T) {
 		datalake := atlas.DataLake{}
 		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
-			t.Errorf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if datalake.Name != datalakeName {
@@ -126,7 +126,7 @@ func TestDatalake(t *testing.T) {
 		datalake := atlas.DataLake{}
 		err = json.Unmarshal(resp, &datalake)
 		if err != nil {
-			t.Errorf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if err := deep.Equal(datalake.DataProcessRegion.Region, updateRegion); err != nil {

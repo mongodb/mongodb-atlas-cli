@@ -44,17 +44,22 @@ func (opts *DataLakeUpdateOpts) initStore() error {
 }
 
 func (opts *DataLakeUpdateOpts) Run() error {
-	updateRequest := mongodbatlas.DataLakeUpdateRequest{
-		CloudProviderConfig: mongodbatlas.CloudProviderConfig{
+	updateRequest := mongodbatlas.DataLakeUpdateRequest{}
+
+	if opts.Region != "" {
+		updateRequest.DataProcessRegion = &mongodbatlas.DataProcessRegion{
+			CloudProvider: AWS,
+			Region:        opts.Region,
+		}
+	}
+
+	if opts.Role != "" || opts.TestBucket != "" {
+		updateRequest.CloudProviderConfig = &mongodbatlas.CloudProviderConfig{
 			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
 				IAMAssumedRoleARN: opts.Role,
 				TestS3Bucket:      opts.TestBucket,
 			},
-		},
-		DataProcessRegion: mongodbatlas.DataProcessRegion{
-			CloudProvider: AWS,
-			Region:        opts.Region,
-		},
+		}
 	}
 
 	result, err := opts.store.UpdateDataLake(opts.ProjectID, opts.Name, &updateRequest)

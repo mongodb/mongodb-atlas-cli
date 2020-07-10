@@ -23,27 +23,21 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersStartOpts struct {
+type DataLakeListOpts struct {
 	cli.GlobalOpts
-	name  string
-	store store.ClusterUpdater
+	store store.DataLakeLister
 }
 
-func (opts *ClustersStartOpts) initStore() error {
+func (opts *DataLakeListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersStartOpts) Run() error {
-	paused := false
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+func (opts *DataLakeListOpts) Run() error {
+	result, err := opts.store.DataLakes(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
@@ -52,18 +46,18 @@ func (opts *ClustersStartOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) start <name> [--projectId projectId]
-func ClustersStartBuilder() *cobra.Command {
-	opts := &ClustersStartOpts{}
+// mongocli atlas datalake(s) list --projectId projectId
+func DataLakeListBuilder() *cobra.Command {
+	opts := &DataLakeListOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <name>",
-		Short: description.StartCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Short:   description.ListDataLakes,
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}

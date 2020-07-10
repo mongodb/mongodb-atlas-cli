@@ -34,9 +34,8 @@ const (
 )
 
 func TestAlertConfig(t *testing.T) {
-	atlasEntity := "atlas"
-	alertsEntity := "alerts"
-	configEntity := "settings"
+	const alertsEntity = "alerts"
+	const configEntity = "settings"
 
 	var alertID string
 
@@ -100,7 +99,6 @@ func TestAlertConfig(t *testing.T) {
 		}
 
 		alertID = alert.ID
-
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -159,7 +157,6 @@ func TestAlertConfig(t *testing.T) {
 		if !*alert.Notifications[0].EmailEnabled {
 			t.Errorf("got=%#v\nwant=%#v\n", false, true)
 		}
-
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -181,7 +178,7 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		fields := []string{}
+		var fields []string
 		err = json.Unmarshal(resp, &fields)
 
 		if err != nil {

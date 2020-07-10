@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
@@ -22,21 +22,21 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProcessesList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveLister(ctrl)
 
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
+	var expected []*mongodbatlas.OnlineArchive
+
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
+		OnlineArchives(listOpts.ProjectID, listOpts.clusterName).
 		Return(expected, nil).
 		Times(1)
 

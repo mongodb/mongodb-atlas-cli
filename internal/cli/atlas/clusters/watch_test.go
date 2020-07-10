@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -22,15 +22,15 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersDescribe_Run(t *testing.T) {
+func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
 
-	describeOpts := &ClustersDescribeOpts{
+	describeOpts := &WatchOpts{
 		name:  "test",
 		store: mockStore,
 	}

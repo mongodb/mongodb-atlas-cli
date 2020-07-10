@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"sort"
 	"strings"
 
@@ -94,6 +93,11 @@ func List() []string {
 	// keys in maps are non deterministic, trying to give users a consistent output
 	sort.Strings(keys)
 	return keys
+}
+
+// Exists returns true if there are any set settings for the profile name.
+func Exists(name string) bool {
+	return len(viper.GetStringMap(name)) > 0
 }
 
 func newProfile() *profile {
@@ -231,17 +235,23 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
-// Exists returns true if there are any set settings for the profile name.
-func Exists(name string) bool { return p.Exists(name) }
-func (p *profile) Exists(name string) bool {
-	return len(viper.GetStringMap(name)) > 0
+// IsAccessSet return true if API keys have been set up.
+// For Ops Manager we also check for the base URL.
+func IsAccessSet() bool { return p.IsAccessSet() }
+func (p *profile) IsAccessSet() bool {
+	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != ""
+	if p.Service() == OpsManagerService {
+		isSet = isSet && p.OpsManagerURL() != ""
+	}
+
+	return isSet
 }
 
 // GetConfigDescription returns a map describing the configuration
 func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
 func (p *profile) GetConfigDescription() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
-	newSettings := make(map[string]string)
+	newSettings := make(map[string]string, len(settings))
 
 	for k, v := range settings {
 		if k == privateAPIKey || k == publicAPIKey {
@@ -275,8 +285,7 @@ func (p *profile) Delete() error {
 
 	s := t.String()
 
-	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), flags, 0600)
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, 0600)
 	if err != nil {
 		return err
 	}
@@ -310,8 +319,7 @@ func (p *profile) Rename(newProfileName string) error {
 
 	s := t.String()
 
-	flags := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), flags, 0600)
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, 0600)
 	if err != nil {
 		return err
 	}

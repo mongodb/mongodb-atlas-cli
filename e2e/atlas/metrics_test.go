@@ -25,8 +25,7 @@ import (
 )
 
 func TestMetrics(t *testing.T) {
-	atlasEntity := "atlas"
-	metricsEntity := "metrics"
+	const metricsEntity = "metrics"
 
 	clusterName, err := deployCluster()
 	if err != nil {
@@ -85,6 +84,10 @@ func TestMetrics(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		databases := &mongodbatlas.ProcessDatabasesResponse{}
 		err = json.Unmarshal(resp, &databases)
 
@@ -114,7 +117,9 @@ func TestMetrics(t *testing.T) {
 
 		disks := &mongodbatlas.ProcessDisksResponse{}
 		err = json.Unmarshal(resp, &disks)
-
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 		if disks.TotalCount != 1 {
 			t.Errorf("got=%#v\nwant=%#v\n", disks.TotalCount, 1)
 		}
@@ -133,7 +138,9 @@ func TestMetrics(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 		metrics := &mongodbatlas.ProcessDiskMeasurements{}
 		err = json.Unmarshal(resp, &metrics)
 

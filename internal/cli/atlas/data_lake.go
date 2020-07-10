@@ -15,33 +15,21 @@
 package atlas
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestProcessesList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
-
-	defer ctrl.Finish()
-
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
-		store: mockStore,
+func DataLakeBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "datalake",
+		Aliases: []string{"dataLakes", "dataLake", "datalakes"},
+		Short:   description.DataLakes,
+		Long:    description.DataLakesLong,
 	}
 
-	mockStore.
-		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
-		Return(expected, nil).
-		Times(1)
+	cmd.AddCommand(DataLakeListBuilder())
+	cmd.AddCommand(DataLakeDescribeBuilder())
+	cmd.AddCommand(DataLakeCreateBuilder())
 
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

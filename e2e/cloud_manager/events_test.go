@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -27,23 +26,16 @@ import (
 )
 
 func TestEvents(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
+	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cloudManagerEntity := "cm"
-	eventsEntity := "events"
+	const eventsEntity = "events"
 
 	t.Run("ListProjectEvent", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
-			cloudManagerEntity,
+			entity,
 			eventsEntity,
 			"list",
 			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
@@ -62,17 +54,11 @@ func TestEvents(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
-		}
-
 	})
 
 	t.Run("ListOrganizationEvent", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
-			cloudManagerEntity,
+			entity,
 			eventsEntity,
 			"list",
 			"--orgId="+os.Getenv("MCLI_ORG_ID"),
@@ -92,11 +78,5 @@ func TestEvents(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
-		}
-
 	})
-
 }

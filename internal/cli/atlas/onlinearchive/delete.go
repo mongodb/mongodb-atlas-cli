@@ -12,73 +12,67 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package automation
+package onlinearchive
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type UpdateOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationUpdater
+	*cli.DeleteOpts
+	clusterName string
+	store       store.OnlineArchiveDeleter
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) Run() error {
-	newConfig := new(opsmngr.AutomationConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
-	if err != nil {
-		return err
-	}
-
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), newConfig); err != nil {
-		return err
-	}
-
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteOnlineArchive, opts.ConfigProjectID(), opts.clusterName)
 }
 
-// mongocli om automation update --projectId projectId --file myfile.json
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{
-		fs: afero.NewOsFs(),
+// mongocli atlas cluster(s) onlineArchive(s) delete <id> [--clusterName name][--projectId projectId][--force]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Archive '%s' deleted\n", "Archive not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:    "update",
-		Hidden: true,
+		Use:     "delete <id>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteOnlineArchive,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use")
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.File)
-	_ = cmd.MarkFlagFilename(flag.File)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

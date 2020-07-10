@@ -245,10 +245,10 @@ github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGr
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
-go.mongodb.org/atlas v0.3.1-0.20200626205920-3b1571e934d6 h1:LqMNLR+RfNBdfRtN68a2vWeCkFtOl+b22QgI3UWELek=
-go.mongodb.org/atlas v0.3.1-0.20200626205920-3b1571e934d6/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
-go.mongodb.org/ops-manager v0.6.2-0.20200629081151-66e6462f556a h1:Cn5c2th1JV10t6Pt/bP7jKpOmqo2Uj+EfMlKzQZ1IJU=
-go.mongodb.org/ops-manager v0.6.2-0.20200629081151-66e6462f556a/go.mod h1:fnROe3bztSArrX+IF7MiuTUCVPnBHPLjMVj/jq1Hzxs=
+go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04 h1:ildNidTScIuYngZQc/ABcQ65PMsCJtWor/EgodL6Bgo=
+go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
+go.mongodb.org/ops-manager v0.7.0 h1:23AQk5s39RLVsbDufQACkHBCDoqSmDPN5Uopwu2CBn4=
+go.mongodb.org/ops-manager v0.7.0/go.mod h1:H5JMirQnfOlh18uRj0WsgFhDC01SZLTywKatpNo7mRs=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

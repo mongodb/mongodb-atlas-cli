@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"errors"
@@ -41,7 +41,7 @@ const (
 	labelValue        = "mongoCLI"
 )
 
-type ClustersCreateOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	name        string
 	provider    string
@@ -58,13 +58,13 @@ type ClustersCreateOpts struct {
 	store       store.ClusterCreator
 }
 
-func (opts *ClustersCreateOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (opts *ClustersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *ClustersCreateOpts) newCluster() (*atlas.Cluster, error) {
+func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 	cluster := new(atlas.Cluster)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
@@ -114,7 +114,7 @@ func updateLabels(out *atlas.Cluster) {
 	}
 }
 
-func (opts *ClustersCreateOpts) applyOpts(out *atlas.Cluster) {
+func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {
 	replicationSpec := opts.newReplicationSpec()
 	if opts.backup {
 		out.ProviderBackupEnabled = &opts.backup
@@ -127,7 +127,7 @@ func (opts *ClustersCreateOpts) applyOpts(out *atlas.Cluster) {
 	out.ReplicationSpecs = []atlas.ReplicationSpec{replicationSpec}
 }
 
-func (opts *ClustersCreateOpts) newProviderSettings() *atlas.ProviderSettings {
+func (opts *CreateOpts) newProviderSettings() *atlas.ProviderSettings {
 	providerName := opts.providerName()
 
 	var backingProviderName string
@@ -143,14 +143,14 @@ func (opts *ClustersCreateOpts) newProviderSettings() *atlas.ProviderSettings {
 	}
 }
 
-func (opts *ClustersCreateOpts) providerName() string {
+func (opts *CreateOpts) providerName() string {
 	if opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
 	return opts.provider
 }
 
-func (opts *ClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec {
+func (opts *CreateOpts) newReplicationSpec() atlas.ReplicationSpec {
 	var (
 		readOnlyNodes int64 = 0
 		Priority      int64 = 7
@@ -169,10 +169,10 @@ func (opts *ClustersCreateOpts) newReplicationSpec() atlas.ReplicationSpec {
 	return replicationSpec
 }
 
-// ClustersCreateBuilder builds a cobra.Command that can run as:
+// CreateBuilder builds a cobra.Command that can run as:
 // create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion]
-func ClustersCreateBuilder() *cobra.Command {
-	opts := &ClustersCreateOpts{
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
@@ -224,6 +224,8 @@ func ClustersCreateBuilder() *cobra.Command {
 	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

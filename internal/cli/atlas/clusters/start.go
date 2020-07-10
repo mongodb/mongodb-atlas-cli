@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,23 +23,27 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersListOpts struct {
+type StartOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.ClusterLister
+	name  string
+	store store.ClusterUpdater
 }
 
-func (opts *ClustersListOpts) initStore() error {
+func (opts *StartOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
+func (opts *StartOpts) Run() error {
+	paused := false
+	cluster := &atlas.Cluster{
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 
 	if err != nil {
 		return err
@@ -48,24 +52,21 @@ func (opts *ClustersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N]
-func ClustersListBuilder() *cobra.Command {
-	opts := &ClustersListOpts{}
+// mongocli atlas cluster(s) start <name> [--projectId projectId]
+func StartBuilder() *cobra.Command {
+	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListClusters,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "start <name>",
+		Short: description.StartCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

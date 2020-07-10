@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
@@ -22,29 +22,26 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersPause_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterUpdater(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	paused := true
-	expected := &mongodbatlas.Cluster{
-		Paused: &paused,
+	describeOpts := &DescribeOpts{
+		clusterName: "test",
+		archiveID:   "1",
+		store:       mockStore,
 	}
 
-	updateOpts := &ClustersPauseOpts{
-		name:  "ProjectBar",
-		store: mockStore,
-	}
-
+	expected := &mongodbatlas.OnlineArchive{}
 	mockStore.
 		EXPECT().
-		UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).
+		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
 		Return(expected, nil).
 		Times(1)
 
-	err := updateOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

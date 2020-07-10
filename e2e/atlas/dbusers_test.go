@@ -33,8 +33,6 @@ const (
 
 func TestDBUsers(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	atlasEntity := "atlas"
 	dbusersEntity := "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
@@ -77,9 +75,11 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		users := []mongodbatlas.DatabaseUser{}
+		var users []mongodbatlas.DatabaseUser
 		err = json.Unmarshal(resp, &users)
-
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
@@ -121,7 +121,6 @@ func TestDBUsers(t *testing.T) {
 		if user.Roles[0].RoleName != roleReadWrite {
 			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
 		}
-
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -138,5 +137,4 @@ func TestDBUsers(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
-
 }

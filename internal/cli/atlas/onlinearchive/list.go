@@ -11,69 +11,59 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package atlas
+package onlinearchive
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ClustersWatchOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
-	name  string
-	store store.ClusterDescriber
+	clusterName string
+	store       store.OnlineArchiveLister
 }
 
-func (opts *ClustersWatchOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersWatchOpts) Run() error {
-	for {
-		result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
-		if err != nil {
-			return err
-		}
-		if result.StateName == "IDLE" {
-			fmt.Printf("\nCluster available at: %s\n", result.MongoURIWithOptions)
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(4 * time.Second)
+func (opts *ListOpts) Run() error {
+	result, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
+
+	if err != nil {
+		return err
 	}
 
-	return nil
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) watch <name> [--projectId projectId]
-func ClustersWatchBuilder() *cobra.Command {
-	opts := &ClustersWatchOpts{}
+// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <name>",
-		Short: description.WatchCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Short:   description.ListOnlineArchive,
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

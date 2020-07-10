@@ -12,36 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package prompt
 
 import (
-	"testing"
+	"fmt"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/AlecAivazis/survey/v2"
 )
 
-func TestProcessesList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
-
-	defer ctrl.Finish()
-
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
-		store: mockStore,
+// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted
+func NewDeleteConfirm(entry string) survey.Prompt {
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("Are you sure you want to delete: %s", entry),
 	}
+	return prompt
+}
 
-	mockStore.
-		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
-		Return(expected, nil).
-		Times(1)
-
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced
+func NewProfileReplaceConfirm(entry string) survey.Prompt {
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("There is already a profile called %s.\nDo you want to replace it?", entry),
 	}
+	return prompt
 }

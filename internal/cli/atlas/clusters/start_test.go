@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"testing"
@@ -22,25 +22,29 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersList_Run(t *testing.T) {
+func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := mocks.NewMockClusterUpdater(ctrl)
 
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.Cluster
+	paused := false
+	expected := &mongodbatlas.Cluster{
+		Paused: &paused,
+	}
 
-	listOpts := &ClustersListOpts{
+	updateOpts := &StartOpts{
+		name:  "ProjectBar",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		ProjectClusters(listOpts.ProjectID, listOpts.NewListOptions()).
+		UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := updateOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

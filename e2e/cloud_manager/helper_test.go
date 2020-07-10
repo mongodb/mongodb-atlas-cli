@@ -11,27 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build e2e cloudmanager
 
-package prompt
+package cloud_manager_test
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
+	"os"
+	"path/filepath"
 )
 
-// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted
-func NewDeleteConfirm(entry string) *survey.Confirm {
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete: %s", entry),
-	}
-	return prompt
-}
+const (
+	entity       = "cloud-manager"
+	mongoCliPath = "../../bin/mongocli"
+)
 
-// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced
-func NewProfileReplaceConfirm(entry string) *survey.Confirm {
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("There is already a profile called %s. Do you want to replace it?", entry),
+func cli() (string, error) {
+	cliPath, err := filepath.Abs(mongoCliPath)
+	if err != nil {
+		return "", err
 	}
-	return prompt
+
+	if _, err := os.Stat(cliPath); err != nil {
+		return "", err
+	}
+	return cliPath, nil
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersUpdateOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
 	name       string
 	tier       string
@@ -39,13 +39,13 @@ type ClustersUpdateOpts struct {
 	store      store.ClusterStore
 }
 
-func (opts *ClustersUpdateOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersUpdateOpts) Run() error {
+func (opts *UpdateOpts) Run() error {
 	cluster, err := opts.cluster()
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (opts *ClustersUpdateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *ClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
+func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
 	var cluster *atlas.Cluster
 	var err error
 	if opts.filename != "" {
@@ -78,7 +78,7 @@ func (opts *ClustersUpdateOpts) cluster() (*atlas.Cluster, error) {
 	return cluster, err
 }
 
-func (opts *ClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
+func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
 	// There can only be one
 	if out.ReplicationSpecs != nil {
 		out.ReplicationSpec = nil
@@ -104,8 +104,8 @@ func (opts *ClustersUpdateOpts) patchOpts(out *atlas.Cluster) {
 }
 
 // mongocli atlas cluster(s) update [name] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion]
-func ClustersUpdateBuilder() *cobra.Command {
-	opts := &ClustersUpdateOpts{
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
@@ -138,6 +138,8 @@ func ClustersUpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

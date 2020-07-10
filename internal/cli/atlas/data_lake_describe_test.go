@@ -19,31 +19,28 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClustersIndexesCreate_Run(t *testing.T) {
+func TestDataLakeDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIndexCreator(ctrl)
+	mockStore := mocks.NewMockDataLakeDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	createOpts := &ClustersIndexesCreateOpts{
-		name:        "ProjectBar",
-		clusterName: "US",
-		db:          "test",
-		collection:  "test",
-		keys:        []string{"name:1"},
-		store:       mockStore,
+	expected := mongodbatlas.DataLake{}
+
+	describeOpts := &DataLakeDescribeOpts{
+		store: mockStore,
 	}
 
-	index, _ := createOpts.newIndex()
 	mockStore.
 		EXPECT().
-		CreateIndex(createOpts.ProjectID, createOpts.clusterName, index).
-		Return(nil).
+		DataLake(describeOpts.ProjectID, describeOpts.name).
+		Return(&expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

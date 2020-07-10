@@ -12,73 +12,68 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package automation
+package onlinearchive
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type UpdateOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationUpdater
+	clusterName string
+	archiveID   string
+	store       store.OnlineArchiveDescriber
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) Run() error {
-	newConfig := new(opsmngr.AutomationConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.OnlineArchive(opts.ConfigProjectID(), opts.clusterName, opts.archiveID)
+
 	if err != nil {
 		return err
 	}
 
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), newConfig); err != nil {
-		return err
-	}
-
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+	return json.PrettyPrint(result)
 }
 
-// mongocli om automation update --projectId projectId --file myfile.json
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{
-		fs: afero.NewOsFs(),
-	}
+// mongocli atlas cluster(s) describe <name> [--clusterName name][--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:    "update",
-		Hidden: true,
+		Use:   "describe <ID>",
+		Short: description.DescribeOnlineArchive,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
+			opts.archiveID = args[0]
+
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use")
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.File)
-	_ = cmd.MarkFlagFilename(flag.File)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

@@ -12,36 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestProcessesList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
-
-	defer ctrl.Finish()
-
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
-		store: mockStore,
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "onlineArchives",
+		Aliases: []string{"onlineArchive", "onlinearchives", "onlinearchive", "online-archives", "online-archive"},
+		Short:   description.OnlineArchives,
 	}
 
-	mockStore.
-		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
-		Return(expected, nil).
-		Times(1)
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(DeleteBuilder())
 
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

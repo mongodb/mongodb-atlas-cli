@@ -12,35 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProcessesList_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveDeleter(ctrl)
 
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
-		Return(expected, nil).
+		DeleteOnlineArchive(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

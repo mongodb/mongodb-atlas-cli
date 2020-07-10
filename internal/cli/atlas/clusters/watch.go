@@ -12,52 +12,57 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package clusters
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ClustersPauseOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ClusterUpdater
+	store store.ClusterDescriber
 }
 
-func (opts *ClustersPauseOpts) initStore() error {
+func (opts *WatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersPauseOpts) Run() error {
-	paused := true
-	cluster := &atlas.Cluster{
-		Paused: &paused,
+func (opts *WatchOpts) Run() error {
+	for {
+		result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return err
+		}
+		if result.StateName == "IDLE" {
+			fmt.Printf("\nCluster available at: %s\n", result.MongoURIWithOptions)
+			break
+		}
+		fmt.Print(".")
+		time.Sleep(4 * time.Second)
 	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 
-	if err != nil {
-		return err
-	}
-
-	return json.PrettyPrint(result)
+	return nil
 }
 
-// mongocli atlas cluster(s) pause <name> [--projectId projectId]
-func ClustersPauseBuilder() *cobra.Command {
-	opts := &ClustersPauseOpts{}
+// mongocli atlas cluster(s) watch <name> [--projectId projectId]
+func WatchBuilder() *cobra.Command {
+	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause <name>",
-		Short: description.PauseCluster,
+		Use:   "watch <name>",
+		Short: description.WatchCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

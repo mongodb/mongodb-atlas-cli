@@ -31,8 +31,7 @@ import (
 func TestClusters(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	atlasEntity := "atlas"
-	clustersEntity := "clusters"
+	const clustersEntity = "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	cliPath, err := cli()
@@ -139,24 +138,23 @@ func TestClusters(t *testing.T) {
 		ensureCluster(t, cluster, clusterName, "4.2", 20)
 	})
 
-	// TODO: this fails as the cluster is not healthy we may need to re think how we test this
-	//t.Run("Create Index", func(t *testing.T) {
-	//	cmd := exec.Command(cliPath,
-	//		atlasEntity,
-	//		clustersEntity,
-	//		"indexes",
-	//		"create",
-	//		"--clusterName="+clusterName,
-	//		"--db=tes",
-	//		"--collection=tes",
-	//		"--key=name:1")
-	//	cmd.Env = os.Environ()
-	//	resp, err := cmd.CombinedOutput()
-	//
-	//	if err != nil {
-	//		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	//	}
-	//})
+	t.Run("Create Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName="+clusterName,
+			"--db=tes",
+			"--collection=tes",
+			"--key=name:1")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--force")
@@ -283,7 +281,7 @@ func TestClusters(t *testing.T) {
 	})
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName string, version string, diskSizeGB float64) {
+func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
 	if cluster.Name != clusterName {
 		t.Errorf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName)
 	}

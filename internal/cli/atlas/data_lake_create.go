@@ -12,60 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package automation
+package atlas
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-type UpdateOpts struct {
+type DataLakeCreateOpts struct {
 	cli.GlobalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationUpdater
+	store store.DataLakeCreator
+	name  string
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *DataLakeCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) Run() error {
-	newConfig := new(opsmngr.AutomationConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
+func (opts *DataLakeCreateOpts) Run() error {
+	createRequest := mongodbatlas.DataLakeCreateRequest{
+		Name: opts.name,
+	}
+
+	result, err := opts.store.CreateDataLake(opts.ProjectID, &createRequest)
+
 	if err != nil {
 		return err
 	}
 
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), newConfig); err != nil {
-		return err
-	}
-
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+	return json.PrettyPrint(result)
 }
 
-// mongocli om automation update --projectId projectId --file myfile.json
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{
-		fs: afero.NewOsFs(),
-	}
+// mongocli atlas datalake(s) create name --projectId projectId
+func DataLakeCreateBuilder() *cobra.Command {
+	opts := &DataLakeCreateOpts{}
 	cmd := &cobra.Command{
-		Use:    "update",
-		Hidden: true,
+		Use:   "create <name>",
+		Short: description.CreateDataLake,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -73,12 +68,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use")
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flag.File)
-	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

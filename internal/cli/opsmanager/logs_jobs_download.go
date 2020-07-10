@@ -74,6 +74,7 @@ func LogsJobsDownloadOptsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.Out)
+	_ = cmd.MarkFlagFilename(flag.Out)
 
 	return cmd
 }

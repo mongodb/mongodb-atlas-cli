@@ -40,10 +40,10 @@ func TestDataLakeUpdate_Run(t *testing.T) {
 
 	createOpts := &DataLakeUpdateOpts{
 		store:      mockStore,
-		Name:       "new_data_lake",
-		Region:     "some_region",
-		Role:       "some::arn",
-		TestBucket: "some_bucket",
+		name:       "new_data_lake",
+		region:     "some_region",
+		role:       "some::arn",
+		testBucket: "some_bucket",
 	}
 
 	updateRequest := &mongodbatlas.DataLakeUpdateRequest{
@@ -61,7 +61,7 @@ func TestDataLakeUpdate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateDataLake(createOpts.ProjectID, createOpts.Name, updateRequest).
+		UpdateDataLake(createOpts.ProjectID, createOpts.name, updateRequest).
 		Return(&expected, nil).
 		Times(1)
 

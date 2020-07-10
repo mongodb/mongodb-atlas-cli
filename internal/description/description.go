@@ -43,6 +43,7 @@ const (
 	ListDataLakes            = "List data lakes for your project."
 	DescribeDataLake         = "Return a specific data lake."
 	CreateDataLake           = "Create a new data lake."
+	UpdateDataLake           = "Update a data lake."
 	DeleteDataLake           = "Delete a data lake."
 	Clusters                 = "Manage clusters for your project."
 	ClustersIndexes          = "Manage cluster rolling indexes for your project."

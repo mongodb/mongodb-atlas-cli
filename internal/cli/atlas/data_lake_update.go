@@ -15,6 +15,8 @@
 package atlas
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -31,10 +33,10 @@ const AWS = "AWS"
 type DataLakeUpdateOpts struct {
 	cli.GlobalOpts
 	store      store.DataLakeUpdater
-	Name       string
-	Region     string
-	Role       string
-	TestBucket string
+	name       string
+	region     string
+	role       string
+	testBucket string
 }
 
 func (opts *DataLakeUpdateOpts) initStore() error {
@@ -43,26 +45,32 @@ func (opts *DataLakeUpdateOpts) initStore() error {
 	return err
 }
 
-func (opts *DataLakeUpdateOpts) Run() error {
-	updateRequest := mongodbatlas.DataLakeUpdateRequest{}
+func (opts *DataLakeUpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateRequest {
+	updateRequest := &mongodbatlas.DataLakeUpdateRequest{}
 
-	if opts.Region != "" {
+	if opts.region != "" {
 		updateRequest.DataProcessRegion = &mongodbatlas.DataProcessRegion{
 			CloudProvider: AWS,
-			Region:        opts.Region,
+			Region:        opts.region,
 		}
 	}
 
-	if opts.Role != "" || opts.TestBucket != "" {
+	if opts.role != "" || opts.testBucket != "" {
 		updateRequest.CloudProviderConfig = &mongodbatlas.CloudProviderConfig{
 			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
-				IAMAssumedRoleARN: opts.Role,
-				TestS3Bucket:      opts.TestBucket,
+				IAMAssumedRoleARN: opts.role,
+				TestS3Bucket:      opts.testBucket,
 			},
 		}
 	}
 
-	result, err := opts.store.UpdateDataLake(opts.ProjectID, opts.Name, &updateRequest)
+	return updateRequest
+}
+
+func (opts *DataLakeUpdateOpts) Run() error {
+	updateRequest := opts.newUpdateRequest()
+
+	result, err := opts.store.UpdateDataLake(opts.ProjectID, opts.name, updateRequest)
 
 	if err != nil {
 		return err
@@ -76,10 +84,15 @@ func DataLakeUpdateBuilder() *cobra.Command {
 	opts := &DataLakeUpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <name>",
-		Short: description.CreateDataLake,
+		Short: description.UpdateDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.Name = args[0]
+			opts.name = args[0]
+
+			if opts.region == "" && opts.role == "" && opts.testBucket == "" {
+				return fmt.Errorf("must provide something to update")
+			}
+
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -87,9 +100,9 @@ func DataLakeUpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.Region, flag.Region, "", usage.DataLakeRegion)
-	cmd.Flags().StringVar(&opts.Role, flag.Role, "", usage.DataLakeRole)
-	cmd.Flags().StringVar(&opts.TestBucket, flag.TestBucket, "", usage.DataLakeTestBucket)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.DataLakeRegion)
+	cmd.Flags().StringVar(&opts.role, flag.Role, "", usage.DataLakeRole)
+	cmd.Flags().StringVar(&opts.testBucket, flag.TestBucket, "", usage.DataLakeTestBucket)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

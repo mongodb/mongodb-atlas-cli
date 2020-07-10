@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package onlinearchive
 
 import (
@@ -22,22 +23,29 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ListOpts struct {
+type StartOpts struct {
 	cli.GlobalOpts
+	id          string
 	clusterName string
-	store       store.OnlineArchiveLister
+	store       store.OnlineArchiveUpdater
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *StartOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	result, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
+func (opts *StartOpts) Run() error {
+	paused := false
+	archive := &atlas.OnlineArchive{
+		ID:     opts.id,
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 
 	if err != nil {
 		return err
@@ -46,18 +54,18 @@ func (opts *ListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas cluster(s) start <name> [--projectId projectId]
+func StartBuilder() *cobra.Command {
+	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListOnlineArchive,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "start <id>",
+		Short: description.StartOnlineArchive,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.initStore()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}

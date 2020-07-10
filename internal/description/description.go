@@ -83,6 +83,7 @@ const (
 	OnlineArchives           = "Manage online archives for your cluster."
 	ListOnlineArchive        = "List online archives for a cluster."
 	DescribeOnlineArchive    = "Describe an online archives for a cluster."
+	DeleteOnlineArchive      = "Delete an online archives from a cluster."
 	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
 	ConfigSetDescription     = "Configure specific properties of a profile."
 	ConfigRenameDescription  = "Rename a profile."

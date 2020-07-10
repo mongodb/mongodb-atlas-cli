@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongocli/internal/store OnlineArchiveLister,OnlineArchiveDescriber
+//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongocli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
 	OnlineArchives(string, string) ([]*atlas.OnlineArchive, error)
@@ -30,6 +30,10 @@ type OnlineArchiveLister interface {
 
 type OnlineArchiveDescriber interface {
 	OnlineArchive(string, string, string) (*atlas.OnlineArchive, error)
+}
+
+type OnlineArchiveDeleter interface {
+	DeleteOnlineArchive(string, string, string) error
 }
 
 // OnlineArchives encapsulate the logic to manage different cloud providers
@@ -51,5 +55,16 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOnlineArchive encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(context.Background(), projectID, clusterName, archiveID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

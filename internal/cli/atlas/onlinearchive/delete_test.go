@@ -15,20 +15,35 @@
 package onlinearchive
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "onlineArchives",
-		Aliases: []string{"onlineArchive", "onlinearchives", "onlinearchive", "online-archives", "online-archive"},
-		Short:   description.OnlineArchives,
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOnlineArchiveDeleter(ctrl)
+
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		store: mockStore,
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	mockStore.
+		EXPECT().
+		DeleteOnlineArchive(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

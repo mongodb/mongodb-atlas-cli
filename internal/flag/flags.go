@@ -124,6 +124,7 @@ const (
 	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       // SizeRequestedPerFileBytes flag
 	Redacted                        = "redacted"                        // Redacted flag
 	Verbose                         = "verbose"                         // Verbose flag
+	TestBucket                      = "testBucket"                      // TestBucket flag
 	Partition                       = "partition"                       // Partition flag
 	DateField                       = "dateField"                       // DateField flag
 )

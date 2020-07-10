@@ -19,56 +19,57 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DeleteOpts struct {
+type StartOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
+	id          string
 	clusterName string
-	store       store.OnlineArchiveDeleter
+	store       store.OnlineArchiveUpdater
 }
 
-func (opts *DeleteOpts) initStore() error {
+func (opts *StartOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOnlineArchive, opts.ConfigProjectID(), opts.clusterName)
+func (opts *StartOpts) Run() error {
+	paused := false
+	archive := &atlas.OnlineArchive{
+		ID:     opts.id,
+		Paused: &paused,
+	}
+	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) delete <id> [--clusterName name][--projectId projectId][--force]
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Archive '%s' deleted\n", "Archive not deleted"),
-	}
+// mongocli atlas cluster(s) start <name> [--projectId projectId]
+func StartBuilder() *cobra.Command {
+	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   description.DeleteOnlineArchive,
-		Args:    cobra.ExactArgs(1),
+		Use:   "start <ID>",
+		Short: description.StartOnlineArchive,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
-			if err := validate.ObjectID(args[0]); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

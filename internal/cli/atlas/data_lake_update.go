@@ -90,7 +90,7 @@ func DataLakeUpdateBuilder() *cobra.Command {
 			opts.name = args[0]
 
 			if opts.region == "" && opts.role == "" && opts.testBucket == "" {
-				return fmt.Errorf("must provide something to update")
+				return fmt.Errorf("nothing to update")
 			}
 
 			return opts.PreRunE(opts.initStore)

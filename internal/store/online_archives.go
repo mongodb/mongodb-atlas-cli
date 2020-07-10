@@ -77,7 +77,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 	}
 }
 
-// CreateOnlineArchive encapsulate the logic to manage different cloud providers
+// UpdateOnlineArchive encapsulate the logic to manage different cloud providers
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:

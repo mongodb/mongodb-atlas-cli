@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongocli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveDeleter
+//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongocli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
 	OnlineArchives(string, string) ([]*atlas.OnlineArchive, error)
@@ -30,6 +30,10 @@ type OnlineArchiveLister interface {
 
 type OnlineArchiveDescriber interface {
 	OnlineArchive(string, string, string) (*atlas.OnlineArchive, error)
+}
+
+type OnlineArchiveCreator interface {
+	CreateOnlineArchive(string, string, *atlas.OnlineArchive) (*atlas.OnlineArchive, error)
 }
 
 type OnlineArchiveDeleter interface {
@@ -52,6 +56,17 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(context.Background(), projectID, clusterName, archiveID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateOnlineArchive encapsulate the logic to manage different cloud providers
+func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(context.Background(), projectID, clusterName, archive)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

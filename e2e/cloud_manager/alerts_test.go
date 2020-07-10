@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (

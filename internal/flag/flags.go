@@ -53,6 +53,7 @@ const (
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag
 	DeleteAfter                     = "deleteAfter"                     // DeleteAfter flag
+	ArchiveAfter                    = "archiveAfter"                    // ArchiveAfter flag
 	Until                           = "until"                           // Until flag
 	Page                            = "page"                            // Page flag
 	Limit                           = "limit"                           // Limit flag
@@ -124,4 +125,6 @@ const (
 	Redacted                        = "redacted"                        // Redacted flag
 	Verbose                         = "verbose"                         // Verbose flag
 	TestBucket                      = "testBucket"                      // TestBucket flag
+	Partition                       = "partition"                       // Partition flag
+	DateField                       = "dateField"                       // DateField flag
 )

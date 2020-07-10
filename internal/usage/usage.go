@@ -106,6 +106,9 @@ const (
 	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
 	Background                      = "Create the index in the background."
+	DateField                       = "Name of an already indexed date field from the documents."
+	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
+	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	TargetClusterID                 = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`

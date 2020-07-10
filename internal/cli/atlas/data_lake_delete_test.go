@@ -17,6 +17,8 @@ package atlas
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
@@ -28,12 +30,16 @@ func TestDataLakeDelete_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	deleteOpts := &DataLakeDeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.name).
+		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

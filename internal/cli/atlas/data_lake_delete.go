@@ -26,8 +26,8 @@ import (
 
 type DataLakeDeleteOpts struct {
 	cli.GlobalOpts
+	*cli.DeleteOpts
 	store store.DataLakeDeleter
-	name  string
 }
 
 func (opts *DataLakeDeleteOpts) initStore() error {
@@ -37,24 +37,31 @@ func (opts *DataLakeDeleteOpts) initStore() error {
 }
 
 func (opts *DataLakeDeleteOpts) Run() error {
-	return opts.store.DeleteDataLake(opts.ProjectID, opts.name)
+	return opts.Delete(opts.store.DeleteDataLake, opts.ProjectID, opts.Entry)
 }
 
 // mongocli atlas datalake(s) delete name --projectId projectId
 func DataLakeDeleteBuilder() *cobra.Command {
-	opts := &DataLakeDeleteOpts{}
+	opts := &DataLakeDeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Data Lake '%s' deleted\n", "Data Lake not deleted"),
+	}
 	cmd := &cobra.Command{
 		Use:   "delete <name>",
 		Short: description.DeleteDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

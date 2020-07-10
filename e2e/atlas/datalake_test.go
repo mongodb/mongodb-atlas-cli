@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,datalake
+// +build e2e atlas,generic
 
 package atlas_test
 
@@ -83,8 +83,8 @@ func TestDatalake(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
-			t.Error(err)
+		if datalake.Name != datalakeName {
+			t.Fatalf("expected name %v, got %v", datalakeName, datalake.Name)
 		}
 	})
 

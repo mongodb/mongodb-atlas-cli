@@ -12,38 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDataLakeDelete_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeDeleter(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &DataLakeDeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "to_delete",
-			Confirm: true,
-		},
-		store: mockStore,
+	describeOpts := &DescribeOpts{
+		clusterName: "test",
+		archiveID:   "1",
+		store:       mockStore,
 	}
 
+	expected := &mongodbatlas.OnlineArchive{}
 	mockStore.
 		EXPECT().
-		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(nil).
+		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
+		Return(expected, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

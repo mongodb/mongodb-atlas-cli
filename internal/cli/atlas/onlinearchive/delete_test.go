@@ -12,34 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestDataLakeDelete_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeDeleter(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveDeleter(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &DataLakeDeleteOpts{
+	deleteOpts := &DeleteOpts{
 		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "to_delete",
 			Confirm: true,
+			Entry:   "test",
 		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteDataLake(deleteOpts.ProjectID, deleteOpts.Entry).
+		DeleteOnlineArchive(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

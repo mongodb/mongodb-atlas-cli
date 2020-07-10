@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package onlinearchive
 
 import (
@@ -21,23 +22,25 @@ import (
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	clusterName string
-	store       store.OnlineArchiveLister
+	archiveID   string
+	store       store.OnlineArchiveDescriber
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	result, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.OnlineArchive(opts.ConfigProjectID(), opts.clusterName, opts.archiveID)
 
 	if err != nil {
 		return err
@@ -46,23 +49,30 @@ func (opts *ListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas cluster(s) describe <name> [--clusterName name][--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListOnlineArchive,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "describe <ID>",
+		Short: description.DescribeOnlineArchive,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.initStore()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
+			opts.archiveID = args[0]
+
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd

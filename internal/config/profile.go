@@ -20,6 +20,7 @@ import (
 	"log"
 	"sort"
 
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -87,7 +88,9 @@ func List() []string {
 	m := viper.AllSettings()
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		keys = append(keys, k)
+		if !search.StringInSlice(Properties(), k) {
+			keys = append(keys, k)
+		}
 	}
 	// keys in maps are non deterministic, trying to give users a consistent output
 	sort.Strings(keys)
@@ -284,6 +287,7 @@ func (p *profile) Delete() error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err
@@ -318,6 +322,7 @@ func (p *profile) Rename(newProfileName string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err

@@ -24,7 +24,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-test/deep"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -53,14 +52,13 @@ func TestDatalake(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		datalake := atlas.DataLake{}
-		err = json.Unmarshal(resp, &datalake)
-		if err != nil {
+		var datalake atlas.DataLake
+		if err = json.Unmarshal(resp, &datalake); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if err := deep.Equal(datalake.Name, datalakeName); err != nil {
-			t.Error(err)
+		if datalake.Name != datalakeName {
+			t.Errorf("expected name %v, got %v\n", datalakeName, datalake.Name)
 		}
 	})
 
@@ -77,14 +75,13 @@ func TestDatalake(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		datalake := atlas.DataLake{}
-		err = json.Unmarshal(resp, &datalake)
-		if err != nil {
+		var datalake atlas.DataLake
+		if err = json.Unmarshal(resp, &datalake); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if datalake.Name != datalakeName {
-			t.Errorf("expected name %v, got %v", datalakeName, datalake.Name)
+			t.Errorf("expected name %v, got %v\n", datalakeName, datalake.Name)
 		}
 	})
 
@@ -94,17 +91,7 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Errorf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-	})
-
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, datalakeName, "delete", datalakeName)
-		cmd.Env = os.Environ()
-
-		err := cmd.Run()
-		if err != nil {
-			t.Errorf("unexpceted error: %v", err)
+			t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
 
@@ -120,17 +107,35 @@ func TestDatalake(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 
-		datalake := atlas.DataLake{}
-		err = json.Unmarshal(resp, &datalake)
-		if err != nil {
+		var datalake atlas.DataLake
+		if err = json.Unmarshal(resp, &datalake); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if err := deep.Equal(datalake.DataProcessRegion.Region, updateRegion); err != nil {
-			t.Error(err)
+		if datalake.DataProcessRegion.Region != updateRegion {
+			t.Errorf("got=%#v\nwant=%#v\n", datalake.DataProcessRegion.Region, updateRegion)
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			datalakeEntity,
+			"delete",
+			datalakeName,
+			"--force")
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+		expected := fmt.Sprintf("Project whitelist entry '%s' deleted\n", datalakeName)
+		if string(resp) != expected {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
 }

@@ -245,9 +245,9 @@ func (p *profile) IsAccessSet() bool {
 	return isSet
 }
 
-// GetConfigDescription returns a map describing the configuration
-func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
-func (p *profile) GetConfigDescription() map[string]string {
+// Get returns a map describing the configuration.
+func Get() map[string]string { return p.Get() }
+func (p *profile) Get() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string, len(settings))
 
@@ -260,6 +260,18 @@ func (p *profile) GetConfigDescription() map[string]string {
 	}
 
 	return newSettings
+}
+
+// SortedKeys returns the properties of the profile sorted.
+func SortedKeys() []string { return p.SortedKeys() }
+func (p *profile) SortedKeys() []string {
+	config := p.Get()
+	keys := make([]string, 0, len(config))
+	for k := range config {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // Delete deletes an existing configuration. The profiles are reloaded afterwards, as

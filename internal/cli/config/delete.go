@@ -45,7 +45,7 @@ func DeleteBuilder() *cobra.Command {
 			opts.Entry = args[0]
 
 			config.SetName(&opts.Entry)
-			profile := config.GetConfigDescription()
+			profile := config.Get()
 			if len(profile) == 0 {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
 			}

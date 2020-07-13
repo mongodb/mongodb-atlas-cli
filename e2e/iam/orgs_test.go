@@ -51,9 +51,7 @@ func TestOrgs(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		var orgs mongodbatlas.Organizations
-		err = json.Unmarshal(resp, &orgs)
-
-		if err != nil {
+		if err := json.Unmarshal(resp, &orgs); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

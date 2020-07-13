@@ -55,9 +55,8 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
+		var user mongodbatlas.DatabaseUser
+		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -76,8 +75,7 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		var users []mongodbatlas.DatabaseUser
-		err = json.Unmarshal(resp, &users)
-		if err != nil {
+		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		if len(users) == 0 {
@@ -100,9 +98,8 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		user := mongodbatlas.DatabaseUser{}
-		err = json.Unmarshal(resp, &user)
-		if err != nil {
+		var user mongodbatlas.DatabaseUser
+		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

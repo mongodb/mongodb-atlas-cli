@@ -43,7 +43,7 @@ func (opts *DataLakeCreateOpts) Run() error {
 		Name: opts.name,
 	}
 
-	result, err := opts.store.CreateDataLake(opts.ProjectID, &createRequest)
+	result, err := opts.store.CreateDataLake(opts.ConfigProjectID(), &createRequest)
 
 	if err != nil {
 		return err

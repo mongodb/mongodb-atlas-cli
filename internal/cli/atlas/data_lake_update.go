@@ -70,7 +70,7 @@ func (opts *DataLakeUpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateR
 func (opts *DataLakeUpdateOpts) Run() error {
 	updateRequest := opts.newUpdateRequest()
 
-	result, err := opts.store.UpdateDataLake(opts.ProjectID, opts.name, updateRequest)
+	result, err := opts.store.UpdateDataLake(opts.ConfigProjectID(), opts.name, updateRequest)
 
 	if err != nil {
 		return err

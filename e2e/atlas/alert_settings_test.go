@@ -67,10 +67,8 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.AlertConfiguration{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.AlertConfiguration
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -135,10 +133,8 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.AlertConfiguration{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.AlertConfiguration
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
@@ -179,9 +175,7 @@ func TestAlertConfig(t *testing.T) {
 		}
 
 		var fields []string
-		err = json.Unmarshal(resp, &fields)
-
-		if err != nil {
+		if err := json.Unmarshal(resp, &fields); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 

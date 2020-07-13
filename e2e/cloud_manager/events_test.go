@@ -48,10 +48,8 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err = json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})
@@ -72,10 +70,8 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err = json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})

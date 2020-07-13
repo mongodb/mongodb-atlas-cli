@@ -70,9 +70,7 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		var users []mongodbatlas.DatabaseUser
-		err = json.Unmarshal(resp, &users)
-
-		if err != nil {
+		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

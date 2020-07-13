@@ -37,7 +37,7 @@ func (opts *DataLakeDeleteOpts) initStore() error {
 }
 
 func (opts *DataLakeDeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteDataLake, opts.ProjectID, opts.Entry)
+	return opts.Delete(opts.store.DeleteDataLake, opts.ConfigProjectID(), opts.Entry)
 }
 
 // mongocli atlas datalake(s) delete name --projectId projectId

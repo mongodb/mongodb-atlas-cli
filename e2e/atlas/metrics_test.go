@@ -54,7 +54,7 @@ func TestMetrics(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		metrics := &mongodbatlas.ProcessMeasurements{}
@@ -88,11 +88,10 @@ func TestMetrics(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		databases := &mongodbatlas.ProcessDatabasesResponse{}
-		err = json.Unmarshal(resp, &databases)
+		var databases mongodbatlas.ProcessDatabasesResponse
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+		if err := json.Unmarshal(resp, &databases); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		if databases.TotalCount != 2 {
@@ -112,12 +111,11 @@ func TestMetrics(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		disks := &mongodbatlas.ProcessDisksResponse{}
-		err = json.Unmarshal(resp, &disks)
-		if err != nil {
+		var disks mongodbatlas.ProcessDisksResponse
+		if err := json.Unmarshal(resp, &disks); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		if disks.TotalCount != 1 {
@@ -139,9 +137,9 @@ func TestMetrics(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		metrics := &mongodbatlas.ProcessDiskMeasurements{}
+		var metrics mongodbatlas.ProcessDiskMeasurements
 		err = json.Unmarshal(resp, &metrics)
 
 		if err != nil {

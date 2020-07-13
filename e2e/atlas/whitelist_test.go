@@ -50,9 +50,8 @@ func TestWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
-		err = json.Unmarshal(resp, &entries)
-		if err != nil {
+		var entries []*mongodbatlas.ProjectIPWhitelist
+		if err := json.Unmarshal(resp, &entries); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		found := false
@@ -117,9 +116,8 @@ func TestWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
-		err = json.Unmarshal(resp, &entries)
-		if err != nil {
+		var entries []*mongodbatlas.ProjectIPWhitelist
+		if err := json.Unmarshal(resp, &entries); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		found := false

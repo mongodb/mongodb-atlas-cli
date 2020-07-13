@@ -26,26 +26,24 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type StartOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
-	id          string
-	clusterName string
-	store       store.OnlineArchiveUpdater
+	id           string
+	clusterName  string
+	archiveAfter float64
+	store        store.OnlineArchiveUpdater
 }
 
-func (opts *StartOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *StartOpts) Run() error {
-	paused := false
-	archive := &atlas.OnlineArchive{
-		ID:     opts.id,
-		Paused: &paused,
-	}
+func (opts *UpdateOpts) Run() error {
+	archive := opts.newOnlineArchive()
 	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+
 	if err != nil {
 		return err
 	}
@@ -53,12 +51,22 @@ func (opts *StartOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId]
-func StartBuilder() *cobra.Command {
-	opts := &StartOpts{}
+func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
+	archive := &atlas.OnlineArchive{
+		ID: opts.id,
+		Criteria: &atlas.OnlineArchiveCriteria{
+			ExpireAfterDays: opts.archiveAfter,
+		},
+	}
+	return archive
+}
+
+// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--archiveAfter N] [--projectId projectId]
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <ID>",
-		Short: description.StartOnlineArchive,
+		Use:   "update <ID>",
+		Short: description.UpdateOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -70,10 +78,12 @@ func StartBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.ArchiveAfter)
 
 	return cmd
 }

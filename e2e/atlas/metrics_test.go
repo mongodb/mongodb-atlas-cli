@@ -31,6 +31,11 @@ func TestMetrics(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
 	hostname, err := getHostnameAndPort()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -154,7 +159,4 @@ func TestMetrics(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
 		}
 	})
-	if err := deleteCluster(clusterName); err != nil {
-		t.Fatalf("unexpected error: %s", err)
-	}
 }

@@ -29,6 +29,11 @@ func TestLogs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
 
 	hostname, err := getHostname()
 	if err != nil {
@@ -161,8 +166,4 @@ func TestLogs(t *testing.T) {
 			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
-
-	if err := deleteCluster(clusterName); err != nil {
-		t.Fatalf("unexpected error: %s", err)
-	}
 }

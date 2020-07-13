@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strconv"
 	"testing"
 
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -120,7 +121,7 @@ func TestOnlineArchives(t *testing.T) {
 			"update",
 			archiveID,
 			"--clusterName="+clusterName,
-			"--archiveAfter=4")
+			"--archiveAfter="+strconv.Itoa(expireAfterDays))
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

@@ -30,8 +30,8 @@ type RenameOpts struct {
 }
 
 func (opts *RenameOpts) Run() error {
-	if config.Exists(opts.oldName) {
-		return fmt.Errorf("profile %v does not exist", opts.oldName)
+	if !config.Exists(opts.oldName) {
+		return fmt.Errorf("profile %s does not exist", opts.oldName)
 	}
 
 	if config.Exists(opts.newName) {

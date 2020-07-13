@@ -131,7 +131,7 @@ func TestProfileDescribeFullProfile(t *testing.T) {
 		t.Error(err)
 	}
 
-	desc := profile.GetConfigDescription()
+	desc := profile.Get()
 	assert.Equal(t, "default", Name())
 	assert.Equal(t, 9, len(desc))
 	assert.Equal(t, "cloud", Service())
@@ -152,7 +152,7 @@ func TestProfileDescribeWithOneDefaultProfile(t *testing.T) {
 		t.Error(err)
 	}
 
-	desc := profile.GetConfigDescription()
+	desc := profile.Get()
 	assert.Equal(t, DefaultProfile, Name())
 	assert.Equal(t, 4, len(desc))
 }
@@ -169,7 +169,7 @@ func TestProfileDescribeWithNonDefaultProfile(t *testing.T) {
 		t.Error(err)
 	}
 
-	desc := profile.GetConfigDescription()
+	desc := profile.Get()
 	assert.Equal(t, atlasProfile, profile.Name(), "expected atlas profile to be described")
 	assert.Equal(t, 3, len(desc))
 
@@ -243,14 +243,14 @@ func TestProfileRename(t *testing.T) {
 		t.Error(err)
 	}
 
-	defaultDescription := profile.GetConfigDescription()
+	defaultDescription := profile.Get()
 
 	if err := profile.Rename(newProfileName); err != nil {
 		t.Error(err)
 	}
 
 	profile.SetName(newProfileName)
-	descriptionAfterRename := profile.GetConfigDescription()
+	descriptionAfterRename := profile.Get()
 
 	// after renaming, one profile should exist
 	assert.Equal(t, false, profile.Exists(DefaultProfile), "default profile should not exist after rename")
@@ -270,7 +270,7 @@ func TestProfileRenameOverwriteExisting(t *testing.T) {
 
 	profile.SetName(DefaultProfile)
 
-	defaultDescription := profile.GetConfigDescription()
+	defaultDescription := profile.Get()
 
 	if err := profile.Rename(atlasProfile); err != nil {
 		t.Error(err)
@@ -278,7 +278,7 @@ func TestProfileRenameOverwriteExisting(t *testing.T) {
 
 	profile.SetName(atlasProfile)
 
-	descriptionAfterRename := profile.GetConfigDescription()
+	descriptionAfterRename := profile.Get()
 
 	// after renaming, one profile should exist
 	assert.Equal(t, false, profile.Exists(DefaultProfile), "default profile should not exist after rename")

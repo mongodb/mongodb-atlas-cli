@@ -21,34 +21,21 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
 	atlasEntity    = "atlas"
 	clustersEntity = "clusters"
-	mongoCliPath   = "../../bin/mongocli"
 )
 
-func cli() (string, error) {
-	cliPath, err := filepath.Abs(mongoCliPath)
-	if err != nil {
-		return "", err
-	}
-
-	if _, err := os.Stat(cliPath); err != nil {
-		return "", err
-	}
-	return cliPath, nil
-}
-
 func getHostnameAndPort() (string, error) {
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
 	}
@@ -81,7 +68,7 @@ func getHostnameAndPort() (string, error) {
 }
 
 func deployCluster() (string, error) {
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
@@ -114,7 +101,7 @@ func deployCluster() (string, error) {
 }
 
 func deleteCluster(clusterName string) error {
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err
 	}

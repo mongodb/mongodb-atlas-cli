@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package onlinearchive
+package atlas
 
 import (
 	"testing"
@@ -22,26 +22,43 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribe_Run(t *testing.T) {
+func TestDataLakeUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
+	mockStore := mocks.NewMockDataLakeUpdater(ctrl)
 
 	defer ctrl.Finish()
 
-	describeOpts := &DescribeOpts{
-		clusterName: "test",
-		archiveID:   "1",
-		store:       mockStore,
+	expected := mongodbatlas.DataLake{}
+
+	createOpts := &DataLakeUpdateOpts{
+		store:      mockStore,
+		name:       "new_data_lake",
+		region:     "some_region",
+		role:       "some::arn",
+		testBucket: "some_bucket",
 	}
 
-	expected := &mongodbatlas.OnlineArchive{}
+	updateRequest := &mongodbatlas.DataLakeUpdateRequest{
+		CloudProviderConfig: &mongodbatlas.CloudProviderConfig{
+			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
+				IAMAssumedRoleARN: "some::arn",
+				TestS3Bucket:      "some_bucket",
+			},
+		},
+		DataProcessRegion: &mongodbatlas.DataProcessRegion{
+			CloudProvider: aws,
+			Region:        "some_region",
+		},
+	}
+
 	mockStore.
 		EXPECT().
-		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
-		Return(expected, nil).
+		UpdateDataLake(createOpts.ProjectID, createOpts.name, updateRequest).
+		Return(&expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
+	err := createOpts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

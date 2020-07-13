@@ -55,9 +55,8 @@ func TestProjects(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		project := mongodbatlas.Project{}
-		err = json.Unmarshal(resp, &project)
-		if err != nil {
+		var project mongodbatlas.Project
+		if err = json.Unmarshal(resp, &project); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

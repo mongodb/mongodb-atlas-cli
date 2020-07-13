@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,7 +35,7 @@ func TestAlerts(t *testing.T) {
 	const alertsEntity = "alerts"
 	var alertID string
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -54,10 +55,8 @@ func TestAlerts(t *testing.T) {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 			}
 
-			alerts := mongodbatlas.AlertsResponse{}
-			err = json.Unmarshal(resp, &alerts)
-
-			if err != nil {
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
 
@@ -83,10 +82,8 @@ func TestAlerts(t *testing.T) {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 			}
 
-			alerts := mongodbatlas.AlertsResponse{}
-			err = json.Unmarshal(resp, &alerts)
-
-			if err != nil {
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
 		})
@@ -107,10 +104,8 @@ func TestAlerts(t *testing.T) {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 			}
 
-			alerts := mongodbatlas.AlertsResponse{}
-			err = json.Unmarshal(resp, &alerts)
-
-			if err != nil {
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
 		})
@@ -131,10 +126,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -167,10 +160,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -194,10 +185,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -220,10 +209,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package onlinearchive
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,28 +23,29 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DataLakeCreateOpts struct {
+type PauseOpts struct {
 	cli.GlobalOpts
-	store store.DataLakeCreator
-	name  string
+	id          string
+	clusterName string
+	store       store.OnlineArchiveUpdater
 }
 
-func (opts *DataLakeCreateOpts) initStore() error {
+func (opts *PauseOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DataLakeCreateOpts) Run() error {
-	createRequest := mongodbatlas.DataLakeCreateRequest{
-		Name: opts.name,
+func (opts *PauseOpts) Run() error {
+	paused := true
+	cluster := &atlas.OnlineArchive{
+		ID:     opts.id,
+		Paused: &paused,
 	}
-
-	result, err := opts.store.CreateDataLake(opts.ConfigProjectID(), &createRequest)
-
+	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, cluster)
 	if err != nil {
 		return err
 	}
@@ -52,23 +53,27 @@ func (opts *DataLakeCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas datalake(s) create name --projectId projectId
-func DataLakeCreateBuilder() *cobra.Command {
-	opts := &DataLakeCreateOpts{}
+// mongocli atlas cluster(s) onlineArchive(s) pause <ID> [--clusterName name][--projectId projectId]
+func PauseBuilder() *cobra.Command {
+	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: description.CreateDataLake,
+		Use:   "pause <ID>",
+		Short: description.PauseOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	return cmd
 }

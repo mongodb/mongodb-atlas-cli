@@ -22,26 +22,31 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribe_Run(t *testing.T) {
+func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
 
 	defer ctrl.Finish()
 
-	describeOpts := &DescribeOpts{
-		clusterName: "test",
-		archiveID:   "1",
-		store:       mockStore,
+	updateOpts := &PauseOpts{
+		id:    "1",
+		store: mockStore,
 	}
 
-	expected := &mongodbatlas.OnlineArchive{}
+	paused := true
+	expected := &mongodbatlas.OnlineArchive{
+		ID:     updateOpts.id,
+		Paused: &paused,
+	}
+
 	mockStore.
 		EXPECT().
-		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
+		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, expected).
 		Return(expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
+	err := updateOpts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

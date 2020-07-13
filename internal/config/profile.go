@@ -21,6 +21,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -93,7 +94,9 @@ func (p *profile) List() []string {
 	fmt.Printf("got %v", m)
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		keys = append(keys, k)
+		if !search.StringInSlice(Properties(), k) {
+			keys = append(keys, k)
+		}
 	}
 	// keys in maps are non deterministic, trying to give users a consistent output
 	sort.Strings(keys)
@@ -255,9 +258,9 @@ func (p *profile) IsAccessSet() bool {
 	return isSet
 }
 
-// GetConfigDescription returns a map describing the configuration
-func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
-func (p *profile) GetConfigDescription() map[string]string {
+// Get returns a map describing the configuration.
+func Get() map[string]string { return p.Get() }
+func (p *profile) Get() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string, len(settings))
 
@@ -270,6 +273,18 @@ func (p *profile) GetConfigDescription() map[string]string {
 	}
 
 	return newSettings
+}
+
+// SortedKeys returns the properties of the profile sorted.
+func SortedKeys() []string { return p.SortedKeys() }
+func (p *profile) SortedKeys() []string {
+	config := p.Get()
+	keys := make([]string, 0, len(config))
+	for k := range config {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // Delete deletes an existing configuration. The profiles are reloaded afterwards, as
@@ -297,6 +312,7 @@ func (p *profile) Delete() error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err
@@ -331,6 +347,7 @@ func (p *profile) Rename(newProfileName string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err

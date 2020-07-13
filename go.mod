@@ -21,7 +21,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/stretchr/testify v1.6.1
-	go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04
+	go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f
 	go.mongodb.org/ops-manager v0.7.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect

@@ -5,9 +5,10 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
 // MockDataLakeLister is a mock of DataLakeLister interface
@@ -185,7 +186,7 @@ func (m *MockDataLakeUpdater) EXPECT() *MockDataLakeUpdaterMockRecorder {
 }
 
 // UpdateDataLake mocks base method
-func (m *MockDataLakeUpdater) UpdateDataLake(arg0, arg1 string, arg2 *mongodbatlas.DataLake) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeUpdater) UpdateDataLake(arg0, arg1 string, arg2 *mongodbatlas.DataLakeUpdateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDataLake", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)
@@ -282,7 +283,7 @@ func (mr *MockDataLakeStoreMockRecorder) DeleteDataLake(arg0, arg1 interface{}) 
 }
 
 // UpdateDataLake mocks base method
-func (m *MockDataLakeStore) UpdateDataLake(arg0, arg1 string, arg2 *mongodbatlas.DataLake) (*mongodbatlas.DataLake, error) {
+func (m *MockDataLakeStore) UpdateDataLake(arg0, arg1 string, arg2 *mongodbatlas.DataLakeUpdateRequest) (*mongodbatlas.DataLake, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDataLake", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.DataLake)

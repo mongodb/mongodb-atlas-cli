@@ -22,11 +22,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestEvents(t *testing.T) {
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -48,10 +49,8 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err = json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})
@@ -72,10 +71,8 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err = json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})

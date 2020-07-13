@@ -13,9 +13,11 @@ LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
 TEST_CMD?=go test
 E2E_TAGS?=e2e
+E2E_BINARY?=../../bin/${BINARY_NAME}
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
+export E2E_BINARY
 
 .PHONY: setup
 setup:  ## Install dev tools

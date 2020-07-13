@@ -89,6 +89,7 @@ const (
 	DeleteOnlineArchive      = "Delete an online archive from a cluster."
 	PauseOnlineArchive       = "Pause an online archive from a cluster."
 	StartOnlineArchive       = "Start a paused online archive from a cluster."
+	UpdateOnlineArchive      = "Update an online archive for a cluster."
 	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
 	ConfigSetDescription     = "Configure specific properties of a profile."
 	ConfigRenameDescription  = "Rename a profile."

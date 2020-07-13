@@ -34,6 +34,12 @@ func TestOnlineArchives(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
+
 	cliPath, err := cli()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -155,8 +161,4 @@ func TestOnlineArchives(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 	})
-
-	if err := deleteCluster(clusterName); err != nil {
-		t.Fatalf("unexpected error: %s", err)
-	}
 }

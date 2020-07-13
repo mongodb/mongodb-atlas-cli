@@ -47,22 +47,23 @@ func TestOnlineArchives(t *testing.T) {
 			"--clusterName="+clusterName)
 
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 	})
 
 	var archiveID string
 	t.Run("Create", func(t *testing.T) {
+		const dbName = "test"
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			onlineArchiveEntity,
 			"create",
 			"--clusterName="+clusterName,
-			"--db=test",
+			"--db="+dbName,
 			"--collection=test",
 			"--dateField=test",
 			"--archiveAfter=3",
@@ -71,7 +72,7 @@ func TestOnlineArchives(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		var archive mongodbatlas.OnlineArchive
@@ -80,6 +81,9 @@ func TestOnlineArchives(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		archiveID = archive.ID
+		if archive.DBName != dbName {
+			t.Errorf("got=%#v\nwant=%#v\n", archive.DBName, dbName)
+		}
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -94,7 +98,7 @@ func TestOnlineArchives(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		var archive mongodbatlas.OnlineArchive
@@ -104,6 +108,33 @@ func TestOnlineArchives(t *testing.T) {
 		}
 		if archiveID != archive.ID {
 			t.Errorf("expected: %s, got: %s", archiveID, archive.ID)
+		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		const expireAfterDays = 4
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			onlineArchiveEntity,
+			"update",
+			archiveID,
+			"--clusterName="+clusterName,
+			"--archiveAfter=4")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		var archive mongodbatlas.OnlineArchive
+		err = json.Unmarshal(resp, &archive)
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		archiveID = archive.ID
+		if archive.Criteria.ExpireAfterDays != expireAfterDays {
+			t.Errorf("got=%#v\nwant=%#v\n", archive.Criteria.ExpireAfterDays, expireAfterDays)
 		}
 	})
 
@@ -118,9 +149,9 @@ func TestOnlineArchives(t *testing.T) {
 			"--force")
 
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		resp, err := cmd.CombinedOutput()
 		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 	})
 

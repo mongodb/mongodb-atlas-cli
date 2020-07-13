@@ -133,7 +133,7 @@ func TestDatalake(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
-		expected := fmt.Sprintf("Project whitelist entry '%s' deleted\n", datalakeName)
+		expected := fmt.Sprintf("Data Lake '%s' deleted\n", datalakeName)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}

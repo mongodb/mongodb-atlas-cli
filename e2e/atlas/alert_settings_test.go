@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -39,7 +40,7 @@ func TestAlertConfig(t *testing.T) {
 
 	var alertID string
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

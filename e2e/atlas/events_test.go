@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,7 +30,7 @@ func TestEvents(t *testing.T) {
 	atlasEntity := "atlas"
 	eventsEntity := "events"
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

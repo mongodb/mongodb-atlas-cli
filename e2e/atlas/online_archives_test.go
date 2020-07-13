@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -40,7 +41,7 @@ func TestOnlineArchives(t *testing.T) {
 		}
 	}()
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

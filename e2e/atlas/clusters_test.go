@@ -25,6 +25,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,7 +35,7 @@ func TestClusters(t *testing.T) {
 	const clustersEntity = "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

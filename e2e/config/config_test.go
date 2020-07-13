@@ -57,13 +57,6 @@ func TestConfig(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		const expected = `service = cloud
-org_id = 5e429e7706822c6eac4d5971
-public_api_key = redacted
-`
-		if string(resp) != expected {
-			t.Errorf("expected %s, got %s\n", expected, string(resp))
-		}
 	})
 	t.Run("Rename", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "rename", "e2e", "renamed")

@@ -20,6 +20,8 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+
+	"github.com/mongodb/mongocli/e2e"
 )
 
 func TestLogs(t *testing.T) {
@@ -40,7 +42,7 @@ func TestLogs(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

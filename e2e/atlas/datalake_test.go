@@ -24,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,7 +35,7 @@ func TestDatalake(t *testing.T) {
 	const updateRegion = "VIRGINIA_USA"
 	datalakeName := fmt.Sprintf("e2e-data-lake-%v", r.Uint32())
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,7 +35,7 @@ func TestAlerts(t *testing.T) {
 	const alertsEntity = "alerts"
 	var alertID string
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

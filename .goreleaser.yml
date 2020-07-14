@@ -46,7 +46,7 @@ archives:
 brews:
 - name: mongocli
   ids: [macos,linux]
-  github:
+  tap:
     owner: mongodb
     name: homebrew-brew
   folder: Formula

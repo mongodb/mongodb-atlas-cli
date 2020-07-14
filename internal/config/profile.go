@@ -86,9 +86,6 @@ func Default() Config {
 
 // List returns the names of available profiles
 func List() []string {
-	return p.List()
-}
-func (p *profile) List() []string {
 	m := viper.AllSettings()
 
 	fmt.Printf("got %v", m)
@@ -105,9 +102,6 @@ func (p *profile) List() []string {
 
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
-	return p.Exists(name)
-}
-func (p *profile) Exists(name string) bool {
 	return len(viper.GetStringMap(name)) > 0
 }
 

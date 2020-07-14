@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// +build integration
+
 package config
 
 import (
@@ -118,7 +121,7 @@ func TestProfileList(t *testing.T) {
 	}
 
 	availableProfiles := profile.List()
-	assert.Equal(t, 2, len(availableProfiles), "expected to find 2 profiles")
+	assert.Len(t, availableProfiles, 2, "expected to find 2 profiles")
 }
 
 func TestProfileDescribeFullProfile(t *testing.T) {
@@ -133,7 +136,7 @@ func TestProfileDescribeFullProfile(t *testing.T) {
 
 	desc := profile.Get()
 	assert.Equal(t, "default", Name())
-	assert.Equal(t, 9, len(desc))
+	assert.Len(t, desc, 9)
 	assert.Equal(t, "cloud", Service())
 	assert.Equal(t, "some_public_key", PublicAPIKey())
 	assert.Equal(t, "some_private_key", PrivateAPIKey())
@@ -154,7 +157,7 @@ func TestProfileDescribeWithOneDefaultProfile(t *testing.T) {
 
 	desc := profile.Get()
 	assert.Equal(t, DefaultProfile, Name())
-	assert.Equal(t, 4, len(desc))
+	assert.Len(t, desc, 4)
 }
 
 func TestProfileDescribeWithNonDefaultProfile(t *testing.T) {
@@ -171,10 +174,10 @@ func TestProfileDescribeWithNonDefaultProfile(t *testing.T) {
 
 	desc := profile.Get()
 	assert.Equal(t, atlasProfile, profile.Name(), "expected atlas profile to be described")
-	assert.Equal(t, 3, len(desc))
+	assert.Len(t, desc,3)
 
 	assert.Equal(t, "5cac6a2179358edabd12b572", profile.OrgID(), "project id should match")
-	assert.Equal(t, "", profile.ProjectID(), "project id should not be set")
+	assert.Empty(t, profile.ProjectID(), "project id should not be set")
 }
 
 func TestProfileDelete(t *testing.T) {
@@ -192,7 +195,7 @@ func TestProfileDelete(t *testing.T) {
 	}
 
 	availableProfiles := List()
-	assert.Equal(t, 0, len(availableProfiles), "0 profiles should exist after deleting")
+	assert.Len(t, availableProfiles, 0, "0 profiles should exist after deleting")
 }
 
 func TestProfileDeleteNonDefault(t *testing.T) {
@@ -212,7 +215,7 @@ func TestProfileDeleteNonDefault(t *testing.T) {
 	}
 
 	availableProfiles := List()
-	assert.Equal(t, 1, len(availableProfiles), "1 profiles should exist after deleting")
+	assert.Len(t, availableProfiles, 1, "1 profiles should exist after deleting")
 	assert.Equal(t, DefaultProfile, availableProfiles[0], "the default profile should remain")
 }
 
@@ -226,9 +229,9 @@ func TestProfileExists(t *testing.T) {
 		t.Error(err)
 	}
 
-	assert.Equal(t, true, profile.Exists(DefaultProfile), "default profile should exist")
-	assert.Equal(t, true, profile.Exists(atlasProfile), "atlas profile should exist")
-	assert.Equal(t, false, profile.Exists("not_a_profile"), "not_a_profile profile should not exist")
+	assert.True(t, profile.Exists(DefaultProfile), "default profile should exist")
+	assert.True(t, profile.Exists(atlasProfile), "atlas profile should exist")
+	assert.False(t, profile.Exists("not_a_profile"), "not_a_profile profile should not exist")
 }
 
 func TestProfileRename(t *testing.T) {
@@ -253,8 +256,8 @@ func TestProfileRename(t *testing.T) {
 	descriptionAfterRename := profile.Get()
 
 	// after renaming, one profile should exist
-	assert.Equal(t, false, profile.Exists(DefaultProfile), "default profile should not exist after rename")
-	assert.Equal(t, true, profile.Exists(newProfileName), "new profile should exist after rename")
+	assert.False(t, profile.Exists(DefaultProfile), "default profile should not exist after rename")
+	assert.True(t, profile.Exists(newProfileName), "new profile should exist after rename")
 	assert.Equal(t, defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 }
 
@@ -281,8 +284,8 @@ func TestProfileRenameOverwriteExisting(t *testing.T) {
 	descriptionAfterRename := profile.Get()
 
 	// after renaming, one profile should exist
-	assert.Equal(t, false, profile.Exists(DefaultProfile), "default profile should not exist after rename")
-	assert.Equal(t, true, profile.Exists(atlasProfile), "atlas profile should exist after rename")
+	assert.False(t, profile.Exists(DefaultProfile), "default profile should not exist after rename")
+	assert.True(t, profile.Exists(atlasProfile), "atlas profile should exist after rename")
 	assert.Equal(t, defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 }
 

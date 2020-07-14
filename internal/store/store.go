@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"runtime"
 	"time"
 
 	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
@@ -27,7 +28,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var userAgent = fmt.Sprintf("%s/%s", config.ToolName, version.Version)
+var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 const (
 	atlasAPIPath = "api/atlas/v1.0/"
@@ -122,19 +123,20 @@ func NewUnauthenticated(c config.Config) (*Store, error) {
 
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := make([]atlas.ClientOpt, 0)
-	opts = append(opts, atlas.SetUserAgent(userAgent))
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
 	c, err := atlas.New(client, opts...)
-
+	if err != nil {
+		return err
+	}
+	c.UserAgent = userAgent
 	s.client = c
-	return err
+	return nil
 }
 
 func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := make([]opsmngr.ClientOpt, 0)
-	opts = append(opts, opsmngr.SetUserAgent(userAgent))
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
@@ -145,9 +147,12 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 		opts = append(opts, opsmngr.OptionSkipVerify())
 	}
 	c, err := opsmngr.New(client, opts...)
-
+	if err != nil {
+		return err
+	}
+	c.UserAgent = userAgent
 	s.client = c
-	return err
+	return nil
 }
 
 func (s *Store) apiPath(baseURL string) string {

@@ -74,8 +74,8 @@ e2e-test: build ## Run E2E tests
 	# the target assumes the MCLI-* environment variables are exported
 	${TEST_CMD} -v -p 1 -parallel 1 -timeout 15m -tags="${E2E_TAGS}" ./e2e...
 
-.PHONY: integration-tests
-integration-tests: ## Run integration-tests
+.PHONY: integration-test
+integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
 	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 

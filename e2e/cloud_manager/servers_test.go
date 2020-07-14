@@ -17,11 +17,12 @@ package cloud_manager_test
 
 import (
 	"encoding/json"
-	"github.com/mongodb/mongocli/e2e"
-	"go.mongodb.org/ops-manager/opsmngr"
 	"os"
 	"os/exec"
 	"testing"
+
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestServers(t *testing.T) {

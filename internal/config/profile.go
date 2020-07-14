@@ -88,7 +88,6 @@ func Default() Config {
 func List() []string {
 	m := viper.AllSettings()
 
-	fmt.Printf("got %v", m)
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		if !search.StringInSlice(Properties(), k) {
@@ -118,11 +117,6 @@ func newProfile() *profile {
 	return np
 }
 
-func SetConfigPath(name string) { p.SetConfigPath(name) }
-func (p *profile) SetConfigPath(name string) {
-	p.configDir = name
-}
-
 func Name() string { return p.Name() }
 func (p *profile) Name() string {
 	return p.name
@@ -143,10 +137,7 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	if p.name != "" {
-		return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
-	}
-	return ""
+	return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
 }
 
 // Service get configured service
@@ -287,9 +278,9 @@ func Delete() error { return p.Delete() }
 func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	configurationAfterDelete := viper.AllSettings()
+	settings := viper.AllSettings()
 
-	t, err := toml.TreeFromMap(configurationAfterDelete)
+	t, err := toml.TreeFromMap(settings)
 	if err != nil {
 		return err
 	}
@@ -358,6 +349,7 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
+	viper.SetFs(p.fs)
 
 	if readEnvironmentVars {
 		viper.SetEnvPrefix(EnvPrefix)

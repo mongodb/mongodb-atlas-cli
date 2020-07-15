@@ -10,8 +10,7 @@ done
 
 if [[ -n "${STAGED_GO_FILES}" ]]; then
     set -o errexit
-    make test
-    make integration-test
+    go test --tags="unit integration" -race ./internal...
     make fix-lint
     set +o errexit
 fi

@@ -37,9 +37,7 @@ fmt: ## Format code
 	@scripts/fmt.sh
 
 .PHONY: test
-test: ## Run tests
-	@echo "==> Running tests..."
-	${TEST_CMD} --tags="${UNIT_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -77,7 +75,12 @@ e2e-test: build ## Run E2E tests
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
+
+.PHONY: unit-test
+unit-test: ## Run unit-tests
+	@echo "==> Running unit tests..."
+	${TEST_CMD} --tags="${UNIT_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

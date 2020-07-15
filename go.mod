@@ -20,7 +20,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f
-	go.mongodb.org/ops-manager v0.7.1-0.20200714201515-51b7a64de8fa
+	go.mongodb.org/ops-manager v0.7.1-0.20200715115243-f81762dfcf4f
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

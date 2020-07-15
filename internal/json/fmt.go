@@ -20,7 +20,7 @@ import (
 )
 
 func PrettyPrint(obj interface{}) error {
-	prettyJSON, err := json.MarshalIndent(obj, "", "\t")
+	prettyJSON, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {
 		return err
 	}

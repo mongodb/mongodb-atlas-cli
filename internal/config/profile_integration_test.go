@@ -32,7 +32,7 @@ const (
 func createProfile(profileContents string) (*profile, error) {
 	fs := afero.NewMemMapFs()
 
-	testConfigDir := "/test/"
+	testConfigDir := "/test"
 	filename := fmt.Sprintf("%v/%v.toml", testConfigDir, ToolName)
 
 	profile := profile{

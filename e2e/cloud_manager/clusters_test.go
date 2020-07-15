@@ -16,11 +16,13 @@
 package cloud_manager_test
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongocli/internal/convert"
 )
 
 const (
@@ -58,6 +60,7 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
+
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
@@ -70,6 +73,29 @@ func TestClusters(t *testing.T) {
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"ls",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+		var clusters []*convert.ClusterConfig
+		if err := json.Unmarshal(resp, &clusters); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(clusters) == 0 {
+			t.Fatalf("expected len(clusters) > 0, got 0")
 		}
 	})
 }

@@ -44,13 +44,12 @@ func TestEvents(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		var events mongodbatlas.EventResponse
-		if err = json.Unmarshal(resp, &events); err != nil {
+		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})
@@ -72,7 +71,7 @@ func TestEvents(t *testing.T) {
 		}
 
 		var events mongodbatlas.EventResponse
-		if err = json.Unmarshal(resp, &events); err != nil {
+		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})

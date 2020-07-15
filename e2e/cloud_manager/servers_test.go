@@ -48,7 +48,7 @@ func TestServers(t *testing.T) {
 		}
 
 		var servers *opsmngr.Agents
-		if err = json.Unmarshal(resp, &servers); err != nil {
+		if err := json.Unmarshal(resp, &servers); err != nil {
 			t.Fatalf("unexpected error: %v\n", err)
 		}
 		if servers.TotalCount != 1 {

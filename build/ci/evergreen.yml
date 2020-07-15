@@ -530,6 +530,26 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
+  - name: cloud_manager_clusters_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,clusters
   - name: package_msi
     tags: ["packaging"]
     depends_on:

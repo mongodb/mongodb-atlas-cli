@@ -170,8 +170,6 @@ github.com/mitchellh/mapstructure v1.3.1 h1:cCBH2gTD2K0OtLlv/Y5H01VQCqmlDxz30kS5
 github.com/mitchellh/mapstructure v1.3.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
-github.com/mongodb/go-client-mongodb-atlas v0.3.0 h1:G2sNi2M/8ovfqSDmvOuxusXmafSqu4qOcQBwjoJiuKg=
-github.com/mongodb/go-client-mongodb-atlas v0.3.0/go.mod h1:182DADO+2ZDWQyW25uIxzop3U0rrQdeNEzqvs6w9kTI=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
@@ -249,8 +247,8 @@ go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04 h1:ildNidTScIuYngZQc/A
 go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
 go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f h1:SJu0hiuSq3lnZGuuWPoFW0pJCryzVvdzNKIffGKodlk=
 go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
-go.mongodb.org/ops-manager v0.7.0 h1:23AQk5s39RLVsbDufQACkHBCDoqSmDPN5Uopwu2CBn4=
-go.mongodb.org/ops-manager v0.7.0/go.mod h1:H5JMirQnfOlh18uRj0WsgFhDC01SZLTywKatpNo7mRs=
+go.mongodb.org/ops-manager v0.7.1-0.20200714201515-51b7a64de8fa h1:zQ0MCBZ4SDFqhfRZno67MG5n42JunsVKmolbGOSiNFQ=
+go.mongodb.org/ops-manager v0.7.1-0.20200714201515-51b7a64de8fa/go.mod h1:H5JMirQnfOlh18uRj0WsgFhDC01SZLTywKatpNo7mRs=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

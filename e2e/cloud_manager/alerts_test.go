@@ -29,7 +29,6 @@ import (
 const (
 	open                        = "OPEN"
 	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
-	entity                      = "cloud-manager"
 )
 
 func TestAlerts(t *testing.T) {

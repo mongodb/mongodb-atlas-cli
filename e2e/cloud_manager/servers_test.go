@@ -31,8 +31,6 @@ func TestServers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const serversEntity = "servers"
-
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,

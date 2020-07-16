@@ -17,6 +17,7 @@ package cloud_manager_test
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -30,7 +31,9 @@ const (
 	serversEntity = "servers"
 )
 
-func automatedServer(cliPath string) (string, error) {
+// automationServerHostname tries to list avaialable server running the automation agent
+// and returns the first available hostname for deployments
+func automationServerHostname(cliPath string) (string, error) {
 	cmd := exec.Command(cliPath, entity, serversEntity, "list")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -41,6 +44,9 @@ func automatedServer(cliPath string) (string, error) {
 	var servers *opsmngr.Agents
 	if err := json.Unmarshal(resp, &servers); err != nil {
 		return "", err
+	}
+	if servers.TotalCount == 0 {
+		return "", errors.New("no server available")
 	}
 	return servers.Results[0].Hostname, nil
 }

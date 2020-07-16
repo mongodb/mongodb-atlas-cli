@@ -31,8 +31,6 @@ func TestServers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const serversEntity = "servers"
-
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
@@ -48,7 +46,7 @@ func TestServers(t *testing.T) {
 		}
 
 		var servers *opsmngr.Agents
-		if err = json.Unmarshal(resp, &servers); err != nil {
+		if err := json.Unmarshal(resp, &servers); err != nil {
 			t.Fatalf("unexpected error: %v\n", err)
 		}
 		if servers.TotalCount != 1 {

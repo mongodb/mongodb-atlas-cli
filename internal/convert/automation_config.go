@@ -23,35 +23,37 @@ import (
 func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 	out := make([]*ClusterConfig, 0, len(c.ReplicaSets))
 
-	for i, s := range c.Sharding {
-		out = append(out, newShardedCluster(s))
+	for _, s := range c.Sharding {
+		newSC := newShardedCluster(s)
 		for j, ss := range s.Shards {
 			id := ss.ID
-			out[i].Shards[j] = newRSConfig(c, id)
+			newSC.Shards[j] = newRSConfig(c, id)
 		}
 
-		out[i].Config = newRSConfig(c, s.ConfigServerReplica)
+		newSC.Config = newRSConfig(c, s.ConfigServerReplica)
 		for j, p := range c.Processes {
 			if p.Cluster == s.Name {
-				out[i].Mongos = append(out[i].Mongos, newMongosProcessConfig(p))
-				out[i].addToMongoURI(p)
+				newSC.Mongos = append(newSC.Mongos, newMongosProcessConfig(p))
+				newSC.addToMongoURI(p)
 				c.Processes = removeProcess(c.Processes, j)
 				break
 			}
 		}
+		out = append(out, newSC)
 	}
-	for i, rs := range c.ReplicaSets {
-		out = append(out, newReplicaSetCluster(rs.ID, len(rs.Members)))
+	for _, rs := range c.ReplicaSets {
+		newRS := newReplicaSetCluster(rs.ID, len(rs.Members))
 		for j, m := range rs.Members {
 			for k, p := range c.Processes {
 				if p.Name == m.Host {
-					out[i].ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
-					out[i].addToMongoURI(p)
+					newRS.ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
+					newRS.addToMongoURI(p)
 					c.Processes = removeProcess(c.Processes, k)
 					break
 				}
 			}
 		}
+		out = append(out, newRS)
 	}
 
 	return out

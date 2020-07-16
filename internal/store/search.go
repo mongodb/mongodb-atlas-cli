@@ -28,7 +28,7 @@ type SearchIndexLister interface {
 	SearchIndexes(string, string, string, string, *atlas.ListOptions) ([]*atlas.SearchIndex, error)
 }
 
-// OnlineArchives encapsulate the logic to manage different cloud providers
+// SearchIndexes encapsulate the logic to manage different cloud providers
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:

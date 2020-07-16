@@ -12,34 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package search
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
-	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:        "clusters",
-		Aliases:    []string{"cluster"},
-		SuggestFor: []string{"replicasets"},
-		Short:      description.Clusters,
-		Long:       description.ClustersLong,
+		Use:     "search",
+		Aliases: []string{"fts"},
+		Short:   description.Search,
 	}
 	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(PauseBuilder())
-	cmd.AddCommand(StartBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(IndexesBuilder())
-	cmd.AddCommand(search.Builder())
-	cmd.AddCommand(onlinearchive.Builder())
-
 	return cmd
 }

@@ -530,11 +530,14 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
-  - name: cloud_manager_clusters_e2e
+  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
+  - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e"]
     depends_on:
       - name: compile
         variant: "code_health"
+        patch_optional: true
+      - name: cloud_manager_generic_e2e
         patch_optional: true
     commands:
       - func: "clone"
@@ -549,7 +552,7 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,clusters
+          E2E_TAGS: cloudmanager,deploy_replica_set
   - name: package_msi
     tags: ["packaging"]
     depends_on:

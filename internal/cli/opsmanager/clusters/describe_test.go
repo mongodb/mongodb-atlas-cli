@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestClustersDescribe_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationGetter(ctrl)
 
@@ -32,7 +32,7 @@ func TestClustersDescribe_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 
-	descOpts := &ClustersDescribeOpts{
+	descOpts := &DescribeOpts{
 		store: mockStore,
 		name:  "myReplicaSet",
 	}

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"fmt"
@@ -30,7 +30,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type ClustersIndexesCreateOpts struct {
+type IndexesCreateOpts struct {
 	cli.GlobalOpts
 	name            string
 	db              string
@@ -52,13 +52,13 @@ type ClustersIndexesCreateOpts struct {
 	store           store.AutomationPatcher
 }
 
-func (opts *ClustersIndexesCreateOpts) initStore() error {
+func (opts *IndexesCreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersIndexesCreateOpts) Run() error {
+func (opts *IndexesCreateOpts) Run() error {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func (opts *ClustersIndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *ClustersIndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) {
+func (opts *IndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (opts *ClustersIndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) 
 	return i, nil
 }
 
-func (opts *ClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
+func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	return &atlas.IndexOptions{
 		Background: opts.background,
 		Unique:     opts.unique,
@@ -112,7 +112,7 @@ func (opts *ClustersIndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	}
 }
 
-func (opts *ClustersIndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
+func (opts *IndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
 	return &atlas.CollationOptions{
 		Locale:          opts.locale,
 		CaseLevel:       opts.caseLevel,
@@ -127,7 +127,7 @@ func (opts *ClustersIndexesCreateOpts) newCollationOptions() *atlas.CollationOpt
 }
 
 // indexKeys takes a slice of values formatted as key:vale and returns an array of slice [[key, value][key, value]]
-func (opts *ClustersIndexesCreateOpts) indexKeys() ([][]string, error) {
+func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 	propertiesList := make([][]string, len(opts.keys))
 	for i, key := range opts.keys {
 		value := strings.Split(key, ":")
@@ -144,8 +144,8 @@ func (opts *ClustersIndexesCreateOpts) indexKeys() ([][]string, error) {
 // mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --dbName dbName [--key field:type] --projectId projectId
 // --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering
 // --normalization normalization --backwards backwards --unique unique --sparse sparse --background background
-func ClustersIndexesCreateBuilder() *cobra.Command {
-	opts := &ClustersIndexesCreateOpts{}
+func IndexesCreateBuilder() *cobra.Command {
+	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: description.CreateIndex,

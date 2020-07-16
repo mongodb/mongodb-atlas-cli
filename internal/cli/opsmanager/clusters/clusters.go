@@ -12,20 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func ClustersIndexesBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "indexes",
-		Aliases: []string{"index"},
-		Short:   description.ClustersIndexes,
+		Use:     "clusters",
+		Aliases: []string{"cluster"},
+		Short:   description.Clusters,
 	}
-	cmd.AddCommand(ClustersIndexesCreateBuilder())
+
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(ShutdownBuilder())
+	cmd.AddCommand(StartupBuilder())
+	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(ApplyBuilder())
+	cmd.AddCommand(IndexesBuilder())
 
 	return cmd
 }

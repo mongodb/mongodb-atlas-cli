@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestCloudManagerClustersStartup_Run(t *testing.T) {
+func TestShutdown_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
@@ -32,7 +32,7 @@ func TestCloudManagerClustersStartup_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 
-	createOpts := &ClustersStartupOpts{
+	createOpts := &ShutdownOpts{
 		store:   mockStore,
 		confirm: true,
 		name:    "myReplicaSet",

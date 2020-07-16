@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestCloudManagerClustersList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersLister(ctrl)
 
@@ -34,7 +34,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 	t.Run("ConfigProjectID is given", func(t *testing.T) {
 		expected := fixture.AutomationConfig()
 
-		listOpts := &ClustersListOpts{
+		listOpts := &ListOpts{
 			store: mockStore,
 		}
 
@@ -60,7 +60,7 @@ func TestCloudManagerClustersList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		listOpts := &ClustersListOpts{
+		listOpts := &ListOpts{
 			store: mockStore,
 		}
 

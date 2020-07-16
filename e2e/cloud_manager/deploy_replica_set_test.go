@@ -125,4 +125,21 @@ func TestDeployReplicaSet(t *testing.T) {
 			t.Errorf("expected %s, got %s\n", clusterName, cluster.Name)
 		}
 	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"rm",
+			clusterName,
+			"--force",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
 }

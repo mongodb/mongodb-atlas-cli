@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
@@ -29,46 +26,46 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ClustersDescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
-	name  string
-	store store.AutomationGetter
+	store store.CloudManagerClustersLister
 }
 
-func (opts *ClustersDescribeOpts) initStore() error {
+func (opts *ListOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersDescribeOpts) Run() error {
-	result, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+func (opts *ListOpts) Run() error {
+	if opts.ConfigProjectID() == "" {
+		result, err := opts.store.ListAllProjectClusters()
+		if err != nil {
+			return err
+		}
+		return json.PrettyPrint(result)
+	}
 
+	clusterConfigs, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
-
-	clusterConfigs := convert.FromAutomationConfig(result)
-	for _, rs := range clusterConfigs {
-		if rs.Name == opts.name {
-			return json.PrettyPrint(rs)
-		}
-	}
-	return fmt.Errorf("replicaset %s not found", opts.name)
+	result := convert.FromAutomationConfig(clusterConfigs)
+	return json.PrettyPrint(result)
 }
 
-// mongocli cloud-manager cluster(s) describe <name> --projectId projectId
-func ClustersDescribeBuilder() *cobra.Command {
-	opts := &ClustersDescribeOpts{}
+// mongocli cloud-manager cluster(s) list --projectId projectId
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: description.DescribeCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   description.ListClusters,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}

@@ -12,83 +12,68 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
-type ClustersApplyOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	filename string
-	fs       afero.Fs
-	store    store.AutomationPatcher
+	name  string
+	store store.AutomationGetter
 }
 
-func (opts *ClustersApplyOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersApplyOpts) Run() error {
-	newConfig := new(convert.ClusterConfig)
-	err := file.Load(opts.fs, opts.filename, newConfig)
-	if err != nil {
-		return err
-	}
-	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	if err := newConfig.PatchAutomationConfig(current); err != nil {
-		return err
+	clusterConfigs := convert.FromAutomationConfig(result)
+	for _, rs := range clusterConfigs {
+		if rs.Name == opts.name {
+			return json.PrettyPrint(rs)
+		}
 	}
-
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
-		return err
-	}
-
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+	return fmt.Errorf("replicaset %s not found", opts.name)
 }
 
-// mongocli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml
-func ClustersApplyBuilder() *cobra.Command {
-	opts := &ClustersApplyOpts{
-		fs: afero.NewOsFs(),
-	}
+// mongocli cloud-manager cluster(s) describe <name> --projectId projectId
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "apply",
-		Short: description.ApplyCluster,
+		Use:   "describe <name>",
+		Short: description.DescribeCluster,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use to change the automation config")
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flag.File)
-	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

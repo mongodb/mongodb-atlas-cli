@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
@@ -22,49 +22,20 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
 )
 
-func TestClustersCreate_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
-	appFS := afero.NewMemMapFs()
-	// create test file
-	fileYML := `
----
-name: "cluster_2"
-version: 4.2.2
-featureCompatibilityVersion: 4.2
-processes:
-  - hostname: host0
-    dbPath: /data/cluster_2/rs1
-    logPath: /data/cluster_2/rs1/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29010
-  - hostname: host1
-    dbPath: /data/cluster_2/rs2
-    logPath: /data/cluster_2/rs2/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29020
-  - hostname: host2
-    dbPath: /data/cluster_2/rs3
-    logPath: /data/cluster_2/rs3/mongodb.log
-    priority: 1
-    votes: 1
-    port: 29030`
-	fileName := "test_om_create.yml"
-	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-	createOpts := &ClustersCreateOpts{
-		store:    mockStore,
-		fs:       appFS,
-		filename: fileName,
+	createOpts := &ShutdownOpts{
+		store:   mockStore,
+		confirm: true,
+		name:    "myReplicaSet",
 	}
 
 	mockStore.

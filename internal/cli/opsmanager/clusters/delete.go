@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"fmt"
@@ -29,20 +29,20 @@ import (
 	"go.mongodb.org/ops-manager/atmcfg"
 )
 
-type ClustersStartupOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
 	name    string
 	confirm bool
 	store   store.AutomationPatcher
 }
 
-func (opts *ClustersStartupOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersStartupOpts) Run() error {
+func (opts *DeleteOpts) Run() error {
 	if !opts.confirm {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (opts *ClustersStartupOpts) Run() error {
 		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
 	}
 
-	atmcfg.Startup(current, opts.name)
+	atmcfg.RemoveByClusterName(current, opts.name)
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -67,23 +67,24 @@ func (opts *ClustersStartupOpts) Run() error {
 	return nil
 }
 
-func (opts *ClustersStartupOpts) Confirm() error {
+func (opts *DeleteOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to startup: %s", opts.name),
+		Message: fmt.Sprintf("Are you sure you want to remove: %s", opts.name),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force]
-func ClustersStartupBuilder() *cobra.Command {
-	opts := &ClustersStartupOpts{}
+// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{}
 	cmd := &cobra.Command{
-		Use:   "startup <name>",
-		Short: description.StartUpCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "delete <name>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteCluster,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err

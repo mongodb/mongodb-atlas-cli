@@ -341,7 +341,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
-  - name: unit_test
+  - name: test
     tags: ["code_health"]
     commands:
       - func: "clone"

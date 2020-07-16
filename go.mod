@@ -19,6 +19,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
+	github.com/stretchr/testify v1.6.1
 	go.mongodb.org/atlas v0.3.1-0.20200715182911-bdd98ee452e6
 	go.mongodb.org/ops-manager v0.7.1-0.20200716111014-0e6b5a319279
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect

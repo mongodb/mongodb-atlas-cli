@@ -27,7 +27,7 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	config.SetName(&opts.name)
+	config.SetName(opts.name)
 	c := config.Get()
 
 	if len(c) == 0 {

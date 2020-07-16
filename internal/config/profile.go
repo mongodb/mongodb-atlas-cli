@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/pelletier/go-toml"
@@ -29,7 +30,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config Setter,Saver,SetSaver,Getter,Config
 
 type profile struct {
-	name      *string
+	name      string
 	configDir string
 	fs        afero.Fs
 }
@@ -86,6 +87,7 @@ func Default() Config {
 // List returns the names of available profiles
 func List() []string {
 	m := viper.AllSettings()
+
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		if !search.StringInSlice(Properties(), k) {
@@ -107,9 +109,8 @@ func newProfile() *profile {
 	if err != nil {
 		log.Fatal(err)
 	}
-	name := DefaultProfile
 	np := &profile{
-		name:      &name,
+		name:      DefaultProfile,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
 	}
@@ -118,17 +119,17 @@ func newProfile() *profile {
 
 func Name() string { return p.Name() }
 func (p *profile) Name() string {
-	return *p.name
+	return p.name
 }
 
-func SetName(name *string) { p.SetName(name) }
-func (p *profile) SetName(name *string) {
-	p.name = name
+func SetName(name string) { p.SetName(name) }
+func (p *profile) SetName(name string) {
+	p.name = strings.ToLower(name)
 }
 
 func Set(name, value string) { p.Set(name, value) }
 func (p *profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", *p.name, name), value)
+	viper.Set(fmt.Sprintf("%s.%s", p.name, name), value)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -136,10 +137,7 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	if p.name != nil {
-		return viper.GetString(fmt.Sprintf("%s.%s", *p.name, name))
-	}
-	return ""
+	return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
 }
 
 // Service get configured service
@@ -148,7 +146,7 @@ func (p *profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", *p.name, service)
+	serviceKey := fmt.Sprintf("%s.%s", p.name, service)
 	if viper.IsSet(serviceKey) {
 		return viper.GetString(serviceKey)
 	}
@@ -280,9 +278,9 @@ func Delete() error { return p.Delete() }
 func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	configurationAfterDelete := viper.AllSettings()
+	settings := viper.AllSettings()
 
-	t, err := toml.TreeFromMap(configurationAfterDelete)
+	t, err := toml.TreeFromMap(settings)
 	if err != nil {
 		return err
 	}
@@ -351,6 +349,7 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
+	viper.SetFs(p.fs)
 
 	if readEnvironmentVars {
 		viper.SetEnvPrefix(EnvPrefix)

@@ -170,8 +170,6 @@ github.com/mitchellh/mapstructure v1.3.1 h1:cCBH2gTD2K0OtLlv/Y5H01VQCqmlDxz30kS5
 github.com/mitchellh/mapstructure v1.3.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
-github.com/mongodb/go-client-mongodb-atlas v0.3.0 h1:G2sNi2M/8ovfqSDmvOuxusXmafSqu4qOcQBwjoJiuKg=
-github.com/mongodb/go-client-mongodb-atlas v0.3.0/go.mod h1:182DADO+2ZDWQyW25uIxzop3U0rrQdeNEzqvs6w9kTI=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
@@ -247,8 +245,8 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04 h1:ildNidTScIuYngZQc/ABcQ65PMsCJtWor/EgodL6Bgo=
 go.mongodb.org/atlas v0.3.1-0.20200709091451-2b4793fbab04/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
-go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f h1:SJu0hiuSq3lnZGuuWPoFW0pJCryzVvdzNKIffGKodlk=
-go.mongodb.org/atlas v0.3.1-0.20200710133721-f0d206b3478f/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
+go.mongodb.org/atlas v0.3.1-0.20200715182911-bdd98ee452e6 h1:JlnMKvGcfNdS7eJgi/3yeKw9gHDLPof7IBJ1DwWKN2Y=
+go.mongodb.org/atlas v0.3.1-0.20200715182911-bdd98ee452e6/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
 go.mongodb.org/ops-manager v0.7.0 h1:23AQk5s39RLVsbDufQACkHBCDoqSmDPN5Uopwu2CBn4=
 go.mongodb.org/ops-manager v0.7.0/go.mod h1:H5JMirQnfOlh18uRj0WsgFhDC01SZLTywKatpNo7mRs=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

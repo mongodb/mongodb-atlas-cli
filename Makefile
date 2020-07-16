@@ -12,6 +12,8 @@ VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
 
 TEST_CMD?=go test
+UNIT_TAGS?=unit
+INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_BINARY?=../../bin/${BINARY_NAME}
 
@@ -35,9 +37,7 @@ fmt: ## Format code
 	@scripts/fmt.sh
 
 .PHONY: test
-test: ## Run tests
-	@echo "==> Running tests..."
-	${TEST_CMD} -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -71,6 +71,16 @@ e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
 	${TEST_CMD} -v -p 1 -parallel 1 -timeout 15m -tags="${E2E_TAGS}" ./e2e...
+
+.PHONY: integration-test
+integration-test: ## Run integration tests
+	@echo "==> Running integration tests..."
+	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
+
+.PHONY: unit-test
+unit-test: ## Run unit-tests
+	@echo "==> Running unit tests..."
+	${TEST_CMD} --tags="${UNIT_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

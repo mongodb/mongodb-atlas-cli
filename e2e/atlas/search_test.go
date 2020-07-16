@@ -49,7 +49,9 @@ func TestSearch(t *testing.T) {
 			clustersEntity,
 			searchEntity,
 			"list",
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"--db=test",
+			"--collection=test")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

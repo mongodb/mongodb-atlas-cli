@@ -74,6 +74,8 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.Database)
+	_ = cmd.MarkFlagRequired(flag.Collection)
 
 	return cmd
 }

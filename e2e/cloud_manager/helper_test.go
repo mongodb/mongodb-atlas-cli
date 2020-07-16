@@ -17,6 +17,7 @@ package cloud_manager_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 
@@ -59,25 +60,25 @@ func generateConfig(filename, hostname, clusterName, version, fcVersion string) 
 			Version:   version,
 			ProcessConfigs: []*convert.ProcessConfig{
 				{
-					DBPath:   "/data/test_config/27000",
+					DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
 					Hostname: hostname,
-					LogPath:  "/data/test_config/27000/mongodb.log",
+					LogPath:  fmt.Sprintf("/data/%s/27000/mongodb.log", clusterName),
 					Port:     27000,
 					Priority: &one,
 					Votes:    &one,
 				},
 				{
-					DBPath:   "/data/test_config/27001",
+					DBPath:   fmt.Sprintf("/data/%s/27001", clusterName),
 					Hostname: hostname,
-					LogPath:  "/data/test_config/27001/mongodb.log",
+					LogPath:  fmt.Sprintf("/data/%s/27001/mongodb.log", clusterName),
 					Port:     27001,
 					Priority: &one,
 					Votes:    &one,
 				},
 				{
-					DBPath:   "/data/test_config/27002",
+					DBPath:   fmt.Sprintf("/data/%s/27002", clusterName),
 					Hostname: hostname,
-					LogPath:  "/data/test_config/27002/mongodb.log",
+					LogPath:  fmt.Sprintf("/data/%s/27002/mongodb.log", clusterName),
 					Port:     27002,
 					Priority: &one,
 					Votes:    &one,

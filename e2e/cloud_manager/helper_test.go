@@ -44,8 +44,8 @@ func automatedServer(cliPath string) (string, error) {
 	return servers.Results[0].Hostname, nil
 }
 
-func generateConfig(hostname, clusterName, version, fcVersion string) error {
-	feedFile, err := os.Create(testFile)
+func generateConfig(filename, hostname, clusterName, version, fcVersion string) error {
+	feedFile, err := os.Create(filename)
 	if err != nil {
 		return err
 	}

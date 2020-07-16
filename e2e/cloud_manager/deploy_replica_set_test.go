@@ -25,10 +25,6 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 )
 
-const (
-	testFile = "om-new-cluster.json"
-)
-
 func TestDeployReplicaSet(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -37,11 +33,12 @@ func TestDeployReplicaSet(t *testing.T) {
 
 	const clustersEntity = "clusters"
 	const clusterName = "myCluster"
+	const testFile = "om-new-cluster.json"
 	hostname, err := automatedServer(cliPath)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if err := generateConfig(hostname, clusterName, "4.2.0", "4.2"); err != nil {
+	if err := generateConfig(testFile, hostname, clusterName, "4.2.0", "4.2"); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

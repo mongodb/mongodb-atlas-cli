@@ -29,19 +29,19 @@ const (
 	testFile = "om-new-cluster.json"
 )
 
-func TestClusters(t *testing.T) {
+func TestDeployReplicaSet(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	const clustersEntity = "clusters"
-
+	const clusterName = "myCluster"
 	hostname, err := automatedServer(cliPath)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if err := generateConfig(hostname); err != nil {
+	if err := generateConfig(hostname, clusterName, "4.2.0", "4.2"); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -95,7 +95,31 @@ func TestClusters(t *testing.T) {
 		}
 
 		if len(clusters) == 0 {
-			t.Fatalf("expected len(clusters) > 0, got 0")
+			t.Errorf("expected len(clusters) > 0, got 0\n")
+		}
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"describe",
+			clusterName,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+		var cluster convert.ClusterConfig
+		if err := json.Unmarshal(resp, &cluster); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if cluster.Name != clusterName {
+			t.Errorf("expected %s, got %s\n", clusterName, cluster.Name)
 		}
 	})
 }

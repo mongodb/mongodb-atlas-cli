@@ -44,7 +44,7 @@ func automatedServer(cliPath string) (string, error) {
 	return servers.Results[0].Hostname, nil
 }
 
-func generateConfig(hostname string) error {
+func generateConfig(hostname, clusterName, version, fcVersion string) error {
 	feedFile, err := os.Create(testFile)
 	if err != nil {
 		return err
@@ -54,9 +54,9 @@ func generateConfig(hostname string) error {
 	var one float64 = 1
 	downloadArchive := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
-			FCVersion: "4.2",
-			Name:      "test_config",
-			Version:   "4.2.2",
+			FCVersion: fcVersion,
+			Name:      clusterName,
+			Version:   version,
 			ProcessConfigs: []*convert.ProcessConfig{
 				{
 					DBPath:   "/data/test_config/27000",

@@ -98,7 +98,25 @@ func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
 	return fields, nil
 }
 
-// mongocli atlas cluster(s) search|fts index(es) create <indexName> [--clusterName clusterName][--db dbName][--collection collection][--dynamic][--field field][--projectId projectId]
+// CreateBuilder
+// Create an online archive for a cluster.
+//
+// Usage:
+//   mongocli atlas clusters search create [flags]
+//
+// Flags:
+//      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
+//      --clusterName string      Name of the cluster.
+//      --collection string       Collection name.
+//      --db string               Database name.
+//      --dynamic                 Indicates whether the index uses dynamic or static mappings.
+//      --field strings           Static field specifications.
+//  -h, --help                    help for create
+//      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
+//      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//
+// Global Flags:
+//  -P, --profile string   Profile to use from your configuration file.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -126,7 +144,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, "lucene.standard", usage.Analyzer)
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, "lucene.standard", usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
-	cmd.Flags().StringSliceVar(&opts.fields, flag.Fields, nil, usage.SearchFields)
+	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

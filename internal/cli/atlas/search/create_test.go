@@ -36,7 +36,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	request, err := opts.newSearchIndex()
 	if err != nil {
-		t.Fatalf("newOnlineArchive() unexpected error: %v", err)
+		t.Fatalf("newSearchIndex() unexpected error: %v", err)
 	}
 	expected := &mongodbatlas.SearchIndex{}
 	mockStore.

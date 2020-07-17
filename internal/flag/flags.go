@@ -130,5 +130,5 @@ const (
 	Analyzer                        = "analyzer"                        // Analyzer flag
 	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
 	Dynamic                         = "dynamic"                         // Dynamic flag
-	Fields                          = "fields"                          // Fields flag
+	Field                           = "field"                           // Fields flag
 )

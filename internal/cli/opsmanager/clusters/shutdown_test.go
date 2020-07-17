@@ -32,7 +32,7 @@ func TestShutdown_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 
-	createOpts := &ShutdownOpts{
+	shutdownOpts := &ShutdownOpts{
 		store:   mockStore,
 		confirm: true,
 		name:    "myReplicaSet",
@@ -40,17 +40,17 @@ func TestShutdown_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfig(createOpts.ProjectID).
+		GetAutomationConfig(shutdownOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	mockStore.
 		EXPECT().
-		UpdateAutomationConfig(createOpts.ProjectID, expected).
+		UpdateAutomationConfig(shutdownOpts.ProjectID, expected).
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := shutdownOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

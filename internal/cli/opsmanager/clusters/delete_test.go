@@ -32,7 +32,7 @@ func TestDelete_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 
-	createOpts := &ShutdownOpts{
+	deleteOpts := &DeleteOpts{
 		store:   mockStore,
 		confirm: true,
 		name:    "myReplicaSet",
@@ -40,17 +40,17 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfig(createOpts.ProjectID).
+		GetAutomationConfig(deleteOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	mockStore.
 		EXPECT().
-		UpdateAutomationConfig(createOpts.ProjectID, expected).
+		UpdateAutomationConfig(deleteOpts.ProjectID, expected).
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -17,7 +17,6 @@ package clusters
 import (
 	"fmt"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -31,9 +30,8 @@ import (
 
 type DeleteOpts struct {
 	cli.GlobalOpts
-	name    string
-	confirm bool
-	store   store.AutomationPatcher
+	*cli.DeleteOpts
+	store store.AutomationPatcher
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -43,7 +41,7 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	if !opts.confirm {
+	if !opts.Confirm {
 		return nil
 	}
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
@@ -52,11 +50,11 @@ func (opts *DeleteOpts) Run() error {
 		return err
 	}
 
-	if !search.ClusterExists(current, opts.name) {
-		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
+	if !search.ClusterExists(current, opts.Entry) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
 	}
 
-	atmcfg.RemoveByClusterName(current, opts.name)
+	atmcfg.RemoveByClusterName(current, opts.Entry)
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -67,19 +65,11 @@ func (opts *DeleteOpts) Run() error {
 	return nil
 }
 
-func (opts *DeleteOpts) Confirm() error {
-	if opts.confirm {
-		return nil
-	}
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to remove: %s", opts.name),
-	}
-	return survey.AskOne(prompt, &opts.confirm)
-}
-
 // mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
 func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{}
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
+	}
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
@@ -90,15 +80,15 @@ func DeleteBuilder() *cobra.Command {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
-			opts.name = args[0]
-			return opts.Confirm()
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

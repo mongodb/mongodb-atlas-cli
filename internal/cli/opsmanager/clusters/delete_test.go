@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
@@ -33,9 +34,11 @@ func TestDelete_Run(t *testing.T) {
 	expected := fixture.AutomationConfig()
 
 	deleteOpts := &DeleteOpts{
-		store:   mockStore,
-		confirm: true,
-		name:    "myReplicaSet",
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "myReplicaSet",
+		},
 	}
 
 	mockStore.

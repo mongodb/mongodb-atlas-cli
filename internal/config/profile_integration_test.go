@@ -35,14 +35,14 @@ func createProfile(profileContents string) (*profile, error) {
 	testConfigDir := "/test"
 	filename := fmt.Sprintf("%v/%v.toml", testConfigDir, ToolName)
 
-	profile := profile{
+	p := profile{
 		name:      DefaultProfile,
 		configDir: testConfigDir,
 		fs:        fs,
 	}
 
 	err := afero.WriteFile(fs, filename, []byte(profileContents), 0600)
-	return &profile, err
+	return &p, err
 }
 
 func createProfileWithOneNonDefaultUser() (*profile, error) {

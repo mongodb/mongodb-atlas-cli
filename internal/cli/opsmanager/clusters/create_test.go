@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-func TestClustersCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
@@ -61,7 +61,7 @@ processes:
 	fileName := "test_om_create.yml"
 	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-	createOpts := &ClustersCreateOpts{
+	createOpts := &CreateOpts{
 		store:    mockStore,
 		fs:       appFS,
 		filename: fileName,

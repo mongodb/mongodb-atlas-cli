@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"fmt"
@@ -29,20 +29,20 @@ import (
 	"go.mongodb.org/ops-manager/atmcfg"
 )
 
-type ClustersShutdownOpts struct {
+type StartupOpts struct {
 	cli.GlobalOpts
 	name    string
 	confirm bool
 	store   store.AutomationPatcher
 }
 
-func (opts *ClustersShutdownOpts) initStore() error {
+func (opts *StartupOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersShutdownOpts) Run() error {
+func (opts *StartupOpts) Run() error {
 	if !opts.confirm {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (opts *ClustersShutdownOpts) Run() error {
 		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
 	}
 
-	atmcfg.Shutdown(current, opts.name)
+	atmcfg.Startup(current, opts.name)
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -67,22 +67,22 @@ func (opts *ClustersShutdownOpts) Run() error {
 	return nil
 }
 
-func (opts *ClustersShutdownOpts) Confirm() error {
+func (opts *StartupOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", opts.name),
+		Message: fmt.Sprintf("Are you sure you want to startup: %s", opts.name),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) shutdown <name> --projectId projectId [--force]
-func ClustersShutdownBuilder() *cobra.Command {
-	opts := &ClustersShutdownOpts{}
+// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force]
+func StartupBuilder() *cobra.Command {
+	opts := &StartupOpts{}
 	cmd := &cobra.Command{
-		Use:   "shutdown <name>",
-		Short: description.ShutdownCluster,
+		Use:   "startup <name>",
+		Short: description.StartUpCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

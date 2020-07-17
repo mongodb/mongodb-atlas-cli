@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package clusters
 
 import (
 	"fmt"
@@ -30,20 +30,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ClustersUpdateOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
 	filename string
 	fs       afero.Fs
 	store    store.AutomationPatcher
 }
 
-func (opts *ClustersUpdateOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ClustersUpdateOpts) Run() error {
+func (opts *UpdateOpts) Run() error {
 	newConfig := new(convert.ClusterConfig)
 	err := file.Load(opts.fs, opts.filename, newConfig)
 	if err != nil {
@@ -73,8 +73,8 @@ func (opts *ClustersUpdateOpts) Run() error {
 }
 
 // mongocli cloud-manager cluster(s) update --projectId projectId --file myfile.yaml
-func ClustersUpdateBuilder() *cobra.Command {
-	opts := &ClustersUpdateOpts{
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{

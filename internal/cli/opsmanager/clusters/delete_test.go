@@ -14,17 +14,18 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestClustersShutdown_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
@@ -32,25 +33,27 @@ func TestClustersShutdown_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 
-	createOpts := &ClustersShutdownOpts{
-		store:   mockStore,
-		confirm: true,
-		name:    "myReplicaSet",
+	deleteOpts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "myReplicaSet",
+		},
 	}
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfig(createOpts.ProjectID).
+		GetAutomationConfig(deleteOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	mockStore.
 		EXPECT().
-		UpdateAutomationConfig(createOpts.ProjectID, expected).
+		UpdateAutomationConfig(deleteOpts.ProjectID, expected).
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

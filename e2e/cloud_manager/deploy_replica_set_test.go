@@ -132,6 +132,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			clustersEntity,
 			"shutdown",
 			clusterName,
+			"--force",
 		)
 
 		cmd.Env = os.Environ()

@@ -31,7 +31,7 @@ const (
 	serversEntity = "servers"
 )
 
-// automationServerHostname tries to list avaialable server running the automation agent
+// automationServerHostname tries to list available server running the automation agent
 // and returns the first available hostname for deployments
 func automationServerHostname(cliPath string) (string, error) {
 	cmd := exec.Command(cliPath, entity, serversEntity, "list")

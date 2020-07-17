@@ -49,8 +49,8 @@ func TestServers(t *testing.T) {
 		if err := json.Unmarshal(resp, &servers); err != nil {
 			t.Fatalf("unexpected error: %v\n", err)
 		}
-		if servers.TotalCount != 1 {
-			t.Errorf("expected one server, got=%d\n", servers.TotalCount)
+		if servers.TotalCount == 0 {
+			t.Errorf("expected at least one server, got=%d\n", servers.TotalCount)
 		}
 	})
 }

@@ -14,43 +14,56 @@
 
 // +build unit
 
-package opsmanager
+package clusters
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/spf13/afero"
 )
 
-func TestClustersIndexesCreate_Run(t *testing.T) {
+func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
-
-	createOpts := &ClustersIndexesCreateOpts{
-		GlobalOpts:      cli.GlobalOpts{},
-		name:            "index",
-		db:              "db",
-		collection:      "db",
-		rsName:          "rsName",
-		locale:          "locale",
-		caseFirst:       "test",
-		alternate:       "alternate",
-		maxVariable:     "max",
-		strength:        0,
-		caseLevel:       false,
-		numericOrdering: false,
-		normalization:   false,
-		backwards:       false,
-		keys:            []string{"field:key", "field:key", "field:key"},
-		store:           mockStore,
+	appFS := afero.NewMemMapFs()
+	// create test file
+	fileYML := `
+---
+name: "myReplicaSet"
+version: 4.2.2
+featureCompatibilityVersion: 4.0
+processes:
+  - hostname: host0
+    dbPath: /data/myReplicaSet/rs1
+    logPath: /data/myReplicaSet/rs1/mongodb.log
+    priority: 1
+    votes: 1
+    port: 29010
+  - hostname: host1
+    dbPath: /data/myReplicaSet/rs2
+    logPath: /data/myReplicaSet/rs2/mongodb.log
+    priority: 1
+    votes: 1
+    port: 29020
+  - hostname: host2
+    dbPath: /data/myReplicaSet/rs3
+    logPath: /data/myReplicaSet/rs3/mongodb.log
+    priority: 1
+    votes: 1
+    port: 29030`
+	fileName := "test_om_update.yml"
+	_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
+	createOpts := &UpdateOpts{
+		store:    mockStore,
+		fs:       appFS,
+		filename: fileName,
 	}
 
 	mockStore.
@@ -66,7 +79,6 @@ func TestClustersIndexesCreate_Run(t *testing.T) {
 		Times(1)
 
 	err := createOpts.Run()
-
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

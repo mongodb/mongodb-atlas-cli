@@ -102,7 +102,7 @@ func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
 // Create an online archive for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search create [flags]
+//   mongocli atlas clusters search create <name> [flags]
 //
 // Flags:
 //      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
@@ -120,7 +120,7 @@ func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create <name>",
 		Short: description.CreateOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

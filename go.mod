@@ -10,7 +10,7 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.3.1 // indirect
-	github.com/mongodb-forks/digest v1.0.0
+	github.com/mongodb-forks/digest v1.0.1
 	github.com/pelletier/go-toml v1.8.0
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.3.1 // indirect

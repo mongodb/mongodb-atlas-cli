@@ -27,7 +27,6 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
-	const clustersEntity = "clusters"
 	const onlineArchiveEntity = "onlineArchives"
 
 	clusterName, err := deployCluster()

@@ -25,8 +25,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"fts"},
 		Short:   description.Search,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(IndexesBuilder())
 
 	return cmd
 }

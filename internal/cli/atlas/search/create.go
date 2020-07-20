@@ -121,7 +121,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateOnlineArchive,
+		Short: description.CreateSearchIndexes,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !opts.dynamic && len(opts.fields) == 0 {

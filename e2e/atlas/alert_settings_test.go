@@ -36,9 +36,6 @@ const (
 )
 
 func TestAlertConfig(t *testing.T) {
-	const alertsEntity = "alerts"
-	const configEntity = "settings"
-
 	var alertID string
 
 	cliPath, err := e2e.Bin()

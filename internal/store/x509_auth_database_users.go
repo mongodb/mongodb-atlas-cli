@@ -22,22 +22,21 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateLister,X509CertificateStore
+//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateDescriber,X509CertificateStore
 
-type X509CertificateLister interface {
-	// TODO :: can we make this use the Result object
-	X509Certificates(string, string) ([]atlas.UserCertificate, error)
+type X509CertificateDescriber interface {
+	X509Configuration(string) (*atlas.CustomerX509, error)
 }
 
 type X509CertificateStore interface {
-	X509CertificateLister
+	X509CertificateDescriber
 }
 
-// X509Certificates retrieves all unexpired certificates for a database user
-func (s *Store) X509Certificates(projectID, username string) ([]atlas.UserCertificate, error) {
+// X509Certificates retrieves the current user managed certificates for a database user
+func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetCurrentX509Conf(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

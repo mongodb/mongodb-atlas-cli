@@ -20,31 +20,30 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDelete_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
+	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 
 	defer ctrl.Finish()
 
-	deleteOpts := &DeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Confirm: true,
-			Entry:   "test",
-		},
-		store: mockStore,
+	describeOpts := &DescribeOpts{
+		clusterName: "test",
+		indexID:     "1",
+		store:       mockStore,
 	}
 
+	expected := &mongodbatlas.SearchIndex{}
 	mockStore.
 		EXPECT().
-		DeleteSearchIndex(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
-		Return(nil).
+		SearchIndex(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.indexID).
+		Return(expected, nil).
 		Times(1)
 
-	if err := deleteOpts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

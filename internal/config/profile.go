@@ -356,7 +356,7 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 		viper.AutomaticEnv()
 	}
 
-	// TODO: review why this is not working as expected
+	// aliases only work for a config file, this won't work for env variables
 	viper.RegisterAlias(baseURL, opsManagerURL)
 
 	// If a config file is found, read it in.

@@ -94,6 +94,7 @@ const (
 	Indexes                  = "Manage search indexes for your cluster."
 	ListSearchIndexes        = "List search indexes for a cluster."
 	CreateSearchIndexes      = "Create a search index for a cluster."
+	DescribeSearchIndexes    = "Describe a search index from a cluster."
 	DeleteSearchIndexes      = "Delete a search index from a cluster."
 	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
 	ConfigSetDescription     = "Configure specific properties of a profile."

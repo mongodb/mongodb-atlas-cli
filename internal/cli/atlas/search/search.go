@@ -26,5 +26,7 @@ func Builder() *cobra.Command {
 		Short:   description.Search,
 	}
 	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(CreateBuilder())
+
 	return cmd
 }

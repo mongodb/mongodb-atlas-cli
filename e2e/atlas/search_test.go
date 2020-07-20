@@ -110,6 +110,7 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"delete",
 			indexID,
+			"--clusterName="+clusterName,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

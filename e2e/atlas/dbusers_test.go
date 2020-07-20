@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -59,10 +60,7 @@ func TestDBUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
-		}
+		assert.Equal(t, username, user.Username)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -103,20 +101,11 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if user.Username != username {
-			t.Errorf("got=%#v\nwant=%#v\n", user.Username, username)
-		}
-
-		if len(user.Roles) != 1 {
-			t.Errorf("len(user.Roles) got=%#v\nwant=%#v\n", len(user.Roles), 1)
-		}
-
-		if user.Roles[0].DatabaseName != "admin" {
-			t.Errorf("got=%#v\nwant=%#v\n", "admin", user.Roles[0].DatabaseName)
-		}
-
-		if user.Roles[0].RoleName != roleReadWrite {
-			t.Errorf("got=%#v\nwant=%#v\n", roleReadWrite, user.Roles[0].RoleName)
+		a := assert.New(t)
+		a.Equal(username, user.Username)
+		if a.Len(user.Roles, 1) {
+			a.Equal("admin", user.Roles[0].DatabaseName)
+			a.Equal(roleReadWrite, user.Roles[0].RoleName)
 		}
 	})
 
@@ -130,8 +119,6 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
-		}
+		assert.Equal(t, expected, string(resp))
 	})
 }

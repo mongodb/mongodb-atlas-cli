@@ -34,7 +34,6 @@ const (
 
 func TestDBUsers(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	dbusersEntity := "dbusers"
 	username := fmt.Sprintf("user-%v", r.Uint32())
 
 	cliPath, err := e2e.Bin()

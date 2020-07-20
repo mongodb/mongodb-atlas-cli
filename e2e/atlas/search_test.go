@@ -30,12 +30,6 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	const (
-		clustersEntity = "clusters"
-		searchEntity   = "search"
-		indexEntity    = "index"
-	)
-
 	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

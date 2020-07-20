@@ -30,8 +30,6 @@ import (
 
 func TestDatalake(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	const datalakeEntity = "datalake"
 	const updateRegion = "VIRGINIA_USA"
 	datalakeName := fmt.Sprintf("e2e-data-lake-%v", r.Uint32())
 

@@ -31,8 +31,6 @@ import (
 
 func TestClusters(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	const clustersEntity = "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
 	cliPath, err := e2e.Bin()

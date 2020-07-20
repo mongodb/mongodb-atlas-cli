@@ -32,7 +32,6 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
-	const alertsEntity = "alerts"
 	var alertID string
 
 	cliPath, err := e2e.Bin()

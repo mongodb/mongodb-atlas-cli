@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator
+//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDeleter
 
 type SearchIndexLister interface {
 	SearchIndexes(string, string, string, string, *atlas.ListOptions) ([]*atlas.SearchIndex, error)
@@ -30,6 +30,10 @@ type SearchIndexLister interface {
 
 type SearchIndexCreator interface {
 	CreateSearchIndexes(string, string, *atlas.SearchIndex) (*atlas.SearchIndex, error)
+}
+
+type SearchIndexDeleter interface {
+	DeleteSearchIndexes(string, string, string) error
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers
@@ -51,5 +55,16 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteSearchIndexes encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteSearchIndexes(projectID, clusterName, indexID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Search.DeleteIndex(context.Background(), projectID, clusterName, indexID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

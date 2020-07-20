@@ -111,6 +111,7 @@ func TestSearch(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
+			clustersEntity,
 			searchEntity,
 			indexEntity,
 			"delete",
@@ -120,7 +121,7 @@ func TestSearch(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("%v unexpected error: %v, resp: %v", cmd.String(), err, string(resp))
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)

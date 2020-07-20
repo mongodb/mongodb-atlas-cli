@@ -19,56 +19,57 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
 	clusterName string
-	store       store.SearchIndexDeleter
+	indexID     string
+	store       store.SearchIndexDescriber
 }
 
-func (opts *DeleteOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.clusterName)
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.clusterName, opts.indexID)
+
+	if err != nil {
+		return err
+	}
+
+	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) search(s) index(es) delete <id> [--clusterName name][--projectId projectId][--force]
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Index '%s' deleted\n", "Index not deleted"),
-	}
+// mongocli atlas cluster(s) search indexes describe <ID> [--clusterName name][--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   description.DeleteSearchIndexes,
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe <ID>",
+		Short: description.DescribeSearchIndexes,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
+			return opts.PreRunE(opts.initStore)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {
 				return err
 			}
-			opts.Entry = args[0]
-			return opts.Prompt()
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.indexID = args[0]
+
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -120,7 +120,7 @@ func TestSearch(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			t.Fatalf("%v unexpected error: %v, resp: %v", cmd.String(), err, string(resp))
 		}
 
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)

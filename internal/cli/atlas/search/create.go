@@ -32,15 +32,9 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	clusterName    string
-	name           string
-	dbName         string
-	collection     string
-	analyzer       string
-	searchAnalyzer string
-	dynamic        bool
-	fields         []string
-	store          store.SearchIndexCreator
+	IndexOpts
+	clusterName string
+	store       store.SearchIndexCreator
 }
 
 func (opts *CreateOpts) initStore() error {

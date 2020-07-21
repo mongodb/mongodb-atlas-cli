@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexDeleter
+//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter
 
 type SearchIndexLister interface {
 	SearchIndexes(string, string, string, string, *atlas.ListOptions) ([]*atlas.SearchIndex, error)
@@ -34,6 +34,10 @@ type SearchIndexCreator interface {
 
 type SearchIndexDescriber interface {
 	SearchIndex(string, string, string) (*atlas.SearchIndex, error)
+}
+
+type SearchIndexUpdater interface {
+	UpdateSearchIndexes(string, string, *atlas.SearchIndex) (*atlas.SearchIndex, error)
 }
 
 type SearchIndexDeleter interface {
@@ -68,6 +72,17 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 	case config.CloudService:
 		index, _, err := s.client.(*atlas.Client).Search.GetIndex(context.Background(), projectID, clusterName, indexID)
 		return index, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateSearchIndexes encapsulate the logic to manage different cloud providers
+func (s *Store) UpdateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, index.IndexID, index)
+		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}

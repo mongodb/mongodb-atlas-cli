@@ -89,6 +89,7 @@ const (
 	NotificationUsername            = "notificationUsername"            // NotificationUsername flag
 	NotificationVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationVictorOpsRoutingKey flag
 	SnapshotID                      = "snapshotId"                      // SnapshotID flag
+	IndexName                       = "indexName"                       // IndexName flag
 	ClusterName                     = "clusterName"                     // ClusterName flag
 	ClusterID                       = "clusterId"                       // ClusterID flag
 	TargetProjectID                 = "targetProjectId"                 // TargetProjectID flag

@@ -124,6 +124,32 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		newName := fmt.Sprintf("index-%v", r.Uint32())
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"update",
+			indexID,
+			"--indexName="+newName,
+			"--clusterName="+clusterName)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var index mongodbatlas.SearchIndex
+		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
+			a := assert.New(t)
+			a.Equal(t, indexID, index.IndexID)
+			a.Equal(t, newName, index.Name)
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

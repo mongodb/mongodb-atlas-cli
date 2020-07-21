@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package certs
+package customercerts
 
 import (
 	"github.com/mongodb/mongocli/internal/description"
@@ -21,7 +21,7 @@ import (
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "certs",
+		Use:   "customerCerts",
 		Short: description.Certs,
 	}
 	cmd.AddCommand(DescribeBuilder())

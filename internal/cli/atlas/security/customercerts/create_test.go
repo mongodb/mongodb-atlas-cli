@@ -14,7 +14,7 @@
 
 // +build unit
 
-package certs
+package customercerts
 
 import (
 	"testing"

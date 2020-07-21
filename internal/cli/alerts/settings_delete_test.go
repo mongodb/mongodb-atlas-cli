@@ -27,7 +27,6 @@ import (
 func TestConfigsDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationDeleter(ctrl)
-
 	defer ctrl.Finish()
 
 	deleteOpts := &ConfigDeleteOpts{

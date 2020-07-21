@@ -28,7 +28,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Projects{}

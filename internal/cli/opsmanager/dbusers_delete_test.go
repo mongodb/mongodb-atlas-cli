@@ -29,7 +29,6 @@ import (
 func TestDBUserDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfigWithMongoDBUsers()

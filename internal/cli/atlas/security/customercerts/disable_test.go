@@ -14,40 +14,32 @@
 
 // +build unit
 
-package onlinearchive
+package customercerts
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestStart_Run(t *testing.T) {
+func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
+	mockStore := mocks.NewMockX509CertificateStore(ctrl)
 	defer ctrl.Finish()
 
-	updateOpts := &StartOpts{
-		id:    "1",
-		store: mockStore,
-	}
-
-	paused := false
-	expected := &mongodbatlas.OnlineArchive{
-		ID:     updateOpts.id,
-		Paused: &paused,
+	saveOpts := &DisableOpts{
+		store:   mockStore,
+		confirm: true,
 	}
 
 	mockStore.
 		EXPECT().
-		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, expected).
-		Return(expected, nil).
+		DisableX509Configuration(saveOpts.ProjectID).
+		Return(nil).
 		Times(1)
 
-	err := updateOpts.Run()
-	if err != nil {
+	if err := saveOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

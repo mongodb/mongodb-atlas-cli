@@ -28,6 +28,7 @@ func IndexesBuilder() *cobra.Command {
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(UpdateBuilder())
 	cmd.AddCommand(DeleteBuilder())
 
 	return cmd

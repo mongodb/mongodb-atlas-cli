@@ -27,7 +27,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDeleter(ctrl)
-
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{

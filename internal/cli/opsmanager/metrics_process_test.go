@@ -29,7 +29,6 @@ const oneMinute = "PT1M"
 func TestMetricsProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostMeasurementLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProcessMeasurements{}

@@ -14,40 +14,40 @@
 
 // +build unit
 
-package onlinearchive
+package search
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestStart_Run(t *testing.T) {
+func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
+	mockStore := mocks.NewMockSearchIndexUpdater(ctrl)
+
 	defer ctrl.Finish()
 
-	updateOpts := &StartOpts{
-		id:    "1",
+	updateOpts := &UpdateOpts{
 		store: mockStore,
 	}
+	updateOpts.id = "1"
 
-	paused := false
-	expected := &mongodbatlas.OnlineArchive{
-		ID:     updateOpts.id,
-		Paused: &paused,
+	expected := &mongodbatlas.SearchIndex{}
+
+	request, err := updateOpts.newSearchIndex()
+	if err != nil {
+		t.Fatalf("newSearchIndex() unexpected error: %v", err)
 	}
-
 	mockStore.
 		EXPECT().
-		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, expected).
+		UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
 		Return(expected, nil).
 		Times(1)
 
-	err := updateOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	assert.NoError(t, updateOpts.Run())
 }

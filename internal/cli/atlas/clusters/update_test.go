@@ -28,7 +28,6 @@ import (
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStore(ctrl)
-
 	defer ctrl.Finish()
 	expected := &mongodbatlas.Cluster{
 		ProviderSettings: &mongodbatlas.ProviderSettings{},

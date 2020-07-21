@@ -28,7 +28,6 @@ import (
 func TestDataLakeDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakeDeleter(ctrl)
-
 	defer ctrl.Finish()
 
 	deleteOpts := &DataLakeDeleteOpts{

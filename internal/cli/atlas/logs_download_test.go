@@ -27,6 +27,7 @@ import (
 func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	defer ctrl.Finish()
 
 	appFS := afero.NewMemMapFs()
 

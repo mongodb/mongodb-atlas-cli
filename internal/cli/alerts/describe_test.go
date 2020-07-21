@@ -27,7 +27,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Alert{}

@@ -293,7 +293,7 @@ func (p *profile) Delete() error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, 0600)
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -328,7 +328,7 @@ func (p *profile) Rename(newProfileName string) error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, 0600)
+	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -347,7 +347,7 @@ func Load() error { return p.Load(true) }
 func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigName(ToolName)
-	viper.SetConfigPermissions(0600)
+	viper.SetConfigPermissions(configPerm)
 	viper.AddConfigPath(p.configDir)
 	viper.SetFs(p.fs)
 

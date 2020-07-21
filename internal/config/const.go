@@ -34,4 +34,5 @@ const (
 	opsManagerCACertificate = "ops_manager_ca_certificate"
 	opsManagerSkipVerify    = "ops_manager_skip_verify"
 	fileFlags               = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm              = 0600
 )

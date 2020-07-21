@@ -27,7 +27,6 @@ import (
 func TestProcessesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []*mongodbatlas.Process

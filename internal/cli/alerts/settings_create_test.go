@@ -27,7 +27,6 @@ import (
 func TestConfigCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationCreator(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AlertConfiguration{}

@@ -28,7 +28,6 @@ import (
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersLister(ctrl)
-
 	defer ctrl.Finish()
 
 	t.Run("ConfigProjectID is given", func(t *testing.T) {

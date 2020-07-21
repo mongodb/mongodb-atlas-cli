@@ -28,7 +28,6 @@ import (
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockX509CertificateStore(ctrl)
-
 	defer ctrl.Finish()
 
 	fs := afero.NewMemMapFs()

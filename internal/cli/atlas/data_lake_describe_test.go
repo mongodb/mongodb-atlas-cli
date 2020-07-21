@@ -27,7 +27,6 @@ import (
 func TestDataLakeDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakeDescriber(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := mongodbatlas.DataLake{}

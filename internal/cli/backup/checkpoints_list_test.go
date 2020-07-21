@@ -27,7 +27,6 @@ import (
 func TestCheckpointsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCheckpointsLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Checkpoints{}

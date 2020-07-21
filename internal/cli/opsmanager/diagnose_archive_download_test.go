@@ -27,6 +27,7 @@ import (
 func TestDiagnoseArchiveDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockArchivesDownloader(ctrl)
+	defer ctrl.Finish()
 
 	opts := &DiagnoseArchiveDownloadOpts{
 		store: mockStore,

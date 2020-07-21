@@ -27,7 +27,6 @@ import (
 func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ContinuousSnapshots{}

@@ -27,7 +27,6 @@ import (
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterUpdater(ctrl)
-
 	defer ctrl.Finish()
 
 	paused := false

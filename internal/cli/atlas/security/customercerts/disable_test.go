@@ -12,22 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package customercerts
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "customerCerts",
-		Aliases: []string{"certs", "customercerts", "cert", "customercert"},
-		Short:   description.Certs,
-	}
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DisableBuilder())
+func TestDisableOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockX509CertificateStore(ctrl)
 
-	return cmd
+	defer ctrl.Finish()
+
+	saveOpts := &DisableOpts{
+		store:   mockStore,
+		confirm: true,
+	}
+
+	mockStore.
+		EXPECT().
+		DisableX509Configuration(saveOpts.ProjectID).
+		Return(nil).
+		Times(1)
+
+	if err := saveOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

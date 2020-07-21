@@ -33,7 +33,7 @@ type X509CertificateSaver interface {
 }
 
 type X509CertificateDisabler interface {
-	DisableX509Configuration(string) (*atlas.CustomerX509, error)
+	DisableX509Configuration(string) error
 }
 
 type X509CertificateStore interface {
@@ -65,14 +65,13 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 	}
 }
 
-// X509Certificates saves a customer-managed X.509 configuration for an Atlas project.
-func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.CustomerX509, error) {
+// DisableX509Configuration disables customer-managed X.509 configuration for an Atlas project.
+func (s *Store) DisableX509Configuration(projectID string) error {
 	switch s.service {
 	case config.CloudService:
-		userCertificate := &atlas.CustomerX509{Cas: certificate}
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(context.Background(), projectID, userCertificate)
-		return result, err
+		_, err := s.client.(*atlas.Client).X509AuthDBUsers.DisableCustomerX509(context.Background(), projectID)
+		return err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

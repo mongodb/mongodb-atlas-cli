@@ -29,7 +29,7 @@ import (
 type DisableOpts struct {
 	cli.GlobalOpts
 	cli.DeleteOpts
-	store   store.X509CertificateStore
+	store   store.X509CertificateDisabler
 }
 
 func (opts *DisableOpts) initStore() error {
@@ -39,21 +39,17 @@ func (opts *DisableOpts) initStore() error {
 }
 
 func (opts *DisableOpts) Run() error {
-	result, err := opts.store.SaveX509Configuration(opts.ConfigProjectID(), caFileContents)
+	err := opts.store.DisableX509Configuration(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
-
-	return json.PrettyPrint(result)
 }
 
 // mongocli atlas security certs disable --projectId projectId
 func DisableBuilder() *cobra.Command {
-	opts := &SaveOpts{
-		fs: afero.NewOsFs(),
-	}
+	opts := &DisableOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "disable",
 		Short: description.DisableCertConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

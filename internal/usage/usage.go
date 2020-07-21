@@ -109,6 +109,7 @@ const (
 	Normalization                   = "If true, collation checks if text requires normalization and performs normalization to compare text."
 	Backwards                       = "If true, strings with diacritics sort from the back to the front of the string."
 	ClusterName                     = "Name of the cluster."
+	CASFilePath                     = "Path to a PEM file containing one or more CAs for database user authentication."
 	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
 	Background                      = "Create the index in the background."

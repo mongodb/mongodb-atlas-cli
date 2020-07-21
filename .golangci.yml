@@ -62,9 +62,9 @@ linters:
 
   # don't enable:
   # - asciicheck
-  # - gochecknoglobals
   # - dupl
   # - funlen
+  # - gochecknoglobals
   # - gocognit
   # - godot
   # - godox

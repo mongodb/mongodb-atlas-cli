@@ -19,10 +19,9 @@ package customercerts
 import (
 	"testing"
 
-	"github.com/spf13/afero"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/spf13/afero"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

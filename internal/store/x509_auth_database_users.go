@@ -32,7 +32,12 @@ type X509CertificateSaver interface {
 	SaveX509Configuration(string, string) (*atlas.CustomerX509, error)
 }
 
+type UserCertificateDescriber interface {
+	GetUserCertificates(string, string) ([]atlas.UserCertificate, error)
+}
+
 type X509CertificateStore interface {
+	UserCertificateDescriber
 	X509CertificateDescriber
 	X509CertificateSaver
 }
@@ -54,6 +59,17 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 	case config.CloudService:
 		userCertificate := &atlas.CustomerX509{Cas: certificate}
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(context.Background(), projectID, userCertificate)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GetUserCertificates retrieves the current user managed certificates for a database user
+func (s *Store) GetUserCertificates(projectID string, username string) ([]atlas.UserCertificate, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

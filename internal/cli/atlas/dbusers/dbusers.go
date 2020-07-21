@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package dbusers
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers/certs"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
@@ -31,6 +32,7 @@ func DBUsersBuilder() *cobra.Command {
 	cmd.AddCommand(DBUsersCreateBuilder())
 	cmd.AddCommand(DBUsersDeleteBuilder())
 	cmd.AddCommand(DBUsersUpdateBuilder())
+	cmd.AddCommand(certs.Builder())
 
 	return cmd
 }

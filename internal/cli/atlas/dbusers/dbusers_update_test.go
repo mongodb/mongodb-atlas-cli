@@ -14,7 +14,7 @@
 
 // +build unit
 
-package atlas
+package dbusers
 
 import (
 	"testing"

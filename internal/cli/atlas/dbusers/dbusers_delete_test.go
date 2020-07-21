@@ -14,37 +14,39 @@
 
 // +build unit
 
-package atlas
+package dbusers
 
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDBUserCreate_Run(t *testing.T) {
+func TestDBUsersDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseUserDeleter(ctrl)
 
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.DatabaseUser{}
-
-	createOpts := &DBUsersCreateOpts{
-		username: "ProjectBar",
-		password: "US",
-		roles:    []string{"admin@admin"},
-		store:    mockStore,
+	deleteOpts := &DBUsersDeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		authDB: "admin",
+		store:  mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDatabaseUser(createOpts.newDatabaseUser()).Return(expected, nil).
+		DeleteDatabaseUser(deleteOpts.authDB, deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

@@ -11,60 +11,62 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package atlas
+
+package dbusers
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type DBUsersListOpts struct {
+type DBUsersDeleteOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.DatabaseUserLister
+	*cli.DeleteOpts
+	authDB string
+	store  store.DatabaseUserDeleter
 }
 
-func (opts *DBUsersListOpts) initStore() error {
+func (opts *DBUsersDeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpts)
-
-	if err != nil {
-		return err
-	}
-
-	return json.PrettyPrint(result)
+func (opts *DBUsersDeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteDatabaseUser, opts.authDB, opts.ConfigProjectID())
 }
 
-// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
-func DBUsersListBuilder() *cobra.Command {
-	opts := new(DBUsersListOpts)
+// mongocli atlas dbuser(s) delete <username> --force
+func DBUsersDeleteBuilder() *cobra.Command {
+	opts := &DBUsersDeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("DB user '%s' deleted\n", "DB user not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListDBUsers,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "delete <username>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteDBUser,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

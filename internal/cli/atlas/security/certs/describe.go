@@ -25,21 +25,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store    store.X509CertificateStore
-	username string
+	store store.X509CertificateStore
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	result, err := opts.store.X509Certificates(opts.ConfigProjectID(), opts.username)
+func (opts *DescribeOpts) Run() error {
+	result, err := opts.store.X509Configuration(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
@@ -48,14 +47,13 @@ func (opts *ListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas security certs list --projectId projectId --username dbUser
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas security certs describe --projectId projectId
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListCerts,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "describe",
+		Short: description.DescribeCertConfig,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
@@ -64,10 +62,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.DatabaseUser)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

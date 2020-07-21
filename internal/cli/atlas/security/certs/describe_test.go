@@ -25,26 +25,25 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockX509CertificateStore(ctrl)
 
 	defer ctrl.Finish()
 
-	listOpts := &ListOpts{
-		store:    mockStore,
-		username: "test",
+	describeOpts := &DescribeOpts{
+		store: mockStore,
 	}
 
-	var expected []mongodbatlas.UserCertificate
+	expected := &mongodbatlas.CustomerX509{}
 
 	mockStore.
 		EXPECT().
-		X509Certificates(listOpts.ProjectID, listOpts.username).
+		X509Configuration(describeOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

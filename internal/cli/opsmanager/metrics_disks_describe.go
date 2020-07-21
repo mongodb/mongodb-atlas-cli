@@ -52,11 +52,12 @@ func (opts *MetricsDisksDescribeOpts) Run() error {
 
 // mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
 func MetricsDisksDescribeBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &MetricsDisksDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostId> <name>",
 		Short: description.DescribeDisks,
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

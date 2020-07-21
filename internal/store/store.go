@@ -16,6 +16,7 @@ package store
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"runtime"
@@ -31,8 +32,16 @@ import (
 var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 const (
-	atlasAPIPath = "api/atlas/v1.0/"
-	yes          = "yes"
+	atlasAPIPath          = "api/atlas/v1.0/"
+	yes                   = "yes"
+	responseHeaderTimeout = 10 * time.Minute
+	tlsHandshakeTimeout   = 10 * time.Second
+	timeout               = 10 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleConns          = 10
+	maxIdleConnsPerHost   = 4
+	idleConnTimeout       = 90 * time.Second
+	expectContinueTimeout = 1 * time.Second
 )
 
 type Store struct {
@@ -49,17 +58,17 @@ func newTransport(c config.Config) *digest.Transport {
 		Password: c.PrivateAPIKey(),
 	}
 	t.Transport = &http.Transport{
-		ResponseHeaderTimeout: 10 * time.Minute,
-		TLSHandshakeTimeout:   10 * time.Second,
+		ResponseHeaderTimeout: responseHeaderTimeout,
+		TLSHandshakeTimeout:   tlsHandshakeTimeout,
 		DialContext: (&net.Dialer{
-			Timeout:   10 * time.Second,
-			KeepAlive: 30 * time.Second,
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
 		}).DialContext,
-		MaxIdleConns:          100,
-		MaxIdleConnsPerHost:   4,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
 		Proxy:                 http.ProxyFromEnvironment,
-		IdleConnTimeout:       90 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
 	}
 
 	return t
@@ -141,7 +150,11 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
 	if s.caCertificate != "" {
-		opts = append(opts, opsmngr.OptionCAValidate(s.caCertificate))
+		dat, err := ioutil.ReadFile(s.caCertificate)
+		if err != nil {
+			return err
+		}
+		opts = append(opts, opsmngr.OptionCAValidate(string(dat)))
 	}
 	if s.skipVerify == yes {
 		opts = append(opts, opsmngr.OptionSkipVerify())

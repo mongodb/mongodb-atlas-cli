@@ -19,10 +19,9 @@ package customercerts
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {

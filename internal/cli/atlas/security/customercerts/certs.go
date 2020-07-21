@@ -21,8 +21,9 @@ import (
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "customerCerts",
-		Short: description.Certs,
+		Use:     "customerCerts",
+		Aliases: []string{"certs", "customercerts"},
+		Short:   description.Certs,
 	}
 	cmd.AddCommand(DescribeBuilder())
 

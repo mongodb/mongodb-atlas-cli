@@ -32,7 +32,7 @@ type X509CertificateStore interface {
 	X509CertificateDescriber
 }
 
-// X509Certificates retrieves the current user managed certificates for a database user
+// X509Configuration retrieves the current user managed certificates for a database user
 func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error) {
 	switch s.service {
 	case config.CloudService:

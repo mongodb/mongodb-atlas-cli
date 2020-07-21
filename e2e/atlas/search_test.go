@@ -148,8 +148,8 @@ func TestSearch(t *testing.T) {
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)
-			a.Equal(t, indexID, index.IndexID)
-			a.Equal(t, analyzer, index.Analyzer)
+			a.Equal(indexID, index.IndexID)
+			a.Equal(analyzer, index.Analyzer)
 		}
 	})
 

@@ -125,7 +125,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		newName := fmt.Sprintf("index-%v", r.Uint32())
+		analyzer := "lucene.simple"
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -133,10 +133,11 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--indexName="+newName,
+			"--indexName="+indexName,
 			"--clusterName="+clusterName,
 			"--db=test",
-			"--collection="+collectionName)
+			"--collection="+collectionName,
+			"--analyzer="+analyzer)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -148,7 +149,7 @@ func TestSearch(t *testing.T) {
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)
 			a.Equal(t, indexID, index.IndexID)
-			a.Equal(t, newName, index.Name)
+			a.Equal(t, analyzer, index.Analyzer)
 		}
 	})
 

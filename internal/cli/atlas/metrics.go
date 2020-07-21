@@ -38,8 +38,9 @@ func MetricsBuilder() *cobra.Command {
 
 // getHostnameAndPort return the hostname and the port starting from the string hostname:port
 func getHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
+	const hostnameParts = 2
 	host := strings.Split(hostInfo, ":")
-	if len(host) != 2 {
+	if len(host) != hostnameParts {
 		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
 	}
 

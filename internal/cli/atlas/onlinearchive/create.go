@@ -75,11 +75,17 @@ func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
 	}
 	return a, nil
 }
+
+const (
+	maxPartitions  = 2
+	partitionParts = 2
+)
+
 func (opts *CreateOpts) partitionFields() ([]*atlas.PartitionFields, error) {
 	fields := make([]*atlas.PartitionFields, len(opts.partitions))
 	for i, p := range opts.partitions {
 		f := strings.Split(p, ":")
-		if len(f) != 2 {
+		if len(f) != partitionParts {
 			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
 		order := float64(i)
@@ -100,7 +106,7 @@ func CreateBuilder() *cobra.Command {
 		Short: description.CreateOnlineArchive,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(opts.partitions) > 2 {
+			if len(opts.partitions) > maxPartitions {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))
 			}
 			return opts.PreRunE(opts.initStore)

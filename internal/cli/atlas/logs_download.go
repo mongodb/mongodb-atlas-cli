@@ -92,6 +92,7 @@ var logNames = []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mong
 
 // mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
 func LogsDownloadBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &LogsDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
@@ -99,7 +100,7 @@ func LogsDownloadBuilder() *cobra.Command {
 		Use:   "download <hostname> <logname>",
 		Short: description.LogsDownload,
 		Long:  description.LogsDownloadLong,
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

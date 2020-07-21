@@ -28,7 +28,7 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.X509CertificateStore
+	store store.X509CertificateDescriber
 }
 
 func (opts *DescribeOpts) initStore() error {

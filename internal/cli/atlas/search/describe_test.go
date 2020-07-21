@@ -14,7 +14,7 @@
 
 // +build unit
 
-package customercerts
+package search
 
 import (
 	"testing"
@@ -26,19 +26,20 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
+	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 
 	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{
-		store: mockStore,
+		clusterName: "test",
+		indexID:     "1",
+		store:       mockStore,
 	}
 
-	expected := &mongodbatlas.CustomerX509{}
-
+	expected := &mongodbatlas.SearchIndex{}
 	mockStore.
 		EXPECT().
-		X509Configuration(describeOpts.ProjectID).
+		SearchIndex(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.indexID).
 		Return(expected, nil).
 		Times(1)
 

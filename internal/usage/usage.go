@@ -87,6 +87,7 @@ const (
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
 	Database                        = "Database name."
 	DatabaseUser                    = "Username of a database user."
+	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
 	Collection                      = "Collection name."
 	Analyzer                        = "Analyzer to use when creating the index"
 	SearchAnalyzer                  = "Analyzer to use when searching the index."

@@ -133,4 +133,5 @@ const (
 	Dynamic                         = "dynamic"                         // Dynamic flag
 	Field                           = "field"                           // Fields flag
 	CASFilePath                     = "casFile"                         // CASFilePath flag
+	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
 )

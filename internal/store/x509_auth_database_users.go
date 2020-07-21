@@ -40,11 +40,38 @@ type UserCertificateDescriber interface {
 	GetUserCertificates(string, string) ([]atlas.UserCertificate, error)
 }
 
+type UserCertificateCreator interface {
+	CreateUserCertificates(string, string, int) (*atlas.UserCertificate, error)
+}
+
 type X509CertificateStore interface {
 	UserCertificateDescriber
+	UserCertificateCreator
 	X509CertificateDescriber
 	X509CertificateSaver
 	X509CertificateDisabler
+}
+
+// CreateUserCertificates creates an atlas managed certificates for a database user
+func (s *Store) CreateUserCertificates(projectID string, username string, monthsUntilExpiry int) (*atlas.UserCertificate, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiry)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GetUserCertificates retrieves the current user managed certificates for a database user
+func (s *Store) GetUserCertificates(projectID string, username string) ([]atlas.UserCertificate, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // X509Configuration retrieves the current user managed certificates for a database user
@@ -64,17 +91,6 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 	case config.CloudService:
 		userCertificate := &atlas.CustomerX509{Cas: certificate}
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(context.Background(), projectID, userCertificate)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// GetUserCertificates retrieves the current user managed certificates for a database user
-func (s *Store) GetUserCertificates(projectID string, username string) ([]atlas.UserCertificate, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

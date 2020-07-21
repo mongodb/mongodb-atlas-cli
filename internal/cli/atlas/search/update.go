@@ -52,7 +52,26 @@ func (opts *UpdateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas cluster(s) search index(es) update <ID> [--clusterName name][--archiveAfter N] [--projectId projectId]
+// UpdateBuilder
+// Update a search index for a cluster.
+//
+// Usage:
+//   mongocli atlas clusters search indexes update <ID> [flags]
+//
+// Flags:
+//      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
+//      --clusterName string      Name of the cluster.
+//      --collection string       Collection name.
+//      --db string               Database name.
+//      --dynamic                 Indicates whether the index uses dynamic or static mappings.
+//      --field strings           Static field specifications.
+//  -h, --help                    help for update
+//      --indexName string        Name of the cluster.
+//      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
+//      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//
+// Global Flags:
+//  -P, --profile string   Profile to use from your configuration file.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

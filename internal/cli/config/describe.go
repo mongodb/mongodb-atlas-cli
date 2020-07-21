@@ -27,15 +27,14 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	config.SetName(&opts.name)
-	configDescription := config.GetConfigDescription()
+	config.SetName(opts.name)
+	c := config.Get()
 
-	if len(configDescription) == 0 {
+	if len(c) == 0 {
 		return fmt.Errorf("no profile with name '%s'", opts.name)
 	}
-
-	for k, v := range configDescription {
-		fmt.Printf("%s = %s\n", k, v)
+	for _, k := range config.SortedKeys() {
+		fmt.Printf("%s = %s\n", k, c[k])
 	}
 
 	return nil

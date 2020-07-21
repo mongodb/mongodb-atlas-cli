@@ -25,11 +25,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDBUsers(t *testing.T) {
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -70,9 +71,7 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		var users []mongodbatlas.DatabaseUser
-		err = json.Unmarshal(resp, &users)
-
-		if err != nil {
+		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

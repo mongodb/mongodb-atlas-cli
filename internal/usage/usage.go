@@ -35,6 +35,9 @@ const (
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
+	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
+	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
+	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
 	Comment                         = "Optional description or comment for the entry."
 	DeleteAfter                     = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
 	Force                           = "Don't ask for confirmation."
@@ -84,6 +87,10 @@ const (
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
 	Database                        = "Database name."
 	Collection                      = "Collection name."
+	Analyzer                        = "Analyzer to use when creating the index"
+	SearchAnalyzer                  = "Analyzer to use when searching the index."
+	Dynamic                         = "Indicates whether the index uses dynamic or static mappings."
+	SearchFields                    = "Static field specifications."
 	RSName                          = "The replica set that the index is built on."
 	Key                             = "Index keys. Should be formatted as field:type."
 	Unique                          = "Create a unique key index."
@@ -104,6 +111,9 @@ const (
 	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
 	Background                      = "Create the index in the background."
+	DateField                       = "Name of an already indexed date field from the documents."
+	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
+	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	TargetClusterID                 = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`

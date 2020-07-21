@@ -25,16 +25,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestClusters(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	const clustersEntity = "clusters"
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -57,9 +56,8 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster *mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -103,9 +101,8 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -129,13 +126,12 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterName, "4.2", 20)
+		ensureCluster(t, &cluster, clusterName, "4.2", 20)
 	})
 
 	t.Run("Create Index", func(t *testing.T) {
@@ -186,13 +182,12 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterFileName, "4.2", 10)
+		ensureCluster(t, &cluster, clusterFileName, "4.2", 10)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -209,13 +204,12 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, clusterFileName, "4.2", 25)
+		ensureCluster(t, &cluster, clusterFileName, "4.2", 25)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
@@ -256,13 +250,12 @@ func TestClusters(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		cluster := new(mongodbatlas.Cluster)
-		err = json.Unmarshal(resp, cluster)
-		if err != nil {
+		var cluster mongodbatlas.Cluster
+		if err := json.Unmarshal(resp, &cluster); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		ensureCluster(t, cluster, shardedClusterName, "4.2", 10)
+		ensureCluster(t, &cluster, shardedClusterName, "4.2", 10)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {

@@ -19,7 +19,9 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -28,7 +30,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config Setter,Saver,SetSaver,Getter,Config
 
 type profile struct {
-	name      *string
+	name      string
 	configDir string
 	fs        afero.Fs
 }
@@ -85,9 +87,12 @@ func Default() Config {
 // List returns the names of available profiles
 func List() []string {
 	m := viper.AllSettings()
+
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		keys = append(keys, k)
+		if !search.StringInSlice(Properties(), k) {
+			keys = append(keys, k)
+		}
 	}
 	// keys in maps are non deterministic, trying to give users a consistent output
 	sort.Strings(keys)
@@ -104,9 +109,8 @@ func newProfile() *profile {
 	if err != nil {
 		log.Fatal(err)
 	}
-	name := DefaultProfile
 	np := &profile{
-		name:      &name,
+		name:      DefaultProfile,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
 	}
@@ -115,17 +119,17 @@ func newProfile() *profile {
 
 func Name() string { return p.Name() }
 func (p *profile) Name() string {
-	return *p.name
+	return p.name
 }
 
-func SetName(name *string) { p.SetName(name) }
-func (p *profile) SetName(name *string) {
-	p.name = name
+func SetName(name string) { p.SetName(name) }
+func (p *profile) SetName(name string) {
+	p.name = strings.ToLower(name)
 }
 
 func Set(name, value string) { p.Set(name, value) }
 func (p *profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", *p.name, name), value)
+	viper.Set(fmt.Sprintf("%s.%s", p.name, name), value)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -133,10 +137,7 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	if p.name != nil {
-		return viper.GetString(fmt.Sprintf("%s.%s", *p.name, name))
-	}
-	return ""
+	return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
 }
 
 // Service get configured service
@@ -145,7 +146,7 @@ func (p *profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", *p.name, service)
+	serviceKey := fmt.Sprintf("%s.%s", p.name, service)
 	if viper.IsSet(serviceKey) {
 		return viper.GetString(serviceKey)
 	}
@@ -242,9 +243,9 @@ func (p *profile) IsAccessSet() bool {
 	return isSet
 }
 
-// GetConfigDescription returns a map describing the configuration
-func GetConfigDescription() map[string]string { return p.GetConfigDescription() }
-func (p *profile) GetConfigDescription() map[string]string {
+// Get returns a map describing the configuration.
+func Get() map[string]string { return p.Get() }
+func (p *profile) Get() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string, len(settings))
 
@@ -259,15 +260,27 @@ func (p *profile) GetConfigDescription() map[string]string {
 	return newSettings
 }
 
+// SortedKeys returns the properties of the profile sorted.
+func SortedKeys() []string { return p.SortedKeys() }
+func (p *profile) SortedKeys() []string {
+	config := p.Get()
+	keys := make([]string, 0, len(config))
+	for k := range config {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
 // Delete deletes an existing configuration. The profiles are reloaded afterwards, as
 // this edits the file directly.
 func Delete() error { return p.Delete() }
 func (p *profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	configurationAfterDelete := viper.AllSettings()
+	settings := viper.AllSettings()
 
-	t, err := toml.TreeFromMap(configurationAfterDelete)
+	t, err := toml.TreeFromMap(settings)
 	if err != nil {
 		return err
 	}
@@ -284,6 +297,7 @@ func (p *profile) Delete() error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err
@@ -318,6 +332,7 @@ func (p *profile) Rename(newProfileName string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	if _, err := f.WriteString(s); err != nil {
 		return err
@@ -334,13 +349,14 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(0600)
 	viper.AddConfigPath(p.configDir)
+	viper.SetFs(p.fs)
 
 	if readEnvironmentVars {
 		viper.SetEnvPrefix(EnvPrefix)
 		viper.AutomaticEnv()
 	}
 
-	// TODO: review why this is not working as expected
+	// aliases only work for a config file, this won't work for env variables
 	viper.RegisterAlias(baseURL, opsManagerURL)
 
 	// If a config file is found, read it in.

@@ -44,7 +44,7 @@ var (
 	}
 
 	completionCmd = &cobra.Command{
-		Use:   "completion <shell>",
+		Use:   "completion <bash|zsh|fish|powershell>",
 		Args:  cobra.ExactValidArgs(1),
 		Short: "Generate shell completion scripts",
 		Long: `Generate shell completion scripts for MongoDB CLI commands.
@@ -97,21 +97,21 @@ func init() {
 
 	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, "", usage.Profile)
 	cobra.OnInitialize(func() {
-		initConfig(profile)
+		initConfig(*profile)
 	})
 }
 
 // initConfig reads in config file and ENV variables if set.
-func initConfig(profileName *string) {
+func initConfig(profileName string) {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
 	availableProfiles := config.List()
-	if *profileName != "" {
+	if profileName != "" {
 		config.SetName(profileName)
 	} else if len(availableProfiles) == 1 {
-		config.SetName(&availableProfiles[0])
+		config.SetName(availableProfiles[0])
 	}
 }
 

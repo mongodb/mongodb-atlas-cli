@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/backup"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/clusters"
 	"github.com/mongodb/mongocli/internal/cli/security"
 	"github.com/mongodb/mongocli/internal/cli/servers"
 	"github.com/mongodb/mongocli/internal/config"
@@ -40,7 +41,7 @@ func Builder() *cobra.Command {
 		},
 	}
 
-	cmd.AddCommand(opsmanager.ClustersBuilder())
+	cmd.AddCommand(clusters.Builder())
 	cmd.AddCommand(alerts.Builder())
 	cmd.AddCommand(backup.Builder())
 	cmd.AddCommand(servers.Builder())

@@ -16,23 +16,84 @@
 package cloud_manager_test
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"os"
-	"path/filepath"
+	"os/exec"
+
+	"github.com/mongodb/mongocli/internal/convert"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
-	entity       = "cloud-manager"
-	mongoCliPath = "../../bin/mongocli"
+	entity        = "cloud-manager"
+	serversEntity = "servers"
 )
 
-func cli() (string, error) {
-	cliPath, err := filepath.Abs(mongoCliPath)
+// automationServerHostname tries to list available server running the automation agent
+// and returns the first available hostname for deployments
+func automationServerHostname(cliPath string) (string, error) {
+	cmd := exec.Command(cliPath, entity, serversEntity, "list")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", err
 	}
 
-	if _, err := os.Stat(cliPath); err != nil {
+	var servers *opsmngr.Agents
+	if err := json.Unmarshal(resp, &servers); err != nil {
 		return "", err
 	}
-	return cliPath, nil
+	if servers.TotalCount == 0 {
+		return "", errors.New("no server available")
+	}
+	return servers.Results[0].Hostname, nil
+}
+
+func generateConfig(filename, hostname, clusterName, version, fcVersion string) error {
+	feedFile, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer feedFile.Close()
+
+	var one float64 = 1
+	downloadArchive := &convert.ClusterConfig{
+		RSConfig: convert.RSConfig{
+			FCVersion: fcVersion,
+			Name:      clusterName,
+			Version:   version,
+			ProcessConfigs: []*convert.ProcessConfig{
+				{
+					DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/27000/mongodb.log", clusterName),
+					Port:     27000,
+					Priority: &one,
+					Votes:    &one,
+				},
+				{
+					DBPath:   fmt.Sprintf("/data/%s/27001", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/27001/mongodb.log", clusterName),
+					Port:     27001,
+					Priority: &one,
+					Votes:    &one,
+				},
+				{
+					DBPath:   fmt.Sprintf("/data/%s/27002", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/27002/mongodb.log", clusterName),
+					Port:     27002,
+					Priority: &one,
+					Votes:    &one,
+				},
+			},
+		},
+	}
+
+	jsonEncoder := json.NewEncoder(feedFile)
+	jsonEncoder.SetIndent("", "  ")
+	return jsonEncoder.Encode(downloadArchive)
 }

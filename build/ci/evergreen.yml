@@ -76,6 +76,7 @@ functions:
           - E2E_TAGS
         working_dir: src/github.com/mongodb/mongocli
         env:
+          XDG_CONFIG_HOME: ${workdir}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
@@ -340,7 +341,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
-  - name: unit_test
+  - name: test
     tags: ["code_health"]
     commands:
       - func: "clone"
@@ -354,6 +355,36 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
+  - name: config_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - command: shell.exec
+        type: test
+        params:
+          script: |
+            set -Eeou pipefail
+
+            cat <<EOF > mongocli.toml
+            [e2e]
+              org_id = "5e429e7706822c6eac4d5971"
+              public_api_key = "AAUMGJXA"
+              service = "cloud"
+            EOF
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,config
+  # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
     tags: ["e2e"]
     depends_on:
@@ -371,40 +402,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
-  - name: atlas_logs_e2e
-    tags: ["e2e"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,logs
-  - name: atlas_metrics_e2e
-    tags: ["e2e"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,metrics
+  # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_e2e
     tags: ["e2e"]
     depends_on:
@@ -422,6 +420,79 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
+  # Logs depend on a cluster running to get logs from
+  - name: atlas_logs_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,logs
+  # Metrics depend on a cluster running to get metrics from
+  - name: atlas_metrics_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,metrics
+  # Online archives depend on a cluster to create the archive against
+  - name: atlas_online_archive_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,onlinearchive
+  # Search depend on a cluster to create the indexes against
+  - name: atlas_search_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,search
+  # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e"]
     depends_on:
@@ -439,6 +510,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: iam
+  # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e
     tags: ["e2e"]
     depends_on:
@@ -476,6 +548,29 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
+  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
+  - name: cloud_manager_deploy_replica_set_e2e
+    tags: ["e2e"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+      - name: cloud_manager_generic_e2e
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,deploy_replica_set
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -714,6 +809,26 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+  - name: push_ubuntu2004_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
   - name: push_debian71_enterprise
     <<: *default_push_def
     commands:
@@ -906,6 +1021,26 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+  - name: push_ubuntu2004_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_ubuntu2004_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
   - name: push_debian71_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1013,7 +1148,7 @@ buildvariants:
     expansions:
       go_root: "/opt/golang/go1.14"
       go_bin: "/opt/golang/go1.14/bin"
-      server_version: "1.0.2"
+      server_version: "1.0.3"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1051,16 +1186,16 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.2.1"
+      server_version: "4.2.2"
       notary_key_name: "server-4.2"
     tasks:
       - name: .push_stable
   - name: release_publish_44
-    display_name: "Release (yum/apt) 4.4"
+    display_name: "Publish yum/apt 4.4"
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.4.1"
+      server_version: "4.4.2"
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable

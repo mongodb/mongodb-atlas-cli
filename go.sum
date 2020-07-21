@@ -11,8 +11,6 @@ cloud.google.com/go/firestore v1.1.0/go.mod h1:ulACoGHTpvq5r8rxGJ4ddJZBZqakUQqCl
 cloud.google.com/go/pubsub v1.0.1/go.mod h1:R0Gpsv3s54REJCy4fxDixWD93lHJMoZTyQ2kNxGRt3I=
 cloud.google.com/go/storage v1.0.0/go.mod h1:IhtSnM/ZTZV8YYJWCY8RULGVqBDmpoyjwiyrjsg+URw=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
-github.com/AlecAivazis/survey/v2 v2.0.7 h1:+f825XHLse/hWd2tE/V5df04WFGimk34Eyg/z35w/rc=
-github.com/AlecAivazis/survey/v2 v2.0.7/go.mod h1:mlizQTaPjnR4jcpwRSaSlkbsRfYFEyKgLQvYTzxxiHA=
 github.com/AlecAivazis/survey/v2 v2.0.8 h1:zVjWKN+JIAfmrq6nGWG3DfLS8ypEBhxYy0p7FM+riFk=
 github.com/AlecAivazis/survey/v2 v2.0.8/go.mod h1:9FJRdMdDm8rnT+zHVbvQT2RTSTLq0Ttd6q3Vl2fahjk=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
@@ -244,8 +242,6 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.mongodb.org/atlas v0.3.1-0.20200715182911-bdd98ee452e6 h1:JlnMKvGcfNdS7eJgi/3yeKw9gHDLPof7IBJ1DwWKN2Y=
 go.mongodb.org/atlas v0.3.1-0.20200715182911-bdd98ee452e6/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
-go.mongodb.org/ops-manager v0.7.1-0.20200716111014-0e6b5a319279 h1:0T9bFidQsXSufi8IWqGeeroVjj2KYVK66O/2cfOSTpQ=
-go.mongodb.org/ops-manager v0.7.1-0.20200716111014-0e6b5a319279/go.mod h1:wBCF8WsVFOO5tXefuKONKQ+FaKrEJNWcxMtWb0qJ7jw=
 go.mongodb.org/ops-manager v0.7.1-0.20200716153840-98dec36fd0d9 h1:iCRloeuq/ILxCyfM70pR37uAro2RjN/FlLmjMIpN5rA=
 go.mongodb.org/ops-manager v0.7.1-0.20200716153840-98dec36fd0d9/go.mod h1:wBCF8WsVFOO5tXefuKONKQ+FaKrEJNWcxMtWb0qJ7jw=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

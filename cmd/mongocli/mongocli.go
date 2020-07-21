@@ -79,7 +79,7 @@ func Execute() {
 	}
 }
 
-func init() {
+func init() { //nolint:gochecknoinits // This is the cobra way
 	// config commands
 	rootCmd.AddCommand(cliconfig.Builder())
 	// Atlas commands

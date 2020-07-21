@@ -21,7 +21,10 @@ import (
 )
 
 const (
-	mongod = "mongod"
+	mongod                  = "mongod"
+	authSchemaVersion       = 5
+	defaultSizeThresholdMB  = 1000
+	defaultTimeThresholdHrs = 24
 )
 
 // ProcessConfig that belongs to a cluster
@@ -86,8 +89,8 @@ func (p *ProcessConfig) setProcessName(processes []*opsmngr.Process, nameOpts ..
 // newLogRotate default log rotation in LogRotate
 func newLogRotate() *opsmngr.LogRotate {
 	return &opsmngr.LogRotate{
-		SizeThresholdMB:  1000,
-		TimeThresholdHrs: 24,
+		SizeThresholdMB:  defaultSizeThresholdMB,
+		TimeThresholdHrs: defaultTimeThresholdHrs,
 	}
 }
 
@@ -230,7 +233,7 @@ func (p *ProcessConfig) auditLog() *opsmngr.AuditLog {
 // process maps convert.ProcessConfig -> opsmngr.Process
 func (p *ProcessConfig) process() *opsmngr.Process {
 	process := &opsmngr.Process{
-		AuthSchemaVersion:           5,
+		AuthSchemaVersion:           authSchemaVersion,
 		Disabled:                    p.Disabled,
 		ManualMode:                  false,
 		ProcessType:                 p.ProcessType,

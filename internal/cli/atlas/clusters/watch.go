@@ -40,6 +40,8 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
+const defaultWait = 4 * time.Second
+
 func (opts *WatchOpts) Run() error {
 	for {
 		result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
@@ -51,7 +53,7 @@ func (opts *WatchOpts) Run() error {
 			break
 		}
 		fmt.Print(".")
-		time.Sleep(4 * time.Second)
+		time.Sleep(defaultWait)
 	}
 
 	return nil

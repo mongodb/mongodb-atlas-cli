@@ -74,6 +74,10 @@ func (opts *CreateOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 	}
 	return i, nil
 }
+
+// indexFieldParts index field should be fieldName:analyzer:fieldType
+const indexFieldParts = 3
+
 func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
 	if len(opts.fields) == 0 {
 		return nil, nil
@@ -81,7 +85,7 @@ func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
 	fields := make(map[string]atlas.IndexField, len(opts.fields))
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
-		if len(f) != 3 {
+		if len(f) != indexFieldParts {
 			return nil, fmt.Errorf("partition should be fieldName:analyzer:fieldType, got: %s", p)
 		}
 		fields[f[0]] = atlas.IndexField{

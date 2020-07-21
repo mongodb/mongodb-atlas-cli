@@ -57,11 +57,12 @@ func (opts *RenameOpts) Run() error {
 }
 
 func RenameBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &RenameOpts{}
 	cmd := &cobra.Command{
 		Use:   "rename <oldName> <newName>",
 		Short: description.ConfigRenameDescription,
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(argsN),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.oldName = args[0]
 			opts.newName = args[1]

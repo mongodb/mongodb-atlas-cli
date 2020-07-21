@@ -15,10 +15,6 @@
 package certs
 
 import (
-	"errors"
-	"fmt"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -26,14 +22,15 @@ import (
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type SaveOpts struct {
 	cli.GlobalOpts
-	store    store.X509CertificateStore
+	store   store.X509CertificateStore
 	casPath string
+	fs      afero.Fs
 }
 
 func (opts *SaveOpts) initStore() error {
@@ -43,11 +40,14 @@ func (opts *SaveOpts) initStore() error {
 }
 
 func (opts *SaveOpts) Run() error {
-	index, err := opts.store.X509Certificates()
+	fileBytes, err := afero.ReadFile(opts.fs, opts.casPath)
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
+
+	caFileContents := string(fileBytes)
+
+	result, err := opts.store.SaveX509Configuration(opts.ConfigProjectID(), caFileContents)
 	if err != nil {
 		return err
 	}
@@ -55,52 +55,30 @@ func (opts *SaveOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *SaveOpts) newSearchIndex() (*atlas.SearchIndex, error) {
-	f, err := opts.indexFields()
-	if err != nil {
-		return nil, err
-	}
-	i := &atlas.SearchIndex{
-		Analyzer:       opts.analyzer,
-		CollectionName: opts.collection,
-		Database:       opts.dbName,
-		Mappings: &atlas.IndexMapping{
-			Dynamic: opts.dynamic,
-			Fields:  &f,
-		},
-		Name:           opts.name,
-		SearchAnalyzer: opts.searchAnalyzer,
-	}
-	return i, nil
-}
-
-// mongocli atlas security certs create --projectId projectId --username dbUser
+// mongocli atlas security certs create --projectId projectId --casFile '/path/to/certificates.pem'
 func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+	opts := &SaveOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: description.CreateSearchIndexes,
-		Args:  cobra.ExactArgs(1),
+		Use:   "create",
+		Short: description.SaveCertConfig,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.dynamic && len(opts.fields) == 0 {
-				return errors.New("you need to specify fields for the index or use a dynamic index")
-			}
-			if opts.dynamic && len(opts.fields) > 0 {
-				return errors.New("you can't specify fields and dynamic at the same time")
-			}
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
+			opts.casPath = args[0]
+
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.clusterName, flag.CASFilePath, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.casPath, flag.CASFilePath, "", usage.CASFilePath)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.Collection)
+	_ = cmd.MarkFlagRequired(flag.CASFilePath)
 
 	return cmd
 }

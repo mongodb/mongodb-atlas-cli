@@ -47,6 +47,7 @@ const (
 	DeleteDataLake           = "Delete a data lake."
 	Certs                    = "Manage x509 certificates for your database users."
 	DescribeCertConfig       = "Get the current customer-managed X.509 configuration details for an Atlas project."
+	SaveCertConfig           = "Saves a customer-managed X.509 configuration for an Atlas project."
 	Clusters                 = "Manage clusters for your project."
 	ClustersIndexes          = "Manage cluster rolling indexes for your project."
 	ClustersLong             = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."

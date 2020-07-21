@@ -14,10 +14,12 @@
 
 // +build unit
 
-package search
+package certs
 
 import (
 	"testing"
+
+	"github.com/spf13/afero"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -26,26 +28,31 @@ import (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchIndexCreator(ctrl)
+	mockStore := mocks.NewMockX509CertificateStore(ctrl)
 
 	defer ctrl.Finish()
 
-	opts := &CreateOpts{
-		store: mockStore,
+	fs := afero.NewMemMapFs()
+	fileName := "/path/to/cert.pem"
+	fileContents := "some_cert"
+
+	_ = afero.WriteFile(fs, fileName, []byte(fileContents), 0600)
+
+	saveOpts := &SaveOpts{
+		fs:      fs,
+		store:   mockStore,
+		casPath: fileName,
 	}
 
-	request, err := opts.newSearchIndex()
-	if err != nil {
-		t.Fatalf("newSearchIndex() unexpected error: %v", err)
-	}
-	expected := &mongodbatlas.SearchIndex{}
+	expected := &mongodbatlas.CustomerX509{}
+
 	mockStore.
 		EXPECT().
-		CreateSearchIndexes(opts.ProjectID, opts.clusterName, request).
+		SaveX509Configuration(saveOpts.ProjectID, fileContents).
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := saveOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

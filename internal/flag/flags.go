@@ -131,5 +131,5 @@ const (
 	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
 	Dynamic                         = "dynamic"                         // Dynamic flag
 	Field                           = "field"                           // Fields flag
-	CASFilePath                           = "casFile"                           // CASFilePath flag
+	CASFilePath                     = "casFile"                         // CASFilePath flag
 )

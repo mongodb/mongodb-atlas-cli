@@ -45,7 +45,7 @@ const (
 	CreateDataLake           = "Create a new data lake."
 	UpdateDataLake           = "Update a data lake."
 	DeleteDataLake           = "Delete a data lake."
-	Certs                    = "Manage your own x509 certificates for your database users."
+	Certs                    = "Manage customer x509 certificates for your database users."
 	DescribeCertConfig       = "Get the current customer-managed X.509 configuration details for an Atlas project."
 	Clusters                 = "Manage clusters for your project."
 	ClustersIndexes          = "Manage cluster rolling indexes for your project."

@@ -27,7 +27,6 @@ import (
 func TestWhitelistList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectIPWhitelistLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.ProjectIPWhitelist

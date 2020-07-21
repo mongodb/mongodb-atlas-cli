@@ -27,7 +27,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
-
 	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{

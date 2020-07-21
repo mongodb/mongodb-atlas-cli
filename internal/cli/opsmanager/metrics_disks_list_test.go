@@ -27,7 +27,6 @@ import (
 func TestMetricsDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDisksLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ProcessDisksResponse{}

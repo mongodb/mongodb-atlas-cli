@@ -27,7 +27,6 @@ import (
 func TestManagerOwnerCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOwnerCreator(ctrl)
-
 	defer ctrl.Finish()
 
 	email := "test@test.com"

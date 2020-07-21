@@ -26,7 +26,6 @@ import (
 func TestIndexesCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIndexCreator(ctrl)
-
 	defer ctrl.Finish()
 
 	createOpts := &IndexesCreateOpts{

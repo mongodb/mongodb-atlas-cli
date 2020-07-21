@@ -27,7 +27,6 @@ import (
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Cluster{StateName: "IDLE"}

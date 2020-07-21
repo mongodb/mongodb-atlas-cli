@@ -89,6 +89,7 @@ const (
 	NotificationUsername            = "notificationUsername"            // NotificationUsername flag
 	NotificationVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationVictorOpsRoutingKey flag
 	SnapshotID                      = "snapshotId"                      // SnapshotID flag
+	IndexName                       = "indexName"                       // IndexName flag
 	ClusterName                     = "clusterName"                     // ClusterName flag
 	ClusterID                       = "clusterId"                       // ClusterID flag
 	TargetProjectID                 = "targetProjectId"                 // TargetProjectID flag
@@ -131,4 +132,5 @@ const (
 	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
 	Dynamic                         = "dynamic"                         // Dynamic flag
 	Field                           = "field"                           // Fields flag
+	CASFilePath                     = "casFile"                         // CASFilePath flag
 )

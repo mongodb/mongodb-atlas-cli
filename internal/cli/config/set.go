@@ -53,12 +53,13 @@ func (opts *SetOpts) Run() error {
 }
 
 func SetBuilder() *cobra.Command {
+	const argsN = 2
 	cmd := &cobra.Command{
 		Use:   "set <property> <value>",
 		Short: description.ConfigSetDescription,
 		Long:  fmt.Sprintf(description.ConfigSetLong, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 2 {
+			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
 			}
 			if !search.StringInSlice(cmd.ValidArgs, args[0]) {

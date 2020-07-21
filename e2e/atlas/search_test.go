@@ -124,6 +124,35 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		analyzer := "lucene.simple"
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"update",
+			indexID,
+			"--indexName="+indexName,
+			"--clusterName="+clusterName,
+			"--db=test",
+			"--collection="+collectionName,
+			"--analyzer="+analyzer)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var index mongodbatlas.SearchIndex
+		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
+			a := assert.New(t)
+			a.Equal(indexID, index.IndexID)
+			a.Equal(analyzer, index.Analyzer)
+		}
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

@@ -27,7 +27,6 @@ import (
 func TestDBUserList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.DatabaseUser

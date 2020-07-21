@@ -28,7 +28,6 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDeleter(ctrl)
-
 	defer ctrl.Finish()
 
 	mockStore.

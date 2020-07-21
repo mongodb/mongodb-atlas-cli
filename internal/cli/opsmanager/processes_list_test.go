@@ -27,7 +27,6 @@ import (
 func TestProcessesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &opsmngr.Hosts{}

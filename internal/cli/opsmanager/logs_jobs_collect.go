@@ -65,14 +65,15 @@ func (opts *LogsJobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
 	}
 }
 
-// mongocli om logs jobs collect resourceType resourceName --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
+// mongocli om logs jobs collect <resourceType> <resourceName> --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
 func LogsJobsCollectOptsBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &LogsJobsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect <resourceType> <resourceName>",
 		Short: description.StartLogCollectionJob,
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 2 {
+			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
 			}
 

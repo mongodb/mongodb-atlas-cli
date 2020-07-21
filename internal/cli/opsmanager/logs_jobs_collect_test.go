@@ -27,7 +27,6 @@ import (
 func TestLogsCollectOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogCollector(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &opsmngr.LogCollectionJob{ID: "1"}

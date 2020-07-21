@@ -28,7 +28,6 @@ import (
 func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &opsmngr.Agents{}

@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDeleter
+//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongocli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexDeleter
 
 type SearchIndexLister interface {
 	SearchIndexes(string, string, string, string, *atlas.ListOptions) ([]*atlas.SearchIndex, error)
@@ -32,8 +32,12 @@ type SearchIndexCreator interface {
 	CreateSearchIndexes(string, string, *atlas.SearchIndex) (*atlas.SearchIndex, error)
 }
 
+type SearchIndexDescriber interface {
+	SearchIndex(string, string, string) (*atlas.SearchIndex, error)
+}
+
 type SearchIndexDeleter interface {
-	DeleteSearchIndexes(string, string, string) error
+	DeleteSearchIndex(string, string, string) error
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers
@@ -58,8 +62,19 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 	}
 }
 
-// DeleteSearchIndexes encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteSearchIndexes(projectID, clusterName, indexID string) error {
+// SearchIndex encapsulate the logic to manage different cloud providers
+func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.SearchIndex, error) {
+	switch s.service {
+	case config.CloudService:
+		index, _, err := s.client.(*atlas.Client).Search.GetIndex(context.Background(), projectID, clusterName, indexID)
+		return index, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteSearchIndex encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Search.DeleteIndex(context.Background(), projectID, clusterName, indexID)

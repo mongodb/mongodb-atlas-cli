@@ -28,7 +28,7 @@ import (
 
 type SaveOpts struct {
 	cli.GlobalOpts
-	store   store.X509CertificateStore
+	store   store.X509CertificateSaver
 	casPath string
 	fs      afero.Fs
 }
@@ -55,7 +55,7 @@ func (opts *SaveOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas security certs create --projectId projectId --casFile '/path/to/certificates.pem'
+// mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem
 func CreateBuilder() *cobra.Command {
 	opts := &SaveOpts{
 		fs: afero.NewOsFs(),

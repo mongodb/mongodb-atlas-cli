@@ -134,7 +134,9 @@ func TestSearch(t *testing.T) {
 			"update",
 			indexID,
 			"--indexName="+newName,
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"--db=test",
+			"--collection="+collectionName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -28,6 +28,7 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	IndexOpts
+	id          string
 	clusterName string
 	store       store.SearchIndexUpdater
 }
@@ -43,7 +44,7 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
+	result, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
 
 	if err != nil {
 		return err

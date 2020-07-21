@@ -45,7 +45,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, request).
+		UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
 		Return(expected, nil).
 		Times(1)
 

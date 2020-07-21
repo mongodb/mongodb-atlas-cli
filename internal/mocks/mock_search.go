@@ -149,18 +149,18 @@ func (m *MockSearchIndexUpdater) EXPECT() *MockSearchIndexUpdaterMockRecorder {
 }
 
 // UpdateSearchIndexes mocks base method
-func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1 string, arg2 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
+func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *mongodbatlas.SearchIndex) (*mongodbatlas.SearchIndex, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateSearchIndexes", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateSearchIndexes", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*mongodbatlas.SearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateSearchIndexes indicates an expected call of UpdateSearchIndexes
-func (mr *MockSearchIndexUpdaterMockRecorder) UpdateSearchIndexes(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockSearchIndexUpdaterMockRecorder) UpdateSearchIndexes(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSearchIndexes", reflect.TypeOf((*MockSearchIndexUpdater)(nil).UpdateSearchIndexes), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSearchIndexes", reflect.TypeOf((*MockSearchIndexUpdater)(nil).UpdateSearchIndexes), arg0, arg1, arg2, arg3)
 }
 
 // MockSearchIndexDeleter is a mock of SearchIndexDeleter interface

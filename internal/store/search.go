@@ -37,7 +37,7 @@ type SearchIndexDescriber interface {
 }
 
 type SearchIndexUpdater interface {
-	UpdateSearchIndexes(string, string, *atlas.SearchIndex) (*atlas.SearchIndex, error)
+	UpdateSearchIndexes(string, string, string, *atlas.SearchIndex) (*atlas.SearchIndex, error)
 }
 
 type SearchIndexDeleter interface {
@@ -78,10 +78,10 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 }
 
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
+func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, index.IndexID, index)
+		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, indexID, index)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -15,21 +15,22 @@
 package customercerts
 
 import (
+	"fmt"
+
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
 type DisableOpts struct {
 	cli.GlobalOpts
-	cli.DeleteOpts
 	store   store.X509CertificateDisabler
+	confirm bool
 }
 
 func (opts *DisableOpts) initStore() error {
@@ -39,10 +40,26 @@ func (opts *DisableOpts) initStore() error {
 }
 
 func (opts *DisableOpts) Run() error {
-	err := opts.store.DisableX509Configuration(opts.ConfigProjectID())
-	if err != nil {
+	if !opts.confirm {
+		fmt.Printf("X.509 configuration was not disabled.\n")
+		return nil
+	}
+
+	if err := opts.store.DisableX509Configuration(opts.ConfigProjectID()); err != nil {
 		return err
 	}
+
+	fmt.Printf("X.509 configuration for project %s was deleted.\n", opts.ConfigProjectID())
+
+	return nil
+}
+
+func (opts *DisableOpts) Prompt() error {
+	prompt := &survey.Confirm{
+		Message: "Are you sure you want to delete the X509 configuration for this project?",
+	}
+
+	return survey.AskOne(prompt, &opts.confirm)
 }
 
 // mongocli atlas security certs disable --projectId projectId
@@ -53,7 +70,11 @@ func DisableBuilder() *cobra.Command {
 		Short: description.DisableCertConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

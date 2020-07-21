@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package certs
+package customercerts
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -47,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas security certs describe --projectId projectId
+// mongocli atlas security customerCerts describe --projectId projectId
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

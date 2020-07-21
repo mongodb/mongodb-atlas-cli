@@ -15,7 +15,7 @@
 package security
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/security/certs"
+	"github.com/mongodb/mongocli/internal/cli/atlas/security/customercerts"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 		Short: description.Security,
 	}
 
-	cmd.AddCommand(certs.Builder())
+	cmd.AddCommand(customercerts.Builder())
 
 	return cmd
 }

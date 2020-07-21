@@ -12,38 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package certs
+package customercerts
 
 import (
-	"testing"
-
-	"go.mongodb.org/atlas/mongodbatlas"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestDescribe_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
-
-	defer ctrl.Finish()
-
-	describeOpts := &DescribeOpts{
-		store: mockStore,
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "customerCerts",
+		Short: description.Certs,
 	}
+	cmd.AddCommand(DescribeBuilder())
 
-	expected := &mongodbatlas.CustomerX509{}
-
-	mockStore.
-		EXPECT().
-		X509Configuration(describeOpts.ProjectID).
-		Return(expected, nil).
-		Times(1)
-
-	if err := describeOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

@@ -15,8 +15,6 @@
 package search
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -27,25 +25,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type CreateOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
 	IndexOpts
+	id          string
 	clusterName string
-	store       store.SearchIndexCreator
+	store       store.SearchIndexUpdater
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
+func (opts *UpdateOpts) Run() error {
 	index, err := opts.newSearchIndex()
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
+	result, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
+
 	if err != nil {
 		return err
 	}
@@ -53,11 +53,11 @@ func (opts *CreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// CreateBuilder
-// Create an online archive for a cluster.
+// UpdateBuilder
+// Update a search index for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search create <name> [flags]
+//   mongocli atlas clusters search indexes update <ID> [flags]
 //
 // Flags:
 //      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
@@ -66,34 +66,30 @@ func (opts *CreateOpts) Run() error {
 //      --db string               Database name.
 //      --dynamic                 Indicates whether the index uses dynamic or static mappings.
 //      --field strings           Static field specifications.
-//  -h, --help                    help for create
+//  -h, --help                    help for update
+//      --indexName string        Name of the cluster.
 //      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
 //
 // Global Flags:
 //  -P, --profile string   Profile to use from your configuration file.
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <name>",
-		Short: description.CreateSearchIndexes,
+		Use:   "update <ID>",
+		Short: description.UpdateSearchIndex,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.dynamic && len(opts.fields) == 0 {
-				return errors.New("you need to specify fields for the index or use a dynamic index")
-			}
-			if opts.dynamic && len(opts.fields) > 0 {
-				return errors.New("you can't specify fields and dynamic at the same time")
-			}
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, "lucene.standard", usage.Analyzer)
@@ -104,6 +100,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+	_ = cmd.MarkFlagRequired(flag.IndexName)
 	_ = cmd.MarkFlagRequired(flag.Database)
 	_ = cmd.MarkFlagRequired(flag.Collection)
 

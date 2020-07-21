@@ -68,8 +68,6 @@ func CreateBuilder() *cobra.Command {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.casPath = args[0]
-
 			return opts.Run()
 		},
 	}

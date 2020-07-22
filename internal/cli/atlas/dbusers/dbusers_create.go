@@ -16,6 +16,7 @@ package dbusers
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 
@@ -35,7 +36,7 @@ type DBUsersCreateOpts struct {
 	cli.GlobalOpts
 	username string
 	password string
-	authDB   string
+	x509Type string
 	roles    []string
 	store    store.DatabaseUserCreator
 }
@@ -57,14 +58,24 @@ func (opts *DBUsersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *DBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *DBUsersCreateOpts) newDatabaseUser() (*atlas.DatabaseUser, error) {
+	authDB := "admin"
+
+	if opts.x509Type != "" && opts.password != "" {
+		return nil, cli.ErrX509AndPassword
+	}
+
+	if opts.x509Type != "" {
+		authDB = "$external"
+	}
+
 	return &atlas.DatabaseUser{
-		DatabaseName: opts.authDB,
-		Roles:        convert.BuildAtlasRoles(opts.roles),
+		Roles:        convert.BuildAtlasRoles(opts.roles, authDB),
 		GroupID:      opts.ConfigProjectID(),
 		Username:     opts.username,
 		Password:     opts.password,
-	}
+		X509Type: 		opts.x509Type,
+	}, nil
 }
 
 func (opts *DBUsersCreateOpts) Prompt() error {
@@ -77,7 +88,11 @@ func (opts *DBUsersCreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
+// mongocli atlas dbuser(s) create
+//		--username username --password password
+//		--role roleName@dbName
+//		[--projectId projectId]
+//		[--x509Type NONE|MANAGED|CUSTOMER]
 func DBUsersCreateBuilder() *cobra.Command {
 	opts := &DBUsersCreateOpts{}
 	cmd := &cobra.Command{
@@ -112,7 +127,7 @@ func DBUsersCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, "", usage.X509Type)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

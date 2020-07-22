@@ -46,6 +46,7 @@ const (
 	DiagnoseOut                     = "Optional output filename, if none given will use diagnose-archive.tar.gz."
 	LogStart                        = "Beginning of the period for which to retrieve logs."
 	LogEnd                          = "End of the period for which to retrieve logs."
+	X509Type                          = "X.509 method by which the provided username is authenticated."
 	ArchiveLimit                    = "Max number of entries for the diagnose archive."
 	ArchiveMinutes                  = "Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time. "
 	MeasurementStart                = "Beginning of the period for which to retrieve measurements."

@@ -24,3 +24,4 @@ const requiredF = `required flag(s) "%s" not set`
 
 var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
 var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
+var ErrX509AndPassword = fmt.Errorf(requiredF, flag.AuthDB, flag.X509Type)

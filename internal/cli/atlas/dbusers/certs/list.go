@@ -28,7 +28,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store    store.UserCertificateLister
+	store    store.DBUserCertificateLister
 	username string
 }
 
@@ -39,7 +39,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	result, err := opts.store.GetUserCertificates(opts.ConfigProjectID(), opts.username)
+	result, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username)
 
 	if err != nil {
 		return err

@@ -105,7 +105,6 @@ func authenticatedClient(c config.Config) (*http.Client, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(string(dat))
 		t.Transport = customCATransport(dat)
 	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
 		t.Transport = skipVerifyTransport()
@@ -123,7 +122,6 @@ func defaultClient(c config.Config) (*http.Client, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(string(dat))
 		client.Transport = customCATransport(dat)
 	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
 		client.Transport = skipVerifyTransport()

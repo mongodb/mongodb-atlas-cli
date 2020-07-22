@@ -37,7 +37,11 @@ func Builder() *cobra.Command {
 		Short:   description.OpsManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.OpsManagerService)
-			return validate.Credentials()
+			// do not validate to create an owner
+			if cmd.CommandPath() != "mongocli ops-manager owner create" {
+				return validate.Credentials()
+			}
+			return nil
 		},
 	}
 

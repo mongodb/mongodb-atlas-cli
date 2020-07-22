@@ -28,7 +28,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store    store.UserCertificateDescriber
+	store    store.UserCertificateLister
 	username string
 }
 

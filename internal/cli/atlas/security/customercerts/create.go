@@ -28,7 +28,7 @@ import (
 
 type SaveOpts struct {
 	cli.GlobalOpts
-	store   store.X509CertificateSaver
+	store   store.X509CertificateConfSaver
 	casPath string
 	fs      afero.Fs
 }

@@ -24,11 +24,11 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateDescriber,X509CertificateSaver,X509CertificateStore
 
-type X509CertificateDescriber interface {
+type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlas.CustomerX509, error)
 }
 
-type X509CertificateSaver interface {
+type X509CertificateConfSaver interface {
 	SaveX509Configuration(string, string) (*atlas.CustomerX509, error)
 }
 
@@ -36,14 +36,14 @@ type X509CertificateDisabler interface {
 	DisableX509Configuration(string) error
 }
 
-type UserCertificateDescriber interface {
+type UserCertificateLister interface {
 	GetUserCertificates(string, string) ([]atlas.UserCertificate, error)
 }
 
 type X509CertificateStore interface {
-	UserCertificateDescriber
-	X509CertificateDescriber
-	X509CertificateSaver
+	UserCertificateLister
+	X509CertificateConfDescriber
+	X509CertificateConfSaver
 	X509CertificateDisabler
 }
 

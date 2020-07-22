@@ -102,7 +102,7 @@ func List() []string {
 
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
-	return len(viper.GetStringMap(name)) > 0
+	return search.StringInSlice(List(), name)
 }
 
 func newProfile() *profile {
@@ -309,7 +309,7 @@ func (p *profile) Delete() error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
+	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -319,8 +319,11 @@ func (p *profile) Delete() error {
 		return err
 	}
 
-	// Force reload, so that viper has the new configuration
-	return p.Load(true)
+	return nil
+}
+
+func (p *profile) Filename() string {
+	return fmt.Sprintf("%s/%s.toml", p.configDir, ToolName)
 }
 
 // Rename replaces the profile to a new profile name, overwriting any profile that existed before.
@@ -344,7 +347,7 @@ func (p *profile) Rename(newProfileName string) error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
+	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -354,8 +357,7 @@ func (p *profile) Rename(newProfileName string) error {
 		return err
 	}
 
-	// Force reload, so that viper has the new configuration
-	return p.Load(true)
+	return nil
 }
 
 // Load loads the configuration from disk

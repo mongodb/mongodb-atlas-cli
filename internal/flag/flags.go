@@ -42,8 +42,8 @@ const (
 	Email                           = "email"                           // Email flag
 	Out                             = "out"                             // Out flag
 	Output                          = "output"                          // Output flag
+	OutputShort                     = "o"                               // OutputShort flag
 	Minutes                         = "minutes"                         // Minutes flag
-	OutShort                        = "o"                               // OutShort flag
 	Status                          = "status"                          // Status flag
 	Start                           = "start"                           // Start flag
 	End                             = "end"                             // End flag

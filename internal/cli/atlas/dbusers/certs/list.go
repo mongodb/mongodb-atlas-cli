@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package atlas
+
+package certs
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,21 +25,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DBUsersListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.DatabaseUserLister
+	store    store.DBUserCertificateLister
+	username string
 }
 
-func (opts *DBUsersListOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpts)
+func (opts *ListOpts) Run() error {
+	result, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username)
 
 	if err != nil {
 		return err
@@ -47,15 +48,17 @@ func (opts *DBUsersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
-func DBUsersListBuilder() *cobra.Command {
-	opts := new(DBUsersListOpts)
+// mongocli atlas dbuser(s) certs list|ls <username> [--projectId projectId]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListDBUsers,
+		Use:     "list <username>",
 		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Short:   description.ListDBUserCerts,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.username = args[0]
+
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -63,8 +66,6 @@ func DBUsersListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

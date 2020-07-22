@@ -14,36 +14,41 @@
 
 // +build unit
 
-package atlas
+package dbusers
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDBUserCreate_Run(t *testing.T) {
+func TestDBUserUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseUserUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.DatabaseUser{}
+	expected := &atlas.DatabaseUser{}
 
-	createOpts := &DBUsersCreateOpts{
-		username: "ProjectBar",
+	updateOpts := &UpdateOpts{
+		username: "test4",
 		password: "US",
 		roles:    []string{"admin@admin"},
 		store:    mockStore,
 	}
 
+	dbUser := atlas.DatabaseUser{}
+	updateOpts.update(&dbUser)
+
 	mockStore.
 		EXPECT().
-		CreateDatabaseUser(createOpts.newDatabaseUser()).Return(expected, nil).
+		UpdateDatabaseUser(&dbUser).
+		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := updateOpts.Run()
+
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

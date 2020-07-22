@@ -14,38 +14,38 @@
 
 // +build unit
 
-package atlas
+package certs
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDBUsersDelete_Run(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserDeleter(ctrl)
+	mockStore := mocks.NewMockDBUserCertificateLister(ctrl)
+
 	defer ctrl.Finish()
 
-	deleteOpts := &DBUsersDeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Confirm: true,
-			Entry:   "test",
-		},
-		authDB: "admin",
-		store:  mockStore,
+	var expected []mongodbatlas.UserCertificate
+
+	username := "user"
+
+	listOpts := &ListOpts{
+		store:    mockStore,
+		username: username,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteDatabaseUser(deleteOpts.authDB, deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(nil).
+		DBUserCertificates(listOpts.ProjectID, username).
+		Return(expected, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

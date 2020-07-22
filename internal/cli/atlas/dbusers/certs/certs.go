@@ -26,7 +26,6 @@ func Builder() *cobra.Command {
 		Short:   description.DbUserCerts,
 	}
 	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
 
 	return cmd
 }

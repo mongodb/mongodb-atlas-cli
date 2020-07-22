@@ -49,7 +49,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
-			if config.Exists(opts.Entry) {
+			if !config.Exists(opts.Entry) {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
 			}
 

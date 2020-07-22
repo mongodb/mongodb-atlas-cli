@@ -83,7 +83,7 @@ service = cloud
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		const expected = "Profile 'dev' deleted\n"
+		const expected = "Profile 'renamed' deleted\n"
 		if string(resp) != expected {
 			t.Errorf("expected %s, got %s\n", expected, string(resp))
 		}

@@ -117,7 +117,9 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	TargetClusterID                 = `Unique identifier of the target cluster.
+	FormatOut                       = `Output format. 
+Valid values: json`
+	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.
 For use only with automated restore jobs.`

@@ -94,15 +94,17 @@ func init() { //nolint:gochecknoinits // This is the cobra way
 	rootCmd.AddCommand(completionCmd)
 
 	cobra.EnableCommandSorting = false
-
-	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, "", usage.Profile)
+	var profile string
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	var output string
+	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutShort, config.JSON, usage.FormatOut)
 	cobra.OnInitialize(func() {
-		initConfig(*profile)
+		initConfig(profile, output)
 	})
 }
 
 // initConfig reads in config file and ENV variables if set.
-func initConfig(profileName string) {
+func initConfig(profileName, output string) {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
@@ -113,6 +115,7 @@ func initConfig(profileName string) {
 	} else if len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
 	}
+	config.SetOutput(output)
 }
 
 func main() {

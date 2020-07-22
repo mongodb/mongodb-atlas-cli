@@ -42,6 +42,7 @@ func Properties() []string {
 		service,
 		publicAPIKey,
 		privateAPIKey,
+		output,
 		opsManagerURL,
 		baseURL,
 		opsManagerCACertificate,
@@ -229,6 +230,18 @@ func (p *profile) OrgID() string {
 func SetOrgID(v string) { p.SetOrgID(v) }
 func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
+}
+
+// Output get configured output format
+func Output() string { return p.Output() }
+func (p *profile) Output() string {
+	return p.GetString(output)
+}
+
+// SetOutput sets the global output format
+func SetOutput(v string) { p.SetOutput(v) }
+func (p *profile) SetOutput(v string) {
+	p.Set(output, v)
 }
 
 // IsAccessSet return true if API keys have been set up.

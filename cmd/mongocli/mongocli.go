@@ -79,6 +79,11 @@ func Execute() {
 	}
 }
 
+var (
+	profile string
+	output  string
+)
+
 func init() { //nolint:gochecknoinits // This is the cobra way
 	// config commands
 	rootCmd.AddCommand(cliconfig.Builder())
@@ -94,24 +99,21 @@ func init() { //nolint:gochecknoinits // This is the cobra way
 	rootCmd.AddCommand(completionCmd)
 
 	cobra.EnableCommandSorting = false
-	var profile string
+
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-	var output string
 	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutShort, config.JSON, usage.FormatOut)
-	cobra.OnInitialize(func() {
-		initConfig(profile, output)
-	})
+	cobra.OnInitialize(initConfig)
 }
 
 // initConfig reads in config file and ENV variables if set.
-func initConfig(profileName, output string) {
+func initConfig() {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
 	availableProfiles := config.List()
-	if profileName != "" {
-		config.SetName(profileName)
+	if profile != "" {
+		config.SetName(profile)
 	} else if len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
 	}

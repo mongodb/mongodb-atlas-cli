@@ -130,7 +130,9 @@ func (p *profile) SetName(name string) {
 
 func Set(name, value string) { p.Set(name, value) }
 func (p *profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.name, name), value)
+	settings := viper.GetStringMapString(p.Name())
+	settings[name] = value
+	viper.Set(p.name, settings)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -138,7 +140,8 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
+	settings := viper.GetStringMapString(p.Name())
+	return settings[name]
 }
 
 // Service get configured service
@@ -147,9 +150,9 @@ func (p *profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", p.name, service)
-	if viper.IsSet(serviceKey) {
-		return viper.GetString(serviceKey)
+	settings := viper.GetStringMapString(p.Name())
+	if settings[service] != "" {
+		return settings[service]
 	}
 	return CloudService
 }

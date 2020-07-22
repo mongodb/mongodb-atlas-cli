@@ -37,14 +37,9 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	f, err := opts.newWriteCloser()
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
-	}
-
 	mockStore.
 		EXPECT().
-		DownloadLog(opts.ProjectID, opts.host, opts.name, f, opts.newDateRangeOpts()).
+		DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
 		Return(nil).
 		Times(1)
 

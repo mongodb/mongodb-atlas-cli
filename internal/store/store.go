@@ -15,6 +15,8 @@
 package store
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io/ioutil"
 	"net"
@@ -38,7 +40,7 @@ const (
 	tlsHandshakeTimeout   = 10 * time.Second
 	timeout               = 10 * time.Second
 	keepAlive             = 30 * time.Second
-	maxIdleConns          = 10
+	maxIdleConns          = 100
 	maxIdleConnsPerHost   = 4
 	idleConnTimeout       = 90 * time.Second
 	expectContinueTimeout = 1 * time.Second
@@ -52,12 +54,14 @@ type Store struct {
 	client        interface{}
 }
 
-func newTransport(c config.Config) *digest.Transport {
-	t := &digest.Transport{
-		Username: c.PublicAPIKey(),
-		Password: c.PrivateAPIKey(),
+func customCATransport(ca []byte) http.RoundTripper {
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(ca)
+	tlsClientConfig := &tls.Config{
+		InsecureSkipVerify: false,
+		RootCAs:            caCertPool,
 	}
-	t.Transport = &http.Transport{
+	return &http.Transport{
 		ResponseHeaderTimeout: responseHeaderTimeout,
 		TLSHandshakeTimeout:   tlsHandshakeTimeout,
 		DialContext: (&net.Dialer{
@@ -69,21 +73,71 @@ func newTransport(c config.Config) *digest.Transport {
 		Proxy:                 http.ProxyFromEnvironment,
 		IdleConnTimeout:       idleConnTimeout,
 		ExpectContinueTimeout: expectContinueTimeout,
+		TLSClientConfig:       tlsClientConfig,
+	}
+}
+
+func skipVerifyTransport() http.RoundTripper {
+	tlsClientConfig := &tls.Config{InsecureSkipVerify: true} //nolint:gosec // this is optional for some users
+	return &http.Transport{
+		ResponseHeaderTimeout: responseHeaderTimeout,
+		TLSHandshakeTimeout:   tlsHandshakeTimeout,
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
+		TLSClientConfig:       tlsClientConfig,
+	}
+}
+
+func authenticatedClient(c config.Config) (*http.Client, error) {
+	t := &digest.Transport{
+		Username: c.PublicAPIKey(),
+		Password: c.PrivateAPIKey(),
+	}
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		dat, err := ioutil.ReadFile(caCertificate)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(string(dat))
+		t.Transport = customCATransport(dat)
+	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
+		t.Transport = skipVerifyTransport()
+	} else {
+		t.Transport = http.DefaultTransport
 	}
 
-	return t
+	return t.Client()
+}
+
+func defaultClient(c config.Config) (*http.Client, error) {
+	client := http.DefaultClient
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		dat, err := ioutil.ReadFile(caCertificate)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(string(dat))
+		client.Transport = customCATransport(dat)
+	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
+		client.Transport = skipVerifyTransport()
+	} else {
+		client.Transport = http.DefaultTransport
+	}
+
+	return client, nil
 }
 
 // New get the appropriate client for the profile/service selected
 func New(c config.Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
-
-	client, err := newTransport(c).Client()
-
-	if err != nil {
-		return nil, err
-	}
 
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		s.baseURL = s.apiPath(configURL)
@@ -93,6 +147,10 @@ func New(c config.Config) (*Store, error) {
 	}
 	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
 		s.skipVerify = skipVerify
+	}
+	client, err := authenticatedClient(c)
+	if err != nil {
+		return nil, err
 	}
 
 	switch s.service {
@@ -111,6 +169,10 @@ func NewUnauthenticated(c config.Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 
+	if s.service != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		s.baseURL = s.apiPath(configURL)
 	}
@@ -120,14 +182,16 @@ func NewUnauthenticated(c config.Config) (*Store, error) {
 	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
 		s.skipVerify = skipVerify
 	}
-
-	err := s.setOpsManagerClient(nil)
-
-	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	client, err := defaultClient(c)
+	if err != nil {
+		return nil, err
+	}
+	err = s.setOpsManagerClient(client)
+	if err != nil {
+		return nil, err
 	}
 
-	return s, err
+	return s, nil
 }
 
 func (s *Store) setAtlasClient(client *http.Client) error {
@@ -148,16 +212,6 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := make([]opsmngr.ClientOpt, 0)
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
-	}
-	if s.caCertificate != "" {
-		dat, err := ioutil.ReadFile(s.caCertificate)
-		if err != nil {
-			return err
-		}
-		opts = append(opts, opsmngr.OptionCAValidate(string(dat)))
-	}
-	if s.skipVerify == yes {
-		opts = append(opts, opsmngr.OptionSkipVerify())
 	}
 	c, err := opsmngr.New(client, opts...)
 	if err != nil {

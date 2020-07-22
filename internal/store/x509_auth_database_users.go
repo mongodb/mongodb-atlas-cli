@@ -71,7 +71,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 }
 
 // GetUserCertificates retrieves the current user managed certificates for a database user
-func (s *Store) GetUserCertificates(projectID string, username string) ([]atlas.UserCertificate, error) {
+func (s *Store) GetUserCertificates(projectID, username string) ([]atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)

@@ -11,34 +11,42 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package dbusers
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/json"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DBUsersListOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.DatabaseUserLister
+	username string
+	password string
+	roles    []string
+	store    store.DatabaseUserUpdater
 }
 
-func (opts *DBUsersListOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpts)
+func (opts *UpdateOpts) Run() error {
+	current := new(atlas.DatabaseUser)
+
+	opts.update(current)
+
+	result, err := opts.store.UpdateDatabaseUser(current)
 
 	if err != nil {
 		return err
@@ -47,24 +55,39 @@ func (opts *DBUsersListOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
-func DBUsersListBuilder() *cobra.Command {
-	opts := new(DBUsersListOpts)
+func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
+	out.GroupID = opts.ConfigProjectID()
+	out.Username = opts.username
+	if opts.password != "" {
+		out.Password = opts.password
+	}
+
+	out.Roles = convert.BuildAtlasRoles(opts.roles)
+}
+
+// mongocli atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId]
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListDBUsers,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:   "update <username>",
+		Short: description.UpdateDBUser,
+		Example: `
+  Update roles for a user
+  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
+		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.username = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
+	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

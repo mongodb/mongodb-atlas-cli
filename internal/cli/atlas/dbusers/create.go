@@ -31,7 +31,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DBUsersCreateOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	username string
 	password string
@@ -40,13 +40,13 @@ type DBUsersCreateOpts struct {
 	store    store.DatabaseUserCreator
 }
 
-func (opts *DBUsersCreateOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	user := opts.newDatabaseUser()
 	result, err := opts.store.CreateDatabaseUser(user)
 
@@ -57,7 +57,7 @@ func (opts *DBUsersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *DBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
 		DatabaseName: opts.authDB,
 		Roles:        convert.BuildAtlasRoles(opts.roles),
@@ -67,7 +67,7 @@ func (opts *DBUsersCreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	}
 }
 
-func (opts *DBUsersCreateOpts) Prompt() error {
+func (opts *CreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
@@ -78,8 +78,8 @@ func (opts *DBUsersCreateOpts) Prompt() error {
 }
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
-func DBUsersCreateBuilder() *cobra.Command {
-	opts := &DBUsersCreateOpts{}
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: description.CreateDBUser,

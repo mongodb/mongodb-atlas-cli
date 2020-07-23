@@ -98,3 +98,13 @@ func Credentials() error {
 	}
 	return nil
 }
+
+func EnsureFlagHasValidValue(value, flag string, validValues []string) error {
+	for _, v := range(validValues) {
+		if value == v {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("%v is an invalid value for %v. It must be one of %v", value, flag, strings.Join(validValues, ","))
+}

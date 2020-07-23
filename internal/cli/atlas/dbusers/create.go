@@ -16,9 +16,6 @@ package dbusers
 
 import (
 	"errors"
-	"fmt"
-	"strings"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -28,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -49,6 +47,10 @@ const (
 
 var validX509Flags = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
 
+func (opts *CreateOpts) isX509Set() bool {
+	return opts.x509Type == X509TypeCustomer || opts.x509Type == X509TypeManaged
+}
+
 func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
@@ -69,7 +71,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := "admin"
 
-	if opts.x509Type == X509TypeCustomer || opts.x509Type == X509TypeManaged {
+	if opts.isX509Set() {
 		authDB = "$external"
 	}
 
@@ -84,10 +86,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.x509Type == X509TypeManaged || opts.x509Type == X509TypeCustomer {
-		return nil
-	}
-	if opts.password != "" {
+	if opts.isX509Set() || opts.password != "" {
 		return nil
 	}
 	prompt := &survey.Password{
@@ -101,10 +100,8 @@ func (opts *CreateOpts) validate() error {
 		return errors.New("no role specified for the user")
 	}
 
-	if opts.x509Type != "" {
-		if opts.x509Type != X509TypeCustomer && opts.x509Type != X509TypeManaged && opts.x509Type != X509TypeNone {
-			return fmt.Errorf("%s type must be one of %v", flag.X509Type, strings.Join(validX509Flags, ","))
-		}
+	if err := validate.EnsureFlagHasValidValue(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
+		return err
 	}
 
 	if opts.x509Type != "" && opts.password != "" {

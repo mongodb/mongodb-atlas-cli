@@ -98,7 +98,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
 	cmd.Flags().StringSliceVar(&opts.whitelistIps, flag.WhitelistIP, []string{}, usage.WhitelistIps)
 
-	_ = cmd.MarkFlagRequired(flag.Username)
+	_ = cmd.MarkFlagRequired(flag.Email)
 	_ = cmd.MarkFlagRequired(flag.FirstName)
 	_ = cmd.MarkFlagRequired(flag.LastName)
 

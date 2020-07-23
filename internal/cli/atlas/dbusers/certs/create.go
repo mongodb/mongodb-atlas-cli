@@ -27,7 +27,7 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	store             store.UserCertificateCreator
+	store             store.DBUserCertificateCreator
 	username          string
 	monthsUntilExpiry int
 }
@@ -39,7 +39,7 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	result, err := opts.store.CreateUserCertificates(opts.ConfigProjectID(), opts.username, opts.monthsUntilExpiry)
+	result, err := opts.store.CreateDBUserCertificate(opts.ConfigProjectID(), opts.username, opts.monthsUntilExpiry)
 
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.ListDbUersCerts,
+		Short: description.CreateDBUserCerts,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

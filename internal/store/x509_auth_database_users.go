@@ -24,11 +24,11 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateDescriber,X509CertificateSaver,X509CertificateStore
 
-type X509CertificateDescriber interface {
+type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlas.CustomerX509, error)
 }
 
-type X509CertificateSaver interface {
+type X509CertificateConfSaver interface {
 	SaveX509Configuration(string, string) (*atlas.CustomerX509, error)
 }
 
@@ -36,42 +36,10 @@ type X509CertificateDisabler interface {
 	DisableX509Configuration(string) error
 }
 
-type UserCertificateDescriber interface {
-	GetUserCertificates(string, string) ([]atlas.UserCertificate, error)
-}
-
-type UserCertificateCreator interface {
-	CreateUserCertificates(string, string, int) (*atlas.UserCertificate, error)
-}
-
 type X509CertificateStore interface {
-	UserCertificateDescriber
-	UserCertificateCreator
-	X509CertificateDescriber
-	X509CertificateSaver
+	X509CertificateConfDescriber
+	X509CertificateConfSaver
 	X509CertificateDisabler
-}
-
-// CreateUserCertificates creates an atlas managed certificates for a database user
-func (s *Store) CreateUserCertificates(projectID string, username string, monthsUntilExpiry int) (*atlas.UserCertificate, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiry)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// GetUserCertificates retrieves the current user managed certificates for a database user
-func (s *Store) GetUserCertificates(projectID string, username string) ([]atlas.UserCertificate, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
 }
 
 // X509Configuration retrieves the current user managed certificates for a database user

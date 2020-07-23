@@ -28,7 +28,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store    store.UserCertificateDescriber
+	store    store.DBUserCertificateLister
 	username string
 }
 
@@ -39,7 +39,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	result, err := opts.store.GetUserCertificates(opts.ConfigProjectID(), opts.username)
+	result, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username)
 
 	if err != nil {
 		return err
@@ -52,9 +52,10 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "list <username>",
-		Short: description.ListDbUersCerts,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list <username>",
+		Aliases: []string{"ls"},
+		Short:   description.ListDBUserCerts,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

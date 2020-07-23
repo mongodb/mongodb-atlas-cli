@@ -21,34 +21,27 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDBUserUpdate_Run(t *testing.T) {
+func TestDBUserList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserUpdater(ctrl)
+	mockStore := mocks.NewMockDatabaseUserLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &atlas.DatabaseUser{}
+	var expected []mongodbatlas.DatabaseUser
 
-	updateOpts := &DBUsersUpdateOpts{
-		username: "test4",
-		password: "US",
-		roles:    []string{"admin@admin"},
-		store:    mockStore,
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
-
-	dbUser := atlas.DatabaseUser{}
-	updateOpts.update(&dbUser)
 
 	mockStore.
 		EXPECT().
-		UpdateDatabaseUser(&dbUser).
+		DatabaseUsers(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	err := updateOpts.Run()
-
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

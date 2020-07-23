@@ -95,7 +95,16 @@ func skipVerifyTransport() http.RoundTripper {
 	}
 }
 
-func authenticatedClient(c config.Config) (*http.Client, error) {
+type Config interface {
+	Service() string
+	PublicAPIKey() string
+	PrivateAPIKey() string
+	OpsManagerURL() string
+	OpsManagerCACertificate() string
+	OpsManagerSkipVerify() string
+}
+
+func authenticatedClient(c Config) (*http.Client, error) {
 	t := &digest.Transport{
 		Username: c.PublicAPIKey(),
 		Password: c.PrivateAPIKey(),
@@ -115,7 +124,7 @@ func authenticatedClient(c config.Config) (*http.Client, error) {
 	return t.Client()
 }
 
-func defaultClient(c config.Config) (*http.Client, error) {
+func defaultClient(c Config) (*http.Client, error) {
 	client := http.DefaultClient
 	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
 		dat, err := ioutil.ReadFile(caCertificate)
@@ -133,7 +142,7 @@ func defaultClient(c config.Config) (*http.Client, error) {
 }
 
 // New get the appropriate client for the profile/service selected
-func New(c config.Config) (*Store, error) {
+func New(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 
@@ -163,7 +172,7 @@ func New(c config.Config) (*Store, error) {
 	return s, err
 }
 
-func NewUnauthenticated(c config.Config) (*Store, error) {
+func NewUnauthenticated(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 

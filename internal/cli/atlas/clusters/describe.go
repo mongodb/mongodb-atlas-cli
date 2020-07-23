@@ -37,13 +37,17 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
+var describeTemplate = `ID	NAME	Mongo DB Version	STATE
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+`
+
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas cluster(s) describe <name> --projectId projectId

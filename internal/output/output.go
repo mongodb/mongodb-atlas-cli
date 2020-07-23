@@ -16,6 +16,7 @@ package output
 
 import (
 	"os"
+	"text/tabwriter"
 	"text/template"
 
 	"github.com/mongodb/mongocli/internal/json"
@@ -38,7 +39,12 @@ func Print(c Config, t string, v interface{}) error {
 		if err != nil {
 			return err
 		}
-		return tmpl.Execute(os.Stdout, v)
+		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
+
+		if err := tmpl.Execute(w, v); err != nil {
+			return err
+		}
+		return w.Flush()
 	}
 	return nil
 }

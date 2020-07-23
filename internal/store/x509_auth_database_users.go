@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateDescriber,X509CertificateSaver,X509CertificateStore
+//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateStore
 
 type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlas.CustomerX509, error)

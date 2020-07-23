@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -47,12 +47,12 @@ func (opts *SaveOpts) Run() error {
 
 	caFileContents := string(fileBytes)
 
-	result, err := opts.store.SaveX509Configuration(opts.ConfigProjectID(), caFileContents)
+	r, err := opts.store.SaveX509Configuration(opts.ConfigProjectID(), caFileContents)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem

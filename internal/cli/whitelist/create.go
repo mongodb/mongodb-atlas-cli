@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -49,13 +49,13 @@ func (opts *CreateOpts) initStore() error {
 
 func (opts *CreateOpts) Run() error {
 	entry := opts.newWhitelist()
-	result, err := opts.store.CreateProjectIPWhitelist(entry)
+	r, err := opts.store.CreateProjectIPWhitelist(entry)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {

@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -39,19 +39,19 @@ func (opts *ListOpts) init() error {
 
 func (opts *ListOpts) Run() error {
 	if opts.ConfigProjectID() == "" {
-		result, err := opts.store.ListAllProjectClusters()
+		r, err := opts.store.ListAllProjectClusters()
 		if err != nil {
 			return err
 		}
-		return json.PrettyPrint(result)
+		return output.Print(config.Default(), "", r)
 	}
 
 	clusterConfigs, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
-	result := convert.FromAutomationConfig(clusterConfigs)
-	return json.PrettyPrint(result)
+	r := convert.FromAutomationConfig(clusterConfigs)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli cloud-manager cluster(s) list --projectId projectId

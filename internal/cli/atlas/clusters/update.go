@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -54,13 +54,12 @@ func (opts *UpdateOpts) Run() error {
 		opts.patchOpts(cluster)
 	}
 
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
-
+	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {

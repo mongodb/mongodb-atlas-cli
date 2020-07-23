@@ -17,7 +17,7 @@ package organizations
 import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
 )
@@ -35,12 +35,11 @@ func (opts *DescribeOpts) init() error {
 
 func (opts *DescribeOpts) Run() error {
 	org, err := opts.store.Organization(opts.id)
-
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(org)
+	return output.Print(config.Default(), "", org)
 }
 
 // mongocli iam organizations(s) describe <ID>

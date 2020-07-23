@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -40,13 +40,13 @@ func (opts *MetricsDatabasesListsOpts) initStore() error {
 
 func (opts *MetricsDatabasesListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	result, err := opts.store.HostDatabases(opts.ConfigProjectID(), opts.hostID, listOpts)
+	r, err := opts.store.HostDatabases(opts.ConfigProjectID(), opts.hostID, listOpts)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli om metric(s) process(es) disks lists <ID>

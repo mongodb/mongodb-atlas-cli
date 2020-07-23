@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -56,13 +56,14 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	result, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser())
+	user := opts.newDatabaseUser()
+	r, err := opts.store.CreateDatabaseUser(user)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {

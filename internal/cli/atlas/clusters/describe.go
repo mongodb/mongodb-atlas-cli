@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -38,13 +38,12 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
-
+	r, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas cluster(s) describe <name> --projectId projectId

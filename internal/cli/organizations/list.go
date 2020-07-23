@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -38,13 +38,13 @@ func (opts *ListOpts) init() error {
 
 func (opts *ListOpts) Run() error {
 	listOptions := opts.NewListOptions()
-	orgs, err := opts.store.Organizations(listOptions)
+	r, err := opts.store.Organizations(listOptions)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(orgs)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli iam organizations(s) list

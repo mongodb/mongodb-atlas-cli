@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateDescriber,X509CertificateSaver,X509CertificateStore
+//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongocli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
 
 type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlas.CustomerX509, error)
@@ -32,14 +32,14 @@ type X509CertificateConfSaver interface {
 	SaveX509Configuration(string, string) (*atlas.CustomerX509, error)
 }
 
-type X509CertificateDisabler interface {
+type X509CertificateConfDisabler interface {
 	DisableX509Configuration(string) error
 }
 
 type X509CertificateStore interface {
 	X509CertificateConfDescriber
 	X509CertificateConfSaver
-	X509CertificateDisabler
+	X509CertificateConfDisabler
 }
 
 // X509Configuration retrieves the current user managed certificates for a database user

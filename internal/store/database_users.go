@@ -114,7 +114,7 @@ func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCert
 	}
 }
 
-// DBUserCertificates creates a new Atlas managed certificates for a database user
+// CreateDBUserCertificate creates a new Atlas managed certificates for a database user
 func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService:

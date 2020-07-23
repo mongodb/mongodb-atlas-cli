@@ -18,12 +18,11 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -51,7 +50,7 @@ func (opts *DescribeOpts) Run() error {
 	clusterConfigs := convert.FromAutomationConfig(result)
 	for _, rs := range clusterConfigs {
 		if rs.Name == opts.name {
-			return json.PrettyPrint(rs)
+			return output.Print(config.Default(), "", rs)
 		}
 	}
 	return fmt.Errorf("replicaset %s not found", opts.name)

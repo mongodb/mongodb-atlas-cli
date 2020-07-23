@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -41,13 +41,12 @@ func (opts *atlasMetricsDisksListsOpts) initStore() error {
 
 func (opts *atlasMetricsDisksListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	result, err := opts.store.ProcessDisks(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
-
+	r, err := opts.store.ProcessDisks(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas metric(s) process(es) disks lists <hostname:port>

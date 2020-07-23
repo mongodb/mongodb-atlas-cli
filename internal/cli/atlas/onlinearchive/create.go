@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -51,12 +51,12 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+	r, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {

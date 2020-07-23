@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -70,13 +70,12 @@ func (opts *DataLakeUpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateR
 func (opts *DataLakeUpdateOpts) Run() error {
 	updateRequest := opts.newUpdateRequest()
 
-	result, err := opts.store.UpdateDataLake(opts.ConfigProjectID(), opts.name, updateRequest)
-
+	r, err := opts.store.UpdateDataLake(opts.ConfigProjectID(), opts.name, updateRequest)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region]

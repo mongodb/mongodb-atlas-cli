@@ -16,6 +16,7 @@ package dbusers
 
 import (
 	"errors"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -104,7 +105,7 @@ func (opts *CreateOpts) validate() error {
 		return err
 	}
 
-	if opts.x509Type != "" && opts.password != "" {
+	if opts.isX509Set() && opts.password != "" {
 		return errors.New("cannot supply both x509 auth and password")
 	}
 

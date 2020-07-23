@@ -18,6 +18,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/mongodb/mongocli/internal/search"
 	"net/url"
 	"strings"
 
@@ -100,10 +101,8 @@ func Credentials() error {
 }
 
 func EnsureFlagHasValidValue(value, flag string, validValues []string) error {
-	for _, v := range validValues {
-		if value == v {
-			return nil
-		}
+	if search.StringInSlice(validValues, value) {
+		return nil
 	}
 
 	return fmt.Errorf("%v is an invalid value for %v. It must be one of: %v", value, flag, strings.Join(validValues, ","))

@@ -33,7 +33,7 @@ import (
 
 func TestDBUserCerts(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	username := fmt.Sprintf("user-%v", r.Uint32())
+	username := fmt.Sprintf("user%v", r.Uint32())
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -83,7 +83,7 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, certsEntity, "list", "--username", username)
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, certsEntity, "list", username)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

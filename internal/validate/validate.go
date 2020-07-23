@@ -101,7 +101,7 @@ func Credentials() error {
 	return nil
 }
 
-func EnsureFlagHasValidValue(value, flag string, validValues []string) error {
+func FlagInSlice(value, flag string, validValues []string) error {
 	if search.StringInSlice(validValues, value) {
 		return nil
 	}

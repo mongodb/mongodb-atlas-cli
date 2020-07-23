@@ -101,7 +101,7 @@ func (opts *CreateOpts) validate() error {
 		return errors.New("no role specified for the user")
 	}
 
-	if err := validate.EnsureFlagHasValidValue(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
+	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
 		return err
 	}
 

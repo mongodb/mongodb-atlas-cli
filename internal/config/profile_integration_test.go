@@ -17,7 +17,6 @@
 package config
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -29,33 +28,31 @@ const (
 	newProfileName = "newProfileName"
 )
 
-func createProfile(profileContents string) (*profile, error) {
+func testProfile(profileContents string) *profile {
 	fs := afero.NewMemMapFs()
-
 	testConfigDir := "/test"
-	filename := fmt.Sprintf("%v/%v.toml", testConfigDir, ToolName)
 
-	p := profile{
+	p := &profile{
 		name:      DefaultProfile,
 		configDir: testConfigDir,
 		fs:        fs,
 	}
 
-	err := afero.WriteFile(fs, filename, []byte(profileContents), 0600)
-	return &p, err
+	_ = afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600)
+	return p
 }
 
-func createProfileWithOneNonDefaultUser() (*profile, error) {
+func profileWithOneNonDefaultUser() *profile {
 	const contents = `
 [atlas]
   base_url = "http://base_url.com/"
   ops_manager_skip_verify = "false"
   org_id = "5cac6a2179358edabd12b572"
 `
-	return createProfile(contents)
+	return testProfile(contents)
 }
 
-func createProfileWithOneDefaultUserOneNonDefault() (*profile, error) {
+func profileWithOneDefaultUserOneNonDefault() *profile {
 	const contents = `
 [default]
   base_url = "http://base_url.com/"
@@ -68,10 +65,10 @@ func createProfileWithOneDefaultUserOneNonDefault() (*profile, error) {
   ops_manager_skip_verify = "false"
   org_id = "5cac6a2179358edabd12b572"
 `
-	return createProfile(contents)
+	return testProfile(contents)
 }
 
-func createProfileWithFullDescription() (*profile, error) {
+func profileWithFullDescription() *profile {
 	const contents = `
 [default]
   base_url = "http://base_url.com/"
@@ -84,24 +81,15 @@ func createProfileWithFullDescription() (*profile, error) {
   profile_id = "5cac6a2179358edabd12b572"
   service = "cloud"
 `
-	return createProfile(contents)
+	return testProfile(contents)
 }
 
 func TestProfile_Get_FullProfile(t *testing.T) {
-	profile, err := createProfileWithFullDescription()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	profile.SetName(DefaultProfile)
-
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
+	profile := profileWithFullDescription()
+	a := assert.New(t)
+	a.NoError(profile.Load(false))
 
 	desc := profile.Get()
-
-	a := assert.New(t)
 	a.Equal("default", profile.Name())
 	a.Len(desc, 9)
 	a.Equal("cloud", profile.Service())
@@ -113,37 +101,24 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 }
 
 func TestProfile_Get_Default(t *testing.T) {
-	profile, err := createProfileWithOneDefaultUserOneNonDefault()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
-
-	desc := profile.Get()
-
+	profile := profileWithOneDefaultUserOneNonDefault()
 	a := assert.New(t)
+	a.NoError(profile.Load(false))
+	desc := profile.Get()
 	a.Equal(DefaultProfile, profile.Name())
 	a.Len(desc, 4)
 }
 
 func TestProfile_Get_NonDefault(t *testing.T) {
-	profile, err := createProfileWithOneNonDefaultUser()
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	profile := profileWithOneNonDefaultUser()
 	profile.SetName(atlasProfile)
 
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
+	a := assert.New(t)
+
+	a.NoError(profile.Load(false))
 
 	desc := profile.Get()
 
-	a := assert.New(t)
 	a.Equal(atlasProfile, profile.Name(), "expected atlas profile to be described")
 	a.Len(desc, 3)
 	a.Equal("5cac6a2179358edabd12b572", profile.OrgID(), "project id should match")
@@ -151,94 +126,66 @@ func TestProfile_Get_NonDefault(t *testing.T) {
 }
 
 func TestProfile_Delete_NonDefault(t *testing.T) {
-	profile, err := createProfileWithOneDefaultUserOneNonDefault()
-	if err != nil {
-		t.Fatal(err)
-	}
+	profile := profileWithOneDefaultUserOneNonDefault()
 
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
+	a := assert.New(t)
+
+	a.NoError(profile.Load(false))
 
 	profile.SetName(atlasProfile)
 
-	if err := profile.Delete(); err != nil {
-		t.Fatal(err)
+	if a.NoError(profile.Delete()) {
+		a.NoError(profile.Load(false))
+		desc := profile.Get()
+		a.Len(desc, 0, "profile should have no properties")
 	}
-
-	desc := profile.Get()
-	a := assert.New(t)
-	a.Len(desc, 0, "profile should have no properties")
 }
 
 func TestProfile_Rename(t *testing.T) {
-	profile, err := createProfileWithOneDefaultUserOneNonDefault()
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
-
-	defaultDescription := profile.Get()
-
-	if err := profile.Rename(newProfileName); err != nil {
-		t.Fatal(err)
-	}
-
-	profile.SetName(newProfileName)
-	descriptionAfterRename := profile.Get()
-
-	// after renaming, one profile should exist
 	a := assert.New(t)
-	a.False(Exists(DefaultProfile), "default profile should not exist after rename")
-	a.True(Exists(newProfileName), "new profile should exist after rename")
-	a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
+	a.NoError(profile.Load(false))
+	defaultDescription := profile.Get()
+	if a.NoError(profile.Rename(newProfileName)) {
+		a.NoError(profile.Load(false))
+		profile.SetName(DefaultProfile)
+		a.Empty(profile.Get())
+		profile.SetName(newProfileName)
+		descriptionAfterRename := profile.Get()
+		// after renaming, one profile should exist
+		a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
+	}
 }
 
 func TestProfile_Rename_OverwriteExisting(t *testing.T) {
-	profile, err := createProfileWithOneDefaultUserOneNonDefault()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
-
+	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
+	a := assert.New(t)
+	a.NoError(profile.Load(false))
 	defaultDescription := profile.Get()
 
-	if err := profile.Rename(atlasProfile); err != nil {
-		t.Fatal(err)
+	if a.NoError(profile.Rename(atlasProfile)) {
+		a.NoError(profile.Load(false))
+		profile.SetName(atlasProfile)
+
+		descriptionAfterRename := profile.Get()
+
+		// after renaming, one profile should exist
+		a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 	}
-
-	profile.SetName(atlasProfile)
-
-	descriptionAfterRename := profile.Get()
-
-	// after renaming, one profile should exist
-	a := assert.New(t)
-	a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 }
 
 func TestProfile_Set(t *testing.T) {
-	profile, err := createProfileWithOneDefaultUserOneNonDefault()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := profile.Load(false); err != nil {
-		t.Fatal(err)
-	}
+	profile := profileWithOneDefaultUserOneNonDefault()
+	a := assert.New(t)
+	a.NoError(profile.Load(false))
 
 	profile.SetName(DefaultProfile)
 
 	profile.Set(projectID, "newProjectId")
 
-	assert.Equal(t, "newProjectId", profile.ProjectID(), "project id should be set to new value")
+	a.Equal("newProjectId", profile.ProjectID(), "project id should be set to new value")
 }

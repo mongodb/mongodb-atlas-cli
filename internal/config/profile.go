@@ -42,6 +42,7 @@ func Properties() []string {
 		service,
 		publicAPIKey,
 		privateAPIKey,
+		output,
 		opsManagerURL,
 		baseURL,
 		opsManagerCACertificate,
@@ -101,7 +102,7 @@ func List() []string {
 
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
-	return len(viper.GetStringMap(name)) > 0
+	return search.StringInSlice(List(), name)
 }
 
 func newProfile() *profile {
@@ -129,7 +130,9 @@ func (p *profile) SetName(name string) {
 
 func Set(name, value string) { p.Set(name, value) }
 func (p *profile) Set(name, value string) {
-	viper.Set(fmt.Sprintf("%s.%s", p.name, name), value)
+	settings := viper.GetStringMapString(p.Name())
+	settings[name] = value
+	viper.Set(p.name, settings)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -137,7 +140,8 @@ func (p *profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
-	return viper.GetString(fmt.Sprintf("%s.%s", p.name, name))
+	settings := viper.GetStringMapString(p.Name())
+	return settings[name]
 }
 
 // Service get configured service
@@ -146,9 +150,9 @@ func (p *profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
-	serviceKey := fmt.Sprintf("%s.%s", p.name, service)
-	if viper.IsSet(serviceKey) {
-		return viper.GetString(serviceKey)
+	settings := viper.GetStringMapString(p.Name())
+	if settings[service] != "" {
+		return settings[service]
 	}
 	return CloudService
 }
@@ -231,6 +235,18 @@ func (p *profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
+// Output get configured output format
+func Output() string { return p.Output() }
+func (p *profile) Output() string {
+	return p.GetString(output)
+}
+
+// SetOutput sets the global output format
+func SetOutput(v string) { p.SetOutput(v) }
+func (p *profile) SetOutput(v string) {
+	p.Set(output, v)
+}
+
 // IsAccessSet return true if API keys have been set up.
 // For Ops Manager we also check for the base URL.
 func IsAccessSet() bool { return p.IsAccessSet() }
@@ -293,7 +309,7 @@ func (p *profile) Delete() error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
+	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -303,8 +319,11 @@ func (p *profile) Delete() error {
 		return err
 	}
 
-	// Force reload, so that viper has the new configuration
-	return p.Load(true)
+	return nil
+}
+
+func (p *profile) Filename() string {
+	return fmt.Sprintf("%s/%s.toml", p.configDir, ToolName)
 }
 
 // Rename replaces the profile to a new profile name, overwriting any profile that existed before.
@@ -328,7 +347,7 @@ func (p *profile) Rename(newProfileName string) error {
 
 	s := t.String()
 
-	f, err := p.fs.OpenFile(fmt.Sprintf("%s/%s.toml", p.configDir, ToolName), fileFlags, configPerm)
+	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
 	if err != nil {
 		return err
 	}
@@ -338,8 +357,7 @@ func (p *profile) Rename(newProfileName string) error {
 		return err
 	}
 
-	// Force reload, so that viper has the new configuration
-	return p.Load(true)
+	return nil
 }
 
 // Load loads the configuration from disk

@@ -18,9 +18,10 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,12 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return config.Delete()
+	config.SetName(opts.Entry)
+	if err := config.Delete(); err != nil {
+		return err
+	}
+	fmt.Printf(opts.SuccessMessage(), opts.Entry)
+	return nil
 }
 
 func DeleteBuilder() *cobra.Command {
@@ -43,10 +49,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
-
-			config.SetName(opts.Entry)
-			profile := config.Get()
-			if len(profile) == 0 {
+			if !config.Exists(opts.Entry) {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
 			}
 
@@ -56,6 +59,8 @@ func DeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	return cmd
 }

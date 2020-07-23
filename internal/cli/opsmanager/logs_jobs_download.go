@@ -69,7 +69,7 @@ func LogsJobsDownloadOptsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Out, flag.Out, flag.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

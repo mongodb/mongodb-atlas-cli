@@ -54,6 +54,7 @@ func TestConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		const expected = `org_id = 5e429e7706822c6eac4d5971
+output = json
 public_api_key = redacted
 service = cloud
 `
@@ -70,6 +71,19 @@ service = cloud
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		const expected = "The profile e2e was renamed to renamed.\n"
+		if string(resp) != expected {
+			t.Errorf("expected %s, got %s\n", expected, string(resp))
+		}
+	})
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		const expected = "Profile 'renamed' deleted\n"
 		if string(resp) != expected {
 			t.Errorf("expected %s, got %s\n", expected, string(resp))
 		}

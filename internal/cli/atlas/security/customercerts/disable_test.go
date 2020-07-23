@@ -25,7 +25,7 @@ import (
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
+	mockStore := mocks.NewMockX509CertificateConfDisabler(ctrl)
 	defer ctrl.Finish()
 
 	saveOpts := &DisableOpts{

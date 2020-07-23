@@ -29,7 +29,7 @@ import (
 
 type DisableOpts struct {
 	cli.GlobalOpts
-	store   store.X509CertificateDisabler
+	store   store.X509CertificateConfDisabler
 	confirm bool
 }
 

@@ -46,7 +46,7 @@ const (
 	DiagnoseOut                     = "Optional output filename, if none given will use diagnose-archive.tar.gz."
 	LogStart                        = "Beginning of the period for which to retrieve logs."
 	LogEnd                          = "End of the period for which to retrieve logs."
-	X509Type                          = "X.509 method by which the provided username is authenticated."
+	X509Type                        = "X.509 method by which the provided username is authenticated. Valid values are NONE, MANAGED, or CUSTOMER."
 	ArchiveLimit                    = "Max number of entries for the diagnose archive."
 	ArchiveMinutes                  = "Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time. "
 	MeasurementStart                = "Beginning of the period for which to retrieve measurements."
@@ -119,7 +119,9 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	TargetClusterID                 = `Unique identifier of the target cluster.
+	FormatOut                       = `Output format. 
+Valid values: json`
+	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.
 For use only with automated restore jobs.`

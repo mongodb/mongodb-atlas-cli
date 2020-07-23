@@ -114,7 +114,7 @@ func LogsDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVar(&opts.out, flag.Out, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.LogStart)
 	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.LogEnd)

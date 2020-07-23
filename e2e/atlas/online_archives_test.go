@@ -31,7 +31,7 @@ func TestOnlineArchives(t *testing.T) {
 
 	clusterName, err := deployCluster()
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("failed to deploy a cluster: %v", err)
 	}
 
 	defer func() {

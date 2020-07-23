@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongocli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister
+//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongocli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
 
 type DatabaseUserLister interface {
 	DatabaseUsers(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
@@ -46,6 +46,10 @@ type DatabaseUserDescriber interface {
 
 type DBUserCertificateLister interface {
 	DBUserCertificates(string, string) ([]atlas.UserCertificate, error)
+}
+
+type DBUserCertificateCreator interface {
+	CreateDBUserCertificate(string, string, int) (*atlas.UserCertificate, error)
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers
@@ -99,11 +103,22 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 	}
 }
 
-// DBUserCertificates retrieves the current user managed certificates for a database user
+// DBUserCertificates retrieves the current Atlas managed certificates for a database user
 func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateDBUserCertificate creates a new Atlas managed certificates for a database user
+func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlas.UserCertificate, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

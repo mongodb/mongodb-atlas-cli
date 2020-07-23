@@ -16,6 +16,8 @@ package dbusers
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -39,6 +41,14 @@ type CreateOpts struct {
 	store    store.DatabaseUserCreator
 }
 
+const (
+	X509TypeManaged  = "MANAGED"
+	X509TypeCustomer = "CUSTOMER"
+	X509TypeNone     = "NONE"
+)
+
+var validX509Flags = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
+
 func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
@@ -46,12 +56,7 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	user, err := opts.newDatabaseUser()
-	if err != nil {
-		return err
-	}
-
-	result, err := opts.store.CreateDatabaseUser(user)
+	result, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser())
 
 	if err != nil {
 		return err
@@ -60,34 +65,49 @@ func (opts *CreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *CreateOpts) newDatabaseUser() (*atlas.DatabaseUser, error) {
+func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := "admin"
 
-	if opts.x509Type != "" && opts.password != "" {
-		return nil, cli.ErrX509AndPassword
-	}
-
-	if opts.x509Type != "" {
+	if opts.x509Type == X509TypeCustomer || opts.x509Type == X509TypeManaged {
 		authDB = "$external"
 	}
 
 	return &atlas.DatabaseUser{
-		Roles:    convert.BuildAtlasRoles(opts.roles, authDB),
-		GroupID:  opts.ConfigProjectID(),
-		Username: opts.username,
-		Password: opts.password,
-		X509Type: opts.x509Type,
-	}, nil
+		Roles:        convert.BuildAtlasRoles(opts.roles),
+		GroupID:      opts.ConfigProjectID(),
+		Username:     opts.username,
+		Password:     opts.password,
+		X509Type:     opts.x509Type,
+		DatabaseName: authDB,
+	}
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.password != "" {
+	if opts.x509Type != X509TypeNone || opts.password != "" {
 		return nil
 	}
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
 	return survey.AskOne(prompt, &opts.password)
+}
+
+func (opts *CreateOpts) validate() error {
+	if len(opts.roles) == 0 {
+		return errors.New("no role specified for the user")
+	}
+
+	if opts.x509Type != "" {
+		if opts.x509Type != X509TypeCustomer && opts.x509Type != X509TypeManaged && opts.x509Type != X509TypeNone {
+			return fmt.Errorf("%s type must be one of %v", flag.X509Type, strings.Join(validX509Flags, ","))
+		}
+	}
+
+	if opts.x509Type != "" && opts.password != "" {
+		return errors.New("cannot supply both x509 auth and password")
+	}
+
+	return nil
 }
 
 // mongocli atlas dbuser(s) create
@@ -115,10 +135,12 @@ func CreateBuilder() *cobra.Command {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
-			if len(args) == 0 && len(opts.roles) == 0 {
-				return errors.New("no role specified for the user")
-			}
 			opts.roles = append(opts.roles, args...)
+
+			if err := opts.validate(); err != nil {
+				return err
+			}
+
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

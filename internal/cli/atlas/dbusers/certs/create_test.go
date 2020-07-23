@@ -26,13 +26,13 @@ import (
 
 func TestCreateBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
+	mockStore := mocks.NewMockDBUserCertificateCreator(ctrl)
 
 	defer ctrl.Finish()
 
 	var expected = &mongodbatlas.UserCertificate{}
 
-	username := "user"
+	username := "to_create"
 	monthsUntilExpiry := 12
 
 	createOpts := &CreateOpts{
@@ -43,7 +43,7 @@ func TestCreateBuilder(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateUserCertificates(createOpts.ProjectID, username, monthsUntilExpiry).
+		CreateDBUserCertificate(createOpts.ProjectID, username, monthsUntilExpiry).
 		Return(expected, nil).
 		Times(1)
 

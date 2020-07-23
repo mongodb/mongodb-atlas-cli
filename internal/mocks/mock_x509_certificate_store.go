@@ -124,6 +124,21 @@ func (mr *MockX509CertificateStoreMockRecorder) DisableX509Configuration(arg0 in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableX509Configuration", reflect.TypeOf((*MockX509CertificateStore)(nil).DisableX509Configuration), arg0)
 }
 
+// GetUserCertificates mocks base method
+func (m *MockX509CertificateStore) GetUserCertificates(arg0, arg1 string) ([]mongodbatlas.UserCertificate, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserCertificates", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.UserCertificate)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserCertificates indicates an expected call of GetUserCertificates
+func (mr *MockX509CertificateStoreMockRecorder) GetUserCertificates(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCertificates", reflect.TypeOf((*MockX509CertificateStore)(nil).GetUserCertificates), arg0, arg1)
+}
+
 // SaveX509Configuration mocks base method
 func (m *MockX509CertificateStore) SaveX509Configuration(arg0, arg1 string) (*mongodbatlas.CustomerX509, error) {
 	m.ctrl.T.Helper()

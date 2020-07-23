@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package dbusers
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DBUsersUpdateOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
 	username string
 	password string
@@ -35,13 +35,13 @@ type DBUsersUpdateOpts struct {
 	store    store.DatabaseUserUpdater
 }
 
-func (opts *DBUsersUpdateOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersUpdateOpts) Run() error {
+func (opts *UpdateOpts) Run() error {
 	current := new(atlas.DatabaseUser)
 
 	opts.update(current)
@@ -55,7 +55,7 @@ func (opts *DBUsersUpdateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *DBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
+func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
 	out.GroupID = opts.ConfigProjectID()
 	out.Username = opts.username
 	if opts.password != "" {
@@ -66,8 +66,8 @@ func (opts *DBUsersUpdateOpts) update(out *atlas.DatabaseUser) {
 }
 
 // mongocli atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId]
-func DBUsersUpdateBuilder() *cobra.Command {
-	opts := &DBUsersUpdateOpts{}
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <username>",
 		Short: description.UpdateDBUser,

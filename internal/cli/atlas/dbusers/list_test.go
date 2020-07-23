@@ -12,25 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+// +build unit
+
+package dbusers
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func DBUsersBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "dbusers",
-		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
-		Short:   description.DBUsers,
-		Long:    description.DBUsersLong,
+func TestDBUserList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockDatabaseUserLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.DatabaseUser
+
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(DBUsersListBuilder())
-	cmd.AddCommand(DBUsersCreateBuilder())
-	cmd.AddCommand(DBUsersDeleteBuilder())
-	cmd.AddCommand(DBUsersUpdateBuilder())
+	mockStore.
+		EXPECT().
+		DatabaseUsers(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

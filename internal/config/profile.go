@@ -27,9 +27,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config Setter,Saver,SetSaver,Getter,Config
+//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
-type profile struct {
+type Setter interface {
+	Set(string, string)
+}
+
+type Saver interface {
+	Save() error
+}
+
+type SetSaver interface {
+	Setter
+	Saver
+}
+
+type Profile struct {
 	name      string
 	configDir string
 	fs        afero.Fs
@@ -52,36 +65,7 @@ func Properties() []string {
 
 var p = newProfile()
 
-type Setter interface {
-	Set(string, string)
-}
-
-type Saver interface {
-	Save() error
-}
-
-type SetSaver interface {
-	Setter
-	Saver
-}
-
-type Getter interface {
-	GetString(string) string
-}
-
-type Config interface {
-	Setter
-	Getter
-	Saver
-	Service() string
-	PublicAPIKey() string
-	PrivateAPIKey() string
-	OpsManagerURL() string
-	OpsManagerCACertificate() string
-	OpsManagerSkipVerify() string
-}
-
-func Default() Config {
+func Default() *Profile {
 	return p
 }
 
@@ -105,12 +89,12 @@ func Exists(name string) bool {
 	return search.StringInSlice(List(), name)
 }
 
-func newProfile() *profile {
+func newProfile() *Profile {
 	configDir, err := configHome()
 	if err != nil {
 		log.Fatal(err)
 	}
-	np := &profile{
+	np := &Profile{
 		name:      DefaultProfile,
 		configDir: configDir,
 		fs:        afero.NewOsFs(),
@@ -119,24 +103,24 @@ func newProfile() *profile {
 }
 
 func Name() string { return p.Name() }
-func (p *profile) Name() string {
+func (p *Profile) Name() string {
 	return p.name
 }
 
 func SetName(name string) { p.SetName(name) }
-func (p *profile) SetName(name string) {
+func (p *Profile) SetName(name string) {
 	p.name = strings.ToLower(name)
 }
 
 func Set(name, value string) { p.Set(name, value) }
-func (p *profile) Set(name, value string) {
+func (p *Profile) Set(name, value string) {
 	settings := viper.GetStringMapString(p.Name())
 	settings[name] = value
 	viper.Set(p.name, settings)
 }
 
 func GetString(name string) string { return p.GetString(name) }
-func (p *profile) GetString(name string) string {
+func (p *Profile) GetString(name string) string {
 	if viper.IsSet(name) && viper.GetString(name) != "" {
 		return viper.GetString(name)
 	}
@@ -146,7 +130,7 @@ func (p *profile) GetString(name string) string {
 
 // Service get configured service
 func Service() string { return p.Service() }
-func (p *profile) Service() string {
+func (p *Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
@@ -159,98 +143,98 @@ func (p *profile) Service() string {
 
 // SetService set configured service
 func SetService(v string) { p.SetService(v) }
-func (p *profile) SetService(v string) {
+func (p *Profile) SetService(v string) {
 	p.Set(service, v)
 }
 
 // PublicAPIKey get configured public api key
 func PublicAPIKey() string { return p.PublicAPIKey() }
-func (p *profile) PublicAPIKey() string {
+func (p *Profile) PublicAPIKey() string {
 	return p.GetString(publicAPIKey)
 }
 
 // SetPublicAPIKey set configured publicAPIKey
 func SetPublicAPIKey(v string) { p.SetPublicAPIKey(v) }
-func (p *profile) SetPublicAPIKey(v string) {
+func (p *Profile) SetPublicAPIKey(v string) {
 	p.Set(publicAPIKey, v)
 }
 
 // PrivateAPIKey get configured private api key
 func PrivateAPIKey() string { return p.PrivateAPIKey() }
-func (p *profile) PrivateAPIKey() string {
+func (p *Profile) PrivateAPIKey() string {
 	return p.GetString(privateAPIKey)
 }
 
 // SetPrivateAPIKey set configured private api key
 func SetPrivateAPIKey(v string) { p.SetPrivateAPIKey(v) }
-func (p *profile) SetPrivateAPIKey(v string) {
+func (p *Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
 }
 
 // OpsManagerURL get configured ops manager base url
 func OpsManagerURL() string { return p.OpsManagerURL() }
-func (p *profile) OpsManagerURL() string {
+func (p *Profile) OpsManagerURL() string {
 	return p.GetString(opsManagerURL)
 }
 
 // SetOpsManagerURL set configured ops manager base url
 func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
-func (p *profile) SetOpsManagerURL(v string) {
+func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
 }
 
 // OpsManagerCACertificate get configured ops manager CA certificate location
 func OpsManagerCACertificate() string { return p.OpsManagerCACertificate() }
-func (p *profile) OpsManagerCACertificate() string {
+func (p *Profile) OpsManagerCACertificate() string {
 	return p.GetString(opsManagerCACertificate)
 }
 
 // SkipVerify get configured ops manager CA certificate location
 func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
-func (p *profile) OpsManagerSkipVerify() string {
+func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
 }
 
 // ProjectID get configured project ID
 func ProjectID() string { return p.ProjectID() }
-func (p *profile) ProjectID() string {
+func (p *Profile) ProjectID() string {
 	return p.GetString(projectID)
 }
 
 // SetProjectID sets the global project ID
 func SetProjectID(v string) { p.SetProjectID(v) }
-func (p *profile) SetProjectID(v string) {
+func (p *Profile) SetProjectID(v string) {
 	p.Set(projectID, v)
 }
 
 // OrgID get configured organization ID
 func OrgID() string { return p.OrgID() }
-func (p *profile) OrgID() string {
+func (p *Profile) OrgID() string {
 	return p.GetString(orgID)
 }
 
 // SetOrgID sets the global organization ID
 func SetOrgID(v string) { p.SetOrgID(v) }
-func (p *profile) SetOrgID(v string) {
+func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
 // Output get configured output format
 func Output() string { return p.Output() }
-func (p *profile) Output() string {
+func (p *Profile) Output() string {
 	return p.GetString(output)
 }
 
 // SetOutput sets the global output format
 func SetOutput(v string) { p.SetOutput(v) }
-func (p *profile) SetOutput(v string) {
+func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
 }
 
 // IsAccessSet return true if API keys have been set up.
 // For Ops Manager we also check for the base URL.
 func IsAccessSet() bool { return p.IsAccessSet() }
-func (p *profile) IsAccessSet() bool {
+func (p *Profile) IsAccessSet() bool {
 	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != ""
 	if p.Service() == OpsManagerService {
 		isSet = isSet && p.OpsManagerURL() != ""
@@ -259,9 +243,9 @@ func (p *profile) IsAccessSet() bool {
 	return isSet
 }
 
-// Get returns a map describing the configuration.
-func Get() map[string]string { return p.Get() }
-func (p *profile) Get() map[string]string {
+// Map returns a map describing the configuration.
+func Map() map[string]string { return p.Map() }
+func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	newSettings := make(map[string]string, len(settings))
 
@@ -276,10 +260,10 @@ func (p *profile) Get() map[string]string {
 	return newSettings
 }
 
-// SortedKeys returns the properties of the profile sorted.
+// SortedKeys returns the properties of the Profile sorted.
 func SortedKeys() []string { return p.SortedKeys() }
-func (p *profile) SortedKeys() []string {
-	config := p.Get()
+func (p *Profile) SortedKeys() []string {
+	config := p.Map()
 	keys := make([]string, 0, len(config))
 	for k := range config {
 		keys = append(keys, k)
@@ -291,7 +275,7 @@ func (p *profile) SortedKeys() []string {
 // Delete deletes an existing configuration. The profiles are reloaded afterwards, as
 // this edits the file directly.
 func Delete() error { return p.Delete() }
-func (p *profile) Delete() error {
+func (p *Profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	settings := viper.AllSettings()
@@ -322,13 +306,13 @@ func (p *profile) Delete() error {
 	return nil
 }
 
-func (p *profile) Filename() string {
+func (p *Profile) Filename() string {
 	return fmt.Sprintf("%s/%s.toml", p.configDir, ToolName)
 }
 
-// Rename replaces the profile to a new profile name, overwriting any profile that existed before.
+// Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
 func Rename(newProfileName string) error { return p.Rename(newProfileName) }
-func (p *profile) Rename(newProfileName string) error {
+func (p *Profile) Rename(newProfileName string) error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	configurationAfterDelete := viper.AllSettings()
@@ -362,7 +346,7 @@ func (p *profile) Rename(newProfileName string) error {
 
 // Load loads the configuration from disk
 func Load() error { return p.Load(true) }
-func (p *profile) Load(readEnvironmentVars bool) error {
+func (p *Profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(configPerm)
@@ -391,7 +375,7 @@ func (p *profile) Load(readEnvironmentVars bool) error {
 
 // Save the configuration to disk
 func Save() error { return p.Save() }
-func (p *profile) Save() error {
+func (p *Profile) Save() error {
 	exists, err := afero.DirExists(p.fs, p.configDir)
 	if err != nil {
 		return err

@@ -33,23 +33,34 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	username string
-	password string
-	x509Type string
-	roles    []string
-	store    store.DatabaseUserCreator
+	username   string
+	password   string
+	x509Type   string
+	awsIamType string
+	roles      []string
+	store      store.DatabaseUserCreator
 }
 
 const (
+	AWSIAMTypeUser   = "USER"
+	AWSIAMTypeRole   = "ROLE"
+	AWSIAMTypeNone   = "NONE"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	X509TypeNone     = "NONE"
 )
 
-var validX509Flags = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
+var (
+	validX509Flags   = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
+	validAWSIAMFlags = []string{AWSIAMTypeNone, AWSIAMTypeRole, AWSIAMTypeUser}
+)
 
 func (opts *CreateOpts) isX509Set() bool {
 	return opts.x509Type == X509TypeCustomer || opts.x509Type == X509TypeManaged
+}
+
+func (opts *CreateOpts) isAWSIAMSet() bool {
+	return opts.awsIamType == AWSIAMTypeUser || opts.awsIamType == AWSIAMTypeRole
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -72,7 +83,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := "admin"
 
-	if opts.isX509Set() {
+	if opts.isX509Set() || opts.isAWSIAMSet() {
 		authDB = "$external"
 	}
 
@@ -82,12 +93,14 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 		Username:     opts.username,
 		Password:     opts.password,
 		X509Type:     opts.x509Type,
+		AWSIAMType:   opts.awsIamType,
 		DatabaseName: authDB,
 	}
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.isX509Set() || opts.password != "" {
+	passwordProvided := opts.password != ""
+	if opts.isAWSIAMSet() || opts.isX509Set() || passwordProvided {
 		return nil
 	}
 	prompt := &survey.Password{
@@ -105,8 +118,20 @@ func (opts *CreateOpts) validate() error {
 		return err
 	}
 
+	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
+		return err
+	}
+
 	if opts.isX509Set() && opts.password != "" {
 		return errors.New("cannot supply both x509 auth and password")
+	}
+
+	if opts.isAWSIAMSet() && opts.password != "" {
+		return errors.New("cannot supply both AWS IAM auth and password")
+	}
+
+	if opts.isAWSIAMSet() && opts.isX509Set() {
+		return errors.New("cannot supply both AWS IAM and x509 auth")
 	}
 
 	return nil
@@ -117,6 +142,7 @@ func (opts *CreateOpts) validate() error {
 //		--role roleName@dbName
 //		[--projectId projectId]
 //		[--x509Type NONE|MANAGED|CUSTOMER]
+//		[--awsIAMType NONE|ROLE|USER]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -154,6 +180,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, X509TypeNone, usage.X509Type)
+	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AWSIAMTypeNone, usage.AWSIAMType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

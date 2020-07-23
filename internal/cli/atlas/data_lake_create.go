@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -39,17 +39,16 @@ func (opts *DataLakeCreateOpts) initStore() error {
 }
 
 func (opts *DataLakeCreateOpts) Run() error {
-	createRequest := mongodbatlas.DataLakeCreateRequest{
+	createRequest := &mongodbatlas.DataLakeCreateRequest{
 		Name: opts.name,
 	}
 
-	result, err := opts.store.CreateDataLake(opts.ConfigProjectID(), &createRequest)
-
+	r, err := opts.store.CreateDataLake(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas datalake(s) create name --projectId projectId

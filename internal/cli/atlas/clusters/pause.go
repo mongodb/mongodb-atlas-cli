@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -43,13 +43,12 @@ func (opts *PauseOpts) Run() error {
 	cluster := &atlas.Cluster{
 		Paused: &paused,
 	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
-
+	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas cluster(s) pause <name> [--projectId projectId]

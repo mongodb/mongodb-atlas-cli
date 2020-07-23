@@ -18,7 +18,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -41,8 +41,7 @@ func (opts *UpgradeOpts) Run() error {
 	if err != nil {
 		return err
 	}
-
-	return json.PrettyPrint(r)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli ops-manager agents upgrade [--projectId projectId]

@@ -34,7 +34,7 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 	for i, roleP := range r {
 		role := strings.Split(roleP, roleSep)
 		roleName := role[0]
-		databaseName := AdminDB
+		databaseName := defaultUserDatabase
 		if len(role) > 1 {
 			databaseName = role[1]
 		}

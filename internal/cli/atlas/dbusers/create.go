@@ -83,7 +83,10 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.x509Type != X509TypeNone || opts.password != "" {
+	if opts.x509Type == X509TypeManaged || opts.x509Type == X509TypeCustomer {
+		return nil
+	}
+	if opts.password != "" {
 		return nil
 	}
 	prompt := &survey.Password{

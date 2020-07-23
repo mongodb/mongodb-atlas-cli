@@ -72,6 +72,7 @@ const (
 	ListDBUsers              = "List Atlas database users for a project."
 	DBUserCerts              = "Manage Atlas x509 certificates for your database users."
 	ListDBUserCerts          = "Get a list of all Atlas-managed, unexpired certificates for a database user."
+	CreateDBUserCerts        = "Create a new Atlas-managed X.509 certificate for the specified database user."
 	ListEvents               = "List events for an organization or project."
 	UpdateDBUser             = "Update a MongoDB dbuser in Atlas."
 	ProcessMeasurements      = "Get measurements for a given host."

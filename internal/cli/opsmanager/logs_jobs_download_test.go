@@ -33,16 +33,12 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 		id:    "1",
 		store: mockStore,
 	}
+	opts.Out = "fake_log.tar.gz"
 	opts.Fs = afero.NewMemMapFs()
-	f, err := opts.NewWriteCloser()
-
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
-	}
 
 	mockStore.
 		EXPECT().
-		DownloadLogJob(opts.ProjectID, opts.id, f).
+		DownloadLogJob(opts.ProjectID, opts.id, gomock.Any()).
 		Return(nil).
 		Times(1)
 

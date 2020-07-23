@@ -16,11 +16,9 @@ package dbusers
 
 import (
 	"errors"
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/description"
@@ -32,7 +30,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type DBUsersCreateOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	username string
 	password string
@@ -41,14 +39,18 @@ type DBUsersCreateOpts struct {
 	store    store.DatabaseUserCreator
 }
 
-func (opts *DBUsersCreateOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DBUsersCreateOpts) Run() error {
-	user := opts.newDatabaseUser()
+func (opts *CreateOpts) Run() error {
+	user, err := opts.newDatabaseUser()
+	if err != nil {
+		return err
+	}
+
 	result, err := opts.store.CreateDatabaseUser(user)
 
 	if err != nil {
@@ -58,7 +60,7 @@ func (opts *DBUsersCreateOpts) Run() error {
 	return json.PrettyPrint(result)
 }
 
-func (opts *DBUsersCreateOpts) newDatabaseUser() (*atlas.DatabaseUser, error) {
+func (opts *CreateOpts) newDatabaseUser() (*atlas.DatabaseUser, error) {
 	authDB := "admin"
 
 	if opts.x509Type != "" && opts.password != "" {
@@ -70,15 +72,15 @@ func (opts *DBUsersCreateOpts) newDatabaseUser() (*atlas.DatabaseUser, error) {
 	}
 
 	return &atlas.DatabaseUser{
-		Roles:        convert.BuildAtlasRoles(opts.roles, authDB),
-		GroupID:      opts.ConfigProjectID(),
-		Username:     opts.username,
-		Password:     opts.password,
-		X509Type: 		opts.x509Type,
+		Roles:    convert.BuildAtlasRoles(opts.roles, authDB),
+		GroupID:  opts.ConfigProjectID(),
+		Username: opts.username,
+		Password: opts.password,
+		X509Type: opts.x509Type,
 	}, nil
 }
 
-func (opts *DBUsersCreateOpts) Prompt() error {
+func (opts *CreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
@@ -93,8 +95,8 @@ func (opts *DBUsersCreateOpts) Prompt() error {
 //		--role roleName@dbName
 //		[--projectId projectId]
 //		[--x509Type NONE|MANAGED|CUSTOMER]
-func DBUsersCreateBuilder() *cobra.Command {
-	opts := &DBUsersCreateOpts{}
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: description.CreateDBUser,

@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "certs",
 		Aliases: []string{"cert"},
-		Short:   description.DbUserCerts,
+		Short:   description.DBUserCerts,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())

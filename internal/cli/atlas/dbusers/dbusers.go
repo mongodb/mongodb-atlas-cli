@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func DBUsersBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "dbusers",
 		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
@@ -28,10 +28,10 @@ func DBUsersBuilder() *cobra.Command {
 		Long:    description.DBUsersLong,
 	}
 
-	cmd.AddCommand(DBUsersListBuilder())
-	cmd.AddCommand(DBUsersCreateBuilder())
-	cmd.AddCommand(DBUsersDeleteBuilder())
-	cmd.AddCommand(DBUsersUpdateBuilder())
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(UpdateBuilder())
 	cmd.AddCommand(certs.Builder())
 
 	return cmd

@@ -26,7 +26,7 @@ import (
 
 func TestListBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
+	mockStore := mocks.NewMockDBUserCertificateLister(ctrl)
 
 	defer ctrl.Finish()
 
@@ -41,7 +41,7 @@ func TestListBuilder(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		GetUserCertificates(listOpts.ProjectID, username).
+		DBUserCertificates(listOpts.ProjectID, username).
 		Return(expected, nil).
 		Times(1)
 

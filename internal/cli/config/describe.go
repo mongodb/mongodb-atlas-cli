@@ -31,7 +31,7 @@ func (opts *ListOpts) Run() error {
 		return fmt.Errorf("no profile with name '%s'", opts.name)
 	}
 	config.SetName(opts.name)
-	c := config.Get()
+	c := config.Map()
 	for _, k := range config.SortedKeys() {
 		fmt.Printf("%s = %s\n", k, c[k])
 	}

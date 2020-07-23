@@ -26,7 +26,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateStore(ctrl)
+	mockStore := mocks.NewMockX509CertificateConfDescriber(ctrl)
 	defer ctrl.Finish()
 
 	describeOpts := &DescribeOpts{

@@ -34,7 +34,7 @@ func Print(c Config, t string, v interface{}) error {
 		return json.PrettyPrint(v)
 	}
 	if t != "" {
-		tmpl, err := template.New("test").Parse(t)
+		tmpl, err := template.New("output").Parse(t)
 		if err != nil {
 			return err
 		}

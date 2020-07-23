@@ -18,9 +18,10 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongocli/internal/search"
 	"net/url"
 	"strings"
+
+	"github.com/mongodb/mongocli/internal/search"
 
 	"github.com/mongodb/mongocli/internal/config"
 )

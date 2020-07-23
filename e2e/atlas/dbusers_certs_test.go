@@ -18,12 +18,13 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
 	"time"
+
+	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -80,7 +81,6 @@ func TestDBUserCerts(t *testing.T) {
 		}
 		assert.Equal(t, username, user.Username)
 	})
-
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, certsEntity, "list", "--username", username)

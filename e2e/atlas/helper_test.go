@@ -38,7 +38,7 @@ const (
 	alertsEntity   = "alerts"
 	configEntity   = "settings"
 	dbusersEntity  = "dbusers"
-	certsEntity  = "certs"
+	certsEntity    = "certs"
 )
 
 func getHostnameAndPort() (string, error) {

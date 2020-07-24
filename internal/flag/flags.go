@@ -37,6 +37,7 @@ const (
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
+	X509Type                        = "x509Type"                        // X509Type flag
 	Period                          = "period"                          // Period flag
 	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag

@@ -152,6 +152,8 @@ Valid values: REPLICASET|SHARDED.`
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
 For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure
 For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp`
+	AWSIAMType = `AWS IAM method by which the provided username is authenticated. 
+Valid values: NONE|USER|ROLE.`
 	X509Type = `X.509 method by which the provided username is authenticated. 
 Valid values: NONE|MANAGED|CUSTOMER.`
 )

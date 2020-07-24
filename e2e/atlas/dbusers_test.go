@@ -81,6 +81,24 @@ func TestDBUsers(t *testing.T) {
 		}
 	})
 
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "describe", username)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var user mongodbatlas.DatabaseUser
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if user.Username != username {
+			t.Fatalf("expected username to match %v, got %v", username, user.Username)
+		}
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

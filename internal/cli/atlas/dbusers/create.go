@@ -49,7 +49,7 @@ const (
 var validX509Flags = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
 
 func (opts *CreateOpts) isX509Set() bool {
-	return opts.x509Type == X509TypeCustomer || opts.x509Type == X509TypeManaged
+	return opts.x509Type != X509TypeNone
 }
 
 func (opts *CreateOpts) initStore() error {

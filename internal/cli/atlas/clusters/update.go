@@ -45,6 +45,8 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
+var updateTmpl = "Updating cluster {{.Name}}.\n"
+
 func (opts *UpdateOpts) Run() error {
 	cluster, err := opts.cluster()
 	if err != nil {
@@ -59,7 +61,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), updateTmpl, r)
 }
 
 func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {

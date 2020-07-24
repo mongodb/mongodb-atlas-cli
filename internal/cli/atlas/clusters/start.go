@@ -23,13 +23,12 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type StartOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ClusterUpdater
+	store store.ClusterStarter
 }
 
 func (opts *StartOpts) initStore() error {
@@ -38,18 +37,15 @@ func (opts *StartOpts) initStore() error {
 	return err
 }
 
-func (opts *StartOpts) Run() error {
-	paused := false
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+var startTmpl = "Starting cluster {{.Name}}.\n"
 
+func (opts *StartOpts) Run() error {
+	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), startTmpl, r)
 }
 
 // mongocli atlas cluster(s) start <name> [--projectId projectId]

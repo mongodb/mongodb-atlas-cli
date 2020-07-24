@@ -16,6 +16,7 @@ package output
 
 import (
 	"os"
+	"text/tabwriter"
 	"text/template"
 
 	"github.com/mongodb/mongocli/internal/json"
@@ -28,7 +29,9 @@ type Config interface {
 const jsonFormat = "json"
 
 // Print outputs v to os.Stdout while handling configured formats,
-// if the optional t is given then it's processed as a go-template
+// if the optional t is given then it's processed as a go-template,
+// this template will be handled with a tabwriter so you can use tabs (\t)
+// and new lines (\n) to space your content evenly.
 func Print(c Config, t string, v interface{}) error {
 	if c.Output() == jsonFormat {
 		return json.PrettyPrint(v)
@@ -38,7 +41,14 @@ func Print(c Config, t string, v interface{}) error {
 		if err != nil {
 			return err
 		}
-		return tmpl.Execute(os.Stdout, v)
+		// tabwriter will handle tabs(`\t) to space columns evenly, each column will use a tab(\t) of 8 spaces
+		// with a minimum padding of 2 characters per column so columns don't touch each other if they are too wide
+		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
+
+		if err := tmpl.Execute(w, v); err != nil {
+			return err
+		}
+		return w.Flush()
 	}
 	return nil
 }

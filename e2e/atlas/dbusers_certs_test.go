@@ -101,7 +101,7 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("Delete User", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "\\$external")
+		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "$external")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

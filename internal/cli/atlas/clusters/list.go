@@ -37,6 +37,10 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .}}
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
@@ -44,7 +48,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas cluster(s) list --projectId projectId [--page N] [--limit N]

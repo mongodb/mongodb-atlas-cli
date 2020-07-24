@@ -23,13 +23,12 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type PauseOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ClusterUpdater
+	store store.ClusterPauser
 }
 
 func (opts *PauseOpts) initStore() error {
@@ -38,17 +37,15 @@ func (opts *PauseOpts) initStore() error {
 	return err
 }
 
+var pauseTmpl = "Pausing cluster {{.Name}}.\n"
+
 func (opts *PauseOpts) Run() error {
-	paused := true
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), pauseTmpl, r)
 }
 
 // mongocli atlas cluster(s) pause <name> [--projectId projectId]

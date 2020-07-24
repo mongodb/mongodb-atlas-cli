@@ -44,23 +44,22 @@ type CreateOpts struct {
 const (
 	AWSIAMTypeUser   = "USER"
 	AWSIAMTypeRole   = "ROLE"
-	AWSIAMTypeNone   = "NONE"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
-	X509TypeNone     = "NONE"
+	AuthTypeNone     = "NONE"
 )
 
 var (
-	validX509Flags   = []string{X509TypeNone, X509TypeManaged, X509TypeCustomer}
-	validAWSIAMFlags = []string{AWSIAMTypeNone, AWSIAMTypeRole, AWSIAMTypeUser}
+	validX509Flags   = []string{AuthTypeNone, X509TypeManaged, X509TypeCustomer}
+	validAWSIAMFlags = []string{AuthTypeNone, AWSIAMTypeRole, AWSIAMTypeUser}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
-	return opts.x509Type != X509TypeNone
+	return opts.x509Type != AuthTypeNone
 }
 
 func (opts *CreateOpts) isAWSIAMSet() bool {
-	return opts.awsIamType == AWSIAMTypeUser || opts.awsIamType == AWSIAMTypeRole
+	return opts.awsIamType == AuthTypeNone
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -179,8 +178,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, X509TypeNone, usage.X509Type)
-	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AWSIAMTypeNone, usage.AWSIAMType)
+	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, AuthTypeNone, usage.X509Type)
+	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AuthTypeNone, usage.AWSIAMType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

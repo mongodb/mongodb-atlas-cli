@@ -59,7 +59,7 @@ func (opts *CreateOpts) isX509Set() bool {
 }
 
 func (opts *CreateOpts) isAWSIAMSet() bool {
-	return opts.awsIamType == AuthTypeNone
+	return opts.awsIamType != AuthTypeNone
 }
 
 func (opts *CreateOpts) initStore() error {

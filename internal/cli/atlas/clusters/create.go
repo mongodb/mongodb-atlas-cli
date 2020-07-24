@@ -64,6 +64,8 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTmpl = "Deploying cluster {{.Name}}.\n"
+
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
 	if err != nil {
@@ -74,7 +76,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTmpl, r)
 }
 
 func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {

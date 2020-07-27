@@ -247,6 +247,8 @@ go.mongodb.org/atlas v0.3.1-0.20200716181225-c140614edf83 h1:o4r8es8A92qjE7o2Qb0
 go.mongodb.org/atlas v0.3.1-0.20200716181225-c140614edf83/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
 go.mongodb.org/ops-manager v0.7.1 h1:mPYkXCoIEyFyCxR8rkpgz2mjEZ1LXW4OsTeGKMkRbJY=
 go.mongodb.org/ops-manager v0.7.1/go.mod h1:WXpDhNlAZv99OyuLGHxi0mAf/le9In25H+TQmUaakMY=
+go.mongodb.org/ops-manager v0.7.2 h1:/Fm2NFtBaRXR1kTGwNWnzax+PAl3nQJuku2zkjx2Lzw=
+go.mongodb.org/ops-manager v0.7.2/go.mod h1:WXpDhNlAZv99OyuLGHxi0mAf/le9In25H+TQmUaakMY=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

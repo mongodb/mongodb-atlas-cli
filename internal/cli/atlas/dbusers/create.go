@@ -26,17 +26,40 @@ import (
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	username string
-	password string
-	authDB   string
-	roles    []string
-	store    store.DatabaseUserCreator
+	username   string
+	password   string
+	x509Type   string
+	awsIamType string
+	roles      []string
+	store      store.DatabaseUserCreator
+}
+
+const (
+	AWSIAMTypeUser   = "USER"
+	AWSIAMTypeRole   = "ROLE"
+	X509TypeManaged  = "MANAGED"
+	X509TypeCustomer = "CUSTOMER"
+	AuthTypeNone     = "NONE"
+)
+
+var (
+	validX509Flags   = []string{AuthTypeNone, X509TypeManaged, X509TypeCustomer}
+	validAWSIAMFlags = []string{AuthTypeNone, AWSIAMTypeRole, AWSIAMTypeUser}
+)
+
+func (opts *CreateOpts) isX509Set() bool {
+	return opts.x509Type != AuthTypeNone
+}
+
+func (opts *CreateOpts) isAWSIAMSet() bool {
+	return opts.awsIamType != AuthTypeNone
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -57,17 +80,26 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
+	authDB := "admin"
+
+	if opts.isX509Set() || opts.isAWSIAMSet() {
+		authDB = "$external"
+	}
+
 	return &atlas.DatabaseUser{
-		DatabaseName: opts.authDB,
 		Roles:        convert.BuildAtlasRoles(opts.roles),
 		GroupID:      opts.ConfigProjectID(),
 		Username:     opts.username,
 		Password:     opts.password,
+		X509Type:     opts.x509Type,
+		AWSIAMType:   opts.awsIamType,
+		DatabaseName: authDB,
 	}
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.password != "" {
+	passwordProvided := opts.password != ""
+	if opts.isAWSIAMSet() || opts.isX509Set() || passwordProvided {
 		return nil
 	}
 	prompt := &survey.Password{
@@ -76,7 +108,40 @@ func (opts *CreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
+func (opts *CreateOpts) validate() error {
+	if len(opts.roles) == 0 {
+		return errors.New("no role specified for the user")
+	}
+
+	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
+		return err
+	}
+
+	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
+		return err
+	}
+
+	if opts.isX509Set() && opts.password != "" {
+		return errors.New("cannot supply both x509 auth and password")
+	}
+
+	if opts.isAWSIAMSet() && opts.password != "" {
+		return errors.New("cannot supply both AWS IAM auth and password")
+	}
+
+	if opts.isAWSIAMSet() && opts.isX509Set() {
+		return errors.New("cannot supply both AWS IAM and x509 auth")
+	}
+
+	return nil
+}
+
+// mongocli atlas dbuser(s) create
+//		--username username --password password
+//		--role roleName@dbName
+//		[--projectId projectId]
+//		[--x509Type NONE|MANAGED|CUSTOMER]
+//		[--awsIAMType NONE|ROLE|USER]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -97,10 +162,12 @@ func CreateBuilder() *cobra.Command {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err
 			}
-			if len(args) == 0 && len(opts.roles) == 0 {
-				return errors.New("no role specified for the user")
-			}
 			opts.roles = append(opts.roles, args...)
+
+			if err := opts.validate(); err != nil {
+				return err
+			}
+
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -111,7 +178,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, AuthTypeNone, usage.X509Type)
+	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AuthTypeNone, usage.AWSIAMType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

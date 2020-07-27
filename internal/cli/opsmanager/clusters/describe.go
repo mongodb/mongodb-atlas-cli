@@ -67,7 +67,7 @@ func (opts *DescribeOpts) cluster() (interface{}, error) {
 			return rs, nil
 		}
 	}
-	return nil, fmt.Errorf("replicaset %s not found", opts.name)
+	return nil, fmt.Errorf("replica set %s not found", opts.name)
 }
 
 // mongocli cloud-manager cluster(s) describe <name> --projectId projectId

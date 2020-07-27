@@ -81,10 +81,10 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
-	authDB := "admin"
+	authDB := convert.AdminDB
 
 	if opts.isX509Set() || opts.isAWSIAMSet() {
-		authDB = "$external"
+		authDB = convert.ExternalAuthDB
 	}
 
 	return &atlas.DatabaseUser{

@@ -16,12 +16,14 @@ package atlas
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
+	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
-	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
+	"github.com/mongodb/mongocli/internal/cli/atlas/whitelist"
 	"github.com/mongodb/mongocli/internal/cli/events"
-	"github.com/mongodb/mongocli/internal/cli/whitelist"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -37,14 +39,14 @@ func Builder() *cobra.Command {
 			return validate.Credentials()
 		},
 	}
-	cmd.AddCommand(DataLakeBuilder())
+	cmd.AddCommand(datalake.Builder())
 	cmd.AddCommand(clusters.Builder())
 	cmd.AddCommand(dbusers.Builder())
 	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(cloudbackup.Builder())
+	cmd.AddCommand(backup.Builder())
 	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(MetricsBuilder())
+	cmd.AddCommand(metrics.Builder())
 	cmd.AddCommand(LogsBuilder())
 	cmd.AddCommand(ProcessesBuilder())
 	cmd.AddCommand(security.Builder())

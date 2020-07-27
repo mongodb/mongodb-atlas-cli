@@ -17,6 +17,7 @@ package store
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -96,7 +97,8 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, username)
+		escapedUsername := url.PathEscape(username)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, escapedUsername)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

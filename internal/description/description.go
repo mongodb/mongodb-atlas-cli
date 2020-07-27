@@ -70,6 +70,7 @@ const (
 	CreateDBUser             = "Create a database user for a project."
 	DeleteDBUser             = "Delete a database user for a project."
 	ListDBUsers              = "List Atlas database users for a project."
+	DescribeDBUser           = "Return a single Atlas database user for a project."
 	DBUserCerts              = "Manage Atlas x509 certificates for your database users."
 	ListDBUserCerts          = "Get a list of all Atlas-managed, unexpired certificates for a database user."
 	CreateDBUserCerts        = "Create a new Atlas-managed X.509 certificate for the specified database user."

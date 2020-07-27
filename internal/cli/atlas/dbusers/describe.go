@@ -74,7 +74,5 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
 
-	_ = cmd.MarkFlagRequired(flag.AuthDB)
-
 	return cmd
 }

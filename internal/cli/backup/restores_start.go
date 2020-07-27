@@ -18,15 +18,15 @@ import (
 	"errors"
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -62,14 +62,12 @@ func (opts *RestoresStartOpts) initStore() error {
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newContinuousJobRequest()
-
-	result, err := opts.store.CreateContinuousRestoreJob(opts.ConfigProjectID(), opts.fromCluster(), request)
-
+	r, err := opts.store.CreateContinuousRestoreJob(opts.ConfigProjectID(), opts.fromCluster(), request)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobRequest {
@@ -82,7 +80,7 @@ func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobReq
 		opts.setTargetCluster(request)
 
 		if opts.oplogTS != "" && opts.oplogInc != 0 {
-			request.OplogTs = opts.oplogTS
+			request.OplogTS = opts.oplogTS
 			request.OplogInc = opts.oplogInc
 		}
 		if opts.pointInTimeUTCMillis != 0 {

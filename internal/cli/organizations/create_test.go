@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package organizations
 
 import (
@@ -19,16 +21,15 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationCreator(ctrl)
-
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Organization{}
+	expected := &mongodbatlas.Organization{}
 
 	mockStore.
 		EXPECT().

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package agents
 
 import (
@@ -25,7 +27,6 @@ import (
 func TestAgentsUpgradeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentUpgrader(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := new(opsmngr.AutomationConfigAgent)

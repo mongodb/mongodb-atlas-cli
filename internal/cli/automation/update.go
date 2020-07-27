@@ -78,6 +78,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.File)
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

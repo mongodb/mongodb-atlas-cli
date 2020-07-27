@@ -38,6 +38,17 @@ const (
 	ListSnapshots            = "List snapshots for a project and cluster."
 	Logs                     = "Download host logs for your project."
 	LogsDownload             = "Download a host mongodb logs."
+	DataLakes                = "Manage data lakes for your project."
+	DataLakesLong            = "The datalakes command provides access to your projects data lakes. You can create, edit, and delete data lakes."
+	ListDataLakes            = "List data lakes for your project."
+	DescribeDataLake         = "Return a specific data lake."
+	CreateDataLake           = "Create a new data lake."
+	UpdateDataLake           = "Update a data lake."
+	DeleteDataLake           = "Delete a data lake."
+	Certs                    = "Manage customer x509 certificates for your database users."
+	DescribeCertConfig       = "Get the current customer-managed X.509 configuration details for an Atlas project."
+	SaveCertConfig           = "Saves a customer-managed X.509 configuration for an Atlas project."
+	DisableCertConfig        = "Disables customer-managed X.509 for a project."
 	Clusters                 = "Manage clusters for your project."
 	ClustersIndexes          = "Manage cluster rolling indexes for your project."
 	ClustersLong             = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
@@ -59,7 +70,10 @@ const (
 	CreateDBUser             = "Create a database user for a project."
 	DeleteDBUser             = "Delete a database user for a project."
 	ListDBUsers              = "List Atlas database users for a project."
-	ListEvents               = "List events for an organization or project"
+	DBUserCerts              = "Manage Atlas x509 certificates for your database users."
+	ListDBUserCerts          = "Get a list of all Atlas-managed, unexpired certificates for a database user."
+	CreateDBUserCerts        = "Create a new Atlas-managed X.509 certificate for the specified database user."
+	ListEvents               = "List events for an organization or project."
 	UpdateDBUser             = "Update a MongoDB dbuser in Atlas."
 	ProcessMeasurements      = "Get measurements for a given host."
 	Disks                    = "List available disks or disks measurements for a given host."
@@ -75,8 +89,27 @@ const (
 	CloudManager             = "Cloud Manager operations."
 	ShutdownCluster          = "Shutdown a cluster."
 	StartUpCluster           = "Start up a cluster."
-	ConfigDescription        = "Configure a profile. This let you store access settings to your cloud."
-	ConfigSetDescription     = "Configure specific properties of the profile."
+	OnlineArchives           = "Manage online archives for your cluster."
+	ListOnlineArchive        = "List online archives for a cluster."
+	DescribeOnlineArchive    = "Describe an online archive for a cluster."
+	CreateOnlineArchive      = "Create an online archive for a cluster."
+	DeleteOnlineArchive      = "Delete an online archive from a cluster."
+	PauseOnlineArchive       = "Pause an online archive from a cluster."
+	StartOnlineArchive       = "Start a paused online archive from a cluster."
+	UpdateOnlineArchive      = "Update an online archive for a cluster."
+	Search                   = "Manage search for your cluster."
+	Indexes                  = "Manage search indexes for your cluster."
+	ListSearchIndexes        = "List search indexes for a cluster."
+	CreateSearchIndexes      = "Create a search index for a cluster."
+	UpdateSearchIndex        = "Update a search index for a cluster."
+	DescribeSearchIndexes    = "Describe a search index for a cluster."
+	DeleteSearchIndexes      = "Delete a search index from a cluster."
+	ConfigDescription        = "Configure a profile to store access settings for your MongoDB deployment."
+	ConfigSetDescription     = "Configure specific properties of a profile."
+	ConfigRenameDescription  = "Rename a profile."
+	ConfigDeleteDescription  = "Delete a profile."
+	ConfigList               = "List available profiles."
+	ConfigDescribe           = "Return a specific profile"
 	IAM                      = "Organization and projects operations."
 	Organization             = "Organization operations."
 	OrganizationLong         = "Create, list and manage your MongoDB organizations."
@@ -102,7 +135,7 @@ const (
 	CreateOwner              = "Create the first user for Ops Manager."
 	Servers                  = "Manage Ops Manager servers."
 	ListServer               = "List all available servers running an automation agent for the given project."
-	Security                 = "Manage clusters security configuration."
+	Security                 = "Manage security configuration for a project."
 	EnableSecurity           = "Enable authentication mechanisms for the project."
 	Events                   = "Manage events for your project."
 	Metrics                  = "Get measurements on the state of the MongoDB process."
@@ -117,8 +150,12 @@ The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-lo
 	DBUsersLong = `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
-	ConfigLongDescription = `Setting API keys is optional and env variables can be used instead.
-Leaving any option empty won't override existing stored values.`
+	ConfigLongDescription = `Configure settings in a user profile.
+All settings are optional. You can specify settings individually by running: 
+  $ mongocli config set --help 
+
+You can also use environment variables (MCLI_*) when running the tool.
+To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`
 	ConfigSetLong = `Configure specific properties of the profile.
 Available properties include: %v.`
 	CreateClusterLong = `You can create MongoDB clusters using this command.

@@ -18,18 +18,18 @@ import (
 	"context"
 	"fmt"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessLister
 
 type ProcessLister interface {
-	Processes(string, *atlas.ListOptions) ([]*atlas.Process, error)
+	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)
 }
 
 // Processes encapsulate the logic to manage different cloud providers
-func (s *Store) Processes(groupID string, opts *atlas.ListOptions) ([]*atlas.Process, error) {
+func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) ([]*atlas.Process, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Processes.List(context.Background(), groupID, opts)

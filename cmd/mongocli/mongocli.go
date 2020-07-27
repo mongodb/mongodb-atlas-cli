@@ -44,15 +44,29 @@ var (
 	}
 
 	completionCmd = &cobra.Command{
-		Use:       "completion <name>",
-		Args:      cobra.ExactValidArgs(1),
-		ValidArgs: []string{"bash", "zsh"},
-		Hidden:    true,
+		Use:   "completion <bash|zsh|fish|powershell>",
+		Args:  cobra.ExactValidArgs(1),
+		Short: "Generate shell completion scripts",
+		Long: `Generate shell completion scripts for MongoDB CLI commands.
+The output of this command will be computer code and is meant to be saved to a
+file or immediately evaluated by an interactive shell.
+
+When installing MongoDB CLI through brew, it's possible that
+no additional shell configuration is necessary, see https://docs.brew.sh/Shell-Completion.`,
+		ValidArgs: []string{"bash", "zsh", "powershell", "fish"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if args[0] == "bash" {
-				return rootCmd.GenBashCompletion(os.Stdout)
+			switch args[0] {
+			case "bash":
+				return rootCmd.GenBashCompletion(cmd.OutOrStdout())
+			case "zsh":
+				return rootCmd.GenZshCompletion(cmd.OutOrStdout())
+			case "powershell":
+				return rootCmd.GenPowerShellCompletion(cmd.OutOrStdout())
+			case "fish":
+				return rootCmd.GenFishCompletion(cmd.OutOrStdout(), true)
+			default:
+				return fmt.Errorf("unsupported shell type %q", args[0])
 			}
-			return rootCmd.GenZshCompletion(os.Stdout)
 		},
 	}
 )
@@ -65,8 +79,12 @@ func Execute() {
 	}
 }
 
-func init() {
-	cobra.OnInitialize(initConfig)
+var (
+	profile string
+	output  string
+)
+
+func init() { //nolint:gochecknoinits // This is the cobra way
 	// config commands
 	rootCmd.AddCommand(cliconfig.Builder())
 	// Atlas commands
@@ -82,8 +100,9 @@ func init() {
 
 	cobra.EnableCommandSorting = false
 
-	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, config.DefaultProfile, usage.Profile)
-	config.SetName(profile)
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutputShort, config.JSON, usage.FormatOut)
+	cobra.OnInitialize(initConfig)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -91,6 +110,14 @@ func initConfig() {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+
+	availableProfiles := config.List()
+	if profile != "" {
+		config.SetName(profile)
+	} else if len(availableProfiles) == 1 {
+		config.SetName(availableProfiles[0])
+	}
+	config.SetOutput(output)
 }
 
 func main() {

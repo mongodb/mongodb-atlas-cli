@@ -15,67 +15,149 @@
 package store
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"net"
 	"net/http"
+	"runtime"
 	"time"
 
-	"github.com/Sectorbob/mlab-ns2/gae/ns/digest"
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/version"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var userAgent = fmt.Sprintf("%s/%s", config.ToolName, version.Version)
+var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
-const atlasAPIPath = "api/atlas/v1.0/"
+const (
+	atlasAPIPath          = "api/atlas/v1.0/"
+	yes                   = "yes"
+	responseHeaderTimeout = 10 * time.Minute
+	tlsHandshakeTimeout   = 10 * time.Second
+	timeout               = 10 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleConns          = 100
+	maxIdleConnsPerHost   = 4
+	idleConnTimeout       = 90 * time.Second
+	expectContinueTimeout = 1 * time.Second
+)
 
 type Store struct {
 	service       string
 	baseURL       string
 	caCertificate string
+	skipVerify    string
 	client        interface{}
 }
 
-func newTransport(c config.Config) *digest.Transport {
+func customCATransport(ca []byte) http.RoundTripper {
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(ca)
+	tlsClientConfig := &tls.Config{
+		InsecureSkipVerify: false,
+		RootCAs:            caCertPool,
+	}
+	return &http.Transport{
+		ResponseHeaderTimeout: responseHeaderTimeout,
+		TLSHandshakeTimeout:   tlsHandshakeTimeout,
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
+		TLSClientConfig:       tlsClientConfig,
+	}
+}
+
+func skipVerifyTransport() http.RoundTripper {
+	tlsClientConfig := &tls.Config{InsecureSkipVerify: true} //nolint:gosec // this is optional for some users
+	return &http.Transport{
+		ResponseHeaderTimeout: responseHeaderTimeout,
+		TLSHandshakeTimeout:   tlsHandshakeTimeout,
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
+		TLSClientConfig:       tlsClientConfig,
+	}
+}
+
+type Config interface {
+	Service() string
+	PublicAPIKey() string
+	PrivateAPIKey() string
+	OpsManagerURL() string
+	OpsManagerCACertificate() string
+	OpsManagerSkipVerify() string
+}
+
+func authenticatedClient(c Config) (*http.Client, error) {
 	t := &digest.Transport{
 		Username: c.PublicAPIKey(),
 		Password: c.PrivateAPIKey(),
 	}
-	t.Transport = &http.Transport{
-		ResponseHeaderTimeout: 10 * time.Minute,
-		TLSHandshakeTimeout:   10 * time.Second,
-		DialContext: (&net.Dialer{
-			Timeout:   10 * time.Second,
-			KeepAlive: 30 * time.Second,
-		}).DialContext,
-		MaxIdleConns:          100,
-		MaxIdleConnsPerHost:   4,
-		Proxy:                 http.ProxyFromEnvironment,
-		IdleConnTimeout:       90 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		dat, err := ioutil.ReadFile(caCertificate)
+		if err != nil {
+			return nil, err
+		}
+		t.Transport = customCATransport(dat)
+	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
+		t.Transport = skipVerifyTransport()
+	} else {
+		t.Transport = http.DefaultTransport
 	}
 
-	return t
+	return t.Client()
+}
+
+func defaultClient(c Config) (*http.Client, error) {
+	client := http.DefaultClient
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		dat, err := ioutil.ReadFile(caCertificate)
+		if err != nil {
+			return nil, err
+		}
+		client.Transport = customCATransport(dat)
+	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
+		client.Transport = skipVerifyTransport()
+	} else {
+		client.Transport = http.DefaultTransport
+	}
+
+	return client, nil
 }
 
 // New get the appropriate client for the profile/service selected
-func New(c config.Config) (*Store, error) {
+func New(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
-
-	client, err := newTransport(c).Client()
-
-	if err != nil {
-		return nil, err
-	}
 
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		s.baseURL = s.apiPath(configURL)
 	}
 	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
 		s.caCertificate = caCertificate
+	}
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		s.skipVerify = skipVerify
+	}
+	client, err := authenticatedClient(c)
+	if err != nil {
+		return nil, err
 	}
 
 	switch s.service {
@@ -90,43 +172,61 @@ func New(c config.Config) (*Store, error) {
 	return s, err
 }
 
-func NewUnauthenticated(c config.Config) (*Store, error) {
-	if c.Service() != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", c.Service())
-	}
+func NewUnauthenticated(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 
-	err := s.setOpsManagerClient(nil)
+	if s.service != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 
-	return s, err
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		s.baseURL = s.apiPath(configURL)
+	}
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		s.caCertificate = caCertificate
+	}
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		s.skipVerify = skipVerify
+	}
+	client, err := defaultClient(c)
+	if err != nil {
+		return nil, err
+	}
+	err = s.setOpsManagerClient(client)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
 
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := make([]atlas.ClientOpt, 0)
-	opts = append(opts, atlas.SetUserAgent(userAgent))
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
 	c, err := atlas.New(client, opts...)
-
+	if err != nil {
+		return err
+	}
+	c.UserAgent = userAgent
 	s.client = c
-	return err
+	return nil
 }
 
 func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := make([]opsmngr.ClientOpt, 0)
-	opts = append(opts, opsmngr.SetUserAgent(userAgent))
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
-	if s.caCertificate != "" {
-		opts = append(opts, opsmngr.OptionCAValidate(s.caCertificate))
-	}
 	c, err := opsmngr.New(client, opts...)
-
+	if err != nil {
+		return err
+	}
+	c.UserAgent = userAgent
 	s.client = c
-	return err
+	return nil
 }
 
 func (s *Store) apiPath(baseURL string) string {

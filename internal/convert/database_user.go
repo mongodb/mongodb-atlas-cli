@@ -17,19 +17,13 @@ package convert
 import (
 	"strings"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-// Public constants
 const (
-	AdminDB = "admin"
-)
-
-// Private constants
-const (
+	AdminDB             = "admin"
 	roleSep             = "@"
-	automationAgentName = "mms-automation"
 	defaultUserDatabase = "admin"
 )
 

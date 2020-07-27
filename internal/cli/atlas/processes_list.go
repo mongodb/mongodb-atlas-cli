@@ -19,16 +19,18 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ProcessesListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.ProcessLister
+	clusterID string
+	store     store.ProcessLister
 }
 
 func (opts *ProcessesListOpts) initStore() error {
@@ -38,14 +40,20 @@ func (opts *ProcessesListOpts) initStore() error {
 }
 
 func (opts *ProcessesListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	result, err := opts.store.Processes(opts.ConfigProjectID(), listOpts)
-
+	listOpts := opts.newProcessesListOptions()
+	r, err := opts.store.Processes(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
+}
+
+func (opts *ProcessesListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
+	return &atlas.ProcessesListOptions{
+		ClusterID:   opts.clusterID,
+		ListOptions: *opts.NewListOptions(),
+	}
 }
 
 // mongocli atlas process(es) list --projectId projectId [--page N] [--limit N]
@@ -64,6 +72,7 @@ func ProcessListBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 

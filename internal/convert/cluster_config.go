@@ -15,7 +15,10 @@
 package convert
 
 import (
-	"github.com/Masterminds/semver"
+	"errors"
+	"fmt"
+	"strconv"
+
 	"go.mongodb.org/ops-manager/opsmngr"
 	"go.mongodb.org/ops-manager/search"
 )
@@ -25,61 +28,123 @@ const (
 	one             = "1"
 	file            = "file"
 	fcvLessThanFour = "< 4.0"
+	mongos          = "mongos"
 )
 
 // ClusterConfig configuration for a cluster
 // This cluster can be used to patch an automation config
 type ClusterConfig struct {
-	FCVersion      string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	MongoURI       string           `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
-	Name           string           `yaml:"name" json:"name"`
-	ProcessConfigs []*ProcessConfig `yaml:"processes" json:"processes"`
-	Version        string           `yaml:"version,omitempty" json:"version,omitempty"`
+	RSConfig `yaml:",inline"`
+	MongoURI string           `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
+	Shards   []*RSConfig      `yaml:"shards,omitempty" json:"shards,omitempty"`
+	Config   *RSConfig        `yaml:"config,omitempty" json:"config,omitempty"`
+	Mongos   []*ProcessConfig `yaml:"mongos,omitempty" json:"mongos,omitempty"`
 }
 
-// PatchAutomationConfig add the ClusterConfig to a cloudmanager.AutomationConfig
-// this method will modify the given AutomationConfig to add the new replica set information
-func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
-	newProcesses := make([]*opsmngr.Process, len(c.ProcessConfigs))
+// newReplicaSetCluster when config is a replicaset
+func newReplicaSetCluster(name string, s int) *ClusterConfig {
+	rs := &ClusterConfig{}
+	rs.Name = name
+	rs.ProcessConfigs = make([]*ProcessConfig, s)
 
-	newReplicaSet, err := c.toReplicaSet()
-	if err != nil {
+	return rs
+}
+
+// newShardedCluster when config is a sharded cluster
+func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
+	rs := &ClusterConfig{}
+	rs.Name = s.Name
+	rs.Shards = make([]*RSConfig, len(s.Shards))
+	rs.Mongos = make([]*ProcessConfig, 0, 1)
+	rs.Tags = s.Tags
+
+	return rs
+}
+
+// PatchAutomationConfig adds the ClusterConfig to a opsmngr.AutomationConfig
+// this method will modify the given AutomationConfig to add the new replica set or sharded cluster information
+func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
+	// A replica set should be just a list of processes
+	if c.ProcessConfigs != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
+		return c.patchReplicaSet(out)
+	}
+	// a sharded cluster will be a a list of mongos (processes),
+	// shards, each with a list of process (replica sets)
+	// one (1) config server, with a list of process (replica set)
+	if c.ProcessConfigs == nil && c.Mongos != nil && c.Shards != nil && c.Config != nil {
+		return c.pathSharding(out)
+	}
+
+	return errors.New("invalid config")
+}
+
+func (c *ClusterConfig) pathSharding(out *opsmngr.AutomationConfig) error {
+	newCluster := newShardingConfig(c)
+	// transform cli config to automation config
+	for i, s := range c.Shards {
+		s.Version = c.Version
+		s.FCVersion = c.FCVersion
+		if err := s.patchShard(out, c.Name); err != nil {
+			return err
+		}
+		newCluster.Shards[i] = newShard(s)
+	}
+	c.Config.Version = c.Version
+	c.Config.FCVersion = c.FCVersion
+	if err := c.Config.patchConfigServer(out, c.Name); err != nil {
 		return err
 	}
 
-	// transform cli config to automation config
-	for i, pc := range c.ProcessConfigs {
-		pc.setDefaults(c)
-		pc.setProcessName(c.Name, out.Processes, i)
-		newProcesses[i] = pc.toCMProcess(c.Name)
-		newReplicaSet.Members[i] = pc.toCMMember(i)
+	newProcesses := make([]*opsmngr.Process, len(c.Mongos))
+	for i, pc := range c.Mongos {
+		pc.ProcessType = mongos
+		pc.setDefaults(&c.RSConfig)
+		pc.setProcessName(out.Processes, c.Name, "mongos", strconv.Itoa(len(out.Processes)+i))
+		newProcesses[i] = newMongosProcess(pc, c.Name)
 	}
-
 	// This value may not be present and is mandatory
 	if out.Auth.DeploymentAuthMechanisms == nil {
 		out.Auth.DeploymentAuthMechanisms = make([]string, 0)
 	}
-
-	patchProcesses(out, newReplicaSet.ID, newProcesses)
-	patchReplicaSet(out, newReplicaSet)
-
+	patchProcesses(out, newCluster.Name, newProcesses)
+	patchSharding(out, newCluster)
 	return nil
 }
 
-// toReplicaSet convert from cli config to cloudmanager.ReplicaSet
-func (c *ClusterConfig) toReplicaSet() (*opsmngr.ReplicaSet, error) {
-	protocolVer, err := protocolVer(c.FCVersion)
-	if err != nil {
-		return nil, err
+func (c *ClusterConfig) addToMongoURI(p *opsmngr.Process) {
+	if c.MongoURI == "" {
+		c.MongoURI = fmt.Sprintf("mongodb://%s:%d", p.Hostname, p.Args26.NET.Port)
+	} else {
+		c.MongoURI = fmt.Sprintf("%s,%s:%d", c.MongoURI, p.Hostname, p.Args26.NET.Port)
+	}
+}
+
+func newShard(rsConfig *RSConfig) *opsmngr.Shard {
+	s := &opsmngr.Shard{
+		ID:   rsConfig.Name,
+		RS:   rsConfig.Name,
+		Tags: rsConfig.Tags,
+	}
+	if s.Tags == nil {
+		s.Tags = make([]string, 0)
+	}
+	return s
+}
+
+func newShardingConfig(c *ClusterConfig) *opsmngr.ShardingConfig {
+	rs := &opsmngr.ShardingConfig{
+		Name:                c.Name,
+		Shards:              make([]*opsmngr.Shard, len(c.Shards)),
+		ConfigServerReplica: c.Config.Name,
+		Tags:                c.Tags,
+		Draining:            make([]string, 0),
+		Collections:         make([]*map[string]interface{}, 0),
+	}
+	if rs.Tags == nil {
+		rs.Tags = make([]string, 0)
 	}
 
-	rs := &opsmngr.ReplicaSet{
-		ID:              c.Name,
-		Members:         make([]opsmngr.Member, len(c.ProcessConfigs)),
-		ProtocolVersion: protocolVer,
-	}
-
-	return rs, nil
+	return rs
 }
 
 // patchProcesses replace replica set processes with new configuration
@@ -134,17 +199,15 @@ func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.Repli
 	out.ReplicaSets[pos] = newReplicaSet
 }
 
-// protocolVer determines the appropriate protocol based on FCV
-// return "0" for versions <4.0 or "1" otherwise
-func protocolVer(version string) (string, error) {
-	ver, err := semver.NewVersion(version)
-	if err != nil {
-		return "", err
+func patchSharding(out *opsmngr.AutomationConfig, s *opsmngr.ShardingConfig) {
+	pos, found := search.ShardingConfig(out.Sharding, func(r *opsmngr.ShardingConfig) bool {
+		return r.Name == s.Name
+	})
+	if !found {
+		out.Sharding = append(out.Sharding, s)
+		return
 	}
-	constrain, _ := semver.NewConstraint(fcvLessThanFour)
 
-	if constrain.Check(ver) {
-		return zero, nil
-	}
-	return one, nil
+	// TODO: test this with CLOUDP-65971
+	out.Sharding[pos] = s
 }

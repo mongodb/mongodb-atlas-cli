@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package opsmanager
 
 import (
@@ -25,20 +27,17 @@ import (
 func TestDiagnoseArchiveDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockArchivesDownloader(ctrl)
+	defer ctrl.Finish()
 
 	opts := &DiagnoseArchiveDownloadOpts{
 		store: mockStore,
 	}
+	opts.Out = "fake_diagnostic.tar.gz"
 	opts.Fs = afero.NewMemMapFs()
-
-	f, err := opts.NewWriteCloser()
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
-	}
 
 	mockStore.
 		EXPECT().
-		DownloadArchive(opts.ProjectID, opts.newDiagnosticsListOpts(), f).
+		DownloadArchive(opts.ProjectID, opts.newDiagnosticsListOpts(), gomock.Any()).
 		Return(nil).
 		Times(1)
 

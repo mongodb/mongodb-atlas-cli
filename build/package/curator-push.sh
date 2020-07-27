@@ -14,8 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-. ./notary_env.sh
+export NOTARY_KEY_NAME
+export BARQUE_USERNAME
+export BARQUE_API_KEY
+case "${NOTARY_KEY_NAME}" in
+    server-4.2)
+        export NOTARY_TOKEN=${signing_auth_token_42}
+        ;;
+    server-4.4)
+        export NOTARY_TOKEN=${signing_auth_token_44}
+        ;;
+    server-4.6)
+        export NOTARY_TOKEN=${signing_auth_token_46}
+        ;;
+esac
 
 set -Eeou pipefail
 

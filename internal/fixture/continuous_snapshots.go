@@ -14,7 +14,7 @@
 
 package fixture
 
-import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+import atlas "go.mongodb.org/atlas/mongodbatlas"
 
 func ContinuousSnapshots() *atlas.ContinuousSnapshots {
 	doNotDelete := false

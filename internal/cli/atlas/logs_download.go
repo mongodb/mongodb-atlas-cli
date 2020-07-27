@@ -19,7 +19,6 @@ import (
 	"io"
 	"os"
 
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -29,6 +28,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type LogsDownloadOpts struct {
@@ -92,6 +92,7 @@ var logNames = []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mong
 
 // mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
 func LogsDownloadBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &LogsDownloadOpts{
 		fs: afero.NewOsFs(),
 	}
@@ -99,7 +100,7 @@ func LogsDownloadBuilder() *cobra.Command {
 		Use:   "download <hostname> <logname>",
 		Short: description.LogsDownload,
 		Long:  description.LogsDownloadLong,
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
@@ -113,11 +114,13 @@ func LogsDownloadBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.out, flag.Out, flag.OutShort, "", usage.LogOut)
+	cmd.Flags().StringVar(&opts.out, flag.Out, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.LogStart)
 	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.LogEnd)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagFilename(flag.Out)
 
 	return cmd
 }

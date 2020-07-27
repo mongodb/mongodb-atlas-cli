@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build e2e atlas,generic
 
 package atlas_test
@@ -23,7 +24,8 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -34,13 +36,9 @@ const (
 )
 
 func TestAlertConfig(t *testing.T) {
-	atlasEntity := "atlas"
-	alertsEntity := "alerts"
-	configEntity := "settings"
-
 	var alertID string
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -68,10 +66,8 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.AlertConfiguration{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.AlertConfiguration
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -100,7 +96,6 @@ func TestAlertConfig(t *testing.T) {
 		}
 
 		alertID = alert.ID
-
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -137,10 +132,8 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.AlertConfiguration{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.AlertConfiguration
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
@@ -159,7 +152,6 @@ func TestAlertConfig(t *testing.T) {
 		if !*alert.Notifications[0].EmailEnabled {
 			t.Errorf("got=%#v\nwant=%#v\n", false, true)
 		}
-
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -181,10 +173,8 @@ func TestAlertConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		fields := []string{}
-		err = json.Unmarshal(resp, &fields)
-
-		if err != nil {
+		var fields []string
+		if err := json.Unmarshal(resp, &fields); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 

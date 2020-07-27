@@ -29,12 +29,15 @@ linters:
     - depguard
     - dogsled
     - errcheck
+    - exhaustive
+    - gochecknoinits
     - goconst
     - gocritic
     - gocyclo
     - gofmt
     - goimports
     - golint
+    - gomnd
     - goprintffuncname
     - gosec
     - gosimple
@@ -43,6 +46,7 @@ linters:
     - interfacer
     - misspell
     - nakedret
+    - noctx
     - nolintlint
     - rowserrcheck
     - scopelint
@@ -57,16 +61,15 @@ linters:
     - whitespace
 
   # don't enable:
-  # - gochecknoinits
-  # - funlen
-  # - lll
-  # - gomnd
   # - asciicheck
+  # - dupl
+  # - funlen
   # - gochecknoglobals
   # - gocognit
   # - godot
   # - godox
   # - goerr113
+  # - lll
   # - maligned
   # - nestif
   # - prealloc
@@ -74,5 +77,20 @@ linters:
   # - wsl
 
 run:
+  tests: true
+  build-tags:
+    - e2e
+    - unit
+    - integration
   skip-dirs:
     - internal/mocks
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - path: e2e # Don't check for cyclomatic complexity on e2e file.
+      linters:
+        - gocyclo
+    - path: internal/fixture # Don't check for magic numbers on fixtures.
+      linters:
+        - gomnd

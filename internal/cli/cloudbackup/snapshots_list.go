@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -40,13 +40,12 @@ func (opts *SnapshotsListOpts) initStore() error {
 
 func (opts *SnapshotsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	result, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
-
+	r, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli atlas backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N]

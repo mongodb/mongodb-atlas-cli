@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package projects
 
 import (
@@ -25,7 +27,6 @@ import (
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDescriber(ctrl)
-
 	defer ctrl.Finish()
 
 	mockStore.

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package opsmanager
 
 import (
@@ -26,7 +28,6 @@ import (
 func TestWhitelistDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobDeleter(ctrl)
-
 	defer ctrl.Finish()
 
 	deleteOpts := &LogsJobsDeleteOpts{

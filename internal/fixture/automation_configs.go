@@ -156,8 +156,7 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				},
 			},
 		},
-		Version:   1,
-		UIBaseURL: "",
+		Version: 1,
 	}
 }
 
@@ -214,6 +213,139 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 	}
 }
 
+func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		Auth: opsmngr.Auth{
+			DeploymentAuthMechanisms: []string{},
+		},
+		Processes: []*opsmngr.Process{
+			{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{Port: 1},
+					Replication: &opsmngr.Replication{
+						ReplSetName: "myShard_0",
+					},
+					Storage: &opsmngr.Storage{
+						DBPath: "/data/myShard_0",
+					},
+					SystemLog: opsmngr.SystemLog{
+						Destination: "file",
+						Path:        "/log/myShard_0",
+					},
+				},
+				LogRotate: &opsmngr.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				AuthSchemaVersion:           5,
+				Name:                        name + "_myShard_0_0",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "example",
+				ManualMode:                  false,
+				ProcessType:                 "mongod",
+				Version:                     "4.2.2",
+			},
+			{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{Port: 2},
+					Replication: &opsmngr.Replication{
+						ReplSetName: "configRS",
+					},
+					Storage: &opsmngr.Storage{
+						DBPath: "/data/configRS",
+					},
+					SystemLog: opsmngr.SystemLog{
+						Destination: "file",
+						Path:        "/log/configRS",
+					},
+					Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+				},
+				LogRotate: &opsmngr.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				AuthSchemaVersion:           5,
+				Name:                        name + "_configRS_1",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "example",
+				ManualMode:                  false,
+				ProcessType:                 "mongod",
+				Version:                     "4.2.2",
+			},
+			{
+				Args26: opsmngr.Args26{
+					NET: opsmngr.Net{Port: 3},
+					SystemLog: opsmngr.SystemLog{
+						Destination: "file",
+						Path:        "/log/mongos",
+					},
+				},
+				LogRotate: &opsmngr.LogRotate{
+					SizeThresholdMB:  1000,
+					TimeThresholdHrs: 24,
+				},
+				Cluster:                     name,
+				AuthSchemaVersion:           5,
+				Name:                        name + "_mongos_2",
+				Disabled:                    disabled,
+				FeatureCompatibilityVersion: "4.2",
+				Hostname:                    "example",
+				ManualMode:                  false,
+				ProcessType:                 "mongos",
+				Version:                     "4.2.2",
+			},
+		},
+		ReplicaSets: []*opsmngr.ReplicaSet{
+			{
+				ID:              "myShard_0",
+				ProtocolVersion: "1",
+				Members: []opsmngr.Member{
+					{
+						ID:           0,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         name + "_myShard_0_0",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+			{
+				ID:              "configRS",
+				ProtocolVersion: "1",
+				Members: []opsmngr.Member{
+					{
+						ID:           0,
+						ArbiterOnly:  false,
+						BuildIndexes: true,
+						Hidden:       false,
+						Host:         name + "_configRS_1",
+						Priority:     1,
+						SlaveDelay:   0,
+						Votes:        1,
+					},
+				},
+			},
+		},
+		Sharding: []*opsmngr.ShardingConfig{
+			{
+				ConfigServerReplica: "configRS",
+				Name:                name,
+				Shards: []*opsmngr.Shard{
+					{
+						ID: "myShard_0",
+						RS: "myShard_0",
+					},
+				},
+			},
+		},
+	}
+}
+
 func MongoDBUsers() *opsmngr.MongoDBUser {
 	return &opsmngr.MongoDBUser{
 		Mechanisms: []string{"SCRAM-SHA-1"},
@@ -225,17 +357,6 @@ func MongoDBUsers() *opsmngr.MongoDBUser {
 		},
 		Username: "test",
 		Database: "test",
-	}
-}
-
-func AutomationConfigWithoutMongoDBUsers() *opsmngr.AutomationConfig {
-	return &opsmngr.AutomationConfig{
-		Auth: opsmngr.Auth{
-			AutoAuthMechanism: "MONGODB-CR",
-			Disabled:          true,
-			AuthoritativeSet:  false,
-			Users:             make([]*opsmngr.MongoDBUser, 0),
-		},
 	}
 }
 
@@ -256,5 +377,6 @@ func EmptyAutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
 		Processes:   make([]*opsmngr.Process, 0),
 		ReplicaSets: make([]*opsmngr.ReplicaSet, 0),
+		Sharding:    make([]*opsmngr.ShardingConfig, 0),
 	}
 }

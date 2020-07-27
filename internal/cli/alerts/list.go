@@ -15,15 +15,15 @@
 package alerts
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
@@ -41,13 +41,13 @@ func (opts *ListOpts) initStore() error {
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newAlertsListOptions()
-	result, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {

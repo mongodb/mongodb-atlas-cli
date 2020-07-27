@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package organizations
 
 import (
@@ -19,24 +21,24 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationLister(ctrl)
-
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Organizations{}
+	expected := &mongodbatlas.Organizations{}
+
+	listOpts := &ListOpts{store: mockStore}
 
 	mockStore.
 		EXPECT().
-		Organizations().
+		Organizations(listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	listOpts := &ListOpts{store: mockStore}
 	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

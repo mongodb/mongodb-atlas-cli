@@ -15,119 +15,50 @@
 package convert
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongocli/internal/search"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const (
-	mongod                         = "mongod"
-	atmAgentWindowsKeyFilePath     = "%SystemDrive%\\MMSAutomation\\versions\\keyfile"
-	atmAgentKeyFilePathInContainer = "/var/lib/mongodb-mms-automation/keyfile"
-)
+// FromAutomationConfig convert from opsmngr.AutomationConfig format to []*ClusterConfig
+// the given opsmngr.AutomationConfig will be modified
+func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
+	out := make([]*ClusterConfig, 0, len(c.ReplicaSets))
 
-// FromAutomationConfig convert from cloud format to mCLI format
-func FromAutomationConfig(in *opsmngr.AutomationConfig) (out []ClusterConfig) {
-	out = make([]ClusterConfig, len(in.ReplicaSets))
+	for _, s := range c.Sharding {
+		newSC := newShardedCluster(s)
+		for j, ss := range s.Shards {
+			id := ss.ID
+			newSC.Shards[j] = newRSConfig(c, id)
+		}
 
-	for i, rs := range in.ReplicaSets {
-		out[i].Name = rs.ID
-		out[i].ProcessConfigs = make([]*ProcessConfig, len(rs.Members))
-
+		newSC.Config = newRSConfig(c, s.ConfigServerReplica)
+		for j, p := range c.Processes {
+			if p.Cluster == s.Name {
+				newSC.Mongos = append(newSC.Mongos, newMongosProcessConfig(p))
+				newSC.addToMongoURI(p)
+				c.Processes = removeProcess(c.Processes, j)
+				break
+			}
+		}
+		out = append(out, newSC)
+	}
+	for _, rs := range c.ReplicaSets {
+		newRS := newReplicaSetCluster(rs.ID, len(rs.Members))
 		for j, m := range rs.Members {
-			out[i].ProcessConfigs[j] = convertCloudMember(m)
-			for k, p := range in.Processes {
+			for k, p := range c.Processes {
 				if p.Name == m.Host {
-					convertCloudProcess(out[i].ProcessConfigs[j], p)
-					if out[i].MongoURI == "" {
-						out[i].MongoURI = fmt.Sprintf("mongodb://%s:%d", p.Hostname, p.Args26.NET.Port)
-					} else {
-						out[i].MongoURI = fmt.Sprintf("%s,%s:%d", out[i].MongoURI, p.Hostname, p.Args26.NET.Port)
-					}
-					in.Processes = append(in.Processes[:k], in.Processes[k+1:]...)
+					newRS.ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
+					newRS.addToMongoURI(p)
+					c.Processes = removeProcess(c.Processes, k)
 					break
 				}
 			}
 		}
+		out = append(out, newRS)
 	}
 
-	return
+	return out
 }
 
-const (
-	keyLength = 500
-	cr        = "MONGODB-CR"
-	sha256    = "SCRAM-SHA-256"
-)
-
-func EnableMechanism(out *opsmngr.AutomationConfig, m []string) error {
-	out.Auth.Disabled = false
-	for _, v := range m {
-		if v != cr && v != sha256 {
-			return fmt.Errorf("unsupported mechanism %s", v)
-		}
-		if v == sha256 {
-			out.Auth.AutoAuthMechanism = v
-		}
-		if !search.StringInSlice(out.Auth.DeploymentAuthMechanisms, v) {
-			out.Auth.DeploymentAuthMechanisms = append(out.Auth.DeploymentAuthMechanisms, v)
-		}
-		if !search.StringInSlice(out.Auth.AutoAuthMechanisms, v) {
-			out.Auth.AutoAuthMechanisms = append(out.Auth.AutoAuthMechanisms, v)
-		}
-	}
-
-	if out.Auth.AutoUser == "" {
-		if err := setAutoUser(out); err != nil {
-			return err
-		}
-	}
-
-	var err error
-	if out.Auth.Key == "" {
-		if out.Auth.Key, err = generateRandomBase64String(keyLength); err != nil {
-			return err
-		}
-	}
-	if out.Auth.KeyFile == "" {
-		out.Auth.KeyFile = atmAgentKeyFilePathInContainer
-	}
-	if out.Auth.KeyFileWindows == "" {
-		out.Auth.KeyFileWindows = atmAgentWindowsKeyFilePath
-	}
-
-	return nil
-}
-
-func setAutoUser(out *opsmngr.AutomationConfig) error {
-	var err error
-	out.Auth.AutoUser = automationAgentName
-	if out.Auth.AutoPwd, err = generateRandomASCIIString(500); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// convertCloudMember map cloudmanager.Member -> convert.ProcessConfig
-func convertCloudMember(in opsmngr.Member) *ProcessConfig {
-	return &ProcessConfig{
-		BuildIndexes: &in.BuildIndexes,
-		Priority:     in.Priority,
-		SlaveDelay:   in.SlaveDelay,
-		Votes:        in.Votes,
-	}
-}
-
-// convertCloudProcess map cloudmanager.Process -> convert.ProcessConfig
-func convertCloudProcess(out *ProcessConfig, in *opsmngr.Process) {
-	out.DBPath = in.Args26.Storage.DBPath
-	out.LogPath = in.Args26.SystemLog.Path
-	out.Port = in.Args26.NET.Port
-	out.ProcessType = in.ProcessType
-	out.Version = in.Version
-	out.FCVersion = in.FeatureCompatibilityVersion
-	out.Hostname = in.Hostname
-	out.Name = in.Name
+func removeProcess(in []*opsmngr.Process, i int) []*opsmngr.Process {
+	return append(in[:i], in[i+1:]...)
 }

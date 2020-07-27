@@ -15,14 +15,18 @@
 package organizations
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 type ListOpts struct {
+	cli.ListOpts
 	store store.OrganizationLister
 }
 
@@ -33,13 +37,14 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	orgs, err := opts.store.Organizations()
+	listOptions := opts.NewListOptions()
+	r, err := opts.store.Organizations(listOptions)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(orgs)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli iam organizations(s) list
@@ -56,6 +61,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	return cmd
 }

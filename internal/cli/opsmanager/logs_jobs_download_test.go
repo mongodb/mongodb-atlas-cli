@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package opsmanager
 
 import (
@@ -25,21 +27,18 @@ import (
 func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobsDownloader(ctrl)
+	defer ctrl.Finish()
 
 	opts := &LogsJobsDownloadOpts{
 		id:    "1",
 		store: mockStore,
 	}
+	opts.Out = "fake_log.tar.gz"
 	opts.Fs = afero.NewMemMapFs()
-	f, err := opts.NewWriteCloser()
-
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
-	}
 
 	mockStore.
 		EXPECT().
-		DownloadLogJob(opts.ProjectID, opts.id, f).
+		DownloadLogJob(opts.ProjectID, opts.id, gomock.Any()).
 		Return(nil).
 		Times(1)
 

@@ -39,6 +39,8 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
+const defaultWait = 4 * time.Second
+
 func (opts *WatchOpts) Run() error {
 	for {
 		result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
@@ -56,7 +58,7 @@ func (opts *WatchOpts) Run() error {
 			break
 		}
 		fmt.Print(".")
-		time.Sleep(4 * time.Second)
+		time.Sleep(defaultWait)
 	}
 	fmt.Printf("\nChanges deployed successfully\n")
 	return nil

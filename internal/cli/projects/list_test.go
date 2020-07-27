@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package projects
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Projects{}
@@ -38,7 +39,7 @@ func TestList_Run(t *testing.T) {
 	t.Run("No ConfigOrgID is given", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			GetAllProjects(listOpts.NewListOptions()).
+			Projects(listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 
@@ -75,7 +76,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetAllProjects(listOpts.NewListOptions()).
+			Projects(listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 

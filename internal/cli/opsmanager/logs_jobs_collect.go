@@ -19,11 +19,10 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -48,11 +47,11 @@ func (opts *LogsJobsCollectOpts) initStore() error {
 }
 
 func (opts *LogsJobsCollectOpts) Run() error {
-	result, err := opts.store.Collect(opts.ConfigProjectID(), opts.newLog())
+	r, err := opts.store.Collect(opts.ConfigProjectID(), opts.newLog())
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *LogsJobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
@@ -65,14 +64,15 @@ func (opts *LogsJobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
 	}
 }
 
-// mongocli om logs jobs collect resourceType resourceName --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
+// mongocli om logs jobs collect <resourceType> <resourceName> --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
 func LogsJobsCollectOptsBuilder() *cobra.Command {
+	const argsN = 2
 	opts := &LogsJobsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect <resourceType> <resourceName>",
 		Short: description.StartLogCollectionJob,
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 2 {
+			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
 			}
 

@@ -20,23 +20,29 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+
+	"github.com/mongodb/mongocli/e2e"
 )
 
 func TestLogs(t *testing.T) {
-	atlasEntity := "atlas"
-	logsEntity := "logs"
+	const logsEntity = "logs"
 
 	clusterName, err := deployCluster()
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("failed to deploy a cluster: %v", err)
 	}
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
 
 	hostname, err := getHostname()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -162,8 +168,4 @@ func TestLogs(t *testing.T) {
 			t.Fatalf("%v has not been downloaded", filepath)
 		}
 	})
-
-	if err := deleteCluster(clusterName); err != nil {
-		t.Fatalf("unexpected error: %s", err)
-	}
 }

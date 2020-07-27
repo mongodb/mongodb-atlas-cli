@@ -14,7 +14,7 @@
 
 package cli
 
-import atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+import atlas "go.mongodb.org/atlas/mongodbatlas"
 
 type MetricsOpts struct {
 	ListOpts

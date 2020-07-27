@@ -17,15 +17,14 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
@@ -47,20 +46,19 @@ func (opts *ListOpts) initStore() error {
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
-	var result *atlas.EventResponse
+	var r *atlas.EventResponse
 	var err error
 
 	if opts.orgID != "" {
-		result, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
 	} else if opts.projectID != "" {
-		result, err = opts.store.ProjectEvents(opts.projectID, listOpts)
+		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
 	}
-
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {

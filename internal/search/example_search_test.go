@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package search_test
+// +build unit
+
+package search
 
 import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/fixture"
-	"github.com/mongodb/mongocli/internal/search"
 )
 
 // This example demonstrates searching a cluster in an automation config.
 func ExampleClusterExists() {
 	a := fixture.AutomationConfig()
 	x := "myReplicaSet"
-	found := search.ClusterExists(a, x)
+	found := ClusterExists(a, x)
 	if found {
 		fmt.Printf("found %v\n", x)
 	} else {

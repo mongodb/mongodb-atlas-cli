@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -38,18 +38,18 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	var projects interface{}
+	var r interface{}
 	var err error
 	listOptions := opts.NewListOptions()
 	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
-		projects, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), listOptions)
+		r, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), listOptions)
 	} else {
-		projects, err = opts.store.GetAllProjects(listOptions)
+		r, err = opts.store.Projects(listOptions)
 	}
 	if err != nil {
 		return err
 	}
-	return json.PrettyPrint(projects)
+	return output.Print(config.Default(), "", r)
 }
 
 // mongocli iam project(s) list [--orgId orgId]

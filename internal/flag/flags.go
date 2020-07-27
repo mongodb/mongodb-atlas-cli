@@ -25,7 +25,9 @@ const (
 	Region                          = "region"                          // Region flag
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
+	Shards                          = "shards"                          // Shards flag
 	MembersShort                    = "m"                               // MembersShort flag
+	ShardsShort                     = "s"                               // ShardsShort flag
 	Tier                            = "tier"                            // Tier flag
 	Forever                         = "forever"                         // Forever flag
 	ForeverShort                    = "F"                               // ForeverShort flag
@@ -35,12 +37,15 @@ const (
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
+	X509Type                        = "x509Type"                        // X509Type flag
+	AWSIAMType                      = "awsIAMType"                      // AWSIAMType flag
 	Period                          = "period"                          // Period flag
 	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag
 	Out                             = "out"                             // Out flag
+	Output                          = "output"                          // Output flag
+	OutputShort                     = "o"                               // OutputShort flag
 	Minutes                         = "minutes"                         // Minutes flag
-	OutShort                        = "o"                               // OutShort flag
 	Status                          = "status"                          // Status flag
 	Start                           = "start"                           // Start flag
 	End                             = "end"                             // End flag
@@ -51,6 +56,7 @@ const (
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag
 	DeleteAfter                     = "deleteAfter"                     // DeleteAfter flag
+	ArchiveAfter                    = "archiveAfter"                    // ArchiveAfter flag
 	Until                           = "until"                           // Until flag
 	Page                            = "page"                            // Page flag
 	Limit                           = "limit"                           // Limit flag
@@ -86,6 +92,7 @@ const (
 	NotificationUsername            = "notificationUsername"            // NotificationUsername flag
 	NotificationVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationVictorOpsRoutingKey flag
 	SnapshotID                      = "snapshotId"                      // SnapshotID flag
+	IndexName                       = "indexName"                       // IndexName flag
 	ClusterName                     = "clusterName"                     // ClusterName flag
 	ClusterID                       = "clusterId"                       // ClusterID flag
 	TargetProjectID                 = "targetProjectId"                 // TargetProjectID flag
@@ -121,4 +128,13 @@ const (
 	SizeRequestedPerFileBytes       = "sizeRequestedPerFileBytes"       // SizeRequestedPerFileBytes flag
 	Redacted                        = "redacted"                        // Redacted flag
 	Verbose                         = "verbose"                         // Verbose flag
+	TestBucket                      = "testBucket"                      // TestBucket flag
+	Partition                       = "partition"                       // Partition flag
+	DateField                       = "dateField"                       // DateField flag
+	Analyzer                        = "analyzer"                        // Analyzer flag
+	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
+	Dynamic                         = "dynamic"                         // Dynamic flag
+	Field                           = "field"                           // Fields flag
+	CASFilePath                     = "casFile"                         // CASFilePath flag
+	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
 )

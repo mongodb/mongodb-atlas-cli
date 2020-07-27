@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package alerts
 
 import (
 	"testing"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -26,7 +28,6 @@ import (
 func TestConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.AlertConfiguration

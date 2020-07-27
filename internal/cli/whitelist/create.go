@@ -15,15 +15,15 @@
 package whitelist
 
 import (
-	atlas "github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -49,13 +49,13 @@ func (opts *CreateOpts) initStore() error {
 
 func (opts *CreateOpts) Run() error {
 	entry := opts.newWhitelist()
-	result, err := opts.store.CreateProjectIPWhitelist(entry)
+	r, err := opts.store.CreateProjectIPWhitelist(entry)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
@@ -94,7 +94,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.WhitelistType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
-	cmd.Flags().StringVar(&opts.comment, flag.DeleteAfter, "", usage.DeleteAfter)
+	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.DeleteAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

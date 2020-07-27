@@ -20,15 +20,17 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestEvents(t *testing.T) {
 	atlasEntity := "atlas"
 	eventsEntity := "events"
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -37,7 +39,7 @@ func TestEvents(t *testing.T) {
 			atlasEntity,
 			eventsEntity,
 			"list",
-			"--projectId=5e429f2e06822c6eac4d59c9",
+			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
 		)
 
 		cmd.Env = os.Environ()
@@ -47,27 +49,23 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if len(events.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
 		}
-
 	})
 
 	t.Run("ListOrganizationEvent", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			eventsEntity,
 			"list",
-			"--orgId=5e429e7706822c6eac4d5970",
-			"--minDate=2020-04-01",
+			"--orgId="+os.Getenv("MCLI_ORG_ID"),
+			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
 		)
 
 		cmd.Env = os.Environ()
@@ -77,16 +75,13 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		events := mongodbatlas.EventResponse{}
-		err = json.Unmarshal(resp, &events)
-
-		if err != nil {
+		var events mongodbatlas.EventResponse
+		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if len(events.Results) == 0 {
 			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
 		}
-
 	})
 }

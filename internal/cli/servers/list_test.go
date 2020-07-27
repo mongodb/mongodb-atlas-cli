@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package servers
 
 import (
@@ -26,7 +28,6 @@ import (
 func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAgentLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &opsmngr.Agents{}

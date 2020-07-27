@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package alerts
 
 import (
@@ -24,7 +26,6 @@ import (
 func TestConfigFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []string

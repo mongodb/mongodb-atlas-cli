@@ -12,40 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package search_test
+// +build unit
+
+package search
 
 import (
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/fixture"
-	"github.com/mongodb/mongocli/internal/search"
 )
 
 func TestStringInSlice(t *testing.T) {
 	s := []string{"a", "b", "c"}
 	t.Run("value exists", func(t *testing.T) {
-		if !search.StringInSlice(s, "b") {
+		if !StringInSlice(s, "b") {
 			t.Error("StringInSlice() should find the value")
 		}
 	})
 
 	t.Run("value not exists", func(t *testing.T) {
-		if search.StringInSlice(s, "d") {
+		if StringInSlice(s, "d") {
 			t.Error("StringInSlice() should not find the value")
 		}
 	})
 }
 
 func TestClusterExists(t *testing.T) {
-	t.Run("value exists", func(t *testing.T) {
-		if !search.ClusterExists(fixture.AutomationConfig(), "myReplicaSet") {
+	t.Run("replica set exists", func(t *testing.T) {
+		if !ClusterExists(fixture.AutomationConfig(), "myReplicaSet") {
+			t.Error("ClusterExists() should find the value")
+		}
+	})
+
+	t.Run("sharded cluster exists", func(t *testing.T) {
+		if !ClusterExists(fixture.AutomationConfigWithOneShardedCluster("myCluster", false), "myCluster") {
 			t.Error("ClusterExists() should find the value")
 		}
 	})
 
 	t.Run("value not exists", func(t *testing.T) {
-		if search.ClusterExists(fixture.AutomationConfig(), "X") {
-			t.Error("StringInSlice() should not find the value")
+		if ClusterExists(fixture.AutomationConfig(), "X") {
+			t.Error("ClusterExists() should not find the value")
 		}
 	})
 }

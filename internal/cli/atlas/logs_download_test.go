@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package atlas
 
 import (
@@ -25,6 +27,7 @@ import (
 func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	defer ctrl.Finish()
 
 	appFS := afero.NewMemMapFs()
 
@@ -34,14 +37,9 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	f, err := opts.newWriteCloser()
-	if err != nil {
-		t.Fatalf("newWriteCloser() unexpected error: %v", err)
-	}
-
 	mockStore.
 		EXPECT().
-		DownloadLog(opts.ProjectID, opts.host, opts.name, f, opts.newDateRangeOpts()).
+		DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
 		Return(nil).
 		Times(1)
 

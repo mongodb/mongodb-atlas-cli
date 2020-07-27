@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package atlas
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestProcessesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessLister(ctrl)
-
 	defer ctrl.Finish()
 
 	var expected []*mongodbatlas.Process
@@ -36,7 +37,7 @@ func TestProcessesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.NewListOptions()).
+		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
 		Return(expected, nil).
 		Times(1)
 

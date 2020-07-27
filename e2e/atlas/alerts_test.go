@@ -22,23 +22,94 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	open                            = "OPEN"
-	users_without_multi_factor_auth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open                        = "OPEN"
+	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
 )
 
 func TestAlerts(t *testing.T) {
-	atlasEntity := "atlas"
-	alertsEntity := "alerts"
-	alertID := "5ecbef6b2359825e889837a7"
+	var alertID string
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	// This test should be run before all other tests to grab an alert ID for all other tests
+	t.Run("List", func(t *testing.T) {
+		t.Run("with no status", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if len(alerts.Results) == 0 {
+				t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
+			}
+			alertID = alerts.Results[0].ID
+		})
+
+		t.Run("with status OPEN", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+				"--status",
+				"OPEN",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+
+		t.Run("List with status CLOSED", func(t *testing.T) {
+			cmd := exec.Command(cliPath,
+				atlasEntity,
+				alertsEntity,
+				"list",
+				"--status",
+				"CLOSED",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+			}
+
+			var alerts mongodbatlas.AlertsResponse
+			if err := json.Unmarshal(resp, &alerts); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -54,10 +125,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -69,101 +138,12 @@ func TestAlerts(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
 
-		if alert.EventTypeName != users_without_multi_factor_auth {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, users_without_multi_factor_auth)
+		if alert.EventTypeName != usersWithoutMultiFactorAuth {
+			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
 		}
-
-	})
-
-	t.Run("List with no status", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
-
-	})
-	t.Run("List with status OPEN", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-			"--status",
-			"OPEN",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=0\nwant>0\n")
-		}
-
-	})
-
-	t.Run("List with status CLOSED", func(t *testing.T) {
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			alertsEntity,
-			"list",
-			"--status",
-			"CLOSED",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		alerts := mongodbatlas.AlertsResponse{}
-		err = json.Unmarshal(resp, &alerts)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
-
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,
@@ -179,10 +159,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -192,7 +170,6 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,
@@ -207,10 +184,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -219,8 +194,7 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("UnaAcknowledge", func(t *testing.T) {
-
+	t.Run("UnAcknowledge", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			alertsEntity,
@@ -234,10 +208,8 @@ func TestAlerts(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		alert := mongodbatlas.Alert{}
-		err = json.Unmarshal(resp, &alert)
-
-		if err != nil {
+		var alert mongodbatlas.Alert
+		if err := json.Unmarshal(resp, &alert); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 

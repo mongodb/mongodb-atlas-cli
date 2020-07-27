@@ -16,9 +16,13 @@ package atlas
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/whitelist"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -29,11 +33,13 @@ func Builder() *cobra.Command {
 		Use:   "atlas",
 		Short: description.Atlas,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			config.SetService(config.CloudService)
 			return validate.Credentials()
 		},
 	}
-	cmd.AddCommand(ClustersBuilder())
-	cmd.AddCommand(DBUsersBuilder())
+	cmd.AddCommand(DataLakeBuilder())
+	cmd.AddCommand(clusters.Builder())
+	cmd.AddCommand(dbusers.Builder())
 	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(alerts.Builder())
 	cmd.AddCommand(cloudbackup.Builder())
@@ -41,6 +47,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(MetricsBuilder())
 	cmd.AddCommand(LogsBuilder())
 	cmd.AddCommand(ProcessesBuilder())
+	cmd.AddCommand(security.Builder())
 
 	return cmd
 }

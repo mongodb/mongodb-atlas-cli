@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -43,13 +43,13 @@ func (opts *CreateOpts) init() error {
 
 func (opts *CreateOpts) Run() error {
 	user := opts.newOwner()
-	result, err := opts.store.CreateOwner(user, opts.whitelistIps)
+	r, err := opts.store.CreateOwner(user, opts.whitelistIps)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), "", r)
 }
 
 func (opts *CreateOpts) newOwner() *opsmngr.User {
@@ -98,7 +98,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
 	cmd.Flags().StringSliceVar(&opts.whitelistIps, flag.WhitelistIP, []string{}, usage.WhitelistIps)
 
-	_ = cmd.MarkFlagRequired(flag.Username)
+	_ = cmd.MarkFlagRequired(flag.Email)
 	_ = cmd.MarkFlagRequired(flag.FirstName)
 	_ = cmd.MarkFlagRequired(flag.LastName)
 

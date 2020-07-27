@@ -21,10 +21,12 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/search"
+
 	"github.com/mongodb/mongocli/internal/config"
 )
 
-// toString tires to cast an interface to string
+// toString tries to cast an interface to string
 func toString(val interface{}) (string, error) {
 	var u string
 	var ok bool
@@ -49,6 +51,22 @@ func URL(val interface{}) error {
 	}
 
 	return nil
+}
+
+// OptionalURL validates a value is a valid URL for the cli store
+func OptionalURL(val interface{}) error {
+	if val == nil {
+		return nil
+	}
+	s, err := toString(val)
+	if err != nil {
+		return err
+	}
+	if s == "" {
+		return nil
+	}
+
+	return URL(val)
 }
 
 // OptionalObjectID validates a value is a valid ObjectID
@@ -81,4 +99,12 @@ func Credentials() error {
 		return errors.New("missing credentials")
 	}
 	return nil
+}
+
+func FlagInSlice(value, flag string, validValues []string) error {
+	if search.StringInSlice(validValues, value) {
+		return nil
+	}
+
+	return fmt.Errorf("%v is an invalid value for %v. It must be one of: %v", value, flag, strings.Join(validValues, ","))
 }

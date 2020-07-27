@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// +build unit
+
 package opsmanager
 
 import (
@@ -24,7 +27,6 @@ import (
 func TestLogsListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLogJobLister(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := &opsmngr.LogCollectionJobs{}

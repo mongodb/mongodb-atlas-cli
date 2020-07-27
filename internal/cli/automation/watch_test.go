@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package automation
 
 import (
@@ -25,7 +27,6 @@ import (
 func TestAutomationWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationStatusGetter(ctrl)
-
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationStatus()

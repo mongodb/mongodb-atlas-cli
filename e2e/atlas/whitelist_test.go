@@ -24,16 +24,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/go-client-mongodb-atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestWhitelist(t *testing.T) {
-	atlasEntity := "atlas"
-	whitelistEntity := "whitelist"
+	const whitelistEntity = "whitelist"
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
 
-	cliPath, err := cli()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -51,9 +51,8 @@ func TestWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
-		err = json.Unmarshal(resp, &entries)
-		if err != nil {
+		var entries []*mongodbatlas.ProjectIPWhitelist
+		if err := json.Unmarshal(resp, &entries); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		found := false
@@ -118,9 +117,8 @@ func TestWhitelist(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		entries := make([]mongodbatlas.ProjectIPWhitelist, 1)
-		err = json.Unmarshal(resp, &entries)
-		if err != nil {
+		var entries []*mongodbatlas.ProjectIPWhitelist
+		if err := json.Unmarshal(resp, &entries); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		found := false

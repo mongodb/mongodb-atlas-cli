@@ -20,9 +20,11 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/automation"
 	"github.com/mongodb/mongocli/internal/cli/backup"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/clusters"
 	"github.com/mongodb/mongocli/internal/cli/owner"
 	"github.com/mongodb/mongocli/internal/cli/security"
 	"github.com/mongodb/mongocli/internal/cli/servers"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -34,11 +36,16 @@ func Builder() *cobra.Command {
 		Aliases: []string{"om"},
 		Short:   description.OpsManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
+			config.SetService(config.OpsManagerService)
+			// do not validate to create an owner
+			if cmd.CommandPath() != "mongocli ops-manager owner create" {
+				return validate.Credentials()
+			}
+			return nil
 		},
 	}
 
-	cmd.AddCommand(ClustersBuilder())
+	cmd.AddCommand(clusters.Builder())
 	cmd.AddCommand(alerts.Builder())
 	cmd.AddCommand(backup.Builder())
 	cmd.AddCommand(servers.Builder())

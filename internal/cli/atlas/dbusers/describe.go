@@ -72,7 +72,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, "", usage.AuthDB)
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
 
 	_ = cmd.MarkFlagRequired(flag.AuthDB)
 

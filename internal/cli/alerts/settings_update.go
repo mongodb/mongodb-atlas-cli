@@ -38,6 +38,8 @@ func (opts *ConfigUpdateOpts) initStore() error {
 	return err
 }
 
+var updateTemplate = "Updating alert configuration {{.ID}}.\n"
+
 func (opts *ConfigUpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
 	alert.ID = opts.alertID
@@ -46,7 +48,7 @@ func (opts *ConfigUpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
 // mongocli atlas alerts config(s) update <ID> [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]

@@ -39,6 +39,10 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	TYPE_NAME	STATUS{{range .Results}}
+{{.ID}}	{{.EventTypeName}}	{{.Status}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newAlertsListOptions()
 	r, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
@@ -47,7 +51,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {

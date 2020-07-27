@@ -36,6 +36,9 @@ func (opts *ConfigListOpts) initStore() error {
 	opts.store, err = store.New(config.Default())
 	return err
 }
+var settingsListTemplate = `ID	TYPE_NAME	ENABLED{{range .}}
+{{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
+`
 
 func (opts *ConfigListOpts) Run() error {
 	listOpts := opts.NewListOptions()
@@ -44,7 +47,7 @@ func (opts *ConfigListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), settingsListTemplate, r)
 }
 
 // mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]

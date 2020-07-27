@@ -39,6 +39,10 @@ func (opts *UnacknowledgeOpts) initStore() error {
 	return err
 }
 
+var unackTemplate = `ID	TYPE_NAME	METRIC_NAME
+{{.ID}}	{{.EventTypeName}}	{{.MetricName}}
+`
+
 func (opts *UnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
 	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
@@ -46,7 +50,7 @@ func (opts *UnacknowledgeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), unackTemplate, r)
 }
 
 func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {

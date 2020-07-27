@@ -37,6 +37,9 @@ func (opts *ConfigCreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Creating alert configuration {{.ID}}.\n"
+
+
 func (opts *ConfigCreateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
 	r, err := opts.store.CreateAlertConfiguration(alert)
@@ -44,7 +47,7 @@ func (opts *ConfigCreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]

@@ -33,13 +33,13 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	username        string
-	password        string
-	x509Type        string
-	awsIamType      string
-	deleteAfterDate string
-	roles           []string
-	store           store.DatabaseUserCreator
+	username    string
+	password    string
+	x509Type    string
+	awsIamType  string
+	deleteAfter string
+	roles       []string
+	store       store.DatabaseUserCreator
 }
 
 const (
@@ -94,7 +94,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 		Password:        opts.password,
 		X509Type:        opts.x509Type,
 		AWSIAMType:      opts.awsIamType,
-		DeleteAfterDate: opts.deleteAfterDate,
+		DeleteAfterDate: opts.deleteAfter,
 		DatabaseName:    authDB,
 	}
 }
@@ -179,7 +179,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.Username)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
-	cmd.Flags().StringVar(&opts.deleteAfterDate, flag.DeleteAfterDate, "", usage.DeleteAfterDate)
+	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.BDUsersDeleteAfter)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, AuthTypeNone, usage.X509Type)
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AuthTypeNone, usage.AWSIAMType)

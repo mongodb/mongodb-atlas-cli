@@ -47,7 +47,7 @@ func TestDBUsers(t *testing.T) {
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
-			"--deleteAfterDate", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
+			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
 			"--password=passW0rd")
 		cmd.Env = os.Environ()

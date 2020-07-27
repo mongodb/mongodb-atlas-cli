@@ -94,7 +94,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.WhitelistType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
-	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.DeleteAfter)
+	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.WhiteListsDeleteAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

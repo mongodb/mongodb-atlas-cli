@@ -39,7 +39,8 @@ const (
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
 	Comment                         = "Optional description or comment for the entry."
-	DeleteAfter                     = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
+	WhiteListsDeleteAfter           = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
+	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
 	LogOut                          = "Optional output filename, if none given will use the log name."

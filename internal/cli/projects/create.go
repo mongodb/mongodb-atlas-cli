@@ -25,7 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const createTemplate = `Project {{.ID}}	created.`
+const createTemplate = `Project {{.ID}} created.
+`
 
 type CreateOpts struct {
 	cli.GlobalOpts

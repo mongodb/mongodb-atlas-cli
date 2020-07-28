@@ -29,7 +29,7 @@ type UpgradeOpts struct {
 	store store.AgentUpgrader
 }
 
-var upgradeTemplate = "Updating agent versions to the latest available."
+var upgradeTemplate = "Updating agent versions to the latest available.\n"
 
 func (opts *UpgradeOpts) initStore() error {
 	var err error

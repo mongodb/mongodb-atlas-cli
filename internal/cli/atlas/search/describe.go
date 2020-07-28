@@ -39,13 +39,17 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
+var describeTemplate = `ID	Name	Database	Collection
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+`
+
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.clusterName, opts.indexID)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas cluster(s) search indexes describe <ID> [--clusterName name][--projectId projectId]

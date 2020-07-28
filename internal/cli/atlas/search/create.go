@@ -40,6 +40,8 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Index {{.Name}} created.\n"
+
 func (opts *CreateOpts) Run() error {
 	index, err := opts.newSearchIndex()
 	if err != nil {
@@ -50,7 +52,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // CreateBuilder

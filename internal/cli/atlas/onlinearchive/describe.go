@@ -40,7 +40,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 var describeTemplate = `ID	CLUSTER	DATABASE	COLLECTION	STATE
-{{.ID}}	{{.ClusterName}} {{.DBName}}	{{.CollName}}	{{.State}}
+{{.ID}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
 `
 
 func (opts *DescribeOpts) Run() error {

@@ -40,6 +40,8 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
+var updateTemplate = "Online archive '{{.ID}}' updated.\n"
+
 func (opts *UpdateOpts) Run() error {
 	archive := opts.newOnlineArchive()
 	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
@@ -47,7 +49,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
 func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {

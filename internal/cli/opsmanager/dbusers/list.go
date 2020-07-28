@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const listTemplate = `USERNAME	DATABASE{{range .}}
+{{.Username}}	{{.Database}}{{end}}
+`
+
 type ListOpts struct {
 	cli.GlobalOpts
 	store store.AutomationGetter
@@ -43,7 +47,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", current.Auth.Users)
+	return output.Print(config.Default(), listTemplate, current.Auth.Users)
 }
 
 // mongocli om|cm dbuser(s) list [--projectId projectId]

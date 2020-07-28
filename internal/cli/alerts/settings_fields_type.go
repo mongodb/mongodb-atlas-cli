@@ -32,8 +32,7 @@ func (opts *ConfigFieldsTypeOpts) init() error {
 	return err
 }
 
-var matcherFieldsTemplate = `{{range .}} {{.}} {{end}}
-`
+var matcherFieldsTemplate = "{{range .}}{{.}}\n{{end}}"
 
 func (opts *ConfigFieldsTypeOpts) Run() error {
 	r, err := opts.store.MatcherFields()

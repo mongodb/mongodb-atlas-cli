@@ -37,7 +37,7 @@ func (opts *ConfigListOpts) initStore() error {
 	return err
 }
 
-var settingsListTemplate = `ID	TYPE_NAME	ENABLED{{range .}}
+var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
 {{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
 `
 

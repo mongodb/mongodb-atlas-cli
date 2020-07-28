@@ -44,8 +44,7 @@ func (opts *AcknowledgeOpts) initStore() error {
 	return err
 }
 
-var ackTemplate = `ID	TYPE_NAME	METRIC_NAME	ACK_UNTIL
-{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.AcknowledgedUntil}}
+var ackTemplate = `Alert {{.ID}} acknowledged until {{.AcknowledgedUntil}}
 `
 
 func (opts *AcknowledgeOpts) Run() error {

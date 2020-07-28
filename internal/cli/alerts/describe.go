@@ -37,7 +37,7 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	TYPE_NAME	METRIC_NAME	STATUS
+var describeTemplate = `ID	TYPE	METRIC	STATUS
 {{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
 `
 

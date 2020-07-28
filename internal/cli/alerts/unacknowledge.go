@@ -39,8 +39,7 @@ func (opts *UnacknowledgeOpts) initStore() error {
 	return err
 }
 
-var unackTemplate = `ID	TYPE_NAME	METRIC_NAME
-{{.ID}}	{{.EventTypeName}}	{{.MetricName}}
+var unackTemplate = `Alert '{{.ID}}' unacknowledged
 `
 
 func (opts *UnacknowledgeOpts) Run() error {

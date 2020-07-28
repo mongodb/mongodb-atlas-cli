@@ -22,6 +22,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const createTemplate = "Organization {{.ID}} created.\n"
+
 type CreateOpts struct {
 	name  string
 	store store.OrganizationCreator
@@ -40,7 +42,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", p)
+	return output.Print(config.Default(), createTemplate, p)
 }
 
 // mongocli iam organization(s) create <name>

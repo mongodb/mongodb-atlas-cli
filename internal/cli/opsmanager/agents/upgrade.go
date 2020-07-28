@@ -29,6 +29,8 @@ type UpgradeOpts struct {
 	store store.AgentUpgrader
 }
 
+var upgradeTemplate = "Updating agent versions to the latest available.\n"
+
 func (opts *UpgradeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
@@ -37,11 +39,10 @@ func (opts *UpgradeOpts) initStore() error {
 
 func (opts *UpgradeOpts) Run() error {
 	r, err := opts.store.UpgradeAgent(opts.ConfigProjectID())
-
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), upgradeTemplate, r)
 }
 
 // mongocli ops-manager agents upgrade [--projectId projectId]

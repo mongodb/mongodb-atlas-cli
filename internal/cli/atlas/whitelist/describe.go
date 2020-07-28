@@ -25,8 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `IP ADDRESS	SECURITY GROUP
-{{.IPAddress}}	{{.AwsSecurityGroup}}
+const describeTemplate = `CIDR BLOCK	SECURITY GROUP
+{{.CIDRBlock}}	{{.AwsSecurityGroup}}
 `
 
 type DescribeOpts struct {

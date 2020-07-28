@@ -19,16 +19,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const template = `ID	NAME
-{{.ID}}	{{.Name}}
-`
-
-const listTemplate = `ID	NAME
-{{range .Results}}{{.ID}}	{{.Name}}{{end}}
-`
-
-const createTemplate = `Organization {{.ID}} created.`
-
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "organizations",

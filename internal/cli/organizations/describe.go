@@ -22,6 +22,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const describeTemplate = `ID	NAME
+{{.ID}}	{{.Name}}
+`
+
 type DescribeOpts struct {
 	id    string
 	store store.OrganizationDescriber
@@ -39,7 +43,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), template, org)
+	return output.Print(config.Default(), describeTemplate, org)
 }
 
 // mongocli iam organizations(s) describe <ID>

@@ -22,6 +22,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const createTemplate = `Organization {{.ID}} created.`
+
 type CreateOpts struct {
 	name  string
 	store store.OrganizationCreator

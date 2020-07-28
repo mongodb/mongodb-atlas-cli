@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const listTemplate = `ID	NAME{{range .Results}}
+{{.ID}}	{{.Name}}{{end}}
+`
+
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
@@ -49,7 +53,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli iam project(s) list [--orgId orgId]

@@ -1140,7 +1140,7 @@ buildvariants:
     tasks:
       - name: ".e2e .generic"
   - name: e2e_atlas_clusters
-    display_name: "E2E Atlas CLuster Tests"
+    display_name: "E2E Atlas Cluster Tests"
     run_on:
       - rhel70-small
     expansions:
@@ -1149,7 +1149,7 @@ buildvariants:
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_cloud_manager_clusters
-    display_name: "E2E Cloud Manager CLuster Tests"
+    display_name: "E2E Cloud Manager Cluster Tests"
     run_on:
       - rhel70-small
     expansions:

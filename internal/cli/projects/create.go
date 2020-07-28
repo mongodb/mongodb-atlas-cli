@@ -25,6 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const createTemplate = `Project {{.ID}}	created.`
+
 type CreateOpts struct {
 	cli.GlobalOpts
 	name  string
@@ -48,7 +50,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), template, r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId]

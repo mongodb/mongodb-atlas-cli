@@ -44,6 +44,8 @@ func (opts *AcknowledgeOpts) initStore() error {
 	return err
 }
 
+var ackTemplate = "Alert '{{.ID}}' acknowledged until {{.AcknowledgedUntil}}\n"
+
 func (opts *AcknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
 	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
@@ -51,7 +53,7 @@ func (opts *AcknowledgeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), ackTemplate, r)
 }
 
 func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {

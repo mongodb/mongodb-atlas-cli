@@ -30,6 +30,7 @@ const (
 	cidrBlock        = "cidrBlock"
 	ipAddress        = "ipAddress"
 	awsSecurityGroup = "awsSecurityGroup"
+	createTemplate   = "Created new IP whitelist.\n"
 )
 
 type CreateOpts struct {
@@ -55,7 +56,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {

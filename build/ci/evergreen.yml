@@ -476,7 +476,7 @@ tasks:
           E2E_TAGS: atlas,onlinearchive
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
-    tags: ["e2e","generic"]
+    tags: ["e2e","clusters"]
     depends_on:
       - name: compile
         variant: "code_health"

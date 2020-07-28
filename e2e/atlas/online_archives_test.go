@@ -17,12 +17,14 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -160,5 +162,7 @@ func TestOnlineArchives(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+		expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
+		assert.Equal(t, string(resp), expected)
 	})
 }

@@ -26,11 +26,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,ClusterStore,ClusterPauser,ClusterStarter
 
 type ClusterLister interface {
-	ProjectClusters(string, *atlas.ListOptions) ([]atlas.Cluster, error)
+	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
 }
 
 type ClusterDescriber interface {
-	Cluster(string, string) (*atlas.Cluster, error)
+	Cluster(string, string) (interface{}, error)
 }
 
 type ClusterCreator interface {
@@ -113,10 +113,13 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) ([]atlas.Cluster, error) {
+func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.List(context.Background(), projectID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Clusters.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -124,10 +127,13 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) ([]at
 }
 
 // Cluster encapsulate the logic to manage different cloud providers
-func (s *Store) Cluster(projectID, name string) (*atlas.Cluster, error) {
+func (s *Store) Cluster(projectID, name string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

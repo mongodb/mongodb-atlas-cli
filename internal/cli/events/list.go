@@ -43,6 +43,10 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	TYPE	CREATED{{range .Results}}
+{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
@@ -58,7 +62,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {

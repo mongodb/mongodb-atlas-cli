@@ -19,13 +19,13 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type WatchOpts struct {
@@ -48,8 +48,8 @@ func (opts *WatchOpts) Run() error {
 		if err != nil {
 			return err
 		}
-		if result.StateName == "IDLE" {
-			fmt.Printf("\nCluster available at: %s\n", result.MongoURIWithOptions)
+		if c, ok := result.(*mongodbatlas.Cluster); ok && c.StateName == "IDLE" {
+			fmt.Printf("\nCluster available at: %s\n", c.MongoURIWithOptions)
 			break
 		}
 		fmt.Print(".")

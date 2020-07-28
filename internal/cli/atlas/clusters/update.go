@@ -66,17 +66,22 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
 	var cluster *atlas.Cluster
-	var err error
 	if opts.filename != "" {
-		cluster = new(atlas.Cluster)
-		err = file.Load(opts.fs, opts.filename, cluster)
+		err := file.Load(opts.fs, opts.filename, &cluster)
+		if err != nil {
+			return nil, err
+		}
 		if opts.name == "" {
 			opts.name = cluster.Name
 		}
 	} else {
-		cluster, err = opts.store.Cluster(opts.ProjectID, opts.name)
+		r, err := opts.store.Cluster(opts.ProjectID, opts.name)
+		if err != nil {
+			return nil, err
+		}
+		cluster = r.(*atlas.Cluster)
 	}
-	return cluster, err
+	return cluster, nil
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {

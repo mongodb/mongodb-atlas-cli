@@ -67,6 +67,8 @@ func (opts *UpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateRequest {
 	return updateRequest
 }
 
+var updateTemplate = "Data lake '{{.Name}}' updated.\n"
+
 func (opts *UpdateOpts) Run() error {
 	updateRequest := opts.newUpdateRequest()
 
@@ -75,7 +77,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
 // mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region]

@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_automation.go -package=mocks github.com/mongodb/mongocli/internal/store AutomationGetter,AutomationUpdater,AutomationStatusGetter,AutomationPatcher,CloudManagerClustersLister
+//go:generate mockgen -destination=../mocks/mock_automation.go -package=mocks github.com/mongodb/mongocli/internal/store AutomationGetter,AutomationUpdater,AutomationStatusGetter,AutomationPatcher,CloudManagerClustersLister,CloudManagerClustersDescriber
 
 type AutomationGetter interface {
 	GetAutomationConfig(string) (*opsmngr.AutomationConfig, error)
@@ -47,7 +47,13 @@ type AllClusterLister interface {
 
 type CloudManagerClustersLister interface {
 	AutomationGetter
+	ClusterLister
 	AllClusterLister
+}
+
+type CloudManagerClustersDescriber interface {
+	AutomationGetter
+	ClusterDescriber
 }
 
 func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {

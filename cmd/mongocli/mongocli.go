@@ -101,7 +101,7 @@ func init() { //nolint:gochecknoinits // This is the cobra way
 	cobra.EnableCommandSorting = false
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutputShort, config.JSON, usage.FormatOut)
 	cobra.OnInitialize(initConfig)
 }
 

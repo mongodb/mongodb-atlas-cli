@@ -30,9 +30,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const (
-	scramSHA1 = "SCRAM-SHA-1"
-)
+const scramSHA1 = "SCRAM-SHA-1"
 
 type CreateOpts struct {
 	cli.GlobalOpts

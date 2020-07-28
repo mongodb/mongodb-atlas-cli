@@ -39,8 +39,7 @@ func (opts *UnacknowledgeOpts) initStore() error {
 	return err
 }
 
-var unackTemplate = `Alert '{{.ID}}' unacknowledged
-`
+var unackTemplate = "Alert '{{.ID}}' unacknowledged\n"
 
 func (opts *UnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()

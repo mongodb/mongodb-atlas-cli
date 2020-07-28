@@ -38,8 +38,7 @@ func (opts *ConfigUpdateOpts) initStore() error {
 	return err
 }
 
-var updateTemplate = `Alert configuration {{.ID}} updated.
-`
+var updateTemplate = "Alert configuration '{{.ID}}' updated.\n"
 
 func (opts *ConfigUpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())

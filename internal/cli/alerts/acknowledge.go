@@ -44,8 +44,7 @@ func (opts *AcknowledgeOpts) initStore() error {
 	return err
 }
 
-var ackTemplate = `Alert {{.ID}} acknowledged until {{.AcknowledgedUntil}}
-`
+var ackTemplate = "Alert {{.ID}} acknowledged until {{.AcknowledgedUntil}}\n"
 
 func (opts *AcknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()

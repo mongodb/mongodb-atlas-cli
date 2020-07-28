@@ -39,7 +39,7 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	Name	Database	Collection
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
 `
 

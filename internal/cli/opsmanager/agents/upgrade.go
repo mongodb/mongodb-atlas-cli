@@ -29,9 +29,7 @@ type UpgradeOpts struct {
 	store store.AgentUpgrader
 }
 
-var upgradeTemplate = `AGENT VERSION	BI VERSION
-{{.AutomationAgentVersion}}	{{.BiConnectorVersion}}
-`
+var upgradeTemplate = "Updating agent versions to the latest available."
 
 func (opts *UpgradeOpts) initStore() error {
 	var err error

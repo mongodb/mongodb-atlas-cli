@@ -34,10 +34,10 @@ func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 }
 
 // ProjectClusters mocks base method
-func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Cluster, error) {
+func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Cluster)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,10 +72,10 @@ func (m *MockClusterDescriber) EXPECT() *MockClusterDescriberMockRecorder {
 }
 
 // Cluster mocks base method
-func (m *MockClusterDescriber) Cluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
+func (m *MockClusterDescriber) Cluster(arg0, arg1 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Cluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Cluster)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -223,10 +223,10 @@ func (m *MockClusterStore) EXPECT() *MockClusterStoreMockRecorder {
 }
 
 // Cluster mocks base method
-func (m *MockClusterStore) Cluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
+func (m *MockClusterStore) Cluster(arg0, arg1 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Cluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Cluster)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -267,10 +267,10 @@ func (mr *MockClusterStoreMockRecorder) DeleteCluster(arg0, arg1 interface{}) *g
 }
 
 // ProjectClusters mocks base method
-func (m *MockClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Cluster, error) {
+func (m *MockClusterStore) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Cluster)
+	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

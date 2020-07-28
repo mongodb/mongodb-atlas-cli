@@ -37,21 +37,46 @@ func (opts *ListOpts) init() error {
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	if opts.ConfigProjectID() == "" {
-		r, err := opts.store.ListAllProjectClusters()
-		if err != nil {
-			return err
-		}
-		return output.Print(config.Default(), "", r)
-	}
+// listTemplate used when project ID is given
+var listTemplate = `ID	NAME	TYPE{{range .Results}}
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}{{end}}
+`
 
-	clusterConfigs, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+// listAllTemplate used fetching all clusters for all projects
+var listAllTemplate = `ID	NAME	TYPE{{range .Results}}{{range .Clusters}}
+{{.ClusterID}}	{{.Name}}	{{.Type}}{{end}}{{end}}
+`
+
+func (opts *ListOpts) Run() error {
+	r, err := opts.clusters()
 	if err != nil {
 		return err
 	}
-	r := convert.FromAutomationConfig(clusterConfigs)
-	return output.Print(config.Default(), "", r)
+
+	return output.Print(config.Default(), opts.template(), r)
+}
+
+func (opts *ListOpts) template() string {
+	if opts.ConfigProjectID() == "" {
+		return listAllTemplate
+	}
+	return listTemplate
+}
+
+func (opts *ListOpts) clusters() (interface{}, error) {
+	if opts.ConfigProjectID() == "" {
+		return opts.store.ListAllProjectClusters()
+	}
+	if config.Output() == "" {
+		return opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
+	}
+	c, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+	if err != nil {
+		return nil, err
+	}
+	r := convert.FromAutomationConfig(c)
+
+	return r, nil
 }
 
 // mongocli cloud-manager cluster(s) list --projectId projectId

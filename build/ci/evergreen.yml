@@ -1130,7 +1130,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: .code_health
-  - name: e2e
+  - name: e2e_generic
     display_name: "E2E Tests Generic"
     run_on:
       - rhel70-small

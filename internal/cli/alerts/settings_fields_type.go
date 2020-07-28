@@ -32,13 +32,15 @@ func (opts *ConfigFieldsTypeOpts) init() error {
 	return err
 }
 
+var matcherFieldsTemplate = "{{range .}}{{.}}\n{{end}}"
+
 func (opts *ConfigFieldsTypeOpts) Run() error {
 	r, err := opts.store.MatcherFields()
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), matcherFieldsTemplate, r)
 }
 
 // mongocli atlas alerts config(s) fields type

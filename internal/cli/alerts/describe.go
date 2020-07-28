@@ -37,6 +37,10 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
+var describeTemplate = `ID	TYPE	METRIC	STATUS
+{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
+`
+
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.Alert(opts.ConfigProjectID(), opts.alertID)
 
@@ -44,7 +48,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas alerts describe <ID> --projectId projectId

@@ -36,6 +36,10 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `Name	State{{range.}}
+{{.Name}}	{{.State}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.DataLakes(opts.ConfigProjectID())
 
@@ -43,7 +47,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas datalake(s) list --projectId projectId

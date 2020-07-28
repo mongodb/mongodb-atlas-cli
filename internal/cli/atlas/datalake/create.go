@@ -38,6 +38,8 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Data lake '{{.Name}}' created.\n"
+
 func (opts *CreateOpts) Run() error {
 	createRequest := &mongodbatlas.DataLakeCreateRequest{
 		Name: opts.name,
@@ -48,7 +50,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // mongocli atlas datalake(s) create name --projectId projectId

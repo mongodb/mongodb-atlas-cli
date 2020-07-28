@@ -36,7 +36,7 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `Name	State{{range.}}
+var listTemplate = `NAME	STATE{{range.}}
 {{.Name}}	{{.State}}{{end}}
 `
 

@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const describeTemplate = `CIDR BLOCK	SECURITY GROUP
+{{.CIDRBlock}}	{{.AwsSecurityGroup}}
+`
+
 type DescribeOpts struct {
 	cli.GlobalOpts
 	name  string
@@ -43,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas whitelist(s) describe <name> --projectId projectId

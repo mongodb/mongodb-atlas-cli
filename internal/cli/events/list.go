@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	TYPE_NAME	CREATED{{range .Results}}
+var listTemplate = `ID	TYPE	CREATED{{range .Results}}
 {{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
 `
 

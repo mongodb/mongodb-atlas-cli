@@ -36,13 +36,17 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .}}
+{{.ID}}	{{.DBName}}	{{.CollName}}	{{.State}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]

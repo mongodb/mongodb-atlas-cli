@@ -46,6 +46,8 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Online archive '{{.ID}}' created.\n"
+
 func (opts *CreateOpts) Run() error {
 	archive, err := opts.newOnlineArchive()
 	if err != nil {
@@ -56,7 +58,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {

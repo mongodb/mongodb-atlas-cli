@@ -37,7 +37,7 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `Name	State
+var describeTemplate = `NAME	STATE
 {{.Name}}	{{.State}}
 `
 

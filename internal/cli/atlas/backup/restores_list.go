@@ -38,6 +38,10 @@ func (opts *RestoresListOpts) initStore() error {
 	return err
 }
 
+var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRE{{range .Results}}
+{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
+`
+
 func (opts *RestoresListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
@@ -45,7 +49,7 @@ func (opts *RestoresListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), restoreListTemplate, r)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N]

@@ -38,6 +38,10 @@ func (opts *SnapshotsListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	TYPE	STATUS	CREATE	EXPIRE{{range .Results}}
+{{.ID}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+`
+
 func (opts *SnapshotsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
@@ -45,7 +49,7 @@ func (opts *SnapshotsListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N]

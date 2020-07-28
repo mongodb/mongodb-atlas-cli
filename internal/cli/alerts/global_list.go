@@ -45,7 +45,7 @@ func (opts *GlobalListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *GlobalListOpts) newAlertsListOptions() *atlas.AlertsListOptions {

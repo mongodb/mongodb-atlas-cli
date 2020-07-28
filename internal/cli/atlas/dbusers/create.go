@@ -48,6 +48,7 @@ const (
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	AuthTypeNone     = "NONE"
+	createTemplate   = "Database user '{{.Username}}' successfully created.\n"
 )
 
 var (
@@ -77,7 +78,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {

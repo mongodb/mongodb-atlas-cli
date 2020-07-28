@@ -27,6 +27,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
+
 type UpdateOpts struct {
 	cli.GlobalOpts
 	username string
@@ -50,7 +52,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
 func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {

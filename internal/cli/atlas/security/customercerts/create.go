@@ -26,6 +26,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const createTemplate = `CAS
+{{.Cas}}
+`
+
 type SaveOpts struct {
 	cli.GlobalOpts
 	store   store.X509CertificateConfSaver
@@ -52,7 +56,7 @@ func (opts *SaveOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem

@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const describeTemplate = `CAS
+{{.Cas}}
+`
+
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
@@ -43,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas security customerCerts describe --projectId projectId

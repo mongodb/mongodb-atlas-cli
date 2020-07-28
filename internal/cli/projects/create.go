@@ -48,7 +48,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), template, r)
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId]

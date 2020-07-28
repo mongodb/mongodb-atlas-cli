@@ -49,7 +49,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli iam project(s) list [--orgId orgId]

@@ -39,7 +39,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", org)
+	return output.Print(config.Default(), template, org)
 }
 
 // mongocli iam projects(s) describe <ID>

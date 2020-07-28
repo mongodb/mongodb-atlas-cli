@@ -51,7 +51,7 @@ func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 }
 
 // indexFieldParts index field should be fieldName:analyzer:fieldType
-const indexFieldParts = 3
+const indexFieldParts = 2
 
 func (opts *IndexOpts) indexFields() (map[string]atlas.IndexField, error) {
 	if len(opts.fields) == 0 {
@@ -61,11 +61,10 @@ func (opts *IndexOpts) indexFields() (map[string]atlas.IndexField, error) {
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {
-			return nil, fmt.Errorf("partition should be fieldName:analyzer:fieldType, got: %s", p)
+			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
 		fields[f[0]] = atlas.IndexField{
-			Analyzer: f[1],
-			Type:     f[2],
+			Type: f[1],
 		}
 	}
 	return fields, nil

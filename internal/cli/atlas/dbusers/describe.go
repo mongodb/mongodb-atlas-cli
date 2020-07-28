@@ -26,6 +26,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const describeTemplate = `USERNAME	DATABASE
+{{.Username}}	{{.DatabaseName}}
+`
+
 type DescribeOpts struct {
 	cli.GlobalOpts
 	store    store.DatabaseUserDescriber
@@ -45,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas dbuser(s) describe <username> --projectId projectId --authDB authDB

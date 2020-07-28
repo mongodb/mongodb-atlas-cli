@@ -22,3 +22,4 @@ This will do the following things:
 1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
 2. Publish the new tag, ie `git push origin v1.0.0`
 3. Run the evergreen releasing task, ie: `evergreen patch -p mongocli-master -y -d "Release v1.0.0" -v release_publish -v release_msi -t all -f`
+4. Open a PR to update `server_version` in [build/ci/evergreen.yml](build/ci/evergreen.yml). The number does not matter as long as it's higher than the previous one.

@@ -16,6 +16,7 @@ UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_BINARY?=../../bin/${BINARY_NAME}
+E2E_TIMEOUT?=20m
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
@@ -70,7 +71,7 @@ build: ## Generate a binary in ./bin
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI-* environment variables are exported
-	${TEST_CMD} -v -p 1 -parallel 1 -timeout 15m -tags="${E2E_TAGS}" ./e2e...
+	${TEST_CMD} -v -p 1 -parallel 1 -timeout ${E2E_TIMEOUT} -tags="${E2E_TAGS}" ./e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests

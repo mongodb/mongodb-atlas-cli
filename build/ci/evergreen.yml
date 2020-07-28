@@ -537,9 +537,6 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install automation agent"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${cloud_manager_org_id}
@@ -568,7 +565,7 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,deploy_replica_set
+          E2E_TAGS: cloudmanager,remote
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -1148,8 +1145,8 @@ buildvariants:
       go_bin: "/opt/golang/go1.14/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
-  - name: e2e_cloud_manager_clusters
-    display_name: "E2E Cloud Manager Cluster Tests"
+  - name: e2e_cloud_manager_remote
+    display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:
       - rhel70-small
     expansions:

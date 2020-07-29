@@ -46,6 +46,7 @@ type RestoresStartOpts struct {
 	oplogInc             int64
 	snapshotID           string
 	pointInTimeUTCMillis int64
+	outputTemplate       string
 	store                store.RestoreJobsCreator
 }
 
@@ -55,6 +56,10 @@ func (opts *RestoresStartOpts) initStore() error {
 	return err
 }
 
+var automatedTemplate = "Restoring cluster {{.TargetClusterName}} using snapshot {{.SnapshotId}}"
+var pointInTimeTemplate = "Restoring cluster {{.TargetClusterName}} using point in time provided"
+var downloadTemplate = "Links to download the snapshot:"
+
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	r, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
@@ -63,32 +68,59 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), opts.outputTemplate, r)
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
 	request := new(atlas.CloudProviderSnapshotRestoreJob)
 	request.DeliveryType = opts.method
-	request.SnapshotID = opts.snapshotID
 
-	if opts.isAutomatedRestore() {
+	if opts.targetProjectID != "" {
 		request.TargetGroupID = opts.targetProjectID
-		request.TargetClusterName = opts.targetClusterName
+	}
 
-		if opts.oplogTS != 0 && opts.oplogInc != 0 {
-			request.OplogTs = opts.oplogTS
-			request.OplogInc = opts.oplogInc
-		}
-		if opts.pointInTimeUTCMillis != 0 {
-			request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
-		}
+	if opts.targetClusterName != "" {
+		request.TargetClusterName = opts.targetClusterName
+	}
+
+	if opts.snapshotID != "" {
+		request.SnapshotID = opts.snapshotID
+	}
+
+	// Set only in pointInTimeRestore
+	if opts.oplogTS != 0 && opts.oplogInc != 0 {
+		request.OplogTs = opts.oplogTS
+		request.OplogInc = opts.oplogInc
+	} else if opts.pointInTimeUTCMillis != 0 {
+		//set only when oplogTS and oplogInc are not set
+		request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
 	}
 
 	return request
 }
 
 func (opts *RestoresStartOpts) isAutomatedRestore() bool {
-	return opts.method == automatedRestore
+	if opts.method == automatedRestore {
+		opts.outputTemplate = automatedTemplate
+		return true
+	}
+	return false
+}
+
+func (opts *RestoresStartOpts) isPointInTimeRestore() bool {
+	if opts.method == pointInTimeRestore {
+		opts.outputTemplate = pointInTimeTemplate
+		return true
+	}
+	return false
+}
+
+func (opts *RestoresStartOpts) isDownloadRestore() bool {
+	if opts.method == downloadRestore {
+		opts.outputTemplate = downloadTemplate
+		return true
+	}
+	return false
 }
 
 func (opts *RestoresStartOpts) validateParams() error {
@@ -96,25 +128,6 @@ func (opts *RestoresStartOpts) validateParams() error {
 		return errors.New("needs clusterName")
 	}
 
-	if !opts.isAutomatedRestore() {
-		if e := opts.automatedRestoreOnlyFlags(); e != nil {
-			return e
-		}
-	}
-
-	return nil
-}
-
-func (opts *RestoresStartOpts) automatedRestoreOnlyFlags() error {
-	if opts.oplogTS != 0 {
-		return fmt.Errorf(onlyFor, flag.OplogTS, automatedRestore)
-	}
-	if opts.oplogInc > 0 {
-		return fmt.Errorf(onlyFor, flag.OplogInc, automatedRestore)
-	}
-	if opts.pointInTimeUTCMillis > 0 {
-		return fmt.Errorf(onlyFor, flag.PointInTimeUTCMillis, automatedRestore)
-	}
 	return nil
 }
 
@@ -123,7 +136,35 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 		return err
 	}
 
+	if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
+		return err
+	}
+
+	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
+		return err
+	}
+
 	return cmd.MarkFlagRequired(flag.ClusterName)
+}
+
+func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
+	if err := cmd.MarkFlagRequired(flag.TargetProjectID); err != nil {
+		return err
+	}
+
+	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
+		return err
+	}
+
+	return cmd.MarkFlagRequired(flag.ClusterName)
+}
+
+func markRequiredDownloadRestoreFlags(cmd *cobra.Command) error {
+	if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>
@@ -140,6 +181,19 @@ func RestoresStartBuilder() *cobra.Command {
 					return err
 				}
 			}
+
+			if opts.isPointInTimeRestore() {
+				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
+					return err
+				}
+			}
+
+			if opts.isDownloadRestore() {
+				if err := markRequiredDownloadRestoreFlags(cmd); err != nil {
+					return err
+				}
+			}
+
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -157,7 +211,6 @@ func RestoresStartBuilder() *cobra.Command {
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
-	// For Automatic restore
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)

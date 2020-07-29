@@ -134,18 +134,6 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           golangci-lint run --out-format junit-xml > lint-tests.xml
-  "snyk":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        script: |
-          export SNYK_TOKEN=${snyk_token}
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:$GOROOT/bin:$PATH"
-          ./bin/snyk-linux test --org=cloud
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -188,6 +176,18 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux
+  "snyk scan":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          export SNYK_TOKEN=${snyk_token}
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          ./bin/snyk-linux test --org=cloud
   "install curator":
     - command: shell.exec
       type: setup
@@ -376,12 +376,12 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
-  - name: dependencies
+  - name: snyk_scan
     tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "install snyk"
-      - func: "snyk"
+      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:

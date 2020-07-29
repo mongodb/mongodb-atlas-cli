@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package processes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,45 +23,62 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type ProcessesDescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
-	hostID string
-	store  store.HostDescriber
+	cli.ListOpts
+	clusterID string
+	store     store.HostLister
 }
 
-func (opts *ProcessesDescribeOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ProcessesDescribeOpts) Run() error {
-	r, err := opts.store.Host(opts.ConfigProjectID(), opts.hostID)
+var listTemplate = `ID	TYPE	HOSTNAME	PORT{{range .Results}}
+{{.ID}}	{{.TypeName}}	{{.Hostname}}	{{.Port}}{{end}}
+`
+
+func (opts *ListOpts) Run() error {
+	listOpts := opts.newHostListOptions()
+	r, err := opts.store.Hosts(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli om process(es) describe <ID> [--projectId projectId]
-func ProcessDescribeBuilder() *cobra.Command {
-	opts := &ProcessesDescribeOpts{}
+func (opts *ListOpts) newHostListOptions() *opsmngr.HostListOptions {
+	return &opsmngr.HostListOptions{
+		ClusterID:   opts.clusterID,
+		ListOptions: *opts.NewListOptions(),
+	}
+}
+
+// mongocli om process(es) list --projectId projectId [--page N] [--limit N]
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "list",
 		Short:   description.ListProcesses,
-		Aliases: []string{"d"},
-		Args:    cobra.ExactArgs(1),
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package processes
 
 import (
 	"testing"
@@ -24,24 +24,24 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestProcessesDescribe_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostDescriber(ctrl)
+	mockStore := mocks.NewMockHostLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Host{}
+	expected := &opsmngr.Hosts{}
 
-	opts := &ProcessesDescribeOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Host(opts.ProjectID, opts.hostID).
+		Hosts(listOpts.ProjectID, listOpts.newHostListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

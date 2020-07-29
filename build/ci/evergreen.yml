@@ -175,7 +175,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux
+          curl -sfL https://github.com/snyk/snyk/releases/download/v1.369.1/snyk-linux -o snyk
   "snyk scan":
     - command: shell.exec
       type: test
@@ -381,7 +381,7 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
-#      - func: "install snyk"
+      - func: "install snyk"
 #      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","generic"]

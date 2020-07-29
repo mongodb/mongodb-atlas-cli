@@ -183,6 +183,7 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         script: |
           export SNYK_TOKEN=${snyk_token}
+
           set -Eeou pipefail
 
           export GOROOT="${go_root}"
@@ -380,8 +381,8 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "clone"
-      - func: "install snyk"
-      - func: "snyk scan"
+#      - func: "install snyk"
+#      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:

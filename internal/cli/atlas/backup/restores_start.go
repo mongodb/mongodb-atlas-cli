@@ -58,7 +58,10 @@ func (opts *RestoresStartOpts) initStore() error {
 
 var automatedTemplate = "Restoring cluster {{.TargetClusterName}} using snapshot {{.SnapshotId}}"
 var pointInTimeTemplate = "Restoring cluster {{.TargetClusterName}} using point in time provided"
-var downloadTemplate = "Links to download the snapshot:"
+var downloadTemplate = `Links to download the snapshot:
+REL	HREF{{range .Links}}
+{{.Rel}}	{{.Href}}{{end}}
+`
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
@@ -100,27 +103,15 @@ func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.Cloud
 }
 
 func (opts *RestoresStartOpts) isAutomatedRestore() bool {
-	if opts.method == automatedRestore {
-		opts.outputTemplate = automatedTemplate
-		return true
-	}
-	return false
+	return opts.method == automatedRestore
 }
 
 func (opts *RestoresStartOpts) isPointInTimeRestore() bool {
-	if opts.method == pointInTimeRestore {
-		opts.outputTemplate = pointInTimeTemplate
-		return true
-	}
-	return false
+	return opts.method == pointInTimeRestore
 }
 
 func (opts *RestoresStartOpts) isDownloadRestore() bool {
-	if opts.method == downloadRestore {
-		opts.outputTemplate = downloadTemplate
-		return true
-	}
-	return false
+	return opts.method == downloadRestore
 }
 
 func (opts *RestoresStartOpts) validateParams() error {
@@ -180,18 +171,21 @@ func RestoresStartBuilder() *cobra.Command {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
 				}
+				opts.outputTemplate = automatedTemplate
 			}
 
 			if opts.isPointInTimeRestore() {
 				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
 					return err
 				}
+				opts.outputTemplate = pointInTimeTemplate
 			}
 
 			if opts.isDownloadRestore() {
 				if err := markRequiredDownloadRestoreFlags(cmd); err != nil {
 					return err
 				}
+				opts.outputTemplate = downloadTemplate
 			}
 
 			return opts.PreRunE(opts.initStore)

@@ -38,7 +38,7 @@ func (opts *SnapshotsListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	TYPE	STATUS	CREATE	EXPIRE{{range .Results}}
+var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range .Results}}
 {{.ID}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 

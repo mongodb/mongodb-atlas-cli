@@ -12,37 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package opsmanager
+package processes
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"github.com/mongodb/mongocli/internal/description"
+	"github.com/spf13/cobra"
 )
 
-func TestProcessesList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostLister(ctrl)
-	defer ctrl.Finish()
-
-	expected := &opsmngr.Hosts{}
-
-	listOpts := &ProcessesListOpts{
-		store: mockStore,
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "processes",
+		Aliases: []string{"process"},
+		Short:   description.Processes,
 	}
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DescribeBuilder())
 
-	mockStore.
-		EXPECT().
-		Hosts(listOpts.ProjectID, listOpts.newHostListOptions()).
-		Return(expected, nil).
-		Times(1)
-
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

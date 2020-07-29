@@ -33,7 +33,6 @@ const (
 	automatedRestore   = "automated"
 	downloadRestore    = "download"
 	pointInTimeRestore = "pointInTime"
-	onlyFor            = "'%s' can only be used with %s"
 )
 
 type RestoresStartOpts struct {
@@ -55,6 +54,8 @@ func (opts *RestoresStartOpts) initStore() error {
 	return err
 }
 
+var startTemplate = "Restore job '{{.ID}}' successfully started\n"
+
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	r, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
@@ -63,25 +64,32 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), startTemplate, r)
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
 	request := new(atlas.CloudProviderSnapshotRestoreJob)
 	request.DeliveryType = opts.method
-	request.SnapshotID = opts.snapshotID
 
-	if opts.isAutomatedRestore() {
+	if opts.targetProjectID != "" {
 		request.TargetGroupID = opts.targetProjectID
-		request.TargetClusterName = opts.targetClusterName
+	}
 
-		if opts.oplogTS != 0 && opts.oplogInc != 0 {
-			request.OplogTs = opts.oplogTS
-			request.OplogInc = opts.oplogInc
-		}
-		if opts.pointInTimeUTCMillis != 0 {
-			request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
-		}
+	if opts.targetClusterName != "" {
+		request.TargetClusterName = opts.targetClusterName
+	}
+
+	if opts.snapshotID != "" {
+		request.SnapshotID = opts.snapshotID
+	}
+
+	// Set only in pointInTimeRestore
+	if opts.oplogTS != 0 && opts.oplogInc != 0 {
+		request.OplogTs = opts.oplogTS
+		request.OplogInc = opts.oplogInc
+	} else if opts.pointInTimeUTCMillis != 0 {
+		// Set only when oplogTS and oplogInc are not set
+		request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
 	}
 
 	return request
@@ -91,35 +99,44 @@ func (opts *RestoresStartOpts) isAutomatedRestore() bool {
 	return opts.method == automatedRestore
 }
 
+func (opts *RestoresStartOpts) isPointInTimeRestore() bool {
+	return opts.method == pointInTimeRestore
+}
+
+func (opts *RestoresStartOpts) isDownloadRestore() bool {
+	return opts.method == downloadRestore
+}
+
 func (opts *RestoresStartOpts) validateParams() error {
 	if opts.clusterName == "" {
 		return errors.New("needs clusterName")
 	}
 
-	if !opts.isAutomatedRestore() {
-		if e := opts.automatedRestoreOnlyFlags(); e != nil {
-			return e
-		}
-	}
-
-	return nil
-}
-
-func (opts *RestoresStartOpts) automatedRestoreOnlyFlags() error {
-	if opts.oplogTS != 0 {
-		return fmt.Errorf(onlyFor, flag.OplogTS, automatedRestore)
-	}
-	if opts.oplogInc > 0 {
-		return fmt.Errorf(onlyFor, flag.OplogInc, automatedRestore)
-	}
-	if opts.pointInTimeUTCMillis > 0 {
-		return fmt.Errorf(onlyFor, flag.PointInTimeUTCMillis, automatedRestore)
-	}
 	return nil
 }
 
 func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 	if err := cmd.MarkFlagRequired(flag.TargetProjectID); err != nil {
+		return err
+	}
+
+	if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
+		return err
+	}
+
+	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
+		return err
+	}
+
+	return cmd.MarkFlagRequired(flag.ClusterName)
+}
+
+func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
+	if err := cmd.MarkFlagRequired(flag.TargetProjectID); err != nil {
+		return err
+	}
+
+	if err := cmd.MarkFlagRequired(flag.TargetClusterID); err != nil {
 		return err
 	}
 
@@ -140,6 +157,19 @@ func RestoresStartBuilder() *cobra.Command {
 					return err
 				}
 			}
+
+			if opts.isPointInTimeRestore() {
+				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
+					return err
+				}
+			}
+
+			if opts.isDownloadRestore() {
+				if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
+					return err
+				}
+			}
+
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -157,7 +187,6 @@ func RestoresStartBuilder() *cobra.Command {
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
-	// For Automatic restore
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// Atlas uses cluster name
 	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)

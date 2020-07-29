@@ -38,12 +38,16 @@ func (opts *JobsListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range .Results}}
+{{.ID}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.URL}}	{{.Redacted}}{{end}}
+`
+
 func (opts *JobsListOpts) Run() error {
 	r, err := opts.store.LogCollectionJobs(opts.ConfigProjectID(), opts.newLogListOptions())
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *JobsListOpts) newLogListOptions() *opsmngr.LogListOptions {

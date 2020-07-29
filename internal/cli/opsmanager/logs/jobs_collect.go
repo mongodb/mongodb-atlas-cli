@@ -46,12 +46,14 @@ func (opts *JobsCollectOpts) initStore() error {
 	return err
 }
 
+var collectTemplate = "Log collection job '{{.ID}}' started successfully.\n"
+
 func (opts *JobsCollectOpts) Run() error {
 	r, err := opts.store.Collect(opts.ConfigProjectID(), opts.newLog())
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), collectTemplate, r)
 }
 
 func (opts *JobsCollectOpts) newLog() *opsmngr.LogCollectionJob {

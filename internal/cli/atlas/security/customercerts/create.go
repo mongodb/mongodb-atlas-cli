@@ -26,9 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const createTemplate = `CAS
-{{.Cas}}
-`
+const createTemplate = "Certificate successfully created.\n"
 
 type SaveOpts struct {
 	cli.GlobalOpts

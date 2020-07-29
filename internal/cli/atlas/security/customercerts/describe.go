@@ -25,9 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `CAS
-{{.Cas}}
-`
+const describeTemplate = "{{.Cas}}\n"
 
 type DescribeOpts struct {
 	cli.GlobalOpts

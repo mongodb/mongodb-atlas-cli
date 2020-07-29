@@ -37,13 +37,17 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
+var describeTemplate = `NAME	STATE
+{{.Name}}	{{.State}}
+`
+
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.DataLake(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas datalake(s) describe name --projectId projectId

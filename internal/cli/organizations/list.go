@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const listTemplate = `ID	NAME{{range .Results}}
+{{.ID}}	{{.Name}}{{end}}
+`
+
 type ListOpts struct {
 	cli.ListOpts
 	store store.OrganizationLister
@@ -44,7 +48,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli iam organizations(s) list

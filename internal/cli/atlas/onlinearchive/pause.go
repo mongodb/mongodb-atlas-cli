@@ -39,6 +39,8 @@ func (opts *PauseOpts) initStore() error {
 	return err
 }
 
+var pauseTemplate = "Online archive '{{.ID}}' paused.\n"
+
 func (opts *PauseOpts) Run() error {
 	paused := true
 	cluster := &atlas.OnlineArchive{
@@ -50,7 +52,7 @@ func (opts *PauseOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), pauseTemplate, r)
 }
 
 // mongocli atlas cluster(s) onlineArchive(s) pause <ID> [--clusterName name][--projectId projectId]

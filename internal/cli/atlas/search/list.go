@@ -39,13 +39,17 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.dbName, opts.collName, opts.NewListOptions())
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas clusters search(s) list [--projectId projectId] [--clusterName name][--db database][--collection collName]

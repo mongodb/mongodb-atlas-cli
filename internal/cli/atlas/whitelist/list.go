@@ -24,6 +24,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const listTemplate = `CIDR BLOCK	SECURITY GROUP{{range .}}
+{{.CIDRBlock}}	{{.AwsSecurityGroup}}{{end}}
+`
+
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
@@ -44,7 +48,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas whitelist(s) list --projectId projectId [--page N] [--limit N]

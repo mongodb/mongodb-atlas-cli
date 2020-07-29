@@ -382,7 +382,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install snyk"
-#      - func: "snyk scan"
+      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:

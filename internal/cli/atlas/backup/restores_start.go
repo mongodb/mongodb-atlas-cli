@@ -56,10 +56,17 @@ func (opts *RestoresStartOpts) initStore() error {
 
 var automatedTemplate = "Restoring {{.TargetClusterName}} using snapshot {{.SnapshotID}}\n"
 var pointInTimeTemplate = "Restoring {{.TargetClusterName}} using point in time\n"
-var downloadTemplate = `Links to download the snapshot:
-REL	HREF{{range .Links}}
-{{.Rel}}	{{.Href}}{{end}}
-`
+var downloadTemplate = "Manual download created for snapshot {{.SnapshotID}}\n"
+
+func (opts *RestoresStartOpts) template() string {
+	if opts.isPointInTimeRestore() {
+		return pointInTimeTemplate
+	} else if opts.isAutomatedRestore() {
+		return automatedTemplate
+	}
+
+	return downloadTemplate
+}
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
@@ -69,13 +76,7 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	if opts.isPointInTimeRestore() {
-		return output.Print(config.Default(), pointInTimeTemplate, r)
-	} else if opts.isAutomatedRestore() {
-		return output.Print(config.Default(), automatedTemplate, r)
-	}
-
-	return output.Print(config.Default(), downloadTemplate, r)
+	return output.Print(config.Default(), opts.template(), r)
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
@@ -154,14 +155,6 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.ClusterName)
 }
 
-func markRequiredDownloadRestoreFlags(cmd *cobra.Command) error {
-	if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>
 func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
@@ -184,7 +177,7 @@ func RestoresStartBuilder() *cobra.Command {
 			}
 
 			if opts.isDownloadRestore() {
-				if err := markRequiredDownloadRestoreFlags(cmd); err != nil {
+				if err := cmd.MarkFlagRequired(flag.SnapshotID); err != nil {
 					return err
 				}
 			}

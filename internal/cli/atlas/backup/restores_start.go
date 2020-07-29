@@ -54,19 +54,7 @@ func (opts *RestoresStartOpts) initStore() error {
 	return err
 }
 
-var automatedTemplate = "Restoring {{.TargetClusterName}} using snapshot {{.SnapshotID}}\n"
-var pointInTimeTemplate = "Restoring {{.TargetClusterName}} using point in time\n"
-var downloadTemplate = "Manual download created for snapshot {{.SnapshotID}}\n"
-
-func (opts *RestoresStartOpts) template() string {
-	if opts.isPointInTimeRestore() {
-		return pointInTimeTemplate
-	} else if opts.isAutomatedRestore() {
-		return automatedTemplate
-	}
-
-	return downloadTemplate
-}
+var startTemplate = "Restore job '{{.ID}}' successfully started\n"
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
@@ -76,7 +64,7 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), opts.template(), r)
+	return output.Print(config.Default(), startTemplate, r)
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {

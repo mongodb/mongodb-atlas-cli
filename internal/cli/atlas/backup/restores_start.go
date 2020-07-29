@@ -33,7 +33,6 @@ const (
 	automatedRestore   = "automated"
 	downloadRestore    = "download"
 	pointInTimeRestore = "pointInTime"
-	onlyFor            = "'%s' can only be used with %s"
 )
 
 type RestoresStartOpts struct {
@@ -55,7 +54,7 @@ func (opts *RestoresStartOpts) initStore() error {
 	return err
 }
 
-var automatedTemplate = "Restoring {{.TargetClusterName}} using snapshot {{.SnapshotId}}\n"
+var automatedTemplate = "Restoring {{.TargetClusterName}} using snapshot {{.SnapshotID}}\n"
 var pointInTimeTemplate = "Restoring {{.TargetClusterName}} using point in time\n"
 var downloadTemplate = `Links to download the snapshot:
 REL	HREF{{range .Links}}
@@ -77,7 +76,6 @@ func (opts *RestoresStartOpts) Run() error {
 	}
 
 	return output.Print(config.Default(), downloadTemplate, r)
-
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
@@ -101,7 +99,7 @@ func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.Cloud
 		request.OplogTs = opts.oplogTS
 		request.OplogInc = opts.oplogInc
 	} else if opts.pointInTimeUTCMillis != 0 {
-		//set only when oplogTS and oplogInc are not set
+		// Set only when oplogTS and oplogInc are not set
 		request.PointInTimeUTCSeconds = opts.pointInTimeUTCMillis
 	}
 
@@ -177,14 +175,12 @@ func RestoresStartBuilder() *cobra.Command {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
 				}
-
 			}
 
 			if opts.isPointInTimeRestore() {
 				if err := markRequiredPointInTimeRestoreFlags(cmd); err != nil {
 					return err
 				}
-
 			}
 
 			if opts.isDownloadRestore() {

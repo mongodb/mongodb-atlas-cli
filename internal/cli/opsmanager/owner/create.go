@@ -41,6 +41,14 @@ func (opts *CreateOpts) init() error {
 	return err
 }
 
+var createTemplate = `Owner successfully created.
+{{if .APIKey}}Personal API Key: {{.APIKey}}{{end}}
+{{- if .ProgrammaticAPIKey}}
+Public API Key: {{.ProgrammaticAPIKey.PublicKey}}
+Private API Key: {{.ProgrammaticAPIKey.PrivateKey}}
+{{- end}}
+`
+
 func (opts *CreateOpts) Run() error {
 	user := opts.newOwner()
 	r, err := opts.store.CreateOwner(user, opts.whitelistIps)
@@ -49,7 +57,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *CreateOpts) newOwner() *opsmngr.User {

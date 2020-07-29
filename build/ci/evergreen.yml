@@ -176,7 +176,7 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux -o snyk
-          chmod +X snyk
+          chmod +x snyk
   "snyk scan":
     - command: shell.exec
       type: test

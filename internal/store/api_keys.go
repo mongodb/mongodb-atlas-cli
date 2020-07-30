@@ -25,7 +25,6 @@ import (
 
 //go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store APIKeyLister
 
-
 type APIKeyLister interface {
 	APIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
 }

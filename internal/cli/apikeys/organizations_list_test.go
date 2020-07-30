@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package apikeys
 
 import (
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
-	"testing"
 )
 
 func TestOrganizationListOpts_Run(t *testing.T) {

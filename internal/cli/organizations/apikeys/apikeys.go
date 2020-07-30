@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "apikeys",
 		Short:   description.APIKeys,
-		Aliases: []string{"apikey", "Apikeys", "Apikey"},
+		Aliases: []string{"apikey", "apiKeys", "apiKey"},
 	}
 	cmd.AddCommand(OrganizationListBuilder())
 

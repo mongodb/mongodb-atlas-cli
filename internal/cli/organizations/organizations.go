@@ -15,7 +15,7 @@
 package organizations
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/apikeys"
+	"github.com/mongodb/mongocli/internal/cli/organizations/apikeys"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )

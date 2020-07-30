@@ -23,20 +23,38 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store APIKeyLister
+//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,OrganizationAPIKeyLister
 
-type APIKeyLister interface {
-	APIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
+type ProjectAPIKeyLister interface {
+	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
 }
 
-// APIKeys encapsulate the logic to manage different cloud providers
-func (s *Store) APIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+type OrganizationAPIKeyLister interface {
+	OrganizationAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
+}
+
+// OrganizationAPIKeys encapsulate the logic to manage different cloud providers
+func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.List(context.Background(), orgID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectAPIKeys returns the API Keys for a specific project
+func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

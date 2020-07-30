@@ -39,13 +39,17 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `HOSTNAME	STATE{{range .Results}}
+{{.Hostname}}	{{.StateName}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.Agents(opts.ConfigProjectID(), agentType)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli om server(s) list [--projectId projectId]

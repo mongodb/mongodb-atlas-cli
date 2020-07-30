@@ -17,7 +17,6 @@ package cloudmanager
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/events"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/automation"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup"
@@ -25,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
 	"github.com/mongodb/mongocli/internal/config"
@@ -52,7 +52,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(security.Builder())
 	cmd.AddCommand(dbusers.Builder())
 	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(opsmanager.ProcessesBuilder())
+	cmd.AddCommand(processes.Builder())
 	cmd.AddCommand(metrics.Builder())
 	cmd.AddCommand(logs.Builder())
 	cmd.AddCommand(agents.Builder())

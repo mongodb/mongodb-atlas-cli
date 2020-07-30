@@ -29,7 +29,11 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockHostDiskMeasurementsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessDiskMeasurements{}
+	expected := &mongodbatlas.ProcessDiskMeasurements{
+		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{
+			Measurements: []*mongodbatlas.Measurements{},
+		},
+	}
 
 	listOpts := &DisksDescribeOpts{
 		hostID: "1",

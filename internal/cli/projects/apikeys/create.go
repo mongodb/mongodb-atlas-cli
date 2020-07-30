@@ -55,7 +55,7 @@ func (opts *CreateOpts) Run() error {
 	return output.Print(config.Default(), createTemplate, r)
 }
 
-// mongocli iam project apiKey create [--projectId projectId] [--roles roles] [--description description]
+// mongocli iam project apiKey create --roles roles --description description
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -74,7 +74,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringArrayVar(&opts.roles, flag.Role, nil, usage.Roles)
+	cmd.Flags().StringArrayVar(&opts.roles, flag.Role, nil, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

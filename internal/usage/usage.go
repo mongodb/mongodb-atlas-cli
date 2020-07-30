@@ -72,7 +72,7 @@ const (
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
 	APIKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key."
 	APIKeyDescription               = "Description of the API key."
-	APIKeyRoels                     = "List of roles for the API key."
+	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."
 	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress        = "Email address to which alert notifications are sent."

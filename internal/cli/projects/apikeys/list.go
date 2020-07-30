@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli iam project(s) apiKeys list --projectId <projectId>
+// mongocli iam project(s) apiKeys list
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

@@ -12,25 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package projects
+package projectapikeys
 
 import (
-	projectApiKey "github.com/mongodb/mongocli/internal/cli/projects/apiKeys"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
-		Aliases: []string{"project"},
+		Use:     "apiKeys",
+		Short:   description.ProjectAPIKeys,
+		Aliases: []string{"apikeys"},
 	}
 	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(projectApiKey.Builder())
 	return cmd
 }

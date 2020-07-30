@@ -26,6 +26,10 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
+{{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
+`
+
 type ProcessesListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
@@ -46,7 +50,7 @@ func (opts *ProcessesListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ProcessesListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {

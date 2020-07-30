@@ -25,8 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const createTemplate = `Project {{.ID}} created.
-`
+var createTemplate = "Project '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -49,6 +48,9 @@ func (opts *CreateOpts) Run() error {
 
 	if err != nil {
 		return err
+	}
+	if config.Service() != config.CloudService {
+		createTemplate += "Agent API Key: '{{.AgentAPIKey}}'\n"
 	}
 
 	return output.Print(config.Default(), createTemplate, r)

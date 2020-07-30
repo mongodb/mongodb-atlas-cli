@@ -12,25 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package organizations
+// +build unit
+
+package apikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/organizations/apikeys"
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "organizations",
-		Short:   description.Organization,
-		Long:    description.OrganizationLong,
-		Aliases: []string{"organization", "orgs", "org"},
+func TestListOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationAPIKeyLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.APIKey
+
+	opts := &ListOpts{
+		store: mockStore,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(apikeys.Builder())
-	return cmd
+
+	mockStore.
+		EXPECT().
+		OrganizationAPIKeys(opts.OrgID, opts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

@@ -14,7 +14,7 @@
 
 // +build unit
 
-package projectapikeys
+package apikeys
 
 import (
 	"testing"

@@ -249,8 +249,8 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.mongodb.org/atlas v0.3.1-0.20200728164135-cd2ad1fa2fa2 h1:+P5zCidi5y49pyxZUoATn/1tB53Mrd5m4XvAqkM74+A=
 go.mongodb.org/atlas v0.3.1-0.20200728164135-cd2ad1fa2fa2/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
-go.mongodb.org/ops-manager v0.7.3-0.20200730100824-47c2d8520008 h1:DFWcGeoFwtKu6ywq8ZhF6siXmiAVr9ZHsRnQnyRjKGs=
-go.mongodb.org/ops-manager v0.7.3-0.20200730100824-47c2d8520008/go.mod h1:mLoq8OmugUyX0NVYtkTPPgaThmRykx1P+y79/xEucX4=
+go.mongodb.org/ops-manager v0.8.0 h1:LDQOlZmuftgtVSS2HuxS/ooTPLf5Q+e8Ok9tXyS71eM=
+go.mongodb.org/ops-manager v0.8.0/go.mod h1:mLoq8OmugUyX0NVYtkTPPgaThmRykx1P+y79/xEucX4=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

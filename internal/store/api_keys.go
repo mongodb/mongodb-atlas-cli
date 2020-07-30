@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store APIKeyLister
+//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store APIKeyLister,APIKeyDescriber
 
 type APIKeyLister interface {
 	APIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
+}
+
+type APIKeyDescriber interface {
+	APIKey(string, string) (*atlas.APIKey, error)
 }
 
 // APIKeys encapsulate the logic to manage different cloud providers
@@ -37,6 +41,20 @@ func (s *Store) APIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, 
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// APIKey encapsulate the logic to manage different cloud providers
+func (s *Store) APIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).APIKeys.Get(context.Background(), orgID, apiKeyID)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Get(context.Background(), orgID, apiKeyID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

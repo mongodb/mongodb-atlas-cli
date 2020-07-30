@@ -54,8 +54,12 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	dbuser := opts.newDBUser()
+	if err := atmcfg.ConfigureScramCredentials(dbuser, opts.password); err != nil {
+		return err
+	}
 
-	atmcfg.AddUser(current, opts.newDBUser())
+	atmcfg.AddUser(current, dbuser)
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -70,7 +74,6 @@ func (opts *CreateOpts) newDBUser() *opsmngr.MongoDBUser {
 	return &opsmngr.MongoDBUser{
 		Database:                   opts.authDB,
 		Username:                   opts.username,
-		InitPassword:               opts.password,
 		Roles:                      convert.BuildOMRoles(opts.roles),
 		AuthenticationRestrictions: []string{},
 		Mechanisms:                 opts.mechanisms,

@@ -29,7 +29,7 @@ type UpdateOpts struct {
 	cli.GlobalOpts
 	id    string
 	desc  string
-	roles  []string
+	roles []string
 	store store.APIKeyUpdater
 }
 
@@ -45,7 +45,6 @@ func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 		Roles: opts.roles,
 	}
 }
-
 
 const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
 
@@ -79,7 +78,6 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-
 
 	return cmd
 }

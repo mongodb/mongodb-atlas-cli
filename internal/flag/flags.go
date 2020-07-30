@@ -137,4 +137,5 @@ const (
 	Field                           = "field"                           // Fields flag
 	CASFilePath                     = "casFile"                         // CASFilePath flag
 	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
+	Description                     = "desc"                            // Description flag
 )

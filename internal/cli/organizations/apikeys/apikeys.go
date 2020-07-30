@@ -26,6 +26,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"apikey", "apiKeys", "apiKey"},
 	}
 	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(UpdateBuilder())
 
 	return cmd
 }

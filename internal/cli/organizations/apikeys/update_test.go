@@ -29,16 +29,15 @@ func TestUpdateOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockAPIKeyUpdater(ctrl)
 	defer ctrl.Finish()
 
-	 expected := &mongodbatlas.APIKey{
-		 ID:         "1",
-	 }
+	expected := &mongodbatlas.APIKey{
+		ID: "1",
+	}
 
 	opts := &UpdateOpts{
 		store: mockStore,
-		id: "1",
-		roles:    []string{"ORG_OWNER"},
+		id:    "1",
+		roles: []string{"ORG_OWNER"},
 	}
-
 
 	mockStore.
 		EXPECT().

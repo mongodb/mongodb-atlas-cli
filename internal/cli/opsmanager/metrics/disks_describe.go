@@ -40,8 +40,8 @@ func (opts *DisksDescribeOpts) initStore() error {
 }
 
 var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurements.Measurements}}  {{if .DataPoints}}
-{{ $name := .Name }}	{{ $unit := .Units }}{{range .DataPoints}}	
-{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}{{ .Value }}{{else}} N/A {{end}}{{end}}{{end}}{{end}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `
 
 func (opts *DisksDescribeOpts) Run() error {

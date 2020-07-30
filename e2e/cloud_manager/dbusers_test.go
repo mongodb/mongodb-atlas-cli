@@ -48,7 +48,7 @@ func TestDBUsers(t *testing.T) {
 			"--username="+username,
 			"--password=passW0rd",
 			"--role=readWriteAnyDatabase",
-			"--mechanisms=SCRAM-SHA-256 ")
+			"--mechanisms=SCRAM-SHA-256")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -62,7 +62,11 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, entity, dbUsersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			entity,
+			dbUsersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -81,7 +85,15 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, entity, dbUsersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath,
+			entity,
+			dbUsersEntity,
+			"delete",
+			username,
+			"--force",
+			"--authDB",
+			"admin",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

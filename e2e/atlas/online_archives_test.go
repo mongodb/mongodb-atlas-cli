@@ -53,7 +53,8 @@ func TestOnlineArchives(t *testing.T) {
 			clustersEntity,
 			onlineArchiveEntity,
 			"list",
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -76,7 +77,8 @@ func TestOnlineArchives(t *testing.T) {
 			"--collection=test",
 			"--dateField=test",
 			"--archiveAfter=3",
-			"--partition=test:date")
+			"--partition=test:date",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -102,7 +104,8 @@ func TestOnlineArchives(t *testing.T) {
 			onlineArchiveEntity,
 			"describe",
 			archiveID,
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -129,7 +132,8 @@ func TestOnlineArchives(t *testing.T) {
 			"update",
 			archiveID,
 			"--clusterName="+clusterName,
-			"--archiveAfter="+strconv.Itoa(expireAfterDays))
+			"--archiveAfter="+strconv.Itoa(expireAfterDays),
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

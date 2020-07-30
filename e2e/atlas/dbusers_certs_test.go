@@ -46,7 +46,8 @@ func TestDBUserCerts(t *testing.T) {
 			"create",
 			"atlasAdmin",
 			"--username", username,
-			"--x509Type", dbusers.X509TypeManaged)
+			"--x509Type", dbusers.X509TypeManaged,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -67,7 +68,8 @@ func TestDBUserCerts(t *testing.T) {
 			dbusersEntity,
 			certsEntity,
 			"create",
-			"--username", username)
+			"--username", username,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -83,7 +85,13 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, certsEntity, "list", username)
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			certsEntity,
+			"list",
+			username,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -101,7 +109,14 @@ func TestDBUserCerts(t *testing.T) {
 	})
 
 	t.Run("Delete User", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "$external")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"delete",
+			username,
+			"--force",
+			"--authDB",
+			"$external")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

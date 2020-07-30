@@ -45,6 +45,7 @@ func TestAlerts(t *testing.T) {
 				atlasEntity,
 				alertsEntity,
 				"list",
+				"-o=json",
 			)
 
 			cmd.Env = os.Environ()
@@ -72,6 +73,7 @@ func TestAlerts(t *testing.T) {
 				"list",
 				"--status",
 				"OPEN",
+				"-o=json",
 			)
 
 			cmd.Env = os.Environ()
@@ -94,6 +96,7 @@ func TestAlerts(t *testing.T) {
 				"list",
 				"--status",
 				"CLOSED",
+				"-o=json",
 			)
 
 			cmd.Env = os.Environ()
@@ -116,6 +119,7 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"describe",
 			alertID,
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
@@ -150,7 +154,8 @@ func TestAlerts(t *testing.T) {
 			"ack",
 			alertID,
 			"--until",
-			time.Now().Format(time.RFC3339))
+			time.Now().Format(time.RFC3339),
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -175,7 +180,8 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"ack",
 			alertID,
-			"--forever")
+			"--forever",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -199,7 +205,8 @@ func TestAlerts(t *testing.T) {
 			atlasEntity,
 			alertsEntity,
 			"unack",
-			alertID)
+			alertID,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

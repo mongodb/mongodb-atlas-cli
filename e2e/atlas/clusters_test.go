@@ -30,6 +30,7 @@ import (
 )
 
 func TestClusters(t *testing.T) {
+	// Run test with json output
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
 
@@ -48,7 +49,8 @@ func TestClusters(t *testing.T) {
 			"--tier=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
-			"--diskSizeGB=10")
+			"--diskSizeGB=10",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -69,7 +71,8 @@ func TestClusters(t *testing.T) {
 			atlasEntity,
 			clustersEntity,
 			"watch",
-			clusterName)
+			clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -83,7 +86,11 @@ func TestClusters(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -118,7 +125,8 @@ func TestClusters(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB=20",
-			"--mdbVersion=4.2")
+			"--mdbVersion=4.2",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -174,7 +182,8 @@ func TestClusters(t *testing.T) {
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file=create_cluster_test.json")
+			"--file=create_cluster_test.json",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -196,7 +205,8 @@ func TestClusters(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterFileName,
-			"--file=update_cluster_test.json")
+			"--file=update_cluster_test.json",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -241,7 +251,8 @@ func TestClusters(t *testing.T) {
 			"--tier=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.2",
-			"--diskSizeGB=10")
+			"--diskSizeGB=10",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

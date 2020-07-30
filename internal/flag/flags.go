@@ -52,6 +52,7 @@ const (
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
+	Description                     = "description"                     // Description flag
 	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag

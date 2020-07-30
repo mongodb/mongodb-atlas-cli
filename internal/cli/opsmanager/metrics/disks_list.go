@@ -38,6 +38,10 @@ func (opts *DisksListsOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `{{range .Results}}
+{{.PartitionName}}{{end}}
+`
+
 func (opts *DisksListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.HostDisks(opts.ConfigProjectID(), opts.hostID, listOpts)
@@ -45,7 +49,7 @@ func (opts *DisksListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli om metric(s) process(es) disks lists <ID>

@@ -33,7 +33,8 @@ const (
 	automatedRestore = "AUTOMATED_RESTORE"
 	httpRestore      = "HTTP"
 	onlyFor          = "'%s' can only be used with %s"
-	createTemplate   = "Created restore job.\n"
+	createTemplate   = `Created restore job(s):{{range .Results}} '{{.ID}}'{{end}}.
+`
 )
 
 type RestoresStartOpts struct {

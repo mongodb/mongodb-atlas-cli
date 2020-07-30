@@ -22,14 +22,19 @@ import (
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const checkpointsTemplate = `ID	TIMESTAMP{{range .Results}}
+{{.ID}}	{{.Timestamp}}{{end}}
+`
 
 type CheckpointsListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	clusterName string
-	store       store.CheckpointsLister
+	clusterID string
+	store     store.CheckpointsLister
 }
 
 func (opts *CheckpointsListOpts) initStore() error {
@@ -41,27 +46,30 @@ func (opts *CheckpointsListOpts) initStore() error {
 func (opts *CheckpointsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
 
-	r, err := opts.store.Checkpoints(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	r, err := opts.store.Checkpoints(opts.ConfigProjectID(), opts.clusterID, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), checkpointsTemplate, r)
 }
 
-// mongocli atlas backup(s) checkpoint(s) list <clusterName> [--projectId projectId]
+// mongocli atlas backup(s) checkpoint(s) list <clusterId> [--projectId projectId]
 func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	opts := new(CheckpointsListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
+		Use:     "list <clusterId>",
 		Aliases: []string{"ls"},
 		Short:   description.ListCheckpoints,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			opts.clusterID = args[0]
 			return opts.Run()
 		},
 	}

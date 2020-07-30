@@ -8,22 +8,6 @@ platform:
   arch: amd64
 
 steps:
-  - name: dependencies
-    image: golang:1.14
-    commands:
-      - curl -sL https://deb.nodesource.com/setup_12.x | bash -
-      - apt-get install -y nodejs
-      - npm install -g snyk
-      - snyk test --org=cloud
-    environment:
-      SNYK_TOKEN:
-        from_secret: snyk_token
-    when:
-      branch:
-        - master
-      event:
-        - push
-
   - name: test
     image: golang:1.14
     commands:

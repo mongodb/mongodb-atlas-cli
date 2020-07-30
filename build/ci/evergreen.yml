@@ -167,6 +167,29 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+  "install snyk":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/bin
+        script: |
+          set -Eeou pipefail
+
+          curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux -o snyk
+          chmod +x snyk
+  "snyk scan":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          export SNYK_TOKEN=${snyk_token}
+
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          ./bin/snyk test --org=cloud
   "install curator":
     - command: shell.exec
       type: setup
@@ -355,6 +378,12 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
+  - name: snyk_scan
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install snyk"
+      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:

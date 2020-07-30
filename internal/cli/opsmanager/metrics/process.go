@@ -38,6 +38,11 @@ func (opts *ProcessOpts) initStore() error {
 	return err
 }
 
+var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
+`
+
 func (opts *ProcessOpts) Run() error {
 	listOpts := opts.NewProcessMetricsListOptions()
 	r, err := opts.store.HostMeasurements(opts.ConfigProjectID(), opts.hostID, listOpts)
@@ -45,7 +50,7 @@ func (opts *ProcessOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), metricTemplate, r)
 }
 
 // mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]

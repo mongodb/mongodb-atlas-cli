@@ -22,14 +22,19 @@ import (
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const snapshotsTemplate = `ID	CREATED	COMPLETE{{range .Results}}
+{{.ID}}	{{.Created.Date}}	{{.Complete}}{{end}}
+`
 
 type SnapshotsListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	clusterName string
-	store       store.ContinuousSnapshotsLister
+	clusterID string
+	store     store.ContinuousSnapshotsLister
 }
 
 func (opts *SnapshotsListOpts) initStore() error {
@@ -40,19 +45,19 @@ func (opts *SnapshotsListOpts) initStore() error {
 
 func (opts *SnapshotsListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ContinuousSnapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	r, err := opts.store.ContinuousSnapshots(opts.ConfigProjectID(), opts.clusterID, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), snapshotsTemplate, r)
 }
 
-// mongocli atlas backups snapshots list <clusterId|clusterName> [--projectId projectId] [--page N] [--limit N]
+// mongocli atlas backups snapshots list <clusterId> [--projectId projectId] [--page N] [--limit N]
 func SnapshotsListBuilder() *cobra.Command {
 	opts := new(SnapshotsListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterId|clusterName>",
+		Use:     "list <clusterId>",
 		Short:   description.ListSnapshots,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
@@ -60,7 +65,10 @@ func SnapshotsListBuilder() *cobra.Command {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
+			opts.clusterID = args[0]
 
 			return opts.Run()
 		},

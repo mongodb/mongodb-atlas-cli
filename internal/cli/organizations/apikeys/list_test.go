@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestOrganizationListOpts_Run(t *testing.T) {
+func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAPIKeyLister(ctrl)
 	defer ctrl.Finish()

@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package apikeys
 
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
+	"go.mongodb.org/atlas/mongodbatlas"
 	"testing"
 )
-
 
 func TestOrganizationListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAPIKeyLister(ctrl)
 	defer ctrl.Finish()
 
-	appFS := afero.NewMemMapFs()
+	var expected []mongodbatlas.APIKey
 
 	opts := &OrganizationListOpts{
 		store: mockStore,
@@ -36,8 +34,8 @@ func TestOrganizationListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
-		Return(nil).
+		APIKeys(opts.OrgID, opts.NewListOptions()).
+		Return(expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

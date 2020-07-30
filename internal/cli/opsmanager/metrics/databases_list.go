@@ -38,6 +38,10 @@ func (opts *DatabasesListsOpts) initStore() error {
 	return err
 }
 
+var DatabasesListTemplate = `NAME{{range .Results}}
+{{.DatabaseName}}{{end}}
+`
+
 func (opts *DatabasesListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.HostDatabases(opts.ConfigProjectID(), opts.hostID, listOpts)
@@ -46,10 +50,10 @@ func (opts *DatabasesListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), DatabasesListTemplate, r)
 }
 
-// mongocli om metric(s) process(es) disks lists <ID>
+// mongocli om metric(s) process(es) disks lists <HOST_ID>
 func DatabasesListBuilder() *cobra.Command {
 	opts := &DatabasesListsOpts{}
 	cmd := &cobra.Command{

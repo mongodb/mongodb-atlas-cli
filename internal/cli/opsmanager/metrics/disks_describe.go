@@ -39,6 +39,11 @@ func (opts *DisksDescribeOpts) initStore() error {
 	return err
 }
 
+var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurements.Measurements}}
+{{.Name}}	{{.Units}}{{range .DataPoints}}	
+		{{.Timestamp}}	{{.Value}}{{end}}{{end}}
+`
+
 func (opts *DisksDescribeOpts) Run() error {
 	listOpts := opts.NewProcessMetricsListOptions()
 	r, err := opts.store.HostDiskMeasurements(opts.ConfigProjectID(), opts.hostID, opts.name, listOpts)
@@ -46,7 +51,7 @@ func (opts *DisksDescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), diskMetricTemplate, r)
 }
 
 // mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]

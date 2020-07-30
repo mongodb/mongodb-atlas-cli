@@ -38,9 +38,9 @@ func (opts *ProcessOpts) initStore() error {
 	return err
 }
 
-var metricTemplate = `NAME	UNITS			TIMESTAMP		VALUE{{range .Measurements}}
-{{.Name}}	{{.Units}}{{range .DataPoints}}	
-			{{.Timestamp}}	{{.Value}}{{end}}{{end}}
+var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
+{{ $name := .Name }}	{{ $unit := .Units }} {{range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}{{ .Value }}{{else}} N/A {{end}}{{end}}{{end}}{{end}}
 `
 
 func (opts *ProcessOpts) Run() error {

@@ -38,7 +38,7 @@ func (opts *DisksListsOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `NAME{{range .Results}}
+var listTemplate = `{{range .Results}}
 {{.PartitionName}}{{end}}
 `
 

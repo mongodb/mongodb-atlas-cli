@@ -38,7 +38,7 @@ func (opts *DatabasesListsOpts) initStore() error {
 	return err
 }
 
-var DatabasesListTemplate = `NAME{{range .Results}}
+var databasesListTemplate = `{{range .Results}}
 {{.DatabaseName}}{{end}}
 `
 
@@ -50,7 +50,7 @@ func (opts *DatabasesListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), DatabasesListTemplate, r)
+	return output.Print(config.Default(), databasesListTemplate, r)
 }
 
 // mongocli om metric(s) process(es) disks lists <HOST_ID>

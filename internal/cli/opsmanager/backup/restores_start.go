@@ -33,6 +33,7 @@ const (
 	automatedRestore = "AUTOMATED_RESTORE"
 	httpRestore      = "HTTP"
 	onlyFor          = "'%s' can only be used with %s"
+	createTemplate   = "Created restore job.\n"
 )
 
 type RestoresStartOpts struct {
@@ -67,7 +68,7 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobRequest {

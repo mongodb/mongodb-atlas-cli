@@ -30,15 +30,16 @@ func TestCheckpointsList_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Checkpoints{}
+	clusterID := "5ec2ac941271767f21cbaefd"
 
 	listOpts := &CheckpointsListOpts{
-		store:       mockStore,
-		clusterName: "Cluster0",
+		store:     mockStore,
+		clusterID: clusterID,
 	}
 
 	mockStore.
 		EXPECT().
-		Checkpoints(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		Checkpoints(listOpts.ProjectID, clusterID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

@@ -31,7 +31,7 @@ func TestOrganizationListOpts_Run(t *testing.T) {
 
 	var expected []mongodbatlas.APIKey
 
-	opts := &OrganizationListOpts{
+	opts := &ListOpts{
 		store: mockStore,
 	}
 

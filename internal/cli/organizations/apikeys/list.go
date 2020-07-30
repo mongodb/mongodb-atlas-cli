@@ -29,19 +29,19 @@ const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
 {{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
 `
 
-type OrganizationListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	store store.APIKeyLister
 }
 
-func (opts *OrganizationListOpts) init() error {
+func (opts *ListOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *OrganizationListOpts) Run() error {
+func (opts *ListOpts) Run() error {
 	r, err := opts.store.APIKeys(opts.ConfigOrgID(), opts.NewListOptions())
 
 	if err != nil {
@@ -52,8 +52,8 @@ func (opts *OrganizationListOpts) Run() error {
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
-func OrganizationListBuilder() *cobra.Command {
-	opts := new(OrganizationListOpts)
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},

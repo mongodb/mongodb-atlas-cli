@@ -114,7 +114,7 @@ const (
 	IAM                         = "Organization and projects operations."
 	Organization                = "Organization operations."
 	APIKeys                     = "APIKeys operations."
-	ListOrganizationAPIKeys     = "List all Organization API Keys associated with {ORG-ID}."
+	ListOrganizationAPIKeys     = "List all organization API Keys for a given organization."
 	DescribeOrganizationsAPIKey = "Get a specific Organization API Key."
 	UpdateOrganizationsAPIKey   = "Update an Organization API Key."
 	CreateOrganizationsAPIKey   = "Create an Organization API Key."

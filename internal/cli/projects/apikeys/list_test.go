@@ -12,25 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package projects
+// +build unit
+
+package apikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/projects/apikeys"
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
-		Aliases: []string{"project"},
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectAPIKeyLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.APIKey
+
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(apikeys.Builder())
-	return cmd
+
+	mockStore.
+		EXPECT().
+		ProjectAPIKeys(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

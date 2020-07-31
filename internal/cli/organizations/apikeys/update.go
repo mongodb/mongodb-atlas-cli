@@ -30,7 +30,7 @@ type UpdateOpts struct {
 	id    string
 	desc  string
 	roles []string
-	store store.APIKeyUpdater
+	store store.OrganizationAPIKeyUpdater
 }
 
 func (opts *UpdateOpts) init() error {
@@ -49,7 +49,7 @@ func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
+	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   description.UpdateOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

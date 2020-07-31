@@ -30,15 +30,16 @@ func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.ContinuousSnapshots{}
+	clusterID := "5ec2ac941271767f21cbaefe"
 
 	listOpts := &SnapshotsListOpts{
-		store:       mockStore,
-		clusterName: "Cluster0",
+		store:     mockStore,
+		clusterID: clusterID,
 	}
 
 	mockStore.
 		EXPECT().
-		ContinuousSnapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		ContinuousSnapshots(listOpts.ProjectID, clusterID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

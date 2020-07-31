@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator
+//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter
 
 type ProjectAPIKeyLister interface {
 	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
@@ -43,6 +43,10 @@ type OrganizationAPIKeyUpdater interface {
 
 type OrganizationAPIKeyCreator interface {
 	CreateOrganizationAPIKey(string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+}
+
+type OrganizationAPIKeyDeleter interface {
+	DeleteOrganizationAPIKey(string, string) error
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers
@@ -112,5 +116,19 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOrganizationAPIKey encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).APIKeys.Delete(context.Background(), orgID, id)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(context.Background(), orgID, id)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

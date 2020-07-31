@@ -19,61 +19,50 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = "APIKey '{{.ID}}' created.\n"
-
-type CreateOpts struct {
+type DeleteOpts struct {
+	*cli.DeleteOpts
 	cli.GlobalOpts
-	desc  string
-	roles []string
-	store store.OrganizationAPIKeyCreator
+	store store.OrganizationAPIKeyDeleter
 }
 
-func (opts *CreateOpts) init() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
-		Roles: opts.roles,
-	}
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
 }
 
-func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
-
-	if err != nil {
-		return err
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
-}
-
-// mongocli iam organizations|orgs apiKey(s)|apikeys create [--role role][--desc description][--orgId orgId]
-func CreateBuilder() *cobra.Command {
-	opts := new(CreateOpts)
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: description.CreateOrganizationsAPIKey,
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteOrganization,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			if err := opts.PreRunEOrg(opts.init); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.Comment)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

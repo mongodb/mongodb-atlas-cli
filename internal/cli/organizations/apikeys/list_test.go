@@ -26,7 +26,7 @@ import (
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAPIKeyLister(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyLister(ctrl)
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.APIKey
@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		APIKeys(opts.OrgID, opts.NewListOptions()).
+		OrganizationAPIKeys(opts.OrgID, opts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

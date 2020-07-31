@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist <APIKey_ID> list|ls [--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist list|ls <ID> [--orgId orgId]
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
@@ -61,7 +61,7 @@ func ListBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   description.ListWhitelistAPIKeys,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

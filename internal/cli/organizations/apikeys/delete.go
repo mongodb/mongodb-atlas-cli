@@ -19,55 +19,50 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
-`
-
-type ListOpts struct {
+type DeleteOpts struct {
+	*cli.DeleteOpts
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.OrganizationAPIKeyLister
+	store store.OrganizationAPIKeyDeleter
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
-
-	if err != nil {
-		return err
-	}
-
-	return output.Print(config.Default(), listTemplate, r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),
+	}
+
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListOrganizationAPIKeys,
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteOrganization,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			if err := opts.PreRunEOrg(opts.init); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

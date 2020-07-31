@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package apikeys
+package agents
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,25 +24,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
-`
-
 type ListOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.OrganizationAPIKeyLister
+	agentType string
+	store     store.AgentLister
 }
 
-func (opts *ListOpts) init() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
+var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
+{{.Hostname}}	{{.TypeName}}	{{.StateName}}{{end}}
+`
 
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType)
 	if err != nil {
 		return err
 	}
@@ -51,25 +49,24 @@ func (opts *ListOpts) Run() error {
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
+// mongocli om server(s) list [--projectId projectId]
 func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ListOrganizationAPIKeys,
+		Args:    cobra.ExactArgs(1),
+		Short:   description.ListServer,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.agentType = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

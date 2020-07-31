@@ -23,41 +23,47 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
-`
+const createTemplate = "APIKey '{{.ID}}' created.\n"
 
-type ListOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.OrganizationAPIKeyLister
+	desc  string
+	roles []string
+	store store.OrganizationAPIKeyCreator
 }
 
-func (opts *ListOpts) init() error {
+func (opts *CreateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
+func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
+	return &atlas.APIKeyInput{
+		Desc:  opts.desc,
+		Roles: opts.roles,
+	}
+}
+
+func (opts *CreateOpts) Run() error {
+	p, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return output.Print(config.Default(), createTemplate, p)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli iam organizations|orgs apiKey(s)|apikeys create [--role role][--desc description][--orgId orgId]
+func CreateBuilder() *cobra.Command {
+	opts := new(CreateOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListOrganizationAPIKeys,
+		Use:   "create",
+		Short: description.CreateOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunEOrg(opts.init)
 		},
@@ -66,8 +72,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

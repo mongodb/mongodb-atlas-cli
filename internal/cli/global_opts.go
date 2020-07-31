@@ -66,6 +66,24 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
+// PreRunEOrg is a function to call before running the command,
+// this will validate the org ID and call any additional function pass as a callback
+func (opts *GlobalOpts) PreRunEOrg(cbs ...cmdOpt) error {
+	if opts.ConfigOrgID() == "" && opts.OrgID == "" {
+		return ErrMissingOrgID
+	}
+	if err := validate.ObjectID(opts.ConfigOrgID()); err != nil {
+		return err
+	}
+	for _, f := range cbs {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func DeploymentStatus(baseURL, projectID string) string {
 	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
 }

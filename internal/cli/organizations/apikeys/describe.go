@@ -58,7 +58,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   description.DescribeOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

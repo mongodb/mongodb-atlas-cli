@@ -12,26 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikeys
+package whitelist
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/organizations/apikeys/whitelist"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:     "apikeys",
-		Short:   description.APIKeys,
-		Aliases: []string{"apikey", "apiKeys", "apiKey"},
+		Use:     "whitelist",
+		Short:   description.Whitelist,
+		Aliases: []string{"ipwhitelist"},
 	}
+
 	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(whitelist.Builder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
 
 	return cmd
 }

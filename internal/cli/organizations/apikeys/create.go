@@ -32,7 +32,7 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	desc  string
 	roles []string
-	store store.APIKeyCreator
+	store store.OrganizationAPIKeyCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -49,7 +49,7 @@ func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 }
 
 func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
+	p, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
 
 	if err != nil {
 		return err

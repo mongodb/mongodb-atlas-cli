@@ -26,7 +26,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAPIKeyCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyCreator(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.APIKey{
@@ -40,7 +40,7 @@ func TestCreate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateAPIKey(createOpts.OrgID, createOpts.newAPIKeyInput()).
+		CreateOrganizationAPIKey(createOpts.OrgID, createOpts.newAPIKeyInput()).
 		Return(expected, nil).
 		Times(1)
 

@@ -62,7 +62,7 @@ func (opts *CreateOpts) Run() error {
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
-		Use:   "create <name>",
+		Use:   "create",
 		Short: description.CreateOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

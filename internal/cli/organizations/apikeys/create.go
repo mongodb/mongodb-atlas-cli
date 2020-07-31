@@ -65,7 +65,7 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: description.CreateOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

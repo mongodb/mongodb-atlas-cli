@@ -14,7 +14,7 @@
 
 // +build unit
 
-package backup
+package apikeys
 
 import (
 	"testing"
@@ -24,27 +24,23 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCheckpointsList_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCheckpointsLister(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Checkpoints{}
-	clusterID := "5ec2ac941271767f21cbaefd"
-
-	listOpts := &CheckpointsListOpts{
-		store:     mockStore,
-		clusterID: clusterID,
+	opts := &DescribeOpts{
+		store: mockStore,
+		id:    "1",
 	}
 
 	mockStore.
 		EXPECT().
-		Checkpoints(listOpts.ProjectID, clusterID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		OrganizationAPIKey(opts.OrgID, opts.id).
+		Return(&mongodbatlas.APIKey{}, nil).
 		Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

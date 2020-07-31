@@ -22,14 +22,19 @@ import (
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const restoresTemplate = `ID	TIMESTAMP	STATUS{{range .Results}}
+{{.ID}}	{{.Timestamp.Date}}	{{.StatusName}}{{end}}
+`
 
 type RestoresListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	clusterName string
-	store       store.ContinuousJobLister
+	clusterID string
+	store     store.ContinuousJobLister
 }
 
 func (opts *RestoresListOpts) initStore() error {
@@ -40,19 +45,19 @@ func (opts *RestoresListOpts) initStore() error {
 
 func (opts *RestoresListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ContinuousRestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	r, err := opts.store.ContinuousRestoreJobs(opts.ConfigProjectID(), opts.clusterID, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), restoresTemplate, r)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) list <clusterName|clusterID> [--page N] [--limit N]
+// mongocli atlas backup(s) restore(s) job(s) list <clusterId> [--page N] [--limit N]
 func RestoresListBuilder() *cobra.Command {
 	opts := new(RestoresListOpts)
 	cmd := &cobra.Command{
-		Use:     "list <clusterName|clusterID>",
+		Use:     "list <clusterId>",
 		Aliases: []string{"ls"},
 		Short:   description.ListRestores,
 		Args:    cobra.ExactArgs(1),
@@ -60,7 +65,10 @@ func RestoresListBuilder() *cobra.Command {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			if err := validate.ObjectID(args[0]); err != nil {
+				return err
+			}
+			opts.clusterID = args[0]
 
 			return opts.Run()
 		},

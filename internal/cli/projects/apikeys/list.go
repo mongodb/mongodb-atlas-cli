@@ -25,14 +25,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
+const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range .}}
+{{.ID}}	{{.PublicKey}}	{{.Desc}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.OrganizationAPIKeyLister
+	store store.ProjectAPIKeyLister
 }
 
 func (opts *ListOpts) init() error {
@@ -42,8 +42,9 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
+	listOptions := opts.NewListOptions()
 
+	r, err := opts.store.ProjectAPIKeys(opts.ConfigProjectID(), listOptions)
 	if err != nil {
 		return err
 	}
@@ -51,15 +52,15 @@ func (opts *ListOpts) Run() error {
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
+// mongocli iam project(s) apiKeys list
 func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ListOrganizationAPIKeys,
+		Short:   description.ListProjectAPIKeys,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -68,8 +69,6 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

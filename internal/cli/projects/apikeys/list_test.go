@@ -14,7 +14,7 @@
 
 // +build unit
 
-package backup
+package apikeys
 
 import (
 	"testing"
@@ -24,22 +24,20 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCheckpointsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCheckpointsLister(ctrl)
+	mockStore := mocks.NewMockProjectAPIKeyLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Checkpoints{}
-	clusterID := "5ec2ac941271767f21cbaefd"
+	var expected []mongodbatlas.APIKey
 
-	listOpts := &CheckpointsListOpts{
-		store:     mockStore,
-		clusterID: clusterID,
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Checkpoints(listOpts.ProjectID, clusterID, listOpts.NewListOptions()).
+		ProjectAPIKeys(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

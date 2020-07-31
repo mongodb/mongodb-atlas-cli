@@ -26,5 +26,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"ipwhitelist"},
 	}
 
+	cmd.AddCommand(ListBuilder())
+
 	return cmd
 }

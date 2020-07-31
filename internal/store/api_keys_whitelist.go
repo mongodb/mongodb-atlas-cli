@@ -17,18 +17,20 @@ package store
 import (
 	"context"
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
+//go:generate mockgen -destination=../mocks/api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister
+
 type OrganizationAPIKeyWhitelistLister interface {
-	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) ([]atlas.APIKey, error)
+	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
 }
 
-
 // OrganizationAPIKeys encapsulate the logic to manage different cloud providers
-func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)

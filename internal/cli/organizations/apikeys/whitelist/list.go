@@ -25,16 +25,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
+const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
+{{.IPAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	id string
-	store store.OrganizationAPIKeyLister
+	id    string
+	store store.OrganizationAPIKeyWhitelistLister
 }
 
 func (opts *ListOpts) init() error {
@@ -44,7 +43,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
+	r, err := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
 
 	if err != nil {
 		return err

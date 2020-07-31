@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 		Aliases: []string{"agent"},
 		Short:   description.Agents,
 	}
-
+	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(UpgradeBuilder())
 	return cmd
 }

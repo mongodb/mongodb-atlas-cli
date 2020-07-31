@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber
+//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater
 
 type ProjectAPIKeyLister interface {
 	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
@@ -37,8 +37,8 @@ type OrganizationAPIKeyDescriber interface {
 	OrganizationAPIKey(string, string) (*atlas.APIKey, error)
 }
 
-type APIKeyUpdater interface {
-	UpdateAPIKey(string, string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+type OrganizationAPIKeyUpdater interface {
+	UpdateOrganizationAPIKey(string, string, *atlas.APIKeyInput) (*atlas.APIKey, error)
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers
@@ -83,8 +83,8 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 	}
 }
 
-// UpdateAPIKey encapsulate the logic to manage different cloud providers
-func (s *Store) UpdateAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
+// UpdateOrganizationAPIKey encapsulate the logic to manage different cloud providers
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.Update(context.Background(), orgID, apiKeyID, input)

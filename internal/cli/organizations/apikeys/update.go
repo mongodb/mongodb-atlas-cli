@@ -30,7 +30,7 @@ type UpdateOpts struct {
 	id    string
 	desc  string
 	roles []string
-	store store.APIKeyUpdater
+	store store.OrganizationAPIKeyUpdater
 }
 
 func (opts *UpdateOpts) init() error {
@@ -49,7 +49,7 @@ func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
+	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
 	if err != nil {
 		return err
 	}

@@ -26,7 +26,7 @@ import (
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAPIKeyUpdater(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyUpdater(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.APIKey{
@@ -41,7 +41,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateAPIKey(opts.OrgID, opts.id, opts.newAPIKeyInput()).
+		UpdateOrganizationAPIKey(opts.OrgID, opts.id, opts.newAPIKeyInput()).
 		Return(expected, nil).
 		Times(1)
 

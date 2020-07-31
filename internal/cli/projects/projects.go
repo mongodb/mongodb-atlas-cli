@@ -15,6 +15,7 @@
 package projects
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/projects/apikeys"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
@@ -30,5 +31,6 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(CreateBuilder())
 	cmd.AddCommand(DeleteBuilder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(apikeys.Builder())
 	return cmd
 }

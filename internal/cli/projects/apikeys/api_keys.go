@@ -21,13 +21,10 @@ import (
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:     "apikeys",
-		Short:   description.APIKeys,
-		Aliases: []string{"apikey", "apiKeys", "apiKey"},
+		Use:     "apiKeys",
+		Short:   description.ProjectAPIKeys,
+		Aliases: []string{"apikeys"},
 	}
 	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(UpdateBuilder())
-
 	return cmd
 }

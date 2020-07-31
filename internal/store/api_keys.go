@@ -46,7 +46,7 @@ type OrganizationAPIKeyCreator interface {
 }
 
 type OrganizationAPIKeyDeleter interface {
-	DeleteOrganizationAPIKeys(string, string) error
+	DeleteOrganizationAPIKey(string, string) error
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers
@@ -119,8 +119,8 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 	}
 }
 
-// DeleteOrganizationAPIKeys encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteOrganizationAPIKeys(orgID, id string) error {
+// DeleteOrganizationAPIKey encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).APIKeys.Delete(context.Background(), orgID, id)

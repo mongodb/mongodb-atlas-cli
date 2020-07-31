@@ -37,7 +37,7 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeys, opts.ConfigOrgID())
+	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]

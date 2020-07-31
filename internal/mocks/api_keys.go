@@ -223,16 +223,16 @@ func (m *MockOrganizationAPIKeyDeleter) EXPECT() *MockOrganizationAPIKeyDeleterM
 	return m.recorder
 }
 
-// DeleteOrganizationAPIKeys mocks base method
-func (m *MockOrganizationAPIKeyDeleter) DeleteOrganizationAPIKeys(arg0, arg1 string) error {
+// DeleteOrganizationAPIKey mocks base method
+func (m *MockOrganizationAPIKeyDeleter) DeleteOrganizationAPIKey(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteOrganizationAPIKeys", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteOrganizationAPIKey", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// DeleteOrganizationAPIKeys indicates an expected call of DeleteOrganizationAPIKeys
-func (mr *MockOrganizationAPIKeyDeleterMockRecorder) DeleteOrganizationAPIKeys(arg0, arg1 interface{}) *gomock.Call {
+// DeleteOrganizationAPIKey indicates an expected call of DeleteOrganizationAPIKey
+func (mr *MockOrganizationAPIKeyDeleterMockRecorder) DeleteOrganizationAPIKey(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKeys", reflect.TypeOf((*MockOrganizationAPIKeyDeleter)(nil).DeleteOrganizationAPIKeys), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKey", reflect.TypeOf((*MockOrganizationAPIKeyDeleter)(nil).DeleteOrganizationAPIKey), arg0, arg1)
 }

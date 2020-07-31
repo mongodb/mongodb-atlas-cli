@@ -19,9 +19,8 @@ package apikeys
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -39,7 +38,7 @@ func TestDelete_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		DeleteOrganizationAPIKeys(deleteOpts.OrgID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		DeleteOrganizationAPIKey(deleteOpts.OrgID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
 		Return(nil).
 		Times(1)
 

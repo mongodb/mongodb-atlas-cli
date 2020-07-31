@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package apikeys
 
 import (
@@ -23,51 +22,60 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
-{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
-`
-
-type ListOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.OrganizationAPIKeyLister
+	id    string
+	desc  string
+	roles []string
+	store store.OrganizationAPIKeyUpdater
 }
 
-func (opts *ListOpts) init() error {
+func (opts *UpdateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeys(opts.ConfigOrgID(), opts.NewListOptions())
+func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
+	return &atlas.APIKeyInput{
+		Desc:  opts.desc,
+		Roles: opts.roles,
+	}
+}
 
+const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
+
+func (opts *UpdateOpts) Run() error {
+	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) list|ls [--orgId orgId]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId]
+func UpdateBuilder() *cobra.Command {
+	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListOrganizationAPIKeys,
+		Use:     "update <ID>",
+		Aliases: []string{"updates"},
+		Args:    cobra.ExactArgs(1),
+		Short:   description.UpdateOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

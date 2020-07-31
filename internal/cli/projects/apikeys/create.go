@@ -23,16 +23,16 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = "APIKey '{{.ID}}' created.\n"
+var createTemplate = "New API Key '{{.ID}}' created for project.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	desc  string
-	roles []string
-	store store.OrganizationAPIKeyCreator
+	store       store.ProjectAPIKeyCreator
+	description string
+	roles       []string
 }
 
 func (opts *CreateOpts) init() error {
@@ -41,41 +41,46 @@ func (opts *CreateOpts) init() error {
 	return err
 }
 
-func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
+func (opts *CreateOpts) Run() error {
+	apiKeyInput := &mongodbatlas.APIKeyInput{
+		Desc:  opts.description,
 		Roles: opts.roles,
 	}
-}
 
-func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateOrganizationAPIKey(opts.ConfigOrgID(), opts.newAPIKeyInput())
-
+	r, err := opts.store.CreateProjectAPIKey(opts.ProjectID, apiKeyInput)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikeys create [--role role][--desc description][--orgId orgId]
+// mongocli iam project apiKey create --roles roles --description description
 func CreateBuilder() *cobra.Command {
-	opts := new(CreateOpts)
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateOrganizationsAPIKey,
+		Short: description.CreateProjectAPIKey,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			if err := opts.init(); err != nil {
+				return err
+			}
+
+			return opts.PreRunE()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
-	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
+	cmd.Flags().StringArrayVar(&opts.roles, flag.Role, nil, usage.APIKeyRoles)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flag.Description)
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

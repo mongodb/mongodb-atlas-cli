@@ -19,11 +19,10 @@ package agents
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

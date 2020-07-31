@@ -27,7 +27,7 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	id    string
-	store store.APIKeyDescriber
+	store store.OrganizationAPIKeyDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -41,7 +41,7 @@ const describeTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
 `
 
 func (opts *DescribeOpts) Run() error {
-	org, err := opts.store.APIKey(opts.ConfigOrgID(), opts.id)
+	org, err := opts.store.OrganizationAPIKey(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}

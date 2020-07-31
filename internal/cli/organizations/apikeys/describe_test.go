@@ -26,7 +26,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAPIKeyDescriber(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyDescriber(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
@@ -36,7 +36,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		APIKey(opts.OrgID, opts.id).
+		OrganizationAPIKey(opts.OrgID, opts.id).
 		Return(&mongodbatlas.APIKey{}, nil).
 		Times(1)
 

@@ -27,7 +27,7 @@ import (
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
-	store store.APIKeyDeleter
+	store store.OrganizationAPIKeyDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -37,10 +37,10 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteAPIKeys, opts.ConfigOrgID())
+	return opts.Delete(opts.store.DeleteOrganizationAPIKeys, opts.ConfigOrgID())
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),

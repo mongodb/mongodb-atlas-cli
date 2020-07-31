@@ -15,7 +15,10 @@
 package output
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 	"text/tabwriter"
 	"text/template"
 
@@ -26,15 +29,25 @@ type Config interface {
 	Output() string
 }
 
-const jsonFormat = "json"
+const (
+	jsonFormat     = "json"
+	goTemplate     = "go-template"
+	goTemplateFile = "go-template-file"
+)
+
+var templateFormats = []string{goTemplate, goTemplateFile}
 
 // Print outputs v to os.Stdout while handling configured formats,
 // if the optional t is given then it's processed as a go-template,
 // this template will be handled with a tabwriter so you can use tabs (\t)
 // and new lines (\n) to space your content evenly.
-func Print(c Config, t string, v interface{}) error {
+func Print(c Config, defaultTemplate string, v interface{}) error {
 	if c.Output() == jsonFormat {
 		return json.PrettyPrint(v)
+	}
+	t, err := templateValue(c, defaultTemplate)
+	if err != nil {
+		return err
 	}
 	if t != "" {
 		tmpl, err := template.New("output").Parse(t)
@@ -51,4 +64,26 @@ func Print(c Config, t string, v interface{}) error {
 		return w.Flush()
 	}
 	return nil
+}
+
+func templateValue(c Config, defaultTemplate string) (string, error) {
+	value := defaultTemplate
+	templateFormat := ""
+	for _, format := range templateFormats {
+		format += "="
+		if strings.HasPrefix(c.Output(), format) {
+			value = c.Output()[len(format):]
+			templateFormat = format[:len(format)-1]
+			break
+		}
+	}
+	if templateFormat == goTemplateFile {
+		data, err := ioutil.ReadFile(value)
+		if err != nil {
+			return "", fmt.Errorf("error loading template: %s, %v", value, err)
+		}
+
+		value = string(data)
+	}
+	return value, nil
 }

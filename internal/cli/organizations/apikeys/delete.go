@@ -52,7 +52,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   description.DeleteOrganization,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
+			if err := opts.PreRunEOrg(opts.init); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

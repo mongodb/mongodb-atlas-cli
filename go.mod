@@ -16,7 +16,7 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/viper v1.7.0
+	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
 	go.mongodb.org/atlas v0.3.1-0.20200728164135-cd2ad1fa2fa2
 	go.mongodb.org/ops-manager v0.8.1

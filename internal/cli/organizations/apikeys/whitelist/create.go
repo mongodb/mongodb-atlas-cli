@@ -102,8 +102,11 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.apyKey, flag.APIKey, "", usage.APIKey)
 	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.OrganizationWhitelistType)
 	cmd.Flags().StringSliceVar(&opts.entries, flag.Entry, []string{}, usage.WhitelistEntry)
-
+	
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
+	_ = cmd.MarkFlagRequired(flag.APIKey)
+	_ = cmd.MarkFlagRequired(flag.Entry)
 
 	return cmd
 }

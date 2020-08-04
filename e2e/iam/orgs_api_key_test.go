@@ -22,38 +22,51 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestOrgs(t *testing.T) {
+const (
+	iamEntity     = "iam"
+	orgEntity     = "orgs"
+	projectEntity = "projects"
+	apiKeysEntity = "apikeys"
+)
+
+func TestOrgAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	var orgID string
+	var ID string
 
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, orgEntity, "ls")
+		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, resp) {
-			var orgs mongodbatlas.Organizations
-			if err := json.Unmarshal(resp, &orgs); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.NotEmpty(orgs.Results)
-			orgID = orgs.Results[0].ID
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+		var orgs mongodbatlas.Organizations
+		if err := json.Unmarshal(resp, &orgs); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(orgs.Results) == 0 {
+			t.Errorf("got=%#v\nwant>0\n", len(orgs.Results))
+		}
+		ID = orgs.Results[0].ID
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, orgEntity, "describe", orgID)
+		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "describe", ID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, resp)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
 	})
 }

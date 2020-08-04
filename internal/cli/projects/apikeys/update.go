@@ -76,7 +76,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 
-	cmd.MarkFlagRequired(flag.Role)
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

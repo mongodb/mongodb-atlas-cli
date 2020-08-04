@@ -39,7 +39,7 @@ curator \
     --level debug \
     repo submit \
     --service "${barque_url}" \
-    --config build/ci/repo_config.yml \
+    --config build/ci/repo_config.yaml \
     --distro "${distro}" \
     --edition "${edition}" \
     --version "${server_version}" \

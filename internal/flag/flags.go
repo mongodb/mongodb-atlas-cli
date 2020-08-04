@@ -138,4 +138,6 @@ const (
 	Field                           = "field"                           // Fields flag
 	CASFilePath                     = "casFile"                         // CASFilePath flag
 	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
+	IP                              = "ip"                              // IP flag
+	CIDR                            = "cidr"                            // CIDR flag
 )

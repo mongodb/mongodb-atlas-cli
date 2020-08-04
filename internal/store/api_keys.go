@@ -34,7 +34,7 @@ type ProjectAPIKeyCreator interface {
 }
 
 type ProjectAPIKeyDeleter interface {
-	DeleteProjectAPIKey(string, string)  error
+	DeleteProjectAPIKey(string, string) error
 }
 
 type OrganizationAPIKeyLister interface {

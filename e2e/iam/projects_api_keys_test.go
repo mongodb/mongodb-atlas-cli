@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build e2e iam
 
 package iam_test
@@ -26,14 +27,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	iamEntity     = "iam"
-	orgEntity     = "orgs"
-	projectEntity = "projects"
-	apiKeysEntity = "apikeys"
-)
-
-func TestOrgAPIKeys(t *testing.T) {
+func TestProjectsAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -43,7 +37,7 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "ls")
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -59,7 +53,7 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
-			orgEntity,
+			projectEntity,
 			apiKeysEntity,
 			"create",
 			"--desc=e2e-test",
@@ -78,7 +72,7 @@ func TestOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "describe", ID)
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "describe", ID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -88,7 +82,7 @@ func TestOrgAPIKeys(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			orgEntity,
+			projectEntity,
 			apiKeysEntity,
 			"rm",
 			ID,

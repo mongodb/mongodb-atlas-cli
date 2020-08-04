@@ -28,9 +28,8 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	id    string
-	desc  string
 	roles []string
-	store store.OrganizationAPIKeyUpdater
+	store store.ProjectAPIKeyUpdater
 }
 
 func (opts *UpdateOpts) init() error {
@@ -39,22 +38,21 @@ func (opts *UpdateOpts) init() error {
 	return err
 }
 
-func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
+func (opts *UpdateOpts) newAssignAPIKey() *atlas.AssignAPIKey {
+	return &atlas.AssignAPIKey{
 		Roles: opts.roles,
 	}
 }
 
-const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
+const updateTemplate = "Successfully updated APIKey.\n"
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
+	err := opts.store.UpdateProjectAPIKey(opts.ConfigOrgID(), opts.id, opts.newAssignAPIKey())
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTemplate, r)
+	return output.Print(config.Default(), updateTemplate, "")
 }
 
 // mongocli iam project(s) apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId]
@@ -64,9 +62,9 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "update <ID>",
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
-		Short:   description.UpdateOrganizationsAPIKey,
+		Short:   description.ProjectOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			return opts.PreRunE(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -75,7 +73,6 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
-	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 

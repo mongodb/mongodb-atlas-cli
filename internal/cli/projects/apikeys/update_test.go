@@ -21,17 +21,12 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyUpdater(ctrl)
+	mockStore := mocks.NewMockProjectAPIKeyUpdater(ctrl)
 	defer ctrl.Finish()
-
-	expected := &mongodbatlas.APIKey{
-		ID: "1",
-	}
 
 	opts := &UpdateOpts{
 		store: mockStore,
@@ -41,8 +36,8 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateOrganizationAPIKey(opts.OrgID, opts.id, opts.newAPIKeyInput()).
-		Return(expected, nil).
+		UpdateProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
+		Return(nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

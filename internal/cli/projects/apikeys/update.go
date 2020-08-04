@@ -55,7 +55,7 @@ func (opts *UpdateOpts) Run() error {
 	return output.Print(config.Default(), updateTemplate, "")
 }
 
-// mongocli iam project(s) apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId]
+// mongocli iam project(s) apiKey(s)|apikey(s) update <ID> [--role role][--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
@@ -75,6 +75,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
+
+	cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

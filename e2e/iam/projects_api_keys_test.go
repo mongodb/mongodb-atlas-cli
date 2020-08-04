@@ -35,7 +35,7 @@ func TestProjectsAPIKeys(t *testing.T) {
 
 	var ID string
 
-	// This test must run first to grab the ID of the org to later describe
+	// This test must run first to grab the ID of the project to later describe
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "ls")
 		cmd.Env = os.Environ()

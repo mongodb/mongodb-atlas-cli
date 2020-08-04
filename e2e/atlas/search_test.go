@@ -18,11 +18,9 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -47,9 +45,12 @@ func TestSearch(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	indexName := fmt.Sprintf("index-%v", r.Uint32())
-	collectionName := fmt.Sprintf("collection-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	indexName := fmt.Sprintf("index-%v", n)
+	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
 	t.Run("Create", func(t *testing.T) {

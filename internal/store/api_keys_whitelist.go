@@ -23,13 +23,17 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister
+//go:generate mockgen -destination=../mocks/api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistCreator
 
 type OrganizationAPIKeyWhitelistLister interface {
 	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
 }
 
-// OrganizationAPIKeys encapsulate the logic to manage different cloud providers
+type OrganizationAPIKeyWhitelistCreator interface {
+	CreateOrganizationAPIKeyWhite(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
+}
+
+// OrganizationAPIKeys encapsulates the logic to manage different cloud providers
 func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
@@ -37,6 +41,20 @@ func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateOrganizationAPIKeyWhite encapsulates the logic to manage different cloud providers
+func (s *Store) CreateOrganizationAPIKeyWhite(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -722,7 +722,7 @@ tasks:
   ################################################################
   # Unstable Publish
   # RPM Distros
-  - name: push_rhel70_enterprise
+  - name: push_rhel62_enterprise
     <<: &default_push_def
       # This should prevent this task from running in patch builds, where we
       # don't want to publish packages.
@@ -741,6 +741,26 @@ tasks:
         vars:
           edition: enterprise
           distro: rhel70
+          ext: rpm
+  - name: push_rhel62_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel62
+          ext: rpm
+  - name: push_rhel70_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel62
           ext: rpm
   - name: push_rhel70_org
     <<: *default_push_def
@@ -936,7 +956,7 @@ tasks:
   ################################################################
   # Stable Publish
   # RPM Distros
-  - name: push_rhel70_enterprise_stable
+  - name: push_rhel62_enterprise_stable
     <<: &default_push_stable_def
       patch_only: true
       stepback: false
@@ -954,7 +974,27 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
-  - name: push_rhel70_org_44
+  - name: push_rhel62_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_rhel70_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_rhel70_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"

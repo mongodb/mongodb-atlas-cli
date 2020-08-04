@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteProjectAPIKey, opts.ConfigProjectID())
 }
 
-// mongocli iam project(s) apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
+// mongocli iam project(s) apiKey(s)|apikey(s) delete <ID> [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),

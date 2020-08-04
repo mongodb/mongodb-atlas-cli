@@ -28,18 +28,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	cidrBlock      = "cidrBlock"
-	ipAddress      = "ipAddress"
-	createTemplate = "Created new whitelist entry(s).\n"
-)
+const createTemplate = "Created new whitelist entry(s).\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	entryType string
-	apyKey    string
-	entries   []string
-	store     store.OrganizationAPIKeyWhitelistCreator
+	apyKey string
+	ips    []string
+	cidrs  []string
+	store  store.OrganizationAPIKeyWhitelistCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -50,21 +46,21 @@ func (opts *CreateOpts) init() error {
 
 func (opts *CreateOpts) newWhitelistAPIKeysReq() ([]*atlas.WhitelistAPIKeysReq, error) {
 	var whitelistRep []*atlas.WhitelistAPIKeysReq
-	for _, v := range opts.entries {
-		switch opts.entryType {
-		case cidrBlock:
-			whitelist := atlas.WhitelistAPIKeysReq{
-				CidrBlock: v,
-			}
-			whitelistRep = append(whitelistRep, &whitelist)
-		case ipAddress:
-			whitelist := atlas.WhitelistAPIKeysReq{
-				IPAddress: v,
-			}
-			whitelistRep = append(whitelistRep, &whitelist)
-		default:
-			return nil, fmt.Errorf("unsupported type: %s", opts.entryType)
+	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
+		return nil, fmt.Errorf("at least one between --ip and --cidr must be used")
+	}
+	for _, v := range opts.ips {
+		whitelist := atlas.WhitelistAPIKeysReq{
+			IPAddress: v,
 		}
+		whitelistRep = append(whitelistRep, &whitelist)
+	}
+
+	for _, v := range opts.cidrs {
+		whitelist := atlas.WhitelistAPIKeysReq{
+			CidrBlock: v,
+		}
+		whitelistRep = append(whitelistRep, &whitelist)
 	}
 
 	return whitelistRep, nil
@@ -100,13 +96,12 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.apyKey, flag.APIKey, "", usage.APIKey)
-	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.OrganizationWhitelistType)
-	cmd.Flags().StringSliceVar(&opts.entries, flag.Entry, []string{}, usage.WhitelistEntry)
+	cmd.Flags().StringSliceVar(&opts.cidrs, flag.CIDR, []string{}, usage.WhitelistCIDREntry)
+	cmd.Flags().StringSliceVar(&opts.ips, flag.IP, []string{}, usage.WhitelistIPEntry)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
-	_ = cmd.MarkFlagRequired(flag.Entry)
 
 	return cmd
 }

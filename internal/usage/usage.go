@@ -121,7 +121,8 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	WhitelistEntry                  = "IP address to be added to the whitelist for the API key or Whitelist entry in CIDR notation to be added for the API key."
+	WhitelistIPEntry                = "IP address to be added to the whitelist for the API key."
+	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for the API key."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.
@@ -146,8 +147,6 @@ For use only with download restore jobs.`
 Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
 	WhitelistType = `Type of whitelist entry.
 Valid values: cidrBlock|ipAddress|awsSecurityGroup`
-	OrganizationWhitelistType = `Type of whitelist entry.
-Valid values: cidrBlock|ipAddress`
 	Service = `Type of MongoDB service.
 Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.

@@ -30,10 +30,9 @@ func TestCreate_Run(t *testing.T) {
 	expected := &mongodbatlas.WhitelistAPIKeys{}
 
 	createOpts := &CreateOpts{
-		store:     mockStore,
-		apyKey:    "1",
-		entryType: ipAddress,
-		entries:   []string{"77.54.32.11"},
+		store:  mockStore,
+		apyKey: "1",
+		ips:    []string{"77.54.32.11"},
 	}
 
 	whitelistReq, err := createOpts.newWhitelistAPIKeysReq()

@@ -31,7 +31,7 @@ import (
 
 func TestWhitelist(t *testing.T) {
 	const whitelistEntity = "whitelist"
-	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	n, err := rand.Int(rand.Reader, big.NewInt(255))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

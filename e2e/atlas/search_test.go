@@ -16,10 +16,8 @@
 package atlas_test
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"testing"
@@ -47,7 +45,7 @@ func TestSearch(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

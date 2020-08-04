@@ -16,10 +16,8 @@
 package atlas_test
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"strconv"
@@ -79,11 +77,10 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
-	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	clusterName, err := RandClusterName()
 	if err != nil {
 		return "", err
 	}
-	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -128,4 +125,12 @@ func getHostname() (string, error) {
 
 	parts := strings.Split(hostnamePort, ":")
 	return parts[0], nil
+}
+
+func RandClusterName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("e2e-cluster-%v", n), nil
 }

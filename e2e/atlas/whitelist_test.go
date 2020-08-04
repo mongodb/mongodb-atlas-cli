@@ -16,10 +16,8 @@
 package atlas_test
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"testing"
@@ -29,9 +27,10 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+const whitelistEntity = "whitelist"
+
 func TestWhitelist(t *testing.T) {
-	const whitelistEntity = "whitelist"
-	n, err := rand.Int(rand.Reader, big.NewInt(255))
+	n, err := e2e.RandInt(255)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

@@ -16,10 +16,8 @@
 package cloud_manager_test
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"testing"
@@ -37,7 +35,7 @@ func TestDeployReplicaSet(t *testing.T) {
 	const clustersEntity = "clusters"
 	const testFile = "om-new-cluster.json"
 
-	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

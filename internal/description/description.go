@@ -118,6 +118,7 @@ const (
 	DescribeOrganizationsAPIKey = "Get a specific Organization API Key."
 	UpdateOrganizationsAPIKey   = "Update an Organization API Key."
 	CreateOrganizationsAPIKey   = "Create an Organization API Key."
+	DeleteOrganizationsAPIKey   = "Delete an Organization API Key."
 	ListWhitelistAPIKeys        = "Get all whitelist entries for a given API key."
 	OrganizationLong            = "Create, list and manage your MongoDB organizations."
 	CreateOrganization          = "Create an organization."

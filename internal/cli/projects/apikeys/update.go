@@ -14,11 +14,12 @@
 package apikeys
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -44,15 +45,13 @@ func (opts *UpdateOpts) newAssignAPIKey() *atlas.AssignAPIKey {
 	}
 }
 
-const updateTemplate = "Successfully updated APIKey.\n"
-
 func (opts *UpdateOpts) Run() error {
-	err := opts.store.UpdateProjectAPIKey(opts.ConfigOrgID(), opts.id, opts.newAssignAPIKey())
+	err := opts.store.UpdateProjectAPIKey(opts.ConfigProjectID(), opts.id, opts.newAssignAPIKey())
 	if err != nil {
 		return err
 	}
-
-	return output.Print(config.Default(), updateTemplate, "")
+	fmt.Println("Successfully updated APIKey.")
+	return nil
 }
 
 // mongocli iam project(s) apiKey(s)|apikey(s) update <ID> [--role role][--projectId projectId]

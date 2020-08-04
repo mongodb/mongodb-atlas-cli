@@ -29,8 +29,26 @@ type OrganizationAPIKeyWhitelistLister interface {
 	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
 }
 
+type OrganizationAPIKeyWhitelistDeleter interface {
+	DeleteOrganizationAPIKeyWhitelist(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
+}
+
 // OrganizationAPIKeys encapsulate the logic to manage different cloud providers
 func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)

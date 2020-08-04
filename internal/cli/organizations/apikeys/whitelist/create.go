@@ -45,22 +45,22 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) newWhitelistAPIKeysReq() ([]*atlas.WhitelistAPIKeysReq, error) {
-	var whitelistRep []*atlas.WhitelistAPIKeysReq
+	whitelistRep := make([]*atlas.WhitelistAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
 	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
-		return nil, fmt.Errorf("at least one between --ip and --cidr must be used")
+		return nil, fmt.Errorf("either --ip or --cidr must be set")
 	}
 	for _, v := range opts.ips {
-		whitelist := atlas.WhitelistAPIKeysReq{
+		whitelist := &atlas.WhitelistAPIKeysReq{
 			IPAddress: v,
 		}
-		whitelistRep = append(whitelistRep, &whitelist)
+		whitelistRep = append(whitelistRep, whitelist)
 	}
 
 	for _, v := range opts.cidrs {
-		whitelist := atlas.WhitelistAPIKeysReq{
+		whitelist := &atlas.WhitelistAPIKeysReq{
 			CidrBlock: v,
 		}
-		whitelistRep = append(whitelistRep, &whitelist)
+		whitelistRep = append(whitelistRep, whitelist)
 	}
 
 	return whitelistRep, nil

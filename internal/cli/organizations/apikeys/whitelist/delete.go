@@ -50,7 +50,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   description.DeleteOrganization,
+		Short:   description.DeleteOrganizationsAPIKey,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunEOrg(opts.init); err != nil {
@@ -67,6 +67,8 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

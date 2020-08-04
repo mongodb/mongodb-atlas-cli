@@ -26,7 +26,7 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyDeleter(ctrl)
+	mockStore := mocks.NewMockProjectAPIKeyDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -38,7 +38,7 @@ func TestDelete_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		DeleteOrganizationAPIKey(deleteOpts.OrgID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		DeleteProjectAPIKey(deleteOpts.ProjectID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
 		Return(nil).
 		Times(1)
 

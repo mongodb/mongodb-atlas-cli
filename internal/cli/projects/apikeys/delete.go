@@ -27,7 +27,7 @@ import (
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
-	store store.OrganizationAPIKeyDeleter
+	store store.ProjectAPIKeyDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -37,7 +37,7 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
+	return opts.Delete(opts.store.DeleteProjectAPIKey, opts.ConfigProjectID())
 }
 
 // mongocli iam project(s) apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
@@ -52,7 +52,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   description.DeleteProjectAPIKey,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunEOrg(opts.init); err != nil {
+			if err := opts.PreRunE(opts.init); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -64,7 +64,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.OrgID)
 
 	return cmd
 }

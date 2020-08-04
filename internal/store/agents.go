@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister
 
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
@@ -29,6 +29,10 @@ type AgentLister interface {
 
 type AgentUpgrader interface {
 	UpgradeAgent(string) (*opsmngr.AutomationConfigAgent, error)
+}
+
+type AgentAPIKeyLister interface {
+	AgentAPIKeys(string) ([]*opsmngr.AgentAPIKey, error)
 }
 
 // Agents encapsulate the logic to manage different cloud providers
@@ -47,6 +51,17 @@ func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, 
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(context.Background(), projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpgradeAgent encapsulate the logic to manage different cloud providers
+func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentAPIKeys(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

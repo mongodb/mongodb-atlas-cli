@@ -16,22 +16,25 @@
 package atlas_test
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestClusters(t *testing.T) {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -167,7 +170,7 @@ func TestClusters(t *testing.T) {
 		}
 	})
 
-	clusterFileName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	clusterFileName := fmt.Sprintf("e2e-cluster-%v", n)
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -227,7 +230,7 @@ func TestClusters(t *testing.T) {
 		}
 	})
 
-	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", n)
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

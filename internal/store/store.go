@@ -57,7 +57,7 @@ type Store struct {
 func customCATransport(ca []byte) http.RoundTripper {
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(ca)
-	tlsClientConfig := &tls.Config{
+	tlsClientConfig := &tls.Config{ //nolint:gosec // we let users set custom certificates
 		InsecureSkipVerify: false,
 		RootCAs:            caCertPool,
 	}

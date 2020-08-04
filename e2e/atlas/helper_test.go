@@ -16,14 +16,14 @@
 package atlas_test
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -79,8 +79,11 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	if err != nil {
+		return "", err
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,

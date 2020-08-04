@@ -16,9 +16,10 @@
 package atlas_test
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"os/exec"
 	"testing"
@@ -30,8 +31,11 @@ import (
 
 func TestWhitelist(t *testing.T) {
 	const whitelistEntity = "whitelist"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	entry := fmt.Sprintf("192.168.0.%d", r.Int63n(255))
+	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {

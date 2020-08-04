@@ -55,11 +55,44 @@ func TestOrgAPIKeys(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		assert.NotEmpty(t, keys)
-		ID = keys[0].ID
+	})
+
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath, iamEntity,
+			orgEntity,
+			apiKeysEntity,
+			"create",
+			"--desc=e2e-test",
+			"--role=ORG_READ_ONLY")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		if a.NoError(err, resp) {
+			var key mongodbatlas.APIKey
+			if err := json.Unmarshal(resp, &key); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			a.Equal("e2e-test", key.Desc)
+			ID = key.ID
+		}
 	})
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "describe", ID)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		assert.NoError(t, err, resp)
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			orgEntity,
+			apiKeysEntity,
+			"rm",
+			ID,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

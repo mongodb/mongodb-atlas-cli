@@ -41,7 +41,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOrganizationAPIKeyWhitelist, opts.ConfigOrgID(), opts.apiKey)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId] [--apiKey apiKey] --force
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),

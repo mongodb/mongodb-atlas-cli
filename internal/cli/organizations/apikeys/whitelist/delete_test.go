@@ -26,7 +26,7 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyDeleter(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -35,10 +35,14 @@ func TestDelete_Run(t *testing.T) {
 			Entry:   "5a0a1e7e0f2912c554080adc",
 			Confirm: true,
 		},
+		apiKey: "1",
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "2",
+		},
 	}
 	mockStore.
 		EXPECT().
-		DeleteOrganizationAPIKey(deleteOpts.OrgID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		DeleteOrganizationAPIKeyWhitelist(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
 		Return(nil).
 		Times(1)
 

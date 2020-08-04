@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistCreator
+//go:generate mockgen -destination=../mocks/api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyWhitelistDeleter
 
 type OrganizationAPIKeyWhitelistLister interface {
 	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
@@ -34,7 +34,7 @@ type OrganizationAPIKeyWhitelistCreator interface {
 }
 
 type OrganizationAPIKeyWhitelistDeleter interface {
-	DeleteOrganizationAPIKeyWhitelist(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
+	DeleteOrganizationAPIKeyWhitelist(string, string, string) error
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers
@@ -66,15 +66,15 @@ func (s *Store) CreateOrganizationAPIKeyWhite(orgID, apiKeyID string, opts []*at
 }
 
 // DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
+func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, opts)
-		return result, err
+		_, err := s.client.(*atlas.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-		return result, err
+		_, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		return err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

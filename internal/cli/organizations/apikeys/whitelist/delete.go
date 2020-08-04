@@ -27,7 +27,8 @@ import (
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
-	store store.OrganizationAPIKeyDeleter
+	apiKey string
+	store  store.OrganizationAPIKeyWhitelistDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -37,13 +38,13 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
+	return opts.Delete(opts.store.DeleteOrganizationAPIKeyWhitelist, opts.ConfigOrgID(), opts.apiKey)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),
 	}
 
 	cmd := &cobra.Command{
@@ -63,6 +64,7 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 

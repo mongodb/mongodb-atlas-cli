@@ -41,7 +41,6 @@ func TestOrgsAPIKeys(t *testing.T) {
 
 	var ID string
 
-	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "ls")
 		cmd.Env = os.Environ()
@@ -57,6 +56,7 @@ func TestOrgsAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys)
 	})
 
+	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,

@@ -36,21 +36,6 @@ func TestProjectsAPIKeys(t *testing.T) {
 	var ID string
 
 	// This test must run first to grab the ID of the project to later describe
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "ls")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var keys []mongodbatlas.APIKey
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.NotEmpty(t, keys)
-	})
-
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			projectEntity,
@@ -69,6 +54,21 @@ func TestProjectsAPIKeys(t *testing.T) {
 			a.Equal("e2e-test", key.Desc)
 			ID = key.ID
 		}
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "ls")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var keys []mongodbatlas.APIKey
+		if err := json.Unmarshal(resp, &keys); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, keys)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

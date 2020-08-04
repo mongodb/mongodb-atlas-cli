@@ -18,11 +18,9 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 
@@ -32,8 +30,11 @@ import (
 )
 
 func TestDBUserCerts(t *testing.T) {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	username := fmt.Sprintf("user%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	username := fmt.Sprintf("user%v", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {

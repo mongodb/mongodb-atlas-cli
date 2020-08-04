@@ -16,14 +16,14 @@
 package iam_test
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -41,8 +41,11 @@ func TestProjects(t *testing.T) {
 
 	iamEntity := "iam"
 	projectEntity := "projects"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	projectName := fmt.Sprintf("e2e-proj-%v", r.Uint32())
+	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	projectName := fmt.Sprintf("e2e-proj-%v", n)
 
 	var projectID string
 	t.Run("Create", func(t *testing.T) {

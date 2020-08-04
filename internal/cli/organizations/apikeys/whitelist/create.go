@@ -81,7 +81,7 @@ func (opts *CreateOpts) Run() error {
 	return output.Print(config.Default(), createTemplate, p)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikeys whitelist|ipwhitelist create [--keyId keyId] [--orgId orgId] [--type cidrBlock|ipAddress] --entry
+// mongocli iam organizations|orgs apiKey(s)|apikeys whitelist|ipwhitelist create [--keyId keyId] [--orgId orgId] [--ip ip] [--cidr cidr]
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{

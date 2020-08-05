@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator
 
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
@@ -35,7 +35,11 @@ type AgentAPIKeyLister interface {
 	AgentAPIKeys(string) ([]*opsmngr.AgentAPIKey, error)
 }
 
-// Agents encapsulate the logic to manage different cloud providers
+type AgentAPIKeyCreator interface {
+	CreateAgentAPIKey(string, *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error)
+}
+
+// Agents encapsulates the logic to manage different cloud providers
 func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -46,7 +50,7 @@ func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	}
 }
 
-// UpgradeAgent encapsulate the logic to manage different cloud providers
+// UpgradeAgent encapsulates the logic to manage different cloud providers
 func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -57,11 +61,22 @@ func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, 
 	}
 }
 
-// UpgradeAgent encapsulate the logic to manage different cloud providers
+// AgentAPIKeys encapsulates the logic to manage different cloud providers
 func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentAPIKeys(context.Background(), projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateAgentAPIKey encapsulates the logic to manage different cloud providers
+func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Agents.CreateAgentAPIKey(context.Background(), projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

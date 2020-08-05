@@ -26,7 +26,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-
 func TestProjectAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {

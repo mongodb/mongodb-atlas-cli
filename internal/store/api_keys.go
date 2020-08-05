@@ -155,7 +155,7 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	}
 }
 
-// DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers
+// DeleteProjectAPIKey encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
 	switch s.service {
 	case config.CloudService:

@@ -26,7 +26,10 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = "APIKey '{{.ID}}' created.\n"
+const createTemplate = `API Key '{{.ID}}' created.
+Public API Key {{.PublicKey}}
+Private API Key {{.PrivateKey}}
+`
 
 type CreateOpts struct {
 	cli.GlobalOpts

@@ -26,7 +26,10 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-var createTemplate = "New API Key '{{.ID}}' created for project.\n"
+var createTemplate = `API Key '{{.ID}}' created.
+Public API Key {{.PublicKey}}
+Private API Key {{.PrivateKey}}
+`
 
 type CreateOpts struct {
 	cli.GlobalOpts

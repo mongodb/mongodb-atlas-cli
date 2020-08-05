@@ -25,10 +25,10 @@ import (
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectAPIKeyUpdater(ctrl)
+	mockStore := mocks.NewMockProjectAPIKeyAssigner(ctrl)
 	defer ctrl.Finish()
 
-	opts := &UpdateOpts{
+	opts := &AssignOpts{
 		store: mockStore,
 		id:    "1",
 		roles: []string{"ORG_OWNER"},
@@ -36,7 +36,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
+		AssignProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
 		Return(nil).
 		Times(1)
 

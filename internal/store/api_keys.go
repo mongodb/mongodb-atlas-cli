@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyUpdater
+//go:generate mockgen -destination=../mocks/api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
 
 type ProjectAPIKeyLister interface {
 	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
@@ -37,8 +37,8 @@ type ProjectAPIKeyDeleter interface {
 	DeleteProjectAPIKey(string, string) error
 }
 
-type ProjectAPIKeyUpdater interface {
-	UpdateProjectAPIKey(string, string, *atlas.AssignAPIKey) error
+type ProjectAPIKeyAssigner interface {
+	AssignProjectAPIKey(string, string, *atlas.AssignAPIKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -72,48 +72,6 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]at
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// CreateProjectAPIKey creates an API Keys for a project
-func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// ProjectAPIKeys returns the API Keys for a specific project
-func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// UpdateProjectAPIKey encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
-		return err
-	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
-		return err
-	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 
@@ -167,6 +125,48 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(context.Background(), orgID, id)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectAPIKeys returns the API Keys for a specific project
+func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateProjectAPIKey creates an API Keys for a project
+func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// AssignProjectAPIKey encapsulates the logic to manage different cloud providers
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
+		return err
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

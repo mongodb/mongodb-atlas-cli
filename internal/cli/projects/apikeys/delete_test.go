@@ -14,41 +14,35 @@
 
 // +build unit
 
-package whitelist
+package apikeys
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreate_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistCreator(ctrl)
+	mockStore := mocks.NewMockProjectAPIKeyDeleter(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.WhitelistAPIKeys{}
-
-	createOpts := &CreateOpts{
-		store:  mockStore,
-		apyKey: "1",
-		ips:    []string{"77.54.32.11"},
+	deleteOpts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
 	}
-
-	whitelistReq, err := createOpts.newWhitelistAPIKeysReq()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
 	mockStore.
 		EXPECT().
-		CreateOrganizationAPIKeyWhite(createOpts.OrgID, createOpts.apyKey, whitelistReq).
-		Return(expected, nil).
+		DeleteProjectAPIKey(deleteOpts.ProjectID, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
 		Times(1)
 
-	err = createOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

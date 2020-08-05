@@ -11,65 +11,60 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package agents
+
+package apikeys
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type DeleteOpts struct {
+	*cli.DeleteOpts
 	cli.GlobalOpts
-	agentType string
-	store     store.AgentLister
+	store store.ProjectAPIKeyDeleter
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
-{{.Hostname}}	{{.TypeName}}	{{.StateName}}{{end}}
-`
-
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType)
-	if err != nil {
-		return err
-	}
-
-	return output.Print(config.Default(), listTemplate, r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteProjectAPIKey, opts.ConfigProjectID())
 }
 
-// mongocli om server(s) list [--projectId projectId]
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli iam project(s) apiKey(s)|apikey(s) delete <ID> [--projectId projectId]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),
+	}
+
 	cmd := &cobra.Command{
-		Use:       "list",
-		Aliases:   []string{"ls"},
-		Args:      cobra.ExactValidArgs(1),
-		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
-		Short:     description.ListAgents,
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   description.DeleteProjectAPIKey,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.init); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.agentType = strings.ToUpper(args[0])
 			return opts.Run()
 		},
 	}
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

@@ -11,11 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package agents
+package apikeys
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
@@ -28,8 +26,7 @@ import (
 
 type ListOpts struct {
 	cli.GlobalOpts
-	agentType string
-	store     store.AgentLister
+	store store.AgentAPIKeyLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -38,12 +35,12 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
-{{.Hostname}}	{{.TypeName}}	{{.StateName}}{{end}}
+var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range .}}
+{{.ID}}	{{.Key}}	{{.Desc}}	{{.CreatedTime}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType)
+	r, err := opts.store.AgentAPIKeys(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -55,16 +52,13 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:       "list",
-		Aliases:   []string{"ls"},
-		Args:      cobra.ExactValidArgs(1),
-		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
-		Short:     description.ListAgents,
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   description.ListAgentAPIKeys,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.agentType = strings.ToUpper(args[0])
 			return opts.Run()
 		},
 	}

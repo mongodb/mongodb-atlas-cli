@@ -12,21 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package apikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "apikeys",
-		Short:   description.APIKeys,
-		Aliases: []string{"apikey", "apiKeys", "apiKey"},
-	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
+func TestCreate_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAgentAPIKeyCreator(ctrl)
+	defer ctrl.Finish()
 
-	return cmd
+	createOpts := &CreateOpts{
+		store: mockStore,
+	}
+
+	expected := &opsmngr.AgentAPIKey{}
+
+	mockStore.
+		EXPECT().
+		CreateAgentAPIKey(createOpts.OrgID, createOpts.newAgentAPIKeysRequest()).
+		Return(expected, nil).
+		Times(1)
+
+	assert.NoError(t, createOpts.Run())
 }

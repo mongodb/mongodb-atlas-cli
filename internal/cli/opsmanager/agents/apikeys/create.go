@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package apikeys
 
 import (
@@ -22,48 +23,57 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type ListOpts struct {
+const createTemplate = "API Key '{{.Key}}' created.\n"
+
+type CreateOpts struct {
 	cli.GlobalOpts
-	store store.AgentAPIKeyLister
+	desc  string
+	store store.AgentAPIKeyCreator
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *CreateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range .}}
-{{.ID}}	{{.Key}}	{{.Desc}}	{{.CreatedTime}}{{end}}
-`
+func (opts *CreateOpts) newAgentAPIKeysRequest() *opsmngr.AgentAPIKeysRequest {
+	return &opsmngr.AgentAPIKeysRequest{
+		Desc: opts.desc,
+	}
+}
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.AgentAPIKeys(opts.ConfigProjectID())
+func (opts *CreateOpts) Run() error {
+	p, err := opts.store.CreateAgentAPIKey(opts.ConfigProjectID(), opts.newAgentAPIKeysRequest())
+
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return output.Print(config.Default(), createTemplate, p)
 }
 
-// mongocli om agents apiKeys(s) list [--projectId projectId]
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli iam organizations|orgs apiKey(s)|apikeys create [--desc description][--projectId projectId]
+func CreateBuilder() *cobra.Command {
+	opts := new(CreateOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   description.ListAgentAPIKeys,
+		Use:   "create",
+		Short: description.CreateAgentAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
+	_ = cmd.MarkFlagRequired(flag.Description)
 
 	return cmd
 }

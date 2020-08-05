@@ -27,7 +27,7 @@ import (
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
-	store store.OrganizationAPIKeyDeleter
+	store store.AgentAPIKeyDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -37,22 +37,22 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKey, opts.ConfigOrgID())
+	return opts.Delete(opts.store.DeleteAgentAPIKey, opts.ConfigProjectID())
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) delete <ID> [--orgId orgId]
+// mongocli iam ops-manager agents apiKey(s)|apikey(s) delete <ID> [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("APIKey '%s' deleted\n", "APIKey not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("API Key '%s' deleted\n", "API Key not deleted"),
 	}
 
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   description.DeleteOrganizationsAPIKey,
+		Short:   description.DeleteAgentAPIKey,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunEOrg(opts.init); err != nil {
+			if err := opts.PreRunE(opts.init); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -64,7 +64,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

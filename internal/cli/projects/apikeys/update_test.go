@@ -12,23 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package apikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "apiKeys",
-		Short:   description.ProjectAPIKeys,
-		Aliases: []string{"apikeys"},
-	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(UpdateBuilder())
+func TestUpdateOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectAPIKeyUpdater(ctrl)
+	defer ctrl.Finish()
 
-	return cmd
+	opts := &UpdateOpts{
+		store: mockStore,
+		id:    "1",
+		roles: []string{"ORG_OWNER"},
+	}
+
+	mockStore.
+		EXPECT().
+		UpdateProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
+		Return(nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

@@ -131,7 +131,7 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 	}
 }
 
-// UpdateOrganizationAPIKey encapsulate the logic to manage different cloud providers
+// UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -145,7 +145,7 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 	}
 }
 
-// CreateOrganizationAPIKey encapsulate the logic to manage different cloud providers
+// CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -159,7 +159,7 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 	}
 }
 
-// DeleteOrganizationAPIKey encapsulate the logic to manage different cloud providers
+// DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	switch s.service {
 	case config.CloudService:

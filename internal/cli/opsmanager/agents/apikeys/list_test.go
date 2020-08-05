@@ -14,42 +14,37 @@
 
 // +build unit
 
-package whitelist
+package apikeys
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestCreate_Run(t *testing.T) {
+func TestAgentsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistCreator(ctrl)
+	mockStore := mocks.NewMockAgentAPIKeyLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.WhitelistAPIKeys{}
-
-	createOpts := &CreateOpts{
-		store:  mockStore,
-		apyKey: "1",
-		ips:    []string{"77.54.32.11"},
+	listOpts := ListOpts{
+		store: mockStore,
 	}
+	listOpts.ProjectID = "1"
 
-	whitelistReq, err := createOpts.newWhitelistAPIKeysReq()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	expected := make([]*opsmngr.AgentAPIKey, 0)
 
 	mockStore.
 		EXPECT().
-		CreateOrganizationAPIKeyWhite(createOpts.OrgID, createOpts.apyKey, whitelistReq).
+		AgentAPIKeys(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
-	err = createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	config.SetService(config.OpsManagerService)
+
+	assert.NoError(t, listOpts.Run())
 }

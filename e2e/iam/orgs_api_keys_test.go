@@ -33,7 +33,7 @@ const (
 	apiKeysEntity = "apikeys"
 )
 
-func TestOrgsAPIKeys(t *testing.T) {
+func TestOrgAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

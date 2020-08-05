@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build e2e iam
 
 package iam_test
@@ -27,7 +26,8 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProjectsAPIKeys(t *testing.T) {
+
+func TestProjectAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -42,7 +42,7 @@ func TestProjectsAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"create",
 			"--desc=e2e-test",
-			"--role=ORG_READ_ONLY")
+			"--role=GROUP_READ_ONLY")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
@@ -69,14 +69,6 @@ func TestProjectsAPIKeys(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		assert.NotEmpty(t, keys)
-	})
-
-	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "describe", ID)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		assert.NoError(t, err, resp)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

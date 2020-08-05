@@ -16,6 +16,7 @@ package output
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -30,10 +31,19 @@ type Config interface {
 }
 
 const (
-	jsonFormat     = "json"
-	goTemplate     = "go-template"
-	goTemplateFile = "go-template-file"
+	jsonFormat        = "json"
+	goTemplate        = "go-template"
+	goTemplateFile    = "go-template-file"
+	tabwriterMinWidth = 6
+	tabwriterWidth    = 4
+	tabwriterPadding  = 3
+	tabwriterPadChar  = ' '
 )
+
+// newTabWriter returns a tabwriter that handles tabs(`\t) to space columns evenly
+func newTabWriter(output io.Writer) *tabwriter.Writer {
+	return tabwriter.NewWriter(output, tabwriterMinWidth, tabwriterWidth, tabwriterPadding, tabwriterPadChar, 0)
+}
 
 var templateFormats = []string{goTemplate, goTemplateFile}
 
@@ -54,9 +64,7 @@ func Print(c Config, defaultTemplate string, v interface{}) error {
 		if err != nil {
 			return err
 		}
-		// tabwriter will handle tabs(`\t) to space columns evenly, each column will use a tab(\t) of 8 spaces
-		// with a minimum padding of 2 characters per column so columns don't touch each other if they are too wide
-		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
+		w := newTabWriter(os.Stdout)
 
 		if err := tmpl.Execute(w, v); err != nil {
 			return err

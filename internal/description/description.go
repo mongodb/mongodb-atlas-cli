@@ -147,6 +147,8 @@ const (
 	CreateOwner                 = "Create the first user for Ops Manager."
 	Servers                     = "Manage Ops Manager servers."
 	ListServer                  = "List all available servers running an automation agent for the given project."
+	ListAgents                  = "List available MongoDB Agents for the given project."
+	ListAgentAPIKeys            = "List available MongoDB Agent API Keys for the given project."
 	Security                    = "Manage security configuration for a project."
 	EnableSecurity              = "Enable authentication mechanisms for the project."
 	Events                      = "Manage events for your project."

@@ -21,7 +21,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter
 
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
@@ -37,6 +37,10 @@ type AgentAPIKeyLister interface {
 
 type AgentAPIKeyCreator interface {
 	CreateAgentAPIKey(string, *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error)
+}
+
+type AgentAPIKeyDeleter interface {
+	DeleteAgentAPIKey(string, string) error
 }
 
 // Agents encapsulates the logic to manage different cloud providers
@@ -80,5 +84,16 @@ func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysReque
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteAgentAPIKey encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*opsmngr.Client).Agents.DeleteAgentAPIKey(context.Background(), projectID, keyID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

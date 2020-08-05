@@ -151,6 +151,7 @@ const (
 	ListAgents                  = "List available MongoDB Agents for the given project."
 	ListAgentAPIKeys            = "List available MongoDB Agent API Keys for the given project."
 	CreateAgentAPIKey           = "Create an Agent API Key."
+	DeleteAgentAPIKey           = "Delete an Agent API Key."
 	Security                    = "Manage security configuration for a project."
 	EnableSecurity              = "Enable authentication mechanisms for the project."
 	Events                      = "Manage events for your project."

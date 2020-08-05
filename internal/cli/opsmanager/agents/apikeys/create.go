@@ -63,7 +63,7 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: description.CreateAgentAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			return opts.PreRunE(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -71,7 +71,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 

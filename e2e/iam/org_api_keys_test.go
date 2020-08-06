@@ -47,7 +47,7 @@ func TestOrgAPIKeys(t *testing.T) {
 			orgEntity,
 			apiKeysEntity,
 			"ls",
-			"--o=json")
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

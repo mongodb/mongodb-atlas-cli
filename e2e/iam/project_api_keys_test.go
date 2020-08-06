@@ -62,7 +62,7 @@ func TestProjectAPIKeys(t *testing.T) {
 			projectEntity,
 			apiKeysEntity,
 			"ls",
-			"--o=json")
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

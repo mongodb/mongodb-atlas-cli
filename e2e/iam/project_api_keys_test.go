@@ -42,7 +42,7 @@ func TestProjectAPIKeys(t *testing.T) {
 			"create",
 			"--desc=e2e-test",
 			"--role=GROUP_READ_ONLY",
-			"--o=json")
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)

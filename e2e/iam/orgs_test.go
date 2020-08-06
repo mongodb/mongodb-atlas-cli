@@ -44,7 +44,7 @@ func TestOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, resp) {
+		if a.NoError(err, string(resp)) {
 			var orgs mongodbatlas.Organizations
 			if err := json.Unmarshal(resp, &orgs); err != nil {
 				t.Fatalf("unexpected error: %v", err)
@@ -63,6 +63,6 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, resp)
+		assert.NoError(t, err, string(resp))
 	})
 }

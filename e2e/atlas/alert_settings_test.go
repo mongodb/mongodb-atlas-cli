@@ -87,7 +87,7 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, resp)
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -128,7 +128,7 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, resp)
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("List Matcher Fields", func(t *testing.T) {

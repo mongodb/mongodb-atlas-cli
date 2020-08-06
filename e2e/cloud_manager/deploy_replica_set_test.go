@@ -85,6 +85,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			entity,
 			clustersEntity,
 			"ls",
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
@@ -109,6 +110,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

@@ -25,6 +25,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -58,54 +59,35 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationDelayMin",
 			strconv.Itoa(delayMin),
 			"--notificationSmsEnabled=false",
-			"--notificationEmailEnabled=true")
+			"--notificationEmailEnabled=true",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.AlertConfiguration
+			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
+				a.Equal(eventTypeName, alert.EventTypeName)
+				a.NotEmpty(alert.Notifications)
+				a.Equal(delayMin, *alert.Notifications[0].DelayMin)
+				a.Equal(group, alert.Notifications[0].TypeName)
+				a.Equal(intervalMin, alert.Notifications[0].IntervalMin)
+				a.False(*alert.Notifications[0].SMSEnabled)
+				alertID = alert.ID
+			}
 		}
-
-		var alert mongodbatlas.AlertConfiguration
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if alert.EventTypeName != eventTypeName {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, eventTypeName)
-		}
-
-		if len(alert.Notifications) != 1 {
-			t.Errorf("len(alert.Notifications) got=%#v\nwant=%#v\n", len(alert.Notifications), 1)
-		}
-
-		if *alert.Notifications[0].DelayMin != delayMin {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].DelayMin, delayMin)
-		}
-
-		if alert.Notifications[0].TypeName != group {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].TypeName, group)
-		}
-
-		if alert.Notifications[0].IntervalMin != intervalMin {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].IntervalMin, intervalMin)
-		}
-
-		if *alert.Notifications[0].SMSEnabled != false {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Notifications[0].SMSEnabled, false)
-		}
-
-		alertID = alert.ID
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			configEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -124,33 +106,20 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationDelayMin",
 			strconv.Itoa(delayMin),
 			"--notificationSmsEnabled=true",
-			"--notificationEmailEnabled=true")
+			"--notificationEmailEnabled=true",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alert mongodbatlas.AlertConfiguration
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if *alert.Enabled {
-			t.Errorf("got=%#v\nwant=%#v\n", true, false)
-		}
-
-		if len(alert.Notifications) != 1 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(alert.Notifications), 1)
-		}
-
-		if !*alert.Notifications[0].SMSEnabled {
-			t.Errorf("got=%#v\nwant=%#v\n", false, true)
-		}
-
-		if !*alert.Notifications[0].EmailEnabled {
-			t.Errorf("got=%#v\nwant=%#v\n", false, true)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.AlertConfiguration
+			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
+				a.False(*alert.Enabled)
+				a.NotEmpty(alert.Notifications)
+				a.True(*alert.Notifications[0].SMSEnabled)
+				a.True(*alert.Notifications[0].EmailEnabled)
+			}
 		}
 	})
 
@@ -159,13 +128,17 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("List Matcher Fields", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "fields", "type")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			configEntity,
+			"fields",
+			"type",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -46,7 +46,8 @@ func TestWhitelist(t *testing.T) {
 			whitelistEntity,
 			"create",
 			entry,
-			"--comment=test")
+			"--comment=test",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -71,7 +72,11 @@ func TestWhitelist(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			whitelistEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -81,7 +86,12 @@ func TestWhitelist(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "describe", entry)
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			whitelistEntity,
+			"describe",
+			entry,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -91,7 +101,12 @@ func TestWhitelist(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, whitelistEntity, "delete", entry, "--force")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			whitelistEntity,
+			"delete",
+			entry,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -112,7 +127,8 @@ func TestWhitelist(t *testing.T) {
 			"create",
 			entry,
 			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
-			"--comment=test")
+			"--comment=test",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -41,7 +41,12 @@ func TestProjects(t *testing.T) {
 	var projectID string
 	t.Run("Create", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "create", projectName)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"create",
+			projectName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -61,7 +66,11 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "ls")
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -71,7 +80,12 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "describe", projectID)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"describe",
+			projectID,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -81,7 +95,12 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "delete", projectID, "--force")
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"delete",
+			projectID,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

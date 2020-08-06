@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -39,75 +40,55 @@ func TestAlerts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// This test should be run before all other tests to grab an alert ID for all other tests
-	t.Run("List", func(t *testing.T) {
-		t.Run("with no status", func(t *testing.T) {
-			cmd := exec.Command(cliPath,
-				atlasEntity,
-				alertsEntity,
-				"list",
-			)
+	t.Run("List with no status", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			"list",
+			"-o=json",
+		)
 
-			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
-
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
-
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
 			var alerts mongodbatlas.AlertsResponse
-			if err := json.Unmarshal(resp, &alerts); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-
-			if len(alerts.Results) == 0 {
-				t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-			}
+			err := json.Unmarshal(resp, &alerts)
+			a.NoError(err)
+			a.NotEmpty(alerts.Results)
 			alertID = alerts.Results[0].ID
-		})
+		}
+	})
 
-		t.Run("with status OPEN", func(t *testing.T) {
-			cmd := exec.Command(cliPath,
-				atlasEntity,
-				alertsEntity,
-				"list",
-				"--status",
-				"OPEN",
-			)
+	t.Run("List with status OPEN", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			"list",
+			"--status",
+			"OPEN",
+			"-o=json",
+		)
 
-			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
 
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
+	t.Run("List with status CLOSED", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			alertsEntity,
+			"list",
+			"--status",
+			"CLOSED",
+			"-o=json",
+		)
 
-			var alerts mongodbatlas.AlertsResponse
-			if err := json.Unmarshal(resp, &alerts); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-		})
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
 
-		t.Run("List with status CLOSED", func(t *testing.T) {
-			cmd := exec.Command(cliPath,
-				atlasEntity,
-				alertsEntity,
-				"list",
-				"--status",
-				"CLOSED",
-			)
-
-			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
-
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
-
-			var alerts mongodbatlas.AlertsResponse
-			if err := json.Unmarshal(resp, &alerts); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-		})
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -116,30 +97,19 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"describe",
 			alertID,
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alert mongodbatlas.Alert
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if alert.ID != alertID {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.ID, alertID)
-		}
-
-		if alert.Status != open {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
-		}
-
-		if alert.EventTypeName != usersWithoutMultiFactorAuth {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.Alert
+			err := json.Unmarshal(resp, &alert)
+			a.NoError(err)
+			a.Equal(alertID, alert.ID)
+			a.Equal(open, alert.Status)
+			a.Equal(usersWithoutMultiFactorAuth, alert.EventTypeName)
 		}
 	})
 
@@ -150,22 +120,17 @@ func TestAlerts(t *testing.T) {
 			"ack",
 			alertID,
 			"--until",
-			time.Now().Format(time.RFC3339))
+			time.Now().Format(time.RFC3339),
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alert mongodbatlas.Alert
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if alert.ID != alertID {
-			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.Alert
+			err := json.Unmarshal(resp, &alert)
+			a.NoError(err)
+			a.Equal(alertID, alert.ID)
 		}
 	})
 
@@ -175,22 +140,17 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"ack",
 			alertID,
-			"--forever")
+			"--forever",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alert mongodbatlas.Alert
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if alert.ID != alertID {
-			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.Alert
+			err := json.Unmarshal(resp, &alert)
+			a.NoError(err)
+			a.Equal(alertID, alert.ID)
 		}
 	})
 
@@ -199,22 +159,17 @@ func TestAlerts(t *testing.T) {
 			atlasEntity,
 			alertsEntity,
 			"unack",
-			alertID)
+			alertID,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alert mongodbatlas.Alert
-		if err := json.Unmarshal(resp, &alert); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if alert.ID != alertID {
-			t.Errorf("got=%#v\nwant%v\n", alert.ID, alertID)
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert mongodbatlas.Alert
+			err := json.Unmarshal(resp, &alert)
+			a.NoError(err)
+			a.Equal(alertID, alert.ID)
 		}
 	})
 }

@@ -51,7 +51,9 @@ func TestDBUsers(t *testing.T) {
 			"atlasAdmin",
 			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
-			"--password=passW0rd")
+			"--password=passW0rd",
+			"-o=json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -67,7 +69,11 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -85,7 +91,12 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "describe", username)
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"describe",
+			username,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -109,7 +120,8 @@ func TestDBUsers(t *testing.T) {
 			"update",
 			username,
 			"--role",
-			roleReadWrite)
+			roleReadWrite,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -131,7 +143,14 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"delete",
+			username,
+			"--force",
+			"--authDB",
+			"admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

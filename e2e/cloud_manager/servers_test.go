@@ -36,6 +36,7 @@ func TestServers(t *testing.T) {
 			entity,
 			serversEntity,
 			"list",
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

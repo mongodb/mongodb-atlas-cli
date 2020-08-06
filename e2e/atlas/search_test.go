@@ -64,7 +64,8 @@ func TestSearch(t *testing.T) {
 			"--clusterName="+clusterName,
 			"--db=test",
 			"--collection="+collectionName,
-			"--dynamic")
+			"--dynamic",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -88,7 +89,8 @@ func TestSearch(t *testing.T) {
 			"list",
 			"--clusterName="+clusterName,
 			"--db=test",
-			"--collection="+collectionName)
+			"--collection="+collectionName,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -111,7 +113,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -138,7 +141,8 @@ func TestSearch(t *testing.T) {
 			"--clusterName="+clusterName,
 			"--db=test",
 			"--collection="+collectionName,
-			"--analyzer="+analyzer)
+			"--analyzer="+analyzer,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

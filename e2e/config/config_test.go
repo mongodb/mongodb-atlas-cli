@@ -54,7 +54,7 @@ func TestConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		const expected = `org_id = 5e429e7706822c6eac4d5971
-output = json
+output = 
 public_api_key = redacted
 service = cloud
 `

@@ -44,7 +44,8 @@ func TestDatalake(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"create",
-			datalakeName)
+			datalakeName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -67,7 +68,8 @@ func TestDatalake(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"describe",
-			datalakeName)
+			datalakeName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -86,7 +88,11 @@ func TestDatalake(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -102,7 +108,8 @@ func TestDatalake(t *testing.T) {
 			"update",
 			datalakeName,
 			"--region",
-			updateRegion)
+			updateRegion,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

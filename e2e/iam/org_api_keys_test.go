@@ -84,7 +84,13 @@ func TestOrgAPIKeys(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, orgEntity, apiKeysEntity, "describe", ID)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			orgEntity,
+			apiKeysEntity,
+			"describe",
+			ID,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

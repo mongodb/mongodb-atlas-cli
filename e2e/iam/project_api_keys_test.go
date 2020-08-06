@@ -41,7 +41,8 @@ func TestProjectAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"create",
 			"--desc=e2e-test",
-			"--role=GROUP_READ_ONLY")
+			"--role=GROUP_READ_ONLY",
+			"--o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
@@ -56,7 +57,12 @@ func TestProjectAPIKeys(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, apiKeysEntity, "ls")
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			apiKeysEntity,
+			"ls",
+			"--o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

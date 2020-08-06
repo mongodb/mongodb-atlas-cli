@@ -28,7 +28,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())
 	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(AssignBuilder())
 
 	return cmd
 }

@@ -11,57 +11,57 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package apikeys
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type UpdateOpts struct {
+type AssignOpts struct {
 	cli.GlobalOpts
 	id    string
 	roles []string
-	store store.ProjectAPIKeyUpdater
+	store store.ProjectAPIKeyAssigner
 }
 
-func (opts *UpdateOpts) init() error {
+func (opts *AssignOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) newAssignAPIKey() *atlas.AssignAPIKey {
+func (opts *AssignOpts) newAssignAPIKey() *atlas.AssignAPIKey {
 	return &atlas.AssignAPIKey{
 		Roles: opts.roles,
 	}
 }
 
-func (opts *UpdateOpts) Run() error {
-	err := opts.store.UpdateProjectAPIKey(opts.ConfigProjectID(), opts.id, opts.newAssignAPIKey())
+var updateTemplate = "API Key successfully assigned.\n"
+
+func (opts *AssignOpts) Run() error {
+	err := opts.store.AssignProjectAPIKey(opts.ConfigProjectID(), opts.id, opts.newAssignAPIKey())
 	if err != nil {
 		return err
 	}
-	fmt.Println("Successfully updated APIKey.")
-	return nil
+	return output.Print(config.Default(), updateTemplate, nil)
 }
 
-// mongocli iam project(s) apiKey(s)|apikey(s) update <ID> [--role role][--projectId projectId]
-func UpdateBuilder() *cobra.Command {
-	opts := new(UpdateOpts)
+// mongocli iam project(s) apiKey(s)|apikey(s) assign <ID> [--role role][--projectId projectId]
+func AssignBuilder() *cobra.Command {
+	opts := new(AssignOpts)
 	cmd := &cobra.Command{
-		Use:     "update <ID>",
-		Aliases: []string{"updates"},
-		Args:    cobra.ExactArgs(1),
-		Short:   description.ProjectOrganizationsAPIKey,
+		Use:   "assign <ID>",
+		Args:  cobra.ExactArgs(1),
+		Short: description.AssignProjectAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.init)
 		},

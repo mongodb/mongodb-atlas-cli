@@ -46,7 +46,7 @@ func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 	}
 }
 
-const updateTemplate = "Successfully updated APIKey '{{.ID}}'.\n"
+const updateTemplate = "API Key '{{.ID}}' successfully updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
@@ -61,7 +61,7 @@ func (opts *UpdateOpts) Run() error {
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "update <ID>",
+		Use:     "assign <ID>",
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		Short:   description.UpdateOrganizationsAPIKey,

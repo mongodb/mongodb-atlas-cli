@@ -70,7 +70,10 @@ const (
 	MetricMode                      = "Atlas computes the current metric value as an average."
 	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
-	APIKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	APIKey                          = "API Key."
+	APIKeyDescription               = "Description of the API key."
+	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."
 	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress        = "Email address to which alert notifications are sent."
@@ -119,6 +122,8 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
+	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
+	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.

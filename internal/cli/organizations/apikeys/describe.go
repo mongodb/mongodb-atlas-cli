@@ -41,12 +41,12 @@ const describeTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
 `
 
 func (opts *DescribeOpts) Run() error {
-	org, err := opts.store.OrganizationAPIKey(opts.ConfigOrgID(), opts.id)
+	r, err := opts.store.OrganizationAPIKey(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, org)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli iam organizations(s) apiKey(s)|apikey(s) describe <ID> --orgID
@@ -58,7 +58,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   description.DescribeOrganizationsAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunEOrg(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

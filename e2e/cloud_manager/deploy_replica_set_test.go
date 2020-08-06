@@ -18,11 +18,9 @@ package cloud_manager_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -37,8 +35,11 @@ func TestDeployReplicaSet(t *testing.T) {
 	const clustersEntity = "clusters"
 	const testFile = "om-new-cluster.json"
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	hostname, err := automationServerHostname(cliPath)
 	if err != nil {

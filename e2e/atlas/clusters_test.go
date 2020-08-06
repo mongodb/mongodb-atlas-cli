@@ -18,27 +18,25 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClusters(t *testing.T) {
-	// Run test with json output
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
-
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+func TestClustersFlags(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
 	}
-	t.Run("Create via params", func(t *testing.T) {
+	clusterName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -174,8 +172,17 @@ func TestClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+}
 
-	clusterFileName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+func TestClustersFile(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	clusterFileName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -236,8 +243,17 @@ func TestClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+}
 
-	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+func TestShardedCluster(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	shardedClusterName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

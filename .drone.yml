@@ -17,7 +17,7 @@ steps:
         path: /go
 
   - name: lint
-    image: golangci/golangci-lint:v1.29.0
+    image: golangci/golangci-lint:v1.30.0
     commands:
       - make lint
 

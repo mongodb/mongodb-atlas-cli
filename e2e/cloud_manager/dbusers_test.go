@@ -16,14 +16,14 @@
 package cloud_manager_test
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -35,10 +35,13 @@ func TestDBUsers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	const dbUsersEntity = "dbusers"
-	username := fmt.Sprintf("user-%v", r.Uint32())
+	username := fmt.Sprintf("user-%v", n)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

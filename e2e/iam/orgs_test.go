@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,9 +31,6 @@ func TestOrgs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	const iamEntity = "iam"
-	const orgEntity = "orgs"
 
 	var orgID string
 
@@ -45,19 +43,15 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		a := assert.New(t)
+		if a.NoError(err, resp) {
+			var orgs mongodbatlas.Organizations
+			if err := json.Unmarshal(resp, &orgs); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			a.NotEmpty(orgs.Results)
+			orgID = orgs.Results[0].ID
 		}
-		var orgs mongodbatlas.Organizations
-		if err := json.Unmarshal(resp, &orgs); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(orgs.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(orgs.Results))
-		}
-		orgID = orgs.Results[0].ID
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -69,9 +63,6 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, resp)
 	})
 }

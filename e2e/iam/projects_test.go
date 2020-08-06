@@ -18,11 +18,9 @@ package iam_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -34,10 +32,11 @@ func TestProjects(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const iamEntity = "iam"
-	const projectEntity = "projects"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	projectName := fmt.Sprintf("e2e-proj-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	projectName := fmt.Sprintf("e2e-proj-%v", n)
 
 	var projectID string
 	t.Run("Create", func(t *testing.T) {

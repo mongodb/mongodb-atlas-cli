@@ -18,20 +18,21 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDatalake(t *testing.T) {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	const updateRegion = "VIRGINIA_USA"
-	datalakeName := fmt.Sprintf("e2e-data-lake-%v", r.Uint32())
+	datalakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {

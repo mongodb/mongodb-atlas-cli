@@ -18,12 +18,10 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -79,8 +77,10 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	clusterName, err := RandClusterName()
+	if err != nil {
+		return "", err
+	}
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -125,4 +125,12 @@ func getHostname() (string, error) {
 
 	parts := strings.Split(hostnamePort, ":")
 	return parts[0], nil
+}
+
+func RandClusterName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("e2e-cluster-%v", n), nil
 }

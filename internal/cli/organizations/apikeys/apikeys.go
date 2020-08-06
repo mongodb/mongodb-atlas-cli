@@ -15,6 +15,7 @@
 package apikeys
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/organizations/apikeys/whitelist"
 	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +27,11 @@ func Builder() *cobra.Command {
 		Aliases: []string{"apikey", "apiKeys", "apiKey"},
 	}
 	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DeleteBuilder())
 
 	return cmd
 }

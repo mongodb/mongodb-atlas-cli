@@ -60,7 +60,7 @@ func TestProjectAPIKeys(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			projectEntity,
 			apiKeysEntity,
-			"updates",
+			"assign",
 			ID,
 			"--role=GROUP_DATA_ACCESS_READ_ONLY",
 			"-o=json")

@@ -47,7 +47,8 @@ func getHostnameAndPort() (string, error) {
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		"processes",
-		"list")
+		"list",
+		"-o=json")
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()

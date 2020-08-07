@@ -98,7 +98,12 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"describe",
+			clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

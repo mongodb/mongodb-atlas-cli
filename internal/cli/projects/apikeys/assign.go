@@ -59,9 +59,10 @@ func (opts *AssignOpts) Run() error {
 func AssignBuilder() *cobra.Command {
 	opts := new(AssignOpts)
 	cmd := &cobra.Command{
-		Use:   "assign <ID>",
-		Args:  cobra.ExactArgs(1),
-		Short: description.AssignProjectAPIKey,
+		Use:     "assign <ID>",
+		Aliases: []string{"updates"},
+		Args:    cobra.ExactArgs(1),
+		Short:   description.AssignProjectAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.init)
 		},

@@ -26,13 +26,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	iamEntity     = "iam"
-	orgEntity     = "orgs"
-	projectEntity = "projects"
-	apiKeysEntity = "apikeys"
-)
-
 func TestOrgAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -80,6 +73,27 @@ func TestOrgAPIKeys(t *testing.T) {
 			}
 			a.Equal("e2e-test", key.Desc)
 			ID = key.ID
+		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath, iamEntity,
+			orgEntity,
+			apiKeysEntity,
+			"updates",
+			ID,
+			"--desc=e2e-test-update",
+			"--role=ORG_READ_ONLY",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var key mongodbatlas.APIKey
+			if err := json.Unmarshal(resp, &key); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			a.Equal("e2e-test-update", key.Desc)
 		}
 	})
 

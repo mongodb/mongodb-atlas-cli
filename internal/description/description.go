@@ -156,6 +156,8 @@ const (
 	EnableSecurity              = "Enable authentication mechanisms for the project."
 	Events                      = "Manage events for your project."
 	Metrics                     = "Get measurements on the state of the MongoDB process."
+	PrivateEndpoints            = "Manage private endpoints."
+	ListPrivateEndpoints        = "Retrieve details for all private endpoint connections in an Atlas project."
 	LogCollection               = "Manage log collection jobs."
 	StartLogCollectionJob       = "Start a job to collect logs."
 	ListLogCollectionJobs       = "List log collection jobs."

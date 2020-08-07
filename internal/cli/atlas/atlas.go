@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateEndpoints"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/atlas/whitelist"
 	"github.com/mongodb/mongocli/internal/cli/events"
@@ -50,6 +51,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(LogsBuilder())
 	cmd.AddCommand(ProcessesBuilder())
 	cmd.AddCommand(security.Builder())
+	cmd.AddCommand(privateEndpoints.Builder())
 
 	return cmd
 }

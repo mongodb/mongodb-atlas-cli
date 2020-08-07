@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package alerts
+package settings
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func ConfigsFieldsBuilder() *cobra.Command {
+func FieldsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "fields",
 		Aliases: []string{"field"},
-		Short:   description.AlertsConfigFields,
+		Short:   ConfigFields,
 	}
 
-	cmd.AddCommand(ConfigsFieldsTypeBuilder())
+	cmd.AddCommand(FieldsTypeBuilder())
 
 	return cmd
 }

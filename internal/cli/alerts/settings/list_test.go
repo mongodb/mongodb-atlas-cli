@@ -14,29 +14,31 @@
 
 // +build unit
 
-package alerts
+package settings
 
 import (
 	"testing"
+
+	"go.mongodb.org/atlas/mongodbatlas"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestConfigFieldsType_Run(t *testing.T) {
+func TestConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
+	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []string
+	var expected []mongodbatlas.AlertConfiguration
 
-	listOpts := &ConfigFieldsTypeOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		MatcherFields().
+		AlertConfigurations(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

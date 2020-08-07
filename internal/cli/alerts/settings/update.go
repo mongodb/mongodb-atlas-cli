@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package alerts
+package settings
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
@@ -25,44 +24,48 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ConfigCreateOpts struct {
+type UpdateOpts struct {
 	cli.GlobalOpts
 	ConfigOpts
-	store store.AlertConfigurationCreator
+	store   store.AlertConfigurationUpdater
+	alertID string
 }
 
-func (opts *ConfigCreateOpts) initStore() error {
+func (opts *UpdateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplate = "Alert configuration {{.ID}} created.\n"
+var updateTemplate = "Alert configuration '{{.ID}}' updated.\n"
 
-func (opts *ConfigCreateOpts) Run() error {
+func (opts *UpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
-	r, err := opts.store.CreateAlertConfiguration(alert)
+	alert.ID = opts.alertID
+	r, err := opts.store.UpdateAlertConfiguration(alert)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
-// mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mongocli atlas alerts config(s) update <ID> [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 // [--projectId projectId]
-func ConfigCreateBuilder() *cobra.Command {
-	opts := new(ConfigCreateOpts)
+func UpdateBuilder() *cobra.Command {
+	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: description.CreateAlertsConfig,
-		Args:  cobra.NoArgs,
+		Use:     "update <ID>",
+		Short:   UpdateAlertsConfig,
+		Aliases: []string{"updates"},
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.alertID = args[0]
 			return opts.Run()
 		},
 	}

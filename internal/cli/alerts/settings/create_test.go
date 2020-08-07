@@ -14,7 +14,7 @@
 
 // +build unit
 
-package alerts
+package settings
 
 import (
 	"testing"
@@ -24,14 +24,14 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestConfigCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationCreator(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AlertConfiguration{}
 
-	createOpts := &ConfigCreateOpts{
+	createOpts := &CreateOpts{
 		ConfigOpts: ConfigOpts{
 			event:                     "OUTSIDE_METRIC_THRESHOLD",
 			enabled:                   true,

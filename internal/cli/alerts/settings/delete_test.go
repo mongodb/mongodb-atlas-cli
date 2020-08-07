@@ -14,35 +14,33 @@
 
 // +build unit
 
-package alerts
+package settings
 
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestConfigList_Run(t *testing.T) {
+func TestConfigsDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
+	mockStore := mocks.NewMockAlertConfigurationDeleter(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.AlertConfiguration
-
-	listOpts := &ConfigListOpts{
-		store: mockStore,
+	deleteOpts := &DeleteOpts{
+		store:      mockStore,
+		DeleteOpts: &cli.DeleteOpts{Confirm: true, Entry: "testAlert"},
 	}
 
 	mockStore.
 		EXPECT().
-		AlertConfigurations(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		DeleteAlertConfiguration(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

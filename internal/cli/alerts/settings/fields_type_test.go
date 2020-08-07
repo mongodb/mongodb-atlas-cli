@@ -14,33 +14,33 @@
 
 // +build unit
 
-package alerts
+package settings
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestConfigsDelete_Run(t *testing.T) {
+func TestFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertConfigurationDeleter(ctrl)
+	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
 	defer ctrl.Finish()
 
-	deleteOpts := &ConfigDeleteOpts{
-		store:      mockStore,
-		DeleteOpts: &cli.DeleteOpts{Confirm: true, Entry: "testAlert"},
+	var expected []string
+
+	listOpts := &FieldsTypeOpts{
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteAlertConfiguration(deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(nil).
+		MatcherFields().
+		Return(expected, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

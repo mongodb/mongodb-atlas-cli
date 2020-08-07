@@ -12,52 +12,64 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package alerts
+package settings
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ConfigFieldsTypeOpts struct {
-	store store.MatcherFieldsLister
+type ListOpts struct {
+	cli.GlobalOpts
+	cli.ListOpts
+	store store.AlertConfigurationLister
 }
 
-func (opts *ConfigFieldsTypeOpts) init() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var matcherFieldsTemplate = "{{range .}}{{.}}\n{{end}}"
+var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
+{{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
+`
 
-func (opts *ConfigFieldsTypeOpts) Run() error {
-	r, err := opts.store.MatcherFields()
+func (opts *ListOpts) Run() error {
+	listOpts := opts.NewListOptions()
+	r, err := opts.store.AlertConfigurations(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), matcherFieldsTemplate, r)
+	return output.Print(config.Default(), settingsListTemplate, r)
 }
 
-// mongocli atlas alerts config(s) fields type
-func ConfigsFieldsTypeBuilder() *cobra.Command {
-	opts := &ConfigFieldsTypeOpts{}
+// mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "type",
-		Short:   description.AlertsConfigFieldsType,
-		Aliases: []string{"types"},
+		Use:     "list",
+		Short:   ListConfigs,
+		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.init()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

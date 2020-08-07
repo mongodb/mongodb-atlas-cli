@@ -12,63 +12,57 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package alerts
+package settings
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ConfigListOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.AlertConfigurationLister
+	*cli.DeleteOpts
+	store store.AlertConfigurationDeleter
 }
 
-func (opts *ConfigListOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
-{{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
-`
-
-func (opts *ConfigListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.AlertConfigurations(opts.ConfigProjectID(), listOpts)
-	if err != nil {
-		return err
-	}
-
-	return output.Print(config.Default(), settingsListTemplate, r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteAlertConfiguration, opts.ConfigProjectID())
 }
 
-// mongocli atlas alerts config(s) list --projectId projectId [--page N] [--limit N]
-func ConfigListBuilder() *cobra.Command {
-	opts := new(ConfigListOpts)
+// mongocli atlas alerts config(s) delete <ID> --projectId projectId [--confirm]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Alert config '%s' deleted\n", "Alert config not deleted"),
+	}
+
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   description.ListAlertsConfigs,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   DeleteAlertsConfig,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

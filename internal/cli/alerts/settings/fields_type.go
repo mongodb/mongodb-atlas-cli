@@ -12,61 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package alerts
+package settings
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
-	cli.GlobalOpts
-	alertID string
-	store   store.AlertDescriber
+type FieldsTypeOpts struct {
+	store store.MatcherFieldsLister
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *FieldsTypeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var describeTemplate = `ID	TYPE	METRIC	STATUS
-{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
-`
+var matcherFieldsTemplate = "{{range .}}{{.}}\n{{end}}"
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Alert(opts.ConfigProjectID(), opts.alertID)
-
+func (opts *FieldsTypeOpts) Run() error {
+	r, err := opts.store.MatcherFields()
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, r)
+	return output.Print(config.Default(), matcherFieldsTemplate, r)
 }
 
-// mongocli atlas alerts describe <ID> --projectId projectId
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas alerts config(s) fields type
+func FieldsTypeBuilder() *cobra.Command {
+	opts := &FieldsTypeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <ID>",
-		Short: DescribeAlert,
-		Args:  cobra.ExactArgs(1),
+		Use:     "type",
+		Short:   ConfigFieldsType,
+		Aliases: []string{"types"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.alertID = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

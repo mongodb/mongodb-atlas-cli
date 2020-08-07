@@ -50,6 +50,10 @@ func createOrgAPIKey() (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 
+	if err != nil {
+		return "", err
+	}
+
 	var key mongodbatlas.APIKey
 	if err := json.Unmarshal(resp, &key); err != nil {
 		return "", err
@@ -60,7 +64,6 @@ func createOrgAPIKey() (string, error) {
 	}
 
 	return "", fmt.Errorf("the apiKey ID is empty")
-
 }
 
 func deleteOrgAPIKey(id string) error {

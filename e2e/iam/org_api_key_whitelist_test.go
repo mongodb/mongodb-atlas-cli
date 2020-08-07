@@ -27,9 +27,9 @@ import (
 )
 
 func TestOrgAPIKeyWhitelist(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	cliPath, er := e2e.Bin()
+	if er != nil {
+		t.Fatalf("unexpected error: %v", er)
 	}
 
 	apiKeyID, e := createOrgAPIKey()
@@ -96,7 +96,7 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 
-	err = deleteOrgAPIKey(apiKeyID)
+	err := deleteOrgAPIKey(apiKeyID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

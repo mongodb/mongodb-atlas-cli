@@ -42,6 +42,7 @@ func TestAgents(t *testing.T) {
 			agentsEntity,
 			"list",
 			"AUTOMATION",
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

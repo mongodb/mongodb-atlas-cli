@@ -42,6 +42,7 @@ func TestAgentAPIKeys(t *testing.T) {
 			agentsEntity,
 			apiKeys,
 			"list",
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

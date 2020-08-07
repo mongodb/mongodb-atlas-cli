@@ -17,7 +17,7 @@ package iam_test
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"os"
 	"os/exec"
 
@@ -31,7 +31,6 @@ const (
 	projectEntity         = "projects"
 	apiKeysEntity         = "apikeys"
 	apiKeyWhitelistEntity = "whitelist"
-	whitelistIP           = "93.144.26.147"
 )
 
 func createOrgAPIKey() (string, error) {
@@ -63,7 +62,7 @@ func createOrgAPIKey() (string, error) {
 		return key.ID, nil
 	}
 
-	return "", fmt.Errorf("the apiKey ID is empty")
+	return "", errors.New("the apiKey ID is empty")
 }
 
 func deleteOrgAPIKey(id string) error {

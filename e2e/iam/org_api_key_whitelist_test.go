@@ -17,6 +17,7 @@ package iam_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -37,6 +38,18 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		t.Fatalf("unexpected error: %v", e)
 	}
 
+	defer func() {
+		if e := deleteOrgAPIKey(apiKeyID); e != nil {
+			t.Errorf("error deleting test apikey: %v", e)
+		}
+	}()
+
+	n, err := e2e.RandInt(255)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	whitelistIP := fmt.Sprintf("192.168.0.%d", n)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
@@ -53,10 +66,9 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
 			var key mongodbatlas.WhitelistAPIKeys
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
+			if err := json.Unmarshal(resp, &key); a.NoError(err) {
+				a.NotEmpty(key.Results)
 			}
-			a.NotEmpty(key.Results)
 		}
 	})
 
@@ -73,10 +85,9 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
 			var key mongodbatlas.WhitelistAPIKeys
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
+			if err := json.Unmarshal(resp, &key); a.NoError(err) {
+				a.NotEmpty(key.Results)
 			}
-			a.NotEmpty(key.Results)
 		}
 	})
 
@@ -95,9 +106,4 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
 	})
-
-	err := deleteOrgAPIKey(apiKeyID)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
 }

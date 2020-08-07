@@ -26,95 +26,57 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestOrgAPIKeys(t *testing.T) {
+func TestOrgAPIKeyWhitelist(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	var ID string
+	apiKeyID, e := createOrgAPIKey()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
 
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			orgEntity,
-			apiKeysEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var keys []mongodbatlas.APIKey
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.NotEmpty(t, keys)
-	})
-
-	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
+			apiKeyWhitelistEntity,
 			"create",
-			"--desc=e2e-test",
-			"--role=ORG_READ_ONLY",
+			"--apiKey",
+			apiKeyID,
+			"--ip",
+			whitelistIP,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
+			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal("e2e-test", key.Desc)
-			ID = key.ID
+			a.NotEmpty(key.Results)
 		}
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
-			"updates",
-			ID,
-			"--desc=e2e-test-update",
-			"--role=ORG_READ_ONLY",
+			apiKeyWhitelistEntity,
+			"list",
+			apiKeyID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
+			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal("e2e-test-update", key.Desc)
-		}
-	})
-
-	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			orgEntity,
-			apiKeysEntity,
-			"describe",
-			ID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(ID, key.ID)
+			a.NotEmpty(key.Results)
 		}
 	})
 
@@ -123,12 +85,19 @@ func TestOrgAPIKeys(t *testing.T) {
 			iamEntity,
 			orgEntity,
 			apiKeysEntity,
+			apiKeyWhitelistEntity,
 			"rm",
-			ID,
+			whitelistIP,
+			"--apiKey",
+			apiKeyID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		assert.NoError(t, err, string(resp))
 	})
+
+	err = deleteOrgAPIKey(apiKeyID)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 }

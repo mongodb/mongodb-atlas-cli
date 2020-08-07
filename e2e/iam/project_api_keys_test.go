@@ -56,6 +56,19 @@ func TestProjectAPIKeys(t *testing.T) {
 		}
 	})
 
+	t.Run("Assign", func(t *testing.T) {
+		cmd := exec.Command(cliPath, iamEntity,
+			projectEntity,
+			apiKeysEntity,
+			"updates",
+			ID,
+			"--role=GROUP_DATA_ACCESS_READ_ONLY",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,

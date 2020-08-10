@@ -14,8 +14,8 @@
 package customercerts
 
 const (
-	Certs              = "Manage customer x509 certificates for your project."
-	DescribeCertConfig = "Get the current customer-managed X.509 configuration details for an Atlas project."
-	SaveCertConfig     = "Saves a customer-managed X.509 configuration for an Atlas project."
-	DisableCertConfig  = "Disables customer-managed X.509 for a project."
+	certs              = "Manage customer x509 certificates for your project."
+	describeCertConfig = "Get the current customer-managed X.509 configuration details for an Atlas project."
+	saveCertConfig     = "Saves a customer-managed X.509 configuration for an Atlas project."
+	disableCertConfig  = "Disables customer-managed X.509 for a project."
 )

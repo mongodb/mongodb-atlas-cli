@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Endpoints(listOpts.ProjectID, listOpts.NewListOptions()).
+		PrivateEndpoints(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

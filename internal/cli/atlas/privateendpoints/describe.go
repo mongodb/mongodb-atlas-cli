@@ -24,50 +24,48 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	store store.PrivateEndpointLister
+	id    string
+	store store.PrivateEndpointDescriber
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), opts.NewListOptions())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) list|ls [--projectId projectId]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listPrivateEndpoints,
-		Args:    cobra.NoArgs,
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Args:    cobra.ExactArgs(1),
+		Short:   describePrivateEndpoints,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.PreRunE(opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

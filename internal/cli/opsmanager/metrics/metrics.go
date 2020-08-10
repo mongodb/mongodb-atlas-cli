@@ -15,7 +15,6 @@
 package metrics
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "metrics",
 		Aliases: []string{"metric", "measurements", "measurement"},
-		Short:   description.Metrics,
+		Short:   Metrics,
 	}
 
 	cmd.AddCommand(ProcessBuilder())

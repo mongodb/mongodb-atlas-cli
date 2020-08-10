@@ -28,16 +28,17 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const cloudManager = "MongoDB Cloud Manager operations."
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "cloud-manager",
 		Aliases: []string{"cm"},
-		Short:   description.CloudManager,
+		Short:   cloudManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudManagerService)
 			return validate.Credentials()

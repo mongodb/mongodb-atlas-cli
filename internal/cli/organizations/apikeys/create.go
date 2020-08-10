@@ -17,7 +17,6 @@ package apikeys
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
@@ -66,7 +65,7 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateOrganizationsAPIKey,
+		Short: createAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunEOrg(opts.init)
 		},

@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -69,7 +68,7 @@ func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
-		Short:     description.EnableSecurity,
+		Short:     enableSecurity,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

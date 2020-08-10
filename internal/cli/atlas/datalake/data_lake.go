@@ -15,7 +15,6 @@
 package datalake
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +22,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "datalake",
 		Aliases: []string{"dataLakes", "dataLake", "datalakes"},
-		Short:   description.DataLakes,
-		Long:    description.DataLakesLong,
+		Short:   DataLakes,
+		Long:    dataLakesLong,
 	}
 
 	cmd.AddCommand(ListBuilder())

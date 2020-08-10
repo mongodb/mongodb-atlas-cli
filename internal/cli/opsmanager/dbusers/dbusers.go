@@ -15,7 +15,6 @@
 package dbusers
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +22,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "dbusers",
 		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
-		Short:   description.DBUsers,
-		Long:    description.DBUsersLong,
+		Short:   DBUsers,
+		Long:    DBUsersLong,
 	}
 
 	cmd.AddCommand(CreateBuilder())

@@ -73,7 +73,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
 		Short:   "This is an internal and undocumented command.",
-		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster from ops manager.",
+		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
 		Args:    cobra.ExactArgs(1),
 		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

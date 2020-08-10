@@ -15,14 +15,13 @@
 package servers
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "servers",
-		Short: description.Servers,
+		Short: short,
 	}
 
 	cmd.AddCommand(ListBuilder())

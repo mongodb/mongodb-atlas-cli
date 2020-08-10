@@ -17,7 +17,6 @@ package clusters
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
@@ -116,7 +115,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [name]",
-		Short: description.UpdateCluster,
+		Short: updateCluster,
 		Example: `
   Update tier for a cluster
   $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50

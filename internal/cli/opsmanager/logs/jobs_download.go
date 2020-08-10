@@ -17,7 +17,6 @@ package logs
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -58,7 +57,7 @@ func JobsDownloadOptsBuilder() *cobra.Command {
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download <ID>",
-		Short: description.DownloadLogCollectionJob,
+		Short: DownloadLogCollectionJob,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

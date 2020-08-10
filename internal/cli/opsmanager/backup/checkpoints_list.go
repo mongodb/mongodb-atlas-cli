@@ -17,7 +17,6 @@ package backup
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
@@ -60,7 +59,7 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <clusterId>",
 		Aliases: []string{"ls"},
-		Short:   description.ListCheckpoints,
+		Short:   ListCheckpoints,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {

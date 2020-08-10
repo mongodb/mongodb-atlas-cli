@@ -20,7 +20,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -67,7 +66,7 @@ func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{
 		Use:   "disable",
-		Short: description.DisableCertConfig,
+		Short: disableCertConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

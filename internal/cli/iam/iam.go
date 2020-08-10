@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	iam = "Organization and projects operations."
+	iam  = "Organization and projects operations."
 	long = "Identity and Access Management."
 )
 
@@ -33,7 +33,7 @@ func Builder() *cobra.Command {
 			return validate.Credentials()
 		},
 		Short: iam,
-		Long: long,
+		Long:  long,
 	}
 	cmd.AddCommand(projects.Builder())
 	cmd.AddCommand(organizations.Builder())

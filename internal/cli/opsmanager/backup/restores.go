@@ -15,14 +15,16 @@
 package backup
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func RestoresBuilder() *cobra.Command {
+	const use = "restores"
 	cmd := &cobra.Command{
-		Use:     "restores",
+		Use:     use,
 		Short:   Restores,
-		Aliases: []string{"restore"},
+		Aliases: cli.GenerateAliases(use),
 	}
 
 	cmd.AddCommand(RestoresListBuilder())

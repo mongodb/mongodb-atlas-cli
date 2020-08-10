@@ -15,13 +15,15 @@
 package metrics
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func DatabasesBuilder() *cobra.Command {
+	const use = "databases"
 	cmd := &cobra.Command{
-		Use:     "databases",
-		Aliases: []string{"database"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   databases,
 	}
 	cmd.AddCommand(DatabasesListBuilder())

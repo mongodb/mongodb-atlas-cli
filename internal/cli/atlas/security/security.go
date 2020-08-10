@@ -19,12 +19,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const Security = "Manage security configuration for your project."
+const security = "Manage security configuration for your project."
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "security",
-		Short: Security,
+		Short: security,
 	}
 
 	cmd.AddCommand(customercerts.Builder())

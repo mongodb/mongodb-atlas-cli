@@ -19,13 +19,16 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/cli"
+
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "metrics"
 	cmd := &cobra.Command{
-		Use:     "metrics",
-		Aliases: []string{"metric", "measurements", "measurement"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use, "measurements", "measurement"),
 		Short:   metrics,
 	}
 	cmd.AddCommand(ProcessBuilder())

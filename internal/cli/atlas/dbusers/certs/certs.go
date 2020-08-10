@@ -15,13 +15,15 @@
 package certs
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "certs"
 	cmd := &cobra.Command{
-		Use:     "certs",
-		Aliases: []string{"cert"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   dbUserCerts,
 	}
 	cmd.AddCommand(ListBuilder())

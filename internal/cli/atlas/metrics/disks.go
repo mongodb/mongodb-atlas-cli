@@ -15,13 +15,15 @@
 package metrics
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func DisksBuilder() *cobra.Command {
+	const use = "disks"
 	cmd := &cobra.Command{
-		Use:     "disks",
-		Aliases: []string{"disk"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   disks,
 	}
 

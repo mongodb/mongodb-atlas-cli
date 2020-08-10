@@ -15,13 +15,15 @@
 package logs
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "logs"
 	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   short,
 	}
 	cmd.AddCommand(DownloadBuilder())

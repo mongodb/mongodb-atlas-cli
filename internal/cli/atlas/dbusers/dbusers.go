@@ -15,14 +15,16 @@
 package dbusers
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers/certs"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "dbusers"
 	cmd := &cobra.Command{
-		Use:     "dbusers",
-		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   dbUsers,
 		Long:    dbUsersLong,
 	}

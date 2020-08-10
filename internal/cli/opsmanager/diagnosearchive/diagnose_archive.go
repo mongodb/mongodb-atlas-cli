@@ -15,13 +15,16 @@
 package diagnosearchive
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "diagnoseArchives"
 	cmd := &cobra.Command{
-		Use:   "diagnose-archive",
-		Short: short,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
 	}
 
 	cmd.AddCommand(DownloadBuilder())

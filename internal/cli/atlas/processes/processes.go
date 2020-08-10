@@ -15,13 +15,15 @@
 package processes
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "processes"
 	cmd := &cobra.Command{
-		Use:     "processes",
-		Aliases: []string{"process"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   processes,
 	}
 	cmd.AddCommand(ListBuilder())

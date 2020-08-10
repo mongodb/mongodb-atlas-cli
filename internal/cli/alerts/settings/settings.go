@@ -156,7 +156,7 @@ func (opts *ConfigOpts) newMatcher() *atlas.Matcher {
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "settings",
-		Aliases: []string{"settings", "config"},
+		Aliases: []string{"config"},
 		Short:   short,
 		Long:    long,
 	}

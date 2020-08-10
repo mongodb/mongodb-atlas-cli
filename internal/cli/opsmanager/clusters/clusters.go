@@ -15,13 +15,15 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "clusters"
 	cmd := &cobra.Command{
-		Use:     "clusters",
-		Aliases: []string{"cluster"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   Clusters,
 	}
 

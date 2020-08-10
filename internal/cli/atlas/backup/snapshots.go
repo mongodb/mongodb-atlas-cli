@@ -15,13 +15,15 @@
 package backup
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func SnapshotsBuilder() *cobra.Command {
+	const use = "snapshots"
 	cmd := &cobra.Command{
-		Use:     "snapshots",
-		Aliases: []string{"snapshot"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   snapshotsShort,
 	}
 

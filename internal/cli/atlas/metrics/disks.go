@@ -15,7 +15,6 @@
 package metrics
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func DisksBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "disks",
 		Aliases: []string{"disk"},
-		Short:   description.Disks,
+		Short:   disks,
 	}
 
 	cmd.AddCommand(DisksListBuilder())

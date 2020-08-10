@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/clusters"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/diagnosearchive"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/owner"
@@ -29,16 +30,17 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const opsManager = "Ops Manager operations."
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "ops-manager",
 		Aliases: []string{"om"},
-		Short:   description.OpsManager,
+		Short:   opsManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.OpsManagerService)
 			// do not validate to create an owner
@@ -62,7 +64,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(metrics.Builder())
 	cmd.AddCommand(logs.Builder())
 	cmd.AddCommand(agents.Builder())
-	cmd.AddCommand(DiagnoseArchive())
+	cmd.AddCommand(diagnosearchive.Builder())
 
 	return cmd
 }

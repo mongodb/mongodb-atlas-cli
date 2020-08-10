@@ -19,7 +19,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -213,8 +212,8 @@ func Builder() *cobra.Command {
 	opts := &configOpts{}
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: description.ConfigDescription,
-		Long:  description.ConfigLongDescription,
+		Short: short,
+		Long:  long,
 		Example: `
   To configure the tool to work with Atlas
   $ mongocli config

@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +42,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: description.ConfigDescribe,
+		Short: describeShort,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

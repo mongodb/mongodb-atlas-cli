@@ -15,7 +15,6 @@
 package processes
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "processes",
 		Aliases: []string{"process"},
-		Short:   description.Processes,
+		Short:   processes,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(DescribeBuilder())

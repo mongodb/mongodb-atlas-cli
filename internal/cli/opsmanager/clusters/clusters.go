@@ -15,7 +15,6 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "clusters",
 		Aliases: []string{"cluster"},
-		Short:   description.Clusters,
+		Short:   Clusters,
 	}
 
 	cmd.AddCommand(ListBuilder())

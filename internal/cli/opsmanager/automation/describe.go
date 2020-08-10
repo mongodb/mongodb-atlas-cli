@@ -50,6 +50,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"show", "get"},
+		Short:   DescribeAutomationConfig,
 		Args:    cobra.NoArgs,
 		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

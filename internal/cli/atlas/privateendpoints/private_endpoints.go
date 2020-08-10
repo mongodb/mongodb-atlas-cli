@@ -20,8 +20,8 @@ import (
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "privateEndpoint",
-		Aliases: []string{"privateEndpoints", "privateendpoint", "privateendpoints"},
+		Use:     "privateendpoints",
+		Aliases: []string{"privateEndpoints", "privateendpoint", "privateEndpoint"},
 		Short:   privateEndpoints,
 	}
 	cmd.AddCommand(ListBuilder())

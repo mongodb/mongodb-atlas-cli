@@ -15,14 +15,13 @@
 package owner
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "owner",
-		Short: description.Owner,
+		Short: Owner,
 	}
 
 	cmd.AddCommand(CreateBuilder())

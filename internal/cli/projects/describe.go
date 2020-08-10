@@ -16,7 +16,6 @@ package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
@@ -53,7 +52,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
-		Short:   description.DescribeProject,
+		Short:   describeProject,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

@@ -20,7 +20,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/search"
@@ -72,7 +71,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 	opts := &JobsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect <resourceType> <resourceName>",
-		Short: description.StartLogCollectionJob,
+		Short: StartLogCollectionJob,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))

@@ -14,7 +14,7 @@
 
 // +build unit
 
-package atlas
+package logs
 
 import (
 	"testing"
@@ -31,7 +31,7 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 
 	appFS := afero.NewMemMapFs()
 
-	opts := &LogsDownloadOpts{
+	opts := &DownloadOpts{
 		name:  "mongo.gz",
 		fs:    appFS,
 		store: mockStore,

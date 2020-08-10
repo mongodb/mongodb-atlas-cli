@@ -15,7 +15,6 @@
 package logs
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func JobsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "jobs",
 		Aliases: []string{"job"},
-		Short:   description.LogCollection,
+		Short:   LogCollection,
 	}
 
 	cmd.AddCommand(JobsCollectOptsBuilder())

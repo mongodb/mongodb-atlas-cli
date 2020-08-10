@@ -14,35 +14,34 @@
 
 // +build unit
 
-package atlas
+package diagnosearchive
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/spf13/afero"
 )
 
-func TestProcessesList_Run(t *testing.T) {
+func TestDiagnoseArchiveDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessLister(ctrl)
+	mockStore := mocks.NewMockArchivesDownloader(ctrl)
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Process
-
-	listOpts := &ProcessesListOpts{
+	opts := &DownloadOpts{
 		store: mockStore,
 	}
+	opts.Out = "fake_diagnostic.tar.gz"
+	opts.Fs = afero.NewMemMapFs()
 
 	mockStore.
 		EXPECT().
-		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
-		Return(expected, nil).
+		DownloadArchive(opts.ProjectID, opts.newDiagnosticsListOpts(), gomock.Any()).
+		Return(nil).
 		Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

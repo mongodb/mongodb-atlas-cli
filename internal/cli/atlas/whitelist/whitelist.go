@@ -15,14 +15,14 @@
 package whitelist
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "whitelist",
-		Short: description.Whitelist,
+		Use:     "whitelist",
+		Aliases: []string{"whitelists"},
+		Short:   short,
 	}
 	cmd.AddCommand(DescribeBuilder())
 	cmd.AddCommand(ListBuilder())

@@ -16,15 +16,14 @@ package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/projects/apikeys"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
+		Short:   short,
+		Long:    long,
 		Aliases: []string{"project"},
 	}
 	cmd.AddCommand(ListBuilder())

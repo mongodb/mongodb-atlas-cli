@@ -16,15 +16,14 @@ package organizations
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/organizations/apikeys"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "organizations",
-		Short:   description.Organization,
-		Long:    description.OrganizationLong,
+		Short:   short,
+		Long:    long,
 		Aliases: []string{"organization", "orgs", "org"},
 	}
 	cmd.AddCommand(ListBuilder())

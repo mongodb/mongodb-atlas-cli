@@ -20,7 +20,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
@@ -82,7 +81,7 @@ func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
 	cmd := &cobra.Command{
 		Use:   "shutdown <name>",
-		Short: description.ShutdownCluster,
+		Short: ShutdownCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

@@ -16,7 +16,6 @@ package agents
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents/apikeys"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +23,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "agents",
 		Aliases: []string{"agent"},
-		Short:   description.Agents,
+		Short:   Agents,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(UpgradeBuilder())

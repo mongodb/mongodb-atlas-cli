@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package processes
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
-func DiagnoseArchive() *cobra.Command {
+func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "diagnose-archive",
-		Short: description.DiagnoseArchive,
+		Use:     "processes",
+		Aliases: []string{"process"},
+		Short:   Processes,
 	}
-
-	cmd.AddCommand(DiagnoseArchiveDownloadBuilder())
+	cmd.AddCommand(ListBuilder())
 
 	return cmd
 }

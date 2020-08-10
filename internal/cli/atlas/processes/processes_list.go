@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package processes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
@@ -30,20 +29,20 @@ const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
 {{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 
-type ProcessesListOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	clusterID string
 	store     store.ProcessLister
 }
 
-func (opts *ProcessesListOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ProcessesListOpts) Run() error {
+func (opts *ListOpts) Run() error {
 	listOpts := opts.newProcessesListOptions()
 	r, err := opts.store.Processes(opts.ConfigProjectID(), listOpts)
 	if err != nil {
@@ -53,7 +52,7 @@ func (opts *ProcessesListOpts) Run() error {
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-func (opts *ProcessesListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
+func (opts *ListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
 	return &atlas.ProcessesListOptions{
 		ClusterID:   opts.clusterID,
 		ListOptions: *opts.NewListOptions(),
@@ -61,11 +60,11 @@ func (opts *ProcessesListOpts) newProcessesListOptions() *atlas.ProcessesListOpt
 }
 
 // mongocli atlas process(es) list --projectId projectId [--page N] [--limit N]
-func ProcessListBuilder() *cobra.Command {
-	opts := &ProcessesListOpts{}
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListProcesses,
+		Short:   ListProcesses,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

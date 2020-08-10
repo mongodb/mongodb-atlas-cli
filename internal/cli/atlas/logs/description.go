@@ -11,21 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package logs
 
-package atlas
-
-import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+const (
+	short        = "Download host logs for your project."
+	download     = "Download a host mongodb logs."
+	downloadLong = `To download a log you need the name of the host where the log files that you want to download are stored.
+To see the hostnames of your Atlas cluster, visit the cluster overview page in the Atlas UI.
+The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-log.gz, mongos-audit-log.gz`
 )
-
-func LogsBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   description.Logs,
-	}
-	cmd.AddCommand(LogsDownloadBuilder())
-
-	return cmd
-}

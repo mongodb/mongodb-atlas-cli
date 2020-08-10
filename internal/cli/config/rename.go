@@ -19,7 +19,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/spf13/cobra"
 )
@@ -62,7 +61,7 @@ func RenameBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "rename <oldName> <newName>",
 		Aliases: []string{"mv"},
-		Short:   description.ConfigRenameDescription,
+		Short:   renameShort,
 		Args:    cobra.ExactArgs(argsN),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.oldName = args[0]

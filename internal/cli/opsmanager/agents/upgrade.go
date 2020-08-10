@@ -49,8 +49,9 @@ func (opts *UpgradeOpts) Run() error {
 func UpgradeBuilder() *cobra.Command {
 	opts := &UpgradeOpts{}
 	cmd := &cobra.Command{
-		Use:  "upgrade",
-		Args: cobra.NoArgs,
+		Use:   "upgrade",
+		Args:  cobra.NoArgs,
+		Short: UpgradeAgents,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

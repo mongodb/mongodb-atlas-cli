@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opsmanager
+package diagnosearchive
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -26,7 +25,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-type DiagnoseArchiveDownloadOpts struct {
+type DownloadOpts struct {
 	cli.GlobalOpts
 	cli.DownloaderOpts
 	limit   int64
@@ -34,13 +33,13 @@ type DiagnoseArchiveDownloadOpts struct {
 	store   store.ArchivesDownloader
 }
 
-func (opts *DiagnoseArchiveDownloadOpts) initStore() error {
+func (opts *DownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DiagnoseArchiveDownloadOpts) Run() error {
+func (opts *DownloadOpts) Run() error {
 	out, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
@@ -54,7 +53,7 @@ func (opts *DiagnoseArchiveDownloadOpts) Run() error {
 	return out.Close()
 }
 
-func (opts *DiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *opsmngr.DiagnosticsListOpts {
+func (opts *DownloadOpts) newDiagnosticsListOpts() *opsmngr.DiagnosticsListOpts {
 	return &opsmngr.DiagnosticsListOpts{
 		Limit:   opts.limit,
 		Minutes: opts.minutes,
@@ -62,13 +61,13 @@ func (opts *DiagnoseArchiveDownloadOpts) newDiagnosticsListOpts() *opsmngr.Diagn
 }
 
 // mongocli om diagnose-archive download [--out out] [--projectId projectId]
-func DiagnoseArchiveDownloadBuilder() *cobra.Command {
-	opts := &DiagnoseArchiveDownloadOpts{}
+func DownloadBuilder() *cobra.Command {
+	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:     "download",
 		Aliases: []string{"get"},
-		Short:   description.DownloadDiagnoseArchive,
+		Short:   download,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

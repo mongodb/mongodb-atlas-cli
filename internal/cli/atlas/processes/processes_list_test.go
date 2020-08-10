@@ -14,34 +14,35 @@
 
 // +build unit
 
-package opsmanager
+package processes
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/spf13/afero"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDiagnoseArchiveDownloadOpts_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockArchivesDownloader(ctrl)
+	mockStore := mocks.NewMockProcessLister(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DiagnoseArchiveDownloadOpts{
+	var expected []*mongodbatlas.Process
+
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
-	opts.Out = "fake_diagnostic.tar.gz"
-	opts.Fs = afero.NewMemMapFs()
 
 	mockStore.
 		EXPECT().
-		DownloadArchive(opts.ProjectID, opts.newDiagnosticsListOpts(), gomock.Any()).
-		Return(nil).
+		Processes(listOpts.ProjectID, listOpts.newProcessesListOptions()).
+		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	err := listOpts.Run()
+	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

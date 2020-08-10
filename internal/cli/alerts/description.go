@@ -17,8 +17,8 @@ const (
 	Alerts              = "Manage alerts for your project."
 	AcknowledgeAlerts   = "Acknowledge an alert for your project."
 	UnacknowledgeAlerts = "Unacknowledge an alert for your project."
-	DescribeAlert       = "Describe an alert for a project."
-	ListAlerts          = "List alerts for a project."
-	Global              = "Manage Ops Manager global properties."
-	ListGlobalAlerts    = "List global alerts."
+	DescribeAlert       = "Describe an alert for your project."
+	ListAlerts          = "List alerts for your project."
+	Global              = "Manage Ops Manager global alert properties."
+	ListGlobalAlerts    = "List Ops Manager global alerts."
 )

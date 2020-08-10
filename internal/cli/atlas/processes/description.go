@@ -11,21 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package processes
 
-package atlas
-
-import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+const (
+	Processes     = "Manage MongoDB processes for your project."
+	ListProcesses = "List MongoDB processes for your project."
 )
-
-func ProcessesBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "processes",
-		Aliases: []string{"process"},
-		Short:   description.Processes,
-	}
-	cmd.AddCommand(ProcessListBuilder())
-
-	return cmd
-}

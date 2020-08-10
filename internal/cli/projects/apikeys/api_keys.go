@@ -15,14 +15,13 @@
 package apikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:     "apiKeys",
-		Short:   description.ProjectAPIKeys,
+		Short:   projectAPIKeys,
 		Aliases: []string{"apikeys"},
 	}
 	cmd.AddCommand(ListBuilder())

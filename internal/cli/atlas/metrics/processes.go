@@ -53,7 +53,7 @@ func ProcessBuilder() *cobra.Command {
 	opts := &ProcessOpts{}
 	cmd := &cobra.Command{
 		Use:     "processes <hostname:port>",
-		Short:   ProcessMeasurements,
+		Short:   processMeasurements,
 		Aliases: []string{"process"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -14,11 +14,11 @@
 package metrics
 
 const (
-	ProcessMeasurements = "Get measurements for a given host."
-	Disks               = "List available disks or disks measurements for a given host."
-	ListDisks           = "List available disks for a given host."
-	DescribeDisks       = "Describe disks measurements for a given host partition."
-	Databases           = "List available databases or databases measurements for a given host."
-	ListDatabases       = "List available databases for a given host."
-	Metrics             = "Get measurements on the state of the MongoDB process."
+	processMeasurements = "Get measurements for a given host."
+	disks               = "List available disks or disks measurements for a given host."
+	listDisks           = "List available disks for a given host."
+	describeDisks       = "Describe disks measurements for a given host partition."
+	databases           = "List available databases or databases measurements for a given host."
+	listDatabases       = "List available databases for a given host."
+	metrics             = "Get measurements on the state of the MongoDB process."
 )

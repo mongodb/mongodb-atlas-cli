@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "metrics",
 		Aliases: []string{"metric", "measurements", "measurement"},
-		Short:   Metrics,
+		Short:   metrics,
 	}
 	cmd.AddCommand(ProcessBuilder())
 	cmd.AddCommand(DisksBuilder())

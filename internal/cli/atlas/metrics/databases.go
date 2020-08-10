@@ -22,7 +22,7 @@ func DatabasesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "databases",
 		Aliases: []string{"database"},
-		Short:   Databases,
+		Short:   databases,
 	}
 	cmd.AddCommand(DatabasesListBuilder())
 

@@ -53,7 +53,7 @@ func DisksListBuilder() *cobra.Command {
 	opts := &DisksListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <hostname:port>",
-		Short:   ListDisks,
+		Short:   listDisks,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

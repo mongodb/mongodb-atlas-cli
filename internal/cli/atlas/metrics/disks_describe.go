@@ -55,7 +55,7 @@ func DisksDescribeBuilder() *cobra.Command {
 	opts := &DisksDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostname:port> <name>",
-		Short: DescribeDisks,
+		Short: describeDisks,
 		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

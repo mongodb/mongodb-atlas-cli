@@ -157,8 +157,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "settings",
 		Aliases: []string{"settings", "config"},
-		Short:   Config,
-		Long:    ConfigLong,
+		Short:   short,
+		Long:    long,
 	}
 
 	cmd.AddCommand(CreateBuilder())

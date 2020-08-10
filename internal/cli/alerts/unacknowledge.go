@@ -62,7 +62,7 @@ func UnacknowledgeBuilder() *cobra.Command {
 	opts := new(UnacknowledgeOpts)
 	cmd := &cobra.Command{
 		Use:     "unacknowledge <ID>",
-		Short:   UnacknowledgeAlerts,
+		Short:   unacknowledgeAlerts,
 		Aliases: []string{"unack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

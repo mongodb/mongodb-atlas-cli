@@ -73,7 +73,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
 	cmd := &cobra.Command{
 		Use:     "acknowledge <ID>",
-		Short:   AcknowledgeAlerts,
+		Short:   acknowledgeAlerts,
 		Aliases: []string{"ack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

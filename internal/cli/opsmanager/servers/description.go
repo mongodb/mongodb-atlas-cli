@@ -14,6 +14,6 @@
 package servers
 
 const (
-	Servers    = "Manage automated servers for your project."
-	ListServer = "List all available servers running an automation agent for your project."
+	short      = "Manage automated servers for your project."
+	listServer = "List all available servers running an automation agent for your project."
 )

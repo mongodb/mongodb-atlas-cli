@@ -21,7 +21,7 @@ import (
 func GlobalBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "global",
-		Short: Global,
+		Short: global,
 	}
 
 	cmd.AddCommand(GlobalListBuilder())

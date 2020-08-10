@@ -47,7 +47,7 @@ func FieldsTypeBuilder() *cobra.Command {
 	opts := &FieldsTypeOpts{}
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   ConfigFieldsType,
+		Short:   configFieldsType,
 		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -58,7 +58,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
 		Use:     "update <ID>",
-		Short:   UpdateAlertsConfig,
+		Short:   updateAlertsConfig,
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

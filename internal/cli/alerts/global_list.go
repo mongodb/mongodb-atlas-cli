@@ -59,7 +59,7 @@ func GlobalListBuilder() *cobra.Command {
 	opts := &GlobalListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   ListGlobalAlerts,
+		Short:   listGlobalAlerts,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

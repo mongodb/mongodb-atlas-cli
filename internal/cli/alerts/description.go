@@ -14,11 +14,11 @@
 package alerts
 
 const (
-	Alerts              = "Manage alerts for your project."
-	AcknowledgeAlerts   = "Acknowledge an alert for your project."
-	UnacknowledgeAlerts = "Unacknowledge an alert for your project."
-	DescribeAlert       = "Describe an alert for your project."
-	ListAlerts          = "List alerts for your project."
-	Global              = "Manage Ops Manager global alert properties."
-	ListGlobalAlerts    = "List Ops Manager global alerts."
+	short               = "Manage alerts for your project."
+	acknowledgeAlerts   = "Acknowledge an alert for your project."
+	unacknowledgeAlerts = "Unacknowledge an alert for your project."
+	describeAlert       = "Describe an alert for your project."
+	listAlerts          = "List alerts for your project."
+	global              = "Manage Ops Manager global alert properties."
+	listGlobalAlerts    = "List Ops Manager global alerts."
 )

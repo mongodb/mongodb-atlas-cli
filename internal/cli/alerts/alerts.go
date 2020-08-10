@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "alerts",
 		Aliases: []string{"alert"},
-		Short:   Alerts,
+		Short:   short,
 	}
 
 	cmd.AddCommand(settings.Builder())

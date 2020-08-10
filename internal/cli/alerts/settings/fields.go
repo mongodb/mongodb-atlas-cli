@@ -22,7 +22,7 @@ func FieldsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "fields",
 		Aliases: []string{"field"},
-		Short:   ConfigFields,
+		Short:   configFields,
 	}
 
 	cmd.AddCommand(FieldsTypeBuilder())

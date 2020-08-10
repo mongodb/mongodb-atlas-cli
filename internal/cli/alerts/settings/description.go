@@ -14,12 +14,12 @@
 package settings
 
 const (
-	Config             = "Manage alerts configuration for your project."
-	ConfigLong         = "The settings command provides access to your alerts configurations. You can create, edit, and delete alert configurations."
-	CreateAlertsConfig = "Create an alert configuration for your project."
-	DeleteAlertsConfig = "Delete an alert configuration from your project."
-	ConfigFields       = "Manage alert configuration fields for your project."
-	ConfigFieldsType   = "List alert configurations available field types."
-	ListConfigs        = "List alert configurations for your project."
-	UpdateAlertsConfig = "Update an alert configuration for your project."
+	short              = "Manage alerts configuration for your project."
+	long               = "The settings command provides access to your alerts configurations. You can create, edit, and delete alert configurations."
+	createAlertsConfig = "Create an alert configuration for your project."
+	deleteAlertsConfig = "Delete an alert configuration from your project."
+	configFields       = "Manage alert configuration fields for your project."
+	configFieldsType   = "List alert configurations available field types."
+	listConfigs        = "List alert configurations for your project."
+	updateAlertsConfig = "Update an alert configuration for your project."
 )

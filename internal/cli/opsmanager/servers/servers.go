@@ -21,7 +21,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "servers",
-		Short: Servers,
+		Short: short,
 	}
 
 	cmd.AddCommand(ListBuilder())

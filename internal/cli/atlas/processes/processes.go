@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "processes",
 		Aliases: []string{"process"},
-		Short:   Processes,
+		Short:   processes,
 	}
 	cmd.AddCommand(ListBuilder())
 

@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "onlineArchives",
 		Aliases: []string{"onlineArchive", "onlinearchives", "onlinearchive", "online-archives", "online-archive"},
-		Short:   OnlineArchives,
+		Short:   onlineArchives,
 	}
 
 	cmd.AddCommand(ListBuilder())

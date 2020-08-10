@@ -14,6 +14,6 @@
 package processes
 
 const (
-	Processes     = "Manage MongoDB processes for your project."
-	ListProcesses = "List MongoDB processes for your project."
+	processes     = "Manage MongoDB processes for your project."
+	listProcesses = "List MongoDB processes for your project."
 )

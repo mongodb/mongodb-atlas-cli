@@ -14,12 +14,12 @@
 package onlinearchive
 
 const (
-	OnlineArchives        = "Manage online archives for your cluster."
-	ListOnlineArchive     = "List online archives for a cluster."
-	DescribeOnlineArchive = "Describe an online archive for a cluster."
-	CreateOnlineArchive   = "Create an online archive for a cluster."
-	DeleteOnlineArchive   = "Delete an online archive from a cluster."
-	PauseOnlineArchive    = "Pause an online archive from a cluster."
-	StartOnlineArchive    = "Start a paused online archive from a cluster."
-	UpdateOnlineArchive   = "Update an online archive for a cluster."
+	onlineArchives        = "Manage online archives for your cluster."
+	listOnlineArchive     = "List online archives for a cluster."
+	describeOnlineArchive = "Describe an online archive for a cluster."
+	createOnlineArchive   = "Create an online archive for a cluster."
+	deleteOnlineArchive   = "Delete an online archive from a cluster."
+	pauseOnlineArchive    = "Pause an online archive from a cluster."
+	startOnlineArchive    = "Start a paused online archive from a cluster."
+	updateOnlineArchive   = "Update an online archive for a cluster."
 )

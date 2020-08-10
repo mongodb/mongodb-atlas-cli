@@ -16,9 +16,9 @@ package search
 const (
 	Search                = "Manage Atlas Search for your cluster."
 	Indexes               = "Manage Atlas Search indexes for your cluster."
-	ListSearchIndexes     = "List Atlas search indexes for a cluster."
-	CreateSearchIndexes   = "Create a search index for a cluster."
-	UpdateSearchIndex     = "Update a search index for a cluster."
-	DescribeSearchIndexes = "Describe a search index for a cluster."
-	DeleteSearchIndexes   = "Delete a search index from a cluster."
+	listSearchIndexes     = "List Atlas search indexes for a cluster."
+	createSearchIndexes   = "Create a search index for a cluster."
+	updateSearchIndex     = "Update a search index for a cluster."
+	describeSearchIndexes = "Describe a search index for a cluster."
+	deleteSearchIndexes   = "Delete a search index from a cluster."
 )

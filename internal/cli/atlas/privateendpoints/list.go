@@ -24,9 +24,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
-// {{.IPAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
-// `
+var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+`
 
 type ListOpts struct {
 	cli.GlobalOpts
@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas privateEndpoint(s)|privateendpoint(s) list|ls [--projectId projectId]

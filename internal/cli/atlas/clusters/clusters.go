@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 		Aliases:    []string{"cluster"},
 		SuggestFor: []string{"replicasets"},
 		Short:      Clusters,
-		Long:       ClustersLong,
+		Long:       long,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(DescribeBuilder())

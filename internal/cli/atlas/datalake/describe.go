@@ -54,7 +54,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: DescribeDataLake,
+		Short: describeDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

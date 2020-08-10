@@ -178,8 +178,8 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: CreateCluster,
-		Long:  CreateClusterLong,
+		Short: createCluster,
+		Long:  createClusterLong,
 		Example: `  
   Deploy a 3 members replica set in AWS
   $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10

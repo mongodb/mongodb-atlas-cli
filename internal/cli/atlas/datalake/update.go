@@ -84,7 +84,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <name>",
-		Short: UpdateDataLake,
+		Short: updateDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

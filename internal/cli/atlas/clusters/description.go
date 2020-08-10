@@ -15,18 +15,18 @@ package clusters
 
 const (
 	Clusters          = "Manage clusters for your project."
-	ClustersLong      = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
-	CreateCluster     = "Create a MongoDB cluster for your project."
-	DeleteCluster     = "Delete a cluster from your project."
-	DescribeCluster   = "Describe a cluster."
-	ListClusters      = "List clusters for your project."
-	UpdateCluster     = "Update a MongoDB cluster."
-	PauseCluster      = "Pause a running MongoDB cluster in Atlas."
-	StartCluster      = "Start a paused MongoDB cluster in Atlas."
-	WatchCluster      = "Watch for a cluster to be available."
+	long              = "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters."
+	createCluster     = "Create a MongoDB cluster for your project."
+	deleteCluster     = "Delete a cluster from your project."
+	describeCluster   = "Describe a cluster."
+	listClusters      = "List clusters for your project."
+	updateCluster     = "Update a MongoDB cluster."
+	pauseCluster      = "Pause a running MongoDB cluster in Atlas."
+	startCluster      = "Start a paused MongoDB cluster in Atlas."
+	watchCluster      = "Watch for a cluster to be available."
 	Indexes           = "Manage cluster rolling indexes for your project."
-	CreateIndex       = "Create a rolling index for your MongoDB cluster."
-	CreateClusterLong = `You can create MongoDB clusters using this command.
+	createIndex       = "Create a rolling index for your MongoDB cluster."
+	createClusterLong = `You can create MongoDB clusters using this command.
 To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
 this will create a 3 member replica set with the latest available mongodb server version available.
 Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`

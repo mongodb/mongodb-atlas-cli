@@ -49,7 +49,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <username>",
 		Aliases: []string{"rm"},
-		Short:   DeleteDBUser,
+		Short:   deleteDBUser,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

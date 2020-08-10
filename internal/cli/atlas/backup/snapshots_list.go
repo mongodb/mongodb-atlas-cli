@@ -56,7 +56,7 @@ func SnapshotsListBuilder() *cobra.Command {
 	opts := new(SnapshotsListOpts)
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
-		Short:   ListSnapshots,
+		Short:   listSnapshots,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

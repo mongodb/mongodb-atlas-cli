@@ -14,13 +14,13 @@
 package dbusers
 
 const (
-	DBUsers        = "Manage database users for your project."
-	CreateDBUser   = "Create a database user for your project."
-	DeleteDBUser   = "Delete a database user for your project."
-	ListDBUsers    = "List Atlas database users for your project."
-	DescribeDBUser = "Return a single Atlas database user for your project."
-	UpdateDBUser   = "Update a MongoDB database for your project.."
-	DBUsersLong    = `The dbusers command retrieves, creates and modifies the MongoDB database users in your project.
+	dbUsers        = "Manage database users for your project."
+	createDBUser   = "Create a database user for your project."
+	deleteDBUser   = "Delete a database user for your project."
+	listDBUsers    = "List Atlas database users for your project."
+	describeDBUser = "Return a single Atlas database user for your project."
+	updateDBUser   = "Update a MongoDB database for your project.."
+	dbUsersLong    = `The dbusers command retrieves, creates and modifies the MongoDB database users in your project.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`
 )

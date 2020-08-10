@@ -14,7 +14,7 @@
 package certs
 
 const (
-	DBUserCerts       = "Manage Atlas x509 certificates for your database users."
-	ListDBUserCerts   = "List of all Atlas-managed, unexpired certificates for a database user."
-	CreateDBUserCerts = "Create a new Atlas-managed X.509 certificate for the specified database user."
+	dbUserCerts       = "Manage Atlas x509 certificates for your database users."
+	listDBUserCerts   = "List of all Atlas-managed, unexpired certificates for a database user."
+	createDBUserCerts = "Create a new Atlas-managed X.509 certificate for the specified database user."
 )

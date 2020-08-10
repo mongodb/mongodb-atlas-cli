@@ -52,7 +52,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <username>",
 		Aliases: []string{"ls"},
-		Short:   ListDBUserCerts,
+		Short:   listDBUserCerts,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

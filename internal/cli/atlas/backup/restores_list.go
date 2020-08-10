@@ -57,7 +57,7 @@ func RestoresListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <clusterName>",
 		Aliases: []string{"ls"},
-		Short:   ListRestores,
+		Short:   listRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

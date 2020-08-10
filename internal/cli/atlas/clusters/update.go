@@ -115,7 +115,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [name]",
-		Short: UpdateCluster,
+		Short: updateCluster,
 		Example: `
   Update tier for a cluster
   $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50

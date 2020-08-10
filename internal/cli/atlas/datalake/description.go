@@ -15,10 +15,10 @@ package datalake
 
 const (
 	DataLakes        = "Manage Atlas Data Lakes for your project."
-	DataLakesLong    = "The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes."
-	ListDataLakes    = "List Atlas Data Lakes for your project."
-	DescribeDataLake = "Return a specific data lake."
-	CreateDataLake   = "Create a new data lake for your project."
-	UpdateDataLake   = "Update a data lake for your project."
-	DeleteDataLake   = "Delete a data lake from your project."
+	dataLakesLong    = "The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes."
+	listDataLakes    = "List Atlas Data Lakes for your project."
+	describeDataLake = "Return a specific data lake."
+	createDataLake   = "Create a new data lake for your project."
+	updateDataLake   = "Update a data lake for your project."
+	deleteDataLake   = "Delete a data lake from your project."
 )

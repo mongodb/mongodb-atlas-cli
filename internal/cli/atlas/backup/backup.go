@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "backups",
 		Aliases: []string{"backup"},
-		Short:   Backup,
+		Short:   short,
 	}
 
 	cmd.AddCommand(SnapshotsBuilder())

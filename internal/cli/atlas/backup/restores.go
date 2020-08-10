@@ -21,7 +21,7 @@ import (
 func RestoresBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "restores",
-		Short:   Restores,
+		Short:   restoresShort,
 		Aliases: []string{"restore"},
 	}
 

@@ -101,7 +101,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: CreateIndex,
+		Short: createIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -52,7 +52,7 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:   "pause <name>",
-		Short: PauseCluster,
+		Short: pauseCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -147,7 +147,7 @@ func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s|%s>", automatedRestore, downloadRestore, pointInTimeRestore),
-		Short:     StartRestore,
+		Short:     startRestore,
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

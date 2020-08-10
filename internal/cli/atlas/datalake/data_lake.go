@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 		Use:     "datalake",
 		Aliases: []string{"dataLakes", "dataLake", "datalakes"},
 		Short:   DataLakes,
-		Long:    DataLakesLong,
+		Long:    dataLakesLong,
 	}
 
 	cmd.AddCommand(ListBuilder())

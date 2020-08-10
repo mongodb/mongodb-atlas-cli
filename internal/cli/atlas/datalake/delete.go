@@ -46,7 +46,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <name>",
-		Short: DeleteDataLake,
+		Short: deleteDataLake,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {

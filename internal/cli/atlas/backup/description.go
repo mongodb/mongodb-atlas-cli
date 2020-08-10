@@ -14,10 +14,10 @@
 package backup
 
 const (
-	Backup        = "Manage cloud backups for your project."
-	Restores      = "Manage cloud backup restore jobs for your project."
-	ListRestores  = "List cloud backup restore jobs for your project and cluster."
-	StartRestore  = "Start a restore job for your project and cluster."
-	Snapshots     = "Manage cloud backup snapshots for your project."
-	ListSnapshots = "List cloud backup snapshots for your project and cluster."
+	short          = "Manage cloud backups for your project."
+	restoresShort  = "Manage cloud backup restore jobs for your project."
+	listRestores   = "List cloud backup restore jobs for your project and cluster."
+	startRestore   = "Start a restore job for your project and cluster."
+	snapshotsShort = "Manage cloud backup snapshots for your project."
+	listSnapshots  = "List cloud backup snapshots for your project and cluster."
 )

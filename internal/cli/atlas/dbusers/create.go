@@ -148,7 +148,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: CreateDBUser,
+		Short: createDBUser,
 		Example: `  
   Create an Atlas admin user
   $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>

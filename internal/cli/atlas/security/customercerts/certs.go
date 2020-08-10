@@ -15,13 +15,15 @@
 package customercerts
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "customerCerts"
 	cmd := &cobra.Command{
-		Use:     "customerCerts",
-		Aliases: []string{"certs", "customercerts", "cert", "customercert"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use, "certs"),
 		Short:   certs,
 	}
 	cmd.AddCommand(DescribeBuilder())

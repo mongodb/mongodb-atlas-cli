@@ -15,14 +15,16 @@
 package alerts
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts/settings"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "alerts"
 	cmd := &cobra.Command{
-		Use:     "alerts",
-		Aliases: []string{"alert"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   short,
 	}
 

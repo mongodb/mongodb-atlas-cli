@@ -15,13 +15,15 @@
 package backup
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func CheckpointsBuilder() *cobra.Command {
+	const use = "checkpoints"
 	cmd := &cobra.Command{
-		Use:     "checkpoints",
-		Aliases: []string{"checkpoint"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   Checkpoints,
 	}
 

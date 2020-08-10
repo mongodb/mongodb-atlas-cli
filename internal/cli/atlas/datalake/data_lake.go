@@ -15,13 +15,15 @@
 package datalake
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "dataLakes"
 	cmd := &cobra.Command{
-		Use:     "datalake",
-		Aliases: []string{"dataLakes", "dataLake", "datalakes"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   DataLakes,
 		Long:    dataLakesLong,
 	}

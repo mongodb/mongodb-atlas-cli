@@ -15,13 +15,15 @@
 package privateendpoints
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "privateEndpoints"
 	cmd := &cobra.Command{
-		Use:     "privateendpoints",
-		Aliases: []string{"privateEndpoints", "privateendpoint", "privateEndpoint"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   privateEndpoints,
 	}
 	cmd.AddCommand(ListBuilder())

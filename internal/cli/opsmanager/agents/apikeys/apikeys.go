@@ -15,14 +15,16 @@
 package apikeys
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "apikeys",
+	const use = "apiKeys"
+	cmd := &cobra.Command{
+		Use:     use,
 		Short:   APIKeys,
-		Aliases: []string{"apikey", "apiKeys", "apiKey"},
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())

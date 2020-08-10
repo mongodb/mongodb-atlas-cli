@@ -15,14 +15,16 @@
 package agents
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents/apikeys"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "agents"
 	cmd := &cobra.Command{
-		Use:     "agents",
-		Aliases: []string{"agent"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
 		Short:   Agents,
 	}
 	cmd.AddCommand(ListBuilder())

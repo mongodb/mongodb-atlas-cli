@@ -3,7 +3,7 @@ module github.com/mongodb/mongocli
 go 1.14
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.0.8
+	github.com/AlecAivazis/survey/v2 v2.1.0
 	github.com/Masterminds/semver/v3 v3.1.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-test/deep v1.0.7

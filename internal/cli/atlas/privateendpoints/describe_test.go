@@ -21,6 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -42,7 +43,5 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Times(1)
 
 	err := opts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	assert.NoError(t, err)
 }

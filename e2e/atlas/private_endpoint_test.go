@@ -74,7 +74,6 @@ func TestPrivateEndpoints(t *testing.T) {
 		a.NoError(err, string(resp))
 		var r atlas.PrivateEndpointConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(region, r.Region)
 			id = r.ID
 		}
 	})

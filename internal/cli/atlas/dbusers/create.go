@@ -36,31 +36,42 @@ type CreateOpts struct {
 	password    string
 	x509Type    string
 	awsIamType  string
+	ldapType    string
 	deleteAfter string
 	roles       []string
 	store       store.DatabaseUserCreator
 }
 
 const (
-	AWSIAMTypeUser   = "USER"
-	AWSIAMTypeRole   = "ROLE"
+	user             = "USER"
+	role             = "ROLE"
+	group            = "GROUP"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
-	AuthTypeNone     = "NONE"
+	none             = "NONE"
 	createTemplate   = "Database user '{{.Username}}' successfully created.\n"
 )
 
 var (
-	validX509Flags   = []string{AuthTypeNone, X509TypeManaged, X509TypeCustomer}
-	validAWSIAMFlags = []string{AuthTypeNone, AWSIAMTypeRole, AWSIAMTypeUser}
+	validX509Flags   = []string{none, X509TypeManaged, X509TypeCustomer}
+	validAWSIAMFlags = []string{none, role, user}
+	validLDAPFlags   = []string{none, group, user}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
-	return opts.x509Type != AuthTypeNone
+	return opts.x509Type != "" && opts.x509Type != none
 }
 
 func (opts *CreateOpts) isAWSIAMSet() bool {
-	return opts.awsIamType != AuthTypeNone
+	return opts.awsIamType != "" && opts.awsIamType != none
+}
+
+func (opts *CreateOpts) isLDAPSet() bool {
+	return opts.ldapType != "" && opts.ldapType != none
+}
+
+func (opts *CreateOpts) isExternal() bool {
+	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet()
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -83,7 +94,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := convert.AdminDB
 
-	if opts.isX509Set() || opts.isAWSIAMSet() {
+	if opts.isExternal() {
 		authDB = convert.ExternalAuthDB
 	}
 
@@ -94,14 +105,14 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 		Password:        opts.password,
 		X509Type:        opts.x509Type,
 		AWSIAMType:      opts.awsIamType,
+		LDAPAuthType:    opts.ldapType,
 		DeleteAfterDate: opts.deleteAfter,
 		DatabaseName:    authDB,
 	}
 }
 
 func (opts *CreateOpts) Prompt() error {
-	passwordProvided := opts.password != ""
-	if opts.isAWSIAMSet() || opts.isX509Set() || passwordProvided {
+	if opts.isExternal() || opts.password != "" {
 		return nil
 	}
 	prompt := &survey.Password{
@@ -112,27 +123,26 @@ func (opts *CreateOpts) Prompt() error {
 
 func (opts *CreateOpts) validate() error {
 	if len(opts.roles) == 0 {
-		return errors.New("no role specified for the user")
+		return errors.New("missing role for the user")
+	}
+
+	if opts.isExternal() && opts.password != "" {
+		return errors.New("can't supply both $external authentication and password")
+	}
+
+	// a && (b || c) || (b && c): check if at least two are true
+	if opts.isAWSIAMSet() && (opts.isX509Set() || opts.isLDAPSet()) || (opts.isX509Set() && opts.isLDAPSet()) {
+		return errors.New("can't supply more than one $external type")
 	}
 
 	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
 		return err
 	}
-
 	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
 		return err
 	}
-
-	if opts.isX509Set() && opts.password != "" {
-		return errors.New("cannot supply both x509 auth and password")
-	}
-
-	if opts.isAWSIAMSet() && opts.password != "" {
-		return errors.New("cannot supply both AWS IAM auth and password")
-	}
-
-	if opts.isAWSIAMSet() && opts.isX509Set() {
-		return errors.New("cannot supply both AWS IAM and x509 auth")
+	if err := validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags); err != nil {
+		return err
 	}
 
 	return nil
@@ -144,6 +154,7 @@ func (opts *CreateOpts) validate() error {
 //		[--projectId projectId]
 //		[--x509Type NONE|MANAGED|CUSTOMER]
 //		[--awsIAMType NONE|ROLE|USER]
+//		[--ldapType NONE|USER|GROUP]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -166,13 +177,12 @@ func CreateBuilder() *cobra.Command {
 			}
 			opts.roles = append(opts.roles, args...)
 
-			if err := opts.validate(); err != nil {
-				return err
-			}
-
-			return opts.Prompt()
+			return opts.validate()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.Prompt(); err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}
@@ -181,8 +191,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.BDUsersDeleteAfter)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
-	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, AuthTypeNone, usage.X509Type)
-	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, AuthTypeNone, usage.AWSIAMType)
+	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
+	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
+	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -50,7 +50,7 @@ func (opts *DescribeOpts) Run() error {
 	return output.Print(config.Default(), describeTemplate, r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get [--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

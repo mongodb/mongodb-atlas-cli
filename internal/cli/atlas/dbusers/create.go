@@ -132,7 +132,7 @@ func (opts *CreateOpts) validate() error {
 
 	// a && (b || c) || (b && c): check if at least two are true
 	if opts.isAWSIAMSet() && (opts.isX509Set() || opts.isLDAPSet()) || (opts.isX509Set() && opts.isLDAPSet()) {
-		return errors.New("can't supply both AWS IAM and x509 auth")
+		return errors.New("can't supply more than one $external type")
 	}
 
 	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {

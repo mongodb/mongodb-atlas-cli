@@ -162,4 +162,6 @@ For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.co
 Valid values: NONE|USER|ROLE.`
 	X509Type = `X.509 method by which the provided username is authenticated. 
 Valid values: NONE|MANAGED|CUSTOMER.`
+	LDAPType = `LDAP method by which the provided username is authenticated. 
+Valid values: NONE|USER|GROUP.`
 )

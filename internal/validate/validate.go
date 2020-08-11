@@ -106,5 +106,5 @@ func FlagInSlice(value, flag string, validValues []string) error {
 		return nil
 	}
 
-	return fmt.Errorf("%v is an invalid value for %v. It must be one of: %v", value, flag, strings.Join(validValues, ","))
+	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
 }

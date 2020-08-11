@@ -14,39 +14,35 @@
 
 // +build unit
 
-package datalake
+package privateendpoints
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeCreator(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointCreator(ctrl)
 	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
-		store: mockStore,
-		name:  "new_data_lake",
+		store:    mockStore,
+		region:   "region",
+		provider: "AWS",
 	}
 
-	createRequest := &mongodbatlas.DataLakeCreateRequest{
-		Name: "new_data_lake",
-	}
-
-	expected := &mongodbatlas.DataLake{}
+	expected := &mongodbatlas.PrivateEndpointConnection{}
 	mockStore.
 		EXPECT().
-		CreateDataLake(createOpts.ProjectID, createRequest).
+		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).
 		Return(expected, nil).
 		Times(1)
 
 	err := createOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	assert.NoError(t, err)
 }

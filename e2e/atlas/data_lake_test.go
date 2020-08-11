@@ -23,15 +23,15 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDatalake(t *testing.T) {
+func TestDataLakes(t *testing.T) {
 	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	const updateRegion = "VIRGINIA_USA"
 	datalakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
 	cliPath, err := e2e.Bin()
@@ -49,17 +49,12 @@ func TestDatalake(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var datalake atlas.DataLake
-		if err = json.Unmarshal(resp, &datalake); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if datalake.Name != datalakeName {
-			t.Errorf("expected name %v, got %v\n", datalakeName, datalake.Name)
+		if err = json.Unmarshal(resp, &datalake); a.NoError(err) {
+			a.Equal(datalakeName, datalake.Name)
 		}
 	})
 
@@ -73,17 +68,12 @@ func TestDatalake(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var datalake atlas.DataLake
-		if err = json.Unmarshal(resp, &datalake); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if datalake.Name != datalakeName {
-			t.Errorf("expected name %v, got %v\n", datalakeName, datalake.Name)
+		if err = json.Unmarshal(resp, &datalake); a.NoError(err) {
+			a.Equal(datalakeName, datalake.Name)
 		}
 	})
 
@@ -96,12 +86,16 @@ func TestDatalake(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var r []atlas.DataLake
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
 		}
 	})
 
 	t.Run("Update", func(t *testing.T) {
+		const updateRegion = "VIRGINIA_USA"
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			datalakeEntity,
@@ -113,17 +107,12 @@ func TestDatalake(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var datalake atlas.DataLake
-		if err = json.Unmarshal(resp, &datalake); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if datalake.DataProcessRegion.Region != updateRegion {
-			t.Errorf("got=%#v\nwant=%#v\n", datalake.DataProcessRegion.Region, updateRegion)
+		if err = json.Unmarshal(resp, &datalake); a.NoError(err) {
+			a.Equal(updateRegion, datalake.DataProcessRegion.Region)
 		}
 	})
 
@@ -137,12 +126,9 @@ func TestDatalake(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 		expected := fmt.Sprintf("Data Lake '%s' deleted\n", datalakeName)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
-		}
+		a.Equal(expected, string(resp))
 	})
 }

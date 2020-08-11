@@ -45,9 +45,10 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete <id>",
-		Short: deletePrivateEndpoint,
-		Args:  cobra.ExactArgs(1),
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   deletePrivateEndpoint,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.initStore); err != nil {
 				return err

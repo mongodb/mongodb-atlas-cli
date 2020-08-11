@@ -20,4 +20,5 @@ const (
 	describePrivateEndpoints = "Return a specific Private Endpoints for your project."
 	createPrivateEndpoint    = "Create a new private endpoint for your project."
 	deletePrivateEndpoint    = "Delete a private endpoint from your project."
+	watchPrivateEndpoint     = "Watch for a private endpoint to be available."
 )

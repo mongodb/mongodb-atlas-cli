@@ -28,15 +28,16 @@ import (
 )
 
 const (
-	atlasEntity    = "atlas"
-	clustersEntity = "clusters"
-	searchEntity   = "search"
-	indexEntity    = "index"
-	datalakeEntity = "datalake"
-	alertsEntity   = "alerts"
-	configEntity   = "settings"
-	dbusersEntity  = "dbusers"
-	certsEntity    = "certs"
+	atlasEntity            = "atlas"
+	clustersEntity         = "clusters"
+	searchEntity           = "search"
+	indexEntity            = "index"
+	datalakeEntity         = "datalake"
+	alertsEntity           = "alerts"
+	configEntity           = "settings"
+	dbusersEntity          = "dbusers"
+	certsEntity            = "certs"
+	privateEndpointsEntity = "privateendpoints"
 )
 
 func getHostnameAndPort() (string, error) {

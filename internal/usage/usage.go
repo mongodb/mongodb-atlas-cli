@@ -38,6 +38,8 @@ const (
 	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
+	PrivateEndpointRegion           = "Cloud provider region in which you want to create the private endpoint connection."
+	PrivateEndpointProvider         = "Name of the cloud provider you want to create the private endpoint connection for."
 	Comment                         = "Optional description or comment for the entry."
 	WhiteListsDeleteAfter           = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
 	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."

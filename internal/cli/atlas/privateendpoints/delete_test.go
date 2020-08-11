@@ -20,28 +20,30 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDeleter(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnection
-
-	listOpts := &ListOpts{
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoints(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		DeletePrivateEndpoint(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := deleteOpts.Run()
 	assert.NoError(t, err)
 }

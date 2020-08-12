@@ -92,7 +92,7 @@ func (s *Store) DeletePrivateEndpoint(projectID, privateLinkID string) error {
 	}
 }
 
-// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
+// CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers
 func (s *Store) CreateInterfaceEndpoint(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:

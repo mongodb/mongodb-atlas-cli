@@ -27,6 +27,7 @@ func Builder() *cobra.Command {
 		Short:   interfaces,
 	}
 	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(DescribeBuilder())
 	cmd.AddCommand(DeleteBuilder())
 
 	return cmd

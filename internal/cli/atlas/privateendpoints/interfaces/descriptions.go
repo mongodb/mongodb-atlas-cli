@@ -15,6 +15,7 @@
 package interfaces
 
 const (
-	interfaces            = "Manage Atlas private endpoint interfaces."
-	deletePrivateEndpoint = "Delete a private endpoint interface from your project."
+	interfaces              = "Manage Atlas private endpoint interfaces."
+	createInterfaceEndpoint = "Add a new interface to a private endpoint."
+	deleteInterfaceEndpoint = "Delete a private endpoint interface from your project."
 )

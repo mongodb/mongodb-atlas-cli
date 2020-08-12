@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package interfaces
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -22,14 +22,13 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	store    store.PrivateEndpointCreator
-	region   string
-	provider string
+	store               store.InterfaceEndpointCreator
+	privateEndpointID   string
+	interfaceEndpointID string
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -38,12 +37,10 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Private endpoint '{{.ID}}' created.\n"
+var createTemplate = "Interface endpoint '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	createRequest := opts.newPrivateEndpointConnection()
-
-	r, err := opts.store.CreatePrivateEndpoint(opts.ConfigProjectID(), createRequest)
+	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), opts.privateEndpointID, opts.interfaceEndpointID)
 	if err != nil {
 		return err
 	}
@@ -51,34 +48,27 @@ func (opts *CreateOpts) Run() error {
 	return output.Print(config.Default(), createTemplate, r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
-	createRequest := &mongodbatlas.PrivateEndpointConnection{
-		Region:       opts.region,
-		ProviderName: opts.provider,
-	}
-	return createRequest
-}
-
-// mongocli atlas privateEndpoint(s) create [--provider AWS] [--region <name>] --projectId projectId
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: createPrivateEndpoint,
-		Args:  cobra.NoArgs,
+		Use:     "create <interfaceEndpointId>",
+		Aliases: []string{"add"},
+		Short:   createInterfaceEndpoint,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.interfaceEndpointID = args[0]
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
+	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.Region)
+	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 
 	return cmd
 }

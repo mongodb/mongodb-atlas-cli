@@ -68,7 +68,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.Region)
+_ = cmd.MarkFlagRequired(flag. PrivateEndpointID)
 
 	return cmd
 }

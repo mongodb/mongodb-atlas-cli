@@ -6,7 +6,7 @@ this document describes some guidelines necessary to participate in the communit
 ## Feature Requests
 
 We welcome any feedback or feature request, to submit yours
-please head over to our [feedback page](https://feedback.mongodb.com/). 
+please head over to our [feedback page](https://feedback.mongodb.com/forums/930808-mongodb-cli). 
  
 ## Reporting Issues
 

@@ -36,7 +36,7 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), opts.Entry)
+	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID())
 }
 
 // mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId

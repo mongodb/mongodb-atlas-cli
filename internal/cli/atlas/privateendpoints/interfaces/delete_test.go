@@ -12,26 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+// +build unit
+
+package interfaces
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
-func Builder() *cobra.Command {
-	const use = "privateEndpoints"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   privateEndpoints,
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockInterfaceEndpointDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
+		store: mockStore,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(interfaces.Builder())
-	return cmd
+
+	mockStore.
+		EXPECT().
+		DeleteInterfaceEndpoint(deleteOpts.ProjectID, deleteOpts.privateEndpointID, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
+
+	err := deleteOpts.Run()
+	assert.NoError(t, err)
 }

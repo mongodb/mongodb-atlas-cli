@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter
+//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDeleter
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error)
@@ -38,6 +38,10 @@ type PrivateEndpointCreator interface {
 
 type PrivateEndpointDeleter interface {
 	DeletePrivateEndpoint(string, string) error
+}
+
+type InterfaceEndpointDeleter interface {
+	DeleteInterfaceEndpoint(string, string, string) error
 }
 
 // PrivateEndpoints encapsulates the logic to manage different cloud providers
@@ -78,6 +82,17 @@ func (s *Store) DeletePrivateEndpoint(projectID, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(context.Background(), projectID, privateLinkID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteInterfaceEndpoint(projectID, privateLinkID, interfaceEndpointID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

@@ -126,6 +126,7 @@ const (
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
+	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.

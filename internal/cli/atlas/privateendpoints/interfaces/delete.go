@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package datalake
+package interfaces
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -26,7 +26,8 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.DataLakeDeleter
+	privateEndpointID string
+	store             store.InterfaceEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -36,34 +37,37 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteDataLake, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), opts.privateEndpointID)
 }
 
-// mongocli atlas datalake(s) delete name --projectId projectId
+// mongocli atlas privateEndpoint(s) interface(s) delete <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Data Lake '%s' deleted\n", "Data Lake not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   deleteDataLake,
+		Short:   deletePrivateEndpoint,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
+			if err := opts.Prompt(); err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 
 	return cmd
 }

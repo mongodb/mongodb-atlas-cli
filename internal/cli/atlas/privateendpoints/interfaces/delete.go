@@ -48,7 +48,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   deletePrivateEndpoint,
+		Short:   deleteInterfaceEndpoint,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

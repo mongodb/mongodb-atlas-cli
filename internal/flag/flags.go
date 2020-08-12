@@ -141,4 +141,5 @@ const (
 	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
 	IP                              = "ip"                              // IP flag
 	CIDR                            = "cidr"                            // CIDR flag
+	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
 )

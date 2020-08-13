@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -126,7 +125,7 @@ func TestOnlineArchives(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		const expireAfterDays = 4
+		const expireAfterDays = float64(4)
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -134,7 +133,7 @@ func TestOnlineArchives(t *testing.T) {
 			"update",
 			archiveID,
 			"--clusterName="+clusterName,
-			"--archiveAfter="+strconv.Itoa(expireAfterDays),
+			"--archiveAfter="+fmt.Sprintf("%.0f", expireAfterDays),
 			"-o=json")
 
 		cmd.Env = os.Environ()

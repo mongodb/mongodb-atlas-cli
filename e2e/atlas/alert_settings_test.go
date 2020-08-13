@@ -77,7 +77,7 @@ func TestAlertConfig(t *testing.T) {
 			}
 		}
 	})
-	if assert.NotEmpty(t, alertID) {
+	if alertID == "" {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
 

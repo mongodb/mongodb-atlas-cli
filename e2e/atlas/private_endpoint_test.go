@@ -78,7 +78,7 @@ func TestPrivateEndpoints(t *testing.T) {
 			}
 		}
 	})
-	if assert.NotEmpty(t, id) {
+	if id == "" {
 		assert.FailNow(t, "Failed to create alert private endpoint")
 	}
 

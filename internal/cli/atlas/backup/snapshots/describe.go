@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESC	EXPIRES AT
+const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
 {{.ID}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
 `
 

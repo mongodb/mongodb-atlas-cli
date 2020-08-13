@@ -33,8 +33,6 @@ func TestDBUserDescribe_Run(t *testing.T) {
 
 	describeOpts := &DescribeOpts{
 		store:       mockStore,
-		clusterName: "",
-		snapshot:    "",
 	}
 
 	mockStore.

@@ -14,7 +14,7 @@
 
 // +build unit
 
-package backup
+package snapshots
 
 import (
 	"testing"
@@ -24,14 +24,14 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsLister(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CloudProviderSnapshots{}
 
-	listOpts := &SnapshotsListOpts{
+	listOpts := &ListOpts{
 		store:       mockStore,
 		clusterName: "Cluster0",
 	}

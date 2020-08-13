@@ -142,4 +142,5 @@ const (
 	IP                              = "ip"                              // IP flag
 	CIDR                            = "cidr"                            // CIDR flag
 	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
+	Retention                       = "retention"                       // Retention flag
 )

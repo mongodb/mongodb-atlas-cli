@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteSnapshot, opts.ConfigProjectID(), opts.clusterName)
 }
 
-// mongocli atlas dbuser(s) delete <snapshotId> --force --clusterName [--projectId projectId]
+// mongocli atlas snapshot(s) delete <snapshotId> --force --clusterName [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Snapshot '%s' deleted\n", "Snapshot not deleted"),

@@ -60,13 +60,14 @@ func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSn
 	return createRequest
 }
 
-// mongocli atlas backup snapshots create clusterName --desc description --retention days [--projectId projectId]
+// mongocli atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: createSnapshot,
-		Args:  cobra.ExactValidArgs(1),
+		Use:     "create",
+		Aliases: []string{"take"},
+		Short:   createSnapshot,
+		Args:    cobra.ExactValidArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

@@ -85,7 +85,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 	}
 }
 
-// ContinuousSnapshots encapsulates the logic to manage different cloud providers
+// Snapshots encapsulates the logic to manage different cloud providers
 func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,

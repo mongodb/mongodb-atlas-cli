@@ -32,7 +32,7 @@ func TestDBUserDescribe_Run(t *testing.T) {
 	var expected mongodbatlas.CloudProviderSnapshot
 
 	describeOpts := &DescribeOpts{
-		store:       mockStore,
+		store: mockStore,
 	}
 
 	mockStore.

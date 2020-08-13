@@ -40,6 +40,10 @@ type SnapshotsCreator interface {
 	CreateSnapshot(string, string, *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error)
 }
 
+type SnapshotsDeleter interface {
+	DeleteSnapshot(string, string, *atlas.CloudProviderSnapshot)  error
+}
+
 // SnapshotRestoreJobs encapsulates the logic to manage different cloud providers
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
 	o := &atlas.SnapshotReqPathParameters{

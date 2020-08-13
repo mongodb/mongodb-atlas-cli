@@ -17,4 +17,5 @@ const (
 	snapshotsShort = "Manage cloud backup snapshots for your project."
 	listSnapshots  = "List cloud backup snapshots for your project and cluster."
 	createSnapshot = "Create a backup snapshot for your project and cluster."
+	deleteSnapshot = "Delete a backup snapshot."
 )

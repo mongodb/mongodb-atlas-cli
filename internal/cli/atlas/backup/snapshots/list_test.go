@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestSnapshotsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSnapshotsLister(ctrl)
 	defer ctrl.Finish()

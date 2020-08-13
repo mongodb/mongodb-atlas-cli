@@ -14,7 +14,7 @@
 
 // +build unit
 
-package backup
+package snapshots
 
 import (
 	"testing"
@@ -24,25 +24,24 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
+func TestDBUserDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsLister(ctrl)
+	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CloudProviderSnapshots{}
+	var expected mongodbatlas.CloudProviderSnapshot
 
-	listOpts := &SnapshotsListOpts{
-		store:       mockStore,
-		clusterName: "Cluster0",
+	describeOpts := &DescribeOpts{
+		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
-		Return(expected, nil).
+		Snapshot(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.snapshot).
+		Return(&expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

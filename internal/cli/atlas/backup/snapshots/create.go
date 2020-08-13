@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package snapshots
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -22,57 +22,66 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-type SnapshotsListOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
-	cli.ListOpts
-	clusterName string
-	store       store.SnapshotsLister
+	store           store.SnapshotsCreator
+	clusterName     string
+	desc            string
+	retentionInDays int
 }
 
-func (opts *SnapshotsListOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
-`
+var createTemplate = "Snapshot '{{.ID}}' created.\n"
 
-func (opts *SnapshotsListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+func (opts *CreateOpts) Run() error {
+	createRequest := opts.newCloudProviderSnapshot()
+
+	r, err := opts.store.CreateSnapshot(opts.ConfigProjectID(), opts.clusterName, createRequest)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
-// mongocli atlas backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N]
-func SnapshotsListBuilder() *cobra.Command {
-	opts := new(SnapshotsListOpts)
+func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSnapshot {
+	createRequest := &mongodbatlas.CloudProviderSnapshot{
+		RetentionInDays: opts.retentionInDays,
+		Description:     opts.desc,
+	}
+	return createRequest
+}
+
+// mongocli atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId]
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <clusterName>",
-		Short:   listSnapshots,
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(1),
+		Use:     "create",
+		Aliases: []string{"take"},
+		Short:   createSnapshot,
+		Args:    cobra.ExactValidArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.clusterName = args[0]
-
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.SnapshotDescription)
+	cmd.Flags().IntVar(&opts.retentionInDays, flag.Retention, 1, usage.PrivateEndpointRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flag.Description)
 
 	return cmd
 }

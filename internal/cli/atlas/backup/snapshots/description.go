@@ -18,5 +18,5 @@ const (
 	listSnapshots    = "List cloud backup snapshots for your project and cluster."
 	createSnapshot   = "Create a backup snapshot for your project and cluster."
 	describeSnapshot = "Get a specific snapshot for your project."
-	deleteSnapshot = "Delete a backup snapshot."
-	)
+	deleteSnapshot   = "Delete a backup snapshot."
+)

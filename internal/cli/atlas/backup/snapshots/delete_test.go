@@ -14,7 +14,7 @@
 
 // +build unit
 
-package dbusers
+package snapshots
 
 import (
 	"testing"
@@ -25,9 +25,9 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestDBUsersDelete_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserDeleter(ctrl)
+	mockStore := mocks.NewMockSnapshotsDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -35,13 +35,13 @@ func TestDBUsersDelete_Run(t *testing.T) {
 			Confirm: true,
 			Entry:   "test",
 		},
-		authDB: "admin",
-		store:  mockStore,
+		clusterName: "cluster",
+		store:       mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteDatabaseUser(deleteOpts.authDB, deleteOpts.ProjectID, deleteOpts.Entry).
+		DeleteSnapshot(deleteOpts.ConfigProjectID(), deleteOpts.clusterName, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

@@ -27,7 +27,7 @@ type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	clusterName string
-	store  store.DatabaseUserDeleter
+	store       store.SnapshotsDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -37,7 +37,7 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteDatabaseUser, opts.authDB, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeleteSnapshot, opts.ConfigProjectID(), opts.clusterName)
 }
 
 // mongocli atlas dbuser(s) delete <snapshotId> --force --clusterName [--projectId projectId]
@@ -65,9 +65,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

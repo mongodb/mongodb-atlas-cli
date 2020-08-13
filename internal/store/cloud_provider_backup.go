@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongocli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongocli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -34,6 +34,10 @@ type RestoreJobsCreator interface {
 
 type SnapshotsLister interface {
 	Snapshots(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error)
+}
+
+type SnapshotsDescriber interface {
+	Snapshot(string, string, string) (*atlas.CloudProviderSnapshot, error)
 }
 
 type SnapshotsCreator interface {
@@ -98,6 +102,22 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Snapshot encapsulates the logic to manage different cloud providers
+func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.CloudProviderSnapshot, error) {
+	o := &atlas.SnapshotReqPathParameters{
+		GroupID:     projectID,
+		SnapshotID:  snapshotID,
+		ClusterName: clusterName,
+	}
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

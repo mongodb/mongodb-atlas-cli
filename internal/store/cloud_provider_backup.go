@@ -124,7 +124,7 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 	}
 }
 
-// DeleteSnapshot encapsulate the logic to manage different cloud providers
+// DeleteSnapshot encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,

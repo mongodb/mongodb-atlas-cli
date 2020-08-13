@@ -60,7 +60,7 @@ func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSn
 	return createRequest
 }
 
-// mongocli atlas backup snapshots create clusterName --description description --retention days [--projectId projectId]
+// mongocli atlas backup snapshots create clusterName --desc description --retention days [--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

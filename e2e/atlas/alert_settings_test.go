@@ -77,6 +77,9 @@ func TestAlertConfig(t *testing.T) {
 			}
 		}
 	})
+	if alertID == "" {
+		assert.FailNow(t, "Failed to create alert setting")
+	}
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

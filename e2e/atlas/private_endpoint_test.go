@@ -69,14 +69,18 @@ func TestPrivateEndpoints(t *testing.T) {
 			"--region="+region,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-		var r atlas.PrivateEndpointConnection
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			id = r.ID
+		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
+			var r atlas.PrivateEndpointConnection
+			if err = json.Unmarshal(resp, &r); a.NoError(err) {
+				id = r.ID
+			}
 		}
 	})
+	if id == "" {
+		assert.FailNow(t, "Failed to create alert private endpoint")
+	}
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

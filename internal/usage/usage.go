@@ -91,6 +91,8 @@ const (
 	NotificationUsername            = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
+	SnapshotDescription             = "Description of the on-demand snapshot."
+	SnapshotRetention               = "The number of days that Atlas should retain the on-demand snapshot."
 	Database                        = "Database name."
 	DatabaseUser                    = "Username of a database user."
 	MonthsUntilExpiration           = "Number of months that the certificate is valid for."

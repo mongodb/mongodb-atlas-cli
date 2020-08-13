@@ -16,6 +16,7 @@ package backup
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ func Builder() *cobra.Command {
 		Short:   short,
 	}
 
-	cmd.AddCommand(SnapshotsBuilder())
+	cmd.AddCommand(snapshots.Builder())
 	cmd.AddCommand(RestoresBuilder())
 
 	return cmd

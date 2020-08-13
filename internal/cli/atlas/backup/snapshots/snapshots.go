@@ -11,11 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package backup
 
-const (
-	short         = "Manage cloud backups for your project."
-	restoresShort = "Manage cloud backup restore jobs for your project."
-	listRestores  = "List cloud backup restore jobs for your project and cluster."
-	startRestore  = "Start a restore job for your project and cluster."
+package snapshots
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "snapshots"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   snapshotsShort,
+	}
+
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(CreateBuilder())
+
+	return cmd
+}

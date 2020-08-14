@@ -12,26 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package snapshots
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "snapshots"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   snapshotsShort,
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotsDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		clusterName: "cluster",
+		store:       mockStore,
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	mockStore.
+		EXPECT().
+		DeleteSnapshot(deleteOpts.ConfigProjectID(), deleteOpts.clusterName, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

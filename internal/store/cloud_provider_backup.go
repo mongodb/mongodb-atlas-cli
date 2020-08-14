@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongocli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongocli/internal/store RestoreJobsLister,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error)
@@ -42,6 +42,10 @@ type SnapshotsDescriber interface {
 
 type SnapshotsCreator interface {
 	CreateSnapshot(string, string, *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error)
+}
+
+type SnapshotsDeleter interface {
+	DeleteSnapshot(string, string, string) error
 }
 
 // SnapshotRestoreJobs encapsulates the logic to manage different cloud providers
@@ -120,23 +124,8 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 	}
 }
 
-// CreateCloudProviderSnapshot encapsulate the logic to manage different cloud providers
-func (s *Store) CreateCloudProviderSnapshot(projectID, clusterName string, req *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error) {
-	o := &atlas.SnapshotReqPathParameters{
-		GroupID:     projectID,
-		ClusterName: clusterName,
-	}
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(context.Background(), o, req)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// DeleteCloudProviderSnapshot encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteCloudProviderSnapshot(projectID, clusterName, snapshotID string) error {
+// DeleteSnapshot encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
 		ClusterName: clusterName,

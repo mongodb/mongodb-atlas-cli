@@ -55,7 +55,9 @@ func DeleteBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
-			opts.Prompt()
+			if err := opts.Prompt(); err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}

@@ -23,6 +23,7 @@ const (
 	CloudService            = "cloud"         // CloudService setting when using Atlas API
 	CloudManagerService     = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService       = "ops-manager"   // OpsManagerService settings when using Ops Manager API
+	JSON                    = "json"          // JSON output format as json
 	projectID               = "project_id"
 	orgID                   = "org_id"
 	configType              = "toml"
@@ -33,5 +34,7 @@ const (
 	baseURL                 = "base_url"
 	opsManagerCACertificate = "ops_manager_ca_certificate"
 	opsManagerSkipVerify    = "ops_manager_skip_verify"
+	output                  = "output"
 	fileFlags               = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm              = 0600
 )

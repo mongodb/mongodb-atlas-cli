@@ -29,7 +29,7 @@ Ideally, you should place this binary somewhere in your `PATH` for easy use. `/u
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.14)](https://golang.org/dl/)
+- [Go (at least Go 1.15)](https://golang.org/dl/)
 
 #### Fetch Source
 
@@ -63,7 +63,15 @@ make install
 Run `mongocli help` for a list of available commands
 or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
-### Getting Started
+### Getting API Keys
+
+To use mongocli you'll need to get API keys, to do this please follow the documentation 
+appropriate for the service you're using, 
+[Atlas](https://docs.atlas.mongodb.com/configure-api-access/),
+[Ops Manager](https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/),
+or [Cloud Manager](https://docs.cloudmanager.mongodb.com/tutorial/manage-programmatic-api-keys/)
+
+### Configuring `mongocli`
 
 Run `mongocli config` to set up your credentials, 
 this is optional and you can use [env variables](#environment-variables) instead.

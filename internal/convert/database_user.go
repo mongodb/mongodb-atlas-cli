@@ -23,6 +23,7 @@ import (
 
 const (
 	AdminDB             = "admin"
+	ExternalAuthDB      = "$external"
 	roleSep             = "@"
 	defaultUserDatabase = "admin"
 )

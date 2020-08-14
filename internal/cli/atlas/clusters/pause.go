@@ -17,19 +17,17 @@ package clusters
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type PauseOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ClusterUpdater
+	store store.ClusterPauser
 }
 
 func (opts *PauseOpts) initStore() error {
@@ -38,18 +36,15 @@ func (opts *PauseOpts) initStore() error {
 	return err
 }
 
-func (opts *PauseOpts) Run() error {
-	paused := true
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+var pauseTmpl = "Pausing cluster {{.Name}}.\n"
 
+func (opts *PauseOpts) Run() error {
+	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), pauseTmpl, r)
 }
 
 // mongocli atlas cluster(s) pause <name> [--projectId projectId]
@@ -57,7 +52,7 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:   "pause <name>",
-		Short: description.PauseCluster,
+		Short: pauseCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

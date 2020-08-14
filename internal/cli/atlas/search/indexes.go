@@ -15,19 +15,21 @@
 package search
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func IndexesBuilder() *cobra.Command {
+	const use = "indexes"
 	cmd := &cobra.Command{
-		Use:     "indexes",
-		Aliases: []string{"index"},
-		Short:   description.Indexes,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   Indexes,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(UpdateBuilder())
 	cmd.AddCommand(DeleteBuilder())
 
 	return cmd

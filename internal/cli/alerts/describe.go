@@ -17,9 +17,8 @@ package alerts
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -37,14 +36,18 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
+var describeTemplate = `ID	TYPE	METRIC	STATUS
+{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
+`
+
 func (opts *DescribeOpts) Run() error {
-	result, err := opts.store.Alert(opts.ConfigProjectID(), opts.alertID)
+	r, err := opts.store.Alert(opts.ConfigProjectID(), opts.alertID)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas alerts describe <ID> --projectId projectId
@@ -52,7 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe <ID>",
-		Short: description.DescribeAlert,
+		Short: describeAlert,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -17,12 +17,13 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,7 +32,7 @@ func TestOnlineArchives(t *testing.T) {
 
 	clusterName, err := deployCluster()
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("failed to deploy a cluster: %v", err)
 	}
 
 	defer func() {
@@ -44,22 +45,6 @@ func TestOnlineArchives(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	t.Run("list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"list",
-			"--clusterName="+clusterName)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-	})
 
 	var archiveID string
 	t.Run("Create", func(t *testing.T) {
@@ -74,7 +59,8 @@ func TestOnlineArchives(t *testing.T) {
 			"--collection=test",
 			"--dateField=test",
 			"--archiveAfter=3",
-			"--partition=test:date")
+			"--partition=test:date",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -83,15 +69,16 @@ func TestOnlineArchives(t *testing.T) {
 		}
 
 		var archive mongodbatlas.OnlineArchive
-		err = json.Unmarshal(resp, &archive)
-		if err != nil {
+		if err = json.Unmarshal(resp, &archive); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
+		assert.Equal(t, dbName, archive.DBName)
 		archiveID = archive.ID
-		if archive.DBName != dbName {
-			t.Errorf("got=%#v\nwant=%#v\n", archive.DBName, dbName)
-		}
 	})
+
+	if archiveID == "" {
+		t.Fatal("Failed to create archive")
+	}
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -100,7 +87,8 @@ func TestOnlineArchives(t *testing.T) {
 			onlineArchiveEntity,
 			"describe",
 			archiveID,
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -109,17 +97,35 @@ func TestOnlineArchives(t *testing.T) {
 		}
 
 		var archive mongodbatlas.OnlineArchive
-		err = json.Unmarshal(resp, &archive)
-		if err != nil {
+		if err = json.Unmarshal(resp, &archive); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if archiveID != archive.ID {
-			t.Errorf("expected: %s, got: %s", archiveID, archive.ID)
+		assert.Equal(t, archiveID, archive.ID)
+	})
+
+	t.Run("list", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			onlineArchiveEntity,
+			"list",
+			"--clusterName="+clusterName,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+		var archives []*mongodbatlas.OnlineArchive
+		if err = json.Unmarshal(resp, &archives); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, archives)
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		const expireAfterDays = 4
+		const expireAfterDays = float64(4)
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -127,7 +133,8 @@ func TestOnlineArchives(t *testing.T) {
 			"update",
 			archiveID,
 			"--clusterName="+clusterName,
-			"--archiveAfter="+strconv.Itoa(expireAfterDays))
+			"--archiveAfter="+fmt.Sprintf("%.0f", expireAfterDays),
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -135,14 +142,11 @@ func TestOnlineArchives(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		var archive mongodbatlas.OnlineArchive
-		err = json.Unmarshal(resp, &archive)
-		if err != nil {
+		if err = json.Unmarshal(resp, &archive); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		archiveID = archive.ID
-		if archive.Criteria.ExpireAfterDays != expireAfterDays {
-			t.Errorf("got=%#v\nwant=%#v\n", archive.Criteria.ExpireAfterDays, expireAfterDays)
-		}
+		assert.Equal(t, expireAfterDays, archive.Criteria.ExpireAfterDays)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -160,5 +164,7 @@ func TestOnlineArchives(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
+		expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
+		assert.Equal(t, string(resp), expected)
 	})
 }

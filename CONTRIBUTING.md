@@ -1,21 +1,21 @@
 # Contributing to MongoDB CLI
 
 Thanks for your interest in contributing to `mongocli`, 
-this document describes some of the guidelines necessary to participate in the comunity 
+this document describes some guidelines necessary to participate in the community. 
 
 ## Feature Requests
 
 We welcome any feedback or feature request, to submit yours
-please head over to our [feedback page](https://feedback.mongodb.com/). 
+please head over to our [feedback page](https://feedback.mongodb.com/forums/930808-mongodb-cli). 
  
 ## Reporting Issues
 
-Please create a [GitHub issue](https://github.com/mongodb/mongocli/issues) describing the kind of problem you're facing
-with as much detail as possible, including things like operating system or anything else that may be relevant to the issue.
+Please create a [GitHub issue](https://github.com/mongodb/mongocli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
+with as much detail as possible, including things like operating system or anything else may be relevant to the issue.
 
 ## Submitting a Patch
 
-Before submitting a patch to the repo please consider opening an [issue first](#reporting-issues)
+Before submitting a patch to the repo please consider opening an [issue first](#reporting-issues).
 
 ### Contributor License Agreement
 
@@ -25,7 +25,7 @@ For patches to be accepted, contributors must sign our [CLA](https://www.mongodb
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.14)](https://golang.org/dl/)
+- [Go (at least Go 1.15)](https://golang.org/dl/)
 
 #### Environment
 - Fork the repository.
@@ -47,12 +47,12 @@ The following is a short list of commands that can be run in the root of the pro
   to set `MCLI_*` variables to point to your Cloud Manager instance. 
 - Run `make build` to generate a local binary in the `./bin` folder.
 
-We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks` 
+We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks`.
 
 ### Generating Mocks
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
-If you need a new mock please update or add the `//go:generate` instruction to the appropriate file 
+If you need a new mock please update or add the `//go:generate` instruction to the appropriate file. 
 
 ### Adding a New Command
 
@@ -66,7 +66,7 @@ For a `mongocli scope newCommand` command a file `internal/cli/scope_new_command
 ### Third Party Dependencies
 
 We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).
-To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI) 
+To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI).
 
 ## Maintainer's Guide
 

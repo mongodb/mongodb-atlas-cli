@@ -17,9 +17,8 @@ package onlinearchive
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -39,18 +38,20 @@ func (opts *StartOpts) initStore() error {
 	return err
 }
 
+var startTemplate = "Online archive '{{.ID}}' started.\n"
+
 func (opts *StartOpts) Run() error {
 	paused := false
 	archive := &atlas.OnlineArchive{
 		ID:     opts.id,
 		Paused: &paused,
 	}
-	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), startTemplate, r)
 }
 
 // mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId]
@@ -58,7 +59,7 @@ func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:   "start <ID>",
-		Short: description.StartOnlineArchive,
+		Short: startOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

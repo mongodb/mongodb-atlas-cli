@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +25,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ConfigList,
+		Short:   listShort,
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Available profiles:")
 			profiles := config.List()

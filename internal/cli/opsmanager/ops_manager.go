@@ -15,29 +15,39 @@
 package opsmanager
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/agents"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
-	"github.com/mongodb/mongocli/internal/cli/automation"
-	"github.com/mongodb/mongocli/internal/cli/backup"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/automation"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/clusters"
-	"github.com/mongodb/mongocli/internal/cli/owner"
-	"github.com/mongodb/mongocli/internal/cli/security"
-	"github.com/mongodb/mongocli/internal/cli/servers"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/diagnosearchive"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/owner"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+const opsManager = "Ops Manager operations."
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "ops-manager",
 		Aliases: []string{"om"},
-		Short:   description.OpsManager,
+		Short:   opsManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.OpsManagerService)
-			return validate.Credentials()
+			// do not validate to create an owner
+			if cmd.CommandPath() != "mongocli ops-manager owner create" {
+				return validate.Credentials()
+			}
+			return nil
 		},
 	}
 
@@ -47,14 +57,14 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(servers.Builder())
 	cmd.AddCommand(automation.Builder())
 	cmd.AddCommand(security.Builder())
-	cmd.AddCommand(DBUsersBuilder())
+	cmd.AddCommand(dbusers.Builder())
 	cmd.AddCommand(owner.Builder())
 	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(ProcessesBuilder())
-	cmd.AddCommand(MetricsBuilder())
-	cmd.AddCommand(LogsBuilder())
+	cmd.AddCommand(processes.Builder())
+	cmd.AddCommand(metrics.Builder())
+	cmd.AddCommand(logs.Builder())
 	cmd.AddCommand(agents.Builder())
-	cmd.AddCommand(DiagnoseArchive())
+	cmd.AddCommand(diagnosearchive.Builder())
 
 	return cmd
 }

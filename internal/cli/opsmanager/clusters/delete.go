@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
@@ -73,7 +72,8 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
-		Short:   description.DeleteCluster,
+		Short:   "This is an internal and undocumented command.",
+		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
 		Args:    cobra.ExactArgs(1),
 		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

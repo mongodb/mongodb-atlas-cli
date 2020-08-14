@@ -23,16 +23,37 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudManagerClustersLister(ctrl)
-
 	defer ctrl.Finish()
 
-	t.Run("ConfigProjectID is given", func(t *testing.T) {
+	t.Run("clusters for project simple view", func(t *testing.T) {
+		expected := &opsmngr.Clusters{}
+
+		listOpts := &ListOpts{
+			store: mockStore,
+		}
+
+		listOpts.ProjectID = "1"
+		mockStore.
+			EXPECT().
+			ProjectClusters(listOpts.ProjectID, nil).
+			Return(expected, nil).
+			Times(1)
+
+		err := listOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("clusters for project json view", func(t *testing.T) {
 		expected := fixture.AutomationConfig()
+		config.SetOutput(config.JSON)
 
 		listOpts := &ListOpts{
 			store: mockStore,
@@ -49,9 +70,10 @@ func TestList_Run(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
+		config.SetOutput("")
 	})
 
-	t.Run("No ConfigProjectID is given", func(t *testing.T) {
+	t.Run("list all clusters the (no project id)", func(t *testing.T) {
 		expected := fixture.AllClusters()
 		config.SetService(config.OpsManagerService)
 		mockStore.

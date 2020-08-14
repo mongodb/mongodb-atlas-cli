@@ -17,9 +17,8 @@ package clusters
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -37,14 +36,17 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+var describeTemplate = `ID	NAME	MDB VER	STATE
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+`
 
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas cluster(s) describe <name> --projectId projectId
@@ -52,7 +54,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: description.DescribeCluster,
+		Short: describeCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

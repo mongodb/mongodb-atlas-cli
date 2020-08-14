@@ -17,13 +17,16 @@ package organizations
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+const listTemplate = `ID	NAME{{range .Results}}
+{{.ID}}	{{.Name}}{{end}}
+`
 
 type ListOpts struct {
 	cli.ListOpts
@@ -38,13 +41,13 @@ func (opts *ListOpts) init() error {
 
 func (opts *ListOpts) Run() error {
 	listOptions := opts.NewListOptions()
-	orgs, err := opts.store.Organizations(listOptions)
+	r, err := opts.store.Organizations(listOptions)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(orgs)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli iam organizations(s) list
@@ -53,7 +56,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   description.ListOrganizations,
+		Short:   listOrganizations,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

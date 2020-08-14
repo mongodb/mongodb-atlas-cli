@@ -15,19 +15,20 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "clusters"
 	cmd := &cobra.Command{
-		Use:        "clusters",
-		Aliases:    []string{"cluster"},
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
 		SuggestFor: []string{"replicasets"},
-		Short:      description.Clusters,
-		Long:       description.ClustersLong,
+		Short:      Clusters,
+		Long:       long,
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(DescribeBuilder())

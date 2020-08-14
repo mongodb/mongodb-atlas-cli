@@ -18,26 +18,25 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestClusters(t *testing.T) {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
-
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+func TestClustersFlags(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
 	}
-	t.Run("Create via params", func(t *testing.T) {
+	clusterName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -48,7 +47,8 @@ func TestClusters(t *testing.T) {
 			"--tier=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
-			"--diskSizeGB=10")
+			"--diskSizeGB=10",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -69,7 +69,8 @@ func TestClusters(t *testing.T) {
 			atlasEntity,
 			clustersEntity,
 			"watch",
-			clusterName)
+			clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -83,7 +84,11 @@ func TestClusters(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -93,7 +98,12 @@ func TestClusters(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "describe", clusterName)
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"describe",
+			clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -118,7 +128,8 @@ func TestClusters(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB=20",
-			"--mdbVersion=4.2")
+			"--mdbVersion=4.2",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -166,15 +177,25 @@ func TestClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+}
 
-	clusterFileName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+func TestClustersFile(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	clusterFileName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file=create_cluster_test.json")
+			"--file=create_cluster_test.json",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -196,7 +217,8 @@ func TestClusters(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterFileName,
-			"--file=update_cluster_test.json")
+			"--file=update_cluster_test.json",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -226,8 +248,17 @@ func TestClusters(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
 	})
+}
 
-	shardedClusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+func TestShardedCluster(t *testing.T) {
+	cliPath, e := e2e.Bin()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
+	shardedClusterName, e := RandClusterName()
+	if e != nil {
+		t.Fatalf("unexpected error: %v", e)
+	}
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -241,7 +272,8 @@ func TestClusters(t *testing.T) {
 			"--tier=M10",
 			"--provider=AWS",
 			"--mdbVersion=4.2",
-			"--diskSizeGB=10")
+			"--diskSizeGB=10",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

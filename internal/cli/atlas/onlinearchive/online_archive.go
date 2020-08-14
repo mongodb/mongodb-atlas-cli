@@ -15,15 +15,16 @@
 package onlinearchive
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "onlineArchives"
 	cmd := &cobra.Command{
-		Use:     "onlineArchives",
-		Aliases: []string{"onlineArchive", "onlinearchives", "onlinearchive", "online-archives", "online-archive"},
-		Short:   description.OnlineArchives,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   onlineArchives,
 	}
 
 	cmd.AddCommand(ListBuilder())

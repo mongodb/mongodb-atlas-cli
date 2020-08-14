@@ -40,6 +40,7 @@ func TestEvents(t *testing.T) {
 			eventsEntity,
 			"list",
 			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
@@ -61,6 +62,7 @@ func TestEvents(t *testing.T) {
 			"list",
 			"--orgId="+os.Getenv("MCLI_ORG_ID"),
 			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

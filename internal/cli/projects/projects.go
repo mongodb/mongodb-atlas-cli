@@ -15,20 +15,23 @@
 package projects
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/projects/apikeys"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	var cmd = &cobra.Command{
-		Use:     "projects",
-		Short:   description.Projects,
-		Long:    description.ProjectsLong,
-		Aliases: []string{"project"},
+	const use = "projects"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   short,
+		Long:    long,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(ListBuilder())
 	cmd.AddCommand(CreateBuilder())
 	cmd.AddCommand(DeleteBuilder())
 	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(apikeys.Builder())
 	return cmd
 }

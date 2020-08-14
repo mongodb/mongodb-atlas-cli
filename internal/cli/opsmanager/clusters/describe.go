@@ -18,12 +18,10 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -32,7 +30,7 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.AutomationGetter
+	store store.CloudManagerClustersDescriber
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -41,20 +39,34 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	result, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+var describeTemplate = `ID	NAME	TYPE
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}
+`
 
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.cluster()
 	if err != nil {
 		return err
 	}
 
-	clusterConfigs := convert.FromAutomationConfig(result)
-	for _, rs := range clusterConfigs {
+	return output.Print(config.Default(), describeTemplate, r)
+}
+
+func (opts *DescribeOpts) cluster() (interface{}, error) {
+	if config.Output() == "" {
+		return opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+	}
+	c, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+	if err != nil {
+		return nil, err
+	}
+	r := convert.FromAutomationConfig(c)
+	for _, rs := range r {
 		if rs.Name == opts.name {
-			return json.PrettyPrint(rs)
+			return rs, nil
 		}
 	}
-	return fmt.Errorf("replicaset %s not found", opts.name)
+	return nil, fmt.Errorf("replica set %s not found", opts.name)
 }
 
 // mongocli cloud-manager cluster(s) describe <name> --projectId projectId
@@ -62,7 +74,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: description.DescribeCluster,
+		Short: DescribeCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -17,9 +17,8 @@ package onlinearchive
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -40,15 +39,16 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
+var updateTemplate = "Online archive '{{.ID}}' updated.\n"
+
 func (opts *UpdateOpts) Run() error {
 	archive := opts.newOnlineArchive()
-	result, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
-
+	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), updateTemplate, r)
 }
 
 func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
@@ -66,7 +66,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
-		Short: description.UpdateOnlineArchive,
+		Short: updateOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

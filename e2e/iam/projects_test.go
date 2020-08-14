@@ -18,36 +18,35 @@ package iam_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"testing"
-	"time"
 
+	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestProjects(t *testing.T) {
-	cliPath, err := filepath.Abs("../../bin/mongocli")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	_, err = os.Stat(cliPath)
-
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	iamEntity := "iam"
-	projectEntity := "projects"
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	projectName := fmt.Sprintf("e2e-proj-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	projectName := fmt.Sprintf("e2e-proj-%v", n)
 
 	var projectID string
 	t.Run("Create", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "create", projectName)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"create",
+			projectName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -67,7 +66,11 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "ls")
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -77,7 +80,12 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "describe", projectID)
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"describe",
+			projectID,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -87,7 +95,12 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity, projectEntity, "delete", projectID, "--force")
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			"delete",
+			projectID,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

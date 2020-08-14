@@ -17,11 +17,9 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -44,23 +42,26 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	TYPE	CREATED{{range .Results}}
+{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
-	var result *atlas.EventResponse
+	var r *atlas.EventResponse
 	var err error
 
 	if opts.orgID != "" {
-		result, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
 	} else if opts.projectID != "" {
-		result, err = opts.store.ProjectEvents(opts.projectID, listOpts)
+		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
 	}
-
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
@@ -80,7 +81,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListEvents,
+		Short:   listEvents,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

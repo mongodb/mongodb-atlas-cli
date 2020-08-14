@@ -20,9 +20,8 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -46,17 +45,19 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Online archive '{{.ID}}' created.\n"
+
 func (opts *CreateOpts) Run() error {
 	archive, err := opts.newOnlineArchive()
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+	r, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
@@ -75,11 +76,17 @@ func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
 	}
 	return a, nil
 }
+
+const (
+	maxPartitions  = 2
+	partitionParts = 2
+)
+
 func (opts *CreateOpts) partitionFields() ([]*atlas.PartitionFields, error) {
 	fields := make([]*atlas.PartitionFields, len(opts.partitions))
 	for i, p := range opts.partitions {
 		f := strings.Split(p, ":")
-		if len(f) != 2 {
+		if len(f) != partitionParts {
 			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
 		order := float64(i)
@@ -97,10 +104,10 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: description.CreateOnlineArchive,
+		Short: createOnlineArchive,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(opts.partitions) > 2 {
+			if len(opts.partitions) > maxPartitions {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))
 			}
 			return opts.PreRunE(opts.initStore)

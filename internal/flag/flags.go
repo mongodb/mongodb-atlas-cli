@@ -37,18 +37,23 @@ const (
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
+	X509Type                        = "x509Type"                        // X509Type flag
+	AWSIAMType                      = "awsIAMType"                      // AWSIAMType flag
+	LDAPType                        = "ldapType"                        // LDAPType flag
 	Period                          = "period"                          // Period flag
 	PasswordShort                   = "p"                               // PasswordShort flag
 	Email                           = "email"                           // Email flag
 	Out                             = "out"                             // Out flag
+	Output                          = "output"                          // Output flag
+	OutputShort                     = "o"                               // OutputShort flag
 	Minutes                         = "minutes"                         // Minutes flag
-	OutShort                        = "o"                               // OutShort flag
 	Status                          = "status"                          // Status flag
 	Start                           = "start"                           // Start flag
 	End                             = "end"                             // End flag
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
+	Description                     = "desc"                            // Description flag
 	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag
@@ -89,6 +94,7 @@ const (
 	NotificationUsername            = "notificationUsername"            // NotificationUsername flag
 	NotificationVictorOpsRoutingKey = "notificationVictorOpsRoutingKey" // NotificationVictorOpsRoutingKey flag
 	SnapshotID                      = "snapshotId"                      // SnapshotID flag
+	IndexName                       = "indexName"                       // IndexName flag
 	ClusterName                     = "clusterName"                     // ClusterName flag
 	ClusterID                       = "clusterId"                       // ClusterID flag
 	TargetProjectID                 = "targetProjectId"                 // TargetProjectID flag
@@ -131,4 +137,10 @@ const (
 	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
 	Dynamic                         = "dynamic"                         // Dynamic flag
 	Field                           = "field"                           // Fields flag
+	CASFilePath                     = "casFile"                         // CASFilePath flag
+	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
+	IP                              = "ip"                              // IP flag
+	CIDR                            = "cidr"                            // CIDR flag
+	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
+	Retention                       = "retention"                       // Retention flag
 )

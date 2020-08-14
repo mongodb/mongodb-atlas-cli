@@ -19,10 +19,9 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -64,17 +63,19 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTmpl = "Deploying cluster {{.Name}}.\n"
+
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateCluster(cluster)
+	r, err := opts.store.CreateCluster(cluster)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), createTmpl, r)
 }
 
 func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
@@ -177,8 +178,8 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: description.CreateCluster,
-		Long:  description.CreateClusterLong,
+		Short: createCluster,
+		Long:  createClusterLong,
 		Example: `  
   Deploy a 3 members replica set in AWS
   $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10

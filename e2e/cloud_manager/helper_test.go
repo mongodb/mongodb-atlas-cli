@@ -34,7 +34,7 @@ const (
 // automationServerHostname tries to list available server running the automation agent
 // and returns the first available hostname for deployments
 func automationServerHostname(cliPath string) (string, error) {
-	cmd := exec.Command(cliPath, entity, serversEntity, "list")
+	cmd := exec.Command(cliPath, entity, serversEntity, "list", "-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {

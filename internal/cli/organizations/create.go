@@ -16,11 +16,12 @@ package organizations
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
 )
+
+const createTemplate = "Organization '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	name  string
@@ -34,13 +35,13 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	projects, err := opts.store.CreateOrganization(opts.name)
+	p, err := opts.store.CreateOrganization(opts.name)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(projects)
+	return output.Print(config.Default(), createTemplate, p)
 }
 
 // mongocli iam organization(s) create <name>
@@ -48,7 +49,7 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateOrganization,
+		Short: createOrganization,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

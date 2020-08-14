@@ -38,8 +38,11 @@ const (
 	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
+	PrivateEndpointRegion           = "Cloud provider region in which you want to create the private endpoint connection."
+	PrivateEndpointProvider         = "Name of the cloud provider you want to create the private endpoint connection for."
 	Comment                         = "Optional description or comment for the entry."
-	DeleteAfter                     = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
+	WhiteListsDeleteAfter           = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
+	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
 	LogOut                          = "Optional output filename, if none given will use the log name."
@@ -69,7 +72,10 @@ const (
 	MetricMode                      = "Atlas computes the current metric value as an average."
 	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
-	APIKey                          = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	APIKey                          = "API Key."
+	APIKeyDescription               = "Description of the API key."
+	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."
 	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress        = "Email address to which alert notifications are sent."
@@ -85,7 +91,11 @@ const (
 	NotificationUsername            = "Name of the Atlas user to which to send notifications."
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
+	SnapshotDescription             = "Description of the on-demand snapshot."
+	SnapshotRetention               = "The number of days that Atlas should retain the on-demand snapshot."
 	Database                        = "Database name."
+	DatabaseUser                    = "Username of a database user."
+	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
 	Collection                      = "Collection name."
 	Analyzer                        = "Analyzer to use when creating the index"
 	SearchAnalyzer                  = "Analyzer to use when searching the index."
@@ -108,6 +118,7 @@ const (
 	Normalization                   = "If true, collation checks if text requires normalization and performs normalization to compare text."
 	Backwards                       = "If true, strings with diacritics sort from the back to the front of the string."
 	ClusterName                     = "Name of the cluster."
+	CASFilePath                     = "Path to a PEM file containing one or more CAs for database user authentication."
 	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
 	Background                      = "Create the index in the background."
@@ -115,7 +126,12 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	TargetClusterID                 = `Unique identifier of the target cluster.
+	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
+	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
+	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
+	FormatOut                       = `Output format. 
+Valid values: json`
+	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.
 For use only with automated restore jobs.`
@@ -147,4 +163,10 @@ Valid values: REPLICASET|SHARDED.`
 For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
 For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure
 For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp`
+	AWSIAMType = `AWS IAM method by which the provided username is authenticated. 
+Valid values: NONE|USER|ROLE.`
+	X509Type = `X.509 method by which the provided username is authenticated. 
+Valid values: NONE|MANAGED|CUSTOMER.`
+	LDAPType = `LDAP method by which the provided username is authenticated. 
+Valid values: NONE|USER|GROUP.`
 )

@@ -11,18 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e cloudmanager,deploy_replica_set
+// +build e2e cloudmanager,remote
 
 package cloud_manager_test
 
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -37,8 +35,11 @@ func TestDeployReplicaSet(t *testing.T) {
 	const clustersEntity = "clusters"
 	const testFile = "om-new-cluster.json"
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	clusterName := fmt.Sprintf("e2e-cluster-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
 
 	hostname, err := automationServerHostname(cliPath)
 	if err != nil {
@@ -84,6 +85,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			entity,
 			clustersEntity,
 			"ls",
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
@@ -108,6 +110,7 @@ func TestDeployReplicaSet(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
+			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

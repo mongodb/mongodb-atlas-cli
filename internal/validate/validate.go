@@ -21,6 +21,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/search"
+
 	"github.com/mongodb/mongocli/internal/config"
 )
 
@@ -97,4 +99,12 @@ func Credentials() error {
 		return errors.New("missing credentials")
 	}
 	return nil
+}
+
+func FlagInSlice(value, flag string, validValues []string) error {
+	if search.StringInSlice(validValues, value) {
+		return nil
+	}
+
+	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
 }

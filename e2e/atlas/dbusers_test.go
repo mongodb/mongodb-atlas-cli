@@ -18,7 +18,6 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
@@ -34,8 +33,11 @@ const (
 )
 
 func TestDBUsers(t *testing.T) {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	username := fmt.Sprintf("user-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	username := fmt.Sprintf("user-%v", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -47,8 +49,11 @@ func TestDBUsers(t *testing.T) {
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
+			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
-			"--password=passW0rd")
+			"--password=passW0rd",
+			"-o=json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -64,7 +69,11 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "ls")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"ls",
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -81,6 +90,29 @@ func TestDBUsers(t *testing.T) {
 		}
 	})
 
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"describe",
+			username,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var user mongodbatlas.DatabaseUser
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if user.Username != username {
+			t.Fatalf("expected username to match %v, got %v", username, user.Username)
+		}
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -88,7 +120,8 @@ func TestDBUsers(t *testing.T) {
 			"update",
 			username,
 			"--role",
-			roleReadWrite)
+			roleReadWrite,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -110,7 +143,14 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, dbusersEntity, "delete", username, "--force", "--authDB", "admin")
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"delete",
+			username,
+			"--force",
+			"--authDB",
+			"admin")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

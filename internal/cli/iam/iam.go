@@ -17,9 +17,13 @@ package iam
 import (
 	"github.com/mongodb/mongocli/internal/cli/organizations"
 	"github.com/mongodb/mongocli/internal/cli/projects"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+)
+
+const (
+	iam  = "Organization and projects operations."
+	long = "Identity and Access Management."
 )
 
 func Builder() *cobra.Command {
@@ -28,7 +32,8 @@ func Builder() *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return validate.Credentials()
 		},
-		Short: description.IAM,
+		Short: iam,
+		Long:  long,
 	}
 	cmd.AddCommand(projects.Builder())
 	cmd.AddCommand(organizations.Builder())

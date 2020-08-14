@@ -1,0 +1,83 @@
+// Copyright 2020 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package customercerts
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/output"
+	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
+)
+
+const createTemplate = "Certificate successfully created.\n"
+
+type SaveOpts struct {
+	cli.GlobalOpts
+	store   store.X509CertificateConfSaver
+	casPath string
+	fs      afero.Fs
+}
+
+func (opts *SaveOpts) initStore() error {
+	var err error
+	opts.store, err = store.New(config.Default())
+	return err
+}
+
+func (opts *SaveOpts) Run() error {
+	fileBytes, err := afero.ReadFile(opts.fs, opts.casPath)
+	if err != nil {
+		return err
+	}
+
+	caFileContents := string(fileBytes)
+
+	r, err := opts.store.SaveX509Configuration(opts.ConfigProjectID(), caFileContents)
+	if err != nil {
+		return err
+	}
+
+	return output.Print(config.Default(), createTemplate, r)
+}
+
+// mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem
+func CreateBuilder() *cobra.Command {
+	opts := &SaveOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "create",
+		Short: saveCertConfig,
+		Args:  cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(opts.initStore)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run()
+		},
+	}
+
+	cmd.Flags().StringVar(&opts.casPath, flag.CASFilePath, "", usage.CASFilePath)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	_ = cmd.MarkFlagRequired(flag.CASFilePath)
+
+	return cmd
+}

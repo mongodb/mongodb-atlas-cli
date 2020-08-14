@@ -26,23 +26,18 @@ import (
 
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterUpdater(ctrl)
-
+	mockStore := mocks.NewMockClusterStarter(ctrl)
 	defer ctrl.Finish()
-
-	paused := false
-	expected := &mongodbatlas.Cluster{
-		Paused: &paused,
-	}
 
 	updateOpts := &StartOpts{
 		name:  "ProjectBar",
 		store: mockStore,
 	}
 
+	expected := &mongodbatlas.Cluster{}
 	mockStore.
 		EXPECT().
-		UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).
+		StartCluster(updateOpts.ConfigProjectID(), updateOpts.name).
 		Return(expected, nil).
 		Times(1)
 

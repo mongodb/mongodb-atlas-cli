@@ -16,9 +16,8 @@ package onlinearchive
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -36,14 +35,17 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	result, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
+var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .}}
+{{.ID}}	{{.DBName}}	{{.CollName}}	{{.State}}{{end}}
+`
 
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 // mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
@@ -51,7 +53,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListOnlineArchive,
+		Short:   listOnlineArchive,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

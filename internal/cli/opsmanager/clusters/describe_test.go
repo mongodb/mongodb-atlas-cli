@@ -20,31 +20,53 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationGetter(ctrl)
-
+	mockStore := mocks.NewMockCloudManagerClustersDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := fixture.AutomationConfig()
+	t.Run("describe cluster simplified", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store: mockStore,
+			name:  "myReplicaSet",
+		}
+		expected := &opsmngr.Cluster{}
+		mockStore.
+			EXPECT().
+			Cluster(descOpts.ProjectID, descOpts.name).
+			Return(expected, nil).
+			Times(1)
 
-	descOpts := &DescribeOpts{
-		store: mockStore,
-		name:  "myReplicaSet",
-	}
+		err := descOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 
-	mockStore.
-		EXPECT().
-		GetAutomationConfig(descOpts.ProjectID).
-		Return(expected, nil).
-		Times(1)
+	t.Run("describe cluster for JSON", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store: mockStore,
+			name:  "myReplicaSet",
+		}
 
-	err := descOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		config.SetOutput(config.JSON)
+		expected := fixture.AutomationConfig()
+		mockStore.
+			EXPECT().
+			GetAutomationConfig(descOpts.ProjectID).
+			Return(expected, nil).
+			Times(1)
+
+		err := descOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		config.SetOutput("")
+	})
 }

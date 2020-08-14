@@ -16,35 +16,45 @@ package atlas
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
+	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
-	"github.com/mongodb/mongocli/internal/cli/cloudbackup"
+	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
+	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/atlas/logs"
+	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints"
+	"github.com/mongodb/mongocli/internal/cli/atlas/processes"
+	"github.com/mongodb/mongocli/internal/cli/atlas/security"
+	"github.com/mongodb/mongocli/internal/cli/atlas/whitelist"
 	"github.com/mongodb/mongocli/internal/cli/events"
-	"github.com/mongodb/mongocli/internal/cli/whitelist"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
+const atlasShort = "Atlas operations."
+
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "atlas",
-		Short: description.Atlas,
+		Short: atlasShort,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudService)
 			return validate.Credentials()
 		},
 	}
-	cmd.AddCommand(DataLakeBuilder())
+	cmd.AddCommand(datalake.Builder())
 	cmd.AddCommand(clusters.Builder())
-	cmd.AddCommand(DBUsersBuilder())
+	cmd.AddCommand(dbusers.Builder())
 	cmd.AddCommand(whitelist.Builder())
 	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(cloudbackup.Builder())
+	cmd.AddCommand(backup.Builder())
 	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(MetricsBuilder())
-	cmd.AddCommand(LogsBuilder())
-	cmd.AddCommand(ProcessesBuilder())
+	cmd.AddCommand(metrics.Builder())
+	cmd.AddCommand(logs.Builder())
+	cmd.AddCommand(processes.Builder())
+	cmd.AddCommand(privateendpoints.Builder())
+	cmd.AddCommand(security.Builder())
 
 	return cmd
 }

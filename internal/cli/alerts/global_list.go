@@ -17,9 +17,8 @@ package alerts
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -40,13 +39,12 @@ func (opts *GlobalListOpts) init() error {
 
 func (opts *GlobalListOpts) Run() error {
 	alertOpts := opts.newAlertsListOptions()
-
-	result, err := opts.store.GlobalAlerts(alertOpts)
+	r, err := opts.store.GlobalAlerts(alertOpts)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *GlobalListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
@@ -61,7 +59,7 @@ func GlobalListBuilder() *cobra.Command {
 	opts := &GlobalListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListGlobalAlerts,
+		Short:   listGlobalAlerts,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

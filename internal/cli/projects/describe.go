@@ -16,11 +16,14 @@ package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
 )
+
+const describeTemplate = `ID	NAME
+{{.ID}}	{{.Name}}
+`
 
 type DescribeOpts struct {
 	id    string
@@ -35,12 +38,11 @@ func (opts *DescribeOpts) init() error {
 
 func (opts *DescribeOpts) Run() error {
 	org, err := opts.store.Project(opts.id)
-
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(org)
+	return output.Print(config.Default(), describeTemplate, org)
 }
 
 // mongocli iam projects(s) describe <ID>
@@ -50,7 +52,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
-		Short:   description.DescribeProject,
+		Short:   describeProject,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},

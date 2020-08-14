@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
@@ -27,12 +26,11 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	config.SetName(opts.name)
-	c := config.Get()
-
-	if len(c) == 0 {
+	if !config.Exists(opts.name) {
 		return fmt.Errorf("no profile with name '%s'", opts.name)
 	}
+	config.SetName(opts.name)
+	c := config.Map()
 	for _, k := range config.SortedKeys() {
 		fmt.Printf("%s = %s\n", k, c[k])
 	}
@@ -44,7 +42,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
-		Short: description.ConfigDescribe,
+		Short: describeShort,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

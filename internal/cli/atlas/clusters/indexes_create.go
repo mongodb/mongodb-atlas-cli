@@ -20,7 +20,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -81,11 +80,13 @@ func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	}
 }
 
+const keyParts = 2
+
 func (opts *IndexesCreateOpts) indexKeys() ([]map[string]string, error) {
 	keys := make([]map[string]string, len(opts.keys))
 	for i, key := range opts.keys {
 		value := strings.Split(key, ":")
-		if len(value) != 2 {
+		if len(value) != keyParts {
 			return nil, fmt.Errorf("unexpected key format: %s", key)
 		}
 		keys[i] = map[string]string{value[0]: value[1]}
@@ -100,7 +101,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: description.CreateIndex,
+		Short: createIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

@@ -30,7 +30,7 @@ func TestMetrics(t *testing.T) {
 
 	clusterName, err := deployCluster()
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("failed to deploy a cluster: %v", err)
 	}
 	defer func() {
 		if e := deleteCluster(clusterName); e != nil {
@@ -54,7 +54,8 @@ func TestMetrics(t *testing.T) {
 			"processes",
 			hostname,
 			"--granularity=PT30M",
-			"--period=P1DT12H")
+			"--period=P1DT12H",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -85,7 +86,8 @@ func TestMetrics(t *testing.T) {
 			metricsEntity,
 			"databases",
 			"list",
-			hostname)
+			hostname,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -111,7 +113,8 @@ func TestMetrics(t *testing.T) {
 			metricsEntity,
 			"disks",
 			"list",
-			hostname)
+			hostname,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -138,7 +141,8 @@ func TestMetrics(t *testing.T) {
 			hostname,
 			"data",
 			"--granularity=PT30M",
-			"--period=P1DT12H")
+			"--period=P1DT12H",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

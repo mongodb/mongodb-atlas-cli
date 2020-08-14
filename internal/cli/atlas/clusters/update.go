@@ -17,10 +17,9 @@ package clusters
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -45,6 +44,8 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
+var updateTmpl = "Updating cluster {{.Name}}.\n"
+
 func (opts *UpdateOpts) Run() error {
 	cluster, err := opts.cluster()
 	if err != nil {
@@ -54,28 +55,32 @@ func (opts *UpdateOpts) Run() error {
 		opts.patchOpts(cluster)
 	}
 
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
-
+	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), updateTmpl, r)
 }
 
 func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
 	var cluster *atlas.Cluster
-	var err error
 	if opts.filename != "" {
-		cluster = new(atlas.Cluster)
-		err = file.Load(opts.fs, opts.filename, cluster)
+		err := file.Load(opts.fs, opts.filename, &cluster)
+		if err != nil {
+			return nil, err
+		}
 		if opts.name == "" {
 			opts.name = cluster.Name
 		}
 	} else {
-		cluster, err = opts.store.Cluster(opts.ProjectID, opts.name)
+		r, err := opts.store.Cluster(opts.ProjectID, opts.name)
+		if err != nil {
+			return nil, err
+		}
+		cluster = r.(*atlas.Cluster)
 	}
-	return cluster, err
+	return cluster, nil
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
@@ -110,7 +115,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [name]",
-		Short: description.UpdateCluster,
+		Short: updateCluster,
 		Example: `
   Update tier for a cluster
   $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50

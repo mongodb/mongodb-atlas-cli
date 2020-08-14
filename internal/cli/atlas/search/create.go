@@ -16,31 +16,21 @@ package search
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	clusterName    string
-	name           string
-	dbName         string
-	collection     string
-	analyzer       string
-	searchAnalyzer string
-	dynamic        bool
-	fields         []string
-	store          store.SearchIndexCreator
+	IndexOpts
+	clusterName string
+	store       store.SearchIndexCreator
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -49,53 +39,19 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
+var createTemplate = "Index {{.Name}} created.\n"
+
 func (opts *CreateOpts) Run() error {
 	index, err := opts.newSearchIndex()
 	if err != nil {
 		return err
 	}
-	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
+	r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
-}
-
-func (opts *CreateOpts) newSearchIndex() (*atlas.SearchIndex, error) {
-	f, err := opts.indexFields()
-	if err != nil {
-		return nil, err
-	}
-	i := &atlas.SearchIndex{
-		Analyzer:       opts.analyzer,
-		CollectionName: opts.collection,
-		Database:       opts.dbName,
-		Mappings: &atlas.IndexMapping{
-			Dynamic: opts.dynamic,
-			Fields:  &f,
-		},
-		Name:           opts.name,
-		SearchAnalyzer: opts.searchAnalyzer,
-	}
-	return i, nil
-}
-func (opts *CreateOpts) indexFields() (map[string]atlas.IndexField, error) {
-	if len(opts.fields) == 0 {
-		return nil, nil
-	}
-	fields := make(map[string]atlas.IndexField, len(opts.fields))
-	for _, p := range opts.fields {
-		f := strings.Split(p, ":")
-		if len(f) != 3 {
-			return nil, fmt.Errorf("partition should be fieldName:analyzer:fieldType, got: %s", p)
-		}
-		fields[f[0]] = atlas.IndexField{
-			Analyzer: f[1],
-			Type:     f[2],
-		}
-	}
-	return fields, nil
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // CreateBuilder
@@ -121,7 +77,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateSearchIndexes,
+		Short: createSearchIndexes,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !opts.dynamic && len(opts.fields) == 0 {

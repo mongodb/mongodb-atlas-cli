@@ -17,13 +17,14 @@ package projects
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+var createTemplate = "Project '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -42,13 +43,16 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	projects, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID())
 
 	if err != nil {
 		return err
 	}
+	if config.Service() != config.CloudService {
+		createTemplate += "Agent API Key: '{{.AgentAPIKey}}'\n"
+	}
 
-	return json.PrettyPrint(projects)
+	return output.Print(config.Default(), createTemplate, r)
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId]
@@ -56,7 +60,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: description.CreateProject,
+		Short: createProject,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()

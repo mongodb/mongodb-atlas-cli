@@ -15,15 +15,16 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func IndexesBuilder() *cobra.Command {
+	const use = "indexes"
 	cmd := &cobra.Command{
-		Use:     "indexes",
-		Aliases: []string{"index"},
-		Short:   description.ClustersIndexes,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   Indexes,
 	}
 	cmd.AddCommand(IndexesCreateBuilder())
 

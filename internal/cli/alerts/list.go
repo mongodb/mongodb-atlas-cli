@@ -17,9 +17,8 @@ package alerts
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -39,15 +38,19 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	TYPE	STATUS{{range .Results}}
+{{.ID}}	{{.EventTypeName}}	{{.Status}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newAlertsListOptions()
-	result, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.Alerts(opts.ConfigProjectID(), listOpts)
 
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
@@ -64,7 +67,7 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListAlerts,
+		Short:   listAlerts,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

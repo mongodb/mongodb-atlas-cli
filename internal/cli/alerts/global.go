@@ -15,14 +15,13 @@
 package alerts
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/spf13/cobra"
 )
 
 func GlobalBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "global",
-		Short: description.Global,
+		Short: global,
 	}
 
 	cmd.AddCommand(GlobalListBuilder())

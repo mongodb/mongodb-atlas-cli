@@ -16,9 +16,11 @@ package cli
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/tangzero/inflector"
 )
 
 type GlobalOpts struct {
@@ -66,6 +68,48 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
+// PreRunEOrg is a function to call before running the command,
+// this will validate the org ID and call any additional function pass as a callback
+func (opts *GlobalOpts) PreRunEOrg(cbs ...cmdOpt) error {
+	if opts.ConfigOrgID() == "" && opts.OrgID == "" {
+		return ErrMissingOrgID
+	}
+	if err := validate.ObjectID(opts.ConfigOrgID()); err != nil {
+		return err
+	}
+	for _, f := range cbs {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func DeploymentStatus(baseURL, projectID string) string {
 	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
+}
+
+// GenerateAliases return aliases for use such that they are:
+// a version all lower case, a version with dashes, a singular versions with the same rules.
+func GenerateAliases(use string, extra ...string) []string {
+	aliases := make([]string, 0)
+
+	if lower := strings.ToLower(use); lower != use {
+		aliases = append(aliases, lower)
+	}
+	if dash := inflector.Dasherize(use); dash != use {
+		aliases = append(aliases, dash)
+	}
+	if singular := inflector.Singularize(use); singular != use {
+		aliases = append(aliases, singular)
+		if lower := strings.ToLower(singular); lower != singular {
+			aliases = append(aliases, lower)
+		}
+		if dash := inflector.Dasherize(singular); dash != singular {
+			aliases = append(aliases, dash)
+		}
+	}
+	aliases = append(aliases, extra...)
+	return aliases
 }

@@ -167,6 +167,29 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+  "install snyk":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/bin
+        script: |
+          set -Eeou pipefail
+
+          curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux -o snyk
+          chmod +x snyk
+  "snyk scan":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          export SNYK_TOKEN=${snyk_token}
+
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          ./bin/snyk test --org=cloud
   "install curator":
     - command: shell.exec
       type: setup
@@ -355,8 +378,14 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
+  - name: snyk_scan
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install snyk"
+      - func: "snyk scan"
   - name: config_e2e
-    tags: ["e2e"]
+    tags: ["e2e","generic"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -386,7 +415,7 @@ tasks:
           E2E_TAGS: atlas,config
   # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
-    tags: ["e2e"]
+    tags: ["e2e","generic","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -404,7 +433,7 @@ tasks:
           E2E_TAGS: atlas,generic
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -422,7 +451,7 @@ tasks:
           E2E_TAGS: atlas,clusters
   # Logs depend on a cluster running to get logs from
   - name: atlas_logs_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -440,7 +469,7 @@ tasks:
           E2E_TAGS: atlas,logs
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -458,7 +487,7 @@ tasks:
           E2E_TAGS: atlas,metrics
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -476,7 +505,7 @@ tasks:
           E2E_TAGS: atlas,onlinearchive
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -494,7 +523,7 @@ tasks:
           E2E_TAGS: atlas,search
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
-    tags: ["e2e"]
+    tags: ["e2e","generic","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -512,7 +541,7 @@ tasks:
           E2E_TAGS: iam
   # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e
-    tags: ["e2e"]
+    tags: ["e2e","generic","cloudmanager"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -529,7 +558,7 @@ tasks:
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: iam
   - name: cloud_manager_generic_e2e
-    tags: ["e2e"]
+    tags: ["e2e","generic","cloudmanager"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -537,9 +566,6 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install automation agent"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${cloud_manager_org_id}
@@ -550,12 +576,10 @@ tasks:
           E2E_TAGS: cloudmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
-    tags: ["e2e"]
+    tags: ["e2e","clusters","cloudmanager"]
     depends_on:
       - name: compile
         variant: "code_health"
-        patch_optional: true
-      - name: cloud_manager_generic_e2e
         patch_optional: true
     commands:
       - func: "clone"
@@ -570,7 +594,7 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,deploy_replica_set
+          E2E_TAGS: cloudmanager,remote
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -698,7 +722,7 @@ tasks:
   ################################################################
   # Unstable Publish
   # RPM Distros
-  - name: push_rhel70_enterprise
+  - name: push_rhel62_enterprise
     <<: &default_push_def
       # This should prevent this task from running in patch builds, where we
       # don't want to publish packages.
@@ -717,6 +741,26 @@ tasks:
         vars:
           edition: enterprise
           distro: rhel70
+          ext: rpm
+  - name: push_rhel62_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel62
+          ext: rpm
+  - name: push_rhel70_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel62
           ext: rpm
   - name: push_rhel70_org
     <<: *default_push_def
@@ -912,7 +956,7 @@ tasks:
   ################################################################
   # Stable Publish
   # RPM Distros
-  - name: push_rhel70_enterprise_stable
+  - name: push_rhel62_enterprise_stable
     <<: &default_push_stable_def
       patch_only: true
       stepback: false
@@ -930,7 +974,27 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
-  - name: push_rhel70_org_44
+  - name: push_rhel62_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_rhel70_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_rhel70_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1128,27 +1192,45 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.14"
-      go_bin: "/opt/golang/go1.14/bin"
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: .code_health
-  - name: e2e
-    display_name: "E2E Tests"
+  - name: e2e_generic
+    display_name: "E2E Tests Generic"
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.14"
-      go_bin: "/opt/golang/go1.14/bin"
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
     tasks:
-      - name: .e2e
+      - name: ".e2e .generic"
+  - name: e2e_atlas_clusters
+    display_name: "E2E Atlas Cluster Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .clusters .atlas"
+  - name: e2e_cloud_manager_remote
+    display_name: "E2E Cloud Manager Remote Host Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .clusters .cloudmanager"
   - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.14"
-      go_bin: "/opt/golang/go1.14/bin"
-      server_version: "1.0.3"
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+      server_version: "4.4.0-rc3"
     tasks:
       - name: package_goreleaser
       - name: .push
@@ -1159,8 +1241,8 @@ buildvariants:
     run_on:
       - windows-64-vs2017-compile
     expansions:
-      go_root: "c:\\golang\\go1.14"
-      go_bin: "c:\\golang\\go1.14/bin"
+      go_root: "c:\\golang\\go1.15"
+      go_bin: "c:\\golang\\go1.15/bin"
     tasks:
       - name: package_msi
   - name: release_msi
@@ -1168,8 +1250,8 @@ buildvariants:
     run_on:
       - windows-64-vs2017-compile
     expansions:
-      go_root: "c:\\golang\\go1.14"
-      go_bin: "c:\\golang\\go1.14/bin"
+      go_root: "c:\\golang\\go1.15"
+      go_bin: "c:\\golang\\go1.15/bin"
     tasks:
       - name: release_msi
   - name: release_github
@@ -1177,8 +1259,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.14"
-      go_bin: "/opt/golang/go1.14/bin"
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: release
   - name: release_publish_42
@@ -1186,7 +1268,7 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.2.2"
+      server_version: "4.2.3"
       notary_key_name: "server-4.2"
     tasks:
       - name: .push_stable
@@ -1195,7 +1277,7 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      server_version: "4.4.2"
+      server_version: "4.4.3"
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable

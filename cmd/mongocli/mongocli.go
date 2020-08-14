@@ -79,7 +79,12 @@ func Execute() {
 	}
 }
 
-func init() {
+var (
+	profile string
+	output  string
+)
+
+func init() { //nolint:gochecknoinits // This is the cobra way
 	// config commands
 	rootCmd.AddCommand(cliconfig.Builder())
 	// Atlas commands
@@ -95,24 +100,24 @@ func init() {
 
 	cobra.EnableCommandSorting = false
 
-	profile := rootCmd.PersistentFlags().StringP(flag.Profile, flag.ProfileShort, "", usage.Profile)
-	cobra.OnInitialize(func() {
-		initConfig(*profile)
-	})
+	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
+	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cobra.OnInitialize(initConfig)
 }
 
 // initConfig reads in config file and ENV variables if set.
-func initConfig(profileName string) {
+func initConfig() {
 	if err := config.Load(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
 	availableProfiles := config.List()
-	if profileName != "" {
-		config.SetName(profileName)
+	if profile != "" {
+		config.SetName(profile)
 	} else if len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
 	}
+	config.SetOutput(output)
 }
 
 func main() {

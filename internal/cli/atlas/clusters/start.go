@@ -17,19 +17,17 @@ package clusters
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type StartOpts struct {
 	cli.GlobalOpts
 	name  string
-	store store.ClusterUpdater
+	store store.ClusterStarter
 }
 
 func (opts *StartOpts) initStore() error {
@@ -38,18 +36,15 @@ func (opts *StartOpts) initStore() error {
 	return err
 }
 
-func (opts *StartOpts) Run() error {
-	paused := false
-	cluster := &atlas.Cluster{
-		Paused: &paused,
-	}
-	result, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+var startTmpl = "Starting cluster {{.Name}}.\n"
 
+func (opts *StartOpts) Run() error {
+	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), startTmpl, r)
 }
 
 // mongocli atlas cluster(s) start <name> [--projectId projectId]
@@ -57,7 +52,7 @@ func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:   "start <name>",
-		Short: description.StartCluster,
+		Short: startCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

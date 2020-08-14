@@ -17,9 +17,8 @@ package onlinearchive
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -39,14 +38,17 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	result, err := opts.store.OnlineArchive(opts.ConfigProjectID(), opts.clusterName, opts.archiveID)
+var describeTemplate = `ID	CLUSTER	DATABASE	COLLECTION	STATE
+{{.ID}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
+`
 
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.OnlineArchive(opts.ConfigProjectID(), opts.clusterName, opts.archiveID)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), describeTemplate, r)
 }
 
 // mongocli atlas cluster(s) describe <name> [--clusterName name][--projectId projectId]
@@ -54,7 +56,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <ID>",
-		Short: description.DescribeOnlineArchive,
+		Short: describeOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)

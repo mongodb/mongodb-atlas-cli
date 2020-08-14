@@ -15,6 +15,8 @@
 package e2e
 
 import (
+	"crypto/rand"
+	"math/big"
 	"os"
 	"path/filepath"
 )
@@ -29,4 +31,8 @@ func Bin() (string, error) {
 		return "", err
 	}
 	return cliPath, nil
+}
+
+func RandInt(max int64) (*big.Int, error) {
+	return rand.Int(rand.Reader, big.NewInt(max))
 }

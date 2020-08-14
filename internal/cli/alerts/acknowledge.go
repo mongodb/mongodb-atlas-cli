@@ -20,9 +20,8 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -44,20 +43,23 @@ func (opts *AcknowledgeOpts) initStore() error {
 	return err
 }
 
+var ackTemplate = "Alert '{{.ID}}' acknowledged until {{.AcknowledgedUntil}}\n"
+
 func (opts *AcknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
-	result, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
+	r, err := opts.store.AcknowledgeAlert(opts.ConfigProjectID(), opts.alertID, body)
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), ackTemplate, r)
 }
 
 func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
-	// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 	if opts.forever {
-		opts.until = time.Now().AddDate(100, 1, 1).Format(time.RFC3339)
+		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
+		years := 100
+		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
 
 	return &atlas.AcknowledgeRequest{
@@ -71,7 +73,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
 	cmd := &cobra.Command{
 		Use:     "acknowledge <ID>",
-		Short:   description.AcknowledgeAlerts,
+		Short:   acknowledgeAlerts,
 		Aliases: []string{"ack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

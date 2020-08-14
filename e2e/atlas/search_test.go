@@ -18,11 +18,9 @@ package atlas_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -47,9 +45,12 @@ func TestSearch(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	indexName := fmt.Sprintf("index-%v", r.Uint32())
-	collectionName := fmt.Sprintf("collection-%v", r.Uint32())
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	indexName := fmt.Sprintf("index-%v", n)
+	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
 	t.Run("Create", func(t *testing.T) {
@@ -63,7 +64,8 @@ func TestSearch(t *testing.T) {
 			"--clusterName="+clusterName,
 			"--db=test",
 			"--collection="+collectionName,
-			"--dynamic")
+			"--dynamic",
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -87,7 +89,8 @@ func TestSearch(t *testing.T) {
 			"list",
 			"--clusterName="+clusterName,
 			"--db=test",
-			"--collection="+collectionName)
+			"--collection="+collectionName,
+			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -110,7 +113,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName="+clusterName)
+			"--clusterName="+clusterName,
+			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -121,6 +125,36 @@ func TestSearch(t *testing.T) {
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			assert.Equal(t, indexID, index.IndexID)
+		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		analyzer := "lucene.simple"
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"update",
+			indexID,
+			"--indexName="+indexName,
+			"--clusterName="+clusterName,
+			"--db=test",
+			"--collection="+collectionName,
+			"--analyzer="+analyzer,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var index mongodbatlas.SearchIndex
+		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
+			a := assert.New(t)
+			a.Equal(indexID, index.IndexID)
+			a.Equal(analyzer, index.Analyzer)
 		}
 	})
 

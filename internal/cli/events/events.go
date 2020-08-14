@@ -15,15 +15,16 @@
 package events
 
 import (
-	"github.com/mongodb/mongocli/internal/description"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "events"
 	cmd := &cobra.Command{
-		Use:     "events",
-		Aliases: []string{"event"},
-		Short:   description.Events,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   events,
 	}
 
 	cmd.AddCommand(ListBuilder())

@@ -22,11 +22,15 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongocli/internal/store ContainersLister
+//go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongocli/internal/store ContainersLister,ContainersDeleter
 
 type ContainersLister interface {
 	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlas.Container, error)
 	AllContainers(string, *atlas.ListOptions) ([]atlas.Container, error)
+}
+
+type ContainersDeleter interface {
+	DeleteContainer(string, string) error
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers
@@ -48,5 +52,16 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteContainer encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteContainer(projectID, containerID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Containers.Delete(context.Background(), projectID, containerID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

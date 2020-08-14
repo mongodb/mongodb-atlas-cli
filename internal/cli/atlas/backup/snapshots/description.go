@@ -18,4 +18,5 @@ const (
 	listSnapshots    = "List cloud backup snapshots for your project and cluster."
 	createSnapshot   = "Create a backup snapshot for your project and cluster."
 	describeSnapshot = "Get a specific snapshot for your project."
+	watchSnapshot    = "Watch for a snapshot to be available."
 )

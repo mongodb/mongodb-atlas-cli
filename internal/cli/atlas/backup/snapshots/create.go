@@ -64,7 +64,7 @@ func (opts *CreateOpts) newCloudProviderSnapshot() *mongodbatlas.CloudProviderSn
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create",
+		Use:     "create <clusterName>",
 		Aliases: []string{"take"},
 		Short:   createSnapshot,
 		Args:    cobra.ExactValidArgs(1),

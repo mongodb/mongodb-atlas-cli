@@ -19,4 +19,5 @@ const (
 	createSnapshot   = "Create a backup snapshot for your project and cluster."
 	describeSnapshot = "Get a specific snapshot for your project."
 	deleteSnapshot   = "Delete a backup snapshot."
+	watchSnapshot    = "Watch for a snapshot to be available."
 )

@@ -48,7 +48,7 @@ func (opts *WatchOpts) Run() error {
 			return err
 		}
 		if result.Status == "completed" || result.Status == "failed" {
-			fmt.Printf("\nSnapshot changes completed.\n")
+			fmt.Printf("\nSnapshot changes %s.\n", result.Status)
 			break
 		}
 		fmt.Print(".")

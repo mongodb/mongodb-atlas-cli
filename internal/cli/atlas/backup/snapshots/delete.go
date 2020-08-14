@@ -51,13 +51,11 @@ func DeleteBuilder() *cobra.Command {
 		Short:   deleteSnapshot,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
+			opts.Prompt()
 			return opts.Run()
 		},
 	}

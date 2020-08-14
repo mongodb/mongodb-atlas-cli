@@ -25,7 +25,7 @@ For patches to be accepted, contributors must sign our [CLA](https://www.mongodb
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.14)](https://golang.org/dl/)
+- [Go (at least Go 1.15)](https://golang.org/dl/)
 
 #### Environment
 - Fork the repository.

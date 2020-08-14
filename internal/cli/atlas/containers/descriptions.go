@@ -14,19 +14,7 @@
 
 package containers
 
-import (
-	"github.com/mongodb/mongocli/internal/description"
-	"github.com/spf13/cobra"
+const (
+	containers     = "Manage Network Peering containers"
+	listContainers = "List network peering containers in an Atlas project"
 )
-
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "containers",
-		Aliases: []string{"container"},
-		Short:   description.Events,
-	}
-
-	cmd.AddCommand(ListBuilder())
-
-	return cmd
-}

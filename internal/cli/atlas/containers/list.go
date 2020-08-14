@@ -15,11 +15,9 @@ package containers
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/description"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/json"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -29,7 +27,8 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.ContainersLister
+	provider string
+	store    store.ContainersLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -38,16 +37,24 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
+var listTemplate = `ID	PROVIDER	REGION	Atlas CIDR{{range .}}
+{{.ID}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCIDRBlock}}{{end}}
+`
+
 func (opts *ListOpts) Run() error {
-	listOpts := opts.newContainerListOptions()
-
-	result, err := opts.store.Containers(opts.ConfigProjectID(), listOpts)
-
+	var r []atlas.Container
+	var err error
+	if opts.provider == "" {
+		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())
+	} else {
+		listOpts := opts.newContainerListOptions()
+		r, err = opts.store.ContainersByProvider(opts.ConfigProjectID(), listOpts)
+	}
 	if err != nil {
 		return err
 	}
 
-	return json.PrettyPrint(result)
+	return output.Print(config.Default(), listTemplate, r)
 }
 
 func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
@@ -61,7 +68,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   description.ListEvents,
+		Short:   listContainers,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -71,7 +78,7 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 

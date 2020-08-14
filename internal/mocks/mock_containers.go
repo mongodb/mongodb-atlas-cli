@@ -33,17 +33,32 @@ func (m *MockContainersLister) EXPECT() *MockContainersListerMockRecorder {
 	return m.recorder
 }
 
-// Containers mocks base method
-func (m *MockContainersLister) Containers(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Container, error) {
+// AllContainers mocks base method
+func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Container, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Containers", arg0, arg1)
+	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.Container)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Containers indicates an expected call of Containers
-func (mr *MockContainersListerMockRecorder) Containers(arg0, arg1 interface{}) *gomock.Call {
+// AllContainers indicates an expected call of AllContainers
+func (mr *MockContainersListerMockRecorder) AllContainers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Containers", reflect.TypeOf((*MockContainersLister)(nil).Containers), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllContainers", reflect.TypeOf((*MockContainersLister)(nil).AllContainers), arg0, arg1)
+}
+
+// ContainersByProvider mocks base method
+func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Container, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ContainersByProvider", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.Container)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainersByProvider indicates an expected call of ContainersByProvider
+func (mr *MockContainersListerMockRecorder) ContainersByProvider(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainersByProvider", reflect.TypeOf((*MockContainersLister)(nil).ContainersByProvider), arg0, arg1)
 }

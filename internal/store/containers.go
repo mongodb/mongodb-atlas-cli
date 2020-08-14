@@ -25,14 +25,26 @@ import (
 //go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongocli/internal/store ContainersLister
 
 type ContainersLister interface {
-	Containers(string, *atlas.ContainersListOptions) ([]atlas.Container, error)
+	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlas.Container, error)
+	AllContainers(string, *atlas.ListOptions) ([]atlas.Container, error)
 }
 
-// Containers encapsulate the logic to manage different cloud providers
-func (s *Store) Containers(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
+// ContainersByProvider encapsulates the logic to manage different cloud providers
+func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// AllContainers encapsulates the logic to manage different cloud providers
+func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Containers.ListAll(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 		var expected []mongodbatlas.Peer
 		mockStore.
 			EXPECT().
-			PeeringConnections(listOpts.ProjectID, listOpts.NewListOptions()).
+			PeeringConnections(listOpts.ProjectID, listOpts.newContainerListOptions()).
 			Return(expected, nil).
 			Times(1)
 

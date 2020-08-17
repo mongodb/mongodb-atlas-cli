@@ -36,8 +36,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	STATUS	PROVIDER{{range .}}
-{{.ID}}	{{if .AWSAccountID}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ProviderName}}{{end}}
+var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
+{{.ID}}	{{if .AWSAccountID}}{{.StatusName}}{{else}}{{.Status}}{{end}}	{{.ContainerID}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

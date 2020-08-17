@@ -46,7 +46,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 
 const maxPerPage = 100
 
-// CreateContainer encapsulates the logic to manage different cloud providers
+// AzureContainers encapsulates the logic to manage different cloud providers
 func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:

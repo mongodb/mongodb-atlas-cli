@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package containers
+package peering
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -28,7 +28,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
 	provider string
-	store    store.ContainersLister
+	store    store.PeeringConnectionLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -42,33 +42,22 @@ var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range .}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []atlas.Container
+	var r []atlas.Peer
 	var err error
-	if opts.provider == "" {
-		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())
-	} else {
-		listOpts := opts.newContainerListOptions()
-		r, err = opts.store.ContainersByProvider(opts.ConfigProjectID(), listOpts)
-	}
+	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.NewListOptions())
 	if err != nil {
 		return err
 	}
-
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
-	return &atlas.ContainersListOptions{
-		ListOptions: *opts.NewListOptions(),
-	}
-}
 
-// mongocli atlas networking container(s) list [--provider provider] [--projectId projectId] [--page N] [--limit N]
+// mongocli atlas networking peering list [--projectId projectId] [--page N] [--limit N]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   listContainers,
+		Short:   listPeering,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -78,7 +67,7 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
+
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 

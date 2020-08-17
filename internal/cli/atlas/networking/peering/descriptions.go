@@ -15,6 +15,7 @@
 package peering
 
 const (
-	peering     = "Manage Network Peering connections"
-	listPeering = "Retrieve details for all network peering connections in one Atlas project"
+	peering                 = "Manage Network Peering connections"
+	listPeering             = "Retrieve details for all network peering connections in one Atlas project"
+	deletePeeringConnection = "Delete a peering connection from an Atlas project"
 )

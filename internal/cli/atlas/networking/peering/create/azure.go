@@ -42,7 +42,7 @@ func (opts *AzureOpts) initStore() error {
 	return err
 }
 
-var azureTemplate = "Online archive '{{.ID}}' created.\n"
+var azureTemplate = "Network peering connection '{{.ID}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
 	container, err := opts.containerExists()

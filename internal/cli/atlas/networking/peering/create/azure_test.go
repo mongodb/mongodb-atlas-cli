@@ -33,25 +33,49 @@ func TestAzureOpts_Run(t *testing.T) {
 		store:  mockStore,
 		region: "test",
 	}
+	t.Run("container exists", func(t *testing.T) {
+		containers := []mongodbatlas.Container{
+			{
+				Region: opts.region,
+			},
+		}
+		mockStore.
+			EXPECT().
+			AzureContainers(opts.ProjectID).
+			Return(containers, nil).
+			Times(1)
 
-	containers := []mongodbatlas.Container{
-		{
-			Region: opts.region,
-		},
-	}
-	mockStore.
-		EXPECT().
-		AzureContainers(opts.ProjectID).
-		Return(containers, nil).
-		Times(1)
+		request := opts.newPeer("")
+		mockStore.
+			EXPECT().
+			CreatePeeringConnection(opts.ProjectID, request).
+			Return(&mongodbatlas.Peer{}, nil).
+			Times(1)
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+	t.Run("container does not exist", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			AzureContainers(opts.ProjectID).
+			Return(nil, nil).
+			Times(1)
+		containerRequest := opts.newContainer()
+		mockStore.
+			EXPECT().
+			CreateContainer(opts.ProjectID, containerRequest).
+			Return(&mongodbatlas.Container{ID: "ID"}, nil).
+			Times(1)
 
-	request := opts.newPeer("")
-	mockStore.
-		EXPECT().
-		CreatePeeringConnection(opts.ProjectID, request).
-		Return(&mongodbatlas.Peer{}, nil).
-		Times(1)
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		request := opts.newPeer("ID")
+		mockStore.
+			EXPECT().
+			CreatePeeringConnection(opts.ProjectID, request).
+			Return(&mongodbatlas.Peer{}, nil).
+			Times(1)
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }

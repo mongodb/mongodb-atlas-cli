@@ -22,10 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peeringConnections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister
+//go:generate mockgen -destination=../mocks/mock_peeringConnections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionDeleter
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *atlas.ListOptions) ([]atlas.Peer, error)
+}
+
+type PeeringConnectionDeleter interface {
+	DeletePeeringConnection(string, string) error
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers
@@ -36,5 +40,16 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ListOptions) ([
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
+func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Peers.Delete(context.Background(), projectID, peerID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

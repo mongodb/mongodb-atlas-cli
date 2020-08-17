@@ -12,23 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package containers
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
-func Builder() *cobra.Command {
-	const use = "containers"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   containers,
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockContainersDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
+		store: mockStore,
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	mockStore.
+		EXPECT().
+		DeleteContainer(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := deleteOpts.Run()
+	assert.NoError(t, err)
 }

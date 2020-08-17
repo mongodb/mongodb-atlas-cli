@@ -15,6 +15,7 @@
 package containers
 
 const (
-	containers     = "Manage Network Peering containers"
-	listContainers = "List network peering containers in an Atlas project"
+	containers      = "Manage Network Peering containers"
+	listContainers  = "List network peering containers in an Atlas project"
+	deleteContainer = "Remove one network peering container in an Atlas project"
 )

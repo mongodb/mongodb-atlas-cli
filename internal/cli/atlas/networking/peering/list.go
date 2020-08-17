@@ -27,7 +27,8 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	store store.PeeringConnectionLister
+	provider string
+	store    store.PeeringConnectionLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -43,14 +44,21 @@ var listTemplate = `ID	STATUS	CONTAINER ID{{range .}}
 func (opts *ListOpts) Run() error {
 	var r []atlas.Peer
 	var err error
-	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.NewListOptions())
+	r, err = opts.store.PeeringConnections(opts.ConfigProjectID(), opts.newContainerListOptions())
 	if err != nil {
 		return err
 	}
 	return output.Print(config.Default(), listTemplate, r)
 }
 
-// mongocli atlas networking peering list [--projectId projectId] [--page N] [--limit N]
+func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
+	return &atlas.ContainersListOptions{
+		ListOptions:  *opts.NewListOptions(),
+		ProviderName: opts.provider,
+	}
+}
+
+// mongocli atlas networking peering list [--provider provider] [--projectId projectId] [--page N] [--limit N]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -66,8 +74,11 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

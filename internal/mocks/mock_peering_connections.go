@@ -34,7 +34,7 @@ func (m *MockPeeringConnectionLister) EXPECT() *MockPeeringConnectionListerMockR
 }
 
 // PeeringConnections mocks base method
-func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Peer, error) {
+func (m *MockPeeringConnectionLister) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Peer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.Peer)

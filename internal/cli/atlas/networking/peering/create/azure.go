@@ -27,13 +27,13 @@ import (
 
 type AzureOpts struct {
 	cli.GlobalOpts
-	region              string
-	atlasCIDRBlock      string
-	azureDirectoryID    string
-	azureSubscriptionID string
-	resourceGroup       string
-	vNetName            string
-	store               store.PeeringConnectionCreator
+	region         string
+	atlasCIDRBlock string
+	directoryID    string
+	subscriptionID string
+	resourceGroup  string
+	vNetName       string
+	store          store.PeeringConnectionCreator
 }
 
 func (opts *AzureOpts) initStore() error {
@@ -88,8 +88,8 @@ func (opts *AzureOpts) newContainer() *atlas.Container {
 
 func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
 	a := &atlas.Peer{
-		AzureDirectoryID:    opts.azureDirectoryID,
-		AzureSubscriptionID: opts.azureSubscriptionID,
+		AzureDirectoryID:    opts.directoryID,
+		AzureSubscriptionID: opts.subscriptionID,
 		ContainerID:         containerID,
 		ProviderName:        "AZURE",
 		ResourceGroupName:   opts.resourceGroup,
@@ -123,8 +123,8 @@ func AzureBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.azureDirectoryID, flag.DirectoryID, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.azureSubscriptionID, flag.SubscriptionID, "", usage.Database)
+	cmd.Flags().StringVar(&opts.directoryID, flag.DirectoryID, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.subscriptionID, flag.SubscriptionID, "", usage.Database)
 	cmd.Flags().StringVar(&opts.resourceGroup, flag.ResourceGroup, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.vNetName, flag.VNet, "", usage.DateField)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.DateField)

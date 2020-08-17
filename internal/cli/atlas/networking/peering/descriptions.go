@@ -15,6 +15,6 @@
 package peering
 
 const (
-	peering     = "Manage Network Peering containers"
+	peering     = "Manage Network Peering"
 	listPeering = "Retrieve details for all network peering connections in one Atlas project"
 )

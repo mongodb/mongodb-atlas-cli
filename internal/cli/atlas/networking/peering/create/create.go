@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package peering
+package create
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/networking/peering/create"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "peering"
+	const use = "create"
 	cmd := &cobra.Command{
-		Use:   use,
-		Short: peering,
+		Use: use,
 	}
-
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(create.Builder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(AzureBuilder())
 
 	return cmd
 }

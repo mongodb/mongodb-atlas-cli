@@ -22,10 +22,16 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionDeleter
+//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionCreator,PeeringConnectionDeleter
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *atlas.ContainersListOptions) ([]atlas.Peer, error)
+}
+
+type PeeringConnectionCreator interface {
+	AzureContainers(string) ([]atlas.Container, error)
+	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
+	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
 }
 
 type PeeringConnectionDeleter interface {
@@ -51,5 +57,16 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreatePeeringConnection encapsulates the logic to manage different cloud providers
+func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Peers.Create(context.Background(), projectID, peer)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

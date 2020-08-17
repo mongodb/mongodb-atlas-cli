@@ -21,8 +21,8 @@ import (
 func Builder() *cobra.Command {
 	const use = "peering"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   peering,
+		Use:   use,
+		Short: peering,
 	}
 
 	cmd.AddCommand(ListBuilder())

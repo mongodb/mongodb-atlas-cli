@@ -17,6 +17,7 @@ package store
 import (
 	"context"
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )

@@ -27,8 +27,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.ListOpts
-	provider string
-	store    store.PeeringConnectionLister
+	store store.PeeringConnectionLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -50,7 +49,6 @@ func (opts *ListOpts) Run() error {
 	}
 	return output.Print(config.Default(), listTemplate, r)
 }
-
 
 // mongocli atlas networking peering list [--projectId projectId] [--page N] [--limit N]
 func ListBuilder() *cobra.Command {

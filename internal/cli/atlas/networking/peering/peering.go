@@ -15,6 +15,7 @@
 package peering
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/atlas/networking/peering/create"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +27,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(create.Builder())
 
 	return cmd
 }

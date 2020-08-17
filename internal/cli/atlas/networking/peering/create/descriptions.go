@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package peering
+package create
 
 const (
-	peering     = "Manage Network Peering connections"
-	listPeering = "Retrieve details for all network peering connections in one Atlas project"
+	createAzureConnection = "Create a connection with Azure"
 )

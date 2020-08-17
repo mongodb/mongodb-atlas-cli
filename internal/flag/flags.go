@@ -143,4 +143,9 @@ const (
 	CIDR                            = "cidr"                            // CIDR flag
 	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
 	Retention                       = "retention"                       // Retention flag
+	AtlasCIDRBlock                  = "atlasCidrBlock"                  // AtlasCIDRBlock flag
+	DirectoryID                     = "directoryId"                     // DirectoryID flag
+	SubscriptionID                  = "subscriptionId"                  // SubscriptionID flag
+	ResourceGroup                   = "resourceGroup"                   // ResourceGroup flag
+	VNet                            = "vnet"                            // VNet flag
 )

@@ -59,7 +59,8 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
 	return &atlas.ContainersListOptions{
-		ListOptions: *opts.NewListOptions(),
+		ProviderName: opts.provider,
+		ListOptions:  *opts.NewListOptions(),
 	}
 }
 

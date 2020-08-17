@@ -12,9 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package peering
+package create
 
-const (
-	peering     = "Manage Network Peering connections"
-	listPeering = "Retrieve details for all network peering connections in one Atlas project"
+import (
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "create"
+	cmd := &cobra.Command{
+		Use: use,
+	}
+	cmd.AddCommand(AzureBuilder())
+
+	return cmd
+}

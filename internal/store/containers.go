@@ -44,6 +44,26 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 	}
 }
 
+const maxPerPage = 100
+
+// CreateContainer encapsulates the logic to manage different cloud providers
+func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
+	switch s.service {
+	case config.CloudService:
+		opts := &atlas.ContainersListOptions{
+			ProviderName: "Azure",
+			ListOptions: atlas.ListOptions{
+				PageNum:      0,
+				ItemsPerPage: maxPerPage,
+			},
+		}
+		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
 // AllContainers encapsulates the logic to manage different cloud providers
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
 	switch s.service {
@@ -63,5 +83,27 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Container encapsulates the logic to manage different cloud providers
+func (s *Store) Container(projectID, containerID string) (*atlas.Container, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Containers.Get(context.Background(), projectID, containerID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateContainer encapsulates the logic to manage different cloud providers
+func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*atlas.Container, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Containers.Create(context.Background(), projectID, container)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

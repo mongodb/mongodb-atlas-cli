@@ -22,10 +22,16 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peeringConnections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister
+//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionCreator
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *atlas.ListOptions) ([]atlas.Peer, error)
+}
+
+type PeeringConnectionCreator interface {
+	AzureContainers(string) ([]atlas.Container, error)
+	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
+	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers
@@ -33,6 +39,17 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ListOptions) ([
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Peers.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreatePeeringConnection encapsulates the logic to manage different cloud providers
+func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Peers.Create(context.Background(), projectID, peer)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

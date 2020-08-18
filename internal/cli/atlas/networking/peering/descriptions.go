@@ -18,5 +18,5 @@ const (
 	peering                 = "Manage Network Peering connections"
 	listPeering             = "Retrieve details for all network peering connections in one Atlas project"
 	deletePeeringConnection = "Delete a peering connection from an Atlas project"
-	watchPeering            = "Watch for a peering connection to be available."
+	watchPeering            = "Watch for a peering connection to be available"
 )

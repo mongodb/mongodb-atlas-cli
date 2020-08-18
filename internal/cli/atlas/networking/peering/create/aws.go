@@ -103,7 +103,7 @@ func (opts *AwsOpts) newPeer(containerID string) *atlas.Peer {
 	return a
 }
 
-// mongocli atlas networking peering create azure
+// mongocli atlas networking peering create aws
 // --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
 // --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
 // --containerId containerId: Unique identifier of the Atlas VPC container for the region.
@@ -137,7 +137,6 @@ func AwsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.AccountID)
-	//_ = cmd.MarkFlagRequired(flag.ContainerID)
 	_ = cmd.MarkFlagRequired(flag.RouteTableCidrBlock)
 	_ = cmd.MarkFlagRequired(flag.VpcID)
 	_ = cmd.MarkFlagRequired(flag.Region)

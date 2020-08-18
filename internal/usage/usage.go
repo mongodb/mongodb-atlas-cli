@@ -130,7 +130,6 @@ const (
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	AccountID                       = "Account ID of the owner of the peer VPC."
-	ContainerID                     = "Unique identifier of the Atlas VPC container for the region."
 	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
 	VpcID                           = "Unique identifier of the peer VPC."
 	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."

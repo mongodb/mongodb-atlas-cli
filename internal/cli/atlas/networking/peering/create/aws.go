@@ -27,24 +27,24 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type AwsOpts struct {
+type AWSOpts struct {
 	cli.GlobalOpts
 	region              string
 	routeTableCidrBlock string
 	accountID           string
-	containerID         string
 	vpcID               string
 	atlasCIDRBlock      string
 	store               store.PeeringConnectionCreator
 }
 
-func (opts *AwsOpts) initStore() error {
+func (opts *AWSOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *AwsOpts) Run() error {
+func (opts *AWSOpts) Run() error {
+	opts.region = opts.normalizeAtlasRegion(opts.region)
 	container, err := opts.containerExists()
 	if err != nil {
 		return err
@@ -64,33 +64,34 @@ func (opts *AwsOpts) Run() error {
 	return output.Print(config.Default(), createTemplate, r)
 }
 
-func (opts *AwsOpts) containerExists() (*atlas.Container, error) {
-	r, err := opts.store.AllContainers(opts.ConfigProjectID(), nil)
+func (opts *AWSOpts) containerExists() (*atlas.Container, error) {
+	r, err := opts.store.AWSContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
-		region := strings.ToUpper(opts.region)
-		region = strings.ReplaceAll(region, "-", "_")
-		if r[i].RegionName == region {
+		if r[i].RegionName == opts.region {
 			return &r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AwsOpts) newContainer() *atlas.Container {
-	region := strings.ToUpper(opts.region)
-	region = strings.ReplaceAll(region, "-", "_")
+func (opts *AWSOpts) newContainer() *atlas.Container {
 	c := &atlas.Container{
 		AtlasCIDRBlock: opts.atlasCIDRBlock,
-		RegionName:     region,
+		RegionName:     opts.region,
 		ProviderName:   "AWS",
 	}
 	return c
 }
 
-func (opts *AwsOpts) newPeer(containerID string) *atlas.Peer {
+func (opts *AWSOpts) normalizeAtlasRegion(region string) string {
+	region = strings.ToUpper(opts.region)
+	return strings.ReplaceAll(region, "-", "_")
+}
+
+func (opts *AWSOpts) newPeer(containerID string) *atlas.Peer {
 	region := strings.ToLower(opts.region)
 	region = strings.ReplaceAll(region, "_", "-")
 	a := &atlas.Peer{
@@ -114,7 +115,7 @@ func (opts *AwsOpts) newPeer(containerID string) *atlas.Peer {
 // if it does not exists we’ll try to create one and use it,
 // there can only be one container per provider and region
 func AwsBuilder() *cobra.Command {
-	opts := &AwsOpts{}
+	opts := &AWSOpts{}
 	cmd := &cobra.Command{
 		Use:   "aws",
 		Short: createAWSConnection,
@@ -128,7 +129,6 @@ func AwsBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.accountID, flag.AccountID, "", usage.AccountID)
-	cmd.Flags().StringVar(&opts.containerID, flag.ContainerID, "", usage.ContainerID)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
 	cmd.Flags().StringVar(&opts.routeTableCidrBlock, flag.RouteTableCidrBlock, "", usage.RouteTableCidrBlock)
 	cmd.Flags().StringVar(&opts.vpcID, flag.VpcID, "", usage.VpcID)

@@ -64,6 +64,24 @@ func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 	}
 }
 
+// AWSContainers encapsulates the logic to manage different cloud providers
+func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
+	switch s.service {
+	case config.CloudService:
+		opts := &atlas.ContainersListOptions{
+			ProviderName: "AWS",
+			ListOptions: atlas.ListOptions{
+				PageNum:      0,
+				ItemsPerPage: maxPerPage,
+			},
+		}
+		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
 // AllContainers encapsulates the logic to manage different cloud providers
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
 	switch s.service {

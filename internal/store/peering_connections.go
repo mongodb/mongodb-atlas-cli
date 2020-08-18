@@ -30,7 +30,7 @@ type PeeringConnectionLister interface {
 
 type PeeringConnectionCreator interface {
 	AzureContainers(string) ([]atlas.Container, error)
-	AllContainers(string, *atlas.ListOptions) ([]atlas.Container, error)
+	AWSContainers(string) ([]atlas.Container, error)
 	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
 	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
 }

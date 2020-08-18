@@ -29,7 +29,7 @@ func TestAwsOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockPeeringConnectionCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &AwsOpts{
+	opts := &AWSOpts{
 		store:  mockStore,
 		region: "TEST",
 	}
@@ -41,7 +41,7 @@ func TestAwsOpts_Run(t *testing.T) {
 		}
 		mockStore.
 			EXPECT().
-			AllContainers(opts.ProjectID, nil).
+			AWSContainers(opts.ProjectID).
 			Return(containers, nil).
 			Times(1)
 
@@ -58,7 +58,7 @@ func TestAwsOpts_Run(t *testing.T) {
 	t.Run("container does not exist", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			AllContainers(opts.ProjectID, nil).
+			AWSContainers(opts.ProjectID).
 			Return(nil, nil).
 			Times(1)
 		containerRequest := opts.newContainer()
@@ -78,4 +78,31 @@ func TestAwsOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestAwsOpts_NormalizeAtlasRegion(t *testing.T) {
+
+	awsRegion := "EU_WEST_1"
+	t.Run("region equal eu-west-1", func(t *testing.T) {
+		opts := &AWSOpts{
+			region: "eu-west-1",
+		}
+
+		region := opts.normalizeAtlasRegion(opts.region)
+		if region != awsRegion {
+			t.Fatalf("Expected EU_WEST_1 got %v", region)
+		}
+	})
+
+	t.Run("region equal EU_WEST_1", func(t *testing.T) {
+		opts := &AWSOpts{
+			region: awsRegion,
+		}
+
+		region := opts.normalizeAtlasRegion(opts.region)
+		if region != awsRegion {
+			t.Fatalf("Expected EU_WEST_1 got %v", region)
+		}
+	})
+
 }

@@ -149,7 +149,6 @@ const (
 	ResourceGroup                   = "resourceGroup"                   // ResourceGroup flag
 	VNet                            = "vnet"                            // VNet flag
 	AccountID                       = "accountId"                       // AccountID flag
-	ContainerID                     = "containerID"                     // ContainerID flag
 	RouteTableCidrBlock             = "routeTableCidrBlock"             // RouteTableCidrBlock flag
 	VpcID                           = "vpcId"                           // VpcID flag
 )

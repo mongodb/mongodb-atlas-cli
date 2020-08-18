@@ -71,19 +71,19 @@ func (m *MockPeeringConnectionCreator) EXPECT() *MockPeeringConnectionCreatorMoc
 	return m.recorder
 }
 
-// AllContainers mocks base method
-func (m *MockPeeringConnectionCreator) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Container, error) {
+// AWSContainers mocks base method
+func (m *MockPeeringConnectionCreator) AWSContainers(arg0 string) ([]mongodbatlas.Container, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
+	ret := m.ctrl.Call(m, "AWSContainers", arg0)
 	ret0, _ := ret[0].([]mongodbatlas.Container)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// AllContainers indicates an expected call of AllContainers
-func (mr *MockPeeringConnectionCreatorMockRecorder) AllContainers(arg0, arg1 interface{}) *gomock.Call {
+// AWSContainers indicates an expected call of AWSContainers
+func (mr *MockPeeringConnectionCreatorMockRecorder) AWSContainers(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllContainers", reflect.TypeOf((*MockPeeringConnectionCreator)(nil).AllContainers), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AWSContainers", reflect.TypeOf((*MockPeeringConnectionCreator)(nil).AWSContainers), arg0)
 }
 
 // AzureContainers mocks base method

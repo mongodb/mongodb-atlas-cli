@@ -47,6 +47,9 @@ func (opts *AzureOpts) initStore() error {
 var createTemplate = "Network peering connection '{{.ID}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
+	opts.region = strings.ToUpper(opts.region)
+	opts.resourceGroup = strings.ToLower(opts.resourceGroup)
+
 	container, err := opts.containerExists()
 	if err != nil {
 		return err
@@ -72,7 +75,7 @@ func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
 		return nil, err
 	}
 	for i := range r {
-		if strings.EqualFold(r[i].Region, opts.region) {
+		if r[i].Region == opts.region {
 			return &r[i], nil
 		}
 	}
@@ -83,7 +86,7 @@ func (opts *AzureOpts) newContainer() *atlas.Container {
 	c := &atlas.Container{
 		AtlasCIDRBlock: opts.atlasCIDRBlock,
 		ProviderName:   "AZURE",
-		Region:         strings.ToUpper(opts.region),
+		Region:         opts.region,
 	}
 	return c
 }

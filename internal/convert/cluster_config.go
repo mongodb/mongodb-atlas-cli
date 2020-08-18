@@ -68,17 +68,17 @@ func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) err
 	if c.ProcessConfigs != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
 		return c.patchReplicaSet(out)
 	}
-	// a sharded cluster will be a a list of mongos (processes),
+	// a sharded cluster will be a list of mongos (processes),
 	// shards, each with a list of process (replica sets)
 	// one (1) config server, with a list of process (replica set)
 	if c.ProcessConfigs == nil && c.Mongos != nil && c.Shards != nil && c.Config != nil {
-		return c.pathSharding(out)
+		return c.patchSharding(out)
 	}
 
 	return errors.New("invalid config")
 }
 
-func (c *ClusterConfig) pathSharding(out *opsmngr.AutomationConfig) error {
+func (c *ClusterConfig) patchSharding(out *opsmngr.AutomationConfig) error {
 	newCluster := newShardingConfig(c)
 	// transform cli config to automation config
 	for i, s := range c.Shards {
@@ -170,7 +170,7 @@ func patchProcesses(out *opsmngr.AutomationConfig, newReplicaSetID string, newPr
 	}
 }
 
-// patchReplicaSet if the replica set exists try to patch it if not add it
+// patchReplicaSet patches the replica set if it exists, else adds it as a new replica set
 func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.ReplicaSet) {
 	pos, found := search.ReplicaSets(out.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == newReplicaSet.ID
@@ -199,6 +199,7 @@ func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.Repli
 	out.ReplicaSets[pos] = newReplicaSet
 }
 
+// patchSharding patches the shard if it exists, else adds it as a new shard
 func patchSharding(out *opsmngr.AutomationConfig, s *opsmngr.ShardingConfig) {
 	pos, found := search.ShardingConfig(out.Sharding, func(r *opsmngr.ShardingConfig) bool {
 		return r.Name == s.Name
@@ -208,6 +209,5 @@ func patchSharding(out *opsmngr.AutomationConfig, s *opsmngr.ShardingConfig) {
 		return
 	}
 
-	// TODO: test this with CLOUDP-65971
 	out.Sharding[pos] = s
 }

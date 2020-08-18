@@ -619,6 +619,253 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				},
 			},
 		},
+		"add a shard set to an existing sharded cluster config": {
+			current: fixture.AutomationConfigWithOneShardedCluster("test_config", false),
+			changes: &ClusterConfig{
+				RSConfig: RSConfig{
+					FCVersion: "4.2",
+					Name:      "test_config",
+					Version:   "4.2.2",
+				},
+				Shards: []*RSConfig{
+					// Old
+					{
+						Name: "myShard_0",
+						ProcessConfigs: []*ProcessConfig{
+							{
+								DBPath:   "/data/myShard_0",
+								Hostname: "example",
+								LogPath:  "/log/myShard_0",
+								Port:     1,
+								Priority: &one,
+								Votes:    &one,
+							},
+						},
+					},
+					// New
+					{
+						Name: "myShard_1",
+						ProcessConfigs: []*ProcessConfig{
+							{
+								DBPath:   "/data/myShard_1",
+								Hostname: "example",
+								LogPath:  "/log/myShard_1",
+								Port:     4,
+								Priority: &one,
+								Votes:    &one,
+							},
+						},
+					},
+				},
+				Config: &RSConfig{
+					Name: "configRS",
+					ProcessConfigs: []*ProcessConfig{
+						{
+							DBPath:   "/data/configRS",
+							Hostname: "example",
+							LogPath:  "/log/configRS",
+							Port:     2,
+							Priority: &one,
+							Votes:    &one,
+						},
+					},
+				},
+				Mongos: []*ProcessConfig{
+					{
+						Hostname: "example",
+						LogPath:  "/log/mongos",
+						Port:     3,
+					},
+				},
+			},
+			expected: &opsmngr.AutomationConfig{
+				Auth: opsmngr.Auth{
+					DeploymentAuthMechanisms: []string{},
+				},
+				Processes: []*opsmngr.Process{
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 1},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "myShard_0",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/myShard_0",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/myShard_0",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_myShard_0_0",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 2},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "configRS",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/configRS",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/configRS",
+							},
+							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_configRS_1",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 3},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/mongos",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						Cluster:                     "test_config",
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_mongos_2",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongos",
+						Version:                     "4.2.2",
+					},
+					// New
+					{
+						Args26: opsmngr.Args26{
+							NET: opsmngr.Net{Port: 4},
+							Replication: &opsmngr.Replication{
+								ReplSetName: "myShard_1",
+							},
+							Storage: &opsmngr.Storage{
+								DBPath: "/data/myShard_1",
+							},
+							SystemLog: opsmngr.SystemLog{
+								Destination: "file",
+								Path:        "/log/myShard_1",
+							},
+						},
+						LogRotate: &opsmngr.LogRotate{
+							SizeThresholdMB:  1000,
+							TimeThresholdHrs: 24,
+						},
+						AuthSchemaVersion:           5,
+						Name:                        "test_config_myShard_1_3",
+						Disabled:                    false,
+						FeatureCompatibilityVersion: "4.2",
+						Hostname:                    "example",
+						ManualMode:                  false,
+						ProcessType:                 "mongod",
+						Version:                     "4.2.2",
+					},
+				},
+				ReplicaSets: []*opsmngr.ReplicaSet{
+					// Old
+					{
+						ID:              "myShard_0",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           0,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "test_config_myShard_0_0",
+								Priority:     1,
+								SlaveDelay:   0,
+								Votes:        1,
+							},
+						},
+					},
+					{
+						ID:              "configRS",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           0,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "test_config_configRS_1",
+								Priority:     1,
+								SlaveDelay:   0,
+								Votes:        1,
+							},
+						},
+					},
+					// New
+					{
+						ID:              "myShard_1",
+						ProtocolVersion: "1",
+						Members: []opsmngr.Member{
+							{
+								ID:           0,
+								ArbiterOnly:  false,
+								BuildIndexes: true,
+								Hidden:       false,
+								Host:         "test_config_myShard_1_3",
+								Priority:     1,
+								SlaveDelay:   0,
+								Votes:        1,
+							},
+						},
+					},
+				},
+				Sharding: []*opsmngr.ShardingConfig{
+					{
+						ConfigServerReplica: "configRS",
+						Name:                "test_config",
+						Collections:         make([]*map[string]interface{}, 0),
+						Draining:            make([]string, 0),
+						Tags:                make([]string, 0),
+						Shards: []*opsmngr.Shard{
+							// Old
+							{
+								ID:   "myShard_0",
+								RS:   "myShard_0",
+								Tags: make([]string, 0),
+							},
+							// New
+							{
+								ID:   "myShard_1",
+								RS:   "myShard_1",
+								Tags: make([]string, 0),
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for name, tc := range testCases {

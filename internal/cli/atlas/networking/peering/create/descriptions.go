@@ -17,4 +17,6 @@ package create
 const (
 	createAzureConnection = "Create a connection with Azure"
 	createGCPConnection   = "Create a connection with GCP"
+	createAWSConnection   = "Create a connection with AWS"
+	create                = "Create a connection with AWS, Azure and Google Cloud"
 )

@@ -21,9 +21,11 @@ import (
 func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{
-		Use: use,
+		Use:   use,
+		Short: create,
 	}
 	cmd.AddCommand(AzureBuilder())
+	cmd.AddCommand(AwsBuilder())
 	cmd.AddCommand(GCPBuilder())
 
 	return cmd

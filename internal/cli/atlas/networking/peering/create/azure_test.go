@@ -26,7 +26,7 @@ import (
 
 func TestAzureOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPeeringConnectionCreator(ctrl)
+	mockStore := mocks.NewMockAzurePeeringConnectionCreator(ctrl)
 	defer ctrl.Finish()
 
 	opts := &AzureOpts{

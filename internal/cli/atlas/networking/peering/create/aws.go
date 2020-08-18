@@ -34,7 +34,7 @@ type AWSOpts struct {
 	accountID           string
 	vpcID               string
 	atlasCIDRBlock      string
-	store               store.PeeringConnectionCreator
+	store               store.AWSPeeringConnectionCreator
 }
 
 func (opts *AWSOpts) initStore() error {

@@ -35,7 +35,7 @@ type AzureOpts struct {
 	subscriptionID string
 	resourceGroup  string
 	vNetName       string
-	store          store.PeeringConnectionCreator
+	store          store.AzurePeeringConnectionCreator
 }
 
 func (opts *AzureOpts) initStore() error {
@@ -131,7 +131,7 @@ func AzureBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.directoryID, flag.DirectoryID, "", usage.DirectoryID)
 	cmd.Flags().StringVar(&opts.subscriptionID, flag.SubscriptionID, "", usage.SubscriptionID)
 	cmd.Flags().StringVar(&opts.resourceGroup, flag.ResourceGroup, "", usage.ResourceGroup)
-	cmd.Flags().StringVar(&opts.vNetName, flag.VNet, "", usage.VnetName)
+	cmd.Flags().StringVar(&opts.vNetName, flag.VNet, "", usage.VNet)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 

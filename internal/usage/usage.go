@@ -133,7 +133,7 @@ const (
 	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
 	VpcID                           = "Unique identifier of the peer VPC."
 	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
-	VnetName                        = "Name of your Azure VNet."
+	VNet                            = "Name of your Azure VNet."
 	ResourceGroup                   = "Name of your Azure resource group."
 	DirectoryID                     = "Unique identifier for an Azure AD directory."
 	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."

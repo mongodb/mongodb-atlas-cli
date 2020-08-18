@@ -17,6 +17,7 @@
 package create
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -26,7 +27,7 @@ import (
 
 func TestAwsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPeeringConnectionCreator(ctrl)
+	mockStore := mocks.NewMockAWSPeeringConnectionCreator(ctrl)
 	defer ctrl.Finish()
 
 	opts := &AWSOpts{
@@ -81,26 +82,23 @@ func TestAwsOpts_Run(t *testing.T) {
 }
 
 func TestNormalizeAtlasRegion(t *testing.T) {
-	awsRegion := "EU_WEST_1"
-	t.Run("region equal eu-west-1", func(t *testing.T) {
-		opts := &AWSOpts{
-			region: "eu-west-1",
-		}
+	type test struct {
+		input string
+		want  string
+	}
 
-		region := normalizeAtlasRegion(opts.region)
-		if region != awsRegion {
-			t.Fatalf("Expected EU_WEST_1 got %v", region)
-		}
-	})
+	tests := []test{
+		{input: "eu-west-1", want: "EU_WEST_1"},
+		{input: "eu_west-1", want: "EU_WEST_1"},
+		{input: "eu-west_1", want: "EU_WEST_1"},
+		{input: "EU_WEST_1", want: "EU_WEST_1"},
+		{input: "eu_west_1", want: "EU_WEST_1"},
+	}
 
-	t.Run("region equal EU_WEST_1", func(t *testing.T) {
-		opts := &AWSOpts{
-			region: awsRegion,
+	for _, tc := range tests {
+		got := normalizeAtlasRegion(tc.input)
+		if !reflect.DeepEqual(tc.want, got) {
+			t.Fatalf("expected: %v, got: %v", tc.want, got)
 		}
-
-		region := normalizeAtlasRegion(opts.region)
-		if region != awsRegion {
-			t.Fatalf("Expected EU_WEST_1 got %v", region)
-		}
-	})
+	}
 }

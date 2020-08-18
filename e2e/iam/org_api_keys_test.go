@@ -17,6 +17,7 @@ package iam_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -56,11 +57,13 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
+		desc := "e2e-test-org"
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			"create",
-			"--desc=e2e-test",
+			"--desc",
+			desc,
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -71,18 +74,22 @@ func TestOrgAPIKeys(t *testing.T) {
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal("e2e-test", key.Desc)
+			a.Equal(desc, key.Desc)
 			ID = key.ID
 		}
 	})
-
+	if ID == "" {
+		assert.FailNow(t, "Failed to create API key")
+	}
 	t.Run("Update", func(t *testing.T) {
+		newDesc := "e2e-test-org-updated"
 		cmd := exec.Command(cliPath, iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			"updates",
 			ID,
-			"--desc=e2e-test-update",
+			"--desc",
+			newDesc,
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -93,7 +100,7 @@ func TestOrgAPIKeys(t *testing.T) {
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal("e2e-test-update", key.Desc)
+			a.Equal(newDesc, key.Desc)
 		}
 	})
 
@@ -129,6 +136,10 @@ func TestOrgAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+			a.Equal(expected, string(resp))
+		}
 	})
 }

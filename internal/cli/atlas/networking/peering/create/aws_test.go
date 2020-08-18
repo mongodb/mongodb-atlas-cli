@@ -17,7 +17,6 @@
 package create
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -97,8 +96,8 @@ func TestNormalizeAtlasRegion(t *testing.T) {
 
 	for _, tc := range tests {
 		got := normalizeAtlasRegion(tc.input)
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
+		if tc.want != got {
+			t.Errorf("expected: %s, got: %s", tc.want, got)
 		}
 	}
 }

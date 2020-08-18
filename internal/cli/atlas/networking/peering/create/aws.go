@@ -71,7 +71,7 @@ func (opts *AwsOpts) containerExists() (*atlas.Container, error) {
 	}
 	for i := range r {
 		region := strings.ToUpper(opts.region)
-		region = strings.Replace(region, "-", "_", -1)
+		region = strings.ReplaceAll(region, "-", "_")
 		if r[i].RegionName == region {
 			return &r[i], nil
 		}
@@ -81,7 +81,7 @@ func (opts *AwsOpts) containerExists() (*atlas.Container, error) {
 
 func (opts *AwsOpts) newContainer() *atlas.Container {
 	region := strings.ToUpper(opts.region)
-	region = strings.Replace(region, "-", "_", -1)
+	region = strings.ReplaceAll(region, "-", "_")
 	c := &atlas.Container{
 		AtlasCIDRBlock: opts.atlasCIDRBlock,
 		RegionName:     region,
@@ -92,7 +92,7 @@ func (opts *AwsOpts) newContainer() *atlas.Container {
 
 func (opts *AwsOpts) newPeer(containerID string) *atlas.Peer {
 	region := strings.ToLower(opts.region)
-	region = strings.Replace(region, "_", "-", -1)
+	region = strings.ReplaceAll(region, "_", "-")
 	a := &atlas.Peer{
 		AccepterRegionName:  region,
 		AWSAccountID:        opts.accountID,

@@ -72,7 +72,7 @@ func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
 		return nil, err
 	}
 	for i := range r {
-		if r[i].Region == strings.ToUpper(opts.region) {
+		if strings.EqualFold(r[i].Region, opts.region) {
 			return &r[i], nil
 		}
 	}

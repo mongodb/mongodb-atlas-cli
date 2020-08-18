@@ -31,7 +31,7 @@ func TestAzureOpts_Run(t *testing.T) {
 
 	opts := &AzureOpts{
 		store:  mockStore,
-		region: "test",
+		region: "TEST",
 	}
 	t.Run("container exists", func(t *testing.T) {
 		containers := []mongodbatlas.Container{

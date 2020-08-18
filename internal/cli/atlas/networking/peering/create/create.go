@@ -26,6 +26,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(AzureBuilder())
 	cmd.AddCommand(AwsBuilder())
+	cmd.AddCommand(GCPBuilder())
 
 	return cmd
 }

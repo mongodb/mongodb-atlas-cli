@@ -137,6 +137,8 @@ const (
 	ResourceGroup                   = "Name of your Azure resource group."
 	DirectoryID                     = "Unique identifier for an Azure AD directory."
 	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
+	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
+	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.

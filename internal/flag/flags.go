@@ -151,4 +151,6 @@ const (
 	AccountID                       = "accountId"                       // AccountID flag
 	RouteTableCidrBlock             = "routeTableCidrBlock"             // RouteTableCidrBlock flag
 	VpcID                           = "vpcId"                           // VpcID flag
+	GCPProjectID                    = "gcpProjectId"                    // GCPProjectID flag
+	Network                         = "network"                         // Network flag
 )

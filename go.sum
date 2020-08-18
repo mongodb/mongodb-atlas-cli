@@ -59,8 +59,6 @@ github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
-github.com/go-test/deep v1.0.1 h1:UQhStjbkDClarlmv0am7OXXO4/GaPdCGiUiMTvi28sg=
-github.com/go-test/deep v1.0.1/go.mod h1:wGDj63lr65AM2AQyKZd/NYHGb0R+1RLqB8NKt3aSFNA=
 github.com/go-test/deep v1.0.7 h1:/VSMRlnY/JSyqxQUzQLKVMAskpY/NZKFA5j2P+0pP2M=
 github.com/go-test/deep v1.0.7/go.mod h1:QV8Hv/iy04NyLBxAdO9njL0iVPN1S4d/A3NVv1V36o8=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
@@ -249,13 +247,9 @@ github.com/xdg/stringprep v1.0.0/go.mod h1:Jhud4/sHMO4oL310DaZAKk9ZaJ08SJfe+sJh0
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
-go.mongodb.org/atlas v0.3.1-0.20200728164135-cd2ad1fa2fa2 h1:+P5zCidi5y49pyxZUoATn/1tB53Mrd5m4XvAqkM74+A=
-go.mongodb.org/atlas v0.3.1-0.20200728164135-cd2ad1fa2fa2/go.mod h1:xa/V3muNuVoReSG0y2pigUUnfPOx1cHF0ZV2uCE+c7I=
 go.mongodb.org/atlas v0.4.0/go.mod h1:QlKvZKT43+R6lhHlaTy2E7Q/3AoAljMI6v5apfqslIs=
 go.mongodb.org/atlas v0.4.1-0.20200817150720-6744a191c04a h1:5X3SviNIesWqnc0+lEGEFL5BHr4irgUBtjr0P61CTcM=
 go.mongodb.org/atlas v0.4.1-0.20200817150720-6744a191c04a/go.mod h1:QlKvZKT43+R6lhHlaTy2E7Q/3AoAljMI6v5apfqslIs=
-go.mongodb.org/ops-manager v0.8.1 h1:0iTwANMyea87yGGrLkH7/JvF2q6E/tNnkYtk70Yv14M=
-go.mongodb.org/ops-manager v0.8.1/go.mod h1:mLoq8OmugUyX0NVYtkTPPgaThmRykx1P+y79/xEucX4=
 go.mongodb.org/ops-manager v0.8.2 h1:E1g1i+8/t3YUbTrGoqeWPUKsXNE74/QtmjeZJQmpElY=
 go.mongodb.org/ops-manager v0.8.2/go.mod h1:B4gSvRZt98d6WJAAxIniRywBU4vhzEENppLnGr+S+V8=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

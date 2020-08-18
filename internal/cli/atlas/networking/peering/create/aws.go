@@ -70,7 +70,9 @@ func (opts *AwsOpts) containerExists() (*atlas.Container, error) {
 		return nil, err
 	}
 	for i := range r {
-		if r[i].RegionName == strings.ToUpper(opts.region) {
+		region := strings.ToUpper(opts.region)
+		region = strings.Replace(region, "-", "_", -1)
+		if r[i].RegionName == region {
 			return &r[i], nil
 		}
 	}

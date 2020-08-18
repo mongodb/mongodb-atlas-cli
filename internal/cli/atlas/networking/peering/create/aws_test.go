@@ -36,7 +36,7 @@ func TestAwsOpts_Run(t *testing.T) {
 	t.Run("container exists", func(t *testing.T) {
 		containers := []mongodbatlas.Container{
 			{
-				Region: opts.region,
+				RegionName: opts.region,
 			},
 		}
 		mockStore.

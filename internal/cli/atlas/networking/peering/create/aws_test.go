@@ -17,6 +17,7 @@
 package create
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -24,24 +25,24 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAzureOpts_Run(t *testing.T) {
+func TestAwsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAzurePeeringConnectionCreator(ctrl)
+	mockStore := mocks.NewMockAWSPeeringConnectionCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &AzureOpts{
+	opts := &AWSOpts{
 		store:  mockStore,
 		region: "TEST",
 	}
 	t.Run("container exists", func(t *testing.T) {
 		containers := []mongodbatlas.Container{
 			{
-				Region: opts.region,
+				RegionName: opts.region,
 			},
 		}
 		mockStore.
 			EXPECT().
-			AzureContainers(opts.ProjectID).
+			AWSContainers(opts.ProjectID).
 			Return(containers, nil).
 			Times(1)
 
@@ -58,7 +59,7 @@ func TestAzureOpts_Run(t *testing.T) {
 	t.Run("container does not exist", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			AzureContainers(opts.ProjectID).
+			AWSContainers(opts.ProjectID).
 			Return(nil, nil).
 			Times(1)
 		containerRequest := opts.newContainer()
@@ -78,4 +79,26 @@ func TestAzureOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestNormalizeAtlasRegion(t *testing.T) {
+	type test struct {
+		input string
+		want  string
+	}
+
+	tests := []test{
+		{input: "eu-west-1", want: "EU_WEST_1"},
+		{input: "eu_west-1", want: "EU_WEST_1"},
+		{input: "eu-west_1", want: "EU_WEST_1"},
+		{input: "EU_WEST_1", want: "EU_WEST_1"},
+		{input: "eu_west_1", want: "EU_WEST_1"},
+	}
+
+	for _, tc := range tests {
+		got := normalizeAtlasRegion(tc.input)
+		if !reflect.DeepEqual(tc.want, got) {
+			t.Fatalf("expected: %v, got: %v", tc.want, got)
+		}
+	}
 }

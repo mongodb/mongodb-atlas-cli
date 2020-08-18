@@ -148,4 +148,7 @@ const (
 	SubscriptionID                  = "subscriptionId"                  // SubscriptionID flag
 	ResourceGroup                   = "resourceGroup"                   // ResourceGroup flag
 	VNet                            = "vnet"                            // VNet flag
+	AccountID                       = "accountId"                       // AccountID flag
+	RouteTableCidrBlock             = "routeTableCidrBlock"             // RouteTableCidrBlock flag
+	VpcID                           = "vpcId"                           // VpcID flag
 )

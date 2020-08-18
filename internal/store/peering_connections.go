@@ -22,14 +22,20 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionCreator,PeeringConnectionDeleter
+//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,AzurePeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionDeleter
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *atlas.ContainersListOptions) ([]atlas.Peer, error)
 }
 
-type PeeringConnectionCreator interface {
+type AzurePeeringConnectionCreator interface {
 	AzureContainers(string) ([]atlas.Container, error)
+	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
+	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
+}
+
+type GCPPeeringConnectionCreator interface {
+	GCPContainers(string) ([]atlas.Container, error)
 	CreateContainer(string, *atlas.Container) (*atlas.Container, error)
 	CreatePeeringConnection(string, *atlas.Peer) (*atlas.Peer, error)
 }

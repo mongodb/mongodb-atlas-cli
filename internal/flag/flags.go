@@ -148,4 +148,6 @@ const (
 	SubscriptionID                  = "subscriptionId"                  // SubscriptionID flag
 	ResourceGroup                   = "resourceGroup"                   // ResourceGroup flag
 	VNet                            = "vnet"                            // VNet flag
+	GCPProjectID                    = "gcpProjectId"                    // GCPProjectID flag
+	Network                         = "network"                         // Network flag
 )

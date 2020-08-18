@@ -24,6 +24,7 @@ func Builder() *cobra.Command {
 		Use: use,
 	}
 	cmd.AddCommand(AzureBuilder())
+	cmd.AddCommand(GCPBuilder())
 
 	return cmd
 }

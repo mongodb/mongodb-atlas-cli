@@ -24,25 +24,25 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAzureOpts_Run(t *testing.T) {
+func TestGCPOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAzurePeeringConnectionCreator(ctrl)
+	mockStore := mocks.NewMockGCPPeeringConnectionCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &AzureOpts{
-		store:  mockStore,
-		region: "test",
+	opts := &GCPOpts{
+		store:   mockStore,
+		network: "test",
 	}
 	t.Run("container exists", func(t *testing.T) {
 		containers := []mongodbatlas.Container{
 			{
-				ID:     "containerID",
-				Region: opts.region,
+				ID:             "containerID",
+				AtlasCIDRBlock: opts.atlasCIDRBlock,
 			},
 		}
 		mockStore.
 			EXPECT().
-			AzureContainers(opts.ProjectID).
+			GCPContainers(opts.ProjectID).
 			Return(containers, nil).
 			Times(1)
 
@@ -59,7 +59,7 @@ func TestAzureOpts_Run(t *testing.T) {
 	t.Run("container does not exist", func(t *testing.T) {
 		mockStore.
 			EXPECT().
-			AzureContainers(opts.ProjectID).
+			GCPContainers(opts.ProjectID).
 			Return(nil, nil).
 			Times(1)
 		containerRequest := opts.newContainer()

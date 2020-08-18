@@ -33,7 +33,7 @@ type AzureOpts struct {
 	subscriptionID string
 	resourceGroup  string
 	vNetName       string
-	store          store.PeeringConnectionCreator
+	store          store.AzurePeeringConnectionCreator
 }
 
 func (opts *AzureOpts) initStore() error {

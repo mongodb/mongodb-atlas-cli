@@ -129,6 +129,9 @@ const (
 	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
+	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
+	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
+	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.

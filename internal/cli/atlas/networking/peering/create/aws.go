@@ -44,7 +44,7 @@ func (opts *AWSOpts) initStore() error {
 }
 
 func (opts *AWSOpts) Run() error {
-	opts.region = opts.normalizeAtlasRegion(opts.region)
+	opts.region = normalizeAtlasRegion(opts.region)
 	container, err := opts.containerExists()
 	if err != nil {
 		return err
@@ -86,8 +86,8 @@ func (opts *AWSOpts) newContainer() *atlas.Container {
 	return c
 }
 
-func (opts *AWSOpts) normalizeAtlasRegion(region string) string {
-	region = strings.ToUpper(opts.region)
+func normalizeAtlasRegion(region string) string {
+	region = strings.ToUpper(region)
 	return strings.ReplaceAll(region, "-", "_")
 }
 

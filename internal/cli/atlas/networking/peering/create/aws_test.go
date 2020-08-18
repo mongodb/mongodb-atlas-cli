@@ -80,15 +80,14 @@ func TestAwsOpts_Run(t *testing.T) {
 	})
 }
 
-func TestAwsOpts_NormalizeAtlasRegion(t *testing.T) {
-
+func TestNormalizeAtlasRegion(t *testing.T) {
 	awsRegion := "EU_WEST_1"
 	t.Run("region equal eu-west-1", func(t *testing.T) {
 		opts := &AWSOpts{
 			region: "eu-west-1",
 		}
 
-		region := opts.normalizeAtlasRegion(opts.region)
+		region := normalizeAtlasRegion(opts.region)
 		if region != awsRegion {
 			t.Fatalf("Expected EU_WEST_1 got %v", region)
 		}
@@ -99,10 +98,9 @@ func TestAwsOpts_NormalizeAtlasRegion(t *testing.T) {
 			region: awsRegion,
 		}
 
-		region := opts.normalizeAtlasRegion(opts.region)
+		region := normalizeAtlasRegion(opts.region)
 		if region != awsRegion {
 			t.Fatalf("Expected EU_WEST_1 got %v", region)
 		}
 	})
-
 }

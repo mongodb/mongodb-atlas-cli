@@ -16,7 +16,7 @@ package projects
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/projects/apikeys"
+	"github.com/mongodb/mongocli/internal/cli/iam/projects/apikeys"
 	"github.com/spf13/cobra"
 )
 

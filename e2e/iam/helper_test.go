@@ -43,7 +43,7 @@ func createOrgAPIKey() (string, error) {
 		orgEntity,
 		apiKeysEntity,
 		"create",
-		"--desc=e2e-test",
+		"--desc=e2e-test-helper",
 		"--role=ORG_READ_ONLY",
 		"-o=json")
 	cmd.Env = os.Environ()

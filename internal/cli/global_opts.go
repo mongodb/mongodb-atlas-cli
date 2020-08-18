@@ -71,7 +71,7 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 // PreRunEOrg is a function to call before running the command,
 // this will validate the org ID and call any additional function pass as a callback
 func (opts *GlobalOpts) PreRunEOrg(cbs ...cmdOpt) error {
-	if opts.ConfigOrgID() == "" && opts.OrgID == "" {
+	if opts.ConfigOrgID() == "" {
 		return ErrMissingOrgID
 	}
 	if err := validate.ObjectID(opts.ConfigOrgID()); err != nil {

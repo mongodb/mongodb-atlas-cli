@@ -77,6 +77,23 @@ func TestDataLakes(t *testing.T) {
 		}
 	})
 
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			datalakeEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var r []atlas.DataLake
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.NotEmpty(r)
+		}
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		const updateRegion = "VIRGINIA_USA"
 		cmd := exec.Command(cliPath,
@@ -96,23 +113,6 @@ func TestDataLakes(t *testing.T) {
 		var dataLake atlas.DataLake
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
 			a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
-		}
-	})
-
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		var r []atlas.DataLake
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
 		}
 	})
 

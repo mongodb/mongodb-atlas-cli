@@ -37,11 +37,13 @@ func TestProjectAPIKeys(t *testing.T) {
 
 	// This test must run first to grab the ID of the project to later describe
 	t.Run("Create", func(t *testing.T) {
+		desc := "e2e-test"
 		cmd := exec.Command(cliPath, iamEntity,
 			projectEntity,
 			apiKeysEntity,
 			"create",
-			"--desc=e2e-test",
+			"--desc",
+			desc,
 			"--role=GROUP_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -52,10 +54,20 @@ func TestProjectAPIKeys(t *testing.T) {
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			a.Equal("e2e-test", key.Desc)
+			a.Equal(desc, key.Desc)
 			ID = key.ID
 		}
 	})
+
+	if ID == "" {
+		assert.FailNow(t, "Failed to create API key")
+	}
+
+	defer func() {
+		if e := deleteOrgAPIKey(ID); e != nil {
+			t.Errorf("error deleting test apikey: %v", e)
+		}
+	}()
 
 	t.Run("Assign", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
@@ -102,8 +114,9 @@ func TestProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-		a.Equal(expected, string(resp))
+		if a.NoError(err, string(resp)) {
+			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+			a.Equal(expected, string(resp))
+		}
 	})
 }

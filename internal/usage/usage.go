@@ -129,6 +129,15 @@ const (
 	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
+	AccountID                       = "Account ID of the owner of the peer VPC."
+	ContainerID                     = "Unique identifier of the Atlas VPC container for the region."
+	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
+	VpcID                           = "Unique identifier of the peer VPC."
+	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
+	VnetName                        = "Name of your Azure VNet."
+	ResourceGroup                   = "Name of your Azure resource group."
+	DirectoryID                     = "Unique identifier for an Azure AD directory."
+	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
 	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.

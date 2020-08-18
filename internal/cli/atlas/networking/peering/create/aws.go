@@ -27,26 +27,24 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type AzureOpts struct {
+type AwsOpts struct {
 	cli.GlobalOpts
-	region         string
-	atlasCIDRBlock string
-	directoryID    string
-	subscriptionID string
-	resourceGroup  string
-	vNetName       string
-	store          store.PeeringConnectionCreator
+	region              string
+	routeTableCidrBlock string
+	accountID           string
+	containerID         string
+	vpcID               string
+	atlasCIDRBlock      string
+	store               store.PeeringConnectionCreator
 }
 
-func (opts *AzureOpts) initStore() error {
+func (opts *AwsOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplate = "Network peering connection '{{.ID}}' created.\n"
-
-func (opts *AzureOpts) Run() error {
+func (opts *AwsOpts) Run() error {
 	container, err := opts.containerExists()
 	if err != nil {
 		return err
@@ -66,56 +64,58 @@ func (opts *AzureOpts) Run() error {
 	return output.Print(config.Default(), createTemplate, r)
 }
 
-func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
-	r, err := opts.store.AzureContainers(opts.ConfigProjectID())
+func (opts *AwsOpts) containerExists() (*atlas.Container, error) {
+	r, err := opts.store.AllContainers(opts.ConfigProjectID(), nil)
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
-		if r[i].Region == strings.ToUpper(opts.region) {
+		if r[i].RegionName == strings.ToUpper(opts.region) {
 			return &r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AzureOpts) newContainer() *atlas.Container {
+func (opts *AwsOpts) newContainer() *atlas.Container {
+	region := strings.ToUpper(opts.region)
+	region = strings.Replace(region, "-", "_", -1)
 	c := &atlas.Container{
 		AtlasCIDRBlock: opts.atlasCIDRBlock,
-		ProviderName:   "AZURE",
-		Region:         strings.ToUpper(opts.region),
+		RegionName:     region,
+		ProviderName:   "AWS",
 	}
 	return c
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
+func (opts *AwsOpts) newPeer(containerID string) *atlas.Peer {
+	region := strings.ToLower(opts.region)
+	region = strings.Replace(region, "_", "-", -1)
 	a := &atlas.Peer{
-		AzureDirectoryID:    opts.directoryID,
-		AzureSubscriptionID: opts.subscriptionID,
+		AccepterRegionName:  region,
+		AWSAccountID:        opts.accountID,
 		ContainerID:         containerID,
-		ProviderName:        "AZURE",
-		ResourceGroupName:   opts.resourceGroup,
-		VNetName:            opts.vNetName,
+		RouteTableCIDRBlock: opts.routeTableCidrBlock,
+		VpcID:               opts.vpcID,
 	}
 	return a
 }
 
 // mongocli atlas networking peering create azure
-// --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
-// --directoryId azureDirectoryId: Unique identifier for an Azure AD directory.
-// --subscriptionId azureSubscriptionId: Unique identifier of the Azure subscription in which the VNet resides.
-// --resourceGroup resourceGroupName: Name of your Azure resource group.
-// --region regionName: Atlas region where the container resides.
-// --vnet vnetName: Name of your Azure VNet.
+// --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
+// --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
+// --containerId containerId: Unique identifier of the Atlas VPC container for the region.
+// --routeTableCidrBlock routeTableCidrBlock: 	Peer VPC CIDR block or subnet.
+// --vpcID vpcID: Unique identifier of the peer VPC.
 // --projectId projectId: ID of the project
-// Create a network peering with Azure, this command will internally check if a container already exists for the provider and region and if it does then we’ll use that,
+// Create a network peering with AWS, this command will internally check if a container already exists for the provider and region and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it,
 // there can only be one container per provider and region
-func AzureBuilder() *cobra.Command {
-	opts := &AzureOpts{}
+func AwsBuilder() *cobra.Command {
+	opts := &AwsOpts{}
 	cmd := &cobra.Command{
-		Use:   "azure",
-		Short: createAzureConnection,
+		Use:   "aws",
+		Short: createAWSConnection,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
@@ -125,19 +125,19 @@ func AzureBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.directoryID, flag.DirectoryID, "", usage.DirectoryID)
-	cmd.Flags().StringVar(&opts.subscriptionID, flag.SubscriptionID, "", usage.SubscriptionID)
-	cmd.Flags().StringVar(&opts.resourceGroup, flag.ResourceGroup, "", usage.ResourceGroup)
-	cmd.Flags().StringVar(&opts.vNetName, flag.VNet, "", usage.VnetName)
+	cmd.Flags().StringVar(&opts.accountID, flag.AccountID, "", usage.AccountID)
+	cmd.Flags().StringVar(&opts.containerID, flag.ContainerID, "", usage.ContainerID)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
+	cmd.Flags().StringVar(&opts.routeTableCidrBlock, flag.RouteTableCidrBlock, "", usage.RouteTableCidrBlock)
+	cmd.Flags().StringVar(&opts.vpcID, flag.VpcID, "", usage.VpcID)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.DirectoryID)
-	_ = cmd.MarkFlagRequired(flag.SubscriptionID)
-	_ = cmd.MarkFlagRequired(flag.ResourceGroup)
-	_ = cmd.MarkFlagRequired(flag.VNet)
+	_ = cmd.MarkFlagRequired(flag.AccountID)
+	//_ = cmd.MarkFlagRequired(flag.ContainerID)
+	_ = cmd.MarkFlagRequired(flag.RouteTableCidrBlock)
+	_ = cmd.MarkFlagRequired(flag.VpcID)
 	_ = cmd.MarkFlagRequired(flag.Region)
 
 	return cmd

@@ -17,6 +17,7 @@ package iam_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -129,6 +130,9 @@ func TestOrgAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+		a.Equal(expected, string(resp))
 	})
 }

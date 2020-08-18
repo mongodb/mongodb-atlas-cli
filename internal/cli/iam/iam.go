@@ -15,8 +15,8 @@
 package iam
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/organizations"
-	"github.com/mongodb/mongocli/internal/cli/projects"
+	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
+	"github.com/mongodb/mongocli/internal/cli/iam/projects"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )

@@ -47,7 +47,7 @@ func (opts *WatchOpts) Run() error {
 			return err
 		}
 		if result.Status == "WAITING_FOR_USER" || result.Status == "FAILED" || result.Status == "AVAILABLE" {
-			fmt.Printf("\nNEtwork peering changes completed.\n")
+			fmt.Printf("\nNetwork peering changes completed.\n")
 			break
 		}
 		fmt.Print(".")

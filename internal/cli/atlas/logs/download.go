@@ -42,6 +42,8 @@ type DownloadOpts struct {
 	store store.LogsDownloader
 }
 
+var downloadMessage = "Download of '%s' completed.\n"
+
 func (opts *DownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
@@ -59,6 +61,8 @@ func (opts *DownloadOpts) Run() error {
 		_ = opts.handleError(f)
 		return err
 	}
+
+	fmt.Printf(downloadMessage, opts.out)
 	return f.Close()
 }
 

@@ -34,7 +34,7 @@ type GlobalAPIKeyWhitelistDescriber interface {
 }
 
 type GlobalAPIKeyWhitelistCreator interface {
-	CreateGlobalAPIKeyWhite([]*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKeys, error)
+	CreateGlobalAPIKeyWhite(*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error)
 }
 
 type GlobalAPIKeyWhitelistDeleter interface {
@@ -64,7 +64,7 @@ func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey
 }
 
 // CreateGlobalAPIKeyWhite encapsulates the logic to manage different cloud providers
-func (s *Store) CreateGlobalAPIKeyWhite(opts []*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKeys, error) {
+func (s *Store) CreateGlobalAPIKeyWhite(opts *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Create(context.Background(), opts)

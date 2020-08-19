@@ -111,10 +111,10 @@ func (m *MockGlobalAPIKeyWhitelistCreator) EXPECT() *MockGlobalAPIKeyWhitelistCr
 }
 
 // CreateGlobalAPIKeyWhite mocks base method
-func (m *MockGlobalAPIKeyWhitelistCreator) CreateGlobalAPIKeyWhite(arg0 []*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKeys, error) {
+func (m *MockGlobalAPIKeyWhitelistCreator) CreateGlobalAPIKeyWhite(arg0 *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateGlobalAPIKeyWhite", arg0)
-	ret0, _ := ret[0].(*opsmngr.GlobalWhitelistAPIKeys)
+	ret0, _ := ret[0].(*opsmngr.GlobalWhitelistAPIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

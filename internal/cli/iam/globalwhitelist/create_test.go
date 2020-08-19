@@ -32,11 +32,11 @@ func TestCreate_Run(t *testing.T) {
 	createOpts := &CreateOpts{
 		store:       mockStore,
 		description: "test",
-		cidrs:       []string{"77.54.32.11"},
+		cidr:        "77.54.32.11",
 	}
 
 	whitelistReq := createOpts.newWhitelistAPIKeysReq()
-	expected := &opsmngr.GlobalWhitelistAPIKeys{}
+	expected := &opsmngr.GlobalWhitelistAPIKey{}
 	mockStore.
 		EXPECT().
 		CreateGlobalAPIKeyWhite(whitelistReq).

@@ -24,11 +24,11 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const createTemplate = "Created new whitelist entry(s).\n"
+const createTemplate = "Global whitelist entry '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	description string
-	cidrs       []string
+	cidr        string
 	store       store.GlobalAPIKeyWhitelistCreator
 }
 
@@ -38,17 +38,12 @@ func (opts *CreateOpts) init() error {
 	return err
 }
 
-func (opts *CreateOpts) newWhitelistAPIKeysReq() []*opsmngr.WhitelistAPIKeysReq {
-	whitelistRep := make([]*opsmngr.WhitelistAPIKeysReq, len(opts.cidrs))
-	for i := range opts.cidrs {
-		whitelist := &opsmngr.WhitelistAPIKeysReq{
-			CidrBlock:   opts.cidrs[i],
-			Description: opts.description,
-		}
-		whitelistRep[i] = whitelist
+func (opts *CreateOpts) newWhitelistAPIKeysReq() *opsmngr.WhitelistAPIKeysReq {
+	whitelist := &opsmngr.WhitelistAPIKeysReq{
+		CidrBlock:   opts.cidr,
+		Description: opts.description,
 	}
-
-	return whitelistRep
+	return whitelist
 }
 
 func (opts *CreateOpts) Run() error {
@@ -75,7 +70,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringSliceVar(&opts.cidrs, flag.CIDR, []string{}, usage.WhitelistCIDREntry)
+	cmd.Flags().StringVar(&opts.cidr, flag.CIDR, "", usage.WhitelistCIDREntry)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.WhitelistIPEntry)
 
 	_ = cmd.MarkFlagRequired(flag.CIDR)

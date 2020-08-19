@@ -58,10 +58,9 @@ func (opts *UpdateOpts) Run() error {
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "assign <ID>",
-		Aliases: []string{"updates"},
-		Args:    cobra.ExactArgs(1),
-		Short:   updateAPIKey,
+		Use:   "update <ID>",
+		Args:  cobra.ExactArgs(1),
+		Short: updateAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.init()
 		},
@@ -73,6 +72,9 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
+
+	_ = cmd.MarkFlagRequired(flag.Description)
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

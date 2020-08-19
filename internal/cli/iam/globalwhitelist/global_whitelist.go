@@ -12,36 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package globalwhitelist
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalwhitelist"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongocli/internal/cli/iam/projects"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-const (
-	iam  = "Organization and projects operations."
-	long = "Identity and Access Management."
-)
-
 func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "iam",
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
-		},
-		Short: iam,
-		Long:  long,
+	const use = "globalWhitelists"
+	var cmd = &cobra.Command{
+		Use:     use,
+		Short:   short,
+		Aliases: cli.GenerateAliases(use, "ipwhitelist"),
 	}
+
 	cmd.AddCommand(
-		projects.Builder(),
-		organizations.Builder(),
-		globalapikeys.Builder(),
-		globalwhitelist.Builder(),
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
 	)
 
 	return cmd

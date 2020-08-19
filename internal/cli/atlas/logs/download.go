@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -63,7 +64,7 @@ func (opts *DownloadOpts) Run() error {
 
 func (opts *DownloadOpts) output() string {
 	if opts.out == "" {
-		opts.out = opts.name
+		opts.out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
 	}
 	return opts.out
 }

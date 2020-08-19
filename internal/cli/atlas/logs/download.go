@@ -42,7 +42,7 @@ type DownloadOpts struct {
 	store store.LogsDownloader
 }
 
-var downloadMessage = "Download of '%s' completed.\n"
+var downloadMessage = "Download of %s completed.\n"
 
 func (opts *DownloadOpts) initStore() error {
 	var err error

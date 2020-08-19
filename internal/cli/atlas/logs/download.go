@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,6 +42,8 @@ type DownloadOpts struct {
 	store store.LogsDownloader
 }
 
+var downloadMessage = "Download of %s completed.\n"
+
 func (opts *DownloadOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
@@ -58,12 +61,14 @@ func (opts *DownloadOpts) Run() error {
 		_ = opts.handleError(f)
 		return err
 	}
+
+	fmt.Printf(downloadMessage, opts.out)
 	return f.Close()
 }
 
 func (opts *DownloadOpts) output() string {
 	if opts.out == "" {
-		opts.out = opts.name
+		opts.out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
 	}
 	return opts.out
 }

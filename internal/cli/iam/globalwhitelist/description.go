@@ -11,11 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package whitelist
+package globalwhitelist
 
 const (
-	short           = "Manage the access whitelist for your API Key."
-	createWhitelist = "Create an access whitelist for your API Key."
-	deleteWhitelist = "Delete an access whitelist from your API Key."
-	listWhitelist   = "List Atlas whitelist entries for your API Key."
+	short           = "Manage the access whitelist for Global API Key."
+	createWhitelist = "Create an access whitelist for Global API Key."
+	deleteWhitelist = "Delete an access whitelist from Global API Key."
+	listWhitelist   = "List Atlas whitelist entries for Global API Key."
+	describeEntry   = "Return one Global Whitelist Entry using its unique identifier."
 )

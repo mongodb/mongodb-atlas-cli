@@ -12,60 +12,62 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package whitelist
+package globalwhitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
-	*cli.DeleteOpts
+const listTemplate = `ID	CIDR BLOCK	CREATED AT{{range .Results}}
+{{.ID}}	{{.CidrBlock}}	{{.Created}}{{end}}
+`
+
+type ListOpts struct {
 	cli.GlobalOpts
-	apiKey string
-	store  store.OrganizationAPIKeyWhitelistDeleter
+	cli.ListOpts
+	store store.GlobalAPIKeyWhitelistLister
 }
 
-func (opts *DeleteOpts) init() error {
+func (opts *ListOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyWhitelist, opts.ConfigOrgID(), opts.apiKey)
-}
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.GlobalAPIKeyWhitelists(opts.NewListOptions())
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist delete <IP> [--orgId orgId] [--apiKey apiKey] --force
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),
+	if err != nil {
+		return err
 	}
 
+	return output.Print(config.Default(), listTemplate, r)
+}
+
+// mongocli iam globalWhitelist(s) list|ls
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   deleteWhitelist,
-		Args:    cobra.ExactArgs(1),
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
+		Short:   listWhitelist,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunEOrg(opts.init); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	return cmd
 }

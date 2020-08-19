@@ -16,6 +16,7 @@ package iam
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
+	"github.com/mongodb/mongocli/internal/cli/iam/globalwhitelist"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -40,6 +41,7 @@ func Builder() *cobra.Command {
 		projects.Builder(),
 		organizations.Builder(),
 		globalapikeys.Builder(),
+		globalwhitelist.Builder(),
 	)
 
 	return cmd

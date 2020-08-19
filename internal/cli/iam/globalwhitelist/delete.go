@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package whitelist
+package globalwhitelist
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,9 +25,7 @@ import (
 
 type DeleteOpts struct {
 	*cli.DeleteOpts
-	cli.GlobalOpts
-	apiKey string
-	store  store.OrganizationAPIKeyWhitelistDeleter
+	store store.GlobalAPIKeyWhitelistDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -37,10 +35,10 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyWhitelist, opts.ConfigOrgID(), opts.apiKey)
+	return opts.Delete(opts.store.DeleteGlobalAPIKeyWhitelist)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist delete <IP> [--orgId orgId] [--apiKey apiKey] --force
+// mongocli iam globalWhitelist(s) delete <ID> [--force]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),
@@ -52,7 +50,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   deleteWhitelist,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunEOrg(opts.init); err != nil {
+			if err := opts.init(); err != nil {
 				return err
 			}
 			opts.Entry = args[0]
@@ -63,9 +61,6 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
-
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

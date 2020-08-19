@@ -11,11 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package whitelist
 
-const (
-	short           = "Manage the access whitelist for your API Key."
-	createWhitelist = "Create an access whitelist for your API Key."
-	deleteWhitelist = "Delete an access whitelist from your API Key."
-	listWhitelist   = "List Atlas whitelist entries for your API Key."
+package globalwhitelist
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "globalWhitelists"
+	var cmd = &cobra.Command{
+		Use:     use,
+		Short:   short,
+		Aliases: cli.GenerateAliases(use, "ipwhitelist"),
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+	)
+
+	return cmd
+}

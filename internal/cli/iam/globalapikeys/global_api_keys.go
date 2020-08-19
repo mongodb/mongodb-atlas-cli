@@ -12,34 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package iam
+package globalapikeys
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongocli/internal/cli/iam/projects"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-const (
-	iam  = "Organization and projects operations."
-	long = "Identity and Access Management."
-)
-
 func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "iam",
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return validate.Credentials()
-		},
-		Short: iam,
-		Long:  long,
+	const use = "globalApiKeys"
+	var cmd = &cobra.Command{
+		Use:     use,
+		Short:   short,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
-		projects.Builder(),
-		organizations.Builder(),
-		globalapikeys.Builder(),
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		UpdateBuilder(),
+		DeleteBuilder(),
 	)
 
 	return cmd

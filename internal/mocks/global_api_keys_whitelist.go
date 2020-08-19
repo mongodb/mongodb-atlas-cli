@@ -110,19 +110,19 @@ func (m *MockGlobalAPIKeyWhitelistCreator) EXPECT() *MockGlobalAPIKeyWhitelistCr
 	return m.recorder
 }
 
-// CreateGlobalAPIKeyWhite mocks base method
-func (m *MockGlobalAPIKeyWhitelistCreator) CreateGlobalAPIKeyWhite(arg0 *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
+// CreateGlobalAPIKeyWhitelist mocks base method
+func (m *MockGlobalAPIKeyWhitelistCreator) CreateGlobalAPIKeyWhitelist(arg0 *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateGlobalAPIKeyWhite", arg0)
+	ret := m.ctrl.Call(m, "CreateGlobalAPIKeyWhitelist", arg0)
 	ret0, _ := ret[0].(*opsmngr.GlobalWhitelistAPIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateGlobalAPIKeyWhite indicates an expected call of CreateGlobalAPIKeyWhite
-func (mr *MockGlobalAPIKeyWhitelistCreatorMockRecorder) CreateGlobalAPIKeyWhite(arg0 interface{}) *gomock.Call {
+// CreateGlobalAPIKeyWhitelist indicates an expected call of CreateGlobalAPIKeyWhitelist
+func (mr *MockGlobalAPIKeyWhitelistCreatorMockRecorder) CreateGlobalAPIKeyWhitelist(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGlobalAPIKeyWhite", reflect.TypeOf((*MockGlobalAPIKeyWhitelistCreator)(nil).CreateGlobalAPIKeyWhite), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGlobalAPIKeyWhitelist", reflect.TypeOf((*MockGlobalAPIKeyWhitelistCreator)(nil).CreateGlobalAPIKeyWhitelist), arg0)
 }
 
 // MockGlobalAPIKeyWhitelistDeleter is a mock of GlobalAPIKeyWhitelistDeleter interface

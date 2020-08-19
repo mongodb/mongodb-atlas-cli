@@ -35,7 +35,6 @@ func TestDelete_Run(t *testing.T) {
 			Entry:   "5a0a1e7e0f2912c554080adc",
 			Confirm: true,
 		},
-		apiKey: "1",
 	}
 	mockStore.
 		EXPECT().

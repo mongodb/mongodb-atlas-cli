@@ -48,7 +48,7 @@ func (opts *CreateOpts) newWhitelistAPIKeysReq() *opsmngr.WhitelistAPIKeysReq {
 
 func (opts *CreateOpts) Run() error {
 	whitelistReq := opts.newWhitelistAPIKeysReq()
-	p, err := opts.store.CreateGlobalAPIKeyWhite(whitelistReq)
+	p, err := opts.store.CreateGlobalAPIKeyWhitelist(whitelistReq)
 
 	if err != nil {
 		return err

@@ -16,6 +16,6 @@ package whitelist
 const (
 	short           = "Manage the access whitelist for your API Key."
 	createWhitelist = "Create an access whitelist for your API Key."
-	deleteWhitelist = "Delete a database user from your API Key."
+	deleteWhitelist = "Delete an access whitelist from your API Key."
 	listWhitelist   = "List Atlas whitelist entries for your API Key."
 )

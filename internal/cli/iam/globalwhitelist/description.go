@@ -16,7 +16,7 @@ package globalwhitelist
 const (
 	short           = "Manage the access whitelist for Global API Key."
 	createWhitelist = "Create an access whitelist for Global API Key."
-	deleteWhitelist = "Delete a database user from Global API Key."
+	deleteWhitelist = "Delete an access whitelist from Global API Key."
 	listWhitelist   = "List Atlas whitelist entries for Global API Key."
 	describeEntry   = "Return one Global Whitelist Entry using its unique identifier."
 )

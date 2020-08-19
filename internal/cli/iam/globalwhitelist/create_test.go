@@ -39,7 +39,7 @@ func TestCreate_Run(t *testing.T) {
 	expected := &opsmngr.GlobalWhitelistAPIKey{}
 	mockStore.
 		EXPECT().
-		CreateGlobalAPIKeyWhite(whitelistReq).
+		CreateGlobalAPIKeyWhitelist(whitelistReq).
 		Return(expected, nil).
 		Times(1)
 

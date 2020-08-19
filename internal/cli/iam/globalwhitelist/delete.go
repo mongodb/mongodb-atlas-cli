@@ -25,8 +25,7 @@ import (
 
 type DeleteOpts struct {
 	*cli.DeleteOpts
-	apiKey string
-	store  store.GlobalAPIKeyWhitelistDeleter
+	store store.GlobalAPIKeyWhitelistDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -62,9 +61,6 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
-
-	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

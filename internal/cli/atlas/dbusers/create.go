@@ -172,14 +172,12 @@ func CreateBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.validate(); err != nil {
-				return err
-			}
 			opts.roles = append(opts.roles, args...)
 
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

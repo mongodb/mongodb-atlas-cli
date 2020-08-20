@@ -66,7 +66,7 @@ func (opts *ListOpts) clusters() (interface{}, error) {
 	if opts.ConfigProjectID() == "" {
 		return opts.store.ListAllProjectClusters()
 	}
-	if config.Output() == "" {
+	if opts.ConfigOutput() == "" {
 		return opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
 	}
 	c, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())

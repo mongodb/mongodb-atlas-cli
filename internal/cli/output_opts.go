@@ -23,8 +23,8 @@ import (
 
 	"github.com/mattn/go-isatty"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/jsonwritter"
-	"github.com/mongodb/mongocli/internal/templatewritter"
+	"github.com/mongodb/mongocli/internal/jsonwriter"
+	"github.com/mongodb/mongocli/internal/templatewriter"
 )
 
 const (
@@ -41,6 +41,7 @@ type OutputOpts struct {
 	Output    string
 }
 
+// InitOutput allow to init the OutputOpts in a functional way
 func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 	return func() error {
 		opts.Template = t
@@ -49,6 +50,8 @@ func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 	}
 }
 
+// ConfigOutput returns the output format.
+// If the format is empty, it caches it after querying config.
 func (opts *OutputOpts) ConfigOutput() string {
 	if opts.Output != "" {
 		return opts.Output
@@ -57,6 +60,8 @@ func (opts *OutputOpts) ConfigOutput() string {
 	return opts.Output
 }
 
+// ConfigWriter returns the io.Writer.
+// If the writer is nil, it defaults to os.Stdout and caches it.
 func (opts *OutputOpts) ConfigWriter() io.Writer {
 	if opts.OutWriter != nil {
 		return opts.OutWriter
@@ -65,6 +70,7 @@ func (opts *OutputOpts) ConfigWriter() io.Writer {
 	return opts.OutWriter
 }
 
+// IsTerminal returns true is the current file descriptor is TTY kind of terminal
 func (opts *OutputOpts) IsTerminal() bool {
 	if f, isFile := opts.OutWriter.(*os.File); isFile {
 		return isatty.IsTerminal(f.Fd()) || opts.IsCygwinTerminal()
@@ -73,6 +79,7 @@ func (opts *OutputOpts) IsTerminal() bool {
 	return false
 }
 
+// IsCygwinTerminal returns true is the current file descriptor is cygwin
 func (opts *OutputOpts) IsCygwinTerminal() bool {
 	if f, isFile := opts.OutWriter.(*os.File); isFile {
 		return isatty.IsCygwinTerminal(f.Fd())
@@ -81,21 +88,24 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 	return false
 }
 
+// Print will evaluate the defined format and try to parse it accordingly outputting to the set writer
 func (opts *OutputOpts) Print(v interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
-		return jsonwritter.Print(opts.ConfigWriter(), v)
+		return jsonwriter.Print(opts.ConfigWriter(), v)
 	}
 	t, err := opts.parseTemplate()
 	if err != nil {
 		return err
 	}
 	if t != "" {
-		return templatewritter.Print(opts.ConfigWriter(), t, v)
+		return templatewriter.Print(opts.ConfigWriter(), t, v)
 	}
 	_, err = fmt.Fprintln(opts.ConfigWriter(), v)
 	return err
 }
 
+// parseTemplate will try to find if the given format is a user given template, either by string or file and use it.
+// Current available user templates are  "go-template=Template string" and "go-template-file=path/to/template"
 func (opts *OutputOpts) parseTemplate() (string, error) {
 	value := opts.Template
 	templateFormat := ""

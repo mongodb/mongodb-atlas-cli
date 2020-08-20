@@ -20,7 +20,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -31,6 +30,7 @@ const createTemplate = "Created new whitelist entry(s).\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	apyKey string
 	ips    []string
 	cidrs  []string
@@ -71,13 +71,13 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	p, err := opts.store.CreateOrganizationAPIKeyWhite(opts.ConfigOrgID(), opts.apyKey, whitelistReq)
+	r, err := opts.store.CreateOrganizationAPIKeyWhite(opts.ConfigOrgID(), opts.apyKey, whitelistReq)
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
+	return opts.Print(r)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikeys whitelist|ipwhitelist create [--apiKey keyId] [--orgId orgId] [--ip ip] [--cidr cidr]
@@ -87,7 +87,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: createWhitelist,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(opts.init)
+			return opts.PreRunEOrg(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -99,6 +102,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.ips, flag.IP, []string{}, usage.WhitelistIPEntry)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 

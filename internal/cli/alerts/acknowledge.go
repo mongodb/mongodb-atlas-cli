@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -30,6 +29,7 @@ import (
 
 type AcknowledgeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	alertID string
 	until   string
 	comment string
@@ -52,7 +52,7 @@ func (opts *AcknowledgeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), ackTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
@@ -71,6 +71,7 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 // mongocli atlas alerts acknowledge <ID> --projectId projectId --forever --comment comment --until until
 func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
+	opts.Template = ackTemplate
 	cmd := &cobra.Command{
 		Use:     "acknowledge <ID>",
 		Short:   acknowledgeAlerts,
@@ -80,19 +81,23 @@ func AcknowledgeBuilder() *cobra.Command {
 			if opts.forever && opts.until != "" {
 				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)
 			}
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), ackTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()
 		},
 	}
-
+	cmd.OutOrStdout()
 	cmd.Flags().BoolVarP(&opts.forever, flag.Forever, flag.ForeverShort, false, usage.Forever)
 	cmd.Flags().StringVar(&opts.until, flag.Until, "", usage.Until)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -31,6 +30,7 @@ const restoresTemplate = `ID	TIMESTAMP	STATUS{{range .Results}}
 
 type RestoresListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	clusterID string
 	store     store.ContinuousJobLister
@@ -49,7 +49,7 @@ func (opts *RestoresListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), restoresTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) list <clusterId> [--page N] [--limit N]
@@ -61,7 +61,10 @@ func RestoresListBuilder() *cobra.Command {
 		Short:   ListRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), restoresTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {

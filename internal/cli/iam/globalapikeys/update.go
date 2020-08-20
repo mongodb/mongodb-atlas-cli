@@ -14,9 +14,9 @@
 package globalapikeys
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -24,6 +24,7 @@ import (
 )
 
 type UpdateOpts struct {
+	cli.OutputOpts
 	id    string
 	desc  string
 	roles []string
@@ -51,17 +52,19 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam globalApiKey(s) update <ID> [--role role][--desc description]
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
+	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Args:  cobra.ExactArgs(1),
 		Short: updateAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -72,6 +75,8 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.Role)

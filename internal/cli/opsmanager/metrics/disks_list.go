@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DisksListsOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	hostID string
 	store  store.HostDisksLister
@@ -48,7 +48,7 @@ func (opts *DisksListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli om metric(s) process(es) disks lists <ID>
@@ -60,7 +60,10 @@ func DisksListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]

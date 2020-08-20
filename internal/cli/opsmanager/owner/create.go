@@ -16,9 +16,9 @@ package owner
 
 import (
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +26,7 @@ import (
 )
 
 type CreateOpts struct {
+	cli.OutputOpts
 	email        string
 	password     string
 	firstName    string
@@ -56,7 +57,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *CreateOpts) newOwner() *opsmngr.User {
@@ -90,6 +91,7 @@ func CreateBuilder() *cobra.Command {
 		Long:  CreateLong,
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			_ = opts.InitOutput(cmd.OutOrStdout(), createTemplate)()
 			if err := opts.init(); err != nil {
 				return err
 			}

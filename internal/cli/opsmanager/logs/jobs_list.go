@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type JobsListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	verbose bool
 	store   store.LogJobLister
 }
@@ -46,7 +46,7 @@ func (opts *JobsListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *JobsListOpts) newLogListOptions() *opsmngr.LogListOptions {
@@ -61,7 +61,10 @@ func JobsListOptsBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   ListLogCollectionJobs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

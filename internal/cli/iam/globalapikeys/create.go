@@ -15,9 +15,9 @@
 package globalapikeys
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -30,6 +30,7 @@ Private API Key {{.PrivateKey}}
 `
 
 type CreateOpts struct {
+	cli.OutputOpts
 	desc  string
 	roles []string
 	store store.GlobalAPIKeyCreator
@@ -49,22 +50,24 @@ func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 }
 
 func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateGlobalAPIKey(opts.newAPIKeyInput())
+	r, err := opts.store.CreateGlobalAPIKey(opts.newAPIKeyInput())
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
+	return opts.Print(r)
 }
 
 // mongocli iam globalApiKey(s) create [--role role][--desc description]
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: createAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -32,6 +31,7 @@ Private API Key {{.PrivateKey}}
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store       store.ProjectAPIKeyCreator
 	description string
 	roles       []string
@@ -54,7 +54,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam project apiKey create --roles roles --description description
@@ -65,11 +65,10 @@ func CreateBuilder() *cobra.Command {
 		Short: createProjectAPIKey,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-
-			return opts.PreRunE()
+			return opts.PreRunE(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -80,6 +79,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.Role)

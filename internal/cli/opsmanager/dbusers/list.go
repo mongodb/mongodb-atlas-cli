@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -30,6 +29,7 @@ const listTemplate = `USERNAME	DATABASE{{range .}}
 
 type ListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store store.AutomationGetter
 }
 
@@ -40,13 +40,13 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+	r, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, current.Auth.Users)
+	return opts.Print(r)
 }
 
 // mongocli om|cm dbuser(s) list [--projectId projectId]
@@ -58,7 +58,10 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

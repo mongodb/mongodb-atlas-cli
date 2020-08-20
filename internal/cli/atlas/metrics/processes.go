@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type ProcessOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.MetricsOpts
 	host  string
 	port  int
@@ -45,8 +45,13 @@ func (opts *ProcessOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
+
+var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
+`
 
 // mongocli atlas metric(s) process(es) <hostname:port> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func ProcessBuilder() *cobra.Command {
@@ -57,7 +62,10 @@ func ProcessBuilder() *cobra.Command {
 		Aliases: []string{"process"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
@@ -79,6 +87,7 @@ func ProcessBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
 

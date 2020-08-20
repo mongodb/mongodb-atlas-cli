@@ -14,13 +14,16 @@
 package globalwhitelist
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/output"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 type DescribeOpts struct {
+	cli.OutputOpts
 	id    string
 	store store.GlobalAPIKeyWhitelistDescriber
 }
@@ -41,18 +44,20 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam globalWhitelist(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
+	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
 		Short:   describeEntry,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -60,6 +65,8 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

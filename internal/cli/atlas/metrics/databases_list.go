@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DatabasesListsOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	host  string
 	port  int
@@ -38,6 +38,10 @@ func (opts *DatabasesListsOpts) initStore() error {
 	return err
 }
 
+var databasesListTemplate = `{{range .Results}}
+{{.DatabaseName}}{{end}}
+`
+
 func (opts *DatabasesListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.ProcessDatabases(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
@@ -45,7 +49,7 @@ func (opts *DatabasesListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
 
 // mongocli atlas metric(s) process(es) disks lists <hostname:port>
@@ -57,7 +61,10 @@ func DatabasesListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), databasesListTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
@@ -72,6 +79,7 @@ func DatabasesListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

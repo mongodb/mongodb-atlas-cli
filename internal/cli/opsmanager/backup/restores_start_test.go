@@ -33,9 +33,9 @@ func TestRestoresStart_Run(t *testing.T) {
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &RestoresStartOpts{
-			store:       mockStore,
-			method:      automatedRestore,
-			clusterName: "Cluster0",
+			store:     mockStore,
+			method:    automatedRestore,
+			clusterID: "Cluster0",
 		}
 
 		mockStore.
@@ -52,9 +52,9 @@ func TestRestoresStart_Run(t *testing.T) {
 
 	t.Run(httpRestore, func(t *testing.T) {
 		listOpts := &RestoresStartOpts{
-			store:       mockStore,
-			method:      httpRestore,
-			clusterName: "Cluster0",
+			store:     mockStore,
+			method:    httpRestore,
+			clusterID: "Cluster0",
 		}
 
 		mockStore.

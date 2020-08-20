@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type GCPOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	atlasCIDRBlock string
 	gcpProjectID   string
 	network        string
@@ -38,8 +38,6 @@ func (opts *GCPOpts) initStore() error {
 	opts.store, err = store.New(config.Default())
 	return err
 }
-
-var gcpTemplate = "Network peering connection '{{.ID}}' created.\n"
 
 func (opts *GCPOpts) Run() error {
 	container, err := opts.containerExists()
@@ -58,7 +56,7 @@ func (opts *GCPOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), gcpTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *GCPOpts) containerExists() (*atlas.Container, error) {
@@ -104,7 +102,10 @@ func GCPBuilder() *cobra.Command {
 		Short: createGCPConnection,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -116,6 +117,7 @@ func GCPBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.AtlasCIDRBlock)
 

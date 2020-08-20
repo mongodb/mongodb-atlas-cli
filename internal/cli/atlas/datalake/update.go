@@ -20,7 +20,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -31,6 +30,7 @@ const aws = "AWS"
 
 type UpdateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store      store.DataLakeUpdater
 	name       string
 	region     string
@@ -76,7 +76,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region]
@@ -93,7 +93,10 @@ func UpdateBuilder() *cobra.Command {
 				return fmt.Errorf("nothing to update")
 			}
 
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -105,6 +108,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.testBucket, flag.TestBucket, "", usage.DataLakeTestBucket)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

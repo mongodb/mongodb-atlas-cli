@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -31,6 +30,7 @@ const snapshotsTemplate = `ID	CREATED	COMPLETE{{range .Results}}
 
 type SnapshotsListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	clusterID string
 	store     store.ContinuousSnapshotsLister
@@ -49,7 +49,7 @@ func (opts *SnapshotsListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), snapshotsTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas backups snapshots list <clusterId> [--projectId projectId] [--page N] [--limit N]
@@ -61,7 +61,10 @@ func SnapshotsListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), snapshotsTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {

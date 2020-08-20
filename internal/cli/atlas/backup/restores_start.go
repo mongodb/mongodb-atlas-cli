@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -36,6 +35,7 @@ const (
 
 type RestoresStartOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	method               string
 	clusterName          string
 	targetProjectID      string
@@ -63,7 +63,7 @@ func (opts *RestoresStartOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), startTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *RestoresStartOpts) newCloudProviderSnapshotRestoreJob() *atlas.CloudProviderSnapshotRestoreJob {
@@ -169,7 +169,10 @@ func RestoresStartBuilder() *cobra.Command {
 				}
 			}
 
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]
@@ -194,6 +197,7 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

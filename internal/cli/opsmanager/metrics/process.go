@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type ProcessOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.MetricsOpts
 	hostID string
 	store  store.HostMeasurementLister
@@ -49,7 +49,7 @@ func (opts *ProcessOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), metricTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
@@ -61,7 +61,10 @@ func ProcessBuilder() *cobra.Command {
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]

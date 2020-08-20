@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store             store.DBUserCertificateCreator
 	username          string
 	monthsUntilExpiry int
@@ -43,8 +43,10 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
+
+var createTemplate = "Certificate created '{{.ID}}'\n"
 
 // mongocli atlas dbuser(s) certs create --username <username> [--monthsUntilExpiration number] [--projectId projectId]
 func CreateBuilder() *cobra.Command {
@@ -54,7 +56,10 @@ func CreateBuilder() *cobra.Command {
 		Short: createDBUserCerts,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -63,7 +68,9 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.monthsUntilExpiry, flag.MonthsUntilExpiration, 3, usage.MonthsUntilExpiration)
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.DatabaseUser)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Username)
 

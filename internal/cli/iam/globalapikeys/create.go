@@ -77,6 +77,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.Role)

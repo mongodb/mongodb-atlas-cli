@@ -15,9 +15,6 @@
 package snapshots
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -28,6 +25,7 @@ import (
 
 type WatchOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	id          string
 	clusterName string
 	store       store.SnapshotsDescriber
@@ -39,23 +37,20 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
-const defaultWait = 4 * time.Second
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err != nil {
+		return false, err
+	}
+	return result.Status == "completed" || result.Status == "failed", nil
+}
 
 func (opts *WatchOpts) Run() error {
-	for {
-		result, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.id)
-		if err != nil {
-			return err
-		}
-		if result.Status == "completed" || result.Status == "failed" {
-			fmt.Printf("\nSnapshot changes %s.\n", result.Status)
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(defaultWait)
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
 	}
 
-	return nil
+	return opts.Print(nil)
 }
 
 // mongocli atlas snapshot(s) watch <snapshotId> --clusterName clusterName [--projectId projectId]
@@ -66,7 +61,10 @@ func WatchBuilder() *cobra.Command {
 		Short: watchSnapshot,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), "\nSnapshot changes completed.\n"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

@@ -15,9 +15,6 @@
 package privateendpoints
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -28,6 +25,7 @@ import (
 
 type WatchOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	id    string
 	store store.PrivateEndpointDescriber
 }
@@ -38,23 +36,20 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
-const defaultWait = 4 * time.Second
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	if err != nil {
+		return false, err
+	}
+	return result.Status == "WAITING_FOR_USER" || result.Status == "FAILED", nil
+}
 
 func (opts *WatchOpts) Run() error {
-	for {
-		result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
-		if err != nil {
-			return err
-		}
-		if result.Status == "WAITING_FOR_USER" || result.Status == "FAILED" {
-			fmt.Printf("\nPrivate endpoint changes completed.\n")
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(defaultWait)
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
 	}
 
-	return nil
+	return opts.Print(nil)
 }
 
 // mongocli atlas cluster(s) watch <name> [--projectId projectId]
@@ -65,7 +60,10 @@ func WatchBuilder() *cobra.Command {
 		Short: watchPrivateEndpoint,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

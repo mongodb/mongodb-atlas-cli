@@ -15,9 +15,6 @@
 package clusters
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -29,6 +26,7 @@ import (
 
 type WatchOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	name  string
 	store store.ClusterDescriber
 }
@@ -39,23 +37,21 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
-const defaultWait = 4 * time.Second
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return false, err
+	}
+	c, ok := result.(*mongodbatlas.Cluster)
+	return ok && c.StateName == "IDLE", nil
+}
 
 func (opts *WatchOpts) Run() error {
-	for {
-		result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
-		if err != nil {
-			return err
-		}
-		if c, ok := result.(*mongodbatlas.Cluster); ok && c.StateName == "IDLE" {
-			fmt.Printf("\nCluster available at: %s\n", c.MongoURIWithOptions)
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(defaultWait)
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
 	}
 
-	return nil
+	return opts.Print(nil)
 }
 
 // mongocli atlas cluster(s) watch <name> [--projectId projectId]
@@ -66,7 +62,10 @@ func WatchBuilder() *cobra.Command {
 		Short: watchCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), "\nCluster available.\n"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

@@ -15,11 +15,7 @@
 package automation
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -29,6 +25,7 @@ import (
 
 type WatchOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	store store.AutomationStatusGetter
 }
 
@@ -38,29 +35,26 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
-const defaultWait = 4 * time.Second
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
+	if err != nil {
+		return false, err
+	}
+
+	for _, p := range result.Processes {
+		if p.LastGoalVersionAchieved != result.GoalVersion {
+			return false, nil
+		}
+	}
+	return true, nil
+}
 
 func (opts *WatchOpts) Run() error {
-	for {
-		result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
-		if err != nil {
-			return err
-		}
-		reachedGoal := true
-		for _, p := range result.Processes {
-			if p.LastGoalVersionAchieved != result.GoalVersion {
-				reachedGoal = false
-				break
-			}
-		}
-		if reachedGoal {
-			break
-		}
-		fmt.Print(".")
-		time.Sleep(defaultWait)
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
 	}
-	fmt.Printf("\nChanges deployed successfully\n")
-	return nil
+
+	return opts.Print(nil)
 }
 
 // mongocli ops-manager automation watch [--projectId projectId]
@@ -71,7 +65,10 @@ func WatchBuilder() *cobra.Command {
 		Short: WatchAutomationStatus,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), "\nChanges deployed successfully\n"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

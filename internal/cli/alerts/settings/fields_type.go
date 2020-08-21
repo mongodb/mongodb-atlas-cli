@@ -15,13 +15,16 @@
 package settings
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/output"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 type FieldsTypeOpts struct {
+	cli.OutputOpts
 	store store.MatcherFieldsLister
 }
 
@@ -39,24 +42,28 @@ func (opts *FieldsTypeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), matcherFieldsTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas alerts config(s) fields type
 func FieldsTypeBuilder() *cobra.Command {
 	opts := &FieldsTypeOpts{}
+	opts.Template = matcherFieldsTemplate
 	cmd := &cobra.Command{
 		Use:     "type",
 		Short:   configFieldsType,
 		Aliases: []string{"types"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

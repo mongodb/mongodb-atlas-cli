@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DescribeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	name  string
 	store store.ClusterDescriber
 }
@@ -46,7 +46,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas cluster(s) describe <name> --projectId projectId
@@ -57,7 +57,10 @@ func DescribeBuilder() *cobra.Command {
 		Short: describeCluster,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
@@ -66,6 +69,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

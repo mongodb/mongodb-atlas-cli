@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -31,6 +30,7 @@ import (
 
 type JobsCollectOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	resourceType              string
 	resourceName              string
 	logTypes                  []string
@@ -52,7 +52,7 @@ func (opts *JobsCollectOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), collectTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *JobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
@@ -85,7 +85,10 @@ func JobsCollectOptsBuilder() *cobra.Command {
 		},
 		ValidArgs: []string{"cluster", "process", "replicaset"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), collectTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.resourceType = args[0]
@@ -102,6 +105,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Type)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

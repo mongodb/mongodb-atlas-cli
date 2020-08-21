@@ -20,7 +20,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -29,6 +28,7 @@ import (
 
 type AzureOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	region         string
 	atlasCIDRBlock string
 	directoryID    string
@@ -66,7 +66,7 @@ func (opts *AzureOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *AzureOpts) containerExists() (*atlas.Container, error) {
@@ -121,7 +121,10 @@ func AzureBuilder() *cobra.Command {
 		Short: createAzureConnection,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -136,6 +139,7 @@ func AzureBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.DirectoryID)
 	_ = cmd.MarkFlagRequired(flag.SubscriptionID)

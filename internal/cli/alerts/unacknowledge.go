@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type UnacknowledgeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	alertID string
 	comment string
 	store   store.AlertAcknowledger
@@ -47,7 +47,7 @@ func (opts *UnacknowledgeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), unackTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
@@ -66,7 +66,10 @@ func UnacknowledgeBuilder() *cobra.Command {
 		Aliases: []string{"unack"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), unackTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]
@@ -77,6 +80,7 @@ func UnacknowledgeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

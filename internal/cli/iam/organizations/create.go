@@ -15,15 +15,18 @@
 package organizations
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/output"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 const createTemplate = "Organization '{{.ID}}' created.\n"
 
 type CreateOpts struct {
+	cli.OutputOpts
 	name  string
 	store store.OrganizationCreator
 }
@@ -35,23 +38,25 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateOrganization(opts.name)
+	r, err := opts.store.CreateOrganization(opts.name)
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
+	return opts.Print(r)
 }
 
 // mongocli iam organization(s) create <name>
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: createOrganization,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -60,6 +65,8 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -29,6 +28,7 @@ const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
 `
 
 type ListOpts struct {
+	cli.OutputOpts
 	cli.ListOpts
 	store store.GlobalAPIKeyLister
 }
@@ -46,17 +46,19 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam globalApiKey(s) list|ls
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   listAPIKeys,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -66,6 +68,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

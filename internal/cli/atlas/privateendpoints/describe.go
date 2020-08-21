@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -30,6 +29,7 @@ var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
 
 type DescribeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	id    string
 	store store.PrivateEndpointDescriber
 }
@@ -47,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
@@ -60,7 +60,10 @@ func DescribeBuilder() *cobra.Command {
 		Short:   describePrivateEndpoints,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-			return opts.PreRunE(opts.init)
+			return opts.PreRunE(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -68,6 +71,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

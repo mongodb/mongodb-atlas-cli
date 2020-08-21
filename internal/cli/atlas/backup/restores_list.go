@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type RestoresListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
 	store       store.RestoreJobsLister
@@ -48,7 +48,7 @@ func (opts *RestoresListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), restoreListTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N]
@@ -60,7 +60,10 @@ func RestoresListBuilder() *cobra.Command {
 		Short:   listRestores,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), restoreListTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.clusterName = args[0]
@@ -73,6 +76,7 @@ func RestoresListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

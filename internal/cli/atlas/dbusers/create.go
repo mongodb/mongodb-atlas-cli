@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -32,6 +31,7 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	username    string
 	password    string
 	x509Type    string
@@ -88,7 +88,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
@@ -172,12 +172,13 @@ func CreateBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
-				return err
-			}
 			opts.roles = append(opts.roles, args...)
 
-			return opts.validate()
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.validate,
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {
@@ -196,6 +197,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Username)
 

@@ -96,6 +96,7 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 		var clusters []*convert.ClusterConfig
 		if err := json.Unmarshal(resp, &clusters); err != nil {
+			t.Log(string(resp))
 			t.Fatalf("unexpected error: %v", err)
 		}
 

@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	ConfigOpts
 	store store.AlertConfigurationCreator
 }
@@ -45,7 +45,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
@@ -54,12 +54,16 @@ func (opts *CreateOpts) Run() error {
 // [--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: createAlertsConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -95,6 +99,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.notificationVictorOpsRoutingKey, flag.NotificationVictorOpsRoutingKey, "", usage.NotificationVictorOpsRoutingKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

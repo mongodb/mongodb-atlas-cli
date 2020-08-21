@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -29,6 +28,7 @@ const createTemplate = "Certificate successfully created.\n"
 
 type SaveOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store   store.X509CertificateConfSaver
 	casPath string
 	fs      afero.Fs
@@ -53,7 +53,7 @@ func (opts *SaveOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem
@@ -66,7 +66,10 @@ func CreateBuilder() *cobra.Command {
 		Short: saveCertConfig,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -76,6 +79,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.casPath, flag.CASFilePath, "", usage.CASFilePath)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.CASFilePath)
 

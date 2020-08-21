@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -30,6 +29,7 @@ const listTemplate = `ID	NAME{{range .Results}}
 
 type ListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	store store.ProjectLister
 }
@@ -52,17 +52,19 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam project(s) list [--orgId orgId]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   listProjects,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -74,6 +76,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

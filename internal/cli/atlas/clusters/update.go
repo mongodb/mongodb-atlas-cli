@@ -19,7 +19,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -29,6 +28,7 @@ import (
 
 type UpdateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	name       string
 	tier       string
 	diskSizeGB float64
@@ -60,7 +60,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTmpl, r)
+	return opts.Print(r)
 }
 
 func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
@@ -130,7 +130,10 @@ func UpdateBuilder() *cobra.Command {
 			if len(args) != 0 {
 				opts.name = args[0]
 			}
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -143,6 +146,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

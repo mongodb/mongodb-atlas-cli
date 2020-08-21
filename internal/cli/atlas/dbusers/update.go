@@ -19,7 +19,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -29,6 +28,7 @@ import (
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 
 type UpdateOpts struct {
+	cli.OutputOpts
 	cli.GlobalOpts
 	username string
 	password string
@@ -51,7 +51,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
@@ -75,7 +75,10 @@ func UpdateBuilder() *cobra.Command {
   $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
@@ -88,6 +91,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -12,19 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package json
+package jsonwriter
 
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 )
 
-func PrettyPrint(obj interface{}) error {
-	prettyJSON, err := json.MarshalIndent(obj, "", "  ")
+const (
+	prefix = ""
+	indent = "  "
+)
+
+func Print(w io.Writer, obj interface{}) error {
+	prettyJSON, err := json.MarshalIndent(obj, prefix, indent)
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(prettyJSON))
+	_, err = fmt.Fprintln(w, string(prettyJSON))
 
-	return nil
+	return err
 }

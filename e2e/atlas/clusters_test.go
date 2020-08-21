@@ -70,7 +70,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
-			"-o=json")
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

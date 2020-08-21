@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type AssignOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	id    string
 	roles []string
 	store store.ProjectAPIKeyAssigner
@@ -51,7 +51,7 @@ func (opts *AssignOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return output.Print(config.Default(), updateTemplate, nil)
+	return opts.Print(nil)
 }
 
 // mongocli iam project(s) apiKey(s)|apikey(s) assign <ID> [--role role][--projectId projectId]
@@ -59,11 +59,15 @@ func AssignBuilder() *cobra.Command {
 	opts := new(AssignOpts)
 	cmd := &cobra.Command{
 		Use:     "assign <ID>",
-		Aliases: []string{"updates"},
+		Aliases: []string{"update"},
 		Args:    cobra.ExactArgs(1),
 		Short:   assignProjectAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.init)
+			opts.OutWriter = cmd.OutOrStdout()
+			return opts.PreRunE(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -76,6 +80,8 @@ func AssignBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.Role)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

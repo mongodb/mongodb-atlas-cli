@@ -15,13 +15,11 @@
 package backup
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -38,12 +36,11 @@ const (
 
 type RestoresStartOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	method               string
-	clusterName          string
 	clusterID            string
 	targetProjectID      string
 	targetClusterID      string
-	targetClusterName    string
 	checkpointID         string
 	oplogTS              string
 	oplogInc             int64
@@ -63,12 +60,12 @@ func (opts *RestoresStartOpts) initStore() error {
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newContinuousJobRequest()
-	r, err := opts.store.CreateContinuousRestoreJob(opts.ConfigProjectID(), opts.fromCluster(), request)
+	r, err := opts.store.CreateContinuousRestoreJob(opts.ConfigProjectID(), opts.clusterID, request)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobRequest {
@@ -78,7 +75,7 @@ func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobReq
 
 	if opts.isAutomatedRestore() {
 		request.Delivery.TargetGroupID = opts.targetProjectID
-		opts.setTargetCluster(request)
+		request.Delivery.TargetClusterID = opts.targetClusterID
 
 		if opts.oplogTS != "" && opts.oplogInc != 0 {
 			request.OplogTS = opts.oplogTS
@@ -103,21 +100,6 @@ func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobReq
 	return request
 }
 
-func (opts *RestoresStartOpts) fromCluster() string {
-	if opts.clusterName != "" {
-		return opts.clusterName
-	}
-	return opts.clusterID
-}
-
-func (opts *RestoresStartOpts) setTargetCluster(out *atlas.ContinuousJobRequest) {
-	if opts.targetClusterID != "" {
-		out.Delivery.TargetClusterID = opts.targetClusterID
-	} else if opts.targetClusterName != "" {
-		out.Delivery.TargetClusterName = opts.targetClusterName
-	}
-}
-
 func (opts *RestoresStartOpts) isAutomatedRestore() bool {
 	return opts.method == automatedRestore
 }
@@ -127,10 +109,6 @@ func (opts *RestoresStartOpts) isHTTP() bool {
 }
 
 func (opts *RestoresStartOpts) validateParams() error {
-	if (opts.clusterName == "" && opts.clusterID == "") || (opts.clusterName != "" && opts.clusterID != "") {
-		return errors.New("needs clusterName or clusterId")
-	}
-
 	if !opts.isAutomatedRestore() {
 		if e := opts.automatedRestoreOnlyFlags(); e != nil {
 			return e
@@ -200,7 +178,10 @@ func RestoresStartBuilder() *cobra.Command {
 					return err
 				}
 			}
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]
@@ -214,8 +195,6 @@ func RestoresStartBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
-	// Atlas uses cluster name
-	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 
@@ -223,8 +202,6 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.targetClusterID, flag.TargetClusterID, "", usage.TargetClusterID)
-	// Atlas uses cluster name
-	cmd.Flags().StringVar(&opts.targetClusterName, flag.TargetClusterName, "", usage.TargetClusterName)
 	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
 	cmd.Flags().StringVar(&opts.oplogTS, flag.OplogTS, "", usage.OplogTS)
 	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
@@ -236,6 +213,9 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.expirationHours, flag.ExpirationHours, 0, usage.ExpirationHours)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.ClusterID)
+	_ = cmd.MarkFlagRequired(flag.TargetClusterID)
 	return cmd
 }

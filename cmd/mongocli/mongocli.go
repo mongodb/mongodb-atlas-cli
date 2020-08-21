@@ -81,7 +81,6 @@ func Execute() {
 
 var (
 	profile string
-	output  string
 )
 
 func init() { //nolint:gochecknoinits // This is the cobra way
@@ -101,7 +100,7 @@ func init() { //nolint:gochecknoinits // This is the cobra way
 	cobra.EnableCommandSorting = false
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-	rootCmd.PersistentFlags().StringVarP(&output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
 	cobra.OnInitialize(initConfig)
 }
 
@@ -117,7 +116,6 @@ func initConfig() {
 	} else if len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
 	}
-	config.SetOutput(output)
 }
 
 func main() {

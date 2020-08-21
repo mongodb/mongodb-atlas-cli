@@ -15,9 +15,11 @@
 package organizations
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/output"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +28,7 @@ const describeTemplate = `ID	NAME
 `
 
 type DescribeOpts struct {
+	cli.OutputOpts
 	id    string
 	store store.OrganizationDescriber
 }
@@ -37,23 +40,25 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	org, err := opts.store.Organization(opts.id)
+	r, err := opts.store.Organization(opts.id)
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), describeTemplate, org)
+	return opts.Print(r)
 }
 
 // mongocli iam organizations(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
+	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
 		Short:   describeOrganizations,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -61,6 +66,8 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

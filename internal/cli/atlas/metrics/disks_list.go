@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DisksListsOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.ListOpts
 	host  string
 	port  int
@@ -45,8 +45,12 @@ func (opts *DisksListsOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
+
+var listTemplate = `{{range .Results}}
+{{.PartitionName}}{{end}}
+`
 
 // mongocli atlas metric(s) process(es) disks lists <hostname:port>
 func DisksListBuilder() *cobra.Command {
@@ -57,7 +61,10 @@ func DisksListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
@@ -73,6 +80,7 @@ func DisksListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

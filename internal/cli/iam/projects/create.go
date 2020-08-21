@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -28,6 +27,7 @@ var createTemplate = "Project '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	name  string
 	store store.ProjectCreator
 }
@@ -52,17 +52,19 @@ func (opts *CreateOpts) Run() error {
 		createTemplate += "Agent API Key: '{{.AgentAPIKey}}'\n"
 	}
 
-	return output.Print(config.Default(), createTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: createProject,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -72,6 +74,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

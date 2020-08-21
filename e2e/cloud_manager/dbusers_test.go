@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDBUsers(t *testing.T) {
@@ -77,8 +77,9 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users []mongodbatlas.DatabaseUser
+		var users []opsmngr.MongoDBUser
 		if err := json.Unmarshal(resp, &users); err != nil {
+			t.Log(string(resp))
 			t.Fatalf("unexpected error: %v", err)
 		}
 

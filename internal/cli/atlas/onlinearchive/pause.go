@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type PauseOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	id          string
 	clusterName string
 	store       store.OnlineArchiveUpdater
@@ -51,7 +51,7 @@ func (opts *PauseOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), pauseTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli atlas cluster(s) onlineArchive(s) pause <ID> [--clusterName name][--projectId projectId]
@@ -62,7 +62,10 @@ func PauseBuilder() *cobra.Command {
 		Short: pauseOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), pauseTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -73,6 +76,7 @@ func PauseBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

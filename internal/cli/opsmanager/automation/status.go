@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type StatusOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	store store.AutomationStatusGetter
 }
 
@@ -41,7 +41,7 @@ func (opts *StatusOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
 
 // mongocli ops-manager automation status [--projectId projectId]
@@ -52,7 +52,10 @@ func StatusBuilder() *cobra.Command {
 		Short: ShowAutomationStatus,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -60,6 +63,7 @@ func StatusBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

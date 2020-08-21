@@ -19,7 +19,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -28,6 +27,7 @@ import (
 
 type ListOpts struct {
 	cli.ListOpts
+	cli.OutputOpts
 	orgID     string
 	projectID string
 	eventType []string
@@ -61,7 +61,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
@@ -79,6 +79,7 @@ func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
 // mongocli atlas event(s) list [--projectId projectId] [--orgId orgId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   listEvents,
@@ -91,6 +92,7 @@ func ListBuilder() *cobra.Command {
 			if opts.orgID == "" && opts.projectID == "" {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -107,6 +109,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

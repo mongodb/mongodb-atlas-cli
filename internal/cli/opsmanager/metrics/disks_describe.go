@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DisksDescribeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.MetricsOpts
 	hostID string
 	name   string
@@ -50,7 +50,7 @@ func (opts *DisksDescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), diskMetricTemplate, r)
+	return opts.Print(r)
 }
 
 // mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
@@ -62,7 +62,10 @@ func DisksDescribeBuilder() *cobra.Command {
 		Short: DescribeDisks,
 		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), diskMetricTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.hostID = args[0]
@@ -82,6 +85,7 @@ func DisksDescribeBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
 

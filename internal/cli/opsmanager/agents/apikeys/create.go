@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -29,6 +28,7 @@ const createTemplate = "API Key '{{.Key}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	desc  string
 	store store.AgentAPIKeyCreator
 }
@@ -46,13 +46,13 @@ func (opts *CreateOpts) newAgentAPIKeysRequest() *opsmngr.AgentAPIKeysRequest {
 }
 
 func (opts *CreateOpts) Run() error {
-	p, err := opts.store.CreateAgentAPIKey(opts.ConfigProjectID(), opts.newAgentAPIKeysRequest())
+	r, err := opts.store.CreateAgentAPIKey(opts.ConfigProjectID(), opts.newAgentAPIKeysRequest())
 
 	if err != nil {
 		return err
 	}
 
-	return output.Print(config.Default(), createTemplate, p)
+	return opts.Print(r)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikeys create [--desc description][--projectId projectId]
@@ -62,7 +62,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: CreateAgentAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.init)
+			return opts.PreRunE(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -71,6 +74,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Description)
 

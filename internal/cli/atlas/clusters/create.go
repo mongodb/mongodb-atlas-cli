@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/afero"
@@ -42,6 +41,7 @@ const (
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	name        string
 	provider    string
 	region      string
@@ -75,7 +75,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), createTmpl, r)
+	return opts.Print(r)
 }
 
 func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
@@ -206,7 +206,10 @@ func CreateBuilder() *cobra.Command {
 			if len(args) != 0 {
 				opts.name = args[0]
 			}
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -225,6 +228,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

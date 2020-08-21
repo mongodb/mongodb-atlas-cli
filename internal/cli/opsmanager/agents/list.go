@@ -19,7 +19,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type ListOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	agentType string
 	store     store.AgentLister
 }
@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), listTemplate, r)
+	return opts.Print(r)
 }
 
 // mongocli om agent(s) list [--projectId projectId]
@@ -60,7 +60,10 @@ func ListBuilder() *cobra.Command {
 		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
 		Short:     ListAgents,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.agentType = strings.ToUpper(args[0])
@@ -69,6 +72,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

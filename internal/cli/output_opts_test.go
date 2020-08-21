@@ -14,52 +14,54 @@
 
 // +build unit
 
-package output
+package cli
 
-import "testing"
+import (
+	"io"
+	"testing"
+)
 
-type testConfig string
-
-func (t testConfig) Output() string {
-	return string(t)
-}
-
-func Test_templateValue(t *testing.T) {
-	type args struct {
-		c               Config
-		defaultTemplate string
+func TestOutputOpts_parseTemplate(t *testing.T) {
+	type fields struct {
+		Template  string
+		OutWriter io.Writer
+		Output    string
 	}
 	tests := []struct {
 		name    string
-		args    args
+		fields  fields
 		want    string
 		wantErr bool
 	}{
 		{
 			name:    "go-template",
-			args:    args{c: testConfig("go-template=test"), defaultTemplate: ""},
+			fields:  fields{Output: "go-template=test", Template: ""},
 			want:    "test",
 			wantErr: false,
 		},
 		{
 			name:    "not-valid",
-			args:    args{c: testConfig("not-valid"), defaultTemplate: "default"},
+			fields:  fields{Output: "not-valid", Template: "default"},
 			want:    "default",
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
-		args := tt.args
+		opts := &OutputOpts{
+			Template:  tt.fields.Template,
+			OutWriter: tt.fields.OutWriter,
+			Output:    tt.fields.Output,
+		}
 		wantErr := tt.wantErr
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := templateValue(args.c, args.defaultTemplate)
+			got, err := opts.parseTemplate()
 			if (err != nil) != wantErr {
-				t.Errorf("templateValue() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("parseTemplate() error = %v, wantErr %v", err, wantErr)
 				return
 			}
 			if got != want {
-				t.Errorf("templateValue() got = %v, want %v", got, want)
+				t.Errorf("parseTemplate() got = %v, want %v", got, want)
 			}
 		})
 	}

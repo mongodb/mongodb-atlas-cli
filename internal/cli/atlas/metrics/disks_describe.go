@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,6 +25,7 @@ import (
 
 type DisksDescribeOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	cli.MetricsOpts
 	host  string
 	port  int
@@ -46,8 +46,13 @@ func (opts *DisksDescribeOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), "", r)
+	return opts.Print(r)
 }
+
+var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurements.Measurements}}  {{if .DataPoints}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
+`
 
 // mcli atlas metric(s) disk(s) describe <host:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
 func DisksDescribeBuilder() *cobra.Command {
@@ -58,7 +63,10 @@ func DisksDescribeBuilder() *cobra.Command {
 		Short: describeDisks,
 		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), diskMetricTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
@@ -81,6 +89,7 @@ func DisksDescribeBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)
 

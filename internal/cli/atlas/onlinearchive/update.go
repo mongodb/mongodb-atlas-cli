@@ -18,7 +18,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/output"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -27,6 +26,7 @@ import (
 
 type UpdateOpts struct {
 	cli.GlobalOpts
+	cli.OutputOpts
 	id           string
 	clusterName  string
 	archiveAfter float64
@@ -48,7 +48,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	return output.Print(config.Default(), updateTemplate, r)
+	return opts.Print(r)
 }
 
 func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
@@ -69,7 +69,10 @@ func UpdateBuilder() *cobra.Command {
 		Short: updateOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -81,6 +84,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 	_ = cmd.MarkFlagRequired(flag.ArchiveAfter)

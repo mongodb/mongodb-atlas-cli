@@ -114,8 +114,9 @@ func databases(t *testing.T, cliPath, hostname string) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if databases.TotalCount != 2 {
-			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, 2)
+		const defaultNDatabases = 2
+		if databases.TotalCount != defaultNDatabases {
+			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, defaultNDatabases)
 		}
 	})
 

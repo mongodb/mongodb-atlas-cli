@@ -23,13 +23,18 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store HostMeasurementLister,HostDiskMeasurementsLister
+//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
 
 type HostMeasurementLister interface {
 	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
 }
+
 type HostDiskMeasurementsLister interface {
 	HostDiskMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error)
+}
+
+type HostDatabaseMeasurementsLister interface {
+	HostDatabaseMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
 }
 
 // HostMeasurements encapsulate the logic to manage different cloud providers
@@ -43,11 +48,22 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 	}
 }
 
-// HostDiskMeasurements encapsulate the logic to manage different cloud providers
+// HostDiskMeasurements encapsulates the logic to manage different cloud providers
 func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Disk(context.Background(), groupID, hostID, partitionName, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// HostDatabaseMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Measurements.Database(context.Background(), groupID, hostID, databaseName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

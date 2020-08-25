@@ -22,10 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen  -destination=../mocks/mock_process_disk_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessDiskMeasurementsLister
+//go:generate mockgen  -destination=../mocks/mock_process_disk_measurements.go -package=mocks github.com/mongodb/mongocli/internal/store ProcessDiskMeasurementsLister,ProcessDatabaseMeasurementsLister
 
 type ProcessDiskMeasurementsLister interface {
 	ProcessDiskMeasurements(string, string, int, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error)
+}
+
+type ProcessDatabaseMeasurementsLister interface {
+	ProcessDatabaseMeasurements(string, string, int, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
 }
 
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers
@@ -33,6 +37,17 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(context.Background(), groupID, host, port, partitionName, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers
+func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(context.Background(), groupID, host, port, dbName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

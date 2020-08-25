@@ -78,7 +78,7 @@ func TestClustersFlags(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if !strings.Contains(string(resp), "Cluster available at:") {
+		if !strings.Contains(string(resp), "Cluster available") {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:")
 		}
 	})

@@ -19,6 +19,7 @@ const (
 	listDisks           = "List available disks for a given host."
 	describeDisks       = "Describe disks measurements for a given host partition."
 	databases           = "List available databases or databases measurements for a given host."
+	describeDatabases   = "Describe databases measurements for a given host database."
 	listDatabases       = "List available databases for a given host."
 	metrics             = "Get measurements on the state of the MongoDB process."
 )

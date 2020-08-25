@@ -121,7 +121,7 @@ func TestClustersFlags(t *testing.T) {
 		}
 	})
 
-	t.Run("Create Index", func(t *testing.T) {
+	t.Run("Create Rolling Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,

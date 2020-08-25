@@ -25,7 +25,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestProcessMetrics(t *testing.T) {
+func TestMetrics(t *testing.T) {
 	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("failed to deploy a cluster: %v", err)
@@ -46,59 +46,52 @@ func TestProcessMetrics(t *testing.T) {
 	}
 
 	t.Run("processes", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			metricsEntity,
-			"processes",
-			hostname,
-			"--granularity=PT30M",
-			"--period=P1DT12H",
-			"-o=json")
+		process(t, cliPath, hostname)
+	})
 
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+	t.Run("databases", func(t *testing.T) {
+		databases(t, cliPath, hostname)
+	})
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		metrics := &mongodbatlas.ProcessMeasurements{}
-		err = json.Unmarshal(resp, &metrics)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
-		}
-
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
-		}
+	t.Run("disks", func(t *testing.T) {
+		disks(t, cliPath, hostname)
 	})
 }
 
-func TestDatabaseMetrics(t *testing.T) {
-	clusterName, err := deployCluster()
+func process(t *testing.T, cliPath, hostname string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		metricsEntity,
+		"processes",
+		hostname,
+		"--granularity=PT30M",
+		"--period=P1DT12H",
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
 	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
-	hostname, err := getHostnameAndPort()
+
+	metrics := &mongodbatlas.ProcessMeasurements{}
+	err = json.Unmarshal(resp, &metrics)
+
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	if metrics.Measurements == nil {
+		t.Errorf("there are no measurements")
 	}
 
+	if len(metrics.Measurements) == 0 {
+		t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+	}
+}
+
+func databases(t *testing.T, cliPath, hostname string) {
 	t.Run("databases list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -133,7 +126,7 @@ func TestDatabaseMetrics(t *testing.T) {
 			"databases",
 			"describe",
 			hostname,
-			"admin",
+			"config",
 			"--granularity=PT30M",
 			"--period=P1DT12H",
 			"-o=json")
@@ -160,26 +153,7 @@ func TestDatabaseMetrics(t *testing.T) {
 	})
 }
 
-func TestDisksMetrics(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
-	hostname, err := getHostnameAndPort()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+func disks(t *testing.T, cliPath, hostname string) {
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

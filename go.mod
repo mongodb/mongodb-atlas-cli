@@ -2,8 +2,6 @@ module github.com/mongodb/mongocli
 
 go 1.15
 
-replace go.mongodb.org/ops-manager => /Users/rob/repos/mongodb/go-client-mongodb-ops-manager
-
 require (
 	github.com/AlecAivazis/survey/v2 v2.1.1
 	github.com/Masterminds/semver/v3 v3.1.0

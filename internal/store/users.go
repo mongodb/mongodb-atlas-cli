@@ -36,7 +36,7 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Users.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Users.ListProjectUsers(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

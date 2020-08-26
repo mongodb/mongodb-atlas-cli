@@ -25,7 +25,10 @@ func DatabasesBuilder() *cobra.Command {
 		Short:   Databases,
 	}
 
-	cmd.AddCommand(DatabasesListBuilder())
+	cmd.AddCommand(
+		DatabasesListBuilder(),
+		DatabasesDescribeBuilder(),
+	)
 
 	return cmd
 }

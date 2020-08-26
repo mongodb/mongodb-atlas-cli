@@ -26,7 +26,10 @@ func DatabasesBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   databases,
 	}
-	cmd.AddCommand(DatabasesListBuilder())
+	cmd.AddCommand(
+		DatabasesListBuilder(),
+		DatabasesDescribeBuilder(),
+	)
 
 	return cmd
 }

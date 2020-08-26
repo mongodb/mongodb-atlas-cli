@@ -26,8 +26,6 @@ import (
 )
 
 func TestMetrics(t *testing.T) {
-	const metricsEntity = "metrics"
-
 	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("failed to deploy a cluster: %v", err)
@@ -48,38 +46,52 @@ func TestMetrics(t *testing.T) {
 	}
 
 	t.Run("processes", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			metricsEntity,
-			"processes",
-			hostname,
-			"--granularity=PT30M",
-			"--period=P1DT12H",
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		metrics := &mongodbatlas.ProcessMeasurements{}
-		err = json.Unmarshal(resp, &metrics)
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if metrics.Measurements == nil {
-			t.Errorf("there are no measurements")
-		}
-
-		if len(metrics.Measurements) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
-		}
+		process(t, cliPath, hostname)
 	})
 
+	t.Run("databases", func(t *testing.T) {
+		databases(t, cliPath, hostname)
+	})
+
+	t.Run("disks", func(t *testing.T) {
+		disks(t, cliPath, hostname)
+	})
+}
+
+func process(t *testing.T, cliPath, hostname string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		metricsEntity,
+		"processes",
+		hostname,
+		"--granularity=PT30M",
+		"--period=P1DT12H",
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	metrics := &mongodbatlas.ProcessMeasurements{}
+	err = json.Unmarshal(resp, &metrics)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if metrics.Measurements == nil {
+		t.Errorf("there are no measurements")
+	}
+
+	if len(metrics.Measurements) == 0 {
+		t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+	}
+}
+
+func databases(t *testing.T, cliPath, hostname string) {
 	t.Run("databases list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -102,11 +114,47 @@ func TestMetrics(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if databases.TotalCount != 2 {
-			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, 2)
+		const defaultNDatabases = 2
+		if databases.TotalCount != defaultNDatabases {
+			t.Errorf("got=%#v\nwant=%#v\n", databases.TotalCount, defaultNDatabases)
 		}
 	})
 
+	t.Run("databases describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			metricsEntity,
+			"databases",
+			"describe",
+			hostname,
+			"config",
+			"--granularity=PT30M",
+			"--period=P1DT12H",
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var metrics mongodbatlas.ProcessDatabaseMeasurements
+		err = json.Unmarshal(resp, &metrics)
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if metrics.Measurements == nil {
+			t.Errorf("there are no measurements")
+		}
+
+		if len(metrics.Measurements) == 0 {
+			t.Errorf("got=%#v\nwant=%#v\n", 0, "len(metrics.Measurements) > 0")
+		}
+	})
+}
+
+func disks(t *testing.T, cliPath, hostname string) {
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

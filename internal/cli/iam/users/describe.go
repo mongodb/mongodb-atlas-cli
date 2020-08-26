@@ -11,9 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package dbusers
+
+package users
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -22,26 +25,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `USERNAME	DATABASE{{range .}}
-{{.DBUsername}}	{{.DatabaseName}}{{end}}
+const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.DatabaseUserLister
+	store    store.UsersDescriber
+	username string
+	ID       string
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpts)
+func (opts *DescribeOpts) Run() error {
+	var r interface{}
+	var err error
+
+	if opts.username != "" {
+		r, err = opts.store.UserByName(opts.username)
+	}
+
+	if opts.ID != "" {
+		r, err = opts.store.UserByID(opts.ID)
+	}
+
 	if err != nil {
 		return err
 	}
@@ -49,18 +62,30 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+func (opts *DescribeOpts) validate() error {
+	if opts.ID == "" && opts.username == "" {
+		return errors.New("must supply one of 'ID' or 'username'")
+	}
+
+	if opts.ID != "" && opts.username != "" {
+		return errors.New("cannot supply both 'ID' and 'username'")
+	}
+
+	return nil
+}
+
+// mongocli iam project(s) user(s) describe --id ID --username USERNAME
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   listDBUsers,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   describeIAMUser,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.initStore,
+				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -68,10 +93,9 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.Username)
+	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.UserID)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 }
 
 var listTemplate = `ID USERNAME	SUBJECT CREATED AT{{range .}}
-{{.ID}}	{{.Username}}	{{.Subject}}	{{.CreatedAt}}{{end}}
+{{.ID}}	{{.DBUsername}}	{{.Subject}}	{{.CreatedAt}}{{end}}
 `
 
 // mongocli atlas dbuser(s) certs list|ls <username> [--projectId projectId]

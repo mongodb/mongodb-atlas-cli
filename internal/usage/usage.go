@@ -31,7 +31,9 @@ const (
 	Status                          = "Alert's status."
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."
-	Username                        = "Username for authenticating to MongoDB."
+	DBUsername                      = "DBUsername for authenticating to MongoDB."
+	Username                        = "The username for a user."
+	UserID                          = "The ID of the user."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."

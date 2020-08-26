@@ -30,6 +30,7 @@ import (
 const (
 	atlasEntity            = "atlas"
 	clustersEntity         = "clusters"
+	metricsEntity          = "metrics"
 	searchEntity           = "search"
 	indexEntity            = "index"
 	datalakeEntity         = "datalake"

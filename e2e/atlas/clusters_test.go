@@ -78,7 +78,7 @@ func TestClustersFlags(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if !strings.Contains(string(resp), "Cluster available at:") {
+		if !strings.Contains(string(resp), "Cluster available") {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:")
 		}
 	})
@@ -121,6 +121,24 @@ func TestClustersFlags(t *testing.T) {
 		}
 	})
 
+	t.Run("Create Rolling Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName="+clusterName,
+			"--db=tes",
+			"--collection=tes",
+			"--key=name:1")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -143,24 +161,6 @@ func TestClustersFlags(t *testing.T) {
 		}
 
 		ensureCluster(t, &cluster, clusterName, "4.2", 20)
-	})
-
-	t.Run("Create Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			"indexes",
-			"create",
-			"--clusterName="+clusterName,
-			"--db=tes",
-			"--collection=tes",
-			"--key=name:1")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
 	})
 
 	t.Run("Delete", func(t *testing.T) {

@@ -47,7 +47,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	Users(string, *atlas.ListOptions) (interface{}, error)
+	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
 }
 
 // Projects encapsulate the logic to manage different cloud providers
@@ -118,8 +118,8 @@ func (s *Store) DeleteProject(projectID string) error {
 	}
 }
 
-// Users lists all IAM users in a project
-func (s *Store) Users(projectID string, opts *atlas.ListOptions) (interface{}, error) {
+// ProjectUsers lists all IAM users in a project
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(context.Background(), projectID, opts)

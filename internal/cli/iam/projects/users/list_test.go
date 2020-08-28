@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Users(listOpts.ProjectID, listOpts.NewListOptions()).
+		ProjectUsers(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

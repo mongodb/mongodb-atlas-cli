@@ -238,17 +238,17 @@ func (m *MockProjectUsersLister) EXPECT() *MockProjectUsersListerMockRecorder {
 	return m.recorder
 }
 
-// Users mocks base method
-func (m *MockProjectUsersLister) Users(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+// ProjectUsers mocks base method
+func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Users", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectUsers", arg0, arg1)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Users indicates an expected call of Users
-func (mr *MockProjectUsersListerMockRecorder) Users(arg0, arg1 interface{}) *gomock.Call {
+// ProjectUsers indicates an expected call of ProjectUsers
+func (mr *MockProjectUsersListerMockRecorder) ProjectUsers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Users", reflect.TypeOf((*MockProjectUsersLister)(nil).Users), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectUsers", reflect.TypeOf((*MockProjectUsersLister)(nil).ProjectUsers), arg0, arg1)
 }

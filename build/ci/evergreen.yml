@@ -668,7 +668,7 @@ tasks:
       - func: "upload dist"
   - name: release
     stepback: false
-    patch_only: true
+    git_tag_only: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -716,7 +716,7 @@ tasks:
           display_name: downloads-center-
   - name: release_msi
     stepback: false
-    patch_only: true
+    git_tag_only: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -976,7 +976,7 @@ tasks:
   # RPM Distros
   - name: push_rhel62_enterprise_stable
     <<: &default_push_stable_def
-      patch_only: true
+      git_tag_only: true
       stepback: false
       tags: ["push_stable"]
       depends_on:

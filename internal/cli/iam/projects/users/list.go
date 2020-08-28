@@ -31,7 +31,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.UsersLister
+	store store.ProjectUsersLister
 }
 
 func (opts *ListOpts) init() error {

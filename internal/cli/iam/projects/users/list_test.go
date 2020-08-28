@@ -26,7 +26,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUsersLister(ctrl)
+	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.AtlasUser
@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectUsers(listOpts.ProjectID, listOpts.NewListOptions()).
+		Users(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

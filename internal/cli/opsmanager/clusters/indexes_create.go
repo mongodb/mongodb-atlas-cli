@@ -165,7 +165,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.db, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.rsName, flag.RSName, "", usage.RSName)
 	cmd.Flags().StringVar(&opts.collection, flag.CollectionName, "", usage.Collection)
-	cmd.Flags().StringArrayVar(&opts.keys, flag.Key, nil, usage.Key)
+	cmd.Flags().StringSliceVar(&opts.keys, flag.Key, []string{}, usage.Key)
 	cmd.Flags().StringVar(&opts.locale, flag.Locale, "", usage.Locale)
 	cmd.Flags().StringVar(&opts.caseFirst, flag.CaseFirst, "", usage.CaseFirst)
 	cmd.Flags().StringVar(&opts.alternate, flag.Alternate, "", usage.Alternate)

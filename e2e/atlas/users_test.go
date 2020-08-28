@@ -54,4 +54,26 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("expected len(users) == 0, got %v", len(users))
 		}
 	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			iamEntity,
+			usersEntity,
+			"describe",
+			"nonExistentUser",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var user mongodbatlas.AtlasUser
+
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+	})
 }

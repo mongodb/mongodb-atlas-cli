@@ -75,7 +75,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringArrayVar(&opts.roles, flag.Role, nil, usage.APIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

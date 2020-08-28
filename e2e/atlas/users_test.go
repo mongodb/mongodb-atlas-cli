@@ -50,8 +50,8 @@ func TestUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if len(users) > 0 {
-			t.Fatalf("expected len(users) == 0, got %v", len(users))
+		if len(users) == 0 {
+			t.Fatalf("expected len(users) > 0, got %v", len(users))
 		}
 	})
 }

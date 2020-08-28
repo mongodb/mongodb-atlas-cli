@@ -117,7 +117,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.db, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().StringArrayVar(&opts.keys, flag.Key, nil, usage.Key)
+	cmd.Flags().StringSliceVar(&opts.keys, flag.Key, []string{}, usage.Key)
 	cmd.Flags().BoolVar(&opts.unique, flag.Unique, false, usage.Unique)
 	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
 	cmd.Flags().BoolVar(&opts.background, flag.Background, false, usage.Background)

@@ -77,7 +77,7 @@ func AssignBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

@@ -154,6 +154,9 @@ func InviteBuilder() *cobra.Command {
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			if config.Service() == config.CloudService {
+				_ = cmd.MarkFlagRequired(flag.Country)
+			}
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -171,6 +174,12 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.orgRole, flag.OrgRole, []string{}, usage.OrgRole)
 	cmd.Flags().StringSliceVar(&opts.projectRole, flag.ProjectRole, []string{}, usage.ProjectRole)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Username)
+	_ = cmd.MarkFlagRequired(flag.Password)
+	_ = cmd.MarkFlagRequired(flag.Email)
+	_ = cmd.MarkFlagRequired(flag.FirstName)
+	_ = cmd.MarkFlagRequired(flag.LastName)
 
 	return cmd
 }

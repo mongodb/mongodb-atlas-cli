@@ -102,20 +102,20 @@ func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
 
 	i := 0
 	for _, role := range opts.orgRoles {
-		value := strings.Split(role, ":")
-		if len(value) != keyParts {
-			return nil, fmt.Errorf("unexpected role format: %s", role)
+		atlasRole, err := newAtlasOrgRole(role)
+		if err != nil {
+			return nil, err
 		}
-		atlasRoles[i] = newAtlasOrgRole(value)
+		atlasRoles[i] = atlasRole
 		i++
 	}
 
 	for _, role := range opts.projectRoles {
-		value := strings.Split(role, ":")
-		if len(value) != keyParts {
-			return nil, fmt.Errorf("unexpected role format: %s", role)
+		atlasRole, err := newAtlasProjectRole(role)
+		if err != nil {
+			return nil, err
 		}
-		atlasRoles[i] = newAtlasProjectRole(value)
+		atlasRoles[i] = atlasRole
 		i++
 	}
 
@@ -132,20 +132,20 @@ func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
 
 		i := 0
 		for _, role := range opts.orgRoles {
-			value := strings.Split(role, ":")
-			if len(value) != keyParts {
-				return nil, fmt.Errorf("unexpected role format: %s", role)
+			userRole, err := newUserOrgRole(role)
+			if err != nil {
+				return nil, err
 			}
-			roles[i] = newUserOrgRole(value)
+			roles[i] = userRole
 			i++
 		}
 
 		for _, role := range opts.projectRoles {
-			value := strings.Split(role, ":")
-			if len(value) != keyParts {
-				return nil, fmt.Errorf("unexpected role format: %s", role)
+			userRole, err := newUserProjectRole(role)
+			if err != nil {
+				return nil, err
 			}
-			roles[i] = newUserProjectRole(value)
+			roles[i] = userRole
 			i++
 		}
 
@@ -155,32 +155,63 @@ func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
 	return nil, nil
 }
 
-func newUserOrgRole(role []string) *opsmngr.UserRole {
-	return &opsmngr.UserRole{
-		OrgID:    role[0],
-		RoleName: strings.ToUpper(role[1]),
+func splitRole(role string) ([]string, error) {
+	value := strings.Split(role, ":")
+	if len(value) != keyParts {
+		return nil, fmt.Errorf("unexpected role format: %s", role)
 	}
+	return value, nil
 }
 
-func newAtlasProjectRole(role []string) atlas.AtlasRole {
-	return atlas.AtlasRole{
-		GroupID:  role[0],
-		RoleName: strings.ToUpper(role[1]),
+func newUserOrgRole(role string) (*opsmngr.UserRole, error) {
+	value, err := splitRole(role)
+	if err != nil {
+		return nil, err
 	}
+	userRole := &opsmngr.UserRole{
+		OrgID:    value[0],
+		RoleName: strings.ToUpper(value[1]),
+	}
+
+	return userRole, nil
 }
 
-func newAtlasOrgRole(role []string) atlas.AtlasRole {
-	return atlas.AtlasRole{
-		OrgID:    role[0],
-		RoleName: strings.ToUpper(role[1]),
+func newUserProjectRole(role string) (*opsmngr.UserRole, error) {
+	value, err := splitRole(role)
+	if err != nil {
+		return nil, err
 	}
+	userRole := &opsmngr.UserRole{
+		GroupID:  value[0],
+		RoleName: strings.ToUpper(value[1]),
+	}
+
+	return userRole, nil
 }
 
-func newUserProjectRole(role []string) *opsmngr.UserRole {
-	return &opsmngr.UserRole{
-		GroupID:  role[0],
-		RoleName: strings.ToUpper(role[1]),
+func newAtlasProjectRole(role string) (atlas.AtlasRole, error) {
+	value, err := splitRole(role)
+	if err != nil {
+		return atlas.AtlasRole{}, err
 	}
+	atlasRole := atlas.AtlasRole{
+		GroupID:  value[0],
+		RoleName: strings.ToUpper(value[1]),
+	}
+
+	return atlasRole, nil
+}
+
+func newAtlasOrgRole(role string) (atlas.AtlasRole, error) {
+	value, err := splitRole(role)
+	if err != nil {
+		return atlas.AtlasRole{}, err
+	}
+	atlasRole := atlas.AtlasRole{
+		OrgID:    value[0],
+		RoleName: strings.ToUpper(value[1]),
+	}
+	return atlasRole, nil
 }
 
 // mongocli iam users(s) invite --username username --password password --country country --email email

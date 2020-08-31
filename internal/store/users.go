@@ -26,33 +26,40 @@ import (
 //go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator
 
 type UserCreator interface {
-	CreateUser(string, string, string, string, string, string, string, []atlas.AtlasRole, []*opsmngr.UserRole) (interface{}, error)
+	CreateUser(*UserView) (interface{}, error)
+}
+
+type UserView struct {
+	opsmngr.User
+	AtlasRoles   []atlas.AtlasRole `json:"roles"`
+	MobileNumber string            `json:"mobileNumber"`
+	Country      string            `json:"country"`
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers
-func (s *Store) CreateUser(username, password, firstName, lastName, emailAddress, mobileNumber, country string, atlasRoles []atlas.AtlasRole, roles []*opsmngr.UserRole) (interface{}, error) {
+func (s *Store) CreateUser(user *UserView) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		user := &atlas.AtlasUser{
-			EmailAddress: emailAddress,
-			FirstName:    firstName,
-			LastName:     lastName,
-			Roles:        atlasRoles,
-			Username:     username,
-			MobileNumber: mobileNumber,
-			Password:     password,
-			Country:      country,
+			EmailAddress: user.User.EmailAddress,
+			FirstName:    user.User.FirstName,
+			LastName:     user.User.LastName,
+			Roles:        user.AtlasRoles,
+			Username:     user.User.Username,
+			MobileNumber: user.MobileNumber,
+			Password:     user.User.Password,
+			Country:      user.Country,
 		}
 		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(context.Background(), user)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		user := &opsmngr.User{
-			Username:     username,
-			Password:     password,
-			FirstName:    firstName,
-			LastName:     lastName,
-			EmailAddress: emailAddress,
-			Roles:        roles,
+			Username:     user.User.Username,
+			Password:     user.User.Password,
+			FirstName:    user.User.FirstName,
+			LastName:     user.User.LastName,
+			EmailAddress: user.User.EmailAddress,
+			Roles:        user.User.Roles,
 		}
 		result, _, err := s.client.(*opsmngr.Client).Users.Create(context.Background(), user)
 		return result, err

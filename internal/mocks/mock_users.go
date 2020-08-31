@@ -6,8 +6,7 @@ package mocks
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	opsmngr "go.mongodb.org/ops-manager/opsmngr"
+	store "github.com/mongodb/mongocli/internal/store"
 	reflect "reflect"
 )
 
@@ -35,16 +34,16 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method
-func (m *MockUserCreator) CreateUser(arg0, arg1, arg2, arg3, arg4, arg5, arg6 string, arg7 []mongodbatlas.AtlasRole, arg8 []*opsmngr.UserRole) (interface{}, error) {
+func (m *MockUserCreator) CreateUser(arg0 *store.UserView) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+	ret := m.ctrl.Call(m, "CreateUser", arg0)
 	ret0, _ := ret[0].(interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateUser indicates an expected call of CreateUser
-func (mr *MockUserCreatorMockRecorder) CreateUser(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 interface{}) *gomock.Call {
+func (mr *MockUserCreatorMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserCreator)(nil).CreateUser), arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserCreator)(nil).CreateUser), arg0)
 }

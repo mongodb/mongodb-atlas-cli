@@ -32,6 +32,7 @@ const (
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."
 	Username                        = "Username of the user."
+	DBUsername                      = "Username for authenticating to MongoDB."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Country                         = "The ISO 3166-1 alpha 2 country code of the user’s country of residence."
 	Mobile                          = "The user’s mobile or cell phone number."

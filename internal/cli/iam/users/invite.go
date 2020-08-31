@@ -32,16 +32,16 @@ var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users 
 
 type InviteOpts struct {
 	cli.OutputOpts
-	username    string
-	password    string
-	country     string
-	email       string
-	mobile      string
-	firstName   string
-	lastName    string
-	orgRole     []string
-	projectRole []string
-	store       store.UserCreator
+	username     string
+	password     string
+	country      string
+	email        string
+	mobile       string
+	firstName    string
+	lastName     string
+	orgRoles     []string
+	projectRoles []string
+	store        store.UserCreator
 }
 
 func (opts *InviteOpts) init() error {
@@ -50,18 +50,40 @@ func (opts *InviteOpts) init() error {
 	return err
 }
 
-func (opts *InviteOpts) Run() error {
+func (opts *InviteOpts) createUserView() (*store.UserView, error) {
 	atlasRoles, err := opts.createAtlasRole()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	userRoles, err := opts.createUserRole()
 	if err != nil {
+		return nil, err
+	}
+	user := &store.UserView{
+		AtlasRoles:   atlasRoles,
+		Country:      opts.country,
+		MobileNumber: opts.mobile,
+		User: opsmngr.User{
+			Username:     opts.username,
+			Password:     opts.password,
+			FirstName:    opts.firstName,
+			LastName:     opts.lastName,
+			EmailAddress: opts.email,
+			Roles:        userRoles,
+		},
+	}
+
+	return user, nil
+}
+
+func (opts *InviteOpts) Run() error {
+	user, err := opts.createUserView()
+	if err != nil {
 		return err
 	}
 
-	r, err := opts.store.CreateUser(opts.username, opts.password, opts.firstName, opts.lastName, opts.email, opts.mobile, opts.country, atlasRoles, userRoles)
+	r, err := opts.store.CreateUser(user)
 	if err != nil {
 		return err
 	}
@@ -72,66 +94,58 @@ func (opts *InviteOpts) Run() error {
 const keyParts = 2
 
 func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
-	if config.Service() == config.CloudService {
-		atlasRoles := make([]atlas.AtlasRole, len(opts.orgRole)+len(opts.projectRole))
-
-		i := 0
-		for _, role := range opts.orgRole {
-			value := strings.Split(role, ":")
-			if len(value) != keyParts {
-				return nil, fmt.Errorf("unexpected role format: %s", role)
-			}
-			atlasRoles[i] = atlas.AtlasRole{
-				OrgID:    value[0],
-				RoleName: strings.ToUpper(value[1]),
-			}
-			i++
-		}
-
-		for _, role := range opts.projectRole {
-			value := strings.Split(role, ":")
-			if len(value) != keyParts {
-				return nil, fmt.Errorf("unexpected role format: %s", role)
-			}
-			atlasRoles[i] = atlas.AtlasRole{
-				GroupID:  value[0],
-				RoleName: strings.ToUpper(value[1]),
-			}
-			i++
-		}
-
-		return atlasRoles, nil
+	if config.Service() != config.CloudService {
+		return nil, nil
 	}
 
-	return nil, nil
+	atlasRoles := make([]atlas.AtlasRole, len(opts.orgRoles)+len(opts.projectRoles))
+
+	i := 0
+	for _, role := range opts.orgRoles {
+		value := strings.Split(role, ":")
+		if len(value) != keyParts {
+			return nil, fmt.Errorf("unexpected role format: %s", role)
+		}
+		atlasRoles[i] = newAtlasOrgRole(value)
+		i++
+	}
+
+	for _, role := range opts.projectRoles {
+		value := strings.Split(role, ":")
+		if len(value) != keyParts {
+			return nil, fmt.Errorf("unexpected role format: %s", role)
+		}
+		atlasRoles[i] = newAtlasProjectRole(value)
+		i++
+	}
+
+	return atlasRoles, nil
 }
 
 func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
+	if config.Service() == config.CloudService {
+		return nil, nil
+	}
+
 	if config.Service() != config.CloudService {
-		roles := make([]*opsmngr.UserRole, len(opts.orgRole)+len(opts.projectRole))
+		roles := make([]*opsmngr.UserRole, len(opts.orgRoles)+len(opts.projectRoles))
 
 		i := 0
-		for _, role := range opts.orgRole {
+		for _, role := range opts.orgRoles {
 			value := strings.Split(role, ":")
 			if len(value) != keyParts {
 				return nil, fmt.Errorf("unexpected role format: %s", role)
 			}
-			roles[i] = &opsmngr.UserRole{
-				OrgID:    value[0],
-				RoleName: strings.ToUpper(value[1]),
-			}
+			roles[i] = newUserOrgRole(value)
 			i++
 		}
 
-		for _, role := range opts.projectRole {
+		for _, role := range opts.projectRoles {
 			value := strings.Split(role, ":")
 			if len(value) != keyParts {
 				return nil, fmt.Errorf("unexpected role format: %s", role)
 			}
-			roles[i] = &opsmngr.UserRole{
-				GroupID:  value[0],
-				RoleName: strings.ToUpper(value[1]),
-			}
+			roles[i] = newUserProjectRole(value)
 			i++
 		}
 
@@ -141,9 +155,37 @@ func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
 	return nil, nil
 }
 
+func newUserOrgRole(role []string) *opsmngr.UserRole {
+	return &opsmngr.UserRole{
+		OrgID:    role[0],
+		RoleName: strings.ToUpper(role[1]),
+	}
+}
+
+func newAtlasProjectRole(role []string) atlas.AtlasRole {
+	return atlas.AtlasRole{
+		GroupID:  role[0],
+		RoleName: strings.ToUpper(role[1]),
+	}
+}
+
+func newAtlasOrgRole(role []string) atlas.AtlasRole {
+	return atlas.AtlasRole{
+		OrgID:    role[0],
+		RoleName: strings.ToUpper(role[1]),
+	}
+}
+
+func newUserProjectRole(role []string) *opsmngr.UserRole {
+	return &opsmngr.UserRole{
+		GroupID:  role[0],
+		RoleName: strings.ToUpper(role[1]),
+	}
+}
+
 // mongocli iam users(s) invite --username username --password password --country country --email email
-// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRole orgID:ROLE_NAME
-// --projectRole projectID:ROLE_NAME
+// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRoles orgID:ROLE_NAME
+// --projectRoles projectID:ROLE_NAME
 
 func InviteBuilder() *cobra.Command {
 	opts := &InviteOpts{}
@@ -171,8 +213,8 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.mobile, flag.Mobile, "", usage.Mobile)
 	cmd.Flags().StringVar(&opts.firstName, flag.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
-	cmd.Flags().StringSliceVar(&opts.orgRole, flag.OrgRole, []string{}, usage.OrgRole)
-	cmd.Flags().StringSliceVar(&opts.projectRole, flag.ProjectRole, []string{}, usage.ProjectRole)
+	cmd.Flags().StringSliceVar(&opts.orgRoles, flag.OrgRole, []string{}, usage.OrgRole)
+	cmd.Flags().StringSliceVar(&opts.projectRoles, flag.ProjectRole, []string{}, usage.ProjectRole)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Username)

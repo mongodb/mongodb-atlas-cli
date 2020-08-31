@@ -34,31 +34,17 @@ func TestInvite_Run(t *testing.T) {
 		Username: "testUser",
 	}
 	opts := &InviteOpts{
-		store:       mockStore,
-		country:     "",
-		mobile:      "",
-		email:       "",
-		lastName:    "",
-		firstName:   "",
-		password:    "",
-		orgRole:     []string{},
-		projectRole: []string{},
-		username:    "testUser",
+		store:    mockStore,
+		username: "testUser",
 	}
 
-	atlasRoles, err := opts.createAtlasRole()
+	user, err := opts.createUserView()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
-	userRoles, err := opts.createUserRole()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
 	mockStore.
 		EXPECT().
-		CreateUser(opts.username, opts.password, opts.firstName, opts.lastName, opts.email, opts.mobile, opts.country, atlasRoles, userRoles).
+		CreateUser(user).
 		Return(expected, nil).
 		Times(1)
 
@@ -77,7 +63,7 @@ func TestCreateAtlasRole(t *testing.T) {
 	tests := []test{
 		{
 			input: InviteOpts{
-				orgRole: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
+				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
 			want: []mongodbatlas.AtlasRole{{
 				OrgID:    "5e4e593f70dfbf1010295836",
@@ -86,7 +72,7 @@ func TestCreateAtlasRole(t *testing.T) {
 		},
 		{
 			input: InviteOpts{
-				orgRole: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
+				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
 			want: []mongodbatlas.AtlasRole{{
 				OrgID:    "5e4e593f70dfbf1010295836",
@@ -100,8 +86,8 @@ func TestCreateAtlasRole(t *testing.T) {
 		},
 		{
 			input: InviteOpts{
-				orgRole:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-				projectRole: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
+				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
+				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
 			},
 			want: []mongodbatlas.AtlasRole{
 				{
@@ -151,7 +137,7 @@ func TestCreateUserRole(t *testing.T) {
 	tests := []test{
 		{
 			input: InviteOpts{
-				orgRole: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
+				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
 			want: []*opsmngr.UserRole{{
 				OrgID:    "5e4e593f70dfbf1010295836",
@@ -160,7 +146,7 @@ func TestCreateUserRole(t *testing.T) {
 		},
 		{
 			input: InviteOpts{
-				orgRole: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
+				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
 			want: []*opsmngr.UserRole{{
 				OrgID:    "5e4e593f70dfbf1010295836",
@@ -174,8 +160,8 @@ func TestCreateUserRole(t *testing.T) {
 		},
 		{
 			input: InviteOpts{
-				orgRole:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-				projectRole: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
+				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
+				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
 			},
 			want: []*opsmngr.UserRole{
 				{

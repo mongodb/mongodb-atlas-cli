@@ -12,28 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package projects
+// +build unit
+
+package users
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/projects/apikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/projects/users"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	const use = "projects"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use),
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectUsersLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.AtlasUser
+
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(apikeys.Builder())
-	cmd.AddCommand(users.Builder())
-	return cmd
+
+	mockStore.
+		EXPECT().
+		ProjectUsers(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

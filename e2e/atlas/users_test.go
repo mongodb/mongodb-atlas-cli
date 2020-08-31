@@ -33,7 +33,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			iamEntity,
 			projectsEntity,
 			usersEntity,
@@ -57,7 +56,6 @@ func TestUsers(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			iamEntity,
 			usersEntity,
 			"describe",

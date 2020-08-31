@@ -127,7 +127,7 @@ func (opts *IndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
 
 const keyParts = 2
 
-// indexKeys takes a slice of values formatted as key:vale and returns an array of slice [[key, value][key, value]]
+// indexKeys takes a slice of values formatted as key:value and returns an array of slice [[key, value][key, value]]
 func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 	propertiesList := make([][]string, len(opts.keys))
 	for i, key := range opts.keys {

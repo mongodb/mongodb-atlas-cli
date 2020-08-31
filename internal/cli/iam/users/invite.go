@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var inviteTemplate = "The user '{{.Username}}' has been invited. \n Invited users do not have access to the project until they accept the invitation. \n"
+var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users do not have access to the project until they accept the invitation.\n"
 
 type InviteOpts struct {
 	cli.OutputOpts

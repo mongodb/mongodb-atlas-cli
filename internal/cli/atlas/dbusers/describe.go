@@ -25,7 +25,7 @@ import (
 )
 
 const describeTemplate = `USERNAME	DATABASE
-{{.DBUsername}}	{{.DatabaseName}}
+{{.Username}}	{{.DatabaseName}}
 `
 
 type DescribeOpts struct {

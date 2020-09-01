@@ -24,7 +24,7 @@ import (
 )
 
 const listTemplate = `USERNAME	DATABASE{{range .}}
-{{.DBUsername}}	{{.Database}}{{end}}
+{{.Username}}	{{.Database}}{{end}}
 `
 
 type ListOpts struct {

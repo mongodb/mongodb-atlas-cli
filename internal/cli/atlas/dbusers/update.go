@@ -25,7 +25,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const updateTemplate = "Successfully updated database user '{{.DBUsername}}'.\n"
+const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts

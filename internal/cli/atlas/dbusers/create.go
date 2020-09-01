@@ -49,7 +49,7 @@ const (
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
-	createTemplate   = "Database user '{{.DBUsername}}' successfully created.\n"
+	createTemplate   = "Database user '{{.Username}}' successfully created.\n"
 )
 
 var (

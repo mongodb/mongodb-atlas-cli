@@ -41,8 +41,6 @@ type UserRequest struct {
 	Country      string
 }
 
-
-
 // CreateUser encapsulates the logic to manage different cloud providers
 func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	switch s.service {

@@ -14,8 +14,8 @@
 package users
 
 const (
-	short      = "Users operations."
-	long       = "Create, list and manage your Atlas/Cloud Manager/Ops Manager users."
-	inviteUser = "Invite a user."
+	short           = "Users operations."
+	long            = "Create, list and manage your Atlas/Cloud Manager/Ops Manager users."
+	inviteUser      = "Invite a user."
 	describeIAMUser = "Get a user by name or ID."
 )

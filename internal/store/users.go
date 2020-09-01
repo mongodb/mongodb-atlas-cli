@@ -23,17 +23,25 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)
 }
 
+type UserDeleter interface {
+	DeleteUser(string) error
+}
+
+type UserDescriber interface {
+	UserByID(string) (interface{}, error)
+	UserByName(string) (interface{}, error)
+}
+
 type UserRequest struct {
 	*opsmngr.User
-	AtlasRoles   []atlas.AtlasRole
-	MobileNumber string
-	Country      string
+	AtlasRoles []atlas.AtlasRole
+	Country    string
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers
@@ -57,5 +65,44 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UserByID encapsulates the logic to manage different cloud providers
+func (s *Store) UserByID(userID string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.Get(context.Background(), userID)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Users.Get(context.Background(), userID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UserByName encapsulates the logic to manage different cloud providers
+func (s *Store) UserByName(username string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(context.Background(), username)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(context.Background(), username)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteUser encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteUser(userID string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Users.Delete(context.Background(), userID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

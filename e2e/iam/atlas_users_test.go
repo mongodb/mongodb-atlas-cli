@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+// +build e2e iam
 
-package atlas_test
+package iam_test
 
 import (
 	"encoding/json"
@@ -30,6 +30,8 @@ func TestUsers(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	var username string
+	var userID string
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -49,8 +51,64 @@ func TestUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
+
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got %v", len(users))
+		}
+
+		username = users[0].Username
+		userID = users[0].ID
+	})
+
+	t.Run("Describe by username", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			usersEntity,
+			"describe",
+			"--username",
+			username,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var user mongodbatlas.AtlasUser
+
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if user.Username != username {
+			t.Fatalf("expected username to match %v, got %v", username, user.Username)
+		}
+	})
+
+	t.Run("Describe by id", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			usersEntity,
+			"describe",
+			"--id",
+			userID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var user mongodbatlas.AtlasUser
+
+		if err := json.Unmarshal(resp, &user); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if user.ID != userID {
+			t.Fatalf("expected id to match %v, got %v", userID, user.ID)
 		}
 	})
 }

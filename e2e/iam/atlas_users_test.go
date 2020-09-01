@@ -31,33 +31,6 @@ func TestUsers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	//t.Run("invite", func(t *testing.T) {
-	//	cmd := exec.Command(cliPath,
-	//		iamEntity,
-	//		usersEntity,
-	//		"invite",
-	//		"--username",
-	//		"test@gmail.com",
-	//		"--password",
-	//		"3ert34221993.",
-	//		"--orgRole",
-	//		"5e429e7706822c6eac4d5970:ORG_MEMBER",
-	//		"--email",
-	//		"test@gmail.com",
-	//		"--firstName",
-	//		"test",
-	//		"--lastName",
-	//		"test",
-	//		"--country",
-	//		"IE")
-	//	cmd.Env = os.Environ()
-	//	resp, err := cmd.CombinedOutput()
-	//
-	//	if err != nil {
-	//		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	//	}
-	//})
-
 	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,

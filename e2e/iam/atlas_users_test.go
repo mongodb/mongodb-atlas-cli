@@ -30,6 +30,37 @@ func TestUsers(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	var username string
+	var userID string
+
+	t.Run("List", func(t *testing.T) {
+
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectsEntity,
+			usersEntity,
+			"list",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var users []mongodbatlas.AtlasUser
+		if err := json.Unmarshal(resp, &users); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(users) == 0 {
+			t.Fatalf("expected len(users) > 0, got %v", len(users))
+		}
+
+		username = users[0].Username
+		userID = users[0].ID
+
+	})
 
 	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -37,7 +68,7 @@ func TestUsers(t *testing.T) {
 			usersEntity,
 			"describe",
 			"--username",
-			"andrea.angiolillo@mongodb.com",
+			username,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -59,7 +90,7 @@ func TestUsers(t *testing.T) {
 			usersEntity,
 			"describe",
 			"--id",
-			"5e4bc367c6b0f41bb9bbb178",
+			userID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

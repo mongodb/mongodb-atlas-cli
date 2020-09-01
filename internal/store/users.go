@@ -98,7 +98,7 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 
 func (s *Store) DeleteUser(userID string) error {
 	switch s.service {
-	case config.CloudManagerService, config.OpsManagerService:
+	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Users.Delete(context.Background(), userID)
 		return err
 	default:

@@ -26,7 +26,7 @@ import (
 )
 
 const describeTemplate = `id	FIRST NAME	LAST NAME	USERNAME	EMAIL
-{{.id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
 `
 
 type DescribeOpts struct {

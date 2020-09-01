@@ -24,8 +24,9 @@ import (
 )
 
 type DeleteOpts struct {
+	*cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.ProjectDeleter
+	store store.ProjectUserDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -35,7 +36,7 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProject)
+	return opts.Delete(opts.store.DeleteUserFromProject, opts.ConfigProjectID())
 }
 
 // mongocli iam project(s) users delete <ID> [--projectId projectId]
@@ -60,7 +61,10 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 
+
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

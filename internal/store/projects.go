@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter
 
 type ProjectLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
@@ -141,10 +141,10 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).Projects.Delete(context.Background(), projectID)
+		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(context.Background(), projectID, userID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.Delete(context.Background(), projectID)
+		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(context.Background(), projectID, userID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

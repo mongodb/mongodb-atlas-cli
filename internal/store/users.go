@@ -68,7 +68,7 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	}
 }
 
-// UserByID gets an IAM user by ID
+// UserByID encapsulates the logic to manage different cloud providers
 func (s *Store) UserByID(userID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -82,7 +82,7 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 	}
 }
 
-// UserByName gets an IAM user by name
+// UserByName encapsulates the logic to manage different cloud providers
 func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -96,6 +96,7 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 	}
 }
 
+// DeleteUser encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteUser(userID string) error {
 	switch s.service {
 	case config.OpsManagerService:

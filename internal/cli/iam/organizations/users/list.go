@@ -24,10 +24,10 @@ import (
 )
 
 const atlasUserListTemplate = `ID	FIRST NAME	LAST NAME	EMAIL{{range .Results}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Email}}{{end}}
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.EmailAddress}}{{end}}
 `
 const OMUserListTemplate = `ID	FIRST NAME	LAST NAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Email}}{{end}}
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.EmailAddress}}{{end}}
 `
 
 type ListOpts struct {

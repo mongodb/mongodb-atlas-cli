@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+// +build e2e atlas,processes
 
 package atlas_test
 
@@ -22,22 +22,35 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestProcesses(t *testing.T) {
+	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("List", func(t *testing.T) {
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
+
+	cliPath, err := e2e.Bin()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	t.Run("list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
-			usersEntity,
+			atlasEntity,
+			processesEntity,
 			"list",
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -45,12 +58,9 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if len(users) == 0 {
-			t.Fatalf("expected len(users) > 0, got %v", len(users))
+		var indexes []*mongodbatlas.Process
+		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
+			assert.NotEmpty(t, indexes)
 		}
 	})
 }

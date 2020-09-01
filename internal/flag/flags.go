@@ -34,6 +34,7 @@ const (
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag
+	ID                              = "id"                              // ID flag
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag

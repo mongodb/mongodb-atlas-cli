@@ -30,6 +30,7 @@ import (
 const (
 	atlasEntity            = "atlas"
 	clustersEntity         = "clusters"
+	processesEntity        = "processes"
 	metricsEntity          = "metrics"
 	searchEntity           = "search"
 	indexEntity            = "index"
@@ -38,10 +39,8 @@ const (
 	configEntity           = "settings"
 	dbusersEntity          = "dbusers"
 	certsEntity            = "certs"
-	iamEntity              = "iam"
-	projectsEntity         = "projects"
-	usersEntity            = "users"
 	privateEndpointsEntity = "privateendpoints"
+	onlineArchiveEntity    = "onlineArchives"
 )
 
 func getHostnameAndPort() (string, error) {
@@ -51,7 +50,7 @@ func getHostnameAndPort() (string, error) {
 	}
 	cmd := exec.Command(cliPath,
 		atlasEntity,
-		"processes",
+		processesEntity,
 		"list",
 		"-o=json")
 

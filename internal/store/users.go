@@ -23,11 +23,48 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/users.go -package=mocks github.com/mongodb/mongocli/internal/store UsersDescriber
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UsersDescriber
+
+type UserCreator interface {
+	CreateUser(*UserRequest) (interface{}, error)
+}
 
 type UsersDescriber interface {
 	UserByID(string) (interface{}, error)
 	UserByName(string) (interface{}, error)
+}
+
+type UserRequest struct {
+	*opsmngr.User
+	AtlasRoles   []atlas.AtlasRole
+	MobileNumber string
+	Country      string
+}
+
+
+
+// CreateUser encapsulates the logic to manage different cloud providers
+func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		atlasUser := &atlas.AtlasUser{
+			EmailAddress: user.EmailAddress,
+			FirstName:    user.FirstName,
+			LastName:     user.LastName,
+			Roles:        user.AtlasRoles,
+			Username:     user.Username,
+			MobileNumber: user.MobileNumber,
+			Password:     user.Password,
+			Country:      user.Country,
+		}
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(context.Background(), atlasUser)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Users.Create(context.Background(), user.User)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // UserByID gets an IAM user by ID

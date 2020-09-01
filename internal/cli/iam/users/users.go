@@ -23,10 +23,12 @@ func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   IAMUsers,
+		Short:   short,
+		Long:    long,
 		Aliases: cli.GenerateAliases(use),
 	}
-	cmd.AddCommand(DescribeBuilder())
 
+	cmd.AddCommand(InviteBuilder())
+	cmd.AddCommand(DescribeBuilder())
 	return cmd
 }

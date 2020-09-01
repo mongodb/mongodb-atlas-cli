@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter
 
 type ProjectLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
@@ -50,7 +50,11 @@ type ProjectUsersLister interface {
 	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
 }
 
-// Projects encapsulate the logic to manage different cloud providers
+type ProjectUserDeleter interface {
+	DeleteUserFromProject(string, string) error
+}
+
+// Projects encapsulates the logic to manage different cloud providers
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -64,7 +68,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	}
 }
 
-// GetOrgProjects encapsulate the logic to manage different cloud providers
+// GetOrgProjects encapsulates the logic to manage different cloud providers
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -75,6 +79,7 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface
 	}
 }
 
+// Project encapsulates the logic to manage different cloud providers
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -88,7 +93,7 @@ func (s *Store) Project(id string) (interface{}, error) {
 	}
 }
 
-// CreateProject encapsulate the logic to manage different cloud providers
+// CreateProject encapsulates the logic to manage different cloud providers
 func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -104,7 +109,7 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	}
 }
 
-// DeleteProject encapsulate the logic to manage different cloud providers
+// DeleteProject encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -129,5 +134,19 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteProject encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteUserFromProject(projectID, userID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(context.Background(), projectID, userID)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(context.Background(), projectID, userID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

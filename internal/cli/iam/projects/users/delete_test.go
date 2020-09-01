@@ -27,19 +27,22 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectDeleter(ctrl)
+	mockStore := mocks.NewMockProjectUserDeleter(ctrl)
 	defer ctrl.Finish()
 
 	mockStore.
 		EXPECT().
-		DeleteProject(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		DeleteUserFromProject(gomock.Eq("5a0a1e7e0f2912c554080adc"), gomock.Eq("213321ds12")).
 		Return(nil).
 		Times(1)
 
 	opts := &DeleteOpts{
 		store: mockStore,
+		GlobalOpts: &cli.GlobalOpts{
+			ProjectID: "5a0a1e7e0f2912c554080adc",
+		},
 		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "5a0a1e7e0f2912c554080adc",
+			Entry:   "213321ds12",
 			Confirm: true,
 		},
 	}

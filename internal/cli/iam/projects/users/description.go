@@ -14,7 +14,7 @@
 package users
 
 const (
-	projectIAMUsers     = "Manage users for a project."
-	listProjectIAMUsers = "List all users for a project."
+	projectIAMUsers      = "Manage users for a project."
+	listProjectIAMUsers  = "List all users for a project."
 	deleteProjectIAMUser = "Delete user from a project."
 )

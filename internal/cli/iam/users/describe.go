@@ -30,7 +30,6 @@ const describeTemplate = `id	FIRST NAME	LAST NAME	USERNAME	EMAIL
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
 	cli.OutputOpts
 	store    store.UserDescriber
 	username string
@@ -74,17 +73,36 @@ func (opts *DescribeOpts) validate() error {
 	return nil
 }
 
-// mongocli iam project(s) user(s) describe --id id --username USERNAME
+type cmdOpt func() error
+
+// PreRunE is a function to call before running the command,
+// It calls any additional function pass as a callback
+func PreRunE(cbs ...cmdOpt) error {
+	for _, f := range cbs {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// mongocli iam user(s) describe --id id --username USERNAME
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Example: "describe --id id | describe --name username",
-		Short:   describeIAMUser,
-		Args:    cobra.NoArgs,
+		Example: `  
+  Describe a user by ID
+  $ mongocli iam users describe --id <id>
+
+  Describe a user by username
+  $ mongocli iam users describe --username <username>
+`,
+		Short: describeIAMUser,
+		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
+			return PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,

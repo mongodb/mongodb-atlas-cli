@@ -34,7 +34,6 @@ func TestUsers(t *testing.T) {
 	var userID string
 
 	t.Run("List", func(t *testing.T) {
-
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			projectsEntity,
@@ -59,7 +58,6 @@ func TestUsers(t *testing.T) {
 
 		username = users[0].Username
 		userID = users[0].ID
-
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {

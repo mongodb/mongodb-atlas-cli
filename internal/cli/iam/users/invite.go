@@ -50,7 +50,7 @@ func (opts *InviteOpts) init() error {
 	return err
 }
 
-func (opts *InviteOpts) createUserView() (*store.UserView, error) {
+func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
 	atlasRoles, err := opts.createAtlasRole()
 	if err != nil {
 		return nil, err
@@ -60,11 +60,11 @@ func (opts *InviteOpts) createUserView() (*store.UserView, error) {
 	if err != nil {
 		return nil, err
 	}
-	user := &store.UserView{
+	user := &store.UserRequest{
 		AtlasRoles:   atlasRoles,
 		Country:      opts.country,
 		MobileNumber: opts.mobile,
-		User: opsmngr.User{
+		User: &opsmngr.User{
 			Username:     opts.username,
 			Password:     opts.password,
 			FirstName:    opts.firstName,
@@ -78,7 +78,7 @@ func (opts *InviteOpts) createUserView() (*store.UserView, error) {
 }
 
 func (opts *InviteOpts) Run() error {
-	user, err := opts.createUserView()
+	user, err := opts.newUserRequest()
 	if err != nil {
 		return err
 	}

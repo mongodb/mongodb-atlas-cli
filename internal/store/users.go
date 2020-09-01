@@ -26,42 +26,34 @@ import (
 //go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator
 
 type UserCreator interface {
-	CreateUser(*UserView) (interface{}, error)
+	CreateUser(*UserRequest) (interface{}, error)
 }
 
-type UserView struct {
-	opsmngr.User
-	AtlasRoles   []atlas.AtlasRole `json:"roles"`
-	MobileNumber string            `json:"mobileNumber"`
-	Country      string            `json:"country"`
+type UserRequest struct {
+	*opsmngr.User
+	AtlasRoles   []atlas.AtlasRole
+	MobileNumber string
+	Country      string
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers
-func (s *Store) CreateUser(user *UserView) (interface{}, error) {
+func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		user := &atlas.AtlasUser{
-			EmailAddress: user.User.EmailAddress,
-			FirstName:    user.User.FirstName,
-			LastName:     user.User.LastName,
+		atlasUser := &atlas.AtlasUser{
+			EmailAddress: user.EmailAddress,
+			FirstName:    user.FirstName,
+			LastName:     user.LastName,
 			Roles:        user.AtlasRoles,
-			Username:     user.User.Username,
+			Username:     user.Username,
 			MobileNumber: user.MobileNumber,
-			Password:     user.User.Password,
+			Password:     user.Password,
 			Country:      user.Country,
 		}
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(context.Background(), user)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(context.Background(), atlasUser)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		user := &opsmngr.User{
-			Username:     user.User.Username,
-			Password:     user.User.Password,
-			FirstName:    user.User.FirstName,
-			LastName:     user.User.LastName,
-			EmailAddress: user.User.EmailAddress,
-			Roles:        user.User.Roles,
-		}
-		result, _, err := s.client.(*opsmngr.Client).Users.Create(context.Background(), user)
+		result, _, err := s.client.(*opsmngr.Client).Users.Create(context.Background(), user.User)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

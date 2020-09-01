@@ -34,7 +34,7 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method
-func (m *MockUserCreator) CreateUser(arg0 *store.UserView) (interface{}, error) {
+func (m *MockUserCreator) CreateUser(arg0 *store.UserRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
 	ret0, _ := ret[0].(interface{})

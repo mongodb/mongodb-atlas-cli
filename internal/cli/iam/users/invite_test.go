@@ -38,7 +38,7 @@ func TestInvite_Run(t *testing.T) {
 		username: "testUser",
 	}
 
-	user, err := opts.createUserView()
+	user, err := opts.newUserRequest()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

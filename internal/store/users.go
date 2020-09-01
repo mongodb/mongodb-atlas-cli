@@ -96,7 +96,6 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 	}
 }
 
-// DeleteUser encapsulates the logic to manage different cloud providers
 func (s *Store) DeleteUser(userID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:

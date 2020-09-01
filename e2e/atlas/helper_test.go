@@ -38,9 +38,6 @@ const (
 	configEntity           = "settings"
 	dbusersEntity          = "dbusers"
 	certsEntity            = "certs"
-	iamEntity              = "iam"
-	projectsEntity         = "projects"
-	usersEntity            = "users"
 	privateEndpointsEntity = "privateendpoints"
 )
 

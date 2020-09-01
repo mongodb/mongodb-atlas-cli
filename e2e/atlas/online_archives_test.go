@@ -28,8 +28,6 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
-	const onlineArchiveEntity = "onlineArchives"
-
 	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("failed to deploy a cluster: %v", err)
@@ -48,32 +46,7 @@ func TestOnlineArchives(t *testing.T) {
 
 	var archiveID string
 	t.Run("Create", func(t *testing.T) {
-		const dbName = "test"
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"create",
-			"--clusterName="+clusterName,
-			"--db="+dbName,
-			"--collection=test",
-			"--dateField=test",
-			"--archiveAfter=3",
-			"--partition=test:date",
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var archive mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archive); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.Equal(t, dbName, archive.DBName)
-		archiveID = archive.ID
+		archiveID = createOnlineArchive(t, cliPath, clusterName)
 	})
 
 	if archiveID == "" {
@@ -81,90 +54,186 @@ func TestOnlineArchives(t *testing.T) {
 	}
 
 	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"describe",
-			archiveID,
-			"--clusterName="+clusterName,
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var archive mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archive); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.Equal(t, archiveID, archive.ID)
+		describeOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("list", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"list",
-			"--clusterName="+clusterName,
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var archives []*mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archives); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.NotEmpty(t, archives)
+		listOnlineArchives(t, cliPath, clusterName)
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		const expireAfterDays = float64(4)
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"update",
-			archiveID,
-			"--clusterName="+clusterName,
-			"--archiveAfter="+fmt.Sprintf("%.0f", expireAfterDays),
-			"-o=json")
+		updateOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
 
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		var archive mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archive); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		archiveID = archive.ID
-		assert.Equal(t, expireAfterDays, archive.Criteria.ExpireAfterDays)
+	t.Run("Pause", func(t *testing.T) {
+		pauseOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
+
+	t.Run("Start", func(t *testing.T) {
+		startOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			onlineArchiveEntity,
-			"rm",
-			archiveID,
-			"--clusterName="+clusterName,
-			"--force")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
-		assert.Equal(t, string(resp), expected)
+		deleteOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
+}
+
+func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"start",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	assert.False(t, *archive.Paused)
+}
+
+func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"pause",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	assert.True(t, *archive.Paused)
+}
+
+func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"rm",
+		archiveID,
+		"--clusterName="+clusterName,
+		"--force")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
+	assert.Equal(t, string(resp), expected)
+}
+
+func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	const expireAfterDays = float64(4)
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"update",
+		archiveID,
+		"--clusterName="+clusterName,
+		"--archiveAfter="+fmt.Sprintf("%.0f", expireAfterDays),
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	assert.Equal(t, expireAfterDays, archive.Criteria.ExpireAfterDays)
+}
+
+func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"describe",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	assert.Equal(t, archiveID, archive.ID)
+}
+
+func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"list",
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	var archives []*mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archives); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	assert.NotEmpty(t, archives)
+}
+
+func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
+	const dbName = "test"
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"create",
+		"--clusterName="+clusterName,
+		"--db="+dbName,
+		"--collection=test",
+		"--dateField=test",
+		"--archiveAfter=3",
+		"--partition=test:date",
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	assert.Equal(t, dbName, archive.DBName)
+	return archive.ID
 }

@@ -61,15 +61,15 @@ func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
 		return nil, err
 	}
 	user := &store.UserRequest{
-		AtlasRoles:   atlasRoles,
-		Country:      opts.country,
-		MobileNumber: opts.mobile,
+		AtlasRoles: atlasRoles,
+		Country:    opts.country,
 		User: &opsmngr.User{
 			Username:     opts.username,
 			Password:     opts.password,
 			FirstName:    opts.firstName,
 			LastName:     opts.lastName,
 			EmailAddress: opts.email,
+			MobileNumber: opts.mobile,
 			Roles:        userRoles,
 		},
 	}

@@ -17,4 +17,5 @@ const (
 	short      = "Users operations."
 	long       = "Create, list and manage your Atlas/Cloud Manager/Ops Manager users."
 	inviteUser = "Invite a user."
+	deleteUser = "Delete an Ops Manager user."
 )

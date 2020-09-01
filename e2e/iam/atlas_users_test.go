@@ -80,6 +80,10 @@ func TestUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
+
+		if user.Username != username {
+			t.Fatalf("expected username to match %v, got %v", username, user.Username)
+		}
 	})
 
 	t.Run("Describe by id", func(t *testing.T) {
@@ -101,6 +105,10 @@ func TestUsers(t *testing.T) {
 
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if user.ID != userID {
+			t.Fatalf("expected id to match %v, got %v", userID, user.ID)
 		}
 	})
 }

@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)
+}
+
+type UserDeleter interface {
+	DeleteUser(string) error
 }
 
 type UserDescriber interface {
@@ -36,9 +40,8 @@ type UserDescriber interface {
 
 type UserRequest struct {
 	*opsmngr.User
-	AtlasRoles   []atlas.AtlasRole
-	MobileNumber string
-	Country      string
+	AtlasRoles []atlas.AtlasRole
+	Country    string
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers
@@ -65,7 +68,7 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	}
 }
 
-// UserByID gets an IAM user by ID
+// UserByID encapsulates the logic to manage different cloud providers
 func (s *Store) UserByID(userID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -79,7 +82,7 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 	}
 }
 
-// UserByName gets an IAM user by name
+// UserByName encapsulates the logic to manage different cloud providers
 func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -90,5 +93,16 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteUser encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteUser(userID string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Users.Delete(context.Background(), userID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

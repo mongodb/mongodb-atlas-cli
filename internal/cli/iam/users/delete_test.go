@@ -12,27 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package users
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "users"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use),
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockUserDeleter(ctrl)
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		DeleteUser(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
+		Times(1)
+
+	opts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
 	}
-
-	cmd.AddCommand(
-		InviteBuilder(),
-		DescribeBuilder(),
-		DeleteBuilder(),
-	)
-
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

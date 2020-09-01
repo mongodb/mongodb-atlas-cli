@@ -24,7 +24,7 @@ import (
 )
 
 type DeleteOpts struct {
-	*cli.GlobalOpts
+	cli.GlobalOpts
 	*cli.DeleteOpts
 	store store.ProjectUserDeleter
 }
@@ -42,7 +42,7 @@ func (opts *DeleteOpts) Run() error {
 // mongocli iam project(s) users delete <ID> [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("User '%s' deleted from project '%s'\n", "User not deleted from project '%s'"),
+		DeleteOpts: cli.NewDeleteOpts("User '%s' deleted from the project\n", "User not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",

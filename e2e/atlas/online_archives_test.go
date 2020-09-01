@@ -65,59 +65,9 @@ func TestOnlineArchives(t *testing.T) {
 		updateOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
-	t.Run("Pause", func(t *testing.T) {
-		pauseOnlineArchive(t, cliPath, clusterName, archiveID)
-	})
-
-	t.Run("Start", func(t *testing.T) {
-		startOnlineArchive(t, cliPath, clusterName, archiveID)
-	})
-
 	t.Run("Delete", func(t *testing.T) {
 		deleteOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
-}
-
-func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		clustersEntity,
-		onlineArchiveEntity,
-		"start",
-		archiveID,
-		"--clusterName="+clusterName,
-		"-o=json")
-
-	cmd.Env = os.Environ()
-	a := assert.New(t)
-	if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-		var archive mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archive); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		a.False(*archive.Paused)
-	}
-}
-
-func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		clustersEntity,
-		onlineArchiveEntity,
-		"pause",
-		archiveID,
-		"--clusterName="+clusterName,
-		"-o=json")
-
-	cmd.Env = os.Environ()
-	a := assert.New(t)
-	if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-		var archive mongodbatlas.OnlineArchive
-		if err = json.Unmarshal(resp, &archive); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		a.True(*archive.Paused)
-	}
 }
 
 func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {

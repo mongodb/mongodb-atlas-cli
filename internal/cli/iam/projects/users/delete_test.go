@@ -38,7 +38,7 @@ func TestDelete_Run(t *testing.T) {
 
 	opts := &DeleteOpts{
 		store: mockStore,
-		GlobalOpts: &cli.GlobalOpts{
+		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "5a0a1e7e0f2912c554080adc",
 		},
 		DeleteOpts: &cli.DeleteOpts{

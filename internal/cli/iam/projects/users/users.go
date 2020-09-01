@@ -26,7 +26,10 @@ func Builder() *cobra.Command {
 		Short:   projectIAMUsers,
 		Aliases: cli.GenerateAliases(use),
 	}
-	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

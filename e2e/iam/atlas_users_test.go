@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+// +build e2e iam
 
-package atlas_test
+package iam_test
 
 import (
 	"encoding/json"
@@ -31,12 +31,40 @@ func TestUsers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("List", func(t *testing.T) {
+	//t.Run("invite", func(t *testing.T) {
+	//	cmd := exec.Command(cliPath,
+	//		iamEntity,
+	//		usersEntity,
+	//		"invite",
+	//		"--username",
+	//		"test@gmail.com",
+	//		"--password",
+	//		"3ert34221993.",
+	//		"--orgRole",
+	//		"5e429e7706822c6eac4d5970:ORG_MEMBER",
+	//		"--email",
+	//		"test@gmail.com",
+	//		"--firstName",
+	//		"test",
+	//		"--lastName",
+	//		"test",
+	//		"--country",
+	//		"IE")
+	//	cmd.Env = os.Environ()
+	//	resp, err := cmd.CombinedOutput()
+	//
+	//	if err != nil {
+	//		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	//	}
+	//})
+
+	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
 			usersEntity,
-			"list",
+			"describe",
+			"--username",
+			"andrea.angiolillo@mongodb.com",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -45,21 +73,20 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &users); err != nil {
+		var user mongodbatlas.AtlasUser
+
+		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
-		}
-		if len(users) == 0 {
-			t.Fatalf("expected len(users) > 0, got %v", len(users))
 		}
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	t.Run("Describe by id", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			usersEntity,
 			"describe",
-			"nonExistentUser",
+			"--id",
+			"5e4bc367c6b0f41bb9bbb178",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

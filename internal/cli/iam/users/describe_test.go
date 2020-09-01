@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build unit
 
 package users
@@ -26,21 +25,19 @@ import (
 
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUsersDescriber(ctrl)
+	mockStore := mocks.NewMockUserDescriber(ctrl)
 	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 
-	var id = "some_id"
-
 	descOpts := &DescribeOpts{
 		store: mockStore,
-		ID:    id,
+		id:    "id",
 	}
 
 	mockStore.
 		EXPECT().
-		UserByID(id).
+		UserByID(descOpts.id).
 		Return(expected, nil).
 		Times(1)
 
@@ -52,21 +49,19 @@ func TestDescribe_Run_ByID(t *testing.T) {
 
 func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUsersDescriber(ctrl)
+	mockStore := mocks.NewMockUserDescriber(ctrl)
 	defer ctrl.Finish()
 
 	var expected mongodbatlas.AtlasUser
 
-	var name = "some_name"
-
 	descOpts := &DescribeOpts{
 		store:    mockStore,
-		username: name,
+		username: "test",
 	}
 
 	mockStore.
 		EXPECT().
-		UserByName(name).
+		UserByName(descOpts.username).
 		Return(expected, nil).
 		Times(1)
 

@@ -25,16 +25,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}
+const describeTemplate = `id	FIRST NAME	LAST NAME	USERNAME	EMAIL
+{{.id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
 `
 
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.UsersDescriber
+	store    store.UserDescriber
 	username string
-	ID       string
+	id       string
 }
 
 func (opts *DescribeOpts) init() error {
@@ -51,8 +51,8 @@ func (opts *DescribeOpts) Run() error {
 		r, err = opts.store.UserByName(opts.username)
 	}
 
-	if opts.ID != "" {
-		r, err = opts.store.UserByID(opts.ID)
+	if opts.id != "" {
+		r, err = opts.store.UserByID(opts.id)
 	}
 
 	if err != nil {
@@ -63,24 +63,26 @@ func (opts *DescribeOpts) Run() error {
 }
 
 func (opts *DescribeOpts) validate() error {
-	if opts.ID == "" && opts.username == "" {
-		return errors.New("must supply one of 'ID' or 'username'")
+	if opts.id == "" && opts.username == "" {
+		return errors.New("must supply one of 'id' or 'username'")
 	}
 
-	if opts.ID != "" && opts.username != "" {
-		return errors.New("cannot supply both 'ID' and 'username'")
+	if opts.id != "" && opts.username != "" {
+		return errors.New("cannot supply both 'id' and 'username'")
 	}
 
 	return nil
 }
 
-// mongocli iam project(s) user(s) describe --id ID --username USERNAME
+// mongocli iam project(s) user(s) describe --id id --username USERNAME
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe --id ID | describe --name username",
+		Use:     "describe",
 		Aliases: []string{"get"},
+		Example: "describe --id id | describe --name username",
 		Short:   describeIAMUser,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.init,
@@ -94,7 +96,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.Username)
-	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.UserID)
+	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

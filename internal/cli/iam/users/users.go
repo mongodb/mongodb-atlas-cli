@@ -28,7 +28,10 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 	}
 
-	cmd.AddCommand(InviteBuilder())
-	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(
+		InviteBuilder(),
+		DescribeBuilder(),
+	)
+
 	return cmd
 }

@@ -31,6 +31,7 @@ const (
 	projectEntity         = "projects"
 	apiKeysEntity         = "apikeys"
 	apiKeyWhitelistEntity = "whitelist"
+	usersEntity           = "users"
 )
 
 func createOrgAPIKey() (string, error) {

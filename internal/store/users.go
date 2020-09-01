@@ -23,13 +23,13 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UsersDescriber
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)
 }
 
-type UsersDescriber interface {
+type UserDescriber interface {
 	UserByID(string) (interface{}, error)
 	UserByName(string) (interface{}, error)
 }

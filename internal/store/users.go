@@ -82,13 +82,13 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 }
 
 // UserByName gets an IAM user by name
-func (s *Store) UserByName(userID string) (interface{}, error) {
+func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(context.Background(), userID)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(context.Background(), username)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(context.Background(), userID)
+		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(context.Background(), username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME
+const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME
 {{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}
 `
 
@@ -78,13 +78,13 @@ func (opts *DescribeOpts) validate() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe --id ID | describe --name username",
 		Aliases: []string{"get"},
 		Short:   describeIAMUser,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,
 			)
 		},

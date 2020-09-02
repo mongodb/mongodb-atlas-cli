@@ -72,5 +72,7 @@ func AddBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.TeamID)
+
 	return cmd
 }

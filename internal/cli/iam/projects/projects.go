@@ -29,11 +29,14 @@ func Builder() *cobra.Command {
 		Long:    long,
 		Aliases: cli.GenerateAliases(use),
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(apikeys.Builder())
-	cmd.AddCommand(users.Builder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		DescribeBuilder(),
+		apikeys.Builder(),
+		users.Builder(),
+	)
+
 	return cmd
 }

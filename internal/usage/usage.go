@@ -65,6 +65,7 @@ const (
 	LastName                        = "User’s last name."
 	OrgRole                         = "User's roles  for the associated organization."
 	ProjectRole                     = "User's roles  for the associated project."
+	TeamRole                        = "Project role you want to assign to the team."
 	MaxDate                         = "Returns events whose created date is less than or equal to it."
 	MinDate                         = "Returns events whose created date is greater than or equal to it."
 	Filename                        = "Filename to use, optional file with a json cluster configuration."

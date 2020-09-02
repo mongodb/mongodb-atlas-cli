@@ -18,10 +18,9 @@ package teams
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {

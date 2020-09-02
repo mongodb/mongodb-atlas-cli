@@ -29,8 +29,9 @@ var createTemplate = "Team '{{.Name}}' created.\n"
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.TeamCreator
+	name      string
+	userNames []string
+	store     store.TeamCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -49,7 +50,8 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newTeam() *atlas.Team {
 	return &atlas.Team{
-		Name: opts.name,
+		Name:      opts.name,
+		Usernames: opts.userNames,
 	}
 }
 
@@ -72,8 +74,12 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringSliceVar(&opts.userNames, flag.Username, []string{}, usage.Username)
+
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

@@ -38,6 +38,10 @@ type TeamCreator interface {
 	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
 }
 
+type TeamAdder interface {
+	AddUsersTeam(string, *atlas.Team) (*atlas.Team, error)
+}
+
 // TeamByID encapsulates the logic to manage different cloud providers
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {

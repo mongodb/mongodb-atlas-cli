@@ -66,6 +66,7 @@ const (
 	OrgRole                         = "User's roles  for the associated organization."
 	ProjectRole                     = "User's roles  for the associated project."
 	MaxDate                         = "Returns events whose created date is less than or equal to it."
+	TeamRole                        = "Project role you want to assign to the team."
 	MinDate                         = "Returns events whose created date is greater than or equal to it."
 	Filename                        = "Filename to use, optional file with a json cluster configuration."
 	WhitelistIps                    = "IP addresses to add to the new user’s whitelist."

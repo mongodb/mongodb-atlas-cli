@@ -89,6 +89,20 @@ func TestProjects(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 
+	t.Run("Users", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			usersEntity,
+			"ls",
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
@@ -105,19 +119,5 @@ func TestProjects(t *testing.T) {
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
-	})
-
-	t.Run("Users", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectEntity,
-			usersEntity,
-			"ls",
-			"--projectId",
-			projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
 	})
 }

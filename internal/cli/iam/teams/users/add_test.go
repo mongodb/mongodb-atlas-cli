@@ -24,20 +24,20 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestAdd_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockTeamUserLister(ctrl)
+	mockStore := mocks.NewMockTeamAdder(ctrl)
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.Team
 
-	listOpts := &ListOpts{
+	listOpts := &AddOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		TeamUsers(listOpts.OrgID, listOpts.teamID).
+		AddUsersToTeam(listOpts.OrgID, listOpts.teamID, listOpts.users).
 		Return(expected, nil).
 		Times(1)
 

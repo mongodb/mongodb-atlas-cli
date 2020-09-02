@@ -35,7 +35,7 @@ const (
 	DBUsername                      = "Username for authenticating to MongoDB."
 	TeamName                        = "Name of the team."
 	UserID                          = "The ID of the user."
-	TeamID                          = "The ID of the user."
+	TeamID                          = "The ID of the team."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Country                         = "The ISO 3166-1 alpha 2 country code of the user’s country of residence."
 	Mobile                          = "The user’s mobile or cell phone number."

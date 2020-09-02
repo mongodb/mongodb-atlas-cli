@@ -162,8 +162,8 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(context.Background(), projectID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.(context.Background(), projectID, opts)
-		return result, err
+		//result, _, err := s.client.(*opsmngr.Client).Teams.(context.Background(), projectID, opts)
+		return nil, nil
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}

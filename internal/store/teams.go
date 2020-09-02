@@ -46,6 +46,10 @@ type TeamAdder interface {
 	AddUsersToTeam(string, string, []string) (interface{}, error)
 }
 
+type TeamUserRemover interface {
+	RemoveUserFromTeam(string, string, string) error
+}
+
 // TeamByID encapsulates the logic to manage different cloud providers
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {

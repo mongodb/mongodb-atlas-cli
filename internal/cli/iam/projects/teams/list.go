@@ -31,7 +31,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.TeamLister
+	store store.ProjectTeamLister
 }
 
 func (opts *ListOpts) init() error {
@@ -41,9 +41,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOptions := opts.NewListOptions()
-
-	r, err := opts.store.Teams(opts.ConfigOrgID(), listOptions)
+	r, err := opts.store.ProjectTeams(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

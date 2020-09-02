@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder
 
 type ProjectLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
@@ -56,6 +56,10 @@ type ProjectUserDeleter interface {
 
 type ProjectTeamLister interface {
 	ProjectTeams(string) (interface{}, error)
+}
+
+type ProjectTeamAdder interface {
+	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error)
 }
 
 // Projects encapsulates the logic to manage different cloud providers
@@ -163,6 +167,20 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(context.Background(), projectID, nil)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// AddTeamsToProject encapsulates the logic to manage different cloud providers
+func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

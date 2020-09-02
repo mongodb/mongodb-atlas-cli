@@ -11,10 +11,38 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// +build unit
+
 package teams
 
-const (
-	short     = "Teams operations."
-	listTeams = "Get all teams in a project."
-	addTeam   = "Add team to a project."
+import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
+
+func TestAdd_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectTeamAdder(ctrl)
+	defer ctrl.Finish()
+
+	var expected *mongodbatlas.TeamsAssigned
+
+	opts := &AddOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		AddTeamsToProject(opts.ProjectID, opts.newProjectTeam()).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

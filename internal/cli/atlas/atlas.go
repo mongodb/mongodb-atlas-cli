@@ -20,6 +20,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongocli/internal/cli/atlas/integrations"
 	"github.com/mongodb/mongocli/internal/cli/atlas/logs"
 	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongocli/internal/cli/atlas/networking"
@@ -44,19 +45,22 @@ func Builder() *cobra.Command {
 			return validate.Credentials()
 		},
 	}
-	cmd.AddCommand(datalake.Builder())
-	cmd.AddCommand(clusters.Builder())
-	cmd.AddCommand(dbusers.Builder())
-	cmd.AddCommand(whitelist.Builder())
-	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(backup.Builder())
-	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(metrics.Builder())
-	cmd.AddCommand(logs.Builder())
-	cmd.AddCommand(processes.Builder())
-	cmd.AddCommand(privateendpoints.Builder())
-	cmd.AddCommand(networking.Builder())
-	cmd.AddCommand(security.Builder())
+	cmd.AddCommand(
+		datalake.Builder(),
+		clusters.Builder(),
+		dbusers.Builder(),
+		whitelist.Builder(),
+		alerts.Builder(),
+		backup.Builder(),
+		events.Builder(),
+		metrics.Builder(),
+		logs.Builder(),
+		processes.Builder(),
+		privateendpoints.Builder(),
+		networking.Builder(),
+		security.Builder(),
+		integrations.Builder(),
+		)
 
 	return cmd
 }

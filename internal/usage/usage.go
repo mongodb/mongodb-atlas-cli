@@ -139,6 +139,11 @@ const (
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	AccountID                       = "Account ID of the owner of the peer VPC."
+	NewRelicAccountID = "Unique identifier of your New Relic account."
+	LicenceKey = 					"Your License Key."
+	WriteToken = "Your Insights Insert Key."
+	ReadToken = "Your Insights Query Key."
+
 	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
 	VpcID                           = "Unique identifier of the peer VPC."
 	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."

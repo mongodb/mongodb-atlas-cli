@@ -54,6 +54,10 @@ type ProjectUserDeleter interface {
 	DeleteUserFromProject(string, string) error
 }
 
+type ProjectTeamLister interface {
+	ProjectTeams(string) (interface{}, error)
+}
+
 // Projects encapsulates the logic to manage different cloud providers
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
@@ -148,5 +152,19 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectTeams encapsulates the logic to manage different cloud providers
+func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(context.Background(), projectID)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

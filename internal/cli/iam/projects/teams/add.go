@@ -21,27 +21,27 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID{{range .Results}}
-{{.TeamID}}{{end}}
-`
+const addTemplate = "Team added to the project.\n"
 
-type ListOpts struct {
+type AddOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.ProjectTeamLister
+	store  store.ProjectTeamAdder
+	teamID string
+	roles  []string
 }
 
-func (opts *ListOpts) init() error {
+func (opts *AddOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.ProjectTeams(opts.ConfigProjectID())
+func (opts *AddOpts) Run() error {
+	r, err := opts.store.AddTeamsToProject(opts.ConfigProjectID(), opts.newProjectTeam())
 	if err != nil {
 		return err
 	}
@@ -49,17 +49,27 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) list --orgId orgId
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+func (opts *AddOpts) newProjectTeam() []*atlas.ProjectTeam {
+	return []*atlas.ProjectTeam{
+		{
+			TeamID:    opts.teamID,
+			RoleNames: opts.roles,
+		},
+	}
+}
+
+// mongocli iam team(s) user(s) add teamId --projectId projectId
+func AddBuilder() *cobra.Command {
+	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listTeams,
+		Use:   "add <teamId>",
+		Args:  cobra.ExactArgs(1),
+		Short: addTeam,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.teamID = args[0]
 			return opts.PreRunE(
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -67,11 +77,12 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.TeamRole)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

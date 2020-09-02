@@ -24,7 +24,6 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   short,
-		Long:    long,
 		Aliases: cli.GenerateAliases(use),
 	}
 

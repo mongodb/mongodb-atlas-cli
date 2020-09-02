@@ -15,6 +15,5 @@ package users
 
 const (
 	short     = "Users operations."
-	long      = "Create, list and manage your Atlas/Cloud Manager/Ops Manager users."
 	listUsers = "List users in a organization."
 )

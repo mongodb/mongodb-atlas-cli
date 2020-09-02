@@ -23,11 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const atlasUserListTemplate = `ID	FIRST NAME	LAST NAME	EMAIL{{range .Results}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.EmailAddress}}{{end}}
-`
-const OMUserListTemplate = `ID	FIRST NAME	LAST NAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.EmailAddress}}{{end}}
+const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME{{range .Results}}
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}{{end}}
 `
 
 type ListOpts struct {
@@ -64,12 +61,8 @@ func ListBuilder() *cobra.Command {
 		Short:   listUsers,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if config.Service() == config.CloudService {
-				opts.Template = atlasUserListTemplate
-			} else {
-				opts.Template = OMUserListTemplate
-			}
 			return opts.PreRunEOrg(
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 				opts.init,
 			)
 		},

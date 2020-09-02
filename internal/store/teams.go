@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamDescriber
+//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamDescriber,TeamCreator
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
@@ -32,6 +32,10 @@ type TeamLister interface {
 type TeamDescriber interface {
 	TeamByID(string, string) (*atlas.Team, error)
 	TeamByName(string, string) (*atlas.Team, error)
+}
+
+type TeamCreator interface {
+	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers
@@ -70,6 +74,19 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.List(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Teams.Create(context.Background(), orgID, team)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.Create(context.Background(), orgID, team)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

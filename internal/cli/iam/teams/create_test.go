@@ -11,12 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
+
 package teams
 
-const (
-	short        = "Teams operations."
-	long         = "Create, list and manage your Atlas/Cloud Manager/Ops Manager teams."
-	listTeams    = "Get all teams in an organization."
-	describeTeam = "Get a team in an organization."
-	createTeam   = "Create a team in an organization."
+import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
+
+func TestCreate_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockTeamCreator(ctrl)
+	defer ctrl.Finish()
+
+	expected := &mongodbatlas.Team{}
+
+	createOpts := &CreateOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		CreateTeam(createOpts.OrgID, createOpts.newTeam()).Return(expected, nil).
+		Times(1)
+
+	err := createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}

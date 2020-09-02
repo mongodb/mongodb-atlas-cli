@@ -14,8 +14,9 @@
 package teams
 
 const (
-	short      = "Teams operations."
-	long       = "Create, list and manage your Atlas/Cloud Manager/Ops Manager teams."
-	listTeams  = "Get all teams in an organization."
+	short        = "Teams operations."
+	long         = "Create, list and manage your Atlas/Cloud Manager/Ops Manager teams."
+	listTeams    = "Get all teams in an organization."
+	describeTeam = "Get a team in an organization."
 	createTeam = "Create a team in an organization."
 )

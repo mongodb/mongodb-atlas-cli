@@ -23,14 +23,47 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamCreator
+//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamDescriber,TeamCreator
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
 }
 
+type TeamDescriber interface {
+	TeamByID(string, string) (*atlas.Team, error)
+	TeamByName(string, string) (*atlas.Team, error)
+}
+
 type TeamCreator interface {
 	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
+}
+
+// TeamByID encapsulates the logic to manage different cloud providers
+func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Teams.Get(context.Background(), orgID, teamID)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.Get(context.Background(), orgID, teamID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// TeamByName encapsulates the logic to manage different cloud providers
+func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Teams.GetOneTeamByName(context.Background(), orgID, teamName)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(context.Background(), orgID, teamName)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // Teams encapsulates the logic to manage different cloud providers
@@ -47,7 +80,6 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 	}
 }
 
-// CreateTeam encapsulates the logic to manage different cloud providers
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService:

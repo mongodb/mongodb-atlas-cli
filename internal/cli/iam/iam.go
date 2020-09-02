@@ -19,6 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/iam/globalwhitelist"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
+	"github.com/mongodb/mongocli/internal/cli/iam/teams"
 	"github.com/mongodb/mongocli/internal/cli/iam/users"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -44,6 +45,7 @@ func Builder() *cobra.Command {
 		globalapikeys.Builder(),
 		globalwhitelist.Builder(),
 		users.Builder(),
+		teams.Builder(),
 	)
 
 	return cmd

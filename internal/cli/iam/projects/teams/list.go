@@ -24,7 +24,7 @@ import (
 )
 
 const listTemplate = `ID{{range .Results}}
-{{.TeamID}}}{{end}}
+{{.TeamID}}{{end}}
 `
 
 type ListOpts struct {

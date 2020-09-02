@@ -24,7 +24,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const addTemplate = "User(s) added to the team.\n"
+const addTemplate = "Team added to the project.\n"
 
 type AddOpts struct {
 	cli.GlobalOpts

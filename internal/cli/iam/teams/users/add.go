@@ -30,7 +30,8 @@ const addTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .}}
 type AddOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.TeamUserLister
+	store  store.TeamAdder
+	teamID string
 	users []string
 }
 
@@ -41,7 +42,7 @@ func (opts *AddOpts) init() error {
 }
 
 func (opts *AddOpts) Run() error {
-	r, err := opts.store.TeamUsers(opts.ConfigOrgID(), opts.teamID)
+	r, err := opts.store.AddUsersToTeam(opts.ConfigOrgID(), opts.teamID, opts.users)
 	if err != nil {
 		return err
 	}
@@ -49,7 +50,7 @@ func (opts *AddOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) user(s) add username1,username2 .. usernameN--teamId teamId --orgId orgId
+// mongocli iam team(s) user(s) add username1,username2 .. usernameN --teamId teamId --orgId orgId
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{

@@ -32,6 +32,7 @@ const (
 	Until                           = "Acknowledged until a date."
 	Limit                           = "Number of items per page."
 	Username                        = "Username of the user."
+	TeamUsername                    = "List of usernames to add to the new team."
 	DBUsername                      = "Username for authenticating to MongoDB."
 	UserID                          = "The ID of the user."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password

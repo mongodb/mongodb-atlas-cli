@@ -23,25 +23,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}{{end}}
-`
+const addTemplate = "User(s) added to the team.\n"
 
-type ListOpts struct {
+type AddOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.TeamUserLister
+	store  store.TeamAdder
 	teamID string
+	users  []string
 }
 
-func (opts *ListOpts) init() error {
+func (opts *AddOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.TeamUsers(opts.ConfigOrgID(), opts.teamID)
+func (opts *AddOpts) Run() error {
+	r, err := opts.store.AddUsersToTeam(opts.ConfigOrgID(), opts.teamID, opts.users)
 	if err != nil {
 		return err
 	}
@@ -49,17 +48,18 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) user(s) list --orgId orgId
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli iam team(s) user(s) add username1 username2 .. usernameN --teamId teamId --orgId orgId
+func AddBuilder() *cobra.Command {
+	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listUsers,
+		Use:   "add username1 username2 .. usernameN",
+		Args:  cobra.MinimumNArgs(1),
+		Short: listUsers,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.users = args
 			return opts.PreRunEOrg(
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

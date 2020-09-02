@@ -12,29 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package teams
+// +build unit
+
+package users
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/teams/users"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	const use = "teams"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use),
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockTeamUserLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.Team
+
+	listOpts := &ListOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
-	)
+	mockStore.
+		EXPECT().
+		TeamUsers(listOpts.OrgID, listOpts.teamID).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

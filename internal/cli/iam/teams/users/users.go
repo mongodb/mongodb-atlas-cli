@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package teams
+package users
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/teams/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "teams"
+	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   short,
@@ -31,9 +30,6 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
 	)
 
 	return cmd

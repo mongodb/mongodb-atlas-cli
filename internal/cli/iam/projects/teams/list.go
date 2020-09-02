@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	NAME{{range .}}
-{{.ID}}	{{.Name}}{{end}}
+const listTemplate = `ID{{range .Results}}
+{{.TeamID}}}{{end}}
 `
 
 type ListOpts struct {

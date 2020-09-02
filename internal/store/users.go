@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)
@@ -35,6 +35,10 @@ type UserDeleter interface {
 
 type UserLister interface {
 	OrganizationUsers(string, *atlas.ListOptions) (interface{}, error)
+}
+
+type TeamUserLister interface {
+	TeamUsers(string, string) (interface{}, error)
 }
 
 type UserDescriber interface {
@@ -119,6 +123,20 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.ListUsers(context.Background(), organizationID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// TeamUsers encapsulates the logic to manage different cloud providers
+func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Teams.GetTeamUsersAssigned(context.Background(), orgID, teamID)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.GetTeamUsersAssigned(context.Background(), orgID, teamID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

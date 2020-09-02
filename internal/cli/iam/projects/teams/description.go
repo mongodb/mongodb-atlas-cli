@@ -14,6 +14,6 @@
 package teams
 
 const (
-	short        = "Teams operations."
-	listTeams    = "Get all teams in a project."
+	short     = "Teams operations."
+	listTeams = "Get all teams in a project."
 )

@@ -11,31 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package users
 
-package organizations
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/users"
-	"github.com/spf13/cobra"
+const (
+	short     = "Users operations."
+	listUsers = "List users in a organization."
 )
-
-func Builder() *cobra.Command {
-	const use = "organizations"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use, "orgs", "org"),
-	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		apikeys.Builder(),
-		users.Builder(),
-	)
-	return cmd
-}

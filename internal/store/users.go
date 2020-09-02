@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongocli/internal/store UserCreator,UserDescriber,UserDeleter,UserLister
 
 type UserCreator interface {
 	CreateUser(*UserRequest) (interface{}, error)
@@ -31,6 +31,10 @@ type UserCreator interface {
 
 type UserDeleter interface {
 	DeleteUser(string) error
+}
+
+type UserLister interface {
+	OrganizationUsers(string, *atlas.ListOptions) (interface{}, error)
 }
 
 type UserDescriber interface {
@@ -104,5 +108,19 @@ func (s *Store) DeleteUser(userID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OrganizationUsers encapsulates the logic to manage different cloud providers
+func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Organizations.Users(context.Background(), organizationID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Organizations.ListUsers(context.Background(), organizationID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

@@ -12,30 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package organizations
+package users
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "organizations"
+	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use, "orgs", "org"),
+		Aliases: cli.GenerateAliases(use),
 	}
+
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		apikeys.Builder(),
-		users.Builder(),
 	)
+
 	return cmd
 }

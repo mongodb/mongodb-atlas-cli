@@ -23,16 +23,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const addTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}{{end}}
-`
+const addTemplate = "User(s) added to the team.\n"
 
 type AddOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	store  store.TeamAdder
 	teamID string
-	users []string
+	users  []string
 }
 
 func (opts *AddOpts) init() error {
@@ -54,14 +52,14 @@ func (opts *AddOpts) Run() error {
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:     "add",
+		Use:   "add username1 username2 .. usernameN",
 		Args:  cobra.MinimumNArgs(1),
-		Short:   listUsers,
+		Short: listUsers,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.users=args
+			opts.users = args
 			return opts.PreRunEOrg(
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

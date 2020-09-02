@@ -117,7 +117,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers
-func (s *Store) AddUsersToTeam(orgID, teamID string,  users []string) (interface{}, error) {
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Teams.AddUsersToTeam(context.Background(), orgID, teamID, users)

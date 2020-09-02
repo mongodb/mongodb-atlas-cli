@@ -46,7 +46,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:     "update <teamId>",
-		Aliases: []string{"updates", "rm"},
+		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		Short:   updateTeamRoles,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -12,30 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package teams
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/teams/users"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "teams"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Long:    long,
-		Aliases: cli.GenerateAliases(use),
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockTeamDeleter(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DeleteOpts{
+		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "6a0a1e7e0f2912c554080adc",
+		},
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
 	}
 
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		users.Builder(),
-		DeleteBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		DeleteTeam(opts.OrgID, opts.Entry).
+		Return(nil).
+		Times(1)
 
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

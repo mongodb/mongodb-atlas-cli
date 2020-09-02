@@ -19,4 +19,5 @@ const (
 	listTeams    = "Get all teams in an organization."
 	describeTeam = "Get a team in an organization."
 	createTeam   = "Create a team in an organization."
+	deleteTeam   = "Create a team from an organization."
 )

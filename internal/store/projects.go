@@ -66,7 +66,6 @@ type ProjectTeamDeleter interface {
 	DeleteTeamFromProject(string, string) error
 }
 
-
 // Projects encapsulates the logic to manage different cloud providers
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {

@@ -18,5 +18,5 @@ const (
 	listTeams       = "Get all teams in a project."
 	addTeam         = "Add team to a project."
 	updateTeamRoles = "Update roles for a team in a project."
-	deleteTeam="Delete team from a project."
-	)
+	deleteTeam      = "Delete team from a project."
+)

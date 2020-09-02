@@ -158,4 +158,5 @@ const (
 	VpcID                           = "vpcId"                           // VpcID flag
 	GCPProjectID                    = "gcpProjectId"                    // GCPProjectID flag
 	Network                         = "network"                         // Network flag
+	Name                            = "name"                            // Name flag
 )

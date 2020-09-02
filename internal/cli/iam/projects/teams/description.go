@@ -17,4 +17,5 @@ const (
 	short     = "Teams operations."
 	listTeams = "Get all teams in a project."
 	addTeam   = "Add team to a project."
+	deleteTeam="Delete team from a project."
 )

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package users
+package teams
 
 import (
 	"errors"
@@ -25,15 +25,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
+const describeTemplate = `ID	NAME
+{{.ID}}	{{.Name}}
 `
 
 type DescribeOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.UserDescriber
-	username string
-	id       string
+	store store.TeamDescriber
+	name  string
+	id    string
 }
 
 func (opts *DescribeOpts) init() error {
@@ -46,12 +47,12 @@ func (opts *DescribeOpts) Run() error {
 	var r interface{}
 	var err error
 
-	if opts.username != "" {
-		r, err = opts.store.UserByName(opts.username)
+	if opts.name != "" {
+		r, err = opts.store.TeamByName(opts.ConfigOrgID(), opts.name)
 	}
 
 	if opts.id != "" {
-		r, err = opts.store.UserByID(opts.id)
+		r, err = opts.store.TeamByID(opts.ConfigOrgID(), opts.id)
 	}
 
 	if err != nil {
@@ -62,31 +63,18 @@ func (opts *DescribeOpts) Run() error {
 }
 
 func (opts *DescribeOpts) validate() error {
-	if opts.id == "" && opts.username == "" {
+	if opts.id == "" && opts.name == "" {
 		return errors.New("must supply one of 'id' or 'username'")
 	}
 
-	if opts.id != "" && opts.username != "" {
+	if opts.id != "" && opts.name != "" {
 		return errors.New("cannot supply both 'id' and 'username'")
 	}
 
 	return nil
 }
 
-type cmdOpt func() error
-
-// PreRunE is a function to call before running the command,
-// It calls any additional function pass as a callback
-func PreRunE(cbs ...cmdOpt) error {
-	for _, f := range cbs {
-		if err := f(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// mongocli iam user(s) describe --id id --username USERNAME
+// mongocli iam team(s) describe --id id --orgId orgId
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -94,15 +82,12 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Example: `  
   Describe a user by ID
-  $ mongocli iam users describe --id <id>
-
-  Describe a user by username
-  $ mongocli iam users describe --username <username>
+  $ mongocli iam users describe --id teamId --orgId orgId <id>
 `,
-		Short: describeIAMUser,
+		Short: describeTeam,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return PreRunE(
+			return opts.PreRunEOrg(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,
@@ -113,9 +98,10 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.Username)
-	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
+	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.TeamName)
+	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.TeamID)
 
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

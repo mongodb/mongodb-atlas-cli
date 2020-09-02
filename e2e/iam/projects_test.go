@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -50,9 +51,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 
 		var project mongodbatlas.Project
 		if err = json.Unmarshal(resp, &project); err != nil {
@@ -74,9 +73,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -89,9 +86,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -104,13 +99,25 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		assert.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project '%s' deleted\n", projectID)
 		if string(resp) != expected {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
 		}
+	})
+
+	t.Run("Users", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectEntity,
+			usersEntity,
+			"ls",
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	})
 }

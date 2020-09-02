@@ -65,4 +65,18 @@ func TestOrgs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
 	})
+
+	t.Run("Users", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			orgEntity,
+			usersEntity,
+			"ls",
+			"--orgId",
+			orgID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
 }

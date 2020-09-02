@@ -19,21 +19,16 @@ package users
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUserDeleter(ctrl)
+	mockStore := mocks.NewMockTeamUserRemover(ctrl)
 	defer ctrl.Finish()
-
-	mockStore.
-		EXPECT().
-		DeleteUser(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(nil).
-		Times(1)
 
 	opts := &DeleteOpts{
 		store: mockStore,
@@ -41,7 +36,18 @@ func TestDelete_Run(t *testing.T) {
 			Entry:   "5a0a1e7e0f2912c554080adc",
 			Confirm: true,
 		},
+		teamID: "213123",
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "2a0a1e7e0f2912c554080adc",
+		},
 	}
+
+	mockStore.
+		EXPECT().
+		RemoveUserFromTeam(opts.OrgID, opts.teamID, opts.Entry).
+		Return(nil).
+		Times(1)
+
 	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

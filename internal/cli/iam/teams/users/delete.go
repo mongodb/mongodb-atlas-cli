@@ -26,7 +26,7 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.TeamUserRemover
+	store  store.TeamUserRemover
 	teamID string
 }
 
@@ -55,7 +55,7 @@ func DeleteBuilder() *cobra.Command {
 			return opts.PreRunEOrg(
 				opts.init,
 				opts.Prompt,
-				)
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

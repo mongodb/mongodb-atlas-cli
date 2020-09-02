@@ -23,44 +23,39 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}{{end}}
-`
-
-type ListOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	store  store.TeamUserLister
+	*cli.DeleteOpts
+	store store.TeamUserRemover
 	teamID string
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.TeamUsers(opts.ConfigOrgID(), opts.teamID)
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.RemoveUserFromTeam, opts.ConfigOrgID(), opts.teamID)
 }
 
-// mongocli iam team(s) user(s) list --orgId orgId
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli iam team(s) users(s) delete <ID> [--force] --orgId orgId
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("User '%s' deleted from the team\n", "User not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listUsers,
+		Use:     "delete <UserID>",
+		Aliases: []string{"rm"},
+		Short:   deleteUser,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
 			return opts.PreRunEOrg(
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-			)
+				opts.Prompt,
+				)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -69,8 +64,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
 
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)
 

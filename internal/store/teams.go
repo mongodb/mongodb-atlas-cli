@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter
+//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongocli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamUserRemover
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
@@ -40,6 +40,10 @@ type TeamCreator interface {
 
 type TeamDeleter interface {
 	DeleteTeam(string, string) error
+}
+
+type TeamUserRemover interface {
+	RemoveUserFromTeam(string, string, string) error
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers
@@ -105,6 +109,20 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 		return err
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(context.Background(), orgID, teamID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// RemoveUserFromTeam encapsulates the logic to manage different cloud providers
+func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(context.Background(), orgID, teamID, userID)
+		return err
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(context.Background(), orgID, teamID, userID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
@@ -52,6 +52,18 @@ type ProjectUsersLister interface {
 
 type ProjectUserDeleter interface {
 	DeleteUserFromProject(string, string) error
+}
+
+type ProjectTeamLister interface {
+	ProjectTeams(string) (interface{}, error)
+}
+
+type ProjectTeamAdder interface {
+	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error)
+}
+
+type ProjectTeamDeleter interface {
+	DeleteTeamFromProject(string, string) error
 }
 
 // Projects encapsulates the logic to manage different cloud providers
@@ -145,6 +157,48 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(context.Background(), projectID, userID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectTeams encapsulates the logic to manage different cloud providers
+func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(context.Background(), projectID)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(context.Background(), projectID, nil)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// AddTeamsToProject encapsulates the logic to manage different cloud providers
+func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteTeamFromProject encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
+		return err
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

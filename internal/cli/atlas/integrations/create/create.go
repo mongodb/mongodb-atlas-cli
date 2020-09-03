@@ -15,16 +15,14 @@
 package create
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "create"
-	aliases := append(cli.GenerateAliases(use), cli.GenerateAliases("update")...)
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: aliases,
+		Aliases: []string{"update"},
 		Short:   short,
 	}
 	cmd.AddCommand(

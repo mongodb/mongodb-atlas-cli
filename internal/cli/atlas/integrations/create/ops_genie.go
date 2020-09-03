@@ -64,7 +64,7 @@ func OpsGenieBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     OpsGenieType,
 		Aliases: []string{"ops_genie", "opsGenie", "og", "OG"},
-		Short:   OpsGenie,
+		Short:   opsGenie,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -16,6 +16,5 @@ package create
 const (
 	short    = "Create operations"
 	newRelic = "Create|Update New Relic integration"
-	OpsGenie = "Create|Update Ops Genie integration"
-
-	)
+	opsGenie = "Create|Update Ops Genie integration"
+)

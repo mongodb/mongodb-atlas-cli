@@ -60,7 +60,7 @@ func Builder() *cobra.Command {
 		networking.Builder(),
 		security.Builder(),
 		integrations.Builder(),
-		)
+	)
 
 	return cmd
 }

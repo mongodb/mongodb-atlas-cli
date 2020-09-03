@@ -15,24 +15,25 @@
 package create
 
 import (
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	_ "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+const integrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	licenseKey  string
-	accountID       string
-	writeToken   string
-	readToken    string
-	store        store.OnlineArchiveCreator
+	licenseKey string
+	accountID  string
+	writeToken string
+	readToken  string
+	store      store.IntegrationCreator
 }
 
 func (opts *NewRelicOpts) initStore() error {
@@ -44,29 +45,31 @@ func (opts *NewRelicOpts) initStore() error {
 var createTemplate = "Online archive '{{.ID}}' created.\n"
 
 func (opts *NewRelicOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), integrationType, opts.newThirdPartyIntegration())
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
-	if err != nil {
-		return err
-	}
-
 	return opts.Print(r)
 }
 
-
-
-
+func (opts *NewRelicOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
+	return &atlas.ThirdPartyIntegration{
+		Type:       integrationType,
+		LicenseKey: opts.licenseKey,
+		AccountID:  opts.accountID,
+		WriteToken: opts.writeToken,
+		ReadToken:  opts.readToken,
+	}
+}
 
 // mongocli atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId]
 func NewRelicBuilder() *cobra.Command {
 	opts := &NewRelicOpts{}
 	cmd := &cobra.Command{
-		Use:   "NEW_RELIC",
-		Aliases:[]string{"new_relic", "newRelic", "nr", "NR"},
-		Short: CreateNewRelic,
-		Args:  cobra.NoArgs,
+		Use:     "NEW_RELIC",
+		Aliases: []string{"new_relic", "newRelic", "nr", "NR"},
+		Short:   CreateNewRelic,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

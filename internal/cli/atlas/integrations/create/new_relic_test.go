@@ -26,21 +26,17 @@ import (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveCreator(ctrl)
+	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
 
 	opts := &NewRelicOpts{
 		store: mockStore,
 	}
 
-	request, err := opts.newOnlineArchive()
-	if err != nil {
-		t.Fatalf("newOnlineArchive() unexpected error: %v", err)
-	}
-	expected := &mongodbatlas.OnlineArchive{}
+	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateOnlineArchive(opts.ProjectID, opts.clusterName, request).
+		CreateIntegration(opts.ProjectID, integrationType, opts.newThirdPartyIntegration()).
 		Return(expected, nil).
 		Times(1)
 

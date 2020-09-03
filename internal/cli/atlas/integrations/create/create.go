@@ -21,14 +21,15 @@ import (
 
 func Builder() *cobra.Command {
 	const use = "create"
+	aliases := append(cli.GenerateAliases(use), cli.GenerateAliases("update")...)
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: aliases,
 		Short:   short,
 	}
 	cmd.AddCommand(
 		NewRelicBuilder(),
-		)
+	)
 
 	return cmd
 }

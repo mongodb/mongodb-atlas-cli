@@ -14,5 +14,5 @@
 package integrations
 
 const (
-	short        = "Integration operations"
+	short = "Integration operations"
 )

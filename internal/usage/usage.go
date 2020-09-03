@@ -139,21 +139,21 @@ const (
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	AccountID                       = "Account ID of the owner of the peer VPC."
-	NewRelicAccountID = "Unique identifier of your New Relic account."
-	LicenceKey = 					"Your License Key."
-	WriteToken = "Your Insights Insert Key."
-	ReadToken = "Your Insights Query Key."
+	NewRelicAccountID               = "Unique identifier of your New Relic account."
+	LicenceKey                      = "Your License Key."
+	WriteToken                      = "Your Insights Insert Key."
+	ReadToken                       = "Your Insights Query Key."
 
-	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
-	VpcID                           = "Unique identifier of the peer VPC."
-	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
-	VNet                            = "Name of your Azure VNet."
-	ResourceGroup                   = "Name of your Azure resource group."
-	DirectoryID                     = "Unique identifier for an Azure AD directory."
-	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
-	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
-	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
-	FormatOut                       = `Output format. 
+	RouteTableCidrBlock = "Peer VPC CIDR block or subnet."
+	VpcID               = "Unique identifier of the peer VPC."
+	AtlasCIDRBlock      = "CIDR block that Atlas uses for your clusters."
+	VNet                = "Name of your Azure VNet."
+	ResourceGroup       = "Name of your Azure resource group."
+	DirectoryID         = "Unique identifier for an Azure AD directory."
+	SubscriptionID      = "Unique identifier of the Azure subscription in which the VNet resides."
+	GCPProjectID        = "Unique identifier of the GCP project in which the network peer resides."
+	Network             = "Unique identifier of the Network Peering connection in the Atlas project."
+	FormatOut           = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`

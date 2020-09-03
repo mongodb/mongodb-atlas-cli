@@ -40,7 +40,7 @@ func (opts *OpsGenieOpts) initStore() error {
 	return err
 }
 
-var createTemplateOpsGenie = "Ops Genie integration created.\n"
+var createTemplateOpsGenie = "Ops Genie integration configured.\n"
 
 func (opts *OpsGenieOpts) Run() error {
 	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), OpsGenieType, opts.newThirdPartyIntegration())

@@ -116,7 +116,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromOrganization(context.Background(), orgID, teamID)
 		return err
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(context.Background(), orgID, teamID)
 		return err
 	default:

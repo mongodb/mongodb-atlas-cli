@@ -36,6 +36,9 @@ func TestTeamUsers(t *testing.T) {
 
 	teamName := fmt.Sprintf("teams%v", n)
 	teamID, err := createTeam(teamName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	defer func() {
 		if e := deleteTeam(teamID); e != nil {
@@ -43,7 +46,7 @@ func TestTeamUsers(t *testing.T) {
 		}
 	}()
 
-	username, userID, err := getUserFromOrg(1)
+	username, userID, err := OrgNUser(1)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -83,9 +86,7 @@ func TestTeamUsers(t *testing.T) {
 			}
 		}
 
-		if !found {
-			t.Fatalf("the username %v has not been added", username)
-		}
+		assert.True(t, found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -109,9 +110,7 @@ func TestTeamUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(teams) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(teams), ">0")
-		}
+		assert.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

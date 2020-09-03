@@ -40,21 +40,21 @@ func TestProjectTeams(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	teamName := fmt.Sprintf("teams%v", n)
+	teamName := fmt.Sprintf("e2e-teams-%v", n)
 	teamID, err := createTeam(teamName)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {
 			t.Errorf("error deleting project: %v", e)
 		}
 		if e := deleteTeam(teamID); e != nil {
-			t.Errorf("error deleting project: %v", e)
+			t.Errorf("error deleting team: %v", e)
 		}
 	}()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
 
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -85,9 +85,7 @@ func TestProjectTeams(t *testing.T) {
 			}
 		}
 
-		if !found {
-			t.Fatalf("the team %v has not been added", teamID)
-		}
+		assert.True(t, found)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -115,24 +113,14 @@ func TestProjectTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(roles) != 1 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(roles), 1)
-		}
+		assert.Len(t, roles, 1)
 
 		role := roles[0]
 
-		if role.TeamID != teamID {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(role.RoleNames) != 2 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(role.RoleNames), 2)
-		}
-
+		assert.Equal(t, role.TeamID, teamID)
+		assert.Len(t, role.RoleNames, 2)
 		for _, roleName := range role.RoleNames {
-			if roleName != roleName1 && roleName != roleName2 {
-				t.Errorf("got=%#v\nwant=%#v\n", roleName, roleName1+"|"+roleName2)
-			}
+			assert.Contains(t, []string{roleName1, roleName2}, roleName)
 		}
 	})
 
@@ -154,9 +142,7 @@ func TestProjectTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(teams.Results) == 0 {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		assert.NotEmpty(t, teams.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

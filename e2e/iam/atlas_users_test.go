@@ -21,6 +21,8 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -81,9 +83,7 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if user.Username != username {
-			t.Fatalf("expected username to match %v, got %v", username, user.Username)
-		}
+		assert.Equal(t, username, user.Username)
 	})
 
 	t.Run("Describe by id", func(t *testing.T) {
@@ -107,8 +107,6 @@ func TestUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if user.ID != userID {
-			t.Fatalf("expected id to match %v, got %v", userID, user.ID)
-		}
+		assert.Equal(t, userID, user.ID)
 	})
 }

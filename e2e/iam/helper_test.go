@@ -21,6 +21,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
+
+	"github.com/mongodb/mongocli/internal/config"
+	"go.mongodb.org/ops-manager/opsmngr"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -107,9 +111,6 @@ func createProject(projectName string) (string, error) {
 		return "", err
 	}
 
-	if project.Name != projectName {
-		return "", fmt.Errorf(`got="%s" want="%s"`, project.Name, projectName)
-	}
 	return project.ID, nil
 }
 
@@ -133,7 +134,7 @@ func createTeam(teamName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	username, _, err := getUserFromOrg(0)
+	username, _, err := OrgNUser(0)
 
 	if err != nil {
 		return "", err
@@ -176,10 +177,10 @@ func deleteTeam(teamID string) error {
 	return cmd.Run()
 }
 
-// getUserFromOrg returns the user at the position userIndex.
+// OrgNUser returns the user at the position userIndex.
 // We need to pass the userIndex because the command iam teams users add would not work
 // if the the user is already in the team.
-func getUserFromOrg(userIndex int) (username, userID string, err error) {
+func OrgNUser(userIndex int) (username, userID string, err error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", "", err
@@ -189,6 +190,8 @@ func getUserFromOrg(userIndex int) (username, userID string, err error) {
 		orgEntity,
 		usersEntity,
 		"list",
+		"--limit",
+		strconv.Itoa(userIndex+1),
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -197,13 +200,25 @@ func getUserFromOrg(userIndex int) (username, userID string, err error) {
 		return "", "", err
 	}
 
-	var users mongodbatlas.AtlasUsersResponse
+	if config.Service() == config.CloudService {
+		var users mongodbatlas.AtlasUsersResponse
+		if err := json.Unmarshal(resp, &users); err != nil {
+			return "", "", err
+		}
+
+		if len(users.Results) < userIndex {
+			return "", "", fmt.Errorf("invalid index %d for %d users", userIndex, len(users.Results))
+		}
+
+		return users.Results[userIndex].Username, users.Results[userIndex].ID, nil
+	}
+	var users opsmngr.UsersResponse
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}
 
 	if len(users.Results) < userIndex {
-		return "", "", fmt.Errorf(`got="%s" want= len(users.Results) > "%d"`, users.Results, userIndex)
+		return "", "", fmt.Errorf("invalid index %d for %d users", userIndex, len(users.Results))
 	}
 
 	return users.Results[userIndex].Username, users.Results[userIndex].ID, nil

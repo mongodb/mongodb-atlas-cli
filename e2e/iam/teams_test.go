@@ -38,7 +38,7 @@ func TestTeams(t *testing.T) {
 	var teamID string
 
 	t.Run("Create", func(t *testing.T) {
-		username, _, err := getUserFromOrg(0)
+		username, _, err := OrgNUser(0)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -64,10 +64,7 @@ func TestTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if team.Name != teamName {
-			t.Errorf("got=%#v\nwant=%#v\n", team.Name, teamName)
-		}
-
+		assert.Equal(t, teamName, team.Name)
 		teamID = team.ID
 	})
 
@@ -91,9 +88,7 @@ func TestTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if team.ID != teamID {
-			t.Errorf("got=%#v\nwant=%#v\n", team.ID, teamID)
-		}
+		assert.Equal(t, teamID, team.ID)
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
@@ -116,9 +111,7 @@ func TestTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if team.Name != teamName {
-			t.Errorf("got=%#v\nwant=%#v\n", team.Name, teamName)
-		}
+		assert.Equal(t, teamName, team.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -139,9 +132,7 @@ func TestTeams(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if len(teams) == 0 {
-			t.Errorf("got=%#v\nwant=%#v\n", len(teams), ">0")
-		}
+		assert.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

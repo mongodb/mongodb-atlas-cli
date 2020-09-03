@@ -74,18 +74,18 @@ func (opts *DescribeOpts) validate() error {
 	return nil
 }
 
-// mongocli iam team(s) describe --id id --orgId orgId
+// mongocli iam team(s) describe --id id --name name --orgId orgId
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Example: `  
-  Describe a user by ID
-  $ mongocli iam users describe --id teamId --orgId orgId <id>
+  Describe a team by ID
+  $ mongocli iam team(s) describe --id teamId --orgId <orgId>
 
-  Describe a user by Name
-  $ mongocli iam users describe --name teamName --orgId orgId <id>
+  Describe a team by Name
+  $ mongocli iam team(s) describe --name teamName --orgId <orgId>
 `,
 		Short: describeTeam,
 		Args:  cobra.NoArgs,

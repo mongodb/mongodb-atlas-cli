@@ -83,6 +83,9 @@ func DescribeBuilder() *cobra.Command {
 		Example: `  
   Describe a user by ID
   $ mongocli iam users describe --id teamId --orgId orgId <id>
+
+  Describe a user by Name
+  $ mongocli iam users describe --name teamName --orgId orgId <id>
 `,
 		Short: describeTeam,
 		Args:  cobra.NoArgs,

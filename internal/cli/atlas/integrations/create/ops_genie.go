@@ -24,56 +24,52 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const integrationType = "NEW_RELIC"
+const OpsGenieType = "OPS_GENIE"
 
-type NewRelicOpts struct {
+type OpsGenieOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	licenseKey string
-	accountID  string
-	writeToken string
-	readToken  string
-	store      store.IntegrationCreator
+	apiKey string
+	region string
+	store  store.IntegrationCreator
 }
 
-func (opts *NewRelicOpts) initStore() error {
+func (opts *OpsGenieOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplate = "New Relic integration created.\n"
+var createTemplateOpsGenie = "Ops Genie integration created.\n"
 
-func (opts *NewRelicOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), integrationType, opts.newThirdPartyIntegration())
+func (opts *OpsGenieOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), OpsGenieType, opts.newThirdPartyIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
+func (opts *OpsGenieOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:       integrationType,
-		LicenseKey: opts.licenseKey,
-		AccountID:  opts.accountID,
-		WriteToken: opts.writeToken,
-		ReadToken:  opts.readToken,
+		Type:   OpsGenieType,
+		Region: opts.region,
+		APIKey: opts.apiKey,
 	}
 }
 
-// mongocli atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId]
-func NewRelicBuilder() *cobra.Command {
-	opts := &NewRelicOpts{}
+// mongocli atlas integration(s) create OPS_GENIE --apiKey apiKey --region region [--projectId projectId]
+func OpsGenieBuilder() *cobra.Command {
+	opts := &OpsGenieOpts{}
 	cmd := &cobra.Command{
-		Use:     "NEW_RELIC",
-		Aliases: []string{"new_relic", "newRelic", "nr", "NR"},
-		Short:   NewRelic,
+		Use:     OpsGenieType,
+		Aliases: []string{"ops_genie", "opsGenie", "og", "OG"},
+		Short:   OpsGenie,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateOpsGenie),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -81,18 +77,14 @@ func NewRelicBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.licenseKey, flag.LicenceKey, "", usage.LicenceKey)
-	cmd.Flags().StringVar(&opts.accountID, flag.AccountID, "", usage.NewRelicAccountID)
-	cmd.Flags().StringVar(&opts.writeToken, flag.WriteToken, "", usage.WriteToken)
-	cmd.Flags().StringVar(&opts.readToken, flag.ReadToken, "", usage.ReadToken)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.IntegrationRegion)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.LicenceKey)
-	_ = cmd.MarkFlagRequired(flag.AccountID)
-	_ = cmd.MarkFlagRequired(flag.WriteToken)
-	_ = cmd.MarkFlagRequired(flag.ReadToken)
+	_ = cmd.MarkFlagRequired(flag.Region)
+	_ = cmd.MarkFlagRequired(flag.APIKey)
 
 	return cmd
 }

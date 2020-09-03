@@ -12,25 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package create
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func Builder() *cobra.Command {
-	const use = "create"
-	aliases := append(cli.GenerateAliases(use), cli.GenerateAliases("update")...)
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: aliases,
-		Short:   short,
-	}
-	cmd.AddCommand(
-		NewRelicBuilder(),
-		OpsGenieBuilder(),
-	)
+func TestOpsGenieOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockIntegrationCreator(ctrl)
+	defer ctrl.Finish()
 
-	return cmd
+	opts := &OpsGenieOpts{
+		store: mockStore,
+	}
+
+	expected := &mongodbatlas.ThirdPartyIntegrations{}
+	mockStore.
+		EXPECT().
+		CreateIntegration(opts.ProjectID, OpsGenieType, opts.newThirdPartyIntegration()).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

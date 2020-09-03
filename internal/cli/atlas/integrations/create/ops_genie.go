@@ -43,14 +43,14 @@ func (opts *OpsGenieOpts) initStore() error {
 var createTemplateOpsGenie = "Ops Genie integration configured.\n"
 
 func (opts *OpsGenieOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), OpsGenieType, opts.newThirdPartyIntegration())
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), OpsGenieType, opts.newOpsGenieIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *OpsGenieOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
+func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
 		Type:   OpsGenieType,
 		Region: opts.region,
@@ -77,7 +77,7 @@ func OpsGenieBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.IntegrationRegion)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.IntegrationRegion)
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

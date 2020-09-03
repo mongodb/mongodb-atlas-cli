@@ -36,7 +36,7 @@ func TestOpsGenieOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, OpsGenieType, opts.newThirdPartyIntegration()).
+		CreateIntegration(opts.ProjectID, OpsGenieType, opts.newOpsGenieIntegration()).
 		Return(expected, nil).
 		Times(1)
 

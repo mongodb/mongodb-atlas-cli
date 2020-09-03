@@ -42,7 +42,7 @@ func (opts *NewRelicOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "New Relic integration created.\n"
+var createTemplate = "New Relic integration configured.\n"
 
 func (opts *NewRelicOpts) Run() error {
 	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), newRelicIntegrationType, opts.newNewRelicIntegration())

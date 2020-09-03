@@ -21,9 +21,8 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

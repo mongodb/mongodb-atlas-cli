@@ -144,7 +144,7 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(context.Background(), orgID, teamID, userID)
 		return err
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(context.Background(), orgID, teamID, userID)
 		return err
 	default:

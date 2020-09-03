@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func ProjectTeamsTest(t *testing.T) {
+func TestProjectTeams(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

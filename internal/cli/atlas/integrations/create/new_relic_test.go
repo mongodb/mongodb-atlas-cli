@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreateOpts_Run(t *testing.T) {
+func TestNewRelicOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
@@ -36,7 +36,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, integrationType, opts.newThirdPartyIntegration()).
+		CreateIntegration(opts.ProjectID, newRelicIntegrationType, opts.newThirdPartyIntegration()).
 		Return(expected, nil).
 		Times(1)
 

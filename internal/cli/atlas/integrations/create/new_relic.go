@@ -24,7 +24,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const integrationType = "NEW_RELIC"
+const newRelicIntegrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
 	cli.GlobalOpts
@@ -45,7 +45,7 @@ func (opts *NewRelicOpts) initStore() error {
 var createTemplate = "New Relic integration created.\n"
 
 func (opts *NewRelicOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), integrationType, opts.newThirdPartyIntegration())
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), newRelicIntegrationType, opts.newThirdPartyIntegration())
 	if err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (opts *NewRelicOpts) Run() error {
 
 func (opts *NewRelicOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:       integrationType,
+		Type:       newRelicIntegrationType,
 		LicenseKey: opts.licenseKey,
 		AccountID:  opts.accountID,
 		WriteToken: opts.writeToken,
@@ -68,7 +68,7 @@ func NewRelicBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "NEW_RELIC",
 		Aliases: []string{"new_relic", "newRelic", "nr", "NR"},
-		Short:   NewRelic,
+		Short:   newRelic,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

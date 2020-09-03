@@ -42,7 +42,7 @@ func (opts *NewRelicOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Online archive '{{.ID}}' created.\n"
+var createTemplate = "New Relic integration created.\n"
 
 func (opts *NewRelicOpts) Run() error {
 	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), integrationType, opts.newThirdPartyIntegration())

@@ -21,6 +21,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// CmdValidator helps validate a cobra.Command, verifying the number of sub commands
+// and the flags that are being defined for it
 func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags []string) {
 	a := assert.New(t)
 	a.Len(subject.Commands(), nSubCommands)

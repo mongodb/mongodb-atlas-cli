@@ -108,7 +108,7 @@ func createProject(projectName string) (string, error) {
 	}
 
 	if project.Name != projectName {
-		fmt.Errorf(`got="%s" want="%s"`, project.Name, projectName)
+		return "", fmt.Errorf(`got="%s" want="%s"`, project.Name, projectName)
 	}
 	return project.ID, nil
 }

@@ -42,17 +42,17 @@ func (opts *NewRelicOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "New Relic integration created.\n"
+var createTemplate = "New Relic integration configured.\n"
 
 func (opts *NewRelicOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), newRelicIntegrationType, opts.newThirdPartyIntegration())
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), newRelicIntegrationType, opts.newNewRelicIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newThirdPartyIntegration() *atlas.ThirdPartyIntegration {
+func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
 		Type:       newRelicIntegrationType,
 		LicenseKey: opts.licenseKey,
@@ -67,7 +67,7 @@ func NewRelicBuilder() *cobra.Command {
 	opts := &NewRelicOpts{}
 	cmd := &cobra.Command{
 		Use:     "NEW_RELIC",
-		Aliases: []string{"new_relic", "newRelic", "nr", "NR"},
+		Aliases: []string{"new_relic", "newRelic"},
 		Short:   newRelic,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

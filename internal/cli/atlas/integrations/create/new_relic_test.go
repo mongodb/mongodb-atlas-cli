@@ -36,7 +36,7 @@ func TestNewRelicOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, newRelicIntegrationType, opts.newThirdPartyIntegration()).
+		CreateIntegration(opts.ProjectID, newRelicIntegrationType, opts.newNewRelicIntegration()).
 		Return(expected, nil).
 		Times(1)
 

@@ -118,3 +118,84 @@ func TestCredentials(t *testing.T) {
 		}
 	})
 }
+
+func TestFlagInSlice(t *testing.T) {
+	type args struct {
+		value       string
+		flag        string
+		validValues []string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "value is present",
+			args: args{
+				value:       "test",
+				flag:        "flag",
+				validValues: []string{"test", "not-test"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "value is present",
+			args: args{
+				value:       "test",
+				flag:        "flag",
+				validValues: []string{"not-test"},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		value := tt.args.value
+		flag := tt.args.flag
+		validValues := tt.args.validValues
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err := FlagInSlice(value, flag, validValues); (err != nil) != wantErr {
+				t.Errorf("FlagInSlice() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}
+
+func TestOptionalURL(t *testing.T) {
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid",
+			val:     "http://test.com/",
+			wantErr: false,
+		},
+		{
+			name:    "empty",
+			val:     "",
+			wantErr: false,
+		},
+		{
+			name:    "nil",
+			val:     nil,
+			wantErr: false,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err := OptionalURL(val); (err != nil) != wantErr {
+				t.Errorf("OptionalURL() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}

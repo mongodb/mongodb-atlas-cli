@@ -84,6 +84,7 @@ const (
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
 	APIKey                          = "API Key."
+	RoutingKey                      = "An optional field for your Routing Key."
 	ChannelName                     = "The channel name to reconfigure."
 	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                         = "Your Flowdock organization name."

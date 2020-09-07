@@ -32,7 +32,7 @@ func Builder() *cobra.Command {
 		SlackBuilder(),
 		DatadogBuilder(),
 		VictorOpsBuilder(),
-		FlowDockBuilder(),
+		FlowdockBuilder(),
 	)
 
 	return cmd

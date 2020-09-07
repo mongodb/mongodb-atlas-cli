@@ -24,9 +24,9 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const flowDockType = "FLOWDOCK"
+const flowdockType = "FLOWDOCK"
 
-type FlowDockOpts struct {
+type FlowdockOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	apiToken string
@@ -35,7 +35,7 @@ type FlowDockOpts struct {
 	store    store.IntegrationCreator
 }
 
-func (opts *FlowDockOpts) initStore() error {
+func (opts *FlowdockOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
@@ -43,17 +43,17 @@ func (opts *FlowDockOpts) initStore() error {
 
 var createTemplateFlowDock = "Flow Dock integration configured.\n"
 
-func (opts *FlowDockOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowDockType, opts.newFlowDockIntegration())
+func (opts *FlowdockOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowdockType, opts.newFlowDockIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *FlowDockOpts) newFlowDockIntegration() *atlas.ThirdPartyIntegration {
+func (opts *FlowdockOpts) newFlowDockIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:     flowDockType,
+		Type:     flowdockType,
 		OrgName:  opts.orgName,
 		FlowName: opts.flowName,
 		APIToken: opts.apiToken,
@@ -61,12 +61,12 @@ func (opts *FlowDockOpts) newFlowDockIntegration() *atlas.ThirdPartyIntegration 
 }
 
 // mongocli atlas integration(s) create FLOWDOCK --apiToken apiToken --orgName orgName --flowName --flowName [--projectId projectId]
-func FlowDockBuilder() *cobra.Command {
-	opts := &FlowDockOpts{}
+func FlowdockBuilder() *cobra.Command {
+	opts := &FlowdockOpts{}
 	cmd := &cobra.Command{
-		Use:     flowDockType,
+		Use:     flowdockType,
 		Aliases: []string{"flowdock"},
-		Short:   slack,
+		Short:   flowdock,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -30,14 +30,14 @@ func TestFlowDockOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &FlowDockOpts{
+	opts := &FlowdockOpts{
 		store: mockStore,
 	}
 
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, flowDockType, opts.newFlowDockIntegration()).
+		CreateIntegration(opts.ProjectID, flowdockType, opts.newFlowDockIntegration()).
 		Return(expected, nil).
 		Times(1)
 
@@ -49,7 +49,7 @@ func TestFlowDockOpts_Run(t *testing.T) {
 func TestFlowDockBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		FlowDockBuilder(),
+		FlowdockBuilder(),
 		0,
 		[]string{flag.APIToken, flag.FlowName, flag.OrgName},
 	)

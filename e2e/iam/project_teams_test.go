@@ -70,11 +70,19 @@ func TestProjectTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var teams mongodbatlas.TeamsAssigned
-		if err = json.Unmarshal(resp, &teams); err != nil {
-			t.Fatalf("unexpected error: %v", err)
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			found := false
+			for _, team := range teams.Results {
+				if team.TeamID == teamID {
+					found = true
+					break
+				}
+			}
+			a.True(found)
 		}
 
 		found := false
@@ -85,7 +93,7 @@ func TestProjectTeams(t *testing.T) {
 			}
 		}
 
-		assert.True(t, found)
+		a.True(found)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -106,22 +114,21 @@ func TestProjectTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var roles []mongodbatlas.TeamRoles
-		if err = json.Unmarshal(resp, &roles); err != nil {
-			t.Fatalf("unexpected error: %v", err)
+		if err = json.Unmarshal(resp, &roles); a.NoError(err) {
+			a.Len(roles, 1)
+
+			role := roles[0]
+			a.Equal(role.TeamID, teamID)
+			a.Len(role.RoleNames, 2)
+			for _, roleName := range role.RoleNames {
+				a.Contains([]string{roleName1, roleName2}, roleName)
+			}
 		}
 
-		assert.Len(t, roles, 1)
-
-		role := roles[0]
-
-		assert.Equal(t, role.TeamID, teamID)
-		assert.Len(t, role.RoleNames, 2)
-		for _, roleName := range role.RoleNames {
-			assert.Contains(t, []string{roleName1, roleName2}, roleName)
-		}
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -135,14 +142,13 @@ func TestProjectTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var teams mongodbatlas.TeamsAssigned
-		if err = json.Unmarshal(resp, &teams); err != nil {
-			t.Fatalf("unexpected error: %v", err)
+		if err = json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(teams.Results)
 		}
-
-		assert.NotEmpty(t, teams.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -157,6 +163,10 @@ func TestProjectTeams(t *testing.T) {
 			projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
+			a.Equal(expected, string(resp))
+		}
 	})
 }

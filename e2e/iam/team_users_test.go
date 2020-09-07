@@ -69,24 +69,21 @@ func TestTeamUsers(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var users []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		found := false
-		for _, user := range users {
-			if user.Username == username {
-				found = true
-				break
+		if err := json.Unmarshal(resp, &users); a.NoError(err) {
+			found := false
+			for _, user := range users {
+				if user.Username == username {
+					found = true
+					break
+				}
 			}
-		}
 
-		assert.True(t, found)
+			a.True(found)
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -101,16 +98,13 @@ func TestTeamUsers(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		a := assert.New(t)
+		a.NoError(err, string(resp))
 
 		var teams []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &teams); err != nil {
-			t.Fatalf("unexpected error: %v", err)
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(teams)
 		}
-
-		assert.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -125,6 +119,11 @@ func TestTeamUsers(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
+			a.Equal(expected, string(resp))
+		}
 	})
 }

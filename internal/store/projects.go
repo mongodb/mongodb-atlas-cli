@@ -197,7 +197,7 @@ func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
 		return err
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
 		return err
 	default:

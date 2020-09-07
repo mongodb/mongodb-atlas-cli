@@ -41,7 +41,7 @@ func (opts *FlowdockOpts) initStore() error {
 	return err
 }
 
-var createTemplateFlowDock = "Flow Dock integration configured.\n"
+var createTemplateFlowDock = "Flowdock integration configured.\n"
 
 func (opts *FlowdockOpts) Run() error {
 	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowdockType, opts.newFlowDockIntegration())

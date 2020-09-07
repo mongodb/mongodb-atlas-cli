@@ -17,4 +17,5 @@ const (
 	short    = "Create operations"
 	newRelic = "Create or update the New Relic integration"
 	opsGenie = "Create or update the Ops Genie integration"
+	slack    = "Create or update the Slack integration"
 )

@@ -24,52 +24,54 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const opsGenieType = "OPS_GENIE"
+const slackType = "SLACK"
 
-type OpsGenieOpts struct {
+type SlackOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apiKey string
-	region string
-	store  store.IntegrationCreator
+	apiToken    string
+	teamName    string
+	channelName string
+	store       store.IntegrationCreator
 }
 
-func (opts *OpsGenieOpts) initStore() error {
+func (opts *SlackOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplateOpsGenie = "Ops Genie integration configured.\n"
+var createTemplateSlack = "Slack integration configured.\n"
 
-func (opts *OpsGenieOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), opsGenieType, opts.newOpsGenieIntegration())
+func (opts *SlackOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), slackType, opts.newOpsGenieIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
+func (opts *SlackOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:   opsGenieType,
-		Region: opts.region,
-		APIKey: opts.apiKey,
+		Type:        slackType,
+		ChannelName: opts.channelName,
+		TeamName:    opts.teamName,
+		APIToken:    opts.apiToken,
 	}
 }
 
-// mongocli atlas integration(s) create OPS_GENIE --apiKey apiKey --region region [--projectId projectId]
-func OpsGenieBuilder() *cobra.Command {
-	opts := &OpsGenieOpts{}
+// mongocli atlas integration(s) create slack --apiKey apiKey --region region [--projectId projectId]
+func SlackBuilder() *cobra.Command {
+	opts := &SlackOpts{}
 	cmd := &cobra.Command{
-		Use:     opsGenieType,
-		Aliases: []string{"ops_genie", "opsGenie"},
-		Short:   opsGenie,
+		Use:     slackType,
+		Aliases: []string{"slack"},
+		Short:   slack,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplateOpsGenie),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateSlack),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -77,13 +79,15 @@ func OpsGenieBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.OpsGenieRegion)
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
+	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "US", usage.ChannelName)
+	cmd.Flags().StringVar(&opts.apiToken, flag.APIToken, "", usage.APIToken)
+	cmd.Flags().StringVar(&opts.teamName, flag.TeamName, "", usage.TeamName)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.APIKey)
+	_ = cmd.MarkFlagRequired(flag.APIToken)
+	_ = cmd.MarkFlagRequired(flag.TeamName)
 
 	return cmd
 }

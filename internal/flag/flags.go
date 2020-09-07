@@ -85,6 +85,9 @@ const (
 	NotificationToken               = "notificationToken"               // NotificationToken flag
 	NotificationChannelName         = "notificationChannelName"         // NotificationChannelName flag
 	APIKey                          = "apiKey"                          // APIKey flag
+	APIToken                        = "apiToken"                        // APIToken flag
+	TeamName                        = "teamName"                        // TeamName flag
+	ChannelName                     = "channelName"                     // ChannelName flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag
 	NotificationDelayMin            = "notificationDelayMin"            // NotificationDelayMin flag
 	NotificationEmailAddress        = "notificationEmailAddress"        // NotificationEmailAddress flag

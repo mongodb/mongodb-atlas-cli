@@ -63,7 +63,6 @@ func TestTeams(t *testing.T) {
 			a.Equal(teamName, team.Name)
 			teamID = team.ID
 		}
-
 	})
 
 	t.Run("Describe By ID", func(t *testing.T) {
@@ -84,7 +83,6 @@ func TestTeams(t *testing.T) {
 		if err := json.Unmarshal(resp, &team); a.NoError(err) {
 			a.Equal(teamID, team.ID)
 		}
-
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
@@ -123,7 +121,6 @@ func TestTeams(t *testing.T) {
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			a.NotEmpty(t, teams)
 		}
-
 	})
 
 	t.Run("Delete", func(t *testing.T) {

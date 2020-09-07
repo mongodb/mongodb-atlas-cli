@@ -128,7 +128,6 @@ func TestProjectTeams(t *testing.T) {
 				a.Contains([]string{roleName1, roleName2}, roleName)
 			}
 		}
-
 	})
 
 	t.Run("List", func(t *testing.T) {

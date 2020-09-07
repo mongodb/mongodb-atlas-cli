@@ -51,6 +51,6 @@ func TestVictorOpsBuilder(t *testing.T) {
 		t,
 		VictorOpsBuilder(),
 		0,
-		[]string{flag.APIKey, flag.ProjectID},
+		[]string{flag.APIKey, flag.RoutingKey, flag.ProjectID},
 	)
 }

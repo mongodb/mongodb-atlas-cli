@@ -42,7 +42,7 @@ func (opts *NewRelicOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "New Relic integration configured.\n"
+var createTemplateNewRelic = "New Relic integration configured.\n"
 
 func (opts *NewRelicOpts) Run() error {
 	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), newRelicIntegrationType, opts.newNewRelicIntegration())
@@ -73,7 +73,7 @@ func NewRelicBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateNewRelic),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

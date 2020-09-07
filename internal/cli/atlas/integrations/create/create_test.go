@@ -12,35 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
 package create
 
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestOpsGenieOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIntegrationCreator(ctrl)
-	defer ctrl.Finish()
-
-	opts := &OpsGenieOpts{
-		store: mockStore,
-	}
-
-	expected := &mongodbatlas.ThirdPartyIntegrations{}
-	mockStore.
-		EXPECT().
-		CreateIntegration(opts.ProjectID, opsGenieType, opts.newOpsGenieIntegration()).
-		Return(expected, nil).
-		Times(1)
-
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
+	)
 }

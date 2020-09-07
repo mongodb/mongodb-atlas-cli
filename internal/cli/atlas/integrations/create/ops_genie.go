@@ -24,7 +24,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const OpsGenieType = "OPS_GENIE"
+const opsGenieType = "OPS_GENIE"
 
 type OpsGenieOpts struct {
 	cli.GlobalOpts
@@ -43,7 +43,7 @@ func (opts *OpsGenieOpts) initStore() error {
 var createTemplateOpsGenie = "Ops Genie integration configured.\n"
 
 func (opts *OpsGenieOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), OpsGenieType, opts.newOpsGenieIntegration())
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), opsGenieType, opts.newOpsGenieIntegration())
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (opts *OpsGenieOpts) Run() error {
 
 func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:   OpsGenieType,
+		Type:   opsGenieType,
 		Region: opts.region,
 		APIKey: opts.apiKey,
 	}
@@ -62,7 +62,7 @@ func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration 
 func OpsGenieBuilder() *cobra.Command {
 	opts := &OpsGenieOpts{}
 	cmd := &cobra.Command{
-		Use:     OpsGenieType,
+		Use:     opsGenieType,
 		Aliases: []string{"ops_genie", "opsGenie", "og", "OG"},
 		Short:   opsGenie,
 		Args:    cobra.NoArgs,
@@ -77,7 +77,7 @@ func OpsGenieBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.IntegrationRegion)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.OpsGenieRegion)
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

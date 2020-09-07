@@ -28,6 +28,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		NewRelicBuilder(),
 		OpsGenieBuilder(),
+		PagerDutyBuilder(),
 		SlackBuilder(),
 	)
 

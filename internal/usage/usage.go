@@ -144,6 +144,7 @@ const (
 	AccountID                       = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
 	LicenceKey                      = "Your License Key."
+	ServiceKey                      = "Your Service Key."
 	WriteToken                      = "Your Insights Insert Key."
 	ReadToken                       = "Your Insights Query Key."
 

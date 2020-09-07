@@ -164,6 +164,7 @@ const (
 	Network                         = "network"                         // Network flag
 	Name                            = "name"                            // Name flag
 	LicenceKey                      = "licenceKey"                      // LicenceKey flag
+	ServiceKey                      = "serviceKey"                      // ServiceKey flag
 	WriteToken                      = "writeToken"                      // WriteToken flag
 	ReadToken                       = "readToken"                       // ReadToken flag
 )

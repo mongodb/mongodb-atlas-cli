@@ -28,7 +28,7 @@ functions:
         env:
           <<: *go_options
         command: make build
-  "test":
+  "unit-test":
     - command: subprocess.exec
       type: test
       params:
@@ -38,7 +38,18 @@ functions:
         env:
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
           <<: *go_options
-        command: make test
+        command: make unit-test
+  "integration-test":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          TEST_CMD: gotestsum --junitfile unit-tests.xml --
+          <<: *go_options
+        command: make integration-test
   "generate html coverage":
     - command: subprocess.exec
       type: test
@@ -364,14 +375,20 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
-  - name: test
+  - name: unit_test
     tags: ["code_health"]
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "test"
+      - func: "unit-test"
       - func: "generate html coverage"
       - func: "upload html coverage"
+  - name: integration_test
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "integration-test"
   - name: lint
     tags: ["code_health"]
     commands:

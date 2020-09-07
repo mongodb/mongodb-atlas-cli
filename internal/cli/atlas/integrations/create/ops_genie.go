@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package users
+package create
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -21,45 +21,55 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .}}
-{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}{{end}}
-`
+const opsGenieType = "OPS_GENIE"
 
-type ListOpts struct {
+type OpsGenieOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.TeamUserLister
-	teamID string
+	apiKey string
+	region string
+	store  store.IntegrationCreator
 }
 
-func (opts *ListOpts) init() error {
+func (opts *OpsGenieOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.TeamUsers(opts.ConfigOrgID(), opts.teamID)
+var createTemplateOpsGenie = "Ops Genie integration configured.\n"
+
+func (opts *OpsGenieOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), opsGenieType, opts.newOpsGenieIntegration())
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) user(s) list --orgId orgId --teamId teamId
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration {
+	return &atlas.ThirdPartyIntegration{
+		Type:   opsGenieType,
+		Region: opts.region,
+		APIKey: opts.apiKey,
+	}
+}
+
+// mongocli atlas integration(s) create OPS_GENIE --apiKey apiKey --region region [--projectId projectId]
+func OpsGenieBuilder() *cobra.Command {
+	opts := &OpsGenieOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listUsers,
+		Use:     opsGenieType,
+		Aliases: []string{"ops_genie", "opsGenie", "og", "OG"},
+		Short:   opsGenie,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
-				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateOpsGenie),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -67,12 +77,13 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.OpsGenieRegion)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.TeamID)
+	_ = cmd.MarkFlagRequired(flag.APIKey)
 
 	return cmd
 }

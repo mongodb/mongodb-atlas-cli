@@ -27,6 +27,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		NewRelicBuilder(),
+		PagerDutyBuilder(),
 	)
 
 	return cmd

@@ -84,6 +84,8 @@ const (
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
 	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
 	APIKey                          = "API Key."
+	ChannelName                     = "The channel name to reconfigure."
+	SlackIntegrationAPIToken        = "Your Slack API Token." //nolint:gosec // This is just a message not a credential
 	APIKeyDescription               = "Description of the API key."
 	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."

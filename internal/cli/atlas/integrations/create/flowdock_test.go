@@ -37,7 +37,7 @@ func TestFlowDockOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, flowdockType, opts.newFlowDockIntegration()).
+		CreateIntegration(opts.ProjectID, flowdockType, opts.newFlowdockIntegration()).
 		Return(expected, nil).
 		Times(1)
 

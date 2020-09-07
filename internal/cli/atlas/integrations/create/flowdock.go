@@ -44,14 +44,14 @@ func (opts *FlowdockOpts) initStore() error {
 var createTemplateFlowDock = "Flowdock integration configured.\n"
 
 func (opts *FlowdockOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowdockType, opts.newFlowDockIntegration())
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowdockType, opts.newFlowdockIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *FlowdockOpts) newFlowDockIntegration() *atlas.ThirdPartyIntegration {
+func (opts *FlowdockOpts) newFlowdockIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
 		Type:     flowdockType,
 		OrgName:  opts.orgName,

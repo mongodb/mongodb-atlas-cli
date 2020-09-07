@@ -25,19 +25,19 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestNewRelicOpts_Run(t *testing.T) {
+func TestOpsGenieOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &NewRelicOpts{
+	opts := &OpsGenieOpts{
 		store: mockStore,
 	}
 
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, newRelicIntegrationType, opts.newNewRelicIntegration()).
+		CreateIntegration(opts.ProjectID, opsGenieType, opts.newOpsGenieIntegration()).
 		Return(expected, nil).
 		Times(1)
 
@@ -46,11 +46,11 @@ func TestNewRelicOpts_Run(t *testing.T) {
 	}
 }
 
-func TestNewRelicBuilder(t *testing.T) {
+func TestOpsGenieBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		NewRelicBuilder(),
+		OpsGenieBuilder(),
 		0,
-		[]string{flag.LicenceKey, flag.AccountID, flag.WriteToken, flag.ReadToken},
+		[]string{flag.APIKey},
 	)
 }

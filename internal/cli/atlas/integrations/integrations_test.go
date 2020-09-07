@@ -11,24 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
-package create
+package integrations
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func Builder() *cobra.Command {
-	const use = "create"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: []string{"update"},
-		Short:   short,
-	}
-	cmd.AddCommand(
-		NewRelicBuilder(),
-		OpsGenieBuilder(),
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
 	)
-
-	return cmd
 }

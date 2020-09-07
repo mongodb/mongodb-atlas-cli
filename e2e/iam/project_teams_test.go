@@ -84,16 +84,6 @@ func TestProjectTeams(t *testing.T) {
 			}
 			a.True(found)
 		}
-
-		found := false
-		for _, team := range teams.Results {
-			if team.TeamID == teamID {
-				found = true
-				break
-			}
-		}
-
-		a.True(found)
 	})
 
 	t.Run("Update", func(t *testing.T) {

@@ -86,6 +86,7 @@ const (
 	NotificationChannelName         = "notificationChannelName"         // NotificationChannelName flag
 	APIKey                          = "apiKey"                          // APIKey flag
 	APIToken                        = "apiToken"                        // APIToken flag
+	RoutingKey                      = "routingKey"                      // RoutingKey flag
 	TeamName                        = "teamName"                        // TeamName flag
 	ChannelName                     = "channelName"                     // ChannelName flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag

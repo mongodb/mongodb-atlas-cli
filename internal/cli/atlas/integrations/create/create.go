@@ -31,6 +31,7 @@ func Builder() *cobra.Command {
 		PagerDutyBuilder(),
 		SlackBuilder(),
 		DatadogBuilder(),
+		VictorOpsBuilder(),
 	)
 
 	return cmd

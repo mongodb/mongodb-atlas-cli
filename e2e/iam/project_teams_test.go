@@ -112,11 +112,9 @@ func TestProjectTeams(t *testing.T) {
 			a.Len(roles, 1)
 
 			role := roles[0]
-			a.Equal(role.TeamID, teamID)
+			a.Equal(teamID, role.TeamID)
 			a.Len(role.RoleNames, 2)
-			for _, roleName := range role.RoleNames {
-				a.Contains([]string{roleName1, roleName2}, roleName)
-			}
+			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 		}
 	})
 

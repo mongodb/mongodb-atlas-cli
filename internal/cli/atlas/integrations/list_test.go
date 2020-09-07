@@ -18,14 +18,41 @@ package integrations
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDBUserList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockIntegrationLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected *mongodbatlas.ThirdPartyIntegrations
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		Integrations(listOpts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestListBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

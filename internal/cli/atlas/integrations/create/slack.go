@@ -79,7 +79,7 @@ func SlackBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "US", usage.ChannelName)
+	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "", usage.ChannelName)
 	cmd.Flags().StringVar(&opts.apiToken, flag.APIToken, "", usage.APIToken)
 	cmd.Flags().StringVar(&opts.teamName, flag.TeamName, "", usage.TeamName)
 

@@ -24,54 +24,52 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const slackType = "SLACK"
+const datadogType = "DATADOG"
 
-type SlackOpts struct {
+type DatadogOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apiToken    string
-	teamName    string
-	channelName string
-	store       store.IntegrationCreator
+	apiKey string
+	region string
+	store  store.IntegrationCreator
 }
 
-func (opts *SlackOpts) initStore() error {
+func (opts *DatadogOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplateSlack = "Slack integration configured.\n"
+var createTemplateDatadog = "Datadog integration configured.\n"
 
-func (opts *SlackOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), slackType, opts.newSlackIntegration())
+func (opts *DatadogOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), datadogType, opts.newDatadogIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *SlackOpts) newSlackIntegration() *atlas.ThirdPartyIntegration {
+func (opts *DatadogOpts) newDatadogIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:        slackType,
-		ChannelName: opts.channelName,
-		TeamName:    opts.teamName,
-		APIToken:    opts.apiToken,
+		Type:   datadogType,
+		APIKey: opts.apiKey,
+		Region: opts.region,
 	}
 }
 
-// mongocli atlas integration(s) create slack --apiToken apiToken --channelName channelName --teamName --teamName [--projectId projectId]
-func SlackBuilder() *cobra.Command {
-	opts := &SlackOpts{}
+// mongocli atlas integration(s) create DATADOG --apiKey apiKey --region region [--projectId projectId]
+func DatadogBuilder() *cobra.Command {
+	opts := &DatadogOpts{}
 	cmd := &cobra.Command{
-		Use:     slackType,
-		Aliases: []string{"slack"},
-		Short:   slack,
+		Use:     datadogType,
+		Aliases: []string{"datadog"},
+		Short:   datadog,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplateSlack),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateDatadog),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -79,15 +77,13 @@ func SlackBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "", usage.ChannelName)
-	cmd.Flags().StringVar(&opts.apiToken, flag.APIToken, "", usage.SlackIntegrationAPIToken)
-	cmd.Flags().StringVar(&opts.teamName, flag.TeamName, "", usage.TeamName)
+	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.APIRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.APIToken)
-	_ = cmd.MarkFlagRequired(flag.TeamName)
+	_ = cmd.MarkFlagRequired(flag.APIKey)
 
 	return cmd
 }

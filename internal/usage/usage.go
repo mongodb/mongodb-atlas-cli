@@ -85,7 +85,9 @@ const (
 	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
 	APIKey                          = "API Key."
 	ChannelName                     = "The channel name to reconfigure."
-	SlackIntegrationAPIToken        = "Your Slack API Token." //nolint:gosec // This is just a message not a credential
+	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
+	OrgName                         = "Your Flowdock organization name."
+	FlowName                        = "Your Flowdock Flow name."
 	APIKeyDescription               = "Description of the API key."
 	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."

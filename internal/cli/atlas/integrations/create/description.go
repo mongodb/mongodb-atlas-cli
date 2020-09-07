@@ -18,4 +18,5 @@ const (
 	newRelic = "Create or update the New Relic integration"
 	opsGenie = "Create or update the Ops Genie integration"
 	slack    = "Create or update the Slack integration"
+	datadog  = "Create or update the Datadog integration"
 )

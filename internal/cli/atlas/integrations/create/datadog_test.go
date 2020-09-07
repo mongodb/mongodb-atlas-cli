@@ -25,19 +25,19 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestSlackOpts_Run(t *testing.T) {
+func TestDatadogOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIntegrationCreator(ctrl)
 	defer ctrl.Finish()
 
-	opts := &SlackOpts{
+	opts := &DatadogOpts{
 		store: mockStore,
 	}
 
 	expected := &mongodbatlas.ThirdPartyIntegrations{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, slackType, opts.newSlackIntegration()).
+		CreateIntegration(opts.ProjectID, datadogType, opts.newDatadogIntegration()).
 		Return(expected, nil).
 		Times(1)
 
@@ -46,11 +46,11 @@ func TestSlackOpts_Run(t *testing.T) {
 	}
 }
 
-func TestSlackBuilder(t *testing.T) {
+func TestDatadogBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		SlackBuilder(),
+		DatadogBuilder(),
 		0,
-		[]string{flag.APIToken, flag.TeamName, flag.ProjectID},
+		[]string{flag.APIKey, flag.Region, flag.ProjectID},
 	)
 }

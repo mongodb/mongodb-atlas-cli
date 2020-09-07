@@ -77,7 +77,7 @@ func OpsGenieBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.OpsGenieRegion)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.APIRegion)
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

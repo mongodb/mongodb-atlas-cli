@@ -57,6 +57,9 @@ var describeTemplatePagerDuty = `TYPE	SERVICE KEY
 var describeTemplateVictorOps = `TYPE	API KEY	ROUTING KEY
 {{.Type}}	{{.APIKey}}	{{.RoutingKey}}
 `
+var describeTemplateWebhook = `TYPE	URL	SECRET
+{{.Type}}	{{.URL}}	{{.Secret}}
+`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.Integration(opts.ConfigProjectID(), opts.integrationType)
@@ -83,6 +86,8 @@ func (opts *DescribeOpts) GetDescribeTemplate() (string, error) {
 		return describeTemplateVictorOps, nil
 	case "OPS_GENIE":
 		return describeTemplateDatadogOpsGenie, nil
+	case "WEBHOOK":
+		return describeTemplateWebhook, nil
 	default:
 		return "", fmt.Errorf("the integration type '%s' is not valid", opts.integrationType)
 	}

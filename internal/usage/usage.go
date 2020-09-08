@@ -150,6 +150,9 @@ const (
 	URL                             = "Your webhook URL."
 	Secret                          = "An optional field for your webhook secret." //nolint:gosec // This is just a message not a credential
 	WriteToken                      = "Your Insights Insert Key."
+	DayOfWeek                       = "Day of the week that you want the maintenance window to start, as a 1-based integer."
+	HourOfDay                       = "Hour of the day that you want the maintenance window to start. This parameter uses the 24-hour clock, where midnight is 0 and noon is 12."
+	StartASAP                       = "Start maintenance immediately upon receiving this request."
 	ReadToken                       = "Your Insights Query Key."
 	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
 	VpcID                           = "Unique identifier of the peer VPC."

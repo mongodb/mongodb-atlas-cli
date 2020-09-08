@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `DAY OF THE WEEK	HOUR OF DAY START ASAP
+var describeTemplate = `DAY OF THE WEEK	HOUR OF DAY	START ASAP
 {{.DayOfWeek}}	{{.HourOfDay}}	{{.StartASAP}}
 `
 
@@ -55,7 +55,6 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Args:    cobra.ExactArgs(1),
 		Short:   describeMaintenanceWindow,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

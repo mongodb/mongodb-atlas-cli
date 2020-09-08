@@ -15,8 +15,6 @@
 package maintenance
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -44,13 +42,7 @@ func (opts *DeferOpts) Run() error {
 	if err != nil {
 		return err
 	}
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Print(deferTemplate)
-	return nil
+	return opts.Print(nil)
 }
 
 // mongocli atlas maintenanceWindow(s) defer [--projectId projectId]
@@ -58,7 +50,7 @@ func DeferBuilder() *cobra.Command {
 	opts := &DeferOpts{}
 	cmd := &cobra.Command{
 		Use:   "defer",
-		Short: updateMaintenanceWindows,
+		Short: deferMaintenanceWindow,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

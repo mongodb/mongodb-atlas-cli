@@ -55,7 +55,7 @@ func (opts *ClearOpts) Run() error {
 
 // mongocli atlas maintenanceWindow(s) update --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
 func ClearBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+	opts := &ClearOpts{}
 	cmd := &cobra.Command{
 		Use:     "clear",
 		Short:   clearMaintenanceWindows,

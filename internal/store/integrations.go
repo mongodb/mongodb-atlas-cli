@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister,IntegrationDescriber
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)
@@ -30,6 +30,10 @@ type IntegrationCreator interface {
 
 type IntegrationLister interface {
 	Integrations(string) (*atlas.ThirdPartyIntegrations, error)
+}
+
+type IntegrationDescriber interface {
+	Integration(string, string) (*atlas.ThirdPartyIntegration, error)
 }
 
 // CreateIntegration encapsulate the logic to manage different cloud providers
@@ -48,6 +52,17 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.List(context.Background(), projectID)
+		return resp, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Integration encapsulate the logic to manage different cloud providers
+func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPartyIntegration, error) {
+	switch s.service {
+	case config.CloudService:
+		resp, _, err := s.client.(*atlas.Client).Integrations.Get(context.Background(), projectID, integrationType)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

@@ -149,6 +149,7 @@ const (
 	LicenceKey                      = "Your License Key."
 	ServiceKey                      = "Your Service Key."
 	WriteToken                      = "Your Insights Insert Key."
+	IntegrationType                 = "Third-party service integration identifier."
 	ReadToken                       = "Your Insights Query Key."
 
 	RouteTableCidrBlock = "Peer VPC CIDR block or subnet."

@@ -14,6 +14,7 @@
 package integrations
 
 const (
-	short            = "Third party integration operations"
-	listIntegrations = "List third party integrations"
+	short               = "Third party integration operations"
+	listIntegrations    = "List third party integrations"
+	describeIntegration = "Get a third party integration"
 )

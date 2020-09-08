@@ -69,7 +69,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) newDescribeTemplate() string {
+func (opts *DescribeOpts) template() string {
 	switch opts.integrationType {
 	case "DATADOG":
 		return describeTemplateDatadogOpsGenie
@@ -102,7 +102,7 @@ func DescribeBuilder() *cobra.Command {
 			opts.integrationType = strings.ToUpper(args[0])
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), opts.newDescribeTemplate()),
+				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -23,15 +23,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
+var describeTemplate = `DAY OF THE WEEK	HOUR OF DAY START ASAP
+{{.DayOfWeek}}	{{.HourOfDay}}	{{.StartASAP}}
 `
 
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.PrivateEndpointDescriber
+	store store.MaintenanceWindowDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -41,7 +40,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.MaintenanceWindow(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
@@ -50,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) describe|get [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -59,7 +58,6 @@ func DescribeBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   describeMaintenanceWindow,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),

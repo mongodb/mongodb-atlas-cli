@@ -19,6 +19,9 @@ package maintenance
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -27,21 +30,30 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
+	mockStore := mocks.NewMockMaintenanceWindowDescriber(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{}
+	expected := &mongodbatlas.MaintenanceWindow{}
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoint(opts.ProjectID, opts.id).
+		MaintenanceWindow(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	err := opts.Run()
 	assert.NoError(t, err)
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID},
+	)
 }

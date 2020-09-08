@@ -51,7 +51,7 @@ func TestIntegrations(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
+	projectName := fmt.Sprintf("e2e-integration-proj-%v", n)
 	projectID, err := createProject(projectName)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -82,7 +82,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(datadogEntity, thirdPartyIntegrations)
+			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -109,7 +109,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(flowdockEntity, thirdPartyIntegrations)
+			a.True(integrationExists(flowdockEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -138,7 +138,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(newRelicEntity, thirdPartyIntegrations)
+			a.True(integrationExists(newRelicEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -161,7 +161,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(opsGenieEntity, thirdPartyIntegrations)
+			a.True(integrationExists(opsGenieEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -184,7 +184,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(pagerDutyEntity, thirdPartyIntegrations)
+			a.True(integrationExists(pagerDutyEntity, thirdPartyIntegrations))
 		}
 	})
 
@@ -227,7 +227,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			integrationExists(webhookEntity, thirdPartyIntegrations)
+			a.True(integrationExists(webhookEntity, thirdPartyIntegrations))
 		}
 	})
 

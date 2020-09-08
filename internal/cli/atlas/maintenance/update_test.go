@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package maintenancewindows
+package maintenance
 
 import (
 	"testing"

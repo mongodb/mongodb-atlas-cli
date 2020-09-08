@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/atlas/integrations"
 	"github.com/mongodb/mongocli/internal/cli/atlas/logs"
+	"github.com/mongodb/mongocli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongocli/internal/cli/atlas/networking"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints"
@@ -60,6 +61,7 @@ func Builder() *cobra.Command {
 		networking.Builder(),
 		security.Builder(),
 		integrations.Builder(),
+		maintenance.Builder(),
 	)
 
 	return cmd

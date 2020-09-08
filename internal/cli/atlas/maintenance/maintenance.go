@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package maintenancewindows
+package maintenance
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"

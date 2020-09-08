@@ -12,19 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package maintenancewindows
+package maintenance
 
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	maintenanceWindows        = "Manage Atlas maintenance windows."
+	maintenanceWindowsArchive = "Update the maintenance window."
 )
-
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
-}

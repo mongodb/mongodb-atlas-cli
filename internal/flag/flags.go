@@ -67,6 +67,9 @@ const (
 	Comment                         = "comment"                         // Comment flag
 	DeleteAfter                     = "deleteAfter"                     // DeleteAfter flag
 	ArchiveAfter                    = "archiveAfter"                    // ArchiveAfter flag
+	DayOfWeek = "dayOfWeek" // DayOfWeek flag
+	HourOfDay = "hourOfDay" // HourOfDay flag
+	StartASAP = "startASAP" // StartASAP flag
 	Until                           = "until"                           // Until flag
 	Page                            = "page"                            // Page flag
 	Limit                           = "limit"                           // Limit flag

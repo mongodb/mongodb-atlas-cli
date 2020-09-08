@@ -1,0 +1,307 @@
+// Copyright 2020 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// +build e2e atlas,generic
+
+package atlas_test
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/exec"
+	"testing"
+
+	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas/mongodbatlas"
+)
+
+const (
+	integrationsEntity = "integrations"
+	datadogEntity      = "DATADOG"
+	flowdockEntity     = "FLOWDOCK"
+	newRelicEntity     = "NEW_RELIC"
+	opsGenieEntity     = "OPS_GENIE"
+	pagerDutyEntity    = "PAGER_DUTY"
+	victorOpsEntity    = "VICTOR_OPS"
+	webhookEntity      = "WEBHOOK"
+)
+
+func TestIntegrations(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	key := "51c0ef87e9951c3e147accf0e12" + n.String()
+
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	t.Run("Create DATADOG", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			datadogEntity,
+			"--apiKey",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == datadogEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("Create FLOWDOCK", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			flowdockEntity,
+			"--apiToken",
+			key,
+			"--flowName",
+			"test",
+			"--orgName",
+			"testOrg",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == flowdockEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("Create NEW_RELIC", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			newRelicEntity,
+			"--accountId",
+			key,
+			"--licenceKey",
+			key,
+			"--writeToken",
+			key,
+			"--readToken",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == newRelicEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("Create OPSGENIE", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			opsGenieEntity,
+			"--apiKey",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == opsGenieEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("Create PAGER_DUTY", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			pagerDutyEntity,
+			"--serviceKey",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == pagerDutyEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("Create VICTOR_OPS", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			victorOpsEntity,
+			"--apiKey",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+	})
+
+	t.Run("Create WEBHOOK", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"create",
+			webhookEntity,
+			"--url",
+			key,
+			"--secret",
+			key,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			found := false
+			services := thirdPartyIntegrations.Results
+			for i := range services {
+				if services[i].Type == webhookEntity {
+					found = true
+					break
+				}
+			}
+			a.True(found)
+		}
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			a.NotEmpty(thirdPartyIntegrations.Results)
+		}
+
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"describe",
+			datadogEntity,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var thirdPartyIntegration mongodbatlas.ThirdPartyIntegration
+		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
+			a.Equal(datadogEntity, thirdPartyIntegration.Type)
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			integrationsEntity,
+			"delete",
+			datadogEntity,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		expected := fmt.Sprintf("Integration '%s' deleted\n", datadogEntity)
+		a.Equal(expected, string(resp))
+	})
+}

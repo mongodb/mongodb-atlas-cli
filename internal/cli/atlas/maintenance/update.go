@@ -15,8 +15,6 @@
 package maintenance
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -48,13 +46,7 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Print(updateTemplate)
-	return nil
+	return opts.Print(updateTemplate)
 }
 
 func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {

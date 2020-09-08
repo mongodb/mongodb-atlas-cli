@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)
@@ -30,6 +30,10 @@ type IntegrationCreator interface {
 
 type IntegrationLister interface {
 	Integrations(string) (*atlas.ThirdPartyIntegrations, error)
+}
+
+type IntegrationDeleter interface {
+	DeleteIntegration(string, string) error
 }
 
 // CreateIntegration encapsulate the logic to manage different cloud providers
@@ -40,6 +44,17 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteIntegration encapsulate the logic to manage different cloud providers
+func (s *Store) DeleteIntegration(projectID, integrationType string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 

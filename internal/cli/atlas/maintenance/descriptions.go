@@ -15,6 +15,6 @@
 package maintenance
 
 const (
-	maintenanceWindows        = "Manage Atlas maintenance windows."
-	maintenanceWindowsArchive = "Update the maintenance window."
+	maintenanceWindows       = "Manage Atlas maintenance windows."
+	updateMaintenanceWindows = "Update the maintenance window."
 )

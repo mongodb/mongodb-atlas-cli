@@ -87,6 +87,8 @@ const (
 	APIKey                          = "apiKey"                          // APIKey flag
 	APIToken                        = "apiToken"                        // APIToken flag
 	RoutingKey                      = "routingKey"                      // RoutingKey flag
+	OrgName                         = "orgName"                         // OrgName flag
+	FlowName                        = "flowName"                        // FlowName flag
 	TeamName                        = "teamName"                        // TeamName flag
 	ChannelName                     = "channelName"                     // ChannelName flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag

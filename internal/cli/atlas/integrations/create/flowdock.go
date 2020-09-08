@@ -24,54 +24,54 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const slackType = "SLACK"
+const flowdockType = "FLOWDOCK"
 
-type SlackOpts struct {
+type FlowdockOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apiToken    string
-	teamName    string
-	channelName string
-	store       store.IntegrationCreator
+	apiToken string
+	flowName string
+	orgName  string
+	store    store.IntegrationCreator
 }
 
-func (opts *SlackOpts) initStore() error {
+func (opts *FlowdockOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplateSlack = "Slack integration configured.\n"
+var createTemplateFlowDock = "Flowdock integration configured.\n"
 
-func (opts *SlackOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), slackType, opts.newSlackIntegration())
+func (opts *FlowdockOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), flowdockType, opts.newFlowdockIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *SlackOpts) newSlackIntegration() *atlas.ThirdPartyIntegration {
+func (opts *FlowdockOpts) newFlowdockIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:        slackType,
-		ChannelName: opts.channelName,
-		TeamName:    opts.teamName,
-		APIToken:    opts.apiToken,
+		Type:     flowdockType,
+		OrgName:  opts.orgName,
+		FlowName: opts.flowName,
+		APIToken: opts.apiToken,
 	}
 }
 
-// mongocli atlas integration(s) create slack --apiToken apiToken --channelName channelName --teamName --teamName [--projectId projectId]
-func SlackBuilder() *cobra.Command {
-	opts := &SlackOpts{}
+// mongocli atlas integration(s) create FLOWDOCK --apiToken apiToken --orgName orgName --flowName --flowName [--projectId projectId]
+func FlowdockBuilder() *cobra.Command {
+	opts := &FlowdockOpts{}
 	cmd := &cobra.Command{
-		Use:     slackType,
-		Aliases: []string{"slack"},
-		Short:   slack,
+		Use:     flowdockType,
+		Aliases: []string{"flowdock"},
+		Short:   flowdock,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplateSlack),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateFlowDock),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -79,15 +79,16 @@ func SlackBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "", usage.ChannelName)
+	cmd.Flags().StringVar(&opts.flowName, flag.FlowName, "", usage.FlowName)
 	cmd.Flags().StringVar(&opts.apiToken, flag.APIToken, "", usage.IntegrationAPIToken)
-	cmd.Flags().StringVar(&opts.teamName, flag.TeamName, "", usage.TeamName)
+	cmd.Flags().StringVar(&opts.orgName, flag.OrgName, "", usage.OrgName)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.FlowName)
 	_ = cmd.MarkFlagRequired(flag.APIToken)
-	_ = cmd.MarkFlagRequired(flag.TeamName)
+	_ = cmd.MarkFlagRequired(flag.OrgName)
 
 	return cmd
 }

@@ -19,4 +19,5 @@ const (
 	opsGenie = "Create or update the Ops Genie integration"
 	slack    = "Create or update the Slack integration"
 	datadog  = "Create or update the Datadog integration"
+	flowdock = "Create or update the Flowdock integration"
 )

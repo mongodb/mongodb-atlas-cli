@@ -20,4 +20,5 @@ const (
 	slack    = "Create or update the Slack integration"
 	datadog  = "Create or update the Datadog integration"
 	flowdock = "Create or update the Flowdock integration"
+	webhook  = "Create or update the Webhook integration"
 )

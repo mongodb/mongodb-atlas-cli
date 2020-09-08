@@ -33,6 +33,7 @@ func Builder() *cobra.Command {
 		DatadogBuilder(),
 		VictorOpsBuilder(),
 		FlowdockBuilder(),
+		WebhookBuilder(),
 	)
 
 	return cmd

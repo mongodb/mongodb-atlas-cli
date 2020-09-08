@@ -15,6 +15,8 @@
 package maintenancewindows
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -27,10 +29,10 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	dayOfWeek           int
-	hourOfDay  int
+	dayOfWeek int
+	hourOfDay int
 	startASAP bool
-	store store.MaintenanceWindowUpdater
+	store     store.MaintenanceWindowUpdater
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -39,24 +41,28 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
-var updateTemplate = "Maintenance window '{{.ID}}' updated.\n"
+var updateTemplate = "Maintenance window updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	err := opts.store.UpdateMaintenanceWindow(opts.ConfigProjectID(), nil)
+	err := opts.store.UpdateMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	if err != nil {
+		return err
+	}
+
+	fmt.Print(updateTemplate)
+	return nil
 }
 
 func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {
-	archive := &atlas.MaintenanceWindow{
-		DayOfWeek:         opts.dayOfWeek,
-		HourOfDay:         &opts.hourOfDay,
-		StartASAP:         &opts.startASAP,
+	return &atlas.MaintenanceWindow{
+		DayOfWeek: opts.dayOfWeek,
+		HourOfDay: &opts.hourOfDay,
+		StartASAP: &opts.startASAP,
 	}
-	return archive
 }
 
 // mongocli atlas maintenanceWindow(s) update(s) --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
@@ -66,6 +72,10 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: maintenanceWindowsArchive,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.startASAP == false {
+				_ = cmd.MarkFlagRequired(flag.DayOfWeek)
+				_ = cmd.MarkFlagRequired(flag.HourOfDay)
+			}
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),

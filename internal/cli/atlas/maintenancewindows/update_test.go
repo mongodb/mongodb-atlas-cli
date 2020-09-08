@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build unit
 
 package maintenancewindows
@@ -19,31 +18,44 @@ package maintenancewindows
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
+	mockStore := mocks.NewMockMaintenanceWindowUpdater(ctrl)
 	defer ctrl.Finish()
 
 	updateOpts := &UpdateOpts{
-		id:    "1",
-		store: mockStore,
+		store:     mockStore,
+		hourOfDay: 2,
+		dayOfWeek: 1,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "21321323343243243",
+		},
 	}
-
-	expected := &mongodbatlas.OnlineArchive{}
 
 	mockStore.
 		EXPECT().
-		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.newOnlineArchive()).
-		Return(expected, nil).
+		UpdateMaintenanceWindow(updateOpts.ConfigProjectID(), updateOpts.newMaintenanceWindow()).
+		Return(nil).
 		Times(1)
 
 	err := updateOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestUpdateBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		UpdateBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.HourOfDay, flag.DayOfWeek, flag.StartASAP},
+	)
 }

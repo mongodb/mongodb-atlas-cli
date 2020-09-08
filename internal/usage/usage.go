@@ -149,7 +149,7 @@ const (
 	LicenceKey                      = "Your License Key."
 	ServiceKey                      = "Your Service Key."
 	URL                             = "Your webhook URL."
-	Secret                          = "An optional field for your webhook secret."
+	Secret                          = "An optional field for your webhook secret." //nolint:gosec // This is just a message not a credential
 	WriteToken                      = "Your Insights Insert Key."
 	ReadToken                       = "Your Insights Query Key."
 	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."

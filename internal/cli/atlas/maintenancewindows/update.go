@@ -27,10 +27,10 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	dayOfWeek           string
-	hourOfDay  string
+	dayOfWeek           int
+	hourOfDay  int
 	startASAP bool
-	store        store.OnlineArchiveUpdater
+	store store.MaintenanceWindowUpdater
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -42,8 +42,7 @@ func (opts *UpdateOpts) initStore() error {
 var updateTemplate = "Maintenance window '{{.ID}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	archive := opts.newOnlineArchive()
-	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
+	err := opts.store.UpdateMaintenanceWindow(opts.ConfigProjectID(), nil)
 	if err != nil {
 		return err
 	}
@@ -51,23 +50,21 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
-	archive := &atlas.OnlineArchive{
-		ID: opts.id,
-		Criteria: &atlas.OnlineArchiveCriteria{
-			ExpireAfterDays: opts.archiveAfter,
-		},
+func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {
+	archive := &atlas.MaintenanceWindow{
+		DayOfWeek:         opts.dayOfWeek,
+		HourOfDay:         &opts.hourOfDay,
+		StartASAP:         &opts.startASAP,
 	}
 	return archive
 }
 
-// mongocli atlas maintenanceWindow(s) update(s) <ID> --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) update(s) --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update <ID>",
+		Use:   "update",
 		Short: maintenanceWindowsArchive,
-		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
@@ -75,13 +72,12 @@ func UpdateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.dayOfWeek, flag.DayOfWeek, "", usage.DayOfWeek)
-	cmd.Flags().StringVar(&opts.hourOfDay, flag.HourOfDay, "", usage.HourOfDay)
+	cmd.Flags().IntVar(&opts.dayOfWeek, flag.DayOfWeek, 0, usage.DayOfWeek)
+	cmd.Flags().IntVar(&opts.hourOfDay, flag.HourOfDay, 0, usage.HourOfDay)
 	cmd.Flags().BoolVar(&opts.startASAP, flag.StartASAP, false, usage.StartASAP)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

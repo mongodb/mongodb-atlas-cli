@@ -29,7 +29,6 @@ func Builder() *cobra.Command {
 		NewRelicBuilder(),
 		OpsGenieBuilder(),
 		PagerDutyBuilder(),
-		SlackBuilder(),
 		DatadogBuilder(),
 		VictorOpsBuilder(),
 		FlowdockBuilder(),

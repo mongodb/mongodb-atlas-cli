@@ -72,7 +72,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: maintenanceWindowsArchive,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.startASAP == false {
+			if !opts.startASAP {
 				_ = cmd.MarkFlagRequired(flag.DayOfWeek)
 				_ = cmd.MarkFlagRequired(flag.HourOfDay)
 			}

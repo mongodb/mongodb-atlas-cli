@@ -50,6 +50,19 @@ func TestIntegrations(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+
+	projectName := fmt.Sprintf("e2e-proj-%v", n)
+	projectID, err := createProject(projectName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
+
 	t.Run("Create DATADOG", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -58,6 +71,8 @@ func TestIntegrations(t *testing.T) {
 			datadogEntity,
 			"--apiKey",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -67,15 +82,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == datadogEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(datadogEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -91,6 +98,8 @@ func TestIntegrations(t *testing.T) {
 			"test",
 			"--orgName",
 			"testOrg",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -100,15 +109,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == flowdockEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(flowdockEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -126,6 +127,8 @@ func TestIntegrations(t *testing.T) {
 			key,
 			"--readToken",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -135,15 +138,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == newRelicEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(newRelicEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -155,6 +150,8 @@ func TestIntegrations(t *testing.T) {
 			opsGenieEntity,
 			"--apiKey",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -164,15 +161,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == opsGenieEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(opsGenieEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -184,6 +173,8 @@ func TestIntegrations(t *testing.T) {
 			pagerDutyEntity,
 			"--serviceKey",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -193,15 +184,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == pagerDutyEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(pagerDutyEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -213,6 +196,8 @@ func TestIntegrations(t *testing.T) {
 			victorOpsEntity,
 			"--apiKey",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -231,6 +216,8 @@ func TestIntegrations(t *testing.T) {
 			key,
 			"--secret",
 			key,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -240,15 +227,7 @@ func TestIntegrations(t *testing.T) {
 
 		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			found := false
-			services := thirdPartyIntegrations.Results
-			for i := range services {
-				if services[i].Type == webhookEntity {
-					found = true
-					break
-				}
-			}
-			a.True(found)
+			integrationExists(webhookEntity, thirdPartyIntegrations)
 		}
 	})
 
@@ -257,6 +236,8 @@ func TestIntegrations(t *testing.T) {
 			atlasEntity,
 			integrationsEntity,
 			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -275,6 +256,8 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"describe",
 			datadogEntity,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -293,7 +276,9 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"delete",
 			datadogEntity,
-			"--force")
+			"--force",
+			"--projectId",
+			projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

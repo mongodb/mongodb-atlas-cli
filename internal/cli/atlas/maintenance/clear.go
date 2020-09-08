@@ -15,8 +15,6 @@
 package maintenance
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -45,15 +43,10 @@ func (opts *ClearOpts) Run() error {
 		return err
 	}
 
-	if err != nil {
-		return err
-	}
-
-	fmt.Print(clearTemplate)
-	return nil
+	return opts.Print(clearTemplate)
 }
 
-// mongocli atlas maintenanceWindow(s) update --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) clear [--projectId projectId]
 func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{

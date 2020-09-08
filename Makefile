@@ -6,7 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
 
-GOLANGCI_VERSION=v1.30.0
+GOLANGCI_VERSION=v1.31.0
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
@@ -70,13 +70,13 @@ build: ## Generate a binary in ./bin
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
-	# the target assumes the MCLI-* environment variables are exported
+	# the target assumes the MCLI_* environment variables are exported
 	${TEST_CMD} -v -p 1 -parallel 1 -timeout ${E2E_TIMEOUT} -tags="${E2E_TAGS}" ./e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
+	${TEST_CMD} --tags="${INTEGRATION_TAGS}" ./internal...
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests

@@ -51,6 +51,6 @@ func TestSlackBuilder(t *testing.T) {
 		t,
 		SlackBuilder(),
 		0,
-		[]string{flag.APIToken, flag.TeamName, flag.ProjectID},
+		[]string{flag.APIToken, flag.TeamName, flag.ChannelName, flag.ProjectID},
 	)
 }

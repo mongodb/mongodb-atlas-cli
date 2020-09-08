@@ -36,7 +36,7 @@ type IntegrationDeleter interface {
 	DeleteIntegration(string, string) error
 }
 
-// CreateIntegration encapsulate the logic to manage different cloud providers
+// CreateIntegration encapsulates the logic to manage different cloud providers
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -47,18 +47,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 	}
 }
 
-// DeleteIntegration encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteIntegration(projectID, integrationType string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
-		return err
-	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// Integrations encapsulate the logic to manage different cloud providers
+// Integrations encapsulates the logic to manage different cloud providers
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -66,5 +55,16 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteIntegration encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteIntegration(projectID, integrationType string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

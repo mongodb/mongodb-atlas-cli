@@ -267,7 +267,6 @@ func TestIntegrations(t *testing.T) {
 		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
 			a.NotEmpty(thirdPartyIntegrations.Results)
 		}
-
 	})
 
 	t.Run("Describe", func(t *testing.T) {

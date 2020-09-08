@@ -12,10 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package maintenance
 
-const (
-	maintenanceWindows        = "Manage Atlas maintenance windows."
-	maintenanceWindowsArchive = "Update the maintenance window."
-	describeMaintenanceWindow = "Get a maintenance window."
+import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
+
+func TestDescribeOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DescribeOpts{
+		store: mockStore,
+	}
+
+	expected := &mongodbatlas.PrivateEndpointConnection{}
+
+	mockStore.
+		EXPECT().
+		PrivateEndpoint(opts.ProjectID, opts.id).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	assert.NoError(t, err)
+}

@@ -27,7 +27,10 @@ func Builder() *cobra.Command {
 		Short:   maintenanceWindows,
 	}
 
-	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(
+		UpdateBuilder(),
+		DescribeBuilder(),
+		)
 
 	return cmd
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package create
+package integrations
 
 import (
 	"testing"
@@ -25,32 +25,33 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestSlackOpts_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIntegrationCreator(ctrl)
+	mockStore := mocks.NewMockIntegrationDescriber(ctrl)
 	defer ctrl.Finish()
 
-	opts := &SlackOpts{
-		store: mockStore,
+	describeOpts := &DescribeOpts{
+		store:           mockStore,
+		integrationType: "SLACK",
 	}
 
-	expected := &mongodbatlas.ThirdPartyIntegrations{}
+	expected := &mongodbatlas.ThirdPartyIntegration{}
 	mockStore.
 		EXPECT().
-		CreateIntegration(opts.ProjectID, slackType, opts.newSlackIntegration()).
+		Integration(describeOpts.ProjectID, describeOpts.integrationType).
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestSlackBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		SlackBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.APIToken, flag.TeamName, flag.ProjectID},
+		[]string{flag.ProjectID},
 	)
 }

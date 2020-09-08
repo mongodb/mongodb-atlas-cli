@@ -91,8 +91,6 @@ const (
 	RoutingKey                      = "routingKey"                      // RoutingKey flag
 	OrgName                         = "orgName"                         // OrgName flag
 	FlowName                        = "flowName"                        // FlowName flag
-	TeamName                        = "teamName"                        // TeamName flag
-	ChannelName                     = "channelName"                     // ChannelName flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag
 	NotificationDelayMin            = "notificationDelayMin"            // NotificationDelayMin flag
 	NotificationEmailAddress        = "notificationEmailAddress"        // NotificationEmailAddress flag

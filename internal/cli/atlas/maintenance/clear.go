@@ -15,62 +15,62 @@
 package maintenance
 
 import (
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type UpdateOpts struct {
+type ClearOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	dayOfWeek int
-	hourOfDay int
-	startASAP bool
-	store     store.MaintenanceWindowUpdater
+	Confirm bool
+	store   store.MaintenanceWindowClearer
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *ClearOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var updateTemplate = "Maintenance window updated.\n"
+var clearTemplate = "Maintenance window removed.\n"
 
-func (opts *UpdateOpts) Run() error {
-	err := opts.store.UpdateMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
+func (opts *ClearOpts) Run() error {
+	err := opts.store.ClearMaintenanceWindow(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(nil)
 }
 
-func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {
-	return &atlas.MaintenanceWindow{
-		DayOfWeek: opts.dayOfWeek,
-		HourOfDay: &opts.hourOfDay,
-		StartASAP: &opts.startASAP,
+// Prompt confirms that the resource should be deleted
+func (opts *ClearOpts) Prompt() error {
+	if opts.Confirm {
+		return nil
 	}
+
+	p := prompt.NewDeleteConfirm("maintenance window")
+	return survey.AskOne(p, &opts.Confirm)
 }
 
-// mongocli atlas maintenanceWindow(s) update(s) --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+// mongocli atlas maintenanceWindow(s) clear [--projectId projectId]
+func ClearBuilder() *cobra.Command {
+	opts := &ClearOpts{}
 	cmd := &cobra.Command{
-		Use:   "update",
-		Short: updateMaintenanceWindow,
+		Use:     "clear",
+		Short:   clearMaintenanceWindow,
+		Aliases: []string{"rm", "delete"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.startASAP {
-				_ = cmd.MarkFlagRequired(flag.DayOfWeek)
-				_ = cmd.MarkFlagRequired(flag.HourOfDay)
-			}
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), clearTemplate),
+				opts.Prompt,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -78,9 +78,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.dayOfWeek, flag.DayOfWeek, 0, usage.DayOfWeek)
-	cmd.Flags().IntVar(&opts.hourOfDay, flag.HourOfDay, 0, usage.HourOfDay)
-	cmd.Flags().BoolVar(&opts.startASAP, flag.StartASAP, false, usage.StartASAP)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

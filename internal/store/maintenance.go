@@ -22,10 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowDescriber
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDescriber
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
+}
+
+type MaintenanceWindowClearer interface {
+	ClearMaintenanceWindow(string) error
 }
 
 type MaintenanceWindowDescriber interface {
@@ -37,6 +41,17 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ClearMaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) ClearMaintenanceWindow(projectID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).MaintenanceWindows.Reset(context.Background(), projectID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

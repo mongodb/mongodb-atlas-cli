@@ -11,20 +11,48 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
 package maintenance
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
+func TestClearOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockMaintenanceWindowClearer(ctrl)
+	defer ctrl.Finish()
+
+	updateOpts := &ClearOpts{
+		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "21321323343243243",
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		ClearMaintenanceWindow(updateOpts.ConfigProjectID()).
+		Return(nil).
+		Times(1)
+
+	err := updateOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestClearBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		ClearBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

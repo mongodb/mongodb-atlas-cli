@@ -17,4 +17,5 @@ package maintenance
 const (
 	maintenanceWindows       = "Manage Atlas maintenance windows."
 	updateMaintenanceWindows = "Update the maintenance window."
+	clearMaintenanceWindows  = "Clear the maintenance window."
 )

@@ -28,10 +28,7 @@ import (
 type ClearOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	dayOfWeek int
-	hourOfDay int
-	startASAP bool
-	store     store.MaintenanceWindowClearer
+	store store.MaintenanceWindowClearer
 }
 
 func (opts *ClearOpts) initStore() error {
@@ -56,13 +53,13 @@ func (opts *ClearOpts) Run() error {
 	return nil
 }
 
-
-// mongocli atlas maintenanceWindow(s) update(s) --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) update --dayOfWeek dayOfWeek --hourOfDay hourOfDay --startASAP [--projectId projectId]
 func ClearBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update",
-		Short: updateMaintenanceWindows,
+		Use:     "clear",
+		Short:   clearMaintenanceWindows,
+		Aliases: []string{"rm", "delete"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

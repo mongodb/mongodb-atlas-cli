@@ -15,7 +15,6 @@
 package integrations
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -70,26 +69,24 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) GetDescribeTemplate() (string, error) {
+func (opts *DescribeOpts) newDescribeTemplate() string {
 	switch opts.integrationType {
-	case "SLACK":
-		return describeTemplateSlack, nil
 	case "DATADOG":
-		return describeTemplateDatadogOpsGenie, nil
+		return describeTemplateDatadogOpsGenie
 	case "FLOWDOCK":
-		return describeTemplateFlowdog, nil
+		return describeTemplateFlowdog
 	case "NEW_RELIC":
-		return describeTemplateNewRelic, nil
+		return describeTemplateNewRelic
 	case "PAGER_DUTY":
-		return describeTemplatePagerDuty, nil
+		return describeTemplatePagerDuty
 	case "VICTOR_OPS":
-		return describeTemplateVictorOps, nil
+		return describeTemplateVictorOps
 	case "OPS_GENIE":
-		return describeTemplateDatadogOpsGenie, nil
+		return describeTemplateDatadogOpsGenie
 	case "WEBHOOK":
-		return describeTemplateWebhook, nil
+		return describeTemplateWebhook
 	default:
-		return "", fmt.Errorf("the integration type '%s' is not valid", opts.integrationType)
+		return describeTemplateSlack
 	}
 }
 
@@ -97,18 +94,15 @@ func (opts *DescribeOpts) GetDescribeTemplate() (string, error) {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <TYPE>",
-		Short: describeIntegration,
-		Args:  cobra.ExactArgs(1),
+		Use:       "describe <TYPE>",
+		Short:     describeIntegration,
+		Args:      cobra.ExactValidArgs(1),
+		ValidArgs: []string{"WEBHOOK", "OPS_GENIE", "VICTOR_OPS", "PAGER_DUTY", "NEW_RELIC", "FLOWDOCK", "DATADOG", "SLACK"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.integrationType = strings.ToUpper(args[0])
-			describeTemplate, err := opts.GetDescribeTemplate()
-			if err != nil {
-				return err
-			}
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), opts.newDescribeTemplate()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

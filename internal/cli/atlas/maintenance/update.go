@@ -46,7 +46,7 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	return opts.Print(updateTemplate)
+	return opts.Print(nil)
 }
 
 func (opts *UpdateOpts) newMaintenanceWindow() *atlas.MaintenanceWindow {

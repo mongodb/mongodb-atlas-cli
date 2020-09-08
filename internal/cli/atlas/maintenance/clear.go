@@ -15,9 +15,11 @@
 package maintenance
 
 import (
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -26,7 +28,8 @@ import (
 type ClearOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.MaintenanceWindowClearer
+	Confirm bool
+	store   store.MaintenanceWindowClearer
 }
 
 func (opts *ClearOpts) initStore() error {
@@ -43,7 +46,17 @@ func (opts *ClearOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(clearTemplate)
+	return opts.Print(nil)
+}
+
+// Prompt confirms that the resource should be deleted
+func (opts *ClearOpts) Prompt() error {
+	if opts.Confirm {
+		return nil
+	}
+
+	p := prompt.NewDeleteConfirm("maintenance window")
+	return survey.AskOne(p, &opts.Confirm)
 }
 
 // mongocli atlas maintenanceWindow(s) clear [--projectId projectId]
@@ -57,12 +70,15 @@ func ClearBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), clearTemplate),
+				opts.Prompt,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

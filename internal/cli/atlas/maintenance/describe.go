@@ -41,11 +41,9 @@ func (opts *DescribeOpts) init() error {
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.MaintenanceWindow(opts.ConfigProjectID())
-
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 

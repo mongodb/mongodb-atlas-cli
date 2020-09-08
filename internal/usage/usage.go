@@ -86,7 +86,9 @@ const (
 	APIKey                          = "API Key."
 	RoutingKey                      = "An optional field for your Routing Key."
 	ChannelName                     = "The channel name to reconfigure."
-	SlackIntegrationAPIToken        = "Your Slack API Token." //nolint:gosec // This is just a message not a credential
+	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
+	OrgName                         = "Your Flowdock organization name."
+	FlowName                        = "Your Flowdock Flow name."
 	APIKeyDescription               = "Description of the API key."
 	APIKeyRoles                     = "List of roles for the API key."
 	NotificationRegion              = "Region that indicates which API URL to use."
@@ -146,20 +148,21 @@ const (
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
 	LicenceKey                      = "Your License Key."
 	ServiceKey                      = "Your Service Key."
+	URL                             = "Your webhook URL."
+	Secret                          = "An optional field for your webhook secret." //nolint:gosec // This is just a message not a credential
 	WriteToken                      = "Your Insights Insert Key."
 	ReadToken                       = "Your Insights Query Key."
-
-	RouteTableCidrBlock = "Peer VPC CIDR block or subnet."
-	VpcID               = "Unique identifier of the peer VPC."
-	AtlasCIDRBlock      = "CIDR block that Atlas uses for your clusters."
-	VNet                = "Name of your Azure VNet."
-	ResourceGroup       = "Name of your Azure resource group."
-	DirectoryID         = "Unique identifier for an Azure AD directory."
-	SubscriptionID      = "Unique identifier of the Azure subscription in which the VNet resides."
-	GCPProjectID        = "Unique identifier of the GCP project in which the network peer resides."
-	Network             = "Unique identifier of the Network Peering connection in the Atlas project."
-	APIRegion           = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
-	FormatOut           = `Output format. 
+	RouteTableCidrBlock             = "Peer VPC CIDR block or subnet."
+	VpcID                           = "Unique identifier of the peer VPC."
+	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
+	VNet                            = "Name of your Azure VNet."
+	ResourceGroup                   = "Name of your Azure resource group."
+	DirectoryID                     = "Unique identifier for an Azure AD directory."
+	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
+	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
+	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
+	APIRegion                       = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
+	FormatOut                       = `Output format. 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`

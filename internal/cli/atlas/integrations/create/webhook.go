@@ -24,54 +24,52 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const slackType = "SLACK"
+const webhookIntegrationType = "WEBHOOK"
 
-type SlackOpts struct {
+type WebhookOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apiToken    string
-	teamName    string
-	channelName string
-	store       store.IntegrationCreator
+	url    string
+	secret string
+	store  store.IntegrationCreator
 }
 
-func (opts *SlackOpts) initStore() error {
+func (opts *WebhookOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplateSlack = "Slack integration configured.\n"
+var createTemplateWebhook = "Webhook integration configured.\n"
 
-func (opts *SlackOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), slackType, opts.newSlackIntegration())
+func (opts *WebhookOpts) Run() error {
+	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), webhookIntegrationType, opts.newWebhookIntegration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *SlackOpts) newSlackIntegration() *atlas.ThirdPartyIntegration {
+func (opts *WebhookOpts) newWebhookIntegration() *atlas.ThirdPartyIntegration {
 	return &atlas.ThirdPartyIntegration{
-		Type:        slackType,
-		ChannelName: opts.channelName,
-		TeamName:    opts.teamName,
-		APIToken:    opts.apiToken,
+		Type:   webhookIntegrationType,
+		URL:    opts.url,
+		Secret: opts.secret,
 	}
 }
 
-// mongocli atlas integration(s) create slack --apiToken apiToken --channelName channelName --teamName --teamName [--projectId projectId]
-func SlackBuilder() *cobra.Command {
-	opts := &SlackOpts{}
+// mongocli atlas integration(s) create WEBHOOK --url url --secret secret [--projectId projectId]
+func WebhookBuilder() *cobra.Command {
+	opts := &WebhookOpts{}
 	cmd := &cobra.Command{
-		Use:     slackType,
-		Aliases: []string{"slack"},
-		Short:   slack,
+		Use:     webhookIntegrationType,
+		Aliases: []string{"webhook"},
+		Short:   webhook,
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplateSlack),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplateWebhook),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -79,15 +77,13 @@ func SlackBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.channelName, flag.ChannelName, "", usage.ChannelName)
-	cmd.Flags().StringVar(&opts.apiToken, flag.APIToken, "", usage.IntegrationAPIToken)
-	cmd.Flags().StringVar(&opts.teamName, flag.TeamName, "", usage.TeamName)
+	cmd.Flags().StringVar(&opts.url, flag.URL, "", usage.URL)
+	cmd.Flags().StringVar(&opts.secret, flag.Secret, "", usage.Secret)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.APIToken)
-	_ = cmd.MarkFlagRequired(flag.TeamName)
+	_ = cmd.MarkFlagRequired(flag.URL)
 
 	return cmd
 }

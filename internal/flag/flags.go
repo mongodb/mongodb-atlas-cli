@@ -20,6 +20,8 @@ const (
 	ProfileShort                    = "P"                               // ProfileShort flag to use a profile
 	OrgID                           = "orgId"                           // OrgID flag to use an Organization ID
 	TeamID                          = "teamId"                          // TeamID flag
+	URL                             = "url"                             // URL flag
+	Secret                          = "secret"                          // Secret flag
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
 	AuthDB                          = "authDB"                          // AuthDB flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
@@ -87,6 +89,8 @@ const (
 	APIKey                          = "apiKey"                          // APIKey flag
 	APIToken                        = "apiToken"                        // APIToken flag
 	RoutingKey                      = "routingKey"                      // RoutingKey flag
+	OrgName                         = "orgName"                         // OrgName flag
+	FlowName                        = "flowName"                        // FlowName flag
 	TeamName                        = "teamName"                        // TeamName flag
 	ChannelName                     = "channelName"                     // ChannelName flag
 	NotificationRegion              = "notificationRegion"              // NotificationRegion flag

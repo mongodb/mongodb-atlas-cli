@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongocli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)
@@ -32,7 +32,11 @@ type IntegrationLister interface {
 	Integrations(string) (*atlas.ThirdPartyIntegrations, error)
 }
 
-// CreateIntegration encapsulate the logic to manage different cloud providers
+type IntegrationDeleter interface {
+	DeleteIntegration(string, string) error
+}
+
+// CreateIntegration encapsulates the logic to manage different cloud providers
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -43,7 +47,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 	}
 }
 
-// Integrations encapsulate the logic to manage different cloud providers
+// Integrations encapsulates the logic to manage different cloud providers
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,5 +55,16 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteIntegration encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteIntegration(projectID, integrationType string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

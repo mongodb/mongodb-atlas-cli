@@ -51,7 +51,7 @@ func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{
 		Use:     "clear",
-		Short:   clearMaintenanceWindows,
+		Short:   clearMaintenanceWindow,
 		Aliases: []string{"rm", "delete"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

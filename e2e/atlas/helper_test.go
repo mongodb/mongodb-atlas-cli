@@ -41,6 +41,8 @@ const (
 	certsEntity            = "certs"
 	privateEndpointsEntity = "privateendpoints"
 	onlineArchiveEntity    = "onlineArchives"
+	iamEntity              = "iam"
+	projectEntity          = "project"
 )
 
 func getHostnameAndPort() (string, error) {
@@ -138,4 +140,54 @@ func RandClusterName() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("e2e-cluster-%v", n), nil
+}
+
+func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
+	services := thirdPartyIntegrations.Results
+	for i := range services {
+		if services[i].Type == name {
+			return true
+		}
+	}
+	return false
+}
+
+func createProject(projectName string) (string, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(cliPath,
+		iamEntity,
+		projectEntity,
+		"create",
+		projectName,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+
+	var project mongodbatlas.Project
+	if err := json.Unmarshal(resp, &project); err != nil {
+		return "", err
+	}
+
+	return project.ID, nil
+}
+
+func deleteProject(projectID string) error {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		iamEntity,
+		projectEntity,
+		"delete",
+		projectID,
+		"--force")
+	cmd.Env = os.Environ()
+	return cmd.Run()
 }

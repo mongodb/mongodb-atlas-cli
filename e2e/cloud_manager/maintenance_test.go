@@ -39,7 +39,7 @@ func TestMaintenanceWindows(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	projectName := fmt.Sprintf("e2e-integration-proj-%v", n)
+	projectName := fmt.Sprintf("e2e-maintenance-proj-%v", n)
 	projectID, err := createProject(projectName)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -54,9 +54,6 @@ func TestMaintenanceWindows(t *testing.T) {
 	startDate := time.Now().Format(time.RFC3339)
 	endDate := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)
 	var maintenanceWindowID string
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
 
 	t.Run("create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -167,9 +164,10 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Maintenance window '%s' deleted\n", maintenanceWindowID)
-		a.Equal(expected, string(resp))
+		if a.NoError(err, string(resp)) {
+			expected := fmt.Sprintf("Maintenance window '%s' deleted\n", maintenanceWindowID)
+			a.Equal(expected, string(resp))
+		}
 	})
 }

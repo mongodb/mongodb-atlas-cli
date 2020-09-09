@@ -196,6 +196,8 @@ func TestIntegrations(t *testing.T) {
 			victorOpsEntity,
 			"--apiKey",
 			key,
+			"--routingKey",
+			"test",
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -204,6 +206,11 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
+
+		var thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations
+		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
+			a.True(integrationExists(victorOpsEntity, thirdPartyIntegrations))
+		}
 	})
 
 	t.Run("Create WEBHOOK", func(t *testing.T) {

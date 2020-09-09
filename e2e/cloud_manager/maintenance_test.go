@@ -63,8 +63,6 @@ func TestMaintenanceWindows(t *testing.T) {
 			entity,
 			maintenanceEntity,
 			"create",
-			"--dayOfWeek",
-			"1",
 			"--startDate",
 			startDate,
 			"--endDate",
@@ -115,6 +113,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			entity,
 			maintenanceEntity,
 			"ls",
+			"-o",
 			"json",
 			"--projectId",
 			projectID)

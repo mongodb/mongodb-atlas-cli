@@ -26,7 +26,7 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	ID    string
+	id    string
 	store store.OpsManagerMaintenanceWindowDescriber
 }
 
@@ -36,12 +36,12 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	GROUP ID	START DATE	END DATE
+var describeTemplate = `ID	PROJECT ID	START DATE	END DATE
 {{.ID}}	{{.GroupID}}	{{.StartDate}}	{{.EndDate}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.OpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.ID)
+	r, err := opts.store.OpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func DescribeBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.ID = args[0]
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}

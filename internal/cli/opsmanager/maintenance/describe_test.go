@@ -39,7 +39,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		OpsManagerMaintenanceWindow(opts.ProjectID, opts.ID).
+		OpsManagerMaintenanceWindow(opts.ProjectID, opts.id).
 		Return(expected, nil).
 		Times(1)
 

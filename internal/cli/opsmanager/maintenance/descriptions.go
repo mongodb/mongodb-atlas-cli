@@ -12,21 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
+package maintenance
 
-package opsmanager
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	maintenanceWindows      = "Manage Ops Manager/Cloud Manager maintenance windows."
+	createMaintenanceWindow = "Create a maintenance window."
 )
-
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		15,
-		[]string{},
-	)
-}

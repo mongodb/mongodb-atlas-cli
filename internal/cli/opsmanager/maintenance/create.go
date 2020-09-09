@@ -27,11 +27,11 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	alertTypeNames []string
-	startDate      string
-	endDate        string
-	description    string
-	store          store.MaintenanceWindowCreator
+	alertType   []string
+	startDate   string
+	endDate     string
+	description string
+	store       store.MaintenanceWindowCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -54,7 +54,7 @@ func (opts *CreateOpts) newMaintenanceWindow() *opsmngr.MaintenanceWindow {
 	return &opsmngr.MaintenanceWindow{
 		StartDate:      opts.startDate,
 		EndDate:        opts.endDate,
-		AlertTypeNames: opts.alertTypeNames,
+		AlertTypeNames: opts.alertType,
 		Description:    opts.description,
 	}
 }
@@ -79,7 +79,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.startDate, flag.StartDate, "", usage.StartDate)
 	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.EndDate)
-	cmd.Flags().StringSliceVar(&opts.alertTypeNames, flag.AlertType, []string{}, usage.AlertType)
+	cmd.Flags().StringSliceVar(&opts.alertType, flag.AlertType, []string{}, usage.AlertType)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.MaintenanceDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

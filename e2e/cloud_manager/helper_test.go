@@ -22,13 +22,18 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
+	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
-	entity        = "cloud-manager"
-	serversEntity = "servers"
+	entity            = "cloud-manager"
+	serversEntity     = "servers"
+	iamEntity         = "iam"
+	projectsEntity    = "projects"
+	maintenanceEntity = "maintenanceWindows"
 )
 
 // automationServerHostname tries to list available server running the automation agent
@@ -96,4 +101,44 @@ func generateConfig(filename, hostname, clusterName, version, fcVersion string) 
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(downloadArchive)
+}
+
+func createProject(projectName string) (string, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(cliPath,
+		iamEntity,
+		projectsEntity,
+		"create",
+		projectName,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+
+	var project mongodbatlas.Project
+	if err := json.Unmarshal(resp, &project); err != nil {
+		return "", err
+	}
+
+	return project.ID, nil
+}
+
+func deleteProject(projectID string) error {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		iamEntity,
+		projectsEntity,
+		"delete",
+		projectID,
+		"--force")
+	cmd.Env = os.Environ()
+	return cmd.Run()
 }

@@ -136,7 +136,6 @@ func TestMaintenanceWindows(t *testing.T) {
 			maintenanceEntity,
 			"update",
 			maintenanceWindowID,
-			"1",
 			"--alertType",
 			"CLUSTER",
 			"-o",

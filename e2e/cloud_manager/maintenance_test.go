@@ -93,6 +93,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			maintenanceEntity,
 			"describe",
 			maintenanceWindowID,
+			"-o",
 			"json",
 			"--projectId",
 			projectID)
@@ -135,7 +136,6 @@ func TestMaintenanceWindows(t *testing.T) {
 			maintenanceEntity,
 			"update",
 			maintenanceWindowID,
-			"--dayOfWeek",
 			"1",
 			"--alertType",
 			"CLUSTER",

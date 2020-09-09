@@ -19,44 +19,43 @@ package maintenance
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+
+	"github.com/mongodb/mongocli/internal/cli"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOpsManagerMaintenanceWindowLister(ctrl)
+	mockStore := mocks.NewMockOpsManagerMaintenanceWindowDeleter(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.MaintenanceWindows{}
-
-	listOpts := ListOpts{
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		OpsManagerMaintenanceWindows(listOpts.ProjectID).
-		Return(expected, nil).
+		DeleteOpsManagerMaintenanceWindow(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	config.SetService(config.OpsManagerService)
-
-	err := listOpts.Run()
-
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDeleteBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		ListBuilder(),
+		DeleteBuilder(),
 		0,
 		[]string{flag.ProjectID},
 	)

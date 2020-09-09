@@ -17,4 +17,5 @@ package maintenance
 const (
 	maintenanceWindows      = "Manage Ops Manager/Cloud Manager maintenance windows."
 	createMaintenanceWindow = "Create a maintenance window."
+	describeMaintenanceWindow = "Get a maintenance window."
 )

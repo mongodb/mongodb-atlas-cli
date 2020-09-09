@@ -12,25 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package maintenance
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func Builder() *cobra.Command {
-	const use = "maintenanceWindows"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   maintenanceWindows,
+func TestDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockHostDescriber(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.Host{}
+
+	opts := &DescribeOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(
-		CreateBuilder(),
-		DescribeBuilder(),
-	)
+	mockStore.
+		EXPECT().
+		Host(opts.ProjectID, opts.ID).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

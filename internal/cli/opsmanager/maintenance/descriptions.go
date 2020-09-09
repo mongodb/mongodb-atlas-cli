@@ -19,4 +19,5 @@ const (
 	createMaintenanceWindow = "Create a maintenance window."
 	listMaintenanceWindows  = "List maintenance windows."
 	deleteMaintenanceWindow = "Delete a maintenance window."
+	updateMaintenanceWindow = "Update a maintenance window."
 )

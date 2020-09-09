@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,MaintenanceWindowCreator
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,MaintenanceWindowCreator,MaintenanceWindowLister
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
@@ -43,6 +43,10 @@ type MaintenanceWindowDescriber interface {
 
 type MaintenanceWindowCreator interface {
 	CreateMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
+}
+
+type MaintenanceWindowLister interface {
+	MaintenanceWindows(string) (*opsmngr.MaintenanceWindows, error)
 }
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers
@@ -94,6 +98,17 @@ func (s *Store) CreateMaintenanceWindow(projectID string, maintenanceWindow *ops
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(context.Background(), projectID, maintenanceWindow)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// MaintenanceWindows encapsulates the logic to manage different cloud providers
+func (s *Store) MaintenanceWindows(projectID string) (*opsmngr.MaintenanceWindows, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(context.Background(), projectID)
 		return log, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

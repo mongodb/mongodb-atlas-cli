@@ -28,7 +28,7 @@ import (
 
 func TestMaintenanceWindowsCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMaintenanceWindowCreator(ctrl)
+	mockStore := mocks.NewMockOpsManagerMaintenanceWindowCreator(ctrl)
 	defer ctrl.Finish()
 
 	expected := &opsmngr.MaintenanceWindow{}
@@ -40,7 +40,7 @@ func TestMaintenanceWindowsCreate_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			CreateMaintenanceWindow(createOpts.ProjectID, createOpts.newMaintenanceWindow()).
+			CreateOpsManagerMaintenanceWindow(createOpts.ProjectID, createOpts.newMaintenanceWindow()).
 			Return(expected, nil).
 			Times(1)
 

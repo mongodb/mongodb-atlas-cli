@@ -25,7 +25,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.MaintenanceWindowLister
+	store store.OpsManagerMaintenanceWindowLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -39,7 +39,7 @@ var listTemplate = `ID	GROUP ID	START DATE	END DATE{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.MaintenanceWindows(opts.ConfigProjectID())
+	r, err := opts.store.OpsManagerMaintenanceWindows(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

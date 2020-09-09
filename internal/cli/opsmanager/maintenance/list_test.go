@@ -29,7 +29,7 @@ import (
 
 func TestMaintenanceWindowsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMaintenanceWindowLister(ctrl)
+	mockStore := mocks.NewMockOpsManagerMaintenanceWindowLister(ctrl)
 	defer ctrl.Finish()
 
 	expected := &opsmngr.MaintenanceWindows{}
@@ -40,7 +40,7 @@ func TestMaintenanceWindowsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		MaintenanceWindows(listOpts.ProjectID).
+		OpsManagerMaintenanceWindows(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

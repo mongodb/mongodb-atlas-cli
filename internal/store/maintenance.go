@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,MaintenanceWindowCreator,MaintenanceWindowLister
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,OpsManagerMaintenanceWindowCreator,OpsManagerMaintenanceWindowLister
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
@@ -41,12 +41,12 @@ type MaintenanceWindowDescriber interface {
 	MaintenanceWindow(string) (*atlas.MaintenanceWindow, error)
 }
 
-type MaintenanceWindowCreator interface {
-	CreateMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
+type OpsManagerMaintenanceWindowCreator interface {
+	CreateOpsManagerMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
 }
 
-type MaintenanceWindowLister interface {
-	MaintenanceWindows(string) (*opsmngr.MaintenanceWindows, error)
+type OpsManagerMaintenanceWindowLister interface {
+	OpsManagerMaintenanceWindows(string) (*opsmngr.MaintenanceWindows, error)
 }
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers
@@ -93,8 +93,8 @@ func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, e
 	}
 }
 
-// CreateMaintenanceWindow encapsulates the logic to manage different cloud providers
-func (s *Store) CreateMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
+// CreateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(context.Background(), projectID, maintenanceWindow)
@@ -104,8 +104,8 @@ func (s *Store) CreateMaintenanceWindow(projectID string, maintenanceWindow *ops
 	}
 }
 
-// MaintenanceWindows encapsulates the logic to manage different cloud providers
-func (s *Store) MaintenanceWindows(projectID string) (*opsmngr.MaintenanceWindows, error) {
+// OpsManagerMaintenanceWindows encapsulates the logic to manage different cloud providers
+func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.MaintenanceWindows, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(context.Background(), projectID)

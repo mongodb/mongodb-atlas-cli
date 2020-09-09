@@ -36,11 +36,11 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) init() error {
 	var err error
-	opts.store, err = store.NewUnauthenticated(config.Default())
+	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplate = "Maintenance window '{{.ID}}' successfully created."
+var createTemplate = "Maintenance window '{{.ID}}' successfully created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())

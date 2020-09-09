@@ -14,19 +14,35 @@
 
 // +build unit
 
-package opsmanager
+package maintenance
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		15,
-		[]string{},
-	)
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockHostLister(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.Hosts{}
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		Hosts(listOpts.ProjectID, listOpts.newHostListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

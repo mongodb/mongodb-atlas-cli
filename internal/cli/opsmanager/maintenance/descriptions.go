@@ -12,21 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
+package maintenance
 
-package opsmanager
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	maintenanceWindows      = "Manage Atlas maintenance windows."
+	updateMaintenanceWindow = "Update the maintenance window."
+	clearMaintenanceWindow  = "Clear the maintenance window."
 )
-
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		15,
-		[]string{},
-	)
-}

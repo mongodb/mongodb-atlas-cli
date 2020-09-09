@@ -41,7 +41,7 @@ func (opts *UpdateOpts) init() error {
 	return err
 }
 
-var updateTemplate = "Maintenance window '{{.id}}' successfully updated.\n"
+var updateTemplate = "Maintenance window '{{.ID}}' successfully updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateOpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
@@ -87,10 +87,6 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.StartDate)
-	_ = cmd.MarkFlagRequired(flag.EndDate)
-	_ = cmd.MarkFlagRequired(flag.AlertType)
 
 	return cmd
 }

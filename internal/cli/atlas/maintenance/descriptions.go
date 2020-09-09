@@ -18,4 +18,5 @@ const (
 	maintenanceWindows      = "Manage Atlas maintenance windows."
 	updateMaintenanceWindow = "Update the maintenance window."
 	clearMaintenanceWindow  = "Clear the maintenance window."
+	deferMaintenanceWindow  = "Defer the maintenance window."
 )

@@ -68,6 +68,6 @@ func Builder() *cobra.Command {
 		agents.Builder(),
 		diagnosearchive.Builder(),
 		maintenance.Builder(),
-		)
+	)
 	return cmd
 }

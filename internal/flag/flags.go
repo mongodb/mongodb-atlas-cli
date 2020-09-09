@@ -62,6 +62,9 @@ const (
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
 	Description                     = "desc"                            // Description flag
+	StartDate                       = "startDate"                       // StartDate flag
+	EndDate                         = "endDate"                         // EndDate flag
+	AlertType                       = "alertType"                       // AlertType flag
 	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag
 	Comment                         = "comment"                         // Comment flag

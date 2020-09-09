@@ -15,7 +15,6 @@
 package maintenance
 
 const (
-	maintenanceWindows      = "Manage Atlas maintenance windows."
-	updateMaintenanceWindow = "Update the maintenance window."
-	clearMaintenanceWindow  = "Clear the maintenance window."
+	maintenanceWindows      = "Manage Ops Manager/Cloud Manager maintenance windows."
+	createMaintenanceWindow = "Create a maintenance window."
 )

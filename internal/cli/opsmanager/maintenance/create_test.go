@@ -19,30 +19,44 @@ package maintenance
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestList_Run(t *testing.T) {
+func TestManagerOwnerCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostLister(ctrl)
+	mockStore := mocks.NewMockMaintenanceWindowCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Hosts{}
+	expected := &opsmngr.MaintenanceWindow{}
 
-	listOpts := &ListOpts{
-		store: mockStore,
-	}
+	t.Run("no whitelist", func(t *testing.T) {
+		createOpts := &CreateOpts{
+			store: mockStore,
+		}
 
-	mockStore.
-		EXPECT().
-		Hosts(listOpts.ProjectID, listOpts.newHostListOptions()).
-		Return(expected, nil).
-		Times(1)
+		mockStore.
+			EXPECT().
+			CreateMaintenanceWindow(createOpts.ProjectID, createOpts.newMaintenanceWindow()).
+			Return(expected, nil).
+			Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		err := createOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+}
+
+func TestCreateBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.StartDate, flag.EndDate, flag.Description},
+	)
 }

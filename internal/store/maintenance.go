@@ -18,11 +18,13 @@ import (
 	"context"
 	"fmt"
 
+	"go.mongodb.org/ops-manager/opsmngr"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowCreator
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
@@ -30,6 +32,10 @@ type MaintenanceWindowUpdater interface {
 
 type MaintenanceWindowClearer interface {
 	ClearMaintenanceWindow(string) error
+}
+
+type MaintenanceWindowCreator interface {
+	CreateMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
 }
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers
@@ -51,5 +57,16 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateMaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) CreateMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(context.Background(), projectID, maintenanceWindow)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

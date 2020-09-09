@@ -22,8 +22,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `id	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
-{{.id}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
+const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
+{{.ID}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
 `
 
 type DescribeOpts struct {

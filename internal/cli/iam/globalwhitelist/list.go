@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `id	CIDR BLOCK	CREATED AT{{range .Results}}
-{{.id}}	{{.CidrBlock}}	{{.Created}}{{end}}
+const listTemplate = `ID	CIDR BLOCK	CREATED AT{{range .Results}}
+{{.ID}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 
 type ListOpts struct {

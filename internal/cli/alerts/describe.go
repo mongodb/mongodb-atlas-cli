@@ -36,8 +36,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `id	TYPE	METRIC	STATUS
-{{.id}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
+var describeTemplate = `ID	TYPE	METRIC	STATUS
+{{.ID}}	{{.EventTypeName}}	{{.MetricName}}	{{.Status}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -50,11 +50,11 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas alerts describe <id> --projectId projectId
+// mongocli atlas alerts describe <ID> --projectId projectId
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <id>",
+		Use:   "describe <ID>",
 		Short: describeAlert,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

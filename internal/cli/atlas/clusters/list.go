@@ -36,8 +36,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `id	NAME	MDB VER	STATE{{range .}}
-{{.id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .}}
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

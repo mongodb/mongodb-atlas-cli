@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Archive '%s' deleted\n", "Archive not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deleteOnlineArchive,
 		Args:    cobra.ExactArgs(1),

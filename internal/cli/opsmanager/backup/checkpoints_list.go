@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const checkpointsTemplate = `id	TIMESTAMP{{range .Results}}
-{{.id}}	{{.Timestamp}}{{end}}
+const checkpointsTemplate = `ID	TIMESTAMP{{range .Results}}
+{{.ID}}	{{.Timestamp}}{{end}}
 `
 
 type CheckpointsListOpts struct {

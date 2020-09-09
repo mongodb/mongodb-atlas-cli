@@ -45,7 +45,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Online archive '{{.id}}' created.\n"
+var createTemplate = "Online archive '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	archive, err := opts.newOnlineArchive()

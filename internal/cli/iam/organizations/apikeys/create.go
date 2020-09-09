@@ -24,7 +24,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = `API Key '{{.id}}' created.
+const createTemplate = `API Key '{{.ID}}' created.
 Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `

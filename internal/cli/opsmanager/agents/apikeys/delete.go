@@ -39,14 +39,14 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteAgentAPIKey, opts.ConfigProjectID())
 }
 
-// mongocli iam ops-manager agents apiKey(s)|apikey(s) delete <id> [--projectId projectId]
+// mongocli iam ops-manager agents apiKey(s)|apikey(s) delete <ID> [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("API Key '%s' deleted\n", "API Key not deleted"),
 	}
 
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   DeleteAgentAPIKey,
 		Args:    cobra.ExactArgs(1),

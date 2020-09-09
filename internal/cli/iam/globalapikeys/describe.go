@@ -34,8 +34,8 @@ func (opts *DescribeOpts) init() error {
 	return err
 }
 
-const describeTemplate = `id	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
-{{.id}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
+const describeTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY
+{{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -47,12 +47,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalApiKey(s) describe <id>
+// mongocli iam globalApiKey(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <id>",
+		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
 		Short:   describeAPIKey,

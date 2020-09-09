@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `id	NAME
-{{.id}}	{{.Name}}
+const describeTemplate = `ID	NAME
+{{.ID}}	{{.Name}}
 `
 
 type DescribeOpts struct {
@@ -48,12 +48,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) describe <id>
+// mongocli iam organizations(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <id>",
+		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
 		Short:   describeOrganizations,

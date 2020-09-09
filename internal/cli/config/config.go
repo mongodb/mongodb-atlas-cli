@@ -135,7 +135,7 @@ Enter [?] on any option to get help.
 }
 
 // askProject will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fallback to ask for project by id
+// If it fails or there are no projects to show we fallback to ask for project by ID
 func (opts *configOpts) askProject() error {
 	pMap, pSlice, err := opts.projects()
 	var projectID string
@@ -153,9 +153,9 @@ func (opts *configOpts) askProject() error {
 }
 
 // projects fetches projects and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=id`.
+// and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the id mapping to store on the config
+// and we want them to get the ID mapping to store on the config
 func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err error) {
 	projects, err := opts.store.Projects(nil)
 	if err != nil {
@@ -171,7 +171,7 @@ func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err
 }
 
 // askOrg will try to construct a select based on fetched organizations.
-// If it fails or there are no organizations to show we fallback to ask for org by id
+// If it fails or there are no organizations to show we fallback to ask for org by ID
 func (opts *configOpts) askOrg() error {
 	oMap, oSlice, err := opts.orgs()
 	var orgID string
@@ -189,9 +189,9 @@ func (opts *configOpts) askOrg() error {
 }
 
 // orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=id`.
+// and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the id mapping to store on the config
+// and we want them to get the ID mapping to store on the config
 func (opts *configOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
 	orgs, err := opts.store.Organizations(nil)
 	if err != nil {

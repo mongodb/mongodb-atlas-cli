@@ -38,7 +38,7 @@ func (opts *UnacknowledgeOpts) initStore() error {
 	return err
 }
 
-var unackTemplate = "Alert '{{.id}}' unacknowledged\n"
+var unackTemplate = "Alert '{{.ID}}' unacknowledged\n"
 
 func (opts *UnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
@@ -57,11 +57,11 @@ func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest
 	}
 }
 
-// mongocli atlas alerts unacknowledge <id> --projectId projectId --comment comment
+// mongocli atlas alerts unacknowledge <ID> --projectId projectId --comment comment
 func UnacknowledgeBuilder() *cobra.Command {
 	opts := new(UnacknowledgeOpts)
 	cmd := &cobra.Command{
-		Use:     "unacknowledge <id>",
+		Use:     "unacknowledge <ID>",
 		Short:   unacknowledgeAlerts,
 		Aliases: []string{"unack"},
 		Args:    cobra.ExactArgs(1),

@@ -15,8 +15,8 @@
 package usage
 
 const (
-	ProjectID                       = "Project id to use. Overrides configuration file or environment variable settings."
-	OrgID                           = "Organization id to use. Overrides configuration file or environment variable settings."
+	ProjectID                       = "Project ID to use. Overrides configuration file or environment variable settings."
+	OrgID                           = "Organization ID to use. Overrides configuration file or environment variable settings."
 	Profile                         = "Profile to use from your configuration file."
 	Members                         = "Number of members in the replica set."
 	Shards                          = "Number of shards in the cluster."
@@ -35,8 +35,8 @@ const (
 	TeamUsername                    = "List of usernames to add to the new team."
 	DBUsername                      = "Username for authenticating to MongoDB."
 	TeamName                        = "Name of the team."
-	UserID                          = "The id of the user."
-	TeamID                          = "The id of the team."
+	UserID                          = "The ID of the user."
+	TeamID                          = "The ID of the team."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Country                         = "The ISO 3166-1 alpha 2 country code of the user’s country of residence."
 	Mobile                          = "The user’s mobile or cell phone number."
@@ -147,7 +147,7 @@ const (
 	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
 	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
-	AccountID                       = "Account id of the owner of the peer VPC."
+	AccountID                       = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
 	LicenceKey                      = "Your License Key."
 	ServiceKey                      = "Your Service Key."

@@ -54,11 +54,11 @@ func (opts *AssignOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli iam project(s) apiKey(s)|apikey(s) assign <id> [--role role][--projectId projectId]
+// mongocli iam project(s) apiKey(s)|apikey(s) assign <ID> [--role role][--projectId projectId]
 func AssignBuilder() *cobra.Command {
 	opts := new(AssignOpts)
 	cmd := &cobra.Command{
-		Use:     "assign <id>",
+		Use:     "assign <ID>",
 		Aliases: []string{"update"},
 		Args:    cobra.ExactArgs(1),
 		Short:   assignProjectAPIKey,

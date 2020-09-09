@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `id	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.id}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {

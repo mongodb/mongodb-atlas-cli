@@ -39,8 +39,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `id	NAME	TYPE
-{{.id}}	{{.ClusterName}}	{{.TypeName}}
+var describeTemplate = `ID	NAME	TYPE
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}
 `
 
 func (opts *DescribeOpts) Run() error {

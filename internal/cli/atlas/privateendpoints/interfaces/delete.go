@@ -46,7 +46,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deleteInterfaceEndpoint,
 		Args:    cobra.ExactArgs(1),

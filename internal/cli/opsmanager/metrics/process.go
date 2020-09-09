@@ -52,11 +52,11 @@ func (opts *ProcessOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om|cm metric(s) process(es) <id> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
+// mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId]
 func ProcessBuilder() *cobra.Command {
 	opts := &ProcessOpts{}
 	cmd := &cobra.Command{
-		Use:     "process <id>",
+		Use:     "process <ID>",
 		Short:   ProcessMeasurements,
 		Aliases: []string{"processes"},
 		Args:    cobra.ExactArgs(1),

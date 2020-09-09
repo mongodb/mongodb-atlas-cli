@@ -70,7 +70,7 @@ func createOrgAPIKey() (string, error) {
 		return key.ID, nil
 	}
 
-	return "", errors.New("the apiKey id is empty")
+	return "", errors.New("the apiKey ID is empty")
 }
 
 func deleteOrgAPIKey(id string) error {

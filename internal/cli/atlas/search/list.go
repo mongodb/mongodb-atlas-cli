@@ -38,7 +38,7 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `id	NAME	DATABASE	COLLECTION{{range .}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
 `
 

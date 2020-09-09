@@ -38,14 +38,14 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteGlobalAPIKeyWhitelist)
 }
 
-// mongocli iam globalWhitelist(s) delete <id> [--force]
+// mongocli iam globalWhitelist(s) delete <ID> [--force]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),
 	}
 
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deleteWhitelist,
 		Args:    cobra.ExactArgs(1),

@@ -38,7 +38,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Private endpoint '{{.id}}' created.\n"
+var createTemplate = "Private endpoint '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newPrivateEndpointConnection()

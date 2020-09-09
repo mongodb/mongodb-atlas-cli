@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deleteWhitelist,
 		Args:    cobra.ExactArgs(1),

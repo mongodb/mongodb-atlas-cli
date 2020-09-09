@@ -36,13 +36,13 @@ func (opts *ListOpts) init() error {
 	return err
 }
 
-// listTemplate used when project id is given
-var listTemplate = `id	NAME	TYPE{{range .Results}}
-{{.id}}	{{.ClusterName}}	{{.TypeName}}{{end}}
+// listTemplate used when project ID is given
+var listTemplate = `ID	NAME	TYPE{{range .Results}}
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}{{end}}
 `
 
 // listAllTemplate used fetching all clusters for all projects
-var listAllTemplate = `id	NAME	TYPE{{range .Results}}{{range .Clusters}}
+var listAllTemplate = `ID	NAME	TYPE{{range .Results}}{{range .Clusters}}
 {{.ClusterID}}	{{.Name}}	{{.Type}}{{end}}{{end}}
 `
 

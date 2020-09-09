@@ -56,7 +56,7 @@ func (opts *DatabasesListsOpts) Run() error {
 func DatabasesListBuilder() *cobra.Command {
 	opts := &DatabasesListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <id>",
+		Use:     "list <ID>",
 		Short:   ListDatabases,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),

@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const snapshotsTemplate = `id	CREATED	COMPLETE{{range .Results}}
-{{.id}}	{{.Created.Date}}	{{.Complete}}{{end}}
+const snapshotsTemplate = `ID	CREATED	COMPLETE{{range .Results}}
+{{.ID}}	{{.Created.Date}}	{{.Complete}}{{end}}
 `
 
 type SnapshotsListOpts struct {

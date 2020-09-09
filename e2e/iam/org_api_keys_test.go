@@ -55,7 +55,7 @@ func TestOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys)
 	})
 
-	// This test must run first to grab the id of the org to later describe
+	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
 		desc := "e2e-test-org"
 		cmd := exec.Command(cliPath, iamEntity,

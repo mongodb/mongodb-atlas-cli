@@ -22,8 +22,8 @@ import (
 
 const (
 	omBaseURLHelp = "FQDN and port number of the Ops Manager Application."
-	projectHelp   = "id of an existing project that your API keys have access to. If you don't enter an id, you must use --projectId for every command that requires it."
-	orgHelp       = "id of an existing organization that your API keys have access to. If you don't enter an id, you must use --orgId for every command that requires it."
+	projectHelp   = "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it."
+	orgHelp       = "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it."
 	atlasAPIHelp  = "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
 	omAPIHelp     = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
 )
@@ -38,7 +38,7 @@ func newOMURLInput() survey.Prompt {
 
 func newOrgIDInput() survey.Prompt {
 	return &survey.Input{
-		Message: "Default Org id:",
+		Message: "Default Org ID:",
 		Help:    orgHelp,
 		Default: config.OrgID(),
 	}
@@ -53,7 +53,7 @@ func newOrgSelect(options []string) survey.Prompt {
 
 func newProjectIDInput() survey.Prompt {
 	return &survey.Input{
-		Message: "Default Project id:",
+		Message: "Default Project ID:",
 		Help:    projectHelp,
 		Default: config.ProjectID(),
 	}

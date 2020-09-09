@@ -38,7 +38,7 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `id	NAME	DATABASE	COLLECTION
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
 `
 
@@ -51,11 +51,11 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) search indexes describe <id> [--clusterName name][--projectId projectId]
+// mongocli atlas cluster(s) search indexes describe <ID> [--clusterName name][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <id>",
+		Use:   "describe <ID>",
 		Short: describeSearchIndexes,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

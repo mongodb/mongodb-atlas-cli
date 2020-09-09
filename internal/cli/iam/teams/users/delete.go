@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.RemoveUserFromTeam, opts.ConfigOrgID(), opts.teamID)
 }
 
-// mongocli iam team(s) users(s) delete <id> [--force] --orgId orgId --teamId teamId
+// mongocli iam team(s) users(s) delete <ID> [--force] --orgId orgId --teamId teamId
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("User '%s' deleted from the team\n", "User not deleted"),

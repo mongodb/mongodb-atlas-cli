@@ -106,11 +106,11 @@ func (opts *AWSOpts) newPeer(containerID string) *atlas.Peer {
 
 // mongocli atlas networking peering create aws
 // --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
-// --awsAccountId awsAccountId: Account id of the owner of the peer VPC.
+// --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
 // --containerId containerId: Unique identifier of the Atlas VPC container for the region.
 // --routeTableCidrBlock routeTableCidrBlock: 	Peer VPC CIDR block or subnet.
 // --vpcID vpcID: Unique identifier of the peer VPC.
-// --projectId projectId: id of the project
+// --projectId projectId: ID of the project
 // Create a network peering with AWS, this command will internally check if a container already exists for the provider and region and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it,
 // there can only be one container per provider and region

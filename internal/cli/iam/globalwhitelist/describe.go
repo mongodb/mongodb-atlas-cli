@@ -34,8 +34,8 @@ func (opts *DescribeOpts) init() error {
 	return err
 }
 
-const describeTemplate = `id	CIDR BLOCK	CREATED AT
-{{.id}}	{{.CidrBlock}}	{{.Created}}
+const describeTemplate = `ID	CIDR BLOCK	CREATED AT
+{{.ID}}	{{.CidrBlock}}	{{.Created}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -47,12 +47,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalWhitelist(s) describe <id>
+// mongocli iam globalWhitelist(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <id>",
+		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    cobra.ExactArgs(1),
 		Short:   describeEntry,

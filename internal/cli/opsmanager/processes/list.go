@@ -38,8 +38,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `id	TYPE	HOSTNAME	PORT{{range .Results}}
-{{.id}}	{{.TypeName}}	{{.Hostname}}	{{.Port}}{{end}}
+var listTemplate = `ID	TYPE	HOSTNAME	PORT{{range .Results}}
+{{.ID}}	{{.TypeName}}	{{.Hostname}}	{{.Port}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

@@ -39,7 +39,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Snapshot '{{.id}}' created.\n"
+var createTemplate = "Snapshot '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCloudProviderSnapshot()

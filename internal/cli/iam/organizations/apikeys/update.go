@@ -45,7 +45,7 @@ func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
 	}
 }
 
-const updateTemplate = "API Key '{{.id}}' successfully updated.\n"
+const updateTemplate = "API Key '{{.ID}}' successfully updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
@@ -56,11 +56,11 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <id> [--role role][--desc description][--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId]
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "assign <id>",
+		Use:     "assign <ID>",
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),
 		Short:   updateAPIKey,

@@ -69,7 +69,7 @@ func TestTeams(t *testing.T) {
 		}
 	})
 
-	t.Run("Describe By id", func(t *testing.T) {
+	t.Run("Describe By ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			teamsEntity,

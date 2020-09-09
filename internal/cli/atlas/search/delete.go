@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Index '%s' deleted\n", "Index not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deleteSearchIndexes,
 		Args:    cobra.ExactArgs(1),

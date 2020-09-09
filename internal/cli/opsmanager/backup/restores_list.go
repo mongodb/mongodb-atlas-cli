@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const restoresTemplate = `id	TIMESTAMP	STATUS{{range .Results}}
-{{.id}}	{{.Timestamp.Date}}	{{.StatusName}}{{end}}
+const restoresTemplate = `ID	TIMESTAMP	STATUS{{range .Results}}
+{{.ID}}	{{.Timestamp.Date}}	{{.StatusName}}{{end}}
 `
 
 type RestoresListOpts struct {

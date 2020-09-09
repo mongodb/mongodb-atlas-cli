@@ -39,7 +39,7 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
-var updateTemplate = "Online archive '{{.id}}' updated.\n"
+var updateTemplate = "Online archive '{{.ID}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	archive := opts.newOnlineArchive()
@@ -61,11 +61,11 @@ func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
 	return archive
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <id> [--clusterName name][--archiveAfter N] [--projectId projectId]
+// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--archiveAfter N] [--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update <id>",
+		Use:   "update <ID>",
 		Short: updateOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

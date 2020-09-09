@@ -68,7 +68,7 @@ func (opts *CreateOpts) Run() error {
 //      --dynamic                 Indicates whether the index uses dynamic or static mappings.
 //      --field strings           Static field specifications.
 //  -h, --help                    help for create
-//      --projectId string        Project id to use. Overrides configuration file or environment variable settings.
+//      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
 //
 // Global Flags:

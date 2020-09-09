@@ -40,7 +40,7 @@ func (opts *CreateOpts) init() error {
 	return err
 }
 
-var createTemplate = "Maintenance window '{{.id}}' successfully created.\n"
+var createTemplate = "Maintenance window '{{.ID}}' successfully created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateOpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())

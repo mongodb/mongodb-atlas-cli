@@ -195,25 +195,25 @@ func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
 }
 
-// ProjectID get configured project id
+// ProjectID get configured project ID
 func ProjectID() string { return p.ProjectID() }
 func (p *Profile) ProjectID() string {
 	return p.GetString(projectID)
 }
 
-// SetProjectID sets the global project id
+// SetProjectID sets the global project ID
 func SetProjectID(v string) { p.SetProjectID(v) }
 func (p *Profile) SetProjectID(v string) {
 	p.Set(projectID, v)
 }
 
-// OrgID get configured organization id
+// OrgID get configured organization ID
 func OrgID() string { return p.OrgID() }
 func (p *Profile) OrgID() string {
 	return p.GetString(orgID)
 }
 
-// SetOrgID sets the global organization id
+// SetOrgID sets the global organization ID
 func SetOrgID(v string) { p.SetOrgID(v) }
 func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)

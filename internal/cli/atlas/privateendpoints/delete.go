@@ -39,13 +39,13 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID())
 }
 
-// mongocli atlas privateEndpoint(s) delete <id>> --projectId projectId
+// mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <id>",
+		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   deletePrivateEndpoint,
 		Args:    cobra.ExactArgs(1),

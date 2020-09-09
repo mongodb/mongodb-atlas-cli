@@ -30,7 +30,7 @@ const (
 	automatedRestore = "AUTOMATED_RESTORE"
 	httpRestore      = "HTTP"
 	onlyFor          = "'%s' can only be used with %s"
-	createTemplate   = `Created restore job(s):{{range .Results}} '{{.id}}'{{end}}.
+	createTemplate   = `Created restore job(s):{{range .Results}} '{{.ID}}'{{end}}.
 `
 )
 
@@ -195,12 +195,12 @@ func RestoresStartBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
-	// C/OM uses cluster id
+	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 
 	// For Automatic restore
 	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
-	// C/OM uses cluster id
+	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.targetClusterID, flag.TargetClusterID, "", usage.TargetClusterID)
 	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
 	cmd.Flags().StringVar(&opts.oplogTS, flag.OplogTS, "", usage.OplogTS)

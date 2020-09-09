@@ -90,9 +90,9 @@ func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {
 
 // mongocli atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName][--projectId projectId]
 // --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
-// --gcpProjectId gcpProjectId: GCP project id of the owner of the network peer.
+// --gcpProjectId gcpProjectId: GCP project ID of the owner of the network peer.
 // --network networkName: Name of the network peer to which Atlas connects.
-// --projectId projectId: id of the project
+// --projectId projectId: ID of the project
 // Create a network peering with GCP, this command will internally check if a container already exists for the provider and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it, there can only be one container per GCP provider
 func GCPBuilder() *cobra.Command {

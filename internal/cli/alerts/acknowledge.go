@@ -43,7 +43,7 @@ func (opts *AcknowledgeOpts) initStore() error {
 	return err
 }
 
-var ackTemplate = "Alert '{{.id}}' acknowledged until {{.AcknowledgedUntil}}\n"
+var ackTemplate = "Alert '{{.ID}}' acknowledged until {{.AcknowledgedUntil}}\n"
 
 func (opts *AcknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
@@ -68,12 +68,12 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
 	}
 }
 
-// mongocli atlas alerts acknowledge <id> --projectId projectId --forever --comment comment --until until
+// mongocli atlas alerts acknowledge <ID> --projectId projectId --forever --comment comment --until until
 func AcknowledgeBuilder() *cobra.Command {
 	opts := new(AcknowledgeOpts)
 	opts.Template = ackTemplate
 	cmd := &cobra.Command{
-		Use:     "acknowledge <id>",
+		Use:     "acknowledge <ID>",
 		Short:   acknowledgeAlerts,
 		Aliases: []string{"ack"},
 		Args:    cobra.ExactArgs(1),

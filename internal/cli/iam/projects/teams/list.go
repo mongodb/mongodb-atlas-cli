@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `id{{range .Results}}
+const listTemplate = `ID{{range .Results}}
 {{.TeamID}}{{end}}
 `
 

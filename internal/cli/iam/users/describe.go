@@ -25,8 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `id	FIRST NAME	LAST NAME	USERNAME	EMAIL
-{{.id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
+const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL
+{{.ID}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
 `
 
 type DescribeOpts struct {
@@ -93,7 +93,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Example: `  
-  Describe a user by id
+  Describe a user by ID
   $ mongocli iam users describe --id <id>
 
   Describe a user by username

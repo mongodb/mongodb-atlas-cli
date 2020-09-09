@@ -65,10 +65,10 @@ func TestAwsOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateContainer(opts.ProjectID, containerRequest).
-			Return(&mongodbatlas.Container{ID: "id"}, nil).
+			Return(&mongodbatlas.Container{ID: "ID"}, nil).
 			Times(1)
 
-		request := opts.newPeer("id")
+		request := opts.newPeer("ID")
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).

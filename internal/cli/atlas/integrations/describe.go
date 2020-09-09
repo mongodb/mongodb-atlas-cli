@@ -47,7 +47,7 @@ var describeTemplateDatadogOpsGenie = `TYPE	API KEY	REGION
 var describeTemplateFlowdog = `TYPE	API TOKEN	FLOW NAME	ORGANIZATION
 {{.Type}}	{{.APIToken}}	{{.FlowName}}	{{.OrgName}}
 `
-var describeTemplateNewRelic = `TYPE	ACCOUNT id	LICENSE KEY	WRITE TOKEN	READ TOKEN
+var describeTemplateNewRelic = `TYPE	ACCOUNT ID	LICENSE KEY	WRITE TOKEN	READ TOKEN
 {{.Type}}	{{.AccountID}}	{{.LicenseKey}}	{{.WriteToken}}	{{.ReadToken}}
 `
 var describeTemplatePagerDuty = `TYPE	SERVICE KEY

@@ -36,7 +36,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Alert configuration {{.id}} created.\n"
+var createTemplate = "Alert configuration {{.ID}} created.\n"
 
 func (opts *CreateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())

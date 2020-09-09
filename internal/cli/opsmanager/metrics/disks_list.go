@@ -51,11 +51,11 @@ func (opts *DisksListsOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om metric(s) process(es) disks lists <id>
+// mongocli om metric(s) process(es) disks lists <ID>
 func DisksListBuilder() *cobra.Command {
 	opts := &DisksListsOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <id>",
+		Use:     "list <ID>",
 		Short:   ListDisks,
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(1),

@@ -26,10 +26,10 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockHostDescriber(ctrl)
+	mockStore := mocks.NewMockOpsManagerMaintenanceWindowDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Host{}
+	expected := &opsmngr.MaintenanceWindow{}
 
 	opts := &DescribeOpts{
 		store: mockStore,
@@ -37,7 +37,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Host(opts.ProjectID, opts.ID).
+		OpsManagerMaintenanceWindow(opts.ProjectID, opts.ID).
 		Return(expected, nil).
 		Times(1)
 

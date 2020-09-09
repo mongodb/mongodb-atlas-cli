@@ -27,7 +27,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	ID    string
-	store store.HostDescriber
+	store store.OpsManagerMaintenanceWindowDescriber
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -41,7 +41,7 @@ var describeTemplate = `ID	GROUP ID	START DATE	END DATE
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Host(opts.ConfigProjectID(), opts.ID)
+	r, err := opts.store.OpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.ID)
 	if err != nil {
 		return err
 	}

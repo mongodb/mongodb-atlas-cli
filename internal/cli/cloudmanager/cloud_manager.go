@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/clusters"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
@@ -45,18 +46,21 @@ func Builder() *cobra.Command {
 		},
 	}
 
-	cmd.AddCommand(clusters.Builder())
-	cmd.AddCommand(alerts.Builder())
-	cmd.AddCommand(backup.Builder())
-	cmd.AddCommand(servers.Builder())
-	cmd.AddCommand(automation.Builder())
-	cmd.AddCommand(security.Builder())
-	cmd.AddCommand(dbusers.Builder())
-	cmd.AddCommand(events.Builder())
-	cmd.AddCommand(processes.Builder())
-	cmd.AddCommand(metrics.Builder())
-	cmd.AddCommand(logs.Builder())
-	cmd.AddCommand(agents.Builder())
+	cmd.AddCommand(
+		clusters.Builder(),
+		alerts.Builder(),
+		backup.Builder(),
+		servers.Builder(),
+		automation.Builder(),
+		security.Builder(),
+		dbusers.Builder(),
+		events.Builder(),
+		processes.Builder(),
+		metrics.Builder(),
+		logs.Builder(),
+		agents.Builder(),
+		maintenance.Builder(),
+	)
 
 	return cmd
 }

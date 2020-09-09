@@ -105,9 +105,9 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		 if a.NoError(err, string(resp)) {
-			 expected := "Maintenance window removed.\n"
-			 a.Equal(expected, string(resp))
-		 }
+		if a.NoError(err, string(resp)) {
+			expected := "Maintenance window removed.\n"
+			a.Equal(expected, string(resp))
+		}
 	})
 }

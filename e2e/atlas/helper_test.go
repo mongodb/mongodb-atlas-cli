@@ -43,6 +43,7 @@ const (
 	onlineArchiveEntity    = "onlineArchives"
 	iamEntity              = "iam"
 	projectEntity          = "project"
+	maintenanceEntity      = "maintenanceWindows"
 )
 
 func getHostnameAndPort() (string, error) {

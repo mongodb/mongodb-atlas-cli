@@ -51,12 +51,12 @@ func (opts *JobsDownloadOpts) Run() error {
 	return out.Close()
 }
 
-// mongocli om logs jobs download <ID> [--out out] [--projectId projectId]
+// mongocli om logs jobs download <id> [--out out] [--projectId projectId]
 func JobsDownloadOptsBuilder() *cobra.Command {
 	opts := &JobsDownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download <ID>",
+		Use:   "download <id>",
 		Short: DownloadLogCollectionJob,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

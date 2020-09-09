@@ -37,8 +37,8 @@ func (opts *DescribeOpts) init() error {
 	return err
 }
 
-var describeTemplate = `ID	STATUS	ERROR
-{{.ID}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
+var describeTemplate = `id	STATUS	ERROR
+{{.id}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {

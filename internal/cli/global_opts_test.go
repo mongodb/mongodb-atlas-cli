@@ -23,19 +23,19 @@ import (
 )
 
 func TestGlobalOpts_PreRunE(t *testing.T) {
-	t.Run("empty project ID", func(t *testing.T) {
+	t.Run("empty project id", func(t *testing.T) {
 		o := &GlobalOpts{}
 		if err := o.PreRunE(); err != errMissingProjectID {
 			t.Errorf("Expected err: %#v, got: %#v\n", errMissingProjectID, err)
 		}
 	})
-	t.Run("invalid project ID", func(t *testing.T) {
+	t.Run("invalid project id", func(t *testing.T) {
 		o := &GlobalOpts{ProjectID: "1"}
 		if err := o.PreRunE(); err == nil {
 			t.Errorf("Expected an error\n")
 		}
 	})
-	t.Run("valid project ID", func(t *testing.T) {
+	t.Run("valid project id", func(t *testing.T) {
 		o := &GlobalOpts{ProjectID: "5e98249d937cfc52efdc2a9f"}
 		if err := o.PreRunE(); err != nil {
 			t.Fatalf("PreRunE() unexpected error %v\n", err)
@@ -44,19 +44,19 @@ func TestGlobalOpts_PreRunE(t *testing.T) {
 }
 
 func TestGlobalOpts_PreRunEOrg(t *testing.T) {
-	t.Run("empty org ID", func(t *testing.T) {
+	t.Run("empty org id", func(t *testing.T) {
 		o := &GlobalOpts{}
 		if err := o.PreRunEOrg(); err != ErrMissingOrgID {
 			t.Errorf("Expected err: %#v, got: %#v\n", ErrMissingOrgID, err)
 		}
 	})
-	t.Run("invalid org ID", func(t *testing.T) {
+	t.Run("invalid org id", func(t *testing.T) {
 		o := &GlobalOpts{OrgID: "1"}
 		if err := o.PreRunEOrg(); err == nil {
 			t.Errorf("Expected an error\n")
 		}
 	})
-	t.Run("valid org ID", func(t *testing.T) {
+	t.Run("valid org id", func(t *testing.T) {
 		o := &GlobalOpts{OrgID: "5e98249d937cfc52efdc2a9f"}
 		if err := o.PreRunEOrg(); err != nil {
 			t.Fatalf("PreRunE() unexpected error %v\n", err)

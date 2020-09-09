@@ -38,8 +38,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	CLUSTER	DATABASE	COLLECTION	STATE
-{{.ID}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
+var describeTemplate = `id	CLUSTER	DATABASE	COLLECTION	STATE
+{{.id}}	{{.ClusterName}}	{{.DBName}}	{{.CollName}}	{{.State}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -55,7 +55,7 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <ID>",
+		Use:   "describe <id>",
 		Short: describeOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

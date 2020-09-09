@@ -38,7 +38,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteUser)
 }
 
-// mongocli iam users(s) delete <ID> [--force]
+// mongocli iam users(s) delete <id> [--force]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("User '%s' deleted\n", "User not deleted"),

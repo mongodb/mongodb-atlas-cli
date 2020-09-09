@@ -18,4 +18,5 @@ const (
 	maintenanceWindows      = "Manage Ops Manager/Cloud Manager maintenance windows."
 	createMaintenanceWindow = "Create a maintenance window."
 	listMaintenanceWindows  = "List maintenance windows."
+	updateMaintenanceWindow = "Update a maintenance window."
 )

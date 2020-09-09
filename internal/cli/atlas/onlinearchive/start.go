@@ -38,7 +38,7 @@ func (opts *StartOpts) initStore() error {
 	return err
 }
 
-var startTemplate = "Online archive '{{.ID}}' started.\n"
+var startTemplate = "Online archive '{{.id}}' started.\n"
 
 func (opts *StartOpts) Run() error {
 	paused := false
@@ -54,11 +54,11 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId]
+// mongocli atlas cluster(s) onlineArchive(s) start <id> [--clusterName name][--projectId projectId]
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <ID>",
+		Use:   "start <id>",
 		Short: startOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

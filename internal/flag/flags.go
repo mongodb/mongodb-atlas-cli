@@ -18,11 +18,11 @@ const (
 	Service                         = "service"                         // Service flag to set service
 	Profile                         = "profile"                         // Profile flag to use a profile
 	ProfileShort                    = "P"                               // ProfileShort flag to use a profile
-	OrgID                           = "orgId"                           // OrgID flag to use an Organization ID
+	OrgID                           = "orgId"                           // OrgID flag to use an Organization id
 	TeamID                          = "teamId"                          // TeamID flag
 	URL                             = "url"                             // URL flag
 	Secret                          = "secret"                          // Secret flag
-	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
+	ProjectID                       = "projectId"                       // ProjectID flag to use a project id
 	AuthDB                          = "authDB"                          // AuthDB flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
 	Region                          = "region"                          // Region flag
@@ -37,7 +37,7 @@ const (
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag
-	ID                              = "id"                              // ID flag
+	ID                              = "id"                              // id flag
 	Username                        = "username"                        // Username flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag

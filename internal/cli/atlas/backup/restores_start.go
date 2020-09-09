@@ -53,7 +53,7 @@ func (opts *RestoresStartOpts) initStore() error {
 	return err
 }
 
-var startTemplate = "Restore job '{{.ID}}' successfully started\n"
+var startTemplate = "Restore job '{{.id}}' successfully started\n"
 
 func (opts *RestoresStartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()

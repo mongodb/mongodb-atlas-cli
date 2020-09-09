@@ -57,7 +57,7 @@ func (opts *UpdateOpts) Run() error {
 // Update a search index for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search indexes update <ID> [flags]
+//   mongocli atlas clusters search indexes update <id> [flags]
 //
 // Flags:
 //      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
@@ -68,7 +68,7 @@ func (opts *UpdateOpts) Run() error {
 //      --field strings           Static field specifications.
 //  -h, --help                    help for update
 //      --indexName string        Name of the cluster.
-//      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
+//      --projectId string        Project id to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
 //
 // Global Flags:
@@ -76,7 +76,7 @@ func (opts *UpdateOpts) Run() error {
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update <ID>",
+		Use:   "update <id>",
 		Short: updateSearchIndex,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

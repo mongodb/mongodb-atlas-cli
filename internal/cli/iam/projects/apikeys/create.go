@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-var createTemplate = `API Key '{{.ID}}' created.
+var createTemplate = `API Key '{{.id}}' created.
 Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `

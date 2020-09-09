@@ -36,8 +36,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+var describeTemplate = `id	NAME	MDB VER	STATE
+{{.id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
 func (opts *DescribeOpts) Run() error {

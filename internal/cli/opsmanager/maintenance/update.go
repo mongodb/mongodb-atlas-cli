@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package apikeys
+
+package maintenance
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -20,16 +21,18 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	desc  string
-	roles []string
-	store store.OrganizationAPIKeyUpdater
+	alertType   []string
+	startDate   string
+	endDate     string
+	description string
+	id          string
+	store       store.OpsManagerMaintenanceWindowUpdater
 }
 
 func (opts *UpdateOpts) init() error {
@@ -38,34 +41,35 @@ func (opts *UpdateOpts) init() error {
 	return err
 }
 
-func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
-	return &atlas.APIKeyInput{
-		Desc:  opts.desc,
-		Roles: opts.roles,
-	}
-}
-
-const updateTemplate = "API Key '{{.id}}' successfully updated.\n"
+var updateTemplate = "Maintenance window '{{.id}}' successfully updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateOrganizationAPIKey(opts.ConfigOrgID(), opts.id, opts.newAPIKeyInput())
+	r, err := opts.store.UpdateOpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <id> [--role role][--desc description][--orgId orgId]
+func (opts *UpdateOpts) newMaintenanceWindow() *opsmngr.MaintenanceWindow {
+	return &opsmngr.MaintenanceWindow{
+		ID:             opts.id,
+		StartDate:      opts.startDate,
+		EndDate:        opts.endDate,
+		AlertTypeNames: opts.alertType,
+		Description:    opts.description,
+	}
+}
+
+// mongocli ops-manager maintenanceWindows update --startDate startDate --endDate endDate --alertType alertType --desc desc [--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "assign <id>",
-		Aliases: []string{"updates"},
-		Args:    cobra.ExactArgs(1),
-		Short:   updateAPIKey,
+		Use:   "update <id>",
+		Short: updateMaintenanceWindow,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
@@ -76,11 +80,17 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
-	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
+	cmd.Flags().StringVar(&opts.startDate, flag.StartDate, "", usage.StartDate)
+	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.EndDate)
+	cmd.Flags().StringSliceVar(&opts.alertType, flag.AlertType, []string{}, usage.AlertType)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.MaintenanceDescription)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.StartDate)
+	_ = cmd.MarkFlagRequired(flag.EndDate)
+	_ = cmd.MarkFlagRequired(flag.AlertType)
 
 	return cmd
 }

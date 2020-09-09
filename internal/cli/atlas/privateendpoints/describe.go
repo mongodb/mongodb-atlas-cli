@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
+var describeTemplate = `id	ENDPOINT SERVICE	STATUS	ERROR
+{{.id}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 type DescribeOpts struct {
@@ -50,7 +50,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <id> [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

@@ -38,7 +38,7 @@ func (opts *PauseOpts) initStore() error {
 	return err
 }
 
-var pauseTemplate = "Online archive '{{.ID}}' paused.\n"
+var pauseTemplate = "Online archive '{{.id}}' paused.\n"
 
 func (opts *PauseOpts) Run() error {
 	paused := true
@@ -54,11 +54,11 @@ func (opts *PauseOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) pause <ID> [--clusterName name][--projectId projectId]
+// mongocli atlas cluster(s) onlineArchive(s) pause <id> [--clusterName name][--projectId projectId]
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause <ID>",
+		Use:   "pause <id>",
 		Short: pauseOnlineArchive,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

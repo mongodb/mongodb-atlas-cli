@@ -36,8 +36,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
-{{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
+var settingsListTemplate = `id	TYPE	ENABLED{{range .}}
+{{.id}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

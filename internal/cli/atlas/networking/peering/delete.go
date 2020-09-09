@@ -39,13 +39,13 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeletePeeringConnection, opts.ConfigProjectID())
 }
 
-// mongocli atlas networking peering delete  <ID> --force [--projectId projectId]
+// mongocli atlas networking peering delete  <id> --force [--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Peering connection '%s' deleted\n", "Peering connection not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <id>",
 		Aliases: []string{"rm"},
 		Short:   deletePeeringConnection,
 		Args:    cobra.ExactArgs(1),

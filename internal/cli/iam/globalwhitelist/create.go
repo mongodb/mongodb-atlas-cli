@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-const createTemplate = "Global whitelist entry '{{.ID}}' created.\n"
+const createTemplate = "Global whitelist entry '{{.id}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts

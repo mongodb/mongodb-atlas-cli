@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Project '{{.ID}}' created.\n"
+var createTemplate = "Project '{{.id}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts

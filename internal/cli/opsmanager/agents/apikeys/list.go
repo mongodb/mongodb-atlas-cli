@@ -34,8 +34,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range .}}
-{{.ID}}	{{.Key}}	{{.Desc}}	{{.CreatedTime}}{{end}}
+var listTemplate = `id	KEY	DESCRIPTION	CREATED AT{{range .}}
+{{.id}}	{{.Key}}	{{.Desc}}	{{.CreatedTime}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

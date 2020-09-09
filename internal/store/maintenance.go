@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,OpsManagerMaintenanceWindowCreator,OpsManagerMaintenanceWindowLister
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,OpsManagerMaintenanceWindowCreator,OpsManagerMaintenanceWindowLister,OpsManagerMaintenanceWindowUpdater
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
@@ -47,6 +47,10 @@ type OpsManagerMaintenanceWindowCreator interface {
 
 type OpsManagerMaintenanceWindowLister interface {
 	OpsManagerMaintenanceWindows(string) (*opsmngr.MaintenanceWindows, error)
+}
+
+type OpsManagerMaintenanceWindowUpdater interface {
+	UpdateOpsManagerMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
 }
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers
@@ -109,6 +113,17 @@ func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.Mainten
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(context.Background(), projectID)
+		return log, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow.ID, maintenanceWindow)
 		return log, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

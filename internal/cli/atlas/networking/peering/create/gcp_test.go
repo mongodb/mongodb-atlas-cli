@@ -66,10 +66,10 @@ func TestGCPOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateContainer(opts.ProjectID, containerRequest).
-			Return(&mongodbatlas.Container{ID: "ID"}, nil).
+			Return(&mongodbatlas.Container{ID: "id"}, nil).
 			Times(1)
 
-		request := opts.newPeer("ID")
+		request := opts.newPeer("id")
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).

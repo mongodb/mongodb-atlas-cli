@@ -37,8 +37,8 @@ func (opts *JobsListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range .Results}}
-{{.ID}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.URL}}	{{.Redacted}}{{end}}
+var listTemplate = `id	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range .Results}}
+{{.id}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.URL}}	{{.Redacted}}{{end}}
 `
 
 func (opts *JobsListOpts) Run() error {

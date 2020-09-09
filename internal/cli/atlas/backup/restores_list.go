@@ -37,8 +37,8 @@ func (opts *RestoresListOpts) initStore() error {
 	return err
 }
 
-var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range .Results}}
-{{.ID}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
+var restoreListTemplate = `id	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range .Results}}
+{{.id}}	{{.SnapshotID}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
 `
 
 func (opts *RestoresListOpts) Run() error {

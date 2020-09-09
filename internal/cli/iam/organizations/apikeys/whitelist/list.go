@@ -51,7 +51,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist list|ls <ID> [--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) whitelist|ipwhitelist list|ls <id> [--orgId orgId]
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

@@ -37,7 +37,7 @@ func (opts *UpdateOpts) initStore() error {
 	return err
 }
 
-var updateTemplate = "Alert configuration '{{.ID}}' updated.\n"
+var updateTemplate = "Alert configuration '{{.id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
 	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
@@ -50,14 +50,14 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas alerts config(s) update <ID> [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
+// mongocli atlas alerts config(s) update <id> [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 // [--projectId projectId]
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:     "update <ID>",
+		Use:     "update <id>",
 		Short:   updateAlertsConfig,
 		Aliases: []string{"updates"},
 		Args:    cobra.ExactArgs(1),

@@ -44,7 +44,7 @@ func (opts *AzureOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Network peering connection '{{.ID}}' created.\n"
+var createTemplate = "Network peering connection '{{.id}}' created.\n"
 
 func (opts *AzureOpts) Run() error {
 	opts.region = strings.ToUpper(opts.region)
@@ -110,7 +110,7 @@ func (opts *AzureOpts) newPeer(containerID string) *atlas.Peer {
 // --resourceGroup resourceGroupName: Name of your Azure resource group.
 // --region regionName: Atlas region where the container resides.
 // --vnet vnetName: Name of your Azure VNet.
-// --projectId projectId: ID of the project
+// --projectId projectId: id of the project
 // Create a network peering with Azure, this command will internally check if a container already exists for the provider and region and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it,
 // there can only be one container per provider and region

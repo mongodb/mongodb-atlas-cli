@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range .}}
-{{.ID}}	{{.PublicKey}}	{{.Desc}}{{end}}
+const listTemplate = `id	PUBLIC KEY	DESCRIPTION{{range .}}
+{{.id}}	{{.PublicKey}}	{{.Desc}}{{end}}
 `
 
 type ListOpts struct {

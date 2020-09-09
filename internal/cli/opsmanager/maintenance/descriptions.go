@@ -20,4 +20,5 @@ const (
 	listMaintenanceWindows    = "List maintenance windows."
 	deleteMaintenanceWindow   = "Delete a maintenance window."
 	describeMaintenanceWindow = "Get a maintenance window."
+	updateMaintenanceWindow   = "Update a maintenance window."
 )

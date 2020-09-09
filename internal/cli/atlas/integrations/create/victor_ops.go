@@ -84,6 +84,7 @@ func VictorOpsBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
+	_ = cmd.MarkFlagRequired(flag.RoutingKey)
 
 	return cmd
 }

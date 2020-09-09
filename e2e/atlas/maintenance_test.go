@@ -110,5 +110,4 @@ func TestMaintenanceWindows(t *testing.T) {
 		expected := "Maintenance window removed.\n"
 		a.Equal(expected, string(resp))
 	})
-
 }

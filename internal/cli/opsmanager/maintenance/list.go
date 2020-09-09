@@ -35,7 +35,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 var listTemplate = `ID	GROUP ID	START DATE	END DATE{{range .Results}}
-{{.ID}}	{{.GroupId}}	{{.StartDate}}	{{.EndDate}}{{end}}
+{{.ID}}	{{.GroupID}}	{{.StartDate}}	{{.EndDate}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

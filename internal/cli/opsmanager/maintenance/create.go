@@ -31,7 +31,7 @@ type CreateOpts struct {
 	startDate   string
 	endDate     string
 	description string
-	store       store.MaintenanceWindowCreator
+	store       store.OpsManagerMaintenanceWindowCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -43,7 +43,7 @@ func (opts *CreateOpts) init() error {
 var createTemplate = "Maintenance window '{{.ID}}' successfully created.\n"
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
+	r, err := opts.store.CreateOpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.newMaintenanceWindow())
 	if err != nil {
 		return err
 	}

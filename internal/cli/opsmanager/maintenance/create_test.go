@@ -26,7 +26,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestMaintenanceWindowsCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOpsManagerMaintenanceWindowCreator(ctrl)
 	defer ctrl.Finish()

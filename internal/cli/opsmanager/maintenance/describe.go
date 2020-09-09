@@ -53,9 +53,9 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
-		Short:   describeMaintenanceWindow,
-		Args:    cobra.ExactArgs(1),
+		Use:   "describe <ID>",
+		Short: describeMaintenanceWindow,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

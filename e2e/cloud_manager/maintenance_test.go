@@ -169,7 +169,7 @@ func TestMaintenanceWindows(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Maintenance window '%s' deleted.\n", maintenanceWindowID)
+		expected := fmt.Sprintf("Maintenance window '%s' deleted\n", maintenanceWindowID)
 		a.Equal(expected, string(resp))
 	})
 }

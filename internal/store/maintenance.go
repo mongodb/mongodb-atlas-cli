@@ -19,12 +19,11 @@ import (
 	"fmt"
 
 	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowCreator
+//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongocli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,MaintenanceWindowCreator
 
 type MaintenanceWindowUpdater interface {
 	UpdateMaintenanceWindow(string, *atlas.MaintenanceWindow) error
@@ -32,6 +31,14 @@ type MaintenanceWindowUpdater interface {
 
 type MaintenanceWindowClearer interface {
 	ClearMaintenanceWindow(string) error
+}
+
+type MaintenanceWindowDeferrer interface {
+	DeferMaintenanceWindow(string) error
+}
+
+type MaintenanceWindowDescriber interface {
+	MaintenanceWindow(string) (*atlas.MaintenanceWindow, error)
 }
 
 type MaintenanceWindowCreator interface {
@@ -57,6 +64,28 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeferMaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) DeferMaintenanceWindow(projectID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).MaintenanceWindows.Defer(context.Background(), projectID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// MaintenanceWindow encapsulates the logic to manage different cloud providers
+func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, error) {
+	switch s.service {
+	case config.CloudService:
+		resp, _, err := s.client.(*atlas.Client).MaintenanceWindows.Get(context.Background(), projectID)
+		return resp, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 

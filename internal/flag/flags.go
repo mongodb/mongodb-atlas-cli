@@ -24,6 +24,12 @@ const (
 	Secret                          = "secret"                          // Secret flag
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
 	AuthDB                          = "authDB"                          // AuthDB flag
+	Hostname                        = "hostname"                        // Hostname flag
+	Port                            = "port"                            // Port flag
+	BindUsername                    = "bindUsername"                    // BindUsername flag
+	BindPassword                    = "binPassword"                     // BindPassword flag
+	CaCertificate                   = "caCertificate"                   // CaCertificate flag
+	AuthzQueryTemplate              = "authzQueryTemplate"              // AuthzQueryTemplate flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
 	Region                          = "region"                          // Region flag
 	RegionShort                     = "r"                               // RegionShort flag

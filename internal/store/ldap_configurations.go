@@ -17,20 +17,22 @@ package store
 import (
 	"context"
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type LDAPChecker interface {
-	CheckLDAP(string, string, *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error)
+//go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongocli/internal/store LDAPConfigurationVerifier
+
+type LDAPConfigurationVerifier interface {
+	VerifyLDAPConfiguration(string, *atlas.LDAP) (*atlas.LDAPConfiguration, error)
 }
 
-
-// CheckLDAP encapsulates the logic to manage different cloud providers
-func (s *Store) CheckLDAP(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
+// VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers
+func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
-		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(context.Background(), projectID, integrationType, integration)
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

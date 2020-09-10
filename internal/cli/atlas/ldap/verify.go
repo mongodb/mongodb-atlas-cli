@@ -21,19 +21,19 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"strings"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type VerifyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	hostname           string
-	port               string
+	port               int
 	bindUsername       string
 	bindPassword       string
 	caCertificate      string
 	authzQueryTemplate string
-	store              store.IntegrationDescriber
+	store              store.LDAPConfigurationVerifier
 }
 
 func (opts *VerifyOpts) initStore() error {
@@ -42,12 +42,12 @@ func (opts *VerifyOpts) initStore() error {
 	return err
 }
 
-var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
+var verifyTemplate = `TYPE	API TOKEN	TEAM	CHANNEL
 {{.Type}}	{{.APIToken}}	{{.TeamName}}	{{.ChannelName}}
 `
 
 func (opts *VerifyOpts) Run() error {
-	r, err := opts.store.Integration(opts.ConfigProjectID(), nil)
+	r, err := opts.store.VerifyLDAPConfiguration(opts.ConfigProjectID(), opts.newLDAP())
 	if err != nil {
 		return err
 	}
@@ -55,18 +55,27 @@ func (opts *VerifyOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas ldap(s) verify [--projectId projectId]
+func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
+	return &atlas.LDAP{
+		Hostname:           opts.hostname,
+		Port:               opts.port,
+		BindUsername:       opts.bindUsername,
+		BindPassword:       opts.bindPassword,
+		CaCertificate:      opts.caCertificate,
+		AuthzQueryTemplate: opts.authzQueryTemplate,
+	}
+}
+
+// mongocli atlas ldap(s) verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
 func VerifyBuilder() *cobra.Command {
 	opts := &VerifyOpts{}
 	cmd := &cobra.Command{
-		Use:       "verify",
-		Short:     verify,
+		Use:   "verify",
+		Short: verify,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.integrationType = strings.ToUpper(args[0])
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
-			)
+				opts.InitOutput(cmd.OutOrStdout(), verifyTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -74,18 +83,16 @@ func VerifyBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.Hostname)
-	cmd.Flags().StringVar(&opts.port, flag.Port, "", usage.Port)
+	cmd.Flags().IntVar(&opts.port, flag.Port, 636, usage.Port)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
 	cmd.Flags().StringVar(&opts.authzQueryTemplate, flag.AuthzQueryTemplate, "", usage.AuthzQueryTemplate)
 
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
-	_ = cmd.MarkFlagRequired(flag.Port)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
 	_ = cmd.MarkFlagRequired(flag.BindPassword)
 

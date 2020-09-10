@@ -42,8 +42,8 @@ func (opts *VerifyOpts) initStore() error {
 	return err
 }
 
-var verifyTemplate = `TYPE	API TOKEN	TEAM	CHANNEL
-{{.Type}}	{{.APIToken}}	{{.TeamName}}	{{.ChannelName}}
+var verifyTemplate = `REQUEST ID	PROJECT ID	STATUS
+{{.RequestID}}	{{.GroupID}}	{{.Status}}
 `
 
 func (opts *VerifyOpts) Run() error {

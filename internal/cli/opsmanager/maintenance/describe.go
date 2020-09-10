@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package create
+package maintenance
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -21,70 +21,55 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const victorOpsIntegrationType = "VICTOR_OPS"
-
-type VictorOpsOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apiKey     string
-	routingKey string
-	store      store.IntegrationCreator
+	id    string
+	store store.OpsManagerMaintenanceWindowDescriber
 }
 
-func (opts *VictorOpsOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var createTemplateVictorOps = "Victor Ops integration configured.\n"
+var describeTemplate = `ID	PROJECT ID	START DATE	END DATE
+{{.ID}}	{{.GroupID}}	{{.StartDate}}	{{.EndDate}}
+`
 
-func (opts *VictorOpsOpts) Run() error {
-	r, err := opts.store.CreateIntegration(opts.ConfigProjectID(), victorOpsIntegrationType, opts.newVictorOpsIntegration())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.OpsManagerMaintenanceWindow(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlas.ThirdPartyIntegration {
-	return &atlas.ThirdPartyIntegration{
-		Type:       victorOpsIntegrationType,
-		APIKey:     opts.apiKey,
-		RoutingKey: opts.routingKey,
-	}
-}
-
-// mongocli atlas integration(s) create VICTOR_OPS --apiKey apiKey --routingKey routingKey [--projectId projectId]
-func VictorOpsBuilder() *cobra.Command {
-	opts := &VictorOpsOpts{}
+// mongocli ops-manager maintenanceWindows describe <ID> [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     victorOpsIntegrationType,
-		Aliases: []string{"victor_ops", "victorOps"},
-		Short:   newRelic,
-		Args:    cobra.NoArgs,
+		Use:   "describe <ID>",
+		Short: describeMaintenanceWindow,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplateVictorOps),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.APIKey)
-	cmd.Flags().StringVar(&opts.routingKey, flag.RoutingKey, "", usage.RoutingKey)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.APIKey)
-	_ = cmd.MarkFlagRequired(flag.RoutingKey)
 
 	return cmd
 }

@@ -39,7 +39,7 @@ func TestProjectAPIKeys(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		desc := "e2e-test"
 		cmd := exec.Command(cliPath, iamEntity,
-			projectEntity,
+			projectsEntity,
 			apiKeysEntity,
 			"create",
 			"--desc",
@@ -71,7 +71,7 @@ func TestProjectAPIKeys(t *testing.T) {
 
 	t.Run("Assign", func(t *testing.T) {
 		cmd := exec.Command(cliPath, iamEntity,
-			projectEntity,
+			projectsEntity,
 			apiKeysEntity,
 			"assign",
 			ID,
@@ -85,7 +85,7 @@ func TestProjectAPIKeys(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			apiKeysEntity,
 			"ls",
 			"-o=json")
@@ -105,7 +105,7 @@ func TestProjectAPIKeys(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			apiKeysEntity,
 			"rm",
 			ID,

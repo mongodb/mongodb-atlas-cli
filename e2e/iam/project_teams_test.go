@@ -63,7 +63,7 @@ func TestProjectTeams(t *testing.T) {
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			teamsEntity,
 			"add",
 			teamID,
@@ -95,7 +95,7 @@ func TestProjectTeams(t *testing.T) {
 		roleName2 := "GROUP_DATA_ACCESS_READ_ONLY"
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			teamsEntity,
 			"update",
 			teamID,
@@ -125,7 +125,7 @@ func TestProjectTeams(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			teamsEntity,
 			"ls",
 			"--projectId",
@@ -145,7 +145,7 @@ func TestProjectTeams(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectEntity,
+			projectsEntity,
 			teamsEntity,
 			"delete",
 			teamID,

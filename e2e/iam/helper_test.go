@@ -33,7 +33,6 @@ import (
 const (
 	iamEntity             = "iam"
 	orgEntity             = "orgs"
-	projectEntity         = "projects"
 	apiKeysEntity         = "apikeys"
 	apiKeyWhitelistEntity = "whitelist"
 	usersEntity           = "users"
@@ -96,7 +95,7 @@ func createProject(projectName string) (string, error) {
 	}
 	cmd := exec.Command(cliPath,
 		iamEntity,
-		projectEntity,
+		projectsEntity,
 		"create",
 		projectName,
 		"-o=json")
@@ -121,7 +120,7 @@ func deleteProject(projectID string) error {
 	}
 	cmd := exec.Command(cliPath,
 		iamEntity,
-		projectEntity,
+		projectsEntity,
 		"delete",
 		projectID,
 		"--force")

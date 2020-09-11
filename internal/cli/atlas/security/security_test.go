@@ -11,27 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
 package security
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/security/customercerts"
-	"github.com/mongodb/mongocli/internal/cli/atlas/security/ldap"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/cli"
 )
 
-const security = "Manage security configuration for your project."
-
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "security",
-		Short: security,
-	}
-
-	cmd.AddCommand(
-		customercerts.Builder(),
-		ldap.Builder(),
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
 	)
-
-	return cmd
 }

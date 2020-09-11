@@ -22,10 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongocli/internal/store LDAPConfigurationVerifier
+//go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongocli/internal/store LDAPConfigurationVerifier,LDAPConfigurationDescriber
 
 type LDAPConfigurationVerifier interface {
 	VerifyLDAPConfiguration(string, *atlas.LDAP) (*atlas.LDAPConfiguration, error)
+}
+
+type LDAPConfigurationDescriber interface {
+	GetStatusLDAPConfiguration(string, string) (*atlas.LDAPConfiguration, error)
 }
 
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers
@@ -33,6 +37,17 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
+		return resp, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers
+func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
+	switch s.service {
+	case config.CloudService:
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(context.Background(), projectID, requestID)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

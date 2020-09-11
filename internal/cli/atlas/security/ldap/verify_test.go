@@ -53,7 +53,7 @@ func TestVerifyBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		VerifyBuilder(),
-		0,
+		1,
 		[]string{flag.ProjectID, flag.Hostname, flag.Port, flag.BindPassword, flag.BindUsername, flag.CaCertificate, flag.AuthzQueryTemplate},
 	)
 }

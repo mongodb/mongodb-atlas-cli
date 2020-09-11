@@ -66,7 +66,7 @@ func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
 	}
 }
 
-// mongocli atlas ldap(s) verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
+// mongocli atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
 func VerifyBuilder() *cobra.Command {
 	opts := &VerifyOpts{}
 	cmd := &cobra.Command{
@@ -82,8 +82,8 @@ func VerifyBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.Hostname)
-	cmd.Flags().IntVar(&opts.port, flag.Port, 636, usage.Port)
+	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.LDAPHostname)
+	cmd.Flags().IntVar(&opts.port, flag.Port, 636, usage.LDAPPort)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
@@ -95,6 +95,10 @@ func VerifyBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
 	_ = cmd.MarkFlagRequired(flag.BindPassword)
+
+	cmd.AddCommand(
+		StatusBuilder(),
+	)
 
 	return cmd
 }

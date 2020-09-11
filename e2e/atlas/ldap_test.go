@@ -207,5 +207,4 @@ func TestLDAP(t *testing.T) {
 		a.NoError(err, string(resp))
 		a.Equal("LDAP configuration userToDNMapping deleted", string(resp))
 	})
-
 }

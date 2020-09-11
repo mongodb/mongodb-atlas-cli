@@ -98,7 +98,6 @@ func VerifyBuilder() *cobra.Command {
 
 	cmd.AddCommand(
 		StatusBuilder(),
-		WatchBuilder(),
 	)
 
 	return cmd

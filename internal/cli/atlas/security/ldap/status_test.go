@@ -53,7 +53,7 @@ func TestStatusBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		StatusBuilder(),
-		0,
+		1,
 		[]string{flag.ProjectID},
 	)
 }

@@ -19,27 +19,29 @@ package ldap
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestVerify_Run(t *testing.T) {
+func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLDAPConfigurationVerifier(ctrl)
+	mockStore := mocks.NewMockLDAPConfigurationDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.LDAPConfiguration
+	expected := &mongodbatlas.LDAPConfiguration{Status: "SUCCESS"}
 
-	opts := &VerifyOpts{
+	opts := &WatchOpts{
+		id:    "213122131232132",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		VerifyLDAPConfiguration(opts.ProjectID, opts.newLDAP()).
+		GetStatusLDAPConfiguration(opts.ProjectID, opts.id).
 		Return(expected, nil).
 		Times(1)
 
@@ -49,11 +51,11 @@ func TestVerify_Run(t *testing.T) {
 	}
 }
 
-func TestVerifyBuilder(t *testing.T) {
+func TestWatchBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		VerifyBuilder(),
-		2,
-		[]string{flag.ProjectID, flag.Hostname, flag.Port, flag.BindPassword, flag.BindUsername, flag.CaCertificate, flag.AuthzQueryTemplate},
+		WatchBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

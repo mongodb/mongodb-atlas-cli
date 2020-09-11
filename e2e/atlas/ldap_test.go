@@ -206,6 +206,8 @@ func TestLDAP(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		a.Equal("LDAP configuration userToDNMapping deleted", string(resp))
+
+		expected := fmt.Sprintf("LDAP configuration userToDNMapping deleted from project'%s'\n", projectID)
+		a.Equal(expected, string(resp))
 	})
 }

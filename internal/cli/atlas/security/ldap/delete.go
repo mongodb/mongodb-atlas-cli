@@ -42,7 +42,7 @@ func (opts *DeleteOpts) Run() error {
 // mongocli atlas security ldap delete [--force] --projectId projectId
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("LDAP configuration userToDNMapping deleted", "LDAP configuration userToDNMapping not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("LDAP configuration userToDNMapping deleted from project'%s'\n", "LDAP configuration userToDNMapping not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:     "delete",

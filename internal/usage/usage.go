@@ -37,7 +37,7 @@ const (
 	TeamName                        = "Name of the team."
 	UserID                          = "The ID of the user."
 	LDAPHostname                    = "The hostname or IP address of the LDAP server."
-	LDAPPort                        = "The port to which the LDAP server listens for client connections. Default: 636"
+	LDAPPort                        = "The port to which the LDAP server listens for client connections."
 	BindUsername                    = "The user DN that Atlas uses to connect to the LDAP server."
 	BindPassword                    = "The password used to authenticate the bindUsername."
 	CaCertificate                   = "CA certificate used to verify the identify of the LDAP server."

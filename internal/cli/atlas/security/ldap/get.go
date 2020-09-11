@@ -23,14 +23,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `CIDR BLOCK	SECURITY GROUP
-{{.CIDRBlock}}	{{.AwsSecurityGroup}}
+var getTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
+{{.LDAP.Hostname}}	{{.LDAP.Port}}	{{.LDAP.AuthenticationEnabled}}	{{.LDAP.AuthorizationEnabled}}
 `
 
 type GetOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
 	store store.LDAPConfigurationGetter
 }
 
@@ -49,21 +48,19 @@ func (opts *GetOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas security ldap get <ID> --projectId projectId
+// mongocli atlas security ldap get --projectId projectId
 func GetBuilder() *cobra.Command {
 	opts := &GetOpts{}
 	cmd := &cobra.Command{
-		Use:   "get <ID>",
+		Use:   "get",
 		Short: get,
-		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), getTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}

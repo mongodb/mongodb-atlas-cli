@@ -19,4 +19,4 @@ const (
 	status = "Get the status of an LDAP configuration request"
 	watch  = "Watch for an LDAP configuration request to complete"
 	save   = "Save an LDAP configuration."
-	)
+)

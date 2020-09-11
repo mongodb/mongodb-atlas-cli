@@ -42,6 +42,8 @@ const (
 	BindPassword                    = "The password used to authenticate the bindUsername."
 	CaCertificate                   = "CA certificate used to verify the identify of the LDAP server."
 	AuthzQueryTemplate              = "An LDAP query template that Atlas executes to obtain the LDAP groups to which the authenticated user belongs."
+	AuthenticationEnabled           = "Specifies whether user authentication with LDAP is enabled."
+	AuthorizationEnabled            = "Specifies whether user authorization with LDAP is enabled."
 	TeamID                          = "The ID of the team."
 	Password                        = "User’s password." //nolint:gosec // This is just a message not a password
 	Country                         = "The ISO 3166-1 alpha 2 country code of the user’s country of residence."

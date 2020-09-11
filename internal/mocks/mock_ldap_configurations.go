@@ -110,7 +110,7 @@ func (m *MockLDAPConfigurationSaver) EXPECT() *MockLDAPConfigurationSaverMockRec
 }
 
 // SaveLDAPConfiguration mocks base method
-func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAP) (*mongodbatlas.LDAPConfiguration, error) {
+func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAPConfiguration) (*mongodbatlas.LDAPConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveLDAPConfiguration", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.LDAPConfiguration)

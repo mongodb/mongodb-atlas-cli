@@ -39,7 +39,7 @@ func TestSave_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SaveLDAPConfiguration(opts.ProjectID, opts.newLDAP()).
+		SaveLDAPConfiguration(opts.ProjectID, opts.newLDAPConfiguration()).
 		Return(expected, nil).
 		Times(1)
 
@@ -53,7 +53,7 @@ func TestSaveBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		SaveBuilder(),
-		1,
+		0,
 		[]string{
 			flag.ProjectID,
 			flag.Hostname,

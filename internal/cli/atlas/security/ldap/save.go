@@ -44,12 +44,12 @@ func (opts *SaveOpts) initStore() error {
 	return err
 }
 
-var saveTemplate = `HOSTNAME PORT	AUTHENTICATION	AUTHORIZATION
+var saveTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
 {{.LDAP.Hostname}}	{{.LDAP.Port}}	{{.LDAP.AuthenticationEnabled}}	{{.LDAP.AuthorizationEnabled}}
 `
 
 func (opts *SaveOpts) Run() error {
-	r, err := opts.store.SaveLDAPConfiguration(opts.ConfigProjectID(), opts.newLDAP())
+	r, err := opts.store.SaveLDAPConfiguration(opts.ConfigProjectID(), opts.newLDAPConfiguration())
 	if err != nil {
 		return err
 	}
@@ -57,16 +57,18 @@ func (opts *SaveOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *SaveOpts) newLDAP() *atlas.LDAP {
-	return &atlas.LDAP{
-		Hostname:              opts.hostname,
-		Port:                  opts.port,
-		BindUsername:          opts.bindUsername,
-		BindPassword:          opts.bindPassword,
-		CaCertificate:         opts.caCertificate,
-		AuthzQueryTemplate:    opts.authzQueryTemplate,
-		AuthenticationEnabled: opts.authenticationEnabled,
-		AuthorizationEnabled:  opts.authorizationEnabled,
+func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
+	return &atlas.LDAPConfiguration{
+		LDAP: &atlas.LDAP{
+			AuthenticationEnabled: opts.authenticationEnabled,
+			AuthorizationEnabled:  opts.authorizationEnabled,
+			Hostname:              opts.hostname,
+			Port:                  opts.port,
+			BindUsername:          opts.bindUsername,
+			BindPassword:          opts.bindPassword,
+			CaCertificate:         opts.caCertificate,
+			AuthzQueryTemplate:    opts.authzQueryTemplate,
+		},
 	}
 }
 

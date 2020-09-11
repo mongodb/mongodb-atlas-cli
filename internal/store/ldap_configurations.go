@@ -33,7 +33,7 @@ type LDAPConfigurationDescriber interface {
 }
 
 type LDAPConfigurationSaver interface {
-	SaveLDAPConfiguration(string, *atlas.LDAP) (*atlas.LDAPConfiguration, error)
+	SaveLDAPConfiguration(string, *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error)
 }
 
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers
@@ -59,7 +59,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 }
 
 // SaveLDAPConfiguration encapsulates the logic to manage different cloud providers
-func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
+func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(context.Background(), projectID, ldap)

@@ -66,7 +66,7 @@ func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
 	}
 }
 
-// mongocli atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
+// mongocli security atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
 func VerifyBuilder() *cobra.Command {
 	opts := &VerifyOpts{}
 	cmd := &cobra.Command{

@@ -468,7 +468,7 @@ tasks:
           E2E_TAGS: atlas,clusters
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
-    tags: ["e2e","ldap","atlas"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"

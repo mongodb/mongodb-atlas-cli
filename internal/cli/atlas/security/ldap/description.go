@@ -20,4 +20,5 @@ const (
 	watch  = "Watch for an LDAP configuration request to complete"
 	save   = "Save an LDAP configuration."
 	delete = "Delete an LDAP configuration userToDNMapping from an LDAP configuration."
+	get    = "Get an LDAP configuration"
 )

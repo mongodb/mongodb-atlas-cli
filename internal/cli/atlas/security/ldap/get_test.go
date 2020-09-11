@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
 package ldap
@@ -18,14 +19,41 @@ package ldap
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestGet_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockLDAPConfigurationGetter(ctrl)
+	defer ctrl.Finish()
+
+	expected := &mongodbatlas.LDAPConfiguration{}
+
+	opts := &GetOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		GetLDAPConfiguration(opts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestGetBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		4,
-		[]string{},
+		GetBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

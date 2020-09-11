@@ -49,7 +49,11 @@ func (opts *StatusOpts) Run() error {
 	return opts.Print(r)
 }
 
+<<<<<<< HEAD
 // mongocli atlas ldap verify status <ID> [--projectId projectId]
+=======
+// mongocli atlas ldap status <ID> [--projectId projectId]
+>>>>>>> origin/master
 func StatusBuilder() *cobra.Command {
 	opts := &StatusOpts{}
 	cmd := &cobra.Command{

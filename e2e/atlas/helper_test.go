@@ -83,7 +83,11 @@ func getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func deployCluster(projectID string) (string, error) {
+func deployCluster() (string, error) {
+	return deployClusterForProject("")
+}
+
+func deployClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
@@ -130,7 +134,11 @@ func deployCluster(projectID string) (string, error) {
 	return clusterName, nil
 }
 
-func deleteCluster(clusterName, projectID string) error {
+func deleteCluster(clusterName string) error {
+	return deleteClusterForProject(clusterName, "")
+}
+
+func deleteClusterForProject(clusterName, projectID string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err

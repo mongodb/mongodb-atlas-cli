@@ -84,10 +84,10 @@ func getHostnameAndPort() (string, error) {
 }
 
 func deployCluster() (string, error) {
-	return deployClusterForProject("")
+	return deployClusterFromProject("")
 }
 
-func deployClusterForProject(projectID string) (string, error) {
+func deployClusterFromProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)

@@ -50,7 +50,7 @@ func TestLDAP(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	clusterName, err := deployClusterForProject(projectID)
+	clusterName, err := deployClusterFromProject(projectID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

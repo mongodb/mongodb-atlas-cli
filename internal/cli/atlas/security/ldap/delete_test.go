@@ -11,27 +11,48 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
 package ldap
 
 import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "ldap"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   short,
-	}
-	cmd.AddCommand(
-		VerifyBuilder(),
-		SaveBuilder(),
-		DeleteBuilder(),
-		GetBuilder(),
-	)
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockLDAPConfigurationDeleter(ctrl)
+	defer ctrl.Finish()
 
-	return cmd
+	opts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteLDAPConfiguration(opts.ProjectID).
+		Return(nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Force},
+	)
 }

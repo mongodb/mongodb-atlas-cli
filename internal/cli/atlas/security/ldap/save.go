@@ -24,30 +24,32 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type VerifyOpts struct {
+type SaveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	hostname           string
-	port               int
-	bindUsername       string
-	bindPassword       string
-	caCertificate      string
-	authzQueryTemplate string
-	store              store.LDAPConfigurationVerifier
+	hostname              string
+	port                  int
+	bindUsername          string
+	bindPassword          string
+	caCertificate         string
+	authzQueryTemplate    string
+	authenticationEnabled bool
+	authorizationEnabled  bool
+	store                 store.LDAPConfigurationSaver
 }
 
-func (opts *VerifyOpts) initStore() error {
+func (opts *SaveOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var verifyTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
+var saveTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
+{{.LDAP.Hostname}}	{{.LDAP.Port}}	{{.LDAP.AuthenticationEnabled}}	{{.LDAP.AuthorizationEnabled}}
 `
 
-func (opts *VerifyOpts) Run() error {
-	r, err := opts.store.VerifyLDAPConfiguration(opts.ConfigProjectID(), opts.newLDAP())
+func (opts *SaveOpts) Run() error {
+	r, err := opts.store.SaveLDAPConfiguration(opts.ConfigProjectID(), opts.newLDAPConfiguration())
 	if err != nil {
 		return err
 	}
@@ -55,27 +57,32 @@ func (opts *VerifyOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
-	return &atlas.LDAP{
-		Hostname:           opts.hostname,
-		Port:               opts.port,
-		BindUsername:       opts.bindUsername,
-		BindPassword:       opts.bindPassword,
-		CaCertificate:      opts.caCertificate,
-		AuthzQueryTemplate: opts.authzQueryTemplate,
+func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
+	return &atlas.LDAPConfiguration{
+		LDAP: &atlas.LDAP{
+			AuthenticationEnabled: opts.authenticationEnabled,
+			AuthorizationEnabled:  opts.authorizationEnabled,
+			Hostname:              opts.hostname,
+			Port:                  opts.port,
+			BindUsername:          opts.bindUsername,
+			BindPassword:          opts.bindPassword,
+			CaCertificate:         opts.caCertificate,
+			AuthzQueryTemplate:    opts.authzQueryTemplate,
+		},
 	}
 }
 
-// mongocli security atlas ldap verify --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate --authzQueryTemplate authzQueryTemplate [--projectId projectId]
-func VerifyBuilder() *cobra.Command {
-	opts := &VerifyOpts{}
+// mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
+// --authzQueryTemplate authzQueryTemplate --authenticationEnabled authenticationEnabled --authorizationEnabled authorizationEnabled [--projectId projectId]
+func SaveBuilder() *cobra.Command {
+	opts := &SaveOpts{}
 	cmd := &cobra.Command{
-		Use:   "verify",
-		Short: verify,
+		Use:   "save",
+		Short: save,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), verifyTemplate))
+				opts.InitOutput(cmd.OutOrStdout(), saveTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -88,6 +95,8 @@ func VerifyBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
 	cmd.Flags().StringVar(&opts.authzQueryTemplate, flag.AuthzQueryTemplate, "", usage.AuthzQueryTemplate)
+	cmd.Flags().BoolVar(&opts.authenticationEnabled, flag.AuthenticationEnabled, false, usage.AuthenticationEnabled)
+	cmd.Flags().BoolVar(&opts.authorizationEnabled, flag.AuthorizationEnabled, false, usage.AuthorizationEnabled)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
@@ -95,10 +104,6 @@ func VerifyBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
 	_ = cmd.MarkFlagRequired(flag.BindPassword)
-
-	cmd.AddCommand(
-		StatusBuilder(),
-	)
 
 	return cmd
 }

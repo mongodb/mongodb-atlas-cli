@@ -112,7 +112,7 @@ func TestLDAP(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		a.Contains("LDAP Configuration request completed.", string(resp))
+		a.Contains(string(resp), "LDAP Configuration request completed.")
 	})
 
 	t.Run("Get Status", func(t *testing.T) {
@@ -198,6 +198,7 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"delete",
+			"--force",
 			"--projectId",
 			projectID)
 		cmd.Env = os.Environ()

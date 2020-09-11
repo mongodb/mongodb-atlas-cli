@@ -18,14 +18,41 @@ package ldap
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockLDAPConfigurationDeleter(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		DeleteLDAPConfiguration(opts.ProjectID).
+		Return(nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		3,
-		[]string{},
+		DeleteBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Force},
 	)
 }

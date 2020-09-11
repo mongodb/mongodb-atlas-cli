@@ -23,14 +23,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type VerifyStatusOpts struct {
+type StatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
 	store store.LDAPConfigurationDescriber
 }
 
-func (opts *VerifyStatusOpts) initStore() error {
+func (opts *StatusOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
@@ -40,7 +40,7 @@ var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
 {{.RequestID}}	{{.GroupID}}	{{.Status}}
 `
 
-func (opts *VerifyStatusOpts) Run() error {
+func (opts *StatusOpts) Run() error {
 	r, err := opts.store.GetStatusLDAPConfiguration(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
@@ -50,10 +50,10 @@ func (opts *VerifyStatusOpts) Run() error {
 }
 
 // mongocli atlas ldap(s) verify status <ID> [--projectId projectId]
-func VerifyStatusBuilder() *cobra.Command {
-	opts := &VerifyStatusOpts{}
+func StatusBuilder() *cobra.Command {
+	opts := &StatusOpts{}
 	cmd := &cobra.Command{
-		Use:   "verify status <ID>",
+		Use:   "status <ID>",
 		Args:  cobra.ExactValidArgs(1),
 		Short: verify,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

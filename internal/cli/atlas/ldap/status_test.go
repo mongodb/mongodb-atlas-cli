@@ -33,7 +33,7 @@ func TestVerifyStatus_Run(t *testing.T) {
 
 	var expected *mongodbatlas.LDAPConfiguration
 
-	opts := &VerifyStatusOpts{
+	opts := &StatusOpts{
 		store: mockStore,
 	}
 

@@ -28,7 +28,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		VerifyBuilder(),
-		VerifyStatusBuilder(),
+		StatusBuilder(),
 	)
 
 	return cmd

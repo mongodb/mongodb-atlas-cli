@@ -75,8 +75,8 @@ func (opts *SaveOpts) newLDAP() *atlas.LDAP {
 func SaveBuilder() *cobra.Command {
 	opts := &SaveOpts{}
 	cmd := &cobra.Command{
-		Use:   "verify",
-		Short: verify,
+		Use:   "save",
+		Short: save,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
@@ -102,10 +102,6 @@ func SaveBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
 	_ = cmd.MarkFlagRequired(flag.BindPassword)
-
-	cmd.AddCommand(
-		StatusBuilder(),
-	)
 
 	return cmd
 }

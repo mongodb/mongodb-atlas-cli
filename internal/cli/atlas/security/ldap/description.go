@@ -15,5 +15,6 @@ package ldap
 
 const (
 	short  = "LDAP operations"
-	verify = "Request verification of an LDAP configuration. "
+	verify = "Request verification of an LDAP configuration."
+	save   = "Save an LDAP configuration."
 )

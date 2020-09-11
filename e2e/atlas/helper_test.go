@@ -44,6 +44,9 @@ const (
 	iamEntity              = "iam"
 	projectEntity          = "project"
 	maintenanceEntity      = "maintenanceWindows"
+	integrationsEntity     = "integrations"
+	securityEntity         = "security"
+	ldapEntity             = "ldap"
 )
 
 func getHostnameAndPort() (string, error) {
@@ -80,7 +83,7 @@ func getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func deployCluster() (string, error) {
+func deployCluster(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
@@ -89,7 +92,7 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	create := exec.Command(cliPath,
+	commands := []string{
 		atlasEntity,
 		clustersEntity,
 		"create",
@@ -97,17 +100,29 @@ func deployCluster() (string, error) {
 		"--region=US_EAST_1",
 		"--tier=M10",
 		"--provider=AWS",
-		"--diskSizeGB=10")
+		"--diskSizeGB=10",
+	}
+	if projectID != "" {
+		commands = append(commands, "--projectId", projectID)
+	}
+	create := exec.Command(cliPath, commands...)
 	create.Env = os.Environ()
 	if err := create.Run(); err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
 
-	watch := exec.Command(cliPath,
-		"atlas",
+	commands = []string{
+		atlasEntity,
 		clustersEntity,
 		"watch",
-		clusterName)
+		clusterName,
+	}
+
+	if projectID != "" {
+		commands = append(commands, "--projectId", projectID)
+	}
+
+	watch := exec.Command(cliPath, commands...)
 	watch.Env = os.Environ()
 	if err := watch.Run(); err != nil {
 		return "", fmt.Errorf("error watching cluster %w", err)
@@ -115,12 +130,24 @@ func deployCluster() (string, error) {
 	return clusterName, nil
 }
 
-func deleteCluster(clusterName string) error {
+func deleteCluster(clusterName, projectID string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
+	commands := []string{
+		atlasEntity,
+		clustersEntity,
+		"delete",
+		clusterName,
+		"--force",
+	}
+
+	if projectID != "" {
+		commands = append(commands, "--projectId", projectID)
+	}
+
+	cmd := exec.Command(cliPath, commands...)
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }

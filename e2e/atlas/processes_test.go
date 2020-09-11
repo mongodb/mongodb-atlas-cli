@@ -27,13 +27,13 @@ import (
 )
 
 func TestProcesses(t *testing.T) {
-	clusterName, err := deployCluster()
+	clusterName, err := deployCluster("")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
+		if e := deleteCluster(clusterName, ""); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()

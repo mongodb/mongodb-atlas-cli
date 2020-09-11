@@ -26,12 +26,12 @@ import (
 )
 
 func TestMetrics(t *testing.T) {
-	clusterName, err := deployCluster()
+	clusterName, err := deployCluster("")
 	if err != nil {
 		t.Fatalf("failed to deploy a cluster: %v", err)
 	}
 	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
+		if e := deleteCluster(clusterName, ""); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()

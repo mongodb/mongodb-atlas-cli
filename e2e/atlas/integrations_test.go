@@ -28,14 +28,13 @@ import (
 )
 
 const (
-	integrationsEntity = "integrations"
-	datadogEntity      = "DATADOG"
-	flowdockEntity     = "FLOWDOCK"
-	newRelicEntity     = "NEW_RELIC"
-	opsGenieEntity     = "OPS_GENIE"
-	pagerDutyEntity    = "PAGER_DUTY"
-	victorOpsEntity    = "VICTOR_OPS"
-	webhookEntity      = "WEBHOOK"
+	datadogEntity   = "DATADOG"
+	flowdockEntity  = "FLOWDOCK"
+	newRelicEntity  = "NEW_RELIC"
+	opsGenieEntity  = "OPS_GENIE"
+	pagerDutyEntity = "PAGER_DUTY"
+	victorOpsEntity = "VICTOR_OPS"
+	webhookEntity   = "WEBHOOK"
 )
 
 func TestIntegrations(t *testing.T) {

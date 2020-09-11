@@ -30,6 +30,8 @@ const (
 	BindPassword                    = "binPassword"                     // BindPassword flag
 	CaCertificate                   = "caCertificate"                   // CaCertificate flag
 	AuthzQueryTemplate              = "authzQueryTemplate"              // AuthzQueryTemplate flag
+	AuthenticationEnabled           = "authenticationEnabled"           // AuthenticationEnabled flag
+	AuthorizationEnabled            = "authorizationEnabled"            // AuthorizationEnabled flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
 	Region                          = "region"                          // Region flag
 	RegionShort                     = "r"                               // RegionShort flag

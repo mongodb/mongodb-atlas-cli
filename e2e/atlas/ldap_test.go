@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -33,34 +32,19 @@ const (
 )
 
 func TestLDAP(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	projectName := fmt.Sprintf("e2e-integration-proj-%v", n)
-	projectID, err := createProject(projectName)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	clusterName, err := deployClusterFromProject(projectID)
+	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	defer func() {
-		if e := deleteClusterForProject(clusterName, projectID); e != nil {
+		if e := deleteCluster(clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
-		}
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
 		}
 	}()
 
@@ -79,8 +63,6 @@ func TestLDAP(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--binPassword",
 			"admin",
-			"--projectId",
-			projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -104,9 +86,7 @@ func TestLDAP(t *testing.T) {
 			"verify",
 			"status",
 			"watch",
-			requestID,
-			"--projectId",
-			projectID)
+			requestID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -123,8 +103,6 @@ func TestLDAP(t *testing.T) {
 			"verify",
 			"status",
 			requestID,
-			"--projectId",
-			projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -153,8 +131,6 @@ func TestLDAP(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--binPassword",
 			"admin",
-			"--projectId",
-			projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -175,8 +151,6 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"get",
-			"--projectId",
-			projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -198,16 +172,12 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"delete",
-			"--force",
-			"--projectId",
-			projectID)
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("LDAP configuration userToDNMapping deleted from project'%s'\n", projectID)
-		a.Equal(expected, string(resp))
+		a.Contains(string(resp), "LDAP configuration userToDNMapping deleted")
 	})
 }

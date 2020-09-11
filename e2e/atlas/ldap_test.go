@@ -56,11 +56,11 @@ func TestLDAP(t *testing.T) {
 	}
 
 	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
 		if e := deleteClusterForProject(clusterName, projectID); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
+		}
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
 		}
 	}()
 

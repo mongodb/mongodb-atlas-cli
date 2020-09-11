@@ -31,18 +31,18 @@ func TestWatch_Run(t *testing.T) {
 
 	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
 
-	describeOpts := &WatchOpts{
+	opts := &WatchOpts{
 		name:  "test",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		Cluster(describeOpts.ProjectID, describeOpts.name).
+		Cluster(opts.ProjectID, opts.name).
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

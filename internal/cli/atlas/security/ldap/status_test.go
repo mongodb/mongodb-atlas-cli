@@ -49,10 +49,10 @@ func TestVerifyStatus_Run(t *testing.T) {
 	}
 }
 
-func TestVerifyStatusBuilder(t *testing.T) {
+func TestStatusBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		VerifyBuilder(),
+		StatusBuilder(),
 		0,
 		[]string{flag.ProjectID},
 	)

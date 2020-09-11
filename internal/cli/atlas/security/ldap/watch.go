@@ -23,43 +23,48 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type StatusOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
+	cli.WatchOpts
 	id    string
 	store store.LDAPConfigurationDescriber
 }
 
-func (opts *StatusOpts) initStore() error {
+func (opts *WatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
-{{.RequestID}}	{{.GroupID}}	{{.Status}}
-`
-
-func (opts *StatusOpts) Run() error {
-	r, err := opts.store.GetStatusLDAPConfiguration(opts.ConfigProjectID(), opts.id)
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.GetStatusLDAPConfiguration(opts.ConfigProjectID(), opts.id)
 	if err != nil {
+		return false, err
+	}
+	status := result.Status
+	return status == "FAILED" || status == "SUCCESS", nil
+}
+
+func (opts *WatchOpts) Run() error {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
-// mongocli atlas ldap verify status <ID> [--projectId projectId]
-func StatusBuilder() *cobra.Command {
-	opts := &StatusOpts{}
+// mongocli atlas security ldap status watch <ID> [--projectId projectId]
+func WatchBuilder() *cobra.Command {
+	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "status <ID>",
-		Args:  cobra.ExactValidArgs(1),
-		Short: status,
+		Use:   "watch <ID>",
+		Short: watch,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), verifyStatusTemplate))
+				opts.InitOutput(cmd.OutOrStdout(), "\nLDAP Configuration request completed.\n"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
@@ -68,11 +73,6 @@ func StatusBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	cmd.AddCommand(
-		WatchBuilder(),
-	)
 
 	return cmd
 }

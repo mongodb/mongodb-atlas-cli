@@ -96,5 +96,9 @@ func VerifyBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
 	_ = cmd.MarkFlagRequired(flag.BindPassword)
 
+	cmd.AddCommand(
+		StatusBuilder(),
+	)
+
 	return cmd
 }

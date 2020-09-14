@@ -23,6 +23,9 @@ const (
 	URL                             = "url"                             // URL flag
 	Secret                          = "secret"                          // Secret flag
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
+	ProcessName                     = "processName"                     // Process Name
+	Since                           = "since"                           // Since flag
+	Duration                        = "duration"                        // Duration Flag
 	AuthDB                          = "authDB"                          // AuthDB flag
 	Hostname                        = "hostname"                        // Hostname flag
 	Port                            = "port"                            // Port flag

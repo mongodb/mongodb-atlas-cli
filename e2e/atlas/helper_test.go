@@ -84,10 +84,6 @@ func getHostnameAndPort() (string, error) {
 }
 
 func deployCluster() (string, error) {
-	return deployClusterFromProject("")
-}
-
-func deployClusterFromProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
@@ -96,7 +92,7 @@ func deployClusterFromProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	commands := []string{
+	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
@@ -104,29 +100,17 @@ func deployClusterFromProject(projectID string) (string, error) {
 		"--region=US_EAST_1",
 		"--tier=M10",
 		"--provider=AWS",
-		"--diskSizeGB=10",
-	}
-	if projectID != "" {
-		commands = append(commands, "--projectId", projectID)
-	}
-	create := exec.Command(cliPath, commands...)
+		"--diskSizeGB=10")
 	create.Env = os.Environ()
 	if err := create.Run(); err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
 	}
 
-	commands = []string{
-		atlasEntity,
+	watch := exec.Command(cliPath,
+		"atlas",
 		clustersEntity,
 		"watch",
-		clusterName,
-	}
-
-	if projectID != "" {
-		commands = append(commands, "--projectId", projectID)
-	}
-
-	watch := exec.Command(cliPath, commands...)
+		clusterName)
 	watch.Env = os.Environ()
 	if err := watch.Run(); err != nil {
 		return "", fmt.Errorf("error watching cluster %w", err)
@@ -135,27 +119,11 @@ func deployClusterFromProject(projectID string) (string, error) {
 }
 
 func deleteCluster(clusterName string) error {
-	return deleteClusterForProject(clusterName, "")
-}
-
-func deleteClusterForProject(clusterName, projectID string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err
 	}
-	commands := []string{
-		atlasEntity,
-		clustersEntity,
-		"delete",
-		clusterName,
-		"--force",
-	}
-
-	if projectID != "" {
-		commands = append(commands, "--projectId", projectID)
-	}
-
-	cmd := exec.Command(cliPath, commands...)
+	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }

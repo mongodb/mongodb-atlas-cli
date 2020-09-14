@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	PENDING  = "PENDING"
-	HOSTNAME = "2.tcp.ngrok.io"
+	pending  = "pending"
+	hostname = "localhost"
 )
 
 func TestLDAP(t *testing.T) {
@@ -56,7 +56,7 @@ func TestLDAP(t *testing.T) {
 			ldapEntity,
 			"verify",
 			"--hostname",
-			HOSTNAME,
+			hostname,
 			"--port",
 			"19657",
 			"--bindUsername",
@@ -73,7 +73,7 @@ func TestLDAP(t *testing.T) {
 
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(PENDING, configuration.Status)
+			a.Equal(pending, configuration.Status)
 			requestID = configuration.RequestID
 		}
 	})
@@ -124,7 +124,7 @@ func TestLDAP(t *testing.T) {
 			ldapEntity,
 			"save",
 			"--hostname",
-			HOSTNAME,
+			hostname,
 			"--port",
 			"19657",
 			"--bindUsername",
@@ -141,7 +141,7 @@ func TestLDAP(t *testing.T) {
 
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(HOSTNAME, configuration.LDAP.Hostname)
+			a.Equal(hostname, configuration.LDAP.Hostname)
 		}
 	})
 
@@ -161,7 +161,7 @@ func TestLDAP(t *testing.T) {
 
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(HOSTNAME, configuration.LDAP.Hostname)
+			a.Equal(hostname, configuration.LDAP.Hostname)
 			requestID = configuration.RequestID
 		}
 	})

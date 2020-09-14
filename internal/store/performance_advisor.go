@@ -18,10 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister

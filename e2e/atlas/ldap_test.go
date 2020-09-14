@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	pending  = "pending"
+	pending  = "PENDING"
 	hostname = "localhost"
 )
 

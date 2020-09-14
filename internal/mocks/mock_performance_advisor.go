@@ -34,7 +34,7 @@ func (m *MockPerformanceAdvisorNamespacesLister) EXPECT() *MockPerformanceAdviso
 }
 
 // PerformanceAdvisorNamespaces mocks base method
-func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0, arg1 string, arg2 *mongodbatlas.PerformanceAdvisorRequest) (*mongodbatlas.Namespaces, error) {
+func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0, arg1 string, arg2 *mongodbatlas.NamespaceOptions) (*mongodbatlas.Namespaces, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.Namespaces)

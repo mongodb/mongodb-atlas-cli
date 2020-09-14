@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), opts.processName, opts.newPerformanceAdvisorRequest())
+	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), opts.processName, opts.newNamespaceOptions())
 	if err != nil {
 		return err
 	}
@@ -51,8 +51,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newPerformanceAdvisorRequest() *atlas.PerformanceAdvisorRequest {
-	return &atlas.PerformanceAdvisorRequest{
+func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
+	return &atlas.NamespaceOptions{
 		Since:    opts.since,
 		Duration: opts.duration,
 	}

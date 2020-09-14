@@ -18,20 +18,25 @@ import (
 	"context"
 	"fmt"
 
+	"go.mongodb.org/ops-manager/opsmngr"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister
 type PerformanceAdvisorNamespacesLister interface {
-	PerformanceAdvisorNamespaces(string, string, *atlas.PerformanceAdvisorRequest) (*atlas.Namespaces, error)
+	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers
-func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, request *atlas.PerformanceAdvisorRequest) (*atlas.Namespaces, error) {
+func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, request)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

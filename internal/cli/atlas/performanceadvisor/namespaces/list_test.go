@@ -38,7 +38,7 @@ func TestDBUserList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.processName, listOpts.newPerformanceAdvisorRequest()).
+		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.processName, listOpts.newNamespaceOptions()).
 		Return(expected, nil).
 		Times(1)
 

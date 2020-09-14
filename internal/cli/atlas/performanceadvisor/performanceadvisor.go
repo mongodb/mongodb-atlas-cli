@@ -22,8 +22,8 @@ import (
 func Builder() *cobra.Command {
 	const use = "performanceAdvisor"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   short,
+		Use:   use,
+		Short: short,
 	}
 	cmd.AddCommand(
 		namespaces.Builder(),

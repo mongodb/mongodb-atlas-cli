@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
 	"github.com/mongodb/mongocli/internal/cli/atlas/networking"
-	"github.com/mongodb/mongocli/internal/cli/atlas/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongocli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
@@ -52,7 +51,6 @@ func Builder() *cobra.Command {
 		clusters.Builder(),
 		dbusers.Builder(),
 		whitelist.Builder(),
-		performanceadvisor.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),

@@ -44,6 +44,9 @@ const (
 	iamEntity              = "iam"
 	projectEntity          = "project"
 	maintenanceEntity      = "maintenanceWindows"
+	integrationsEntity     = "integrations"
+	securityEntity         = "security"
+	ldapEntity             = "ldap"
 )
 
 func getHostnameAndPort() (string, error) {

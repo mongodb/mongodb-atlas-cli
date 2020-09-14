@@ -62,7 +62,7 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 }
 
 func (opts *ListOpts) validateProcessName() error {
-	if config.Service() == config.CloudService {
+	if config.Service() != config.CloudService {
 		return nil
 	}
 

@@ -52,7 +52,6 @@ func Builder() *cobra.Command {
 		clusters.Builder(),
 		dbusers.Builder(),
 		whitelist.Builder(),
-		performanceadvisor.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),
@@ -64,6 +63,7 @@ func Builder() *cobra.Command {
 		security.Builder(),
 		integrations.Builder(),
 		maintenance.Builder(),
+		performanceadvisor.Builder(),
 	)
 
 	return cmd

@@ -35,6 +35,8 @@ type ListOpts struct {
 	cli.OutputOpts
 	store       store.PerformanceAdvisorNamespacesLister
 	processName string
+	hostID      string
+	host        string
 	since       int64
 	duration    int64
 }
@@ -46,7 +48,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), opts.processName, opts.newNamespaceOptions())
+	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), opts.host, opts.newNamespaceOptions())
 	if err != nil {
 		return err
 	}
@@ -62,17 +64,20 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 }
 
 func (opts *ListOpts) validateProcessName() error {
-	if config.Service() != config.CloudService {
-		return nil
-	}
-
 	length := 2
 	process := strings.Split(opts.processName, ":")
 	if len(process) != length {
 		return fmt.Errorf("'%v' is not valid", opts.processName)
 	}
-
 	return nil
+}
+
+func (opts *ListOpts) setHost() {
+	if opts.processName == "" {
+		opts.host = opts.hostID
+	} else {
+		opts.host = opts.processName
+	}
 }
 
 // mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
@@ -84,24 +89,32 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if config.Service() == config.CloudService {
+				_ = cmd.MarkFlagRequired(flag.ProcessName)
+				err := opts.validateProcessName()
+				if err != nil {
+					return err
+				}
+			} else {
+				_ = cmd.MarkFlagRequired(flag.HostID)
+			}
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.validateProcessName,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.setHost()
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.hostID, flag.HostID, "", usage.HostID)
 	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.ProcessName)
 	return cmd
 }

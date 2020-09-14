@@ -24,6 +24,7 @@ const (
 	Secret                          = "secret"                          // Secret flag
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
 	ProcessName                     = "processName"                     // Process Name
+	HostID                          = "hostId"                          // HostID flag
 	Since                           = "since"                           // Since flag
 	Duration                        = "duration"                        // Duration Flag
 	AuthDB                          = "authDB"                          // AuthDB flag

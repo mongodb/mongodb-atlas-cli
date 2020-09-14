@@ -22,6 +22,7 @@ const (
 	Shards                          = "Number of shards in the cluster."
 	ProcessName                     = "The unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}."
 	Since                           = "Point in time, specified as milliseconds since the Unix Epoch, from which you want to receive results."
+	HostID                          = "The unique identifier for the host of a MongoDB process. "
 	Duration                        = "Length of time from the since parameter, in milliseconds, for which you want to receive results."
 	Tier                            = "Tier for each data-bearing server in the cluster."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."

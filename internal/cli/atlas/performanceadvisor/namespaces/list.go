@@ -58,7 +58,7 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 	}
 }
 
-// mongocli atlas performanceAdvisor namespace(s) list  --processName processName --projectId projectId
+// mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

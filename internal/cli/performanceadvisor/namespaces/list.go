@@ -14,6 +14,9 @@
 package namespaces
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -58,6 +61,20 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 	}
 }
 
+func (opts *ListOpts) validateProcessName() error {
+	if config.Service() == config.CloudService {
+		return nil
+	}
+
+	length := 2
+	process := strings.Split(opts.processName, ":")
+	if len(process) != length {
+		return fmt.Errorf("'%v' is not valid", opts.processName)
+	}
+
+	return nil
+}
+
 // mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
@@ -70,6 +87,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.validateProcessName,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,5 +102,6 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.ProcessName)
 	return cmd
 }

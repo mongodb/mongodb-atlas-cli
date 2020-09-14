@@ -28,7 +28,7 @@ type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService:

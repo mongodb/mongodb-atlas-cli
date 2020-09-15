@@ -15,7 +15,6 @@ package slowquerylogs
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -31,13 +30,12 @@ const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.PerformanceAdvisorSlowQueriesLister
-	processName string
-	hostID      string
-	since       int64
-	duration    int64
-	namespaces  string
-	nLog        int64
+	cli.PerformanceAdvisorOpts
+	store      store.PerformanceAdvisorSlowQueriesLister
+	since      int64
+	duration   int64
+	namespaces string
+	nLog       int64
 }
 
 func (opts *ListOpts) initStore() error {
@@ -47,7 +45,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := namespaces.Host(opts.processName, opts.hostID)
+	host, err := opts.host()
 	if err != nil {
 		return err
 	}
@@ -70,6 +68,17 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 	}
 }
 
+func (opts *ListOpts) host() (string, error) {
+	if opts.ProcessName == "" {
+		return opts.HostID, nil
+	}
+	err := opts.ValidateProcessName()
+	if err != nil {
+		return "", err
+	}
+	return opts.ProcessName, nil
+}
+
 // mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
@@ -83,7 +92,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				namespaces.MarkRequired(cmd),
+				opts.MarkProcessNameHostIDRequired(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -91,8 +100,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.hostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
+	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
+	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, 20000, usage.NLog)

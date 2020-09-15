@@ -14,9 +14,6 @@
 package namespaces
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -33,11 +30,10 @@ const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.PerformanceAdvisorNamespacesLister
-	processName string
-	hostID      string
-	since       int64
-	duration    int64
+	cli.PerformanceAdvisorOpts
+	store    store.PerformanceAdvisorNamespacesLister
+	since    int64
+	duration int64
 }
 
 func (opts *ListOpts) initStore() error {
@@ -47,7 +43,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := Host(opts.processName, opts.hostID)
+	host, err := opts.host()
 	if err != nil {
 		return err
 	}
@@ -66,33 +62,15 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 	}
 }
 
-func validateProcessName(processName string) error {
-	const length = 2
-	process := strings.Split(processName, ":")
-	if len(process) != length {
-		return fmt.Errorf("'%v' is not valid", processName)
+func (opts *ListOpts) host() (string, error) {
+	if opts.ProcessName == "" {
+		return opts.HostID, nil
 	}
-	return nil
-}
-
-func Host(processName, hostID string) (string, error) {
-	if processName == "" {
-		return hostID, nil
-	}
-	err := validateProcessName(processName)
+	err := opts.ValidateProcessName()
 	if err != nil {
 		return "", err
 	}
-	return processName, nil
-}
-
-func MarkRequired(cmd *cobra.Command) func() error {
-	return func() error {
-		if config.Service() == config.CloudService {
-			return cmd.MarkFlagRequired(flag.ProcessName)
-		}
-		return cmd.MarkFlagRequired(flag.HostID)
-	}
+	return opts.ProcessName, nil
 }
 
 // mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
@@ -107,7 +85,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				MarkRequired(cmd),
+				opts.MarkProcessNameHostIDRequired(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -115,8 +93,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.hostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
+	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
+	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 

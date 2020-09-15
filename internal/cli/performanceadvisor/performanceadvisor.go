@@ -17,6 +17,7 @@ package performanceadvisor
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
+	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +30,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		namespaces.Builder(),
+		suggestedindexes.Builder(),
 	)
 
 	return cmd

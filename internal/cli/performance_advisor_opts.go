@@ -39,7 +39,6 @@ func (opts *PerformanceAdvisorOpts) ValidateProcessName() error {
 }
 
 // MarkProcessNameHostIDRequired marks processName or hostId as required in accordance with the service
-// where the command is run
 // Atlas: processName is required
 // OM/CM: hostId is required
 func (opts *PerformanceAdvisorOpts) MarkProcessNameHostIDRequired(cmd *cobra.Command) func() error {

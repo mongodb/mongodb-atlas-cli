@@ -47,7 +47,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := opts.host()
+	host, err := Host(opts.processName, opts.hostID)
 	if err != nil {
 		return err
 	}
@@ -66,27 +66,27 @@ func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
 	}
 }
 
-func (opts *ListOpts) validateProcessName() error {
+func validateProcessName(processName string) error {
 	const length = 2
-	process := strings.Split(opts.processName, ":")
+	process := strings.Split(processName, ":")
 	if len(process) != length {
-		return fmt.Errorf("'%v' is not valid", opts.processName)
+		return fmt.Errorf("'%v' is not valid", processName)
 	}
 	return nil
 }
 
-func (opts *ListOpts) host() (string, error) {
-	if opts.processName == "" {
-		return opts.hostID, nil
+func Host(processName, hostID string) (string, error) {
+	if processName == "" {
+		return hostID, nil
 	}
-	err := opts.validateProcessName()
+	err := validateProcessName(processName)
 	if err != nil {
 		return "", err
 	}
-	return opts.processName, nil
+	return processName, nil
 }
 
-func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
+func MarkRequired(cmd *cobra.Command) func() error {
 	return func() error {
 		if config.Service() == config.CloudService {
 			return cmd.MarkFlagRequired(flag.ProcessName)
@@ -107,7 +107,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.markRequired(cmd),
+				MarkRequired(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

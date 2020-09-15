@@ -14,10 +14,8 @@
 package slowquerylogs
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -49,7 +47,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := opts.host()
+	host, err := namespaces.Host(opts.processName, opts.hostID)
 	if err != nil {
 		return err
 	}
@@ -72,35 +70,6 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 	}
 }
 
-func (opts *ListOpts) validateProcessName() error {
-	const length = 2
-	process := strings.Split(opts.processName, ":")
-	if len(process) != length {
-		return fmt.Errorf("'%v' is not valid", opts.processName)
-	}
-	return nil
-}
-
-func (opts *ListOpts) host() (string, error) {
-	if opts.processName == "" {
-		return opts.hostID, nil
-	}
-	err := opts.validateProcessName()
-	if err != nil {
-		return "", err
-	}
-	return opts.processName, nil
-}
-
-func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
-	return func() error {
-		if config.Service() == config.CloudService {
-			return cmd.MarkFlagRequired(flag.ProcessName)
-		}
-		return cmd.MarkFlagRequired(flag.HostID)
-	}
-}
-
 // mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
@@ -114,7 +83,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.markRequired(cmd),
+				namespaces.MarkRequired(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

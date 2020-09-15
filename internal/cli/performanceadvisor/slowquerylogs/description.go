@@ -14,6 +14,6 @@
 package slowquerylogs
 
 const (
-	short = "Retrieve namespaces for collections experiencing slow queries for a specified host"
+	short = "Get log lines for slow queries for a specified host"
 	list  = "List namespaces for collections experiencing slow queries for a specified host"
 )

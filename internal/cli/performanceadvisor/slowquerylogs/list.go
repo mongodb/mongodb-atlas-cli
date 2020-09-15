@@ -78,39 +78,43 @@ func (opts *ListOpts) validateProcessName() error {
 	return nil
 }
 
-func (opts *ListOpts) setHost() {
+func (opts *ListOpts) setHost() error{
+
 	if opts.processName == "" {
 		opts.host = opts.hostID
 	} else {
+		err := opts.validateProcessName()
+		if err != nil{
+			return err
+		}
 		opts.host = opts.processName
 	}
+	return nil
 }
 
 // mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   list,
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			if config.Service() == config.CloudService {
 				_ = cmd.MarkFlagRequired(flag.ProcessName)
-				err := opts.validateProcessName()
-				if err != nil {
-					return err
-				}
 			} else {
 				_ = cmd.MarkFlagRequired(flag.HostID)
 			}
-			return opts.PreRunE(
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-			)
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.setHost()
+			err := opts.setHost()
+			if err != nil{
+				return err
+			}
 			return opts.Run()
 		},
 	}
@@ -124,5 +128,6 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
 	return cmd
 }

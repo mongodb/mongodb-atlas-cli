@@ -25,7 +25,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDBUserList_Run(t *testing.T) {
+func TestSlowQueryLogsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorSlowQueriesLister(ctrl)
 	defer ctrl.Finish()

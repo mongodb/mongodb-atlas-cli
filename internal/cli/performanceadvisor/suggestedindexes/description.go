@@ -14,6 +14,6 @@
 package suggestedindexes
 
 const (
-	short = "Retrieve namespaces for collections experiencing slow queries"
-	list  = "List namespaces for collections experiencing slow queries"
+	short = "Get suggested indexes for collections experiencing slow queries"
+	list  = "Retrieves suggested indexes for collections experiencing slow queries"
 )

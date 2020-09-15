@@ -27,6 +27,9 @@ const (
 	HostID                          = "hostId"                          // HostID flag
 	Since                           = "since"                           // Since flag
 	Duration                        = "duration"                        // Duration Flag
+	Namespaces                      = "namespaces"                      // Namespaces flag
+	NIndexes                        = "nIndexes"                        // NIndexes flag
+	NExamples                       = "nExamples"                       // NExamples flag
 	AuthDB                          = "authDB"                          // AuthDB flag
 	Hostname                        = "hostname"                        // Hostname flag
 	Port                            = "port"                            // Port flag

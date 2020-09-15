@@ -33,11 +33,14 @@ const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.PerformanceAdvisorNamespacesLister
+	store       store.PerformanceAdvisorIndexesLister
 	processName string
 	hostID      string
 	since       int64
 	duration    int64
+	namespaces  string
+	nIndexes    int64
+	nExamples   int64
 }
 
 func (opts *ListOpts) initStore() error {
@@ -51,7 +54,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), host, opts.newNamespaceOptions())
+	r, err := opts.store.PerformanceAdvisorIndexes(opts.ConfigProjectID(), host, opts.newSuggestedIndexOptions())
 	if err != nil {
 		return err
 	}
@@ -59,10 +62,15 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
-	return &atlas.NamespaceOptions{
-		Since:    opts.since,
-		Duration: opts.duration,
+func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
+	return &atlas.SuggestedIndexOptions{
+		Namespaces: opts.namespaces,
+		NIndexes:   opts.nIndexes,
+		NExamples:  opts.nExamples,
+		NamespaceOptions: atlas.NamespaceOptions{
+			Since:    opts.since,
+			Duration: opts.duration,
+		},
 	}
 }
 
@@ -119,6 +127,9 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
+	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.Namespaces)
+	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
+	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

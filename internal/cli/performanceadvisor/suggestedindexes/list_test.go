@@ -27,10 +27,10 @@ import (
 
 func TestNamespacesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
+	mockStore := mocks.NewMockPerformanceAdvisorIndexesLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.Namespaces
+	var expected *mongodbatlas.SuggestedIndexes
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -38,7 +38,7 @@ func TestNamespacesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.processName, listOpts.newNamespaceOptions()).
+		PerformanceAdvisorIndexes(listOpts.ProjectID, listOpts.processName, listOpts.newSuggestedIndexOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -53,6 +53,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since},
+		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.Namespaces, flag.NExamples, flag.NIndexes},
 	)
 }

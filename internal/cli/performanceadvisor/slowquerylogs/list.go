@@ -78,13 +78,12 @@ func (opts *ListOpts) validateProcessName() error {
 	return nil
 }
 
-func (opts *ListOpts) setHost() error{
-
+func (opts *ListOpts) setHost() error {
 	if opts.processName == "" {
 		opts.host = opts.hostID
 	} else {
 		err := opts.validateProcessName()
-		if err != nil{
+		if err != nil {
 			return err
 		}
 		opts.host = opts.processName
@@ -112,7 +111,7 @@ func ListBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := opts.setHost()
-			if err != nil{
+			if err != nil {
 				return err
 			}
 			return opts.Run()

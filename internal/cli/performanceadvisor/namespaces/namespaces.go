@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package opsmanager
+package namespaces
 
 import (
-	"testing"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		16,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "namespaces"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+	cmd.AddCommand(
+		ListBuilder())
+
+	return cmd
 }

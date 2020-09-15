@@ -26,8 +26,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
-{{.Namespace}}	{{.Type}}{{end}}
+const listTemplate = `ID	NAMESPACE	WEIGHT{{range .SuggestedIndexes}}
+{{.ID}}	{{.Namespace}}	{{.Weight}}{{end}}
 `
 
 type ListOpts struct {

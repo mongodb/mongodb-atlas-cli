@@ -36,7 +36,6 @@ type ListOpts struct {
 	store       store.PerformanceAdvisorSlowQueriesLister
 	processName string
 	hostID      string
-	host        string
 	since       int64
 	duration    int64
 	namespaces  string
@@ -50,7 +49,11 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), opts.host, opts.newSlowQueryOptions())
+	host, err := opts.host()
+	if err != nil {
+		return err
+	}
+	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), host, opts.newSlowQueryOptions())
 	if err != nil {
 		return err
 	}
@@ -70,7 +73,7 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 }
 
 func (opts *ListOpts) validateProcessName() error {
-	length := 2
+	const length = 2
 	process := strings.Split(opts.processName, ":")
 	if len(process) != length {
 		return fmt.Errorf("'%v' is not valid", opts.processName)
@@ -78,17 +81,24 @@ func (opts *ListOpts) validateProcessName() error {
 	return nil
 }
 
-func (opts *ListOpts) setHost() error {
+func (opts *ListOpts) host() (string, error) {
 	if opts.processName == "" {
-		opts.host = opts.hostID
-	} else {
-		err := opts.validateProcessName()
-		if err != nil {
-			return err
-		}
-		opts.host = opts.processName
+		return opts.hostID, nil
 	}
-	return nil
+	err := opts.validateProcessName()
+	if err != nil {
+		return "", err
+	}
+	return opts.processName, nil
+}
+
+func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
+	return func() error {
+		if config.Service() == config.CloudService {
+			return cmd.MarkFlagRequired(flag.ProcessName)
+		}
+		return cmd.MarkFlagRequired(flag.HostID)
+	}
 }
 
 // mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
@@ -101,19 +111,13 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			if config.Service() == config.CloudService {
-				_ = cmd.MarkFlagRequired(flag.ProcessName)
-			} else {
-				_ = cmd.MarkFlagRequired(flag.HostID)
-			}
-			return opts.initStore()
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.markRequired(cmd),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := opts.setHost()
-			if err != nil {
-				return err
-			}
 			return opts.Run()
 		},
 	}

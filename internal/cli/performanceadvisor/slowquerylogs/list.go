@@ -24,8 +24,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE{{range .SlowQuery}}
-{{.Namespace}}{{end}}
+const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
+{{.Namespace}}	{{.Line}}{{end}}
 `
 
 type ListOpts struct {

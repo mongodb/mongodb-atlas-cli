@@ -72,12 +72,17 @@ func (opts *ListOpts) validateProcessName() error {
 	return nil
 }
 
-func (opts *ListOpts) setHost() {
+func (opts *ListOpts) setHost() error {
 	if opts.processName == "" {
 		opts.host = opts.hostID
 	} else {
+		err := opts.validateProcessName()
+		if err != nil {
+			return err
+		}
 		opts.host = opts.processName
 	}
+	return nil
 }
 
 // mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
@@ -91,10 +96,6 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.Service() == config.CloudService {
 				_ = cmd.MarkFlagRequired(flag.ProcessName)
-				err := opts.validateProcessName()
-				if err != nil {
-					return err
-				}
 			} else {
 				_ = cmd.MarkFlagRequired(flag.HostID)
 			}
@@ -104,7 +105,10 @@ func ListBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.setHost()
+			err := opts.setHost()
+			if err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}

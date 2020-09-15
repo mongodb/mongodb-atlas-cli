@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/atlas/whitelist"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -62,6 +63,7 @@ func Builder() *cobra.Command {
 		security.Builder(),
 		integrations.Builder(),
 		maintenance.Builder(),
+		performanceadvisor.Builder(),
 	)
 
 	return cmd

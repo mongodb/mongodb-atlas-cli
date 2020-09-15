@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
+	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -60,6 +61,7 @@ func Builder() *cobra.Command {
 		logs.Builder(),
 		agents.Builder(),
 		maintenance.Builder(),
+		performanceadvisor.Builder(),
 	)
 
 	return cmd

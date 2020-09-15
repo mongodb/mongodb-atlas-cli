@@ -21,8 +21,8 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
 	github.com/tangzero/inflector v1.0.0
-	go.mongodb.org/atlas v0.4.1-0.20200911103357-a4f90048bddd
-	go.mongodb.org/ops-manager v0.9.4-0.20200909093650-6ad3df931828
+	go.mongodb.org/atlas v0.4.1-0.20200914112800-4040159bd364
+	go.mongodb.org/ops-manager v0.9.4-0.20200914120352-c80daa484c60
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

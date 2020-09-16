@@ -36,12 +36,22 @@ func (opts *WatchOpts) initStore() error {
 	return err
 }
 
+const (
+	waitingForUser    = "WAITING_FOR_USER"
+	failed            = "FAILED"
+	available         = "AVAILABLE"
+	pendingAcceptance = "PENDING_ACCEPTANCE"
+)
+
 func (opts *WatchOpts) watcher() (bool, error) {
 	result, err := opts.store.PeeringConnection(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "WAITING_FOR_USER" || result.Status == "FAILED" || result.Status == "AVAILABLE", nil
+	if result.Status != "" {
+		return result.Status == waitingForUser || result.Status == failed || result.Status == available, nil
+	}
+	return result.StatusName == pendingAcceptance || result.StatusName == failed || result.StatusName == available, nil
 }
 
 func (opts *WatchOpts) Run() error {

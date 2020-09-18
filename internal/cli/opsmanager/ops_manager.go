@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/monitoring"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/owner"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
@@ -63,6 +64,7 @@ func Builder() *cobra.Command {
 		dbusers.Builder(),
 		owner.Builder(),
 		events.Builder(),
+		monitoring.Builder(),
 		processes.Builder(),
 		metrics.Builder(),
 		logs.Builder(),

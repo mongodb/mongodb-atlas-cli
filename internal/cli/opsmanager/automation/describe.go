@@ -54,7 +54,10 @@ func DescribeBuilder() *cobra.Command {
 		Args:    cobra.NoArgs,
 		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), "use json output"),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

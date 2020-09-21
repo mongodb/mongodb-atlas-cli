@@ -72,15 +72,6 @@ func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
 	}
 }
 
-func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
-	return func() error {
-		if config.Service() == config.CloudService {
-			return cmd.MarkFlagRequired(flag.ProcessName)
-		}
-		return cmd.MarkFlagRequired(flag.HostID)
-	}
-}
-
 // mongocli atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes--nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
@@ -93,7 +84,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.markRequired(cmd),
+				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

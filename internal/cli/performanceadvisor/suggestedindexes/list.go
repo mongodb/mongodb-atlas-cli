@@ -72,7 +72,7 @@ func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
 	}
 }
 
-// mongocli atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes--nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId
+// mongocli atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes --nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

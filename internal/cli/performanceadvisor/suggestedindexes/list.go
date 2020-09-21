@@ -31,12 +31,12 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
-	store       store.PerformanceAdvisorIndexesLister
-	since       int64
-	duration    int64
-	namespaces  string
-	nIndexes    int64
-	nExamples   int64
+	store      store.PerformanceAdvisorIndexesLister
+	since      int64
+	duration   int64
+	namespaces string
+	nIndexes   int64
+	nExamples  int64
 }
 
 func (opts *ListOpts) initStore() error {

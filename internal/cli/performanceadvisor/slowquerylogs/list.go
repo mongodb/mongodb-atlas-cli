@@ -94,7 +94,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, 20000, usage.NLog)
-	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.Namespaces)
+	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SlowQueryNamespaces)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

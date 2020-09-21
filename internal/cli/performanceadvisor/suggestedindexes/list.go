@@ -14,9 +14,6 @@
 package suggestedindexes
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -33,6 +30,7 @@ const listTemplate = `ID	NAMESPACE	WEIGHT{{range .SuggestedIndexes}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.PerformanceAdvisorOpts
 	store       store.PerformanceAdvisorIndexesLister
 	processName string
 	hostID      string
@@ -50,7 +48,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := opts.host()
+	host, err := opts.Host()
 	if err != nil {
 		return err
 	}
@@ -74,26 +72,6 @@ func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
 	}
 }
 
-func (opts *ListOpts) validateProcessName() error {
-	const length = 2
-	process := strings.Split(opts.processName, ":")
-	if len(process) != length {
-		return fmt.Errorf("'%v' is not valid", opts.processName)
-	}
-	return nil
-}
-
-func (opts *ListOpts) host() (string, error) {
-	if opts.processName == "" {
-		return opts.hostID, nil
-	}
-	err := opts.validateProcessName()
-	if err != nil {
-		return "", err
-	}
-	return opts.processName, nil
-}
-
 func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
 	return func() error {
 		if config.Service() == config.CloudService {
@@ -103,7 +81,7 @@ func (opts *ListOpts) markRequired(cmd *cobra.Command) func() error {
 	}
 }
 
-// mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
+// mongocli atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes--nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
@@ -127,7 +105,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
-	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.Namespaces)
+	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SuggestedIndexNamespaces)
 	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
 	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 

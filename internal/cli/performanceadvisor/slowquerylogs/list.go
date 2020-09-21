@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package namespaces
+package slowquerylogs
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,17 +23,19 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
-{{.Namespace}}	{{.Type}}{{end}}
+const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
+{{.Namespace}}	{{.Line}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
-	store    store.PerformanceAdvisorNamespacesLister
-	since    int64
-	duration int64
+	store      store.PerformanceAdvisorSlowQueriesLister
+	since      int64
+	duration   int64
+	namespaces string
+	nLog       int64
 }
 
 func (opts *ListOpts) initStore() error {
@@ -47,7 +49,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), host, opts.newNamespaceOptions())
+	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), host, opts.newSlowQueryOptions())
 	if err != nil {
 		return err
 	}
@@ -55,16 +57,21 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
-	return &atlas.NamespaceOptions{
-		Since:    opts.since,
-		Duration: opts.duration,
+func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
+	return &atlas.SlowQueryOptions{
+		Namespaces: opts.namespaces,
+		NLogs:      opts.nLog,
+		NamespaceOptions: atlas.NamespaceOptions{
+			Since:    opts.since,
+			Duration: opts.duration,
+		},
 	}
 }
 
-// mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId
+// mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   list,
@@ -86,8 +93,11 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
+	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, 20000, usage.NLog)
+	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.Namespaces)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
 	return cmd
 }

@@ -25,6 +25,8 @@ const (
 	HostID                          = "The unique identifier for the host of a MongoDB process. "
 	Duration                        = "Length of time from the since parameter, in milliseconds, for which you want to receive results."
 	Tier                            = "Tier for each data-bearing server in the cluster."
+	NLog                            = "Maximum number of log lines to return."
+	Namespaces                      = "Namespaces from which to retrieve suggested slow query logs."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
 	Backup                          = "If true, enables Continuous Cloud Backup for your cluster."
 	Namespaces                      = "Namespaces from which to retrieve suggested indexes. "

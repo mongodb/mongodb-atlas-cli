@@ -32,8 +32,6 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store       store.PerformanceAdvisorIndexesLister
-	processName string
-	hostID      string
 	since       int64
 	duration    int64
 	namespaces  string
@@ -92,8 +90,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.hostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.processName, flag.ProcessName, "", usage.ProcessName)
+	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
+	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SuggestedIndexNamespaces)

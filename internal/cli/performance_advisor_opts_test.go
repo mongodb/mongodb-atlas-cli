@@ -17,8 +17,9 @@ package cli
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPerformanceAdvisorOpts_ValidateProcessName(t *testing.T) {
@@ -38,8 +39,6 @@ func TestPerformanceAdvisorOpts_ValidateProcessName(t *testing.T) {
 		opts := new(PerformanceAdvisorOpts)
 		opts.ProcessName = tc.input
 		got := opts.validateProcessName()
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		assert.Equal(t, tc.want, got)
 	}
 }

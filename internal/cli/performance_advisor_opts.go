@@ -57,8 +57,8 @@ func (opts *PerformanceAdvisorOpts) Host() (string, error) {
 	if opts.ProcessName == "" {
 		return opts.HostID, nil
 	}
-	err := opts.validateProcessName()
-	if err != nil {
+
+	if err := opts.validateProcessName(); err != nil {
 		return "", err
 	}
 	return opts.ProcessName, nil

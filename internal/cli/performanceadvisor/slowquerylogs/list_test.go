@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package namespaces
+package slowquerylogs
 
 import (
 	"testing"
@@ -25,12 +25,12 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestNamespacesList_Run(t *testing.T) {
+func TestSlowQueryLogsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
+	mockStore := mocks.NewMockPerformanceAdvisorSlowQueriesLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.Namespaces
+	var expected *mongodbatlas.SlowQueries
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -38,7 +38,7 @@ func TestNamespacesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.ProcessName, listOpts.newNamespaceOptions()).
+		PerformanceAdvisorSlowQueries(listOpts.ProjectID, listOpts.ProcessName, listOpts.newSlowQueryOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -53,6 +53,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.ProcessName, flag.HostID},
+		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.HostID, flag.ProcessName, flag.Namespaces, flag.NLog},
 	)
 }

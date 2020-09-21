@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package performanceadvisor
+package slowquerylogs
 
 import (
 	"testing"

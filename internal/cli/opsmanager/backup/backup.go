@@ -27,9 +27,12 @@ func Builder() *cobra.Command {
 		Short:   Backup,
 	}
 
-	cmd.AddCommand(SnapshotsBuilder())
-	cmd.AddCommand(RestoresBuilder())
-	cmd.AddCommand(CheckpointsBuilder())
+	cmd.AddCommand(
+		SnapshotsBuilder(),
+		RestoresBuilder(),
+		CheckpointsBuilder(),
+		EnableBuilder(),
+	)
 
 	return cmd
 }

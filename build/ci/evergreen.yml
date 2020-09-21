@@ -1319,7 +1319,7 @@ buildvariants:
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
-      - windows-64-vs2017-compile
+      - windows-vsCurrent-small
     expansions:
       go_root: "c:\\golang\\go1.15"
       go_bin: "c:\\golang\\go1.15/bin"
@@ -1328,7 +1328,7 @@ buildvariants:
   - name: release_msi
     display_name: "Release (go-msi)"
     run_on:
-      - windows-64-vs2017-compile
+      - windows-vsCurrent-small
     expansions:
       go_root: "c:\\golang\\go1.15"
       go_bin: "c:\\golang\\go1.15/bin"

@@ -45,7 +45,7 @@ func (opts *ListOpts) initStore() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := opts.host()
+	host, err := opts.Host()
 	if err != nil {
 		return err
 	}
@@ -68,17 +68,6 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 	}
 }
 
-func (opts *ListOpts) host() (string, error) {
-	if opts.ProcessName == "" {
-		return opts.HostID, nil
-	}
-	err := opts.ValidateProcessName()
-	if err != nil {
-		return "", err
-	}
-	return opts.ProcessName, nil
-}
-
 // mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
@@ -92,7 +81,7 @@ func ListBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkProcessNameHostIDRequired(cmd),
+				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

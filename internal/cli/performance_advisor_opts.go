@@ -28,8 +28,8 @@ type PerformanceAdvisorOpts struct {
 	HostID      string
 }
 
-// ValidateProcessName checks that the processName respects the format processName:port
-func (opts *PerformanceAdvisorOpts) ValidateProcessName() error {
+// validateProcessName checks that the processName respects the format processName:port
+func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 	const length = 2
 	process := strings.Split(opts.ProcessName, ":")
 	if len(process) != length {
@@ -38,14 +38,28 @@ func (opts *PerformanceAdvisorOpts) ValidateProcessName() error {
 	return nil
 }
 
-// MarkProcessNameHostIDRequired marks processName or hostId as required in accordance with the service
+// MarkRequiredFlagsByService marks processName or hostId as required in accordance with the service
+//
 // Atlas: processName is required
+//
 // OM/CM: hostId is required
-func (opts *PerformanceAdvisorOpts) MarkProcessNameHostIDRequired(cmd *cobra.Command) func() error {
+func (opts *PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
 	return func() error {
 		if config.Service() == config.CloudService {
 			return cmd.MarkFlagRequired(flag.ProcessName)
 		}
 		return cmd.MarkFlagRequired(flag.HostID)
 	}
+}
+
+// Host returns the correct processName or the hostId in accordance with the service
+func (opts *PerformanceAdvisorOpts) Host() (string, error) {
+	if opts.ProcessName == "" {
+		return opts.HostID, nil
+	}
+	err := opts.validateProcessName()
+	if err != nil {
+		return "", err
+	}
+	return opts.ProcessName, nil
 }

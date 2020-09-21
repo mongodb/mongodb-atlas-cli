@@ -37,7 +37,7 @@ func TestPerformanceAdvisorOpts_ValidateProcessName(t *testing.T) {
 	for _, tc := range tests {
 		opts := new(PerformanceAdvisorOpts)
 		opts.ProcessName = tc.input
-		got := opts.ValidateProcessName()
+		got := opts.validateProcessName()
 		if !reflect.DeepEqual(tc.want, got) {
 			t.Fatalf("expected: %v, got: %v", tc.want, got)
 		}

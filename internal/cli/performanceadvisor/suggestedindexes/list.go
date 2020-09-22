@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package slowquerylogs
+package suggestedindexes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,19 +23,20 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
-{{.Namespace}}	{{.Line}}{{end}}
+const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range .SuggestedIndexes}}  
+{{ .ID }}	{{ .Namespace}}	{ {{range $i, $element := .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
-	store      store.PerformanceAdvisorSlowQueriesLister
+	store      store.PerformanceAdvisorIndexesLister
 	since      int64
 	duration   int64
 	namespaces string
-	nLog       int64
+	nIndexes   int64
+	nExamples  int64
 }
 
 func (opts *ListOpts) initStore() error {
@@ -49,7 +50,7 @@ func (opts *ListOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), host, opts.newSlowQueryOptions())
+	r, err := opts.store.PerformanceAdvisorIndexes(opts.ConfigProjectID(), host, opts.newSuggestedIndexOptions())
 	if err != nil {
 		return err
 	}
@@ -57,10 +58,11 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
-	return &atlas.SlowQueryOptions{
+func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
+	return &atlas.SuggestedIndexOptions{
 		Namespaces: opts.namespaces,
-		NLogs:      opts.nLog,
+		NIndexes:   opts.nIndexes,
+		NExamples:  opts.nExamples,
 		NamespaceOptions: atlas.NamespaceOptions{
 			Since:    opts.since,
 			Duration: opts.duration,
@@ -68,10 +70,9 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 	}
 }
 
-// mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
+// mongocli atlas performanceAdvisor suggestedIndexes list  --processName processName --nIndexes nIndexes --nExamples nExamples --namespaces namespaces --since since --duration duration  --projectId projectId
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
-	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   list,
@@ -93,11 +94,11 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
-	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, 20000, usage.NLog)
-	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SlowQueryNamespaces)
+	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SuggestedIndexNamespaces)
+	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
+	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
 	return cmd
 }

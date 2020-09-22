@@ -24,8 +24,13 @@ import (
 )
 
 const listTemplate = `ID	NAMESPACE	INDEX{{range .SuggestedIndexes}}
-{{- $id := .ID}}	{{- $name := .Namespace}}	{{- range .Index}}{{- range $key, $value := .}}
-{{ $id }}	{{ $name }}	{ {{ $key }}:{{ $value }} } {{ end }}{{ end }}{{ end }}
+{{- $id := .ID}}   {{- $name := .Namespace}}  
+{{ $id }}	{{ $name }}	{
+{{- range .Index}}
+{{- range $key, $value := .}}
+			{{ $key }}:{{ $value }} {{ end }}{{ end }}
+		}
+{{ end }}
 `
 
 type ListOpts struct {

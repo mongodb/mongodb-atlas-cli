@@ -28,7 +28,7 @@ const listTemplate = `ID	NAMESPACE	INDEX{{range .SuggestedIndexes}}
 {{ $id }}	{{ $name }}	{
 {{- range .Index}}
 {{- range $key, $value := .}}
-			{{ $key }}:{{ $value }}, {{ end }}{{ end }}
+			"{{ $key }}":{{ $value }}, {{ end }}{{ end }}
 		}
 {{ end }}
 `

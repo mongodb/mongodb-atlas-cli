@@ -21,13 +21,12 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type DisableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CustomDNSUpdater
+	store store.CustomDNSDisabler
 }
 
 var disableTemplate = "DNS configuration disabled.\n"
@@ -39,17 +38,11 @@ func (opts *DisableOpts) initStore() error {
 }
 
 func (opts *DisableOpts) Run() error {
-	r, err := opts.store.UpdateCustomDNS(opts.ConfigProjectID(), opts.newAWSCustomDNSSetting())
+	r, err := opts.store.DisableCustomDNS(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
-}
-
-func (opts *DisableOpts) newAWSCustomDNSSetting() *atlas.AWSCustomDNSSetting {
-	return &atlas.AWSCustomDNSSetting{
-		Enabled: false,
-	}
 }
 
 // mongocli atlas customDns aws disable [--projectId projectId]
@@ -70,6 +63,7 @@ func DisableBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

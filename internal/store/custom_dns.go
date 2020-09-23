@@ -14,7 +14,7 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSUpdater,CustomDNSDescriber
+//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
 
 import (
 	"context"
@@ -24,18 +24,39 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type CustomDNSUpdater interface {
-	UpdateCustomDNS(string, *atlas.AWSCustomDNSSetting) (*atlas.AWSCustomDNSSetting, error)
+type CustomDNSEnabler interface {
+	EnableCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
+}
+
+type CustomDNSDisabler interface {
+	DisableCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
 }
 
 type CustomDNSDescriber interface {
 	DescribeCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
 }
 
-// UpdateCustomDns encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateCustomDNS(projectID string, customDNSSetting *atlas.AWSCustomDNSSetting) (*atlas.AWSCustomDNSSetting, error) {
+// EnableCustomDNS encapsulates the logic to manage different cloud providers
+func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
+		customDNSSetting := &atlas.AWSCustomDNSSetting{
+			Enabled: true,
+		}
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DisableCustomDNS encapsulates the logic to manage different cloud providers
+func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
+	switch s.service {
+	case config.CloudService:
+		customDNSSetting := &atlas.AWSCustomDNSSetting{
+			Enabled: false,
+		}
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
 		return result, err
 	default:

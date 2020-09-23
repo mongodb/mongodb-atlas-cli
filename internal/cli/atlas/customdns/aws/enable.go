@@ -21,13 +21,12 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CustomDNSUpdater
+	store store.CustomDNSEnabler
 }
 
 var enableTemplate = "DNS configuration enabled.\n"
@@ -39,17 +38,11 @@ func (opts *EnableOpts) initStore() error {
 }
 
 func (opts *EnableOpts) Run() error {
-	r, err := opts.store.UpdateCustomDNS(opts.ConfigProjectID(), opts.newAWSCustomDNSSetting())
+	r, err := opts.store.EnableCustomDNS(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
-}
-
-func (opts *EnableOpts) newAWSCustomDNSSetting() *atlas.AWSCustomDNSSetting {
-	return &atlas.AWSCustomDNSSetting{
-		Enabled: true,
-	}
 }
 
 // mongocli atlas customDns aws enable [--projectId projectId]
@@ -70,6 +63,7 @@ func EnableBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

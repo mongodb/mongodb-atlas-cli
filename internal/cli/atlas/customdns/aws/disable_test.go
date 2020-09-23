@@ -37,7 +37,7 @@ func TestDisableBuilder(t *testing.T) {
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCustomDNSUpdater(ctrl)
+	mockStore := mocks.NewMockCustomDNSDisabler(ctrl)
 	defer ctrl.Finish()
 
 	expected := &atlas.AWSCustomDNSSetting{
@@ -50,7 +50,7 @@ func TestDisableOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateCustomDNS(opts.ProjectID, opts.newAWSCustomDNSSetting()).
+		DisableCustomDNS(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

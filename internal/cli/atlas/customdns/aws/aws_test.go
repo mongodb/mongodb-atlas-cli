@@ -11,39 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build unit
 
-package clusters
+package aws
 
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestWatch_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
-	defer ctrl.Finish()
-
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
-
-	opts := &WatchOpts{
-		name:  "test",
-		store: mockStore,
-	}
-
-	mockStore.
-		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
-		Return(expected, nil).
-		Times(1)
-
-	err := opts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+func TestAWSBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		3,
+		[]string{},
+	)
 }

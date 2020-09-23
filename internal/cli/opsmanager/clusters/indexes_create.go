@@ -148,7 +148,7 @@ func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 func IndexesCreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create [name]",
 		Short: CreateIndex,
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

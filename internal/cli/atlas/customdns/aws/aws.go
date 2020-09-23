@@ -12,38 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package clusters
+package aws
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestWatch_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
-	defer ctrl.Finish()
-
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
-
-	opts := &WatchOpts{
-		name:  "test",
-		store: mockStore,
+func Builder() *cobra.Command {
+	const use = "aws"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
 	}
 
-	mockStore.
-		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
-		Return(expected, nil).
-		Times(1)
+	cmd.AddCommand(
+		EnableBuilder(),
+		DisableBuilder(),
+		DescribeBuilder(),
+	)
 
-	err := opts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

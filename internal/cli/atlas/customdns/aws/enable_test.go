@@ -14,31 +14,43 @@
 
 // +build unit
 
-package clusters
+package aws
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestWatch_Run(t *testing.T) {
+func TestEnableBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		EnableBuilder(),
+		0,
+		[]string{flag.ProjectID},
+	)
+}
+
+func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
+	mockStore := mocks.NewMockCustomDNSEnabler(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
+	expected := &atlas.AWSCustomDNSSetting{
+		Enabled: true,
+	}
 
-	opts := &WatchOpts{
-		name:  "test",
+	opts := &EnableOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
+		EnableCustomDNS(opts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

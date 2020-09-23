@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package aws
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -26,9 +26,12 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.AtlasClusterDescriber
+	store store.CustomDNSDescriber
 }
+
+const describeTemplate = `ENABLED
+{{.Enabled}}
+`
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
@@ -36,30 +39,21 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
-`
-
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	r, err := opts.store.DescribeCustomDNS(opts.ConfigProjectID())
 	if err != nil {
 		return err
-	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
 	}
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <name> --projectId projectId
+// mongocli atlas customDns aws describe [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: describeCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:     "describe",
+		Short:   describe,
+		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
@@ -67,7 +61,6 @@ func DescribeBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}

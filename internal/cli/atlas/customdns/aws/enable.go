@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package aws
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,51 +23,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
+type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.AtlasClusterDescriber
+	store store.CustomDNSEnabler
 }
 
-func (opts *DescribeOpts) initStore() error {
+var enableTemplate = "DNS configuration enabled.\n"
+
+func (opts *EnableOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
-`
-
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+func (opts *EnableOpts) Run() error {
+	r, err := opts.store.EnableCustomDNS(opts.ConfigProjectID())
 	if err != nil {
 		return err
-	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
 	}
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <name> --projectId projectId
-func DescribeBuilder() *cobra.Command {
-	opts := &DescribeOpts{}
+// mongocli atlas customDns aws enable [--projectId projectId]
+func EnableBuilder() *cobra.Command {
+	opts := &EnableOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: describeCluster,
-		Args:  cobra.ExactArgs(1),
+		Use:   "enable",
+		Short: enable,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}

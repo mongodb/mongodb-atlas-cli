@@ -26,7 +26,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Cluster{}
@@ -38,7 +38,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Cluster(describeOpts.ProjectID, describeOpts.name).
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 

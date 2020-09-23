@@ -53,7 +53,7 @@ type CloudManagerClustersLister interface {
 
 type CloudManagerClustersDescriber interface {
 	AutomationGetter
-	ClusterDescriber
+	OpsManagerClusterDescriber
 }
 
 func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {

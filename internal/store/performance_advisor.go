@@ -23,13 +23,17 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister
+//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister
 type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
 }
 
 type PerformanceAdvisorSlowQueriesLister interface {
 	PerformanceAdvisorSlowQueries(string, string, *atlas.SlowQueryOptions) (*atlas.SlowQueries, error)
+}
+
+type PerformanceAdvisorIndexesLister interface {
+	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
 }
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers
@@ -54,6 +58,20 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers
+func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

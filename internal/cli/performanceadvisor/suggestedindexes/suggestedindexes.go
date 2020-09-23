@@ -12,28 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package performanceadvisor
+package suggestedindexes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/slowquerylogs"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "performanceAdvisor"
+	const use = "suggestedIndexes"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   short,
 	}
 	cmd.AddCommand(
-		namespaces.Builder(),
-		slowquerylogs.Builder(),
-		suggestedindexes.Builder(),
-	)
+		ListBuilder())
 
 	return cmd
 }

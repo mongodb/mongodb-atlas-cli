@@ -28,7 +28,9 @@ const (
 	Since                           = "since"                           // Since flag
 	Duration                        = "duration"                        // Duration Flag
 	NLog                            = "nLog"                            // NLog flag
-	Namespaces                      = "namespaces"                      // Namespaces flag
+	Namespaces                      = "namespaces"                      // Namespaces flag 	// Namespaces flag
+	NIndexes                        = "nIndexes"                        // NIndexes flag
+	NExamples                       = "nExamples"                       // NExamples flag
 	AuthDB                          = "authDB"                          // AuthDB flag
 	Hostname                        = "hostname"                        // Hostname flag
 	Port                            = "port"                            // Port flag

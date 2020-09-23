@@ -84,6 +84,16 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
 		}
+		// There can only be one
+		if cluster.ReplicationSpecs != nil {
+			cluster.ReplicationSpec = nil
+		}
+		// This can't be sent
+		cluster.MongoURI = ""
+		cluster.MongoURIWithOptions = ""
+		cluster.MongoURIUpdated = ""
+		cluster.StateName = ""
+		cluster.MongoDBVersion = ""
 	} else {
 		opts.applyOpts(cluster)
 	}

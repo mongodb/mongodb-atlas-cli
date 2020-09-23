@@ -54,7 +54,7 @@ func (opts *DescribeOpts) Run() error {
 
 func (opts *DescribeOpts) cluster() (interface{}, error) {
 	if opts.ConfigOutput() == "" {
-		return opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+		return opts.store.OpsManagerCluster(opts.ConfigProjectID(), opts.name)
 	}
 	c, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {

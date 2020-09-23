@@ -21,14 +21,13 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	name  string
-	store store.ClusterDescriber
+	store store.AtlasClusterDescriber
 }
 
 func (opts *WatchOpts) initStore() error {
@@ -38,12 +37,11 @@ func (opts *WatchOpts) initStore() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.Cluster(opts.ConfigProjectID(), opts.name)
+	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return false, err
 	}
-	c, ok := result.(*mongodbatlas.Cluster)
-	return ok && c.StateName == "IDLE", nil
+	return result.StateName == "IDLE", nil
 }
 
 func (opts *WatchOpts) Run() error {

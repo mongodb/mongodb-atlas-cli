@@ -35,7 +35,7 @@ type UpdateOpts struct {
 	mdbVersion string
 	filename   string
 	fs         afero.Fs
-	store      store.ClusterStore
+	store      store.AtlasClusterGetterUpdater
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -73,14 +73,9 @@ func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
 		if opts.name == "" {
 			opts.name = cluster.Name
 		}
-	} else {
-		r, err := opts.store.Cluster(opts.ProjectID, opts.name)
-		if err != nil {
-			return nil, err
-		}
-		cluster = r.(*atlas.Cluster)
+		return cluster, nil
 	}
-	return cluster, nil
+	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {

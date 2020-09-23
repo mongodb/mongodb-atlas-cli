@@ -17,5 +17,6 @@ const (
 	short      = "Users operations."
 	long       = "Create, list and manage your users."
 	listUsers  = "List users of a team."
+	addUser    = "Add a user to a team."
 	deleteUser = "Delete user from a team."
 )

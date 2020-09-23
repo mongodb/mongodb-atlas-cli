@@ -23,14 +23,18 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,ClusterStore,ClusterPauser,ClusterStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
 }
 
-type ClusterDescriber interface {
-	Cluster(string, string) (interface{}, error)
+type AtlasClusterDescriber interface {
+	AtlasCluster(string, string) (*atlas.Cluster, error)
+}
+
+type OpsManagerClusterDescriber interface {
+	OpsManagerCluster(string, string) (*opsmngr.Cluster, error)
 }
 
 type ClusterCreator interface {
@@ -53,11 +57,8 @@ type ClusterStarter interface {
 	StartCluster(string, string) (*atlas.Cluster, error)
 }
 
-type ClusterStore interface {
-	ClusterLister
-	ClusterDescriber
-	ClusterCreator
-	ClusterDeleter
+type AtlasClusterGetterUpdater interface {
+	AtlasClusterDescriber
 	ClusterUpdater
 }
 
@@ -126,12 +127,20 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 	}
 }
 
-// Cluster encapsulate the logic to manage different cloud providers
-func (s *Store) Cluster(projectID, name string) (interface{}, error) {
+// AtlasCluster encapsulate the logic to manage different cloud providers
+func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OpsManagerCluster encapsulate the logic to manage different cloud providers
+func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
+	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err

@@ -39,7 +39,7 @@ func TestDescribe_Run(t *testing.T) {
 		expected := &opsmngr.Cluster{}
 		mockStore.
 			EXPECT().
-			Cluster(descOpts.ProjectID, descOpts.name).
+			OpsManagerCluster(descOpts.ProjectID, descOpts.name).
 			Return(expected, nil).
 			Times(1)
 

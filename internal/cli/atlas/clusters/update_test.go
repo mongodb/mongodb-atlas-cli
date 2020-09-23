@@ -27,7 +27,7 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterStore(ctrl)
+	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
 	defer ctrl.Finish()
 	expected := &mongodbatlas.Cluster{
 		ProviderSettings: &mongodbatlas.ProviderSettings{},
@@ -44,7 +44,7 @@ func TestUpdate_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			Cluster(updateOpts.ProjectID, updateOpts.name).
+			AtlasCluster(updateOpts.ProjectID, updateOpts.name).
 			Return(expected, nil).
 			Times(1)
 

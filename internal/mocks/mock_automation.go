@@ -267,21 +267,6 @@ func (m *MockCloudManagerClustersDescriber) EXPECT() *MockCloudManagerClustersDe
 	return m.recorder
 }
 
-// Cluster mocks base method
-func (m *MockCloudManagerClustersDescriber) Cluster(arg0, arg1 string) (interface{}, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Cluster", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Cluster indicates an expected call of Cluster
-func (mr *MockCloudManagerClustersDescriberMockRecorder) Cluster(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cluster", reflect.TypeOf((*MockCloudManagerClustersDescriber)(nil).Cluster), arg0, arg1)
-}
-
 // GetAutomationConfig mocks base method
 func (m *MockCloudManagerClustersDescriber) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
@@ -295,4 +280,19 @@ func (m *MockCloudManagerClustersDescriber) GetAutomationConfig(arg0 string) (*o
 func (mr *MockCloudManagerClustersDescriberMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockCloudManagerClustersDescriber)(nil).GetAutomationConfig), arg0)
+}
+
+// OpsManagerCluster mocks base method
+func (m *MockCloudManagerClustersDescriber) OpsManagerCluster(arg0, arg1 string) (*opsmngr.Cluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OpsManagerCluster", arg0, arg1)
+	ret0, _ := ret[0].(*opsmngr.Cluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// OpsManagerCluster indicates an expected call of OpsManagerCluster
+func (mr *MockCloudManagerClustersDescriberMockRecorder) OpsManagerCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerCluster", reflect.TypeOf((*MockCloudManagerClustersDescriber)(nil).OpsManagerCluster), arg0, arg1)
 }

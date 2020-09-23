@@ -48,13 +48,13 @@ func (opts *AddOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) user(s) add username1 username2 .. usernameN --teamId teamId --orgId orgId
+// mongocli iam team(s) user(s) add <userId> [userId]... --teamId teamId --orgId orgId
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:   "add username1 username2 .. usernameN",
+		Use:   "add <userId> [userId]...",
 		Args:  cobra.MinimumNArgs(1),
-		Short: listUsers,
+		Short: addUser,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args
 			return opts.PreRunEOrg(

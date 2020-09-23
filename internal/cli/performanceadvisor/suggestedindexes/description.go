@@ -11,12 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package users
+package suggestedindexes
 
 const (
-	short      = "Users operations."
-	long       = "Create, list and manage your users."
-	listUsers  = "List users of a team."
-	addUser    = "Add a user to a team."
-	deleteUser = "Delete user from a team."
+	short = "Get suggested indexes for collections experiencing slow queries"
+	list  = "Retrieves suggested indexes for collections experiencing slow queries"
 )

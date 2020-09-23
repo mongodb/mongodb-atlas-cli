@@ -3,6 +3,8 @@
 Currently, you're not able to easily rename a cluster, 
 however you could deploy a new cluster with the same properties and only change the name.
 
+**Note:** this won't migrate any data of the old cluster to the new cluster.
+
 One way to do this with the cli could be:
 
 ```bash

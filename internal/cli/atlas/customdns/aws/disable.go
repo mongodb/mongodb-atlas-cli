@@ -52,7 +52,7 @@ func (opts *DisableOpts) newAWSCustomDNSSetting() *atlas.AWSCustomDNSSetting {
 	}
 }
 
-// mongocli atlas customDns aws enable [--projectId projectId]
+// mongocli atlas customDns aws disable [--projectId projectId]
 func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{

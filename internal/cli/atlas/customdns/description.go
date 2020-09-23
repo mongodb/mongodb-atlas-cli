@@ -14,5 +14,5 @@
 package customdns
 
 const (
-	short = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
+	short = "Manage DNS configuration of Atlas project’s clusters deployed to AWS."
 )

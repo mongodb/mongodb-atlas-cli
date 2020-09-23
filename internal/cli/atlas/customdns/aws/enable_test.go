@@ -19,12 +19,11 @@ package aws
 import (
 	"testing"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestEnableBuilder(t *testing.T) {

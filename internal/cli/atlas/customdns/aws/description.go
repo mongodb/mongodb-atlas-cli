@@ -14,8 +14,8 @@
 package aws
 
 const (
-	short    = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
-	enable   = "Enable the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
-	disable  = "Disable the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
-	describe = "Describe the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
+	short    = "Manage DNS configuration of an Atlas project’s cluster deployed to AWS."
+	enable   = "Enable the custom DNS configuration of an Atlas project’s cluster deployed to AWS."
+	disable  = "Disable the custom DNS configuration of an Atlas project’s cluster deployed to AWS."
+	describe = "Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS."
 )

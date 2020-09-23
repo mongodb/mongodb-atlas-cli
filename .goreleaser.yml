@@ -83,7 +83,7 @@ changelog:
     - '^docs:'
     - '^test:'
 release:
-  draft: true
+  draft: true # we only publish after the Windows MSI gets uploaded
   prerelease: auto
   extra_files:
     - glob: ./dist/mongocli_macos_signed_x86_64.zip

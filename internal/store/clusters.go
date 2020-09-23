@@ -127,7 +127,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 	}
 }
 
-// AtlasCluster encapsulate the logic to manage different cloud providers
+// AtlasCluster encapsulates the logic to manage different cloud providers
 func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:

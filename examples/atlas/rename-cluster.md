@@ -18,5 +18,3 @@ In case that **zsh** is available to you can even use the following utilities:
 (TMPSUFFIX=.json; mongocli atlas clusters create newName -f =(mongocli atlas clusters describe oldName -o json))
 mongocli atlas cluster delete oldName --force
 ```
-
-

@@ -11,8 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package customdns
+package aws
 
 const (
-	short = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
+	short    = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
+	enable   = "Enable the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
+	disable  = "Disable the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
+	describe = "Describe the custom DNS configuration of an Atlas project’s clusters deployed to AWS."
 )

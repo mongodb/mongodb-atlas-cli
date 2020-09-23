@@ -11,8 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
+
 package customdns
 
-const (
-	short = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
+import (
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/cli"
 )
+
+func TestCustomDNSBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
+	)
+}

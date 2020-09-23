@@ -14,11 +14,12 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSUpdater
+//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSUpdater,CustomDNSDescriber
 
 import (
 	"context"
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -27,12 +28,26 @@ type CustomDNSUpdater interface {
 	UpdateCustomDNS(string, *atlas.AWSCustomDNSSetting) (*atlas.AWSCustomDNSSetting, error)
 }
 
+type CustomDNSDescriber interface {
+	DescribeCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
+}
 
 // UpdateCustomDns encapsulates the logic to manage different cloud providers
 func (s *Store) UpdateCustomDNS(projectID string, customDNSSetting *atlas.AWSCustomDNSSetting) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DescribeCustomDNS encapsulates the logic to manage different cloud providers
+func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(context.Background(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

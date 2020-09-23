@@ -16,6 +16,7 @@ package customdns
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/customdns/aws"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +28,7 @@ func Builder() *cobra.Command {
 		Short:   short,
 	}
 
+	cmd.AddCommand(aws.Builder())
 
 	return cmd
 }

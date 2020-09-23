@@ -11,8 +11,27 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package customdns
 
-const (
-	short = "Manage DNS configuration of an Atlas project’s clusters deployed to AWS."
+package aws
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "aws"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+
+	cmd.AddCommand(
+		EnableBuilder(),
+		DisableBuilder(),
+		DescribeBuilder(),
+	)
+
+	return cmd
+}

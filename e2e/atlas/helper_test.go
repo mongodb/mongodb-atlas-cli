@@ -47,6 +47,8 @@ const (
 	integrationsEntity     = "integrations"
 	securityEntity         = "security"
 	ldapEntity             = "ldap"
+	awsEntity              = "aws"
+	customDNSEntity        = "customDns"
 )
 
 func getHostnameAndPort() (string, error) {

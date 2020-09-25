@@ -31,6 +31,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/versionmanifest"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -72,6 +73,7 @@ func Builder() *cobra.Command {
 		diagnosearchive.Builder(),
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
+		versionmanifest.Builder(),
 	)
 	return cmd
 }

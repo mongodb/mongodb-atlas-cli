@@ -29,7 +29,6 @@ const updateTemplate = "Version manifest updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
 	versionManifest string
 	store           store.VersionManifestUpdater
 }
@@ -54,22 +53,20 @@ func (opts *UpdateOpts) version() string {
 	if strings.Contains(opts.versionManifest, ".json") {
 		return opts.versionManifest
 	}
-
 	return opts.versionManifest + ".json"
 }
 
 // mongocli om versionManifest(s) update <version>
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
+	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update <version>",
 		Short: update,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
-			)
+			opts.OutWriter = cmd.OutOrStdout()
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionManifest = args[0]

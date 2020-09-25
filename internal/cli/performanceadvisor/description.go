@@ -14,5 +14,5 @@
 package performanceadvisor
 
 const (
-	short = "Performance Advisor operations"
+	short = "Performance Advisor operations."
 )

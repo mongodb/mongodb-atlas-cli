@@ -32,11 +32,11 @@ type VersionManifestUpdater interface {
 func (s *Store) UpdateVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		versionManifest, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
+		versionManifestStruct, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
 		if err != nil {
 			return nil, err
 		}
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifestStruct)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

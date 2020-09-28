@@ -19,6 +19,9 @@ package config
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -45,4 +48,13 @@ func TestAutomationShowOpts_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
+	)
 }

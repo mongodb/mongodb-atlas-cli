@@ -12,29 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+// +build unit
+
+package config
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
+func TestAutomationShowOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockBackupConfigGetter(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.BackupConfig{}
+
+	opts := &DescribeOpts{
+		store: mockStore,
 	}
 
-	cmd.AddCommand(
-		SnapshotsBuilder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-	)
+	mockStore.
+		EXPECT().
+		GetBackupConfig(opts.ProjectID, opts.clusterID).
+		Return(expected, nil).
+		Times(1)
 
-	return cmd
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

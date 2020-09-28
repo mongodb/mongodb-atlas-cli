@@ -18,14 +18,20 @@ import (
 	"context"
 	"fmt"
 
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter
+//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,BackupConfigLister
 
 type BackupConfigGetter interface {
 	GetBackupConfig(string, string) (*opsmngr.BackupConfig, error)
+}
+
+type BackupConfigLister interface {
+	ListBackupConfigs(string, *atlas.ListOptions) (*opsmngr.BackupConfigs, error)
 }
 
 // GetBackupConfig encapsulates the logic to manage different cloud providers
@@ -33,6 +39,17 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ListBackupConfigs encapsulates the logic to manage different cloud providers
+func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(context.Background(), projectID, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

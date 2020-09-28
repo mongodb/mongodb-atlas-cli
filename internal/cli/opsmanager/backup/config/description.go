@@ -16,4 +16,5 @@ package config
 const (
 	short    = "Manage backup configurations for your project."
 	describe = "Get a backup configuration."
+	list     = "List backup configurations for your project."
 )

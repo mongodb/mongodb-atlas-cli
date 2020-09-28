@@ -22,10 +22,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter
+//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,BackupConfigUpdater
 
 type BackupConfigGetter interface {
 	GetBackupConfig(string, string) (*opsmngr.BackupConfig, error)
+}
+
+type BackupConfigUpdater interface {
+	UpdateBackupConfig(*opsmngr.BackupConfig) (*opsmngr.BackupConfig, error)
 }
 
 // GetBackupConfig encapsulates the logic to manage different cloud providers
@@ -33,6 +37,17 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateBackupConfig encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateBackupConfig(backupConfig *opsmngr.BackupConfig) (*opsmngr.BackupConfig, error) {
+	switch s.service {
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Update(context.Background(), backupConfig.GroupID, backupConfig.ClusterID, backupConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

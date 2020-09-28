@@ -31,7 +31,7 @@ type BackupConfigGetter interface {
 // GetBackupConfig encapsulates the logic to manage different cloud providers
 func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupConfig, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:

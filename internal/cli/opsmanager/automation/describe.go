@@ -52,7 +52,6 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show", "get"},
 		Short:   DescribeAutomationConfig,
 		Args:    cobra.NoArgs,
-		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

@@ -16,7 +16,7 @@ package automation
 const (
 	Automation               = "Manage automation configuration for your project."
 	ShowAutomationStatus     = "Show the current status of the automation config."
-	UpdateAutomationConfig   = "This operation is unsupported by mongocli, use at your own risk."
-	DescribeAutomationConfig = "This operation is unsupported by mongocli, use at your own risk."
+	UpdateAutomationConfig   = "Update the current automation configuration for a project."
+	DescribeAutomationConfig = "Get the current automation configuration for a project."
 	WatchAutomationStatus    = "Watch for automation changes to be completed."
 )

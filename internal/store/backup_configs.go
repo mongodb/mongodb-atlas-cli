@@ -19,11 +19,11 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"go.mongodb.org/ops-manager/opsmngr"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,ListBackupConfigs
+//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,BackupConfigLister
 
 type BackupConfigGetter interface {
 	GetBackupConfig(string, string) (*opsmngr.BackupConfig, error)
@@ -43,7 +43,6 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
-
 
 // ListBackupConfigs encapsulates the logic to manage different cloud providers
 func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {

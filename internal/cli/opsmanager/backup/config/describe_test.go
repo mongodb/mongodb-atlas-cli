@@ -19,15 +19,14 @@ package config
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
-
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAutomationShowOpts_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockBackupConfigGetter(ctrl)
 	defer ctrl.Finish()

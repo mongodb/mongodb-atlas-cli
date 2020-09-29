@@ -63,9 +63,8 @@ func UpdateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:    "update",
-		Hidden: true,
-		Short:  UpdateAutomationConfig,
+		Use:   "update",
+		Short: UpdateAutomationConfig,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initStore)
 		},

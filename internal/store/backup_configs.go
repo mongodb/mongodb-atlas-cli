@@ -18,13 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,BackupConfigLister
+//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongocli/internal/store BackupConfigGetter,ListBackupConfigs
 
 type BackupConfigGetter interface {
 	GetBackupConfig(string, string) (*opsmngr.BackupConfig, error)
@@ -37,7 +36,7 @@ type BackupConfigLister interface {
 // GetBackupConfig encapsulates the logic to manage different cloud providers
 func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupConfig, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
@@ -45,10 +44,11 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 	}
 }
 
+
 // ListBackupConfigs encapsulates the logic to manage different cloud providers
 func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(context.Background(), projectID, options)
 		return result, err
 	default:

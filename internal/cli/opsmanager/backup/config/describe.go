@@ -49,11 +49,11 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager backup config describe clusterID [--projectId projectId]
+// mongocli ops-manager backup config describe <clusterID> [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe [clusterID]",
+		Use:     "describe <clusterID>",
 		Aliases: []string{"get"},
 		Short:   describe,
 		Args:    cobra.ExactArgs(1),

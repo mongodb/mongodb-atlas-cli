@@ -19,14 +19,41 @@ package config
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockBackupConfigLister(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.BackupConfigs{}
+
+	opts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ListBackupConfigs(opts.ProjectID, opts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestListBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		3,
-		[]string{},
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
 	)
 }

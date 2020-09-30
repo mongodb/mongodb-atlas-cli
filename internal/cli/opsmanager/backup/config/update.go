@@ -61,21 +61,32 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newBackupConfig() *opsmngr.BackupConfig {
-	return &opsmngr.BackupConfig{
+	backupConfig := &opsmngr.BackupConfig{
 		GroupID:            opts.ConfigProjectID(),
 		ClusterID:          opts.clusterID,
 		StatusName:         opts.status,
 		StorageEngineName:  opts.storageEngine,
-		EncryptionEnabled:  opts.encryption,
-		SSLEnabled:         opts.ssl,
 		ExcludedNamespaces: opts.excludedNamespace,
 		IncludedNamespaces: opts.includedNamespace,
 		AuthMechanismName:  opts.authMechanism,
 		Password:           opts.password,
-		Provisioned:        opts.provisioned,
 		SyncSource:         opts.syncSource,
 		Username:           opts.username,
 	}
+
+	if opts.ssl {
+		backupConfig.SSLEnabled = opts.ssl
+	}
+
+	if opts.encryption {
+		backupConfig.EncryptionEnabled = opts.encryption
+	}
+
+	if opts.provisioned {
+		backupConfig.Provisioned = opts.provisioned
+	}
+
+	return backupConfig
 }
 
 // mongocli ops-manager backup config update clusterID --status status --storageEngine storageEngine --authMechanism authMechanism

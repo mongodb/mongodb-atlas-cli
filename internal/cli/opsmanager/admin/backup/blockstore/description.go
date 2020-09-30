@@ -14,6 +14,7 @@
 package blockstore
 
 const (
-	short = "Manage backup blockstores."
-	list  = "List backup blockstores."
+	short    = "Manage backup blockstore configurations."
+	list     = "List backup blockstore configurations."
+	describe = "Get a backup blockstore configuration."
 )

@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister
+//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber
 
 type BlockstoresLister interface {
 	ListBlockstores(*atlas.ListOptions) (*opsmngr.BackupStores, error)
+}
+
+type BlockstoresDescriber interface {
+	DescribeBlockstore(string) (*opsmngr.BackupStore, error)
 }
 
 // ListBlockstore encapsulates the logic to manage different cloud providers
@@ -34,6 +38,17 @@ func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStor
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.List(context.Background(), options)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DescribeBlockstore encapsulates the logic to manage different cloud providers
+func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Get(context.Background(), blockstoreID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

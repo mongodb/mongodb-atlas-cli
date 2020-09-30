@@ -55,6 +55,14 @@ const (
 	Backup                          = "backup"                          // Backup flag
 	ID                              = "id"                              // ID flag
 	Username                        = "username"                        // Username flag
+	StorageEngine                   = "storageEngine"                   // StorageEngine flag
+	AuthMechanism                   = "authMechanism"                   // AuthMechanism flag
+	Provisioned                     = "provisioned"                     // Provisioned flag
+	Encryption                      = "encryption"                      // Encryption flag
+	SSL                             = "ssl"                             // SSL flag
+	SyncSource                      = "syncSource"                      // SyncSource flag
+	ExcludedNamespace               = "excludedNamespace"               // ExcludedNamespace flag
+	IncludedNamespace               = "includedNamespace"               // IncludedNamespace flag
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
 	Country                         = "country"                         // Country flag

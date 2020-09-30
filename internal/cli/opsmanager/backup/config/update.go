@@ -75,15 +75,15 @@ func (opts *UpdateOpts) newBackupConfig() *opsmngr.BackupConfig {
 	}
 
 	if opts.ssl {
-		backupConfig.SSLEnabled = opts.ssl
+		backupConfig.SSLEnabled = &opts.ssl
 	}
 
 	if opts.encryption {
-		backupConfig.EncryptionEnabled = opts.encryption
+		backupConfig.EncryptionEnabled = &opts.encryption
 	}
 
 	if opts.provisioned {
-		backupConfig.Provisioned = opts.provisioned
+		backupConfig.Provisioned = &opts.provisioned
 	}
 
 	return backupConfig

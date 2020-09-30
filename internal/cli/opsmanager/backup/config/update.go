@@ -96,7 +96,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update",
+		Use:   "update <clusterID>",
 		Short: update,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

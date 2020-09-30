@@ -32,7 +32,7 @@ type BlockstoresLister interface {
 // ListBlockstore encapsulates the logic to manage different cloud providers
 func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
-	case config.CloudManagerService, config.OpsManagerService:
+	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.List(context.Background(), options)
 		return result, err
 	default:

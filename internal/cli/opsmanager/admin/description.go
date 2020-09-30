@@ -14,5 +14,5 @@
 package admin
 
 const (
-	short = "Manage backup administration for your project."
+	short = "Manage backup administration."
 )

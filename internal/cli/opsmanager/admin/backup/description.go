@@ -14,5 +14,5 @@
 package backup
 
 const (
-	backup = "Manage backup administration for your project."
+	backup = "Manage backup administration."
 )

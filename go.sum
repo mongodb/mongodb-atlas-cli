@@ -256,8 +256,8 @@ go.mongodb.org/atlas v0.4.1-0.20200916093941-a86355b45816 h1:wnYPHWDNpG0XaMebz6L
 go.mongodb.org/atlas v0.4.1-0.20200916093941-a86355b45816/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
 go.mongodb.org/atlas v0.4.1-0.20200921142021-15be5f77e0ed h1:ZFLchdZ7U0JQWypTxzDGuSjrCsy2/35tW3gnpaKl/is=
 go.mongodb.org/atlas v0.4.1-0.20200921142021-15be5f77e0ed/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
-go.mongodb.org/ops-manager v0.9.4-0.20200930091848-2a852064180e h1:hRj5MtHZMUypRGlRVYze6c/j/8XNbA/drG24+A1Vj+0=
-go.mongodb.org/ops-manager v0.9.4-0.20200930091848-2a852064180e/go.mod h1:r7sU/JNPvYANcUxECB+zox4XR+vbrh//o6ejPWLfjCc=
+go.mongodb.org/ops-manager v0.10.0 h1:zIqOVuMzgbq6+OqE9334h3eWrsoQcrB19a4E+JMZEqk=
+go.mongodb.org/ops-manager v0.10.0/go.mod h1:r7sU/JNPvYANcUxECB+zox4XR+vbrh//o6ejPWLfjCc=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

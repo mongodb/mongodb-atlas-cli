@@ -200,6 +200,23 @@ func NewUnauthenticated(c Config) (*Store, error) {
 
 	return s, nil
 }
+func NewStaticPath(c Config, baseURL string) (*Store, error) {
+	s := new(Store)
+	s.service = c.Service()
+	s.skipVerify = yes
+	s.baseURL = baseURL
+
+	client, err := defaultClient(c)
+	if err != nil {
+		return nil, err
+	}
+	err = s.setOpsManagerClient(client)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
 
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := make([]atlas.ClientOpt, 0)

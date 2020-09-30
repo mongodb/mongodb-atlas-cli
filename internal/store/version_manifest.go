@@ -22,21 +22,32 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater
+//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter
 
 type VersionManifestUpdater interface {
-	UpdateVersionManifest(string) (*opsmngr.VersionManifest, error)
+	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)
+}
+
+type VersionManifestGetter interface {
+	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
 }
 
 // UpdateVersionManifest encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateVersionManifest(version string) (*opsmngr.VersionManifest, error) {
+func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		versionManifestStruct, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
-		if err != nil {
-			return nil, err
-		}
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifestStruct)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GetVersionManifest encapsulates the logic to manage different cloud providers
+func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

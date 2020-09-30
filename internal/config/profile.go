@@ -196,7 +196,7 @@ func (p *Profile) OpsManagerSkipVerify() string {
 }
 
 // OpsManagerVersionManifestURL set configured ops manager version manifest base url
-func OpsManagerVersionManifestURL() string { return p.OpsManagerSkipVerify() }
+func OpsManagerVersionManifestURL() string { return p.OpsManagerVersionManifestURL() }
 func (p *Profile) OpsManagerVersionManifestURL() string {
 	return p.GetString(opsManagerVersionManifestURL)
 }

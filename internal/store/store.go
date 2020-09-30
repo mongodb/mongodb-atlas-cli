@@ -34,16 +34,17 @@ import (
 var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 const (
-	atlasAPIPath          = "api/atlas/v1.0/"
-	yes                   = "yes"
-	responseHeaderTimeout = 10 * time.Minute
-	tlsHandshakeTimeout   = 10 * time.Second
-	timeout               = 10 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 100
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 90 * time.Second
-	expectContinueTimeout = 1 * time.Second
+	atlasAPIPath              = "api/atlas/v1.0/"
+	yes                       = "yes"
+	responseHeaderTimeout     = 10 * time.Minute
+	tlsHandshakeTimeout       = 10 * time.Second
+	timeout                   = 10 * time.Second
+	keepAlive                 = 30 * time.Second
+	maxIdleConns              = 100
+	maxIdleConnsPerHost       = 4
+	idleConnTimeout           = 90 * time.Second
+	expectContinueTimeout     = 1 * time.Second
+	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
 )
 
 type Store struct {
@@ -102,6 +103,7 @@ type Config interface {
 	OpsManagerURL() string
 	OpsManagerCACertificate() string
 	OpsManagerSkipVerify() string
+	OpsManagerVersionManifestURL() string
 }
 
 func authenticatedClient(c Config) (*http.Client, error) {
@@ -200,11 +202,15 @@ func NewUnauthenticated(c Config) (*Store, error) {
 
 	return s, nil
 }
-func NewStaticPath(c Config, baseURL string) (*Store, error) {
+func NewStaticPath(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 	s.skipVerify = yes
-	s.baseURL = baseURL
+	s.baseURL = versionManifestStaticPath
+
+	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
+		s.baseURL = baseURL
+	}
 
 	client, err := defaultClient(c)
 	if err != nil {

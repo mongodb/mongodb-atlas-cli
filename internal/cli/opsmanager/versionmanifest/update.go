@@ -25,10 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	staticPath     = "https://opsmanager.mongodb.com/"
-	updateTemplate = "Version manifest updated.\n"
-)
+const updateTemplate = "Version manifest updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
@@ -43,7 +40,7 @@ func (opts *UpdateOpts) initStore() error {
 	if err != nil {
 		return err
 	}
-	opts.storeStaticPath, err = store.NewStaticPath(config.Default(), staticPath)
+	opts.storeStaticPath, err = store.NewStaticPath(config.Default())
 	return err
 }
 

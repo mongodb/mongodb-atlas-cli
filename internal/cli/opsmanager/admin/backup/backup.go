@@ -25,10 +25,12 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
+		Short:   backup,
 	}
 
-	cmd.AddCommand(blockstore.Builder())
+	cmd.AddCommand(
+		blockstore.Builder(),
+	)
 
 	return cmd
 }

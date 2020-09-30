@@ -16,19 +16,21 @@ package admin
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "backups"
+	const use = "admin"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   short,
 	}
 
-	cmd.AddCommand(blockstore.Builder())
+	cmd.AddCommand(
+		backup.Builder(),
+	)
 
 	return cmd
 }

@@ -12,31 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package blockstore
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "backups"
+	const use = "blockstore"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
+		Short:   short,
 	}
 
-	cmd.AddCommand(
-		SnapshotsBuilder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-		blockstore.Builder(),
-	)
-
+	cmd.AddCommand(ListBuilder())
 	return cmd
 }

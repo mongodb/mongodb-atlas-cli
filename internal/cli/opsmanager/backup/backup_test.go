@@ -11,32 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
 package backup
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
-	}
-
-	cmd.AddCommand(
-		SnapshotsBuilder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-		blockstore.Builder(),
+func TestListBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		6,
+		[]string{},
 	)
-
-	return cmd
 }

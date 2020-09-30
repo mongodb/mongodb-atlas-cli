@@ -11,32 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package blockstore
 
-package backup
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/spf13/cobra"
+const (
+	short = "Manage backup blockstores."
+	list  = "List backup blockstores."
 )
-
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
-	}
-
-	cmd.AddCommand(
-		SnapshotsBuilder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-		blockstore.Builder(),
-	)
-
-	return cmd
-}

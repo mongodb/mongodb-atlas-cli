@@ -14,19 +14,46 @@
 
 // +build unit
 
-package opsmanager
+package blockstore
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockBlockstoresLister(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.BackupStores{}
+
+	opts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ListBlockstores(opts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestListBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		19,
-		[]string{},
+		ListBuilder(),
+		0,
+		[]string{flag.Output, flag.Page, flag.Limit},
 	)
 }

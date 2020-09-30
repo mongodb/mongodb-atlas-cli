@@ -202,6 +202,7 @@ func NewUnauthenticated(c Config) (*Store, error) {
 
 	return s, nil
 }
+
 func NewStaticPath(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()

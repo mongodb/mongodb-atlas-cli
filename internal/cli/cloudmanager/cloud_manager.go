@@ -17,6 +17,7 @@ package cloudmanager
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/automation"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup"
@@ -64,6 +65,7 @@ func Builder() *cobra.Command {
 		agents.Builder(),
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
+		admin.Builder(),
 	)
 
 	return cmd

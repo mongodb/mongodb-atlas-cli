@@ -14,7 +14,7 @@
 
 // +build unit
 
-package opsmanager
+package blockstore
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		19,
+		2,
 		[]string{},
 	)
 }

@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package versionmanifest
+package blockstore
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -25,32 +23,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updateTemplate = "Version manifest updated.\n"
+var listTemplate = `ID	URI	SSL	LOAD FACTOR{{range .Results}}
+{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}{{end}}
+`
 
-type UpdateOpts struct {
+type ListOpts struct {
 	cli.OutputOpts
-	versionManifest string
-	store           store.VersionManifestUpdater
-	storeStaticPath store.VersionManifestGetter
+	cli.ListOpts
+	store store.BlockstoresLister
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
-	if err != nil {
-		return err
-	}
-	opts.storeStaticPath, err = store.NewStaticPath(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) Run() error {
-	versionManifest, err := opts.storeStaticPath.GetVersionManifest(opts.version())
-	if err != nil {
-		return err
-	}
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.ListBlockstores(opts.NewListOptions())
 
-	r, err := opts.store.UpdateVersionManifest(versionManifest)
 	if err != nil {
 		return err
 	}
@@ -58,30 +49,26 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) version() string {
-	if strings.Contains(opts.versionManifest, ".json") {
-		return opts.versionManifest
-	}
-	return opts.versionManifest + ".json"
-}
-
-// mongocli om versionManifest(s) update <version>
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
-	opts.Template = updateTemplate
+// mongocli ops-manager admin backup blockstore(s) lists
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
-		Use:   "update <version>",
-		Short: update,
-		Args:  cobra.ExactArgs(1),
+		Use:     "list",
+		Short:   list,
+		Aliases: []string{"ls"},
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.versionManifest = args[0]
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

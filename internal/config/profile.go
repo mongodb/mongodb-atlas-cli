@@ -195,6 +195,12 @@ func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
 }
 
+// OpsManagerVersionManifestURL get configured ops manager version manifest base url
+func OpsManagerVersionManifestURL() string { return p.OpsManagerVersionManifestURL() }
+func (p *Profile) OpsManagerVersionManifestURL() string {
+	return p.GetString(opsManagerVersionManifestURL)
+}
+
 // ProjectID get configured project ID
 func ProjectID() string { return p.ProjectID() }
 func (p *Profile) ProjectID() string {

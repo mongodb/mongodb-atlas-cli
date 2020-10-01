@@ -14,7 +14,7 @@
 
 // +build unit
 
-package versionmanifest
+package blockstore
 
 import (
 	"testing"
@@ -26,41 +26,32 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestVersionManifestUpdate_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockVersionManifestUpdater(ctrl)
-	mockStoreStaticPath := mocks.NewMockVersionManifestGetter(ctrl)
+	mockStore := mocks.NewMockBlockstoresDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.VersionManifest{}
+	expected := &opsmngr.BackupStore{}
 
-	updateOpts := &UpdateOpts{
-		versionManifest: "4.4",
-		store:           mockStore,
-		storeStaticPath: mockStoreStaticPath,
+	opts := &DescribeOpts{
+		store: mockStore,
 	}
 
-	mockStoreStaticPath.
-		EXPECT().GetVersionManifest(updateOpts.version()).
-		Return(expected, nil).
-		Times(1)
-
 	mockStore.
-		EXPECT().UpdateVersionManifest(expected).
+		EXPECT().DescribeBlockstore(opts.blockstoreID).
 		Return(expected, nil).
 		Times(1)
 
-	err := updateOpts.Run()
-
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestUpdateBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		UpdateBuilder(),
+		DescribeBuilder(),
 		0,
 		[]string{flag.Output},
 	)

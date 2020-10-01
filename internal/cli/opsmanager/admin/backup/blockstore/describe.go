@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package versionmanifest
+package blockstore
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -25,32 +23,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updateTemplate = "Version manifest updated.\n"
+var describeTemplate = `ID	URI	SSL	LOAD FACTOR
+{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}
+`
 
-type UpdateOpts struct {
+type DescribeOpts struct {
 	cli.OutputOpts
-	versionManifest string
-	store           store.VersionManifestUpdater
-	storeStaticPath store.VersionManifestGetter
+	store        store.BlockstoresDescriber
+	blockstoreID string
 }
 
-func (opts *UpdateOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
-	if err != nil {
-		return err
-	}
-	opts.storeStaticPath, err = store.NewStaticPath(config.Default())
 	return err
 }
 
-func (opts *UpdateOpts) Run() error {
-	versionManifest, err := opts.storeStaticPath.GetVersionManifest(opts.version())
-	if err != nil {
-		return err
-	}
-
-	r, err := opts.store.UpdateVersionManifest(versionManifest)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.DescribeBlockstore(opts.blockstoreID)
 	if err != nil {
 		return err
 	}
@@ -58,27 +48,21 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) version() string {
-	if strings.Contains(opts.versionManifest, ".json") {
-		return opts.versionManifest
-	}
-	return opts.versionManifest + ".json"
-}
-
-// mongocli om versionManifest(s) update <version>
-func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
-	opts.Template = updateTemplate
+// mongocli ops-manager admin backup config describe <blockstoreID>
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
+	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:   "update <version>",
-		Short: update,
-		Args:  cobra.ExactArgs(1),
+		Use:     "describe <blockstoreID>",
+		Aliases: []string{"get"},
+		Short:   describe,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.versionManifest = args[0]
+			opts.blockstoreID = args[0]
 			return opts.Run()
 		},
 	}

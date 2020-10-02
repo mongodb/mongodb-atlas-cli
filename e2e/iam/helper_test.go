@@ -31,13 +31,13 @@ import (
 )
 
 const (
-	iamEntity             = "iam"
-	orgEntity             = "orgs"
-	apiKeysEntity         = "apikeys"
-	apiKeyWhitelistEntity = "whitelist"
-	usersEntity           = "users"
-	projectsEntity        = "projects"
-	teamsEntity           = "teams"
+	iamEntity              = "iam"
+	orgEntity              = "orgs"
+	apiKeysEntity          = "apikeys"
+	apiKeyAccessListEntity = "accessList"
+	usersEntity            = "users"
+	projectsEntity         = "projects"
+	teamsEntity            = "teams"
 )
 
 func createOrgAPIKey() (string, error) {

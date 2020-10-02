@@ -12,28 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikeys
+package accesslist
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys/accesslist"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "apiKeys"
-	var cmd = &cobra.Command{
+	const use = "accessLists"
+	deprecated := append([]string{"whitelists"}, cli.GenerateAliases("whitelists")...)
+	cmd := &cobra.Command{
 		Use:     use,
 		Short:   short,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: cli.GenerateAliases(use, deprecated...),
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			fmt.Println("HERE")
+			if search.StringInSlice(deprecated, cmd.CalledAs()) {
+				_, _ = fmt.Fprintln(cmd.OutOrStderr(), "The use of this command is deprecated please prefer accessList")
+			}
+		},
 	}
+
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		UpdateBuilder(),
 		CreateBuilder(),
 		DeleteBuilder(),
-		accesslist.Builder(),
 	)
+
 	return cmd
 }

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/global_api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyLister,GlobalAPIKeyDescriber,GlobalAPIKeyUpdater,GlobalAPIKeyCreator,GlobalAPIKeyDeleter
+//go:generate mockgen -destination=../mocks/mock_global_api_keys.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyLister,GlobalAPIKeyDescriber,GlobalAPIKeyUpdater,GlobalAPIKeyCreator,GlobalAPIKeyDeleter
 
 type GlobalAPIKeyLister interface {
 	GlobalAPIKeys(*atlas.ListOptions) ([]atlas.APIKey, error)

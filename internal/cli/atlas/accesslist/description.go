@@ -11,29 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package accesslist
 
-package apikeys
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys/accesslist"
-	"github.com/spf13/cobra"
+const (
+	short       = "Manage the access IP access list for your project."
+	create      = "Create an IP access list for your project."
+	deleteEntry = "Delete an IP access list from your project."
+	describe    = "Describe an IP access list entry."
+	list        = "List Atlas IP access list entries for your project."
 )
-
-func Builder() *cobra.Command {
-	const use = "apiKeys"
-	var cmd = &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Aliases: cli.GenerateAliases(use),
-	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		UpdateBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		accesslist.Builder(),
-	)
-	return cmd
-}

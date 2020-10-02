@@ -74,7 +74,7 @@ const (
 	PrivateEndpointRegion           = "Cloud provider region in which you want to create the private endpoint connection."
 	PrivateEndpointProvider         = "Name of the cloud provider you want to create the private endpoint connection for."
 	Comment                         = "Optional description or comment for the entry."
-	WhiteListsDeleteAfter           = "ISO-8601-formatted UTC date after which Atlas removes the entry from the whitelist."
+	AccessListsDeleteAfter          = "ISO-8601-formatted UTC date after which Atlas removes the entry from the entry."
 	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
 	Force                           = "Don't ask for confirmation."
 	Email                           = "User’s email address."
@@ -95,7 +95,7 @@ const (
 	MaxDate                         = "Returns events whose created date is less than or equal to it."
 	MinDate                         = "Returns events whose created date is greater than or equal to it."
 	Filename                        = "Filename to use, optional file with a json cluster configuration."
-	WhitelistIps                    = "IP addresses to add to the new user’s whitelist."
+	AccessListIps                   = "IP addresses to add to the new user’s access list."
 	StartDate                       = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
 	AlertType                       = "Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP."
@@ -136,7 +136,6 @@ const (
 	NotificationVictorOpsRoutingKey = "VictorOps routing key."
 	SnapshotID                      = "Unique identifier of the snapshot to restore."
 	SnapshotDescription             = "Description of the on-demand snapshot."
-	SnapshotRetention               = "The number of days that Atlas should retain the on-demand snapshot."
 	Database                        = "Database name."
 	DatabaseUser                    = "Username of a database user."
 	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
@@ -170,8 +169,8 @@ const (
 	PartitionFields                 = "Fields to use to partition data. You can specify up to two frequently queried fields to use for partitioning data."
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
-	WhitelistIPEntry                = "IP address to be whitelisted for a given API key."
-	WhitelistCIDREntry              = "Whitelist entry in CIDR notation to be added for a given API key."
+	AccessListIPEntry               = "IP address to be allowed for a given API key."
+	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	AccountID                       = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
@@ -216,7 +215,7 @@ For use only with download restore jobs.`
 For use only with download restore jobs.`
 	Mechanisms = `Authentication mechanism. 
 Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
-	WhitelistType = `Type of whitelist entry.
+	AccessListType = `Type of access list entry.
 Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 	Service = `Type of MongoDB service.
 Valid values: cloud|cloud-manager|ops-manager`

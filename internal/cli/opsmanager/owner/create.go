@@ -15,6 +15,8 @@
 package owner
 
 import (
+	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -27,12 +29,12 @@ import (
 
 type CreateOpts struct {
 	cli.OutputOpts
-	email        string
-	password     string
-	firstName    string
-	lastName     string
-	whitelistIps []string
-	store        store.OwnerCreator
+	email     string
+	password  string
+	firstName string
+	lastName  string
+	accessIps []string
+	store     store.OwnerCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -51,7 +53,7 @@ Private API Key: {{.ProgrammaticAPIKey.PrivateKey}}
 
 func (opts *CreateOpts) Run() error {
 	user := opts.newOwner()
-	r, err := opts.store.CreateOwner(user, opts.whitelistIps)
+	r, err := opts.store.CreateOwner(user, opts.accessIps)
 
 	if err != nil {
 		return err
@@ -82,7 +84,7 @@ func (opts *CreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --whitelistIps whitelistIp
+// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --accessListIp <IP>
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
@@ -106,7 +108,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringVar(&opts.firstName, flag.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
-	cmd.Flags().StringSliceVar(&opts.whitelistIps, flag.WhitelistIP, []string{}, usage.WhitelistIps)
+	cmd.Flags().StringSliceVar(&opts.accessIps, flag.AccessListIP, []string{}, usage.AccessListIps)
+	_ = cmd.Flags().MarkDeprecated(flag.WhitelistIP, fmt.Sprintf("please use --%s instead", flag.AccessListIP))
+	cmd.Flags().StringSliceVar(&opts.accessIps, flag.WhitelistIP, []string{}, usage.AccessListIps)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

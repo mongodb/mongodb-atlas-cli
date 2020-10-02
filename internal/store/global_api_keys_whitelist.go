@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/global_api_keys_whitelist.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyWhitelistLister,GlobalAPIKeyWhitelistDescriber,GlobalAPIKeyWhitelistCreator,GlobalAPIKeyWhitelistDeleter
+//go:generate mockgen -destination=../mocks/mock_global_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyWhitelistLister,GlobalAPIKeyWhitelistDescriber,GlobalAPIKeyWhitelistCreator,GlobalAPIKeyWhitelistDeleter
 
 type GlobalAPIKeyWhitelistLister interface {
 	GlobalAPIKeyWhitelists(*atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error)

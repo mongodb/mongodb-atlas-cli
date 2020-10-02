@@ -35,7 +35,7 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 	lastName := "McTestyson"
 	expected := &opsmngr.CreateUserResponse{}
 
-	t.Run("no whitelist", func(t *testing.T) {
+	t.Run("no access list", func(t *testing.T) {
 		createOpts := &CreateOpts{
 			email:     email,
 			password:  password,
@@ -46,7 +46,7 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			CreateOwner(createOpts.newOwner(), createOpts.whitelistIps).Return(expected, nil).
+			CreateOwner(createOpts.newOwner(), createOpts.accessIps).Return(expected, nil).
 			Times(1)
 
 		err := createOpts.Run()
@@ -55,19 +55,19 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 		}
 	})
 
-	t.Run("with whitelist", func(t *testing.T) {
+	t.Run("with access list", func(t *testing.T) {
 		createOpts := &CreateOpts{
-			email:        email,
-			password:     password,
-			firstName:    firstName,
-			lastName:     lastName,
-			store:        mockStore,
-			whitelistIps: []string{"192.168.0.1"},
+			email:     email,
+			password:  password,
+			firstName: firstName,
+			lastName:  lastName,
+			store:     mockStore,
+			accessIps: []string{"192.168.0.1"},
 		}
 
 		mockStore.
 			EXPECT().
-			CreateOwner(createOpts.newOwner(), createOpts.whitelistIps).Return(expected, nil).
+			CreateOwner(createOpts.newOwner(), createOpts.accessIps).Return(expected, nil).
 			Times(1)
 
 		err := createOpts.Run()

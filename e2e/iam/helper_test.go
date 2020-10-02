@@ -34,7 +34,7 @@ const (
 	iamEntity              = "iam"
 	orgEntity              = "orgs"
 	apiKeysEntity          = "apikeys"
-	apiKeyAccessListEntity = "accessList"
+	apiKeyAccessListEntity = "accessLists"
 	usersEntity            = "users"
 	projectsEntity         = "projects"
 	teamsEntity            = "teams"

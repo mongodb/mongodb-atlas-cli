@@ -27,7 +27,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestOrgAPIKeyWhitelist(t *testing.T) {
+func TestOrgAPIKeyAccessList(t *testing.T) {
 	cliPath, er := e2e.Bin()
 	if er != nil {
 		t.Fatalf("unexpected error: %v", er)
@@ -65,6 +65,7 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
+			t.Logf("got=%#v\n", string(resp))
 			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
@@ -84,6 +85,7 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
+			t.Logf("got=%#v\n", string(resp))
 			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
@@ -104,6 +106,9 @@ func TestOrgAPIKeyWhitelist(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		if assert.NoError(t, err, string(resp)) {
+			expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
+			assert.Equal(t, string(resp), expected)
+		}
 	})
 }

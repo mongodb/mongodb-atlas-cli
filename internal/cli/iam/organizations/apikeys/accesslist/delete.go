@@ -43,7 +43,7 @@ func (opts *DeleteOpts) Run() error {
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Whitelist entry '%s' deleted\n", "Whitelist entry not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Access list entry '%s' deleted\n", "Access list entry not deleted"),
 	}
 
 	cmd := &cobra.Command{

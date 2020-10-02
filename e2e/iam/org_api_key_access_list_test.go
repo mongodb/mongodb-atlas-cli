@@ -65,7 +65,6 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			t.Logf("got=%#v\n", string(resp))
 			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)
@@ -85,7 +84,6 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			t.Logf("got=%#v\n", string(resp))
 			var key mongodbatlas.WhitelistAPIKeys
 			if err := json.Unmarshal(resp, &key); a.NoError(err) {
 				a.NotEmpty(key.Results)

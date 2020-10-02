@@ -15,10 +15,7 @@
 package accesslist
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/search"
 	"github.com/spf13/cobra"
 )
 
@@ -29,12 +26,6 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Short:   short,
 		Aliases: cli.GenerateAliases(use, deprecated...),
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			fmt.Println("HERE")
-			if search.StringInSlice(deprecated, cmd.CalledAs()) {
-				_, _ = fmt.Fprintln(cmd.OutOrStderr(), "The use of this command is deprecated please prefer accessList")
-			}
-		},
 	}
 
 	cmd.AddCommand(

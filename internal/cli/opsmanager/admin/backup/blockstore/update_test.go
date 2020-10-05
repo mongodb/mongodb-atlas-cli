@@ -32,16 +32,16 @@ func TestUpdate_Run(t *testing.T) {
 
 	expected := &opsmngr.BackupStore{}
 
-	createOpts := &UpdateOpts{
+	opts := &UpdateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateBlockstore(createOpts.NewBackupStore()).
+		EXPECT().UpdateBlockstore(opts.NewBackupStore()).
 		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

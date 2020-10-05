@@ -25,10 +25,12 @@ func JobsBuilder() *cobra.Command {
 		Short:   LogCollection,
 	}
 
-	cmd.AddCommand(JobsCollectOptsBuilder())
-	cmd.AddCommand(JobsListOptsBuilder())
-	cmd.AddCommand(JobsDownloadOptsBuilder())
-	cmd.AddCommand(JobsDeleteOptsBuilder())
+	cmd.AddCommand(
+		JobsCollectOptsBuilder(),
+		JobsListOptsBuilder(),
+		JobsDownloadOptsBuilder(),
+		JobsDeleteOptsBuilder(),
+	)
 
 	return cmd
 }

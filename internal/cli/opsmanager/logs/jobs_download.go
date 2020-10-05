@@ -71,6 +71,7 @@ func JobsDownloadOptsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
 	_ = cmd.MarkFlagRequired(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.Out)

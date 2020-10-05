@@ -20,8 +20,11 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLogsDownloadOpts_Run(t *testing.T) {
@@ -29,13 +32,12 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
 	defer ctrl.Finish()
 
-	appFS := afero.NewMemMapFs()
-
 	opts := &DownloadOpts{
 		name:  "mongo.gz",
-		fs:    appFS,
 		store: mockStore,
 	}
+	opts.Out = opts.name
+	opts.Fs = afero.NewMemMapFs()
 
 	mockStore.
 		EXPECT().
@@ -45,5 +47,56 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDownloadBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		DownloadBuilder(),
+		0,
+		[]string{flag.Out, flag.ProjectID, flag.Force, flag.Start, flag.End},
+	)
+}
+
+func TestDownloadOpts_initDefaultOut(t *testing.T) {
+	type fields struct {
+		logName string
+		out     string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "empty out and add log",
+			fields: fields{
+				logName: "mongo.gz",
+				out:     "",
+			},
+			want: "mongo.log.gz",
+		},
+		{
+			name: "with out",
+			fields: fields{
+				logName: "mongo.gz",
+				out:     "myfile.gz",
+			},
+			want: "myfile.gz",
+		},
+	}
+	for _, tt := range tests {
+		logName := tt.fields.logName
+		out := tt.fields.out
+		want := tt.want
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &DownloadOpts{
+				name: logName,
+			}
+			opts.Out = out
+			opts.initDefaultOut()
+			assert.Equal(t, opts.Out, want)
+		})
 	}
 }

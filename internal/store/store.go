@@ -174,6 +174,7 @@ func New(c Config) (*Store, error) {
 	return s, err
 }
 
+// NewUnauthenticated a client to interact with the Ops Manager APIs that don't require authentication
 func NewUnauthenticated(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
@@ -181,7 +182,6 @@ func NewUnauthenticated(c Config) (*Store, error) {
 	if s.service != config.OpsManagerService {
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
-
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		s.baseURL = s.apiPath(configURL)
 	}
@@ -195,11 +195,9 @@ func NewUnauthenticated(c Config) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = s.setOpsManagerClient(client)
-	if err != nil {
+	if err := s.setOpsManagerClient(client); err != nil {
 		return nil, err
 	}
-
 	return s, nil
 }
 

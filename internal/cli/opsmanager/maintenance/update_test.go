@@ -33,7 +33,7 @@ func TestUpdate_Run(t *testing.T) {
 
 	expected := &opsmngr.MaintenanceWindow{}
 
-	t.Run("no whitelist", func(t *testing.T) {
+	t.Run("no access list", func(t *testing.T) {
 		opts := &UpdateOpts{
 			store: mockStore,
 		}

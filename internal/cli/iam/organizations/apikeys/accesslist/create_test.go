@@ -14,48 +14,42 @@
 
 // +build unit
 
-package maintenance
+package accesslist
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOpsManagerMaintenanceWindowCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.MaintenanceWindow{}
+	expected := &mongodbatlas.WhitelistAPIKeys{}
 
-	t.Run("no access list", func(t *testing.T) {
-		createOpts := &CreateOpts{
-			store: mockStore,
-		}
+	createOpts := &CreateOpts{
+		store:  mockStore,
+		apyKey: "1",
+		ips:    []string{"77.54.32.11"},
+	}
 
-		mockStore.
-			EXPECT().
-			CreateOpsManagerMaintenanceWindow(createOpts.ProjectID, createOpts.newMaintenanceWindow()).
-			Return(expected, nil).
-			Times(1)
+	r, err := createOpts.newWhitelistAPIKeysReq()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 
-		err := createOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-}
+	mockStore.
+		EXPECT().
+		CreateOrganizationAPIKeyWhite(createOpts.OrgID, createOpts.apyKey, r).
+		Return(expected, nil).
+		Times(1)
 
-func TestCreateBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.StartDate, flag.EndDate, flag.Description},
-	)
+	err = createOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

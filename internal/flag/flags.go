@@ -104,6 +104,7 @@ const (
 	FileShort                       = "f"                               // File flag
 	Force                           = "force"                           // Force flag
 	WhitelistIP                     = "whitelistIp"                     // WhitelistIP flag
+	AccessListIP                    = "accessListIp"                    // AccessListIP flag
 	Event                           = "event"                           // EventTypeName flag
 	Enabled                         = "enabled"                         // Enabled flag
 	MatcherFieldName                = "matcherFieldName"                // MatcherFieldName flag

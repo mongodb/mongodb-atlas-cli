@@ -14,48 +14,36 @@
 
 // +build unit
 
-package maintenance
+package globalaccesslist
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOpsManagerMaintenanceWindowCreator(ctrl)
+	mockStore := mocks.NewMockGlobalAPIKeyWhitelistCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.MaintenanceWindow{}
+	createOpts := &CreateOpts{
+		store:       mockStore,
+		description: "test",
+		cidr:        "77.54.32.11",
+	}
 
-	t.Run("no access list", func(t *testing.T) {
-		createOpts := &CreateOpts{
-			store: mockStore,
-		}
+	r := createOpts.newWhitelistAPIKeysReq()
+	expected := &opsmngr.GlobalWhitelistAPIKey{}
+	mockStore.
+		EXPECT().
+		CreateGlobalAPIKeyWhitelist(r).
+		Return(expected, nil).
+		Times(1)
 
-		mockStore.
-			EXPECT().
-			CreateOpsManagerMaintenanceWindow(createOpts.ProjectID, createOpts.newMaintenanceWindow()).
-			Return(expected, nil).
-			Times(1)
-
-		err := createOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-}
-
-func TestCreateBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.StartDate, flag.EndDate, flag.Description},
-	)
+	if err := createOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

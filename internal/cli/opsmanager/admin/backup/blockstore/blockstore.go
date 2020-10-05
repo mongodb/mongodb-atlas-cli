@@ -31,6 +31,7 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		DescribeBuilder(),
 		CreateBuilder(),
-		UpdateBuilder())
+		UpdateBuilder(),
+		DeleteBuilder())
 	return cmd
 }

@@ -37,7 +37,7 @@ type CreateOpts struct {
 	uri                  string
 	loadFactor           int64
 	maxCapacityGB        int64
-	store                store.BlockstoresCreater
+	store                store.BlockstoresCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -47,7 +47,7 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.BlockstoreCreater(opts.newBackupStore())
+	r, err := opts.store.CreateBlockstore(opts.newBackupStore())
 	if err != nil {
 		return err
 	}

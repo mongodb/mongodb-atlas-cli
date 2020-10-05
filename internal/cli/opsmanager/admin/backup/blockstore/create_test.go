@@ -27,7 +27,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockBlockstoresCreater(ctrl)
+	mockStore := mocks.NewMockBlockstoresCreator(ctrl)
 	defer ctrl.Finish()
 
 	expected := &opsmngr.BackupStore{}
@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().BlockstoreCreater(createOpts.newBackupStore()).
+		EXPECT().CreateBlockstore(createOpts.newBackupStore()).
 		Return(expected, nil).
 		Times(1)
 

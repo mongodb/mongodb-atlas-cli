@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreater
+//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreator
 
 type BlockstoresLister interface {
 	ListBlockstores(*atlas.ListOptions) (*opsmngr.BackupStores, error)
@@ -33,12 +33,8 @@ type BlockstoresDescriber interface {
 	DescribeBlockstore(string) (*opsmngr.BackupStore, error)
 }
 
-type BlockstoresCreater interface {
-	BlockstoreCreater(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
-}
-
-type BlockstoresUpdater interface {
-	BlockstoreCreater(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+type BlockstoresCreator interface {
+	CreateBlockstore(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
 }
 
 // ListBlockstore encapsulates the logic to manage different cloud providers
@@ -63,8 +59,8 @@ func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, e
 	}
 }
 
-// BlockstoreCreater encapsulates the logic to manage different cloud providers
-func (s *Store) BlockstoreCreater(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+// CreateBlockstore encapsulates the logic to manage different cloud providers
+func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(context.Background(), blockstore)

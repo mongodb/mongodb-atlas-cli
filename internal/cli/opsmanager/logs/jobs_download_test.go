@@ -20,6 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/spf13/afero"
 )
@@ -45,4 +47,13 @@ func TestDownloadOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestJobsDownloadOptsBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		JobsDownloadOptsBuilder(),
+		0,
+		[]string{flag.Out, flag.ProjectID, flag.Force},
+	)
 }

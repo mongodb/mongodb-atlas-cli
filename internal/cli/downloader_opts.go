@@ -25,13 +25,17 @@ import (
 // A command can compose this struct and then safely rely on the methods Prompt, or Delete
 // to manage the interactions with the user
 type DownloaderOpts struct {
-	Out string
-	Fs  afero.Fs
+	Out   string
+	Force bool
+	Fs    afero.Fs
 }
 
 func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
 	// Create file only if is not there already (don't overwrite)
-	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
+	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	if !opts.Force {
+		ff |= os.O_EXCL
+	}
 	f, err := opts.Fs.OpenFile(opts.Out, ff, 0777)
 	return f, err
 }

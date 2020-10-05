@@ -16,8 +16,6 @@ package logs
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -33,12 +31,11 @@ import (
 
 type DownloadOpts struct {
 	cli.GlobalOpts
+	cli.DownloaderOpts
 	host  string
 	name  string
-	out   string
 	start string
 	end   string
-	fs    afero.Fs
 	store store.LogsDownloader
 }
 
@@ -51,38 +48,26 @@ func (opts *DownloadOpts) initStore() error {
 }
 
 func (opts *DownloadOpts) Run() error {
-	f, err := opts.newWriteCloser()
+	f, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
 	}
 
 	r := opts.newDateRangeOpts()
 	if err := opts.store.DownloadLog(opts.ConfigProjectID(), opts.host, opts.name, f, r); err != nil {
-		_ = opts.handleError(f)
+		_ = opts.OnError(f)
 		return err
 	}
-
-	fmt.Printf(downloadMessage, opts.out)
+	if opts.Out != "/dev/stdout" {
+		fmt.Printf(downloadMessage, opts.Out)
+	}
 	return f.Close()
 }
 
-func (opts *DownloadOpts) output() string {
-	if opts.out == "" {
-		opts.out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
+func (opts *DownloadOpts) initDefaultOut() {
+	if opts.Out == "" {
+		opts.Out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
 	}
-	return opts.out
-}
-
-func (opts *DownloadOpts) handleError(f io.Closer) error {
-	_ = f.Close()
-	return opts.fs.Remove(opts.output())
-}
-
-func (opts *DownloadOpts) newWriteCloser() (io.WriteCloser, error) {
-	// Create file only if is not there already (don't overwrite)
-	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY | os.O_EXCL
-	f, err := opts.fs.OpenFile(opts.output(), ff, 0777)
-	return f, err
 }
 
 func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
@@ -92,36 +77,36 @@ func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
-var logNames = []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"}
-
 // mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
-	opts := &DownloadOpts{
-		fs: afero.NewOsFs(),
-	}
+	opts := &DownloadOpts{}
+	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download <hostname> <logname>",
 		Short: download,
 		Long:  downloadLong,
 		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.initDefaultOut()
 			return opts.PreRunE(opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
-			if !search.StringInSlice(logNames, opts.name) {
-				return fmt.Errorf("<logname> must be one of %s", logNames)
+			if !search.StringInSlice(cmd.ValidArgs, opts.name) {
+				return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
 			}
 			return opts.Run()
 		},
+		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
 	}
 
-	cmd.Flags().StringVar(&opts.out, flag.Out, "", usage.LogOut)
-
+	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 	cmd.Flags().StringVar(&opts.start, flag.Start, "", usage.LogStart)
 	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.LogEnd)
+	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagFilename(flag.Out)

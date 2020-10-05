@@ -201,4 +201,11 @@ const (
 	ServiceKey                      = "serviceKey"                      // ServiceKey flag
 	WriteToken                      = "writeToken"                      // WriteToken flag
 	ReadToken                       = "readToken"                       // ReadToken flag
+	Assignment                      = "assignment"                      // Assignment flag
+	EncryptedCredentials            = "encryptedCredentials"            // EncryptedCredentials flag
+	Label                           = "label"                           // Label flag
+	LoadFactor                      = "loadFactor"                      // LoadFactor flag
+	MaxCapacityGB                   = "maxCapacityGB"                   // MaxCapacityGB flag
+	URI                             = "uri"                             // URI flag
+	WriteConcern                    = "writeConcern"                    // WriteConcern flag
 )

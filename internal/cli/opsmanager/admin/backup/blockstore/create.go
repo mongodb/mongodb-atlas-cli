@@ -116,5 +116,8 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.ID)
+	_ = cmd.MarkFlagRequired(flag.URI)
+
 	return cmd
 }

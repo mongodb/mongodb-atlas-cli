@@ -87,7 +87,8 @@ func (opts *CreateOpts) newBackupStore() *opsmngr.BackupStore {
 	return backupStore
 }
 
-// mongocli iam team(s) create
+// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id][
+// --label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate

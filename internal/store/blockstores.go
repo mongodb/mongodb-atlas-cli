@@ -37,6 +37,10 @@ type BlockstoresCreater interface {
 	BlockstoreCreater(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
 }
 
+type BlockstoresUpdater interface {
+	BlockstoreCreater(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+}
+
 // ListBlockstore encapsulates the logic to manage different cloud providers
 func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {

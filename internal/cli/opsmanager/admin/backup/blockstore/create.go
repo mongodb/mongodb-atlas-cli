@@ -21,23 +21,14 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 var createTemplate = "Blockstore configuration '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts
-	assignment           bool
-	encryptedCredentials bool
-	ssl                  bool
-	id                   string
-	label                []string
-	writeConcern         string
-	uri                  string
-	loadFactor           int64
-	maxCapacityGB        int64
-	store                store.BlockstoresCreator
+	cli.AdminOpts
+	store store.BlockstoresCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -47,48 +38,15 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateBlockstore(opts.newBackupStore())
+	r, err := opts.store.CreateBlockstore(opts.NewBackupStore())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newBackupStore() *opsmngr.BackupStore {
-	backupStore := &opsmngr.BackupStore{
-		AdminBackupConfig: opsmngr.AdminBackupConfig{
-			ID:           opts.id,
-			URI:          opts.uri,
-			WriteConcern: opts.writeConcern,
-			Labels:       opts.label,
-		},
-	}
-
-	if opts.ssl {
-		backupStore.SSL = &opts.ssl
-	}
-
-	if opts.encryptedCredentials {
-		backupStore.EncryptedCredentials = &opts.encryptedCredentials
-	}
-
-	if opts.assignment {
-		backupStore.AssignmentEnabled = &opts.assignment
-	}
-
-	if opts.maxCapacityGB != 0 {
-		backupStore.MaxCapacityGB = &opts.maxCapacityGB
-	}
-
-	if opts.loadFactor != 0 {
-		backupStore.LoadFactor = &opts.loadFactor
-	}
-
-	return backupStore
-}
-
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id][
-// --label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
+// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
+// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate
@@ -104,15 +62,15 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.assignment, flag.Assignment, false, usage.Assignment)
-	cmd.Flags().BoolVar(&opts.encryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
-	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.BlockstoreID)
-	cmd.Flags().StringSliceVar(&opts.label, flag.Label, []string{}, usage.Label)
-	cmd.Flags().Int64Var(&opts.loadFactor, flag.LoadFactor, 0, usage.LoadFactor)
-	cmd.Flags().Int64Var(&opts.maxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
-	cmd.Flags().StringVar(&opts.uri, flag.URI, "", usage.BlockstoreURI)
-	cmd.Flags().BoolVar(&opts.ssl, flag.SSL, false, usage.BlockstoreSSL)
-	cmd.Flags().StringVar(&opts.writeConcern, flag.WriteConcern, "", usage.WriteConcern)
+	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
+	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
+	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreID)
+	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
+	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
+	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
+	cmd.Flags().StringVar(&opts.URI, flag.URI, "", usage.BlockstoreURI)
+	cmd.Flags().BoolVar(&opts.SSL, flag.SSL, false, usage.BlockstoreSSL)
+	cmd.Flags().StringVar(&opts.WriteConcern, flag.WriteConcern, "", usage.WriteConcern)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

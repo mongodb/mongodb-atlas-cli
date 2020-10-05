@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().CreateBlockstore(createOpts.newBackupStore()).
+		EXPECT().CreateBlockstore(createOpts.NewBackupStore()).
 		Return(expected, nil).
 		Times(1)
 

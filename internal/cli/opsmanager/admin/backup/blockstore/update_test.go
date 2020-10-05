@@ -27,7 +27,7 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockBlockstoresCreater(ctrl)
+	mockStore := mocks.NewMockBlockstoresUpdater(ctrl)
 	defer ctrl.Finish()
 
 	expected := &opsmngr.BackupStore{}
@@ -37,7 +37,7 @@ func TestUpdate_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().BlockstoreCreater(createOpts.newBackupStore()).
+		EXPECT().UpdateBlockstore(createOpts.NewBackupStore()).
 		Return(expected, nil).
 		Times(1)
 
@@ -52,7 +52,7 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.Output, flag.ID, flag.SSL, flag.EncryptedCredentials, flag.LoadFactor,
+		[]string{flag.Output, flag.SSL, flag.EncryptedCredentials, flag.LoadFactor,
 			flag.MaxCapacityGB, flag.Assignment, flag.Label, flag.URI, flag.WriteConcern},
 	)
 }

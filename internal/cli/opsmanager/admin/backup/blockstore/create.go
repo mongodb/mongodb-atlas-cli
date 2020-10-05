@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var createTemplate = "Team '{{.Name}}' created.\n"
+var createTemplate = "Blockstore configuration '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts

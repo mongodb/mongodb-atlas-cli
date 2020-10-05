@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreater
+//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreator
 
 type BlockstoresLister interface {
 	ListBlockstores(*atlas.ListOptions) (*opsmngr.BackupStores, error)
@@ -33,7 +33,7 @@ type BlockstoresDescriber interface {
 	DescribeBlockstore(string) (*opsmngr.BackupStore, error)
 }
 
-type BlockstoresCreater interface {
+type BlockstoresCreator interface {
 	CreateBlockstore(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
 }
 

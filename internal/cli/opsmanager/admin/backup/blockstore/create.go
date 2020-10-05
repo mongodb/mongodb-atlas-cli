@@ -47,7 +47,7 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.BlockstoreCreater(opts.newBackupStore())
+	r, err := opts.store.CreateBlockstore(opts.newBackupStore())
 	if err != nil {
 		return err
 	}

@@ -34,7 +34,7 @@ type BlockstoresDescriber interface {
 }
 
 type BlockstoresCreater interface {
-	BlockstoreCreater(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+	CreateBlockstore(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
 }
 
 // ListBlockstore encapsulates the logic to manage different cloud providers
@@ -59,8 +59,8 @@ func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, e
 	}
 }
 
-// BlockstoreCreater encapsulates the logic to manage different cloud providers
-func (s *Store) BlockstoreCreater(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+// CreateBlockstore encapsulates the logic to manage different cloud providers
+func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(context.Background(), blockstore)

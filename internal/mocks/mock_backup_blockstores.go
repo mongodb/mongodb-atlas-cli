@@ -110,17 +110,17 @@ func (m *MockBlockstoresCreater) EXPECT() *MockBlockstoresCreaterMockRecorder {
 	return m.recorder
 }
 
-// BlockstoreCreater mocks base method
-func (m *MockBlockstoresCreater) BlockstoreCreater(arg0 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+// CreateBlockstore mocks base method
+func (m *MockBlockstoresCreater) CreateBlockstore(arg0 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BlockstoreCreater", arg0)
+	ret := m.ctrl.Call(m, "CreateBlockstore", arg0)
 	ret0, _ := ret[0].(*opsmngr.BackupStore)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// BlockstoreCreater indicates an expected call of BlockstoreCreater
-func (mr *MockBlockstoresCreaterMockRecorder) BlockstoreCreater(arg0 interface{}) *gomock.Call {
+// CreateBlockstore indicates an expected call of CreateBlockstore
+func (mr *MockBlockstoresCreaterMockRecorder) CreateBlockstore(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockstoreCreater", reflect.TypeOf((*MockBlockstoresCreater)(nil).BlockstoreCreater), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBlockstore", reflect.TypeOf((*MockBlockstoresCreater)(nil).CreateBlockstore), arg0)
 }

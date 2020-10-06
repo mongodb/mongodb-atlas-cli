@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package blockstore
+package filesystem
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "blockstores"
+	const use = "fileSystems"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
@@ -29,8 +29,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		UpdateBuilder())
+	)
+
 	return cmd
 }

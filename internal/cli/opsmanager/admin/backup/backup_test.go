@@ -21,11 +21,11 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestListBuilder(t *testing.T) {
+func TestBackupBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		1,
+		2,
 		[]string{},
 	)
 }

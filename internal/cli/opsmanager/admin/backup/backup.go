@@ -17,6 +17,7 @@ package backup
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +31,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		blockstore.Builder(),
+		filesystem.Builder(),
 	)
 
 	return cmd

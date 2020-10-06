@@ -11,21 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build unit
+package filesystem
 
-package backup
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	short = "Manage file system configurations."
+	list  = "List file system configurations."
 )
-
-func TestBackupBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
-}

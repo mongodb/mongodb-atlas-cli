@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "blockstore"
+	const use = "blockstores"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

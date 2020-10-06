@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package backup
+package filesystem
 
 import (
 	"testing"
@@ -21,11 +21,11 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestBackupBuilder(t *testing.T) {
+func TestFileSystemBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		2,
+		1,
 		[]string{},
 	)
 }

@@ -19,4 +19,5 @@ const (
 	describe = "Get a backup blockstore configuration."
 	create   = "Create a backup blockstore configuration."
 	update   = "Update a backup blockstore configuration."
+	delete   = "Delete a backup blockstore configuration."
 )

@@ -23,51 +23,44 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	URI	SSL	LOAD FACTOR
-{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}
-`
-
-type DescribeOpts struct {
-	cli.OutputOpts
-	store        store.BlockstoresDescriber
-	blockstoreID string
+type DeleteOpts struct {
+	*cli.DeleteOpts
+	store store.BlockstoresDeleter
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DescribeBlockstore(opts.blockstoreID)
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteBlockstore)
 }
 
-// mongocli ops-manager admin backup blockstore(s) describe <blockstoreID>
-func DescribeBuilder() *cobra.Command {
-	opts := &DescribeOpts{}
-	opts.Template = describeTemplate
+// mongocli ops-manager admin backup blockstore(s) delete <ID> [--force]
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Blockstore configuration '%s' deleted\n", "Blockstore configuration not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:     "describe <blockstoreID>",
-		Aliases: []string{"get"},
-		Short:   describe,
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   delete,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			if err := opts.init(); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.blockstoreID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	return cmd
 }

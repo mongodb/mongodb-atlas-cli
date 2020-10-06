@@ -14,8 +14,9 @@
 package filesystem
 
 const (
-	short = "Manage file system configurations."
-	list  = "List file system configurations."
+	short    = "Manage file system configurations."
+	list     = "List file system configurations."
+	describe = "Get a file system configuration."
 	create  = "Create a file system configurations."
 	update  = "Update a file system configurations."
 )

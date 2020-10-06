@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	PATH	WIREDTIGER	MMAPV1{{range .Results}}
+var listTemplate = `ID	PATH	WT COMPRESSION	MMAPV1 COMPRESSION{{range .Results}}
 {{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}{{end}}
 `
 

@@ -25,32 +25,32 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestCreate_Run(t *testing.T) {
+func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockFileSystemsCreator(ctrl)
+	mockStore := mocks.NewMockFileSystemsUpdater(ctrl)
 	defer ctrl.Finish()
 
 	expected := &opsmngr.FileSystemStoreConfiguration{}
 
-	createOpts := &CreateOpts{
+	opts := &UpdateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().CreateFileSystems(createOpts.NewFileSystemConfiguration()).
+		EXPECT().UpdateFileSystems(opts.NewFileSystemConfiguration()).
 		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		CreateBuilder(),
+		UpdateBuilder(),
 		0,
 		[]string{flag.Output, flag.ID, flag.EncryptedCredentials, flag.LoadFactor,
 			flag.WTCompressionSetting, flag.StorePath, flag.Label, flag.MMAPV1CompressionSetting, flag.Assignment},

@@ -24,42 +24,44 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "File System configuration '{{.ID}}' created.\n"
+var updateTemplate = "File System configuration '{{.ID}}' updated.\n"
 
-type CreateOpts struct {
+type UpdateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store store.FileSystemsCreator
+	store store.FileSystemsUpdater
 }
 
-func (opts *CreateOpts) init() error {
+func (opts *UpdateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateFileSystems(opts.NewFileSystemConfiguration())
+func (opts *UpdateOpts) Run() error {
+	r, err := opts.store.UpdateFileSystems(opts.NewFileSystemConfiguration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup fileSystem(s) create [--assignment][--encryptedCredentials]
+// mongocli ops-manager admin backup fileSystem(s) update <ID> [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--id ID][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
 // [--wtCompressionSetting wtCompressionSetting]
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
-	opts.Template = createTemplate
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
+	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: create,
+		Use:   "update <ID>",
+		Short: update,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.ID = args[0]
 			return opts.Run()
 		},
 	}
@@ -74,11 +76,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.StorePath, flag.StorePath, "", usage.StorePath)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.ID)
-	_ = cmd.MarkFlagRequired(flag.StorePath)
-	_ = cmd.MarkFlagRequired(flag.MMAPV1CompressionSetting)
-	_ = cmd.MarkFlagRequired(flag.WTCompressionSetting)
 
 	return cmd
 }

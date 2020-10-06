@@ -252,12 +252,10 @@ github.com/xdg/stringprep v1.0.0/go.mod h1:Jhud4/sHMO4oL310DaZAKk9ZaJ08SJfe+sJh0
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
-go.mongodb.org/atlas v0.4.1-0.20200916093941-a86355b45816 h1:wnYPHWDNpG0XaMebz6LBe7RRb6c+2bzmZ7bcDJDbWcg=
-go.mongodb.org/atlas v0.4.1-0.20200916093941-a86355b45816/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
-go.mongodb.org/atlas v0.4.1-0.20200921142021-15be5f77e0ed h1:ZFLchdZ7U0JQWypTxzDGuSjrCsy2/35tW3gnpaKl/is=
-go.mongodb.org/atlas v0.4.1-0.20200921142021-15be5f77e0ed/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
-go.mongodb.org/ops-manager v0.10.0 h1:zIqOVuMzgbq6+OqE9334h3eWrsoQcrB19a4E+JMZEqk=
-go.mongodb.org/ops-manager v0.10.0/go.mod h1:r7sU/JNPvYANcUxECB+zox4XR+vbrh//o6ejPWLfjCc=
+go.mongodb.org/atlas v0.5.0 h1:WoeXdXSLCyquhSqSqTa0PwpjxWZbm70E1Gkbx+w3Sco=
+go.mongodb.org/atlas v0.5.0/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
+go.mongodb.org/ops-manager v0.10.1 h1:b1FcHg04Ahaouv38wFonDrDXdjcAePFSWXw8Jj6GYPI=
+go.mongodb.org/ops-manager v0.10.1/go.mod h1:l4gu8hs31sfsvJnet7nh0uEjOCXezvkzbfR6DhPRt+M=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

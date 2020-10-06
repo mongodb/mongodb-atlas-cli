@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	URI	SSL	LOAD FACTOR
-{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}
+var describeTemplate = `ID	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
+{{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}
 `
 
 type DescribeOpts struct {

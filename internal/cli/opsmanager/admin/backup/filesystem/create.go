@@ -30,10 +30,10 @@ var createTemplate = "File System configuration '{{.ID}}' created.\n"
 type CreateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store store.FileSystemsCreator
+	store                    store.FileSystemsCreator
 	mmapv1CompressionSetting string
-	wtCompressionSetting string
-	storePath string
+	wtCompressionSetting     string
+	storePath                string
 }
 
 func (opts *CreateOpts) init() error {
@@ -52,14 +52,12 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreConfiguration {
 	return &opsmngr.FileSystemStoreConfiguration{
-		BackupStore: *opts.NewBackupStore(),
-		MMAPV1CompressionSetting: "",
-		StorePath:                "",
-		WTCompressionSetting:     "",
-		AssignmentEnabled:        nil,
+		BackupStore:              *opts.NewBackupStore(),
+		MMAPV1CompressionSetting: opts.mmapv1CompressionSetting,
+		StorePath:                opts.storePath,
+		WTCompressionSetting:     opts.wtCompressionSetting,
 	}
 }
-
 
 // mongocli ops-manager admin backup fileSystem(s) create [flags]
 func CreateBuilder() *cobra.Command {

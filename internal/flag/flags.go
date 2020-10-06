@@ -205,9 +205,9 @@ const (
 	EncryptedCredentials            = "encryptedCredentials"            // EncryptedCredentials flag
 	Label                           = "label"                           // Label flag
 	LoadFactor                      = "loadFactor"                      // LoadFactor flag
-	MMAPV1CompressionSetting = "mmapv1CompressionSetting" // MMAPV1CompressionSetting flag
-	WTCompressionSetting = "wtCompressionSetting" // WTCompressionSetting flag
-	StorePath = "storePath" // StorePath flag
+	MMAPV1CompressionSetting        = "mmapv1CompressionSetting"        // MMAPV1CompressionSetting flag
+	WTCompressionSetting            = "wtCompressionSetting"            // WTCompressionSetting flag
+	StorePath                       = "storePath"                       // StorePath flag
 	MaxCapacityGB                   = "maxCapacityGB"                   // MaxCapacityGB flag
 	URI                             = "uri"                             // URI flag
 	WriteConcern                    = "writeConcern"                    // WriteConcern flag

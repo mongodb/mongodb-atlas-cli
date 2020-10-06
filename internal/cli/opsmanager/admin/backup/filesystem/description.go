@@ -17,4 +17,5 @@ const (
 	short    = "Manage file system configurations."
 	list     = "List file system configurations."
 	describe = "Get a file system configuration."
+	delete   = "Delete a file system configuration."
 )

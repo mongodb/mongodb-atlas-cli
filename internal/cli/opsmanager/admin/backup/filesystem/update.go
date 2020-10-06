@@ -77,5 +77,9 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagRequired(flag.StorePath)
+	_ = cmd.MarkFlagRequired(flag.MMAPV1CompressionSetting)
+	_ = cmd.MarkFlagRequired(flag.WTCompressionSetting)
+
 	return cmd
 }

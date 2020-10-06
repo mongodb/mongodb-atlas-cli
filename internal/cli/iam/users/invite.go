@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -155,6 +156,16 @@ func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
 	return nil, nil
 }
 
+func (opts *InviteOpts) Prompt() error {
+	if opts.password != "" {
+		return nil
+	}
+	prompt := &survey.Password{
+		Message: "Password:",
+	}
+	return survey.AskOne(prompt, &opts.password)
+}
+
 func splitRole(role string) ([]string, error) {
 	value := strings.Split(role, ":")
 	if len(value) != keyParts {
@@ -233,6 +244,9 @@ func InviteBuilder() *cobra.Command {
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.Prompt(); err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}
@@ -249,7 +263,6 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Username)
-	_ = cmd.MarkFlagRequired(flag.Password)
 	_ = cmd.MarkFlagRequired(flag.Email)
 	_ = cmd.MarkFlagRequired(flag.FirstName)
 	_ = cmd.MarkFlagRequired(flag.LastName)

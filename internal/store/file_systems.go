@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister
+//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister,FileSystemsDescriber
 
 type FileSystemsLister interface {
 	ListFileSystems(*atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error)
+}
+
+type FileSystemsDescriber interface {
+	DescribeFileSystem(string) (*opsmngr.FileSystemStoreConfiguration, error)
 }
 
 // ListFileSystems encapsulates the logic to manage different cloud providers
@@ -34,6 +38,17 @@ func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystem
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(context.Background(), options)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DescribeFileSystem encapsulates the logic to manage different cloud providers
+func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStoreConfiguration, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(context.Background(), fileSystemID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

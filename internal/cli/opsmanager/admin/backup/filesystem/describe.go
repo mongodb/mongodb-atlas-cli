@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package blockstore
+package filesystem
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -29,8 +29,8 @@ var describeTemplate = `ID	URI	SSL	LOAD FACTOR
 
 type DescribeOpts struct {
 	cli.OutputOpts
-	store        store.BlockstoresDescriber
-	blockstoreID string
+	store store.FileSystemsDescriber
+	ID    string
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -40,7 +40,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DescribeBlockstore(opts.blockstoreID)
+	r, err := opts.store.DescribeFileSystem(opts.ID)
 	if err != nil {
 		return err
 	}
@@ -48,12 +48,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) describe <blockstoreID>
+// mongocli ops-manager admin backup fileSystem(s) describe <ID>
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <blockstoreID>",
+		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Short:   describe,
 		Args:    cobra.ExactArgs(1),
@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.blockstoreID = args[0]
+			opts.ID = args[0]
 			return opts.Run()
 		},
 	}

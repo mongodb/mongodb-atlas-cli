@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsCreator,FileSystemsUpdater
+//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
 
 type FileSystemsLister interface {
 	ListFileSystems(*atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error)
@@ -31,6 +31,10 @@ type FileSystemsLister interface {
 
 type FileSystemsDescriber interface {
 	DescribeFileSystem(string) (*opsmngr.FileSystemStoreConfiguration, error)
+}
+
+type FileSystemsDeleter interface {
+	DeleteFileSystem(string) error
 }
 
 type FileSystemsCreator interface {
@@ -60,6 +64,17 @@ func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStor
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteFileSystem encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteFileSystem(fileSystemID string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(context.Background(), fileSystemID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 

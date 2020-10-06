@@ -24,48 +24,49 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Blockstore configuration '{{.ID}}' created.\n"
+var updateTemplate = "Blockstore configuration '{{.ID}}' updated.\n"
 
-type CreateOpts struct {
+type UpdateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store store.BlockstoresCreator
+	store store.BlockstoresUpdater
 }
 
-func (opts *CreateOpts) init() error {
+func (opts *UpdateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateBlockstore(opts.NewBackupStore())
+func (opts *UpdateOpts) Run() error {
+	r, err := opts.store.UpdateBlockstore(opts.NewBackupStore())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
+// mongocli ops-manager admin backup blockstore(s) update <ID> [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
-	opts.Template = createTemplate
+func UpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
+	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: create,
+		Use:   "update <ID>",
+		Short: update,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.ID = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
-	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreID)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
 	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
@@ -74,9 +75,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.WriteConcern, flag.WriteConcern, "", usage.WriteConcern)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.ID)
-	_ = cmd.MarkFlagRequired(flag.URI)
 
 	return cmd
 }

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreator
+//go:generate mockgen -destination=../mocks/mock_backup_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store BlockstoresLister,BlockstoresDescriber,BlockstoresCreator,BlockstoresUpdater
 
 type BlockstoresLister interface {
 	ListBlockstores(*atlas.ListOptions) (*opsmngr.BackupStores, error)
@@ -35,6 +35,10 @@ type BlockstoresDescriber interface {
 
 type BlockstoresCreator interface {
 	CreateBlockstore(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+}
+
+type BlockstoresUpdater interface {
+	UpdateBlockstore(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
 }
 
 // ListBlockstore encapsulates the logic to manage different cloud providers
@@ -64,6 +68,17 @@ func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.Back
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(context.Background(), blockstore)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateBlockstore encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Update(context.Background(), blockstore.ID, blockstore)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

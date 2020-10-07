@@ -15,7 +15,7 @@ Describe the big picture of your changes here and communicate why we should acce
 If it fixes a bug or resolves a feature request, be sure to link to that issue. 
 -->
 
-_Jira ticket:_ https://...
+_Jira ticket:_ CLOUDP-#
 
 <!--
 What MongoDB CLI issue does this PR address? (for example, #1234), remove this section if none.

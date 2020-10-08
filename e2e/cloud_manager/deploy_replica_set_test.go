@@ -32,7 +32,6 @@ func TestDeployReplicaSet(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const clustersEntity = "clusters"
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
@@ -54,31 +53,17 @@ func TestDeployReplicaSet(t *testing.T) {
 			entity,
 			clustersEntity,
 			"apply",
-			"-f="+testFile,
+			"-f",
+			testFile,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
+		if resp, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
 
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			"automation",
-			"watch",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
-	})
+	t.Run("Watch", watch(cliPath))
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -96,7 +81,6 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 		var clusters []*convert.ClusterConfig
 		if err := json.Unmarshal(resp, &clusters); err != nil {
-			t.Log(string(resp))
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -140,27 +124,12 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
+		if resp, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
 
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			"automation",
-			"watch",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
-	})
+	t.Run("Watch", watch(cliPath))
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -172,10 +141,48 @@ func TestDeployReplicaSet(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
+		if resp, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
+
+	t.Run("Watch", watch(cliPath))
+
+	t.Run("Stop Monitoring", func(t *testing.T) {
+		hostIDs, err := hostIDs(cliPath)
+		if err != nil {
+			t.Fatalf("unexpected error: %v\n", err)
+		}
+		for _, h := range hostIDs {
+			cmd := exec.Command(cliPath,
+				entity,
+				monitoringEntity,
+				"rm",
+				h,
+				"--force",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
+			}
+		}
+	})
+}
+
+func watch(cliPath string) func(t *testing.T) {
+	return func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			"automation",
+			"watch",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	}
 }

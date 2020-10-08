@@ -15,81 +15,53 @@
 package monitoring
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/atmcfg"
 )
 
-func Builder() *cobra.Command {
-	const use = "monitoring"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage monitoring for your project.",
-	}
-
-	cmd.AddCommand(
-		EnableBuilder(),
-		StopBuilder(),
-	)
-	return cmd
-}
-
-type EnableOpts struct {
+type StopOpts struct {
 	cli.GlobalOpts
-	hostname string
-	store    store.AutomationPatcher
+	*cli.DeleteOpts
+	store store.MonitoringStopper
 }
 
-func (opts *EnableOpts) initStore() error {
+func (opts *StopOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *EnableOpts) Run() error {
-	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
-
-	if err != nil {
-		return err
-	}
-
-	if err := atmcfg.EnableMonitoring(current, opts.hostname); err != nil {
-		return err
-	}
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
-		return err
-	}
-
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
-
-	return nil
+func (opts *StopOpts) Run() error {
+	return opts.Delete(opts.store.StopMonitoring, opts.ConfigProjectID())
 }
 
-// mongocli ops-manager monitoring enable <hostname> [--projectId projectId]
-func EnableBuilder() *cobra.Command {
-	opts := &EnableOpts{}
+// mongocli ops-manager monitoring stop <ID> --force
+func StopBuilder() *cobra.Command {
+	opts := &StopOpts{
+		DeleteOpts: cli.NewDeleteOpts("Stopped monitoring '%s'\n", "Monitoring did not stop"),
+	}
 	cmd := &cobra.Command{
-		Use:   "enable <hostname>",
-		Short: "Enable monitoring for a given hostname",
-		Args:  cobra.ExactArgs(1),
+		Use:     "stop <ID>",
+		Aliases: []string{"rm"},
+		Short:   "Stops monitoring the MongoDB process  specified",
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initStore,
-			)
+			if err := opts.PreRunE(opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostname = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

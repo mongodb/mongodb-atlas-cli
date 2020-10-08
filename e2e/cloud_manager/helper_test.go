@@ -33,7 +33,10 @@ const (
 	serversEntity     = "servers"
 	iamEntity         = "iam"
 	projectsEntity    = "projects"
+	clustersEntity    = "clusters"
 	maintenanceEntity = "maintenanceWindows"
+	monitoringEntity  = "monitoring"
+	processesEntity   = "processes"
 )
 
 // automationServerHostname tries to list available server running the automation agent
@@ -54,6 +57,28 @@ func automationServerHostname(cliPath string) (string, error) {
 		return "", errors.New("no server available")
 	}
 	return servers.Results[0].Hostname, nil
+}
+
+func hostIDs(cliPath string) ([]string, error) {
+	cmd := exec.Command(cliPath, entity, processesEntity, "list", "-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return nil, err
+	}
+
+	var servers *opsmngr.Hosts
+	if err := json.Unmarshal(resp, &servers); err != nil {
+		return nil, err
+	}
+	if servers.TotalCount == 0 {
+		return nil, errors.New("no hosts available")
+	}
+	result := make([]string, len(servers.Results))
+	for i, h := range servers.Results {
+		result[i] = h.ID
+	}
+	return result, nil
 }
 
 func generateConfig(filename, hostname, clusterName, version, fcVersion string) error {

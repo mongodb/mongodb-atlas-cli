@@ -55,7 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Short:   describeProcesses,
-		Aliases: []string{"d"},
+		Aliases: []string{"get"},
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

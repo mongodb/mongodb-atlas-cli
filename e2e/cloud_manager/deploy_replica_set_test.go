@@ -32,7 +32,6 @@ func TestDeployReplicaSet(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const clustersEntity = "clusters"
 	const testFile = "om-new-cluster.json"
 
 	n, err := e2e.RandInt(1000)
@@ -176,6 +175,29 @@ func TestDeployReplicaSet(t *testing.T) {
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Stop Monitoring", func(t *testing.T) {
+		hostIDs, err := hostIDs(cliPath)
+		if err != nil {
+			t.Fatalf("unexpected error: %v\n", err)
+		}
+		for _, h := range hostIDs {
+			cmd := exec.Command(cliPath,
+				entity,
+				monitoringEntity,
+				"rm",
+				h,
+				"--force",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+
+			if err != nil {
+				t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
+			}
 		}
 	})
 }

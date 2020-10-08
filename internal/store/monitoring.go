@@ -32,7 +32,7 @@ type MonitoringStopper interface {
 	StopMonitoring(string, string) error
 }
 
-// StartMonitoring encapsulate the logic to manage different cloud providers
+// StartMonitoring encapsulates the logic to manage different cloud providers
 func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

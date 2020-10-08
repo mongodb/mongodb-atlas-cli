@@ -43,7 +43,7 @@ func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Ho
 	}
 }
 
-// StopMonitoring encapsulate the logic to manage different cloud providers
+// StopMonitoring encapsulates the logic to manage different cloud providers
 func (s *Store) StopMonitoring(groupID, hostID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

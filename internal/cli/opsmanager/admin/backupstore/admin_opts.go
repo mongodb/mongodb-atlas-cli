@@ -20,12 +20,12 @@ type AdminOpts struct {
 	Assignment           bool
 	EncryptedCredentials bool
 	SSL                  bool
-	ID                   string
-	Label                []string
 	WriteConcern         string
 	URI                  string
 	LoadFactor           int64
 	MaxCapacityGB        int64
+	ID                   string
+	Label                []string
 }
 
 func (opts *AdminOpts) NewBackupStore() *opsmngr.BackupStore {

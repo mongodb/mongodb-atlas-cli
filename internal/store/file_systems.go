@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter
+//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongocli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
 
 type FileSystemsLister interface {
 	ListFileSystems(*atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error)
@@ -35,6 +35,14 @@ type FileSystemsDescriber interface {
 
 type FileSystemsDeleter interface {
 	DeleteFileSystem(string) error
+}
+
+type FileSystemsCreator interface {
+	CreateFileSystems(*opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error)
+}
+
+type FileSystemsUpdater interface {
+	UpdateFileSystems(*opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error)
 }
 
 // ListFileSystems encapsulates the logic to manage different cloud providers
@@ -67,5 +75,27 @@ func (s *Store) DeleteFileSystem(fileSystemID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateFileSystems encapsulates the logic to manage different cloud providers
+func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(context.Background(), fileSystem)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateFileSystems encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(context.Background(), fileSystem.ID, fileSystem)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

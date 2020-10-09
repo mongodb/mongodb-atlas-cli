@@ -18,4 +18,6 @@ const (
 	list     = "List file system configurations."
 	describe = "Get a file system configuration."
 	delete   = "Delete a file system configuration."
+	create   = "Create a file system configuration."
+	update   = "Update a file system configuration."
 )

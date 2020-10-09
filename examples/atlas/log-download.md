@@ -1,9 +1,10 @@
 # Download and Unzip Logs
 
-You can download and unzip logs in one go like
+You can download and decompress logs by piping the command to gunzip.
+To do this you'll need to output to stdout in the following way: 
 
 ```bash
-mongocli atlas logs download <processName> mongodb.gz \
+mongocli atlas logs download <hostname> mongodb.gz \
     --out /dev/stdout \
     --force | gunzip
 ```

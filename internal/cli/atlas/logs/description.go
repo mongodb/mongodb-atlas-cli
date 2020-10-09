@@ -16,7 +16,6 @@ package logs
 const (
 	short        = "Download host logs for your project."
 	download     = "Download a host mongodb logs."
-	downloadLong = `To download a log you need the name of the host where the log files that you want to download are stored.
-To see the hostnames of your Atlas cluster, visit the cluster overview page in the Atlas UI.
-The name of the log file must be one of: mongodb.gz, mongos.gz, mongodb-audit-log.gz, mongos-audit-log.gz`
+	downloadLong = `Download a gzipped file containing the logs for the selected hostname.
+To find the hostnames for an Atlas project, you can use the process list command.`
 )

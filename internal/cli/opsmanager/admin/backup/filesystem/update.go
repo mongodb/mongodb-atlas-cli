@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 var updateTemplate = "File System configuration '{{.ID}}' updated.\n"
@@ -29,7 +30,10 @@ var updateTemplate = "File System configuration '{{.ID}}' updated.\n"
 type UpdateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store store.FileSystemsUpdater
+	store                    store.FileSystemsUpdater
+	mmapv1CompressionSetting string
+	storePath                string
+	wtCompressionSetting     string
 }
 
 func (opts *UpdateOpts) init() error {
@@ -39,11 +43,20 @@ func (opts *UpdateOpts) init() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateFileSystems(opts.NewFileSystemConfiguration())
+	r, err := opts.store.UpdateFileSystems(opts.newFileSystemConfiguration())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
+}
+
+func (opts *UpdateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreConfiguration {
+	return &opsmngr.FileSystemStoreConfiguration{
+		BackupStore:              *opts.NewBackupStore(),
+		MMAPV1CompressionSetting: opts.mmapv1CompressionSetting,
+		StorePath:                opts.storePath,
+		WTCompressionSetting:     opts.wtCompressionSetting,
+	}
 }
 
 // mongocli ops-manager admin backup fileSystem(s) update <ID> [--assignment][--encryptedCredentials]
@@ -71,9 +84,9 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreID)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
-	cmd.Flags().StringVar(&opts.MMAPV1CompressionSetting, flag.MMAPV1CompressionSetting, "", usage.MMAPV1CompressionSetting)
-	cmd.Flags().StringVar(&opts.WTCompressionSetting, flag.WTCompressionSetting, "", usage.WTCompressionSetting)
-	cmd.Flags().StringVar(&opts.StorePath, flag.StorePath, "", usage.StorePath)
+	cmd.Flags().StringVar(&opts.mmapv1CompressionSetting, flag.MMAPV1CompressionSetting, "", usage.MMAPV1CompressionSetting)
+	cmd.Flags().StringVar(&opts.wtCompressionSetting, flag.WTCompressionSetting, "", usage.WTCompressionSetting)
+	cmd.Flags().StringVar(&opts.storePath, flag.StorePath, "", usage.StorePath)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

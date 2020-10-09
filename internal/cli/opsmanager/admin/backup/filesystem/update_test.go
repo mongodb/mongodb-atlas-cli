@@ -37,7 +37,7 @@ func TestUpdate_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().UpdateFileSystems(opts.NewFileSystemConfiguration()).
+		EXPECT().UpdateFileSystems(opts.newFileSystemConfiguration()).
 		Return(expected, nil).
 		Times(1)
 

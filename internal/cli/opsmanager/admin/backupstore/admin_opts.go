@@ -17,18 +17,15 @@ package backupstore
 import "go.mongodb.org/ops-manager/opsmngr"
 
 type AdminOpts struct {
-	Assignment               bool
-	EncryptedCredentials     bool
-	SSL                      bool
-	WriteConcern             string
-	URI                      string
-	LoadFactor               int64
-	MaxCapacityGB            int64
-	MMAPV1CompressionSetting string
-	StorePath                string
-	WTCompressionSetting     string
-	ID                       string
-	Label                    []string
+	Assignment           bool
+	EncryptedCredentials bool
+	SSL                  bool
+	WriteConcern         string
+	URI                  string
+	LoadFactor           int64
+	MaxCapacityGB        int64
+	ID                   string
+	Label                []string
 }
 
 func (opts *AdminOpts) NewBackupStore() *opsmngr.BackupStore {
@@ -62,13 +59,4 @@ func (opts *AdminOpts) NewBackupStore() *opsmngr.BackupStore {
 	}
 
 	return backupStore
-}
-
-func (opts *AdminOpts) NewFileSystemConfiguration() *opsmngr.FileSystemStoreConfiguration {
-	return &opsmngr.FileSystemStoreConfiguration{
-		BackupStore:              *opts.NewBackupStore(),
-		MMAPV1CompressionSetting: opts.MMAPV1CompressionSetting,
-		StorePath:                opts.StorePath,
-		WTCompressionSetting:     opts.WTCompressionSetting,
-	}
 }

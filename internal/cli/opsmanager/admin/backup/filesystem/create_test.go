@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().CreateFileSystems(createOpts.NewFileSystemConfiguration()).
+		EXPECT().CreateFileSystems(createOpts.newFileSystemConfiguration()).
 		Return(expected, nil).
 		Times(1)
 

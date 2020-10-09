@@ -77,13 +77,13 @@ func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
-// mongocli atlas logs download <hostname> <logname> [--type type] [--output destination] [--projectId projectId]
+// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download <hostname> <logname>",
+		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
 		Short: download,
 		Long:  downloadLong,
 		Args:  cobra.ExactArgs(argsN),

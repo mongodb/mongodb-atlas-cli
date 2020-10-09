@@ -30,8 +30,8 @@ type DownloaderOpts struct {
 	Fs    afero.Fs
 }
 
+// NewWriteCloser creates a new file, if Force is false then don't allow to overwrite the file
 func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
-	// Create file only if is not there already (don't overwrite)
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	if !opts.Force {
 		ff |= os.O_EXCL

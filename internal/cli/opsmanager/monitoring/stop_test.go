@@ -19,55 +19,39 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
+func TestStopBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
-	)
-}
-
-func TestEnableBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		EnableBuilder(),
+		StopBuilder(),
 		0,
-		[]string{flag.ProjectID},
+		[]string{flag.ProjectID, flag.Force},
 	)
 }
 
-func TestEnableOpts_Run(t *testing.T) {
+func TestStopOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationPatcher(ctrl)
+	mockStore := mocks.NewMockMonitoringStopper(ctrl)
 	defer ctrl.Finish()
 
-	expected := fixture.AutomationConfig()
-
-	createOpts := &EnableOpts{
-		hostname: "test",
-		store:    mockStore,
+	opts := &StopOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
 	}
 
 	mockStore.
 		EXPECT().
-		GetAutomationConfig(createOpts.ProjectID).
-		Return(expected, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		UpdateAutomationConfig(createOpts.ProjectID, expected).
+		StopMonitoring(opts.ProjectID, opts.Entry).
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

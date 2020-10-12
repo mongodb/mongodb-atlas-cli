@@ -114,7 +114,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.pathStyleAccessEnabled, flag.PathStyleAccessEnabled, false, usage.PathStyleAccessEnabled)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	
+
 	_ = cmd.MarkFlagRequired(flag.URI)
 	_ = cmd.MarkFlagRequired(flag.AcceptedTos)
 	_ = cmd.MarkFlagRequired(flag.S3BucketName)

@@ -73,7 +73,7 @@ func (opts *CreateOpts) newS3Blockstore() *opsmngr.S3Blockstore {
 	}
 }
 
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
+// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--name name]
 // [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern] [--awsAccessKey awsAccessKey]
 // [--awsSecretKey awsSecretKey] [--s3AuthMethod s3AuthMethod] [--s3BucketEndpoint s3BucketEndpoint] [--s3BucketName s3BucketName]
 // [--s3MaxConnections s3MaxConnections] [--disableProxyS3 disableProxyS3] [--acceptedTos acceptedTos] [--sseEnabled sseEnabled]

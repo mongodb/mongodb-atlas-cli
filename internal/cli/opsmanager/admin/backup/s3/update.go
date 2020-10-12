@@ -96,7 +96,6 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreID)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
@@ -115,8 +114,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.pathStyleAccessEnabled, flag.PathStyleAccessEnabled, false, usage.PathStyleAccessEnabled)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.ID)
+	
 	_ = cmd.MarkFlagRequired(flag.URI)
 	_ = cmd.MarkFlagRequired(flag.AcceptedTos)
 	_ = cmd.MarkFlagRequired(flag.S3BucketName)

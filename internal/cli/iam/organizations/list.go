@@ -31,7 +31,9 @@ const listTemplate = `ID	NAME{{range .Results}}
 type ListOpts struct {
 	cli.ListOpts
 	cli.OutputOpts
-	store store.OrganizationLister
+	store              store.OrganizationLister
+	name               string
+	includeDeletedOrgs bool
 }
 
 func (opts *ListOpts) init() error {
@@ -50,11 +52,13 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptions {
 	return &atlas.OrganizationsListOptions{
-		ListOptions: *opts.NewListOptions(),
+		Name:               opts.name,
+		IncludeDeletedOrgs: &opts.includeDeletedOrgs,
+		ListOptions:        *opts.NewListOptions(),
 	}
 }
 
-// mongocli iam organizations(s) list
+// mongocli iam organizations(s) list --name --includeDeletedOrgs
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate
@@ -70,6 +74,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
+	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)

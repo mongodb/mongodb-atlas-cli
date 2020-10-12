@@ -35,7 +35,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Organizations(listOpts.NewListOptions()).
+		Organizations(listOpts.newOrganizationListOptions()).
 		Return(expected, nil).
 		Times(1)
 

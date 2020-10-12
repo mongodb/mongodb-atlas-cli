@@ -34,7 +34,7 @@ const (
 
 type ProjectOrgsLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
-	Organizations(options *atlas.OrganizationsListOptions) (*atlas.Organizations, error)
+	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
 type configOpts struct {

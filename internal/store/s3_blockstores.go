@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_s3_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store S3BlockstoresLister
+//go:generate mockgen -destination=../mocks/mock_backup_s3_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store S3BlockstoresLister,S3BlockstoresDeleter
 
 type S3BlockstoresLister interface {
 	ListS3Blockstores(*atlas.ListOptions) (*opsmngr.S3Blockstores, error)
+}
+
+type S3BlockstoresDeleter interface {
+	DeleteS3Blockstore(string) error
 }
 
 // ListS3Blockstores encapsulates the logic to manage different cloud providers
@@ -37,5 +41,16 @@ func (s *Store) ListS3Blockstores(options *atlas.ListOptions) (*opsmngr.S3Blocks
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteS3Blockstores encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Delete(context.Background(), blockstoreID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

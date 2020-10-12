@@ -23,25 +23,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	URI	SSL	LOAD FACTOR	AUTH METHOD{{range .Results}}
-{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}	{{.S3AuthMethod}}{{end}}
+var describeTemplate = `ID	URI	SSL	LOAD FACTOR	AUTH METHOD
+{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}	{{.S3AuthMethod}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.OutputOpts
-	cli.ListOpts
-	store store.S3BlockstoresLister
+	store        store.S3BlockstoresDescriber
+	blockstoreID string
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.ListS3Blockstores(opts.NewListOptions())
-
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.GetS3Blockstore(opts.blockstoreID)
 	if err != nil {
 		return err
 	}
@@ -49,26 +48,24 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup s3 lists
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
-	opts.Template = listTemplate
+// mongocli ops-manager admin backup s3 describe <blockstoreID>
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
+	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   list,
-		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Use:     "describe <blockstoreID>",
+		Aliases: []string{"get"},
+		Short:   describe,
+		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.blockstoreID = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

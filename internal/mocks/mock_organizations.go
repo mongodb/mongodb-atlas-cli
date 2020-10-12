@@ -34,7 +34,7 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method
-func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.ListOptions) (*mongodbatlas.Organizations, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlas.Organizations, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*mongodbatlas.Organizations)

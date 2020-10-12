@@ -211,4 +211,5 @@ const (
 	MaxCapacityGB                   = "maxCapacityGB"                   // MaxCapacityGB flag
 	URI                             = "uri"                             // URI flag
 	WriteConcern                    = "writeConcern"                    // WriteConcern flag
+	IncludeDeleted                  = "includeDeleted"                  // IncludeDeleted flag
 )

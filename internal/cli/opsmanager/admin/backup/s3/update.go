@@ -84,7 +84,7 @@ func (opts *UpdateOpts) newS3Blockstore() *opsmngr.S3Blockstore {
 	return blockstore
 }
 
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
+// mongocli ops-manager admin backup blockstore(s) update [--assignment][--encryptedCredentials][--id id]
 // [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern] [--awsAccessKey awsAccessKey]
 // [--awsSecretKey awsSecretKey] [--s3AuthMethod s3AuthMethod] [--s3BucketEndpoint s3BucketEndpoint] [--s3BucketName s3BucketName]
 // [--s3MaxConnections s3MaxConnections] [--disableProxyS3 disableProxyS3] [--acceptedTos acceptedTos] [--sseEnabled sseEnabled]
@@ -96,7 +96,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <blockstoreID>",
 		Args:  cobra.ExactArgs(1),
-		Short: create,
+		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

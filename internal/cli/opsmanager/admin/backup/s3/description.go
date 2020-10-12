@@ -17,4 +17,5 @@ const (
 	short  = "Manage backup S3 blockstore configurations."
 	list   = "List backup S3 blockstore configurations."
 	create = "Create a backup S3 blockstore configuration."
+	update = "Update a backup S3 blockstore configuration."
 )

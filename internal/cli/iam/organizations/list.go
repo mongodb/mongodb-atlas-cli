@@ -76,7 +76,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
-	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeletedOrgs, false, usage.IncludeDeletedOrgs)
+	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)

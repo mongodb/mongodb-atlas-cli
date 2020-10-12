@@ -119,7 +119,7 @@ const (
 	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
 	OrgName                         = "Your Flowdock organization name."
 	OrgNameFilter                   = "Performs a case-insensitive search for organizations which exactly match the specified name"
-	IncludeDeletedOrgs              = "Include deleted organization."
+	OrgIncludeDeleted               = "Include deleted organization."
 	FlowName                        = "Your Flowdock Flow name."
 	Assignment                      = "Flag indicating whether this blockstore can be assigned backup jobs."
 	EncryptedCredentials            = "Flag indicating whether the username and password for this blockstore were encrypted using the credentialstool."

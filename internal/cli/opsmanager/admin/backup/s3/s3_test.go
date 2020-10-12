@@ -25,7 +25,7 @@ func TestFileSystemBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		1,
+		3,
 		[]string{},
 	)
 }

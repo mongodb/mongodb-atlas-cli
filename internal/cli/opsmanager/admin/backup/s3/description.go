@@ -14,6 +14,7 @@
 package s3
 
 const (
-	short = "Manage backup s3 blockstore configurations."
-	list  = "List backup s3 blockstore configurations."
+	short  = "Manage backup S3 blockstore configurations."
+	list   = "List backup S3 blockstore configurations."
+	create = "Create a backup S3 blockstore configuration."
 )

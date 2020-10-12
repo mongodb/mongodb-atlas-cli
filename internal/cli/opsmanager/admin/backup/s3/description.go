@@ -11,30 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package s3
 
-package backup
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
-	"github.com/spf13/cobra"
+const (
+	short = "Manage backup s3 blockstore configurations."
+	list  = "List backup s3 blockstore configurations."
 )
-
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   backup,
-	}
-
-	cmd.AddCommand(
-		blockstore.Builder(),
-		filesystem.Builder(),
-		s3.Builder(),
-	)
-
-	return cmd
-}

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package organizations
+package s3
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -21,50 +21,46 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	NAME{{range .Results}}
-{{.ID}}	{{.Name}}{{end}}
+var listTemplate = `ID	URI	SSL	LOAD FACTOR{{range .Results}}
+{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}{{end}}
 `
 
 type ListOpts struct {
-	cli.ListOpts
 	cli.OutputOpts
-	store store.OrganizationLister
+	cli.ListOpts
+	store store.S3BlockstoresLister
 }
 
-func (opts *ListOpts) init() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.Organizations(opts.newOrganizationListOptions())
+	r, err := opts.store.ListS3Blockstores(opts.NewListOptions())
+
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptions {
-	return &atlas.OrganizationsListOptions{
-		ListOptions: *opts.NewListOptions(),
-	}
-}
-
-// mongocli iam organizations(s) list
+// mongocli ops-manager admin backup s3 lists
 func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+	opts := &ListOpts{}
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
+		Short:   list,
 		Aliases: []string{"ls"},
-		Short:   listOrganizations,
+		Args:    cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

@@ -26,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber
 
 type OrganizationLister interface {
-	Organizations(*atlas.ListOptions) (*atlas.Organizations, error)
+	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
 type OrganizationDescriber interface {
@@ -42,7 +42,7 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers
-func (s *Store) Organizations(opts *atlas.ListOptions) (*atlas.Organizations, error) {
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Organizations.List(context.Background(), opts)

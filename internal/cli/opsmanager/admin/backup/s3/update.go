@@ -58,33 +58,22 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newS3Blockstore() *opsmngr.S3Blockstore {
-	blockstore := &opsmngr.S3Blockstore{
-		BackupStore:      *opts.NewBackupStore(),
-		AWSAccessKey:     opts.awsAccessKey,
-		AWSSecretKey:     opts.awsSecretKey,
-		S3AuthMethod:     opts.s3AuthMethod,
-		S3BucketEndpoint: opts.s3BucketEndpoint,
-		S3BucketName:     opts.s3BucketName,
-		S3MaxConnections: opts.s3MaxConnections,
-		AcceptedTos:      &opts.acceptedTos,
+	return &opsmngr.S3Blockstore{
+		BackupStore:            *opts.NewBackupStore(),
+		AWSAccessKey:           opts.awsAccessKey,
+		AWSSecretKey:           opts.awsSecretKey,
+		S3AuthMethod:           opts.s3AuthMethod,
+		S3BucketEndpoint:       opts.s3BucketEndpoint,
+		S3BucketName:           opts.s3BucketName,
+		S3MaxConnections:       opts.s3MaxConnections,
+		AcceptedTos:            &opts.acceptedTos,
+		SSEEnabled:             &opts.sseEnabled,
+		DisableProxyS3:         &opts.disableProxyS3,
+		PathStyleAccessEnabled: &opts.pathStyleAccessEnabled,
 	}
-
-	if opts.disableProxyS3 {
-		blockstore.DisableProxyS3 = &opts.disableProxyS3
-	}
-
-	if opts.sseEnabled {
-		blockstore.SSEEnabled = &opts.sseEnabled
-	}
-
-	if opts.pathStyleAccessEnabled {
-		blockstore.PathStyleAccessEnabled = &opts.pathStyleAccessEnabled
-	}
-
-	return blockstore
 }
 
-// mongocli ops-manager admin backup blockstore(s) update [--assignment][--encryptedCredentials][--id id]
+// mongocli ops-manager admin backup blockstore(s) update ID [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern] [--awsAccessKey awsAccessKey]
 // [--awsSecretKey awsSecretKey] [--s3AuthMethod s3AuthMethod] [--s3BucketEndpoint s3BucketEndpoint] [--s3BucketName s3BucketName]
 // [--s3MaxConnections s3MaxConnections] [--disableProxyS3 disableProxyS3] [--acceptedTos acceptedTos] [--sseEnabled sseEnabled]
@@ -94,7 +83,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <blockstoreID>",
+		Use:   "update <ID>",
 		Args:  cobra.ExactArgs(1),
 		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -133,7 +122,6 @@ func UpdateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.S3BucketName)
 	_ = cmd.MarkFlagRequired(flag.S3BucketEndpoint)
 	_ = cmd.MarkFlagRequired(flag.S3AuthMethod)
-	_ = cmd.MarkFlagRequired(flag.SSEEnabled)
 
 	return cmd
 }

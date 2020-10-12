@@ -58,30 +58,19 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newS3Blockstore() *opsmngr.S3Blockstore {
-	blockstore := &opsmngr.S3Blockstore{
-		BackupStore:      *opts.NewBackupStore(),
-		AWSAccessKey:     opts.awsAccessKey,
-		AWSSecretKey:     opts.awsSecretKey,
-		S3AuthMethod:     opts.s3AuthMethod,
-		S3BucketEndpoint: opts.s3BucketEndpoint,
-		S3BucketName:     opts.s3BucketName,
-		S3MaxConnections: opts.s3MaxConnections,
-		AcceptedTos:      &opts.acceptedTos,
+	return &opsmngr.S3Blockstore{
+		BackupStore:            *opts.NewBackupStore(),
+		AWSAccessKey:           opts.awsAccessKey,
+		AWSSecretKey:           opts.awsSecretKey,
+		S3AuthMethod:           opts.s3AuthMethod,
+		S3BucketEndpoint:       opts.s3BucketEndpoint,
+		S3BucketName:           opts.s3BucketName,
+		S3MaxConnections:       opts.s3MaxConnections,
+		AcceptedTos:            &opts.acceptedTos,
+		SSEEnabled:             &opts.sseEnabled,
+		DisableProxyS3:         &opts.disableProxyS3,
+		PathStyleAccessEnabled: &opts.pathStyleAccessEnabled,
 	}
-
-	if opts.disableProxyS3 {
-		blockstore.DisableProxyS3 = &opts.disableProxyS3
-	}
-
-	if opts.sseEnabled {
-		blockstore.SSEEnabled = &opts.sseEnabled
-	}
-
-	if opts.pathStyleAccessEnabled {
-		blockstore.PathStyleAccessEnabled = &opts.pathStyleAccessEnabled
-	}
-
-	return blockstore
 }
 
 // mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
@@ -131,7 +120,6 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.S3BucketName)
 	_ = cmd.MarkFlagRequired(flag.S3BucketEndpoint)
 	_ = cmd.MarkFlagRequired(flag.S3AuthMethod)
-	_ = cmd.MarkFlagRequired(flag.SSEEnabled)
 
 	return cmd
 }

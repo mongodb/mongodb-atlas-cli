@@ -131,6 +131,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.S3BucketName)
 	_ = cmd.MarkFlagRequired(flag.S3BucketEndpoint)
 	_ = cmd.MarkFlagRequired(flag.S3AuthMethod)
+	_ = cmd.MarkFlagRequired(flag.SSEEnabled)
 
 	return cmd
 }

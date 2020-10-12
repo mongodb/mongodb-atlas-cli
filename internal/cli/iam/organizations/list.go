@@ -58,7 +58,7 @@ func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptio
 	}
 }
 
-// mongocli iam organizations(s) list --name
+// mongocli iam organizations(s) list --name --includeDeletedOrgs
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate

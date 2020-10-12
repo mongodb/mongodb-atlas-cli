@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const listTemplate = `ID	NAME{{range .Results}}
@@ -30,7 +31,9 @@ const listTemplate = `ID	NAME{{range .Results}}
 type ListOpts struct {
 	cli.ListOpts
 	cli.OutputOpts
-	store store.OrganizationLister
+	store              store.OrganizationLister
+	name               string
+	includeDeletedOrgs bool
 }
 
 func (opts *ListOpts) init() error {
@@ -40,17 +43,22 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOptions := opts.NewListOptions()
-	r, err := opts.store.Organizations(listOptions)
-
+	r, err := opts.store.Organizations(opts.newOrganizationListOptions())
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) list
+func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptions {
+	return &atlas.OrganizationsListOptions{
+		Name:               opts.name,
+		IncludeDeletedOrgs: &opts.includeDeletedOrgs,
+		ListOptions:        *opts.NewListOptions(),
+	}
+}
+
+// mongocli iam organizations(s) list --name
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate
@@ -66,6 +74,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
+	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeletedOrgs, false, usage.IncludeDeletedOrgs)
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)

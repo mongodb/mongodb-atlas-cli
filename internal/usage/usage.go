@@ -132,6 +132,7 @@ const (
 	BlockstoreURI                   = "A comma-separated list of hosts in the <hostname:port> format that can be used to access this blockstore."
 	BlockstoreSSL                   = "Flag indicating whether this blockstore only accepts connections encrypted using TLS."
 	BlockstoreName                  = "The unique name that labels this blockstore."
+	FileSystemName                  = "The unique name that labels this file system store configuration."
 	WriteConcern                    = "The write concern used for this blockstore."
 	AWSAccessKey                    = "AWS Access Key ID that can access the S3 bucket specified in s3BucketName."
 	AWSSecretKey                    = "AWS Secret Access Key that can access the S3 bucket specified in s3BucketName." //nolint:gosec // This is just a message not a credential

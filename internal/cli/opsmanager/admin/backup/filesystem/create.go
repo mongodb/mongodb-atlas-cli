@@ -60,7 +60,7 @@ func (opts *CreateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreCon
 }
 
 // mongocli ops-manager admin backup fileSystem(s) create [--assignment][--encryptedCredentials]
-// [--label label][--loadFactor loadFactor][--id ID][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
+// [--label label][--loadFactor loadFactor][--name name][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
 // [--wtCompressionSetting wtCompressionSetting]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
@@ -79,7 +79,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
-	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreName)
+	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.FileSystemName)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
 	cmd.Flags().StringVar(&opts.mmapv1CompressionSetting, flag.MMAPV1CompressionSetting, "", usage.MMAPV1CompressionSetting)

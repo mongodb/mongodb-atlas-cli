@@ -24,7 +24,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var updateTemplate = "Snapshot schedule '{{.ID}}' updated.\n"
+var updateTemplate = "Snapshot schedule updated.\n"
 
 type UpdateOpts struct {
 	cli.GlobalOpts
@@ -96,7 +96,6 @@ func UpdateBuilder() *cobra.Command {
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update",
-		Args:  cobra.ExactArgs(1),
 		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

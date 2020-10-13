@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `NAME	URI	SSL	LOAD FACTOR	AUTH METHOD
-{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}	{{.S3AuthMethod}}
+var describeTemplate = `PROJECT ID	ID	MONTHLY SNAPSHOT RETENTION MONTHS	POINT IN TIME WINDOW HOURS
+{{.GroupID}}	{{.ClusterID}}	{{.MonthlySnapshotRetentionMonths}}	{{.PointInTimeWindowHours}}
 `
 
 type DescribeOpts struct {
@@ -56,7 +56,6 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Short:   describe,
-		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,

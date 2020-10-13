@@ -14,9 +14,10 @@
 package s3
 
 const (
-	short  = "Manage backup s3 blockstore configurations."
-	list   = "List backup s3 blockstore configurations."
-	delete = "Delete a backup s3 blockstore configuration."
-	create = "Create a backup S3 blockstore configuration."
-	update = "Update a backup S3 blockstore configuration."
+	short    = "Manage backup s3 blockstore configurations."
+	list     = "List backup s3 blockstore configurations."
+	delete   = "Delete a backup s3 blockstore configuration."
+	create   = "Create a backup S3 blockstore configuration."
+	update   = "Update a backup S3 blockstore configuration."
+	describe = "Get a backup s3 blockstore configuration."
 )

@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	URI	SSL	LOAD FACTOR
+var describeTemplate = `NAME	URI	SSL	LOAD FACTOR
 {{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}
 `
 
@@ -48,12 +48,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) describe <blockstoreID>
+// mongocli ops-manager admin backup blockstore(s) describe <name>
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <blockstoreID>",
+		Use:     "describe <name>",
 		Aliases: []string{"get"},
 		Short:   describe,
 		Args:    cobra.ExactArgs(1),

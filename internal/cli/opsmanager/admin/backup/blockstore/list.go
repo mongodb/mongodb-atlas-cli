@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	URI	SSL	LOAD FACTOR{{range .Results}}
+var listTemplate = `NAME	URI	SSL	LOAD FACTOR{{range .Results}}
 {{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}{{end}}
 `
 

@@ -16,6 +16,7 @@ package snapshots
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/snapshots/schedule"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,9 @@ func Builder() *cobra.Command {
 		Short:   shots,
 	}
 
-	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		schedule.Builder())
 
 	return cmd
 }

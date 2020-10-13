@@ -49,7 +49,6 @@ type UserDescriber interface {
 type UserRequest struct {
 	*opsmngr.User
 	AtlasRoles []atlas.AtlasRole
-	Country    string
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers

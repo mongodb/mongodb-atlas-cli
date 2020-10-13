@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestFileSystemBuilder(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),

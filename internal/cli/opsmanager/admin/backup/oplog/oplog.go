@@ -11,21 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build unit
 
-package s3
+package oplog
 
 import (
-	"testing"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		5,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "oplog"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
 	)
+
+	return cmd
 }

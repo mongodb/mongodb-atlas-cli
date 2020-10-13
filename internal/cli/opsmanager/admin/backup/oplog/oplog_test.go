@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package s3
+package oplog
 
 import (
 	"testing"
@@ -25,7 +25,7 @@ func TestBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		5,
+		2,
 		[]string{},
 	)
 }

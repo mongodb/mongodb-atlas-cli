@@ -25,7 +25,7 @@ func TestBackupBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		3,
+		4,
 		[]string{},
 	)
 }

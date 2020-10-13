@@ -12,30 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package oplog
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/oplog"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "backups"
+	const use = "oplog"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   backup,
+		Short:   short,
 	}
 
 	cmd.AddCommand(
-		blockstore.Builder(),
-		filesystem.Builder(),
-		s3.Builder(),
-		oplog.Builder(),
+		ListBuilder(),
+		DescribeBuilder(),
 	)
 
 	return cmd

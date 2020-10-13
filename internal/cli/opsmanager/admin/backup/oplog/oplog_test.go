@@ -11,32 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
-package backup
+package oplog
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/oplog"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
-	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   backup,
-	}
-
-	cmd.AddCommand(
-		blockstore.Builder(),
-		filesystem.Builder(),
-		s3.Builder(),
-		oplog.Builder(),
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
 	)
-
-	return cmd
 }

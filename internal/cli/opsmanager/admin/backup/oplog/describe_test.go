@@ -11,21 +11,48 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package s3
+package oplog
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOplogsDescriber(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.BackupStore{}
+
+	opts := &DescribeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().GetOplog(opts.oplogID).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		5,
-		[]string{},
+		DescribeBuilder(),
+		0,
+		[]string{flag.Output},
 	)
 }

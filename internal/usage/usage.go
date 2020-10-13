@@ -124,6 +124,7 @@ const (
 	FlowName                        = "Your Flowdock Flow name."
 	BlockstoreAssignment            = "Flag indicating whether this blockstore can be assigned backup jobs."
 	OplogAssignment                 = "Flag indicating whether this oplog can be assigned backup jobs."
+	FileSystemAssignment            = "Flag indicating whether this file system store can be assigned backup jobs."
 	EncryptedCredentials            = "Flag indicating whether the username and password were encrypted using the credentialstool."
 	MMAPV1CompressionSetting        = "The compression setting for the MMAPv1 storage engine snaphots."
 	WTCompressionSetting            = "The compression setting for the WiredTiger storage engine snaphots."

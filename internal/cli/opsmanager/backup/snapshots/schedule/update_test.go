@@ -11,40 +11,50 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build unit
 
-package backup
+package schedule
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
+func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
+	mockStore := mocks.NewMockSnapshotScheduleUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ContinuousSnapshots{}
-	clusterID := "5ec2ac941271767f21cbaefe"
+	expected := &opsmngr.SnapshotSchedule{}
 
-	listOpts := &SnapshotsListOpts{
-		store:     mockStore,
-		clusterID: clusterID,
+	opts := &UpdateOpts{
+		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().
-		ContinuousSnapshots(listOpts.ProjectID, clusterID, listOpts.NewListOptions()).
+		EXPECT().UpdateSnapshotSchedule(opts.ConfigProjectID(), opts.clusterID, opts.newSnapshotSchedule()).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestUpdateBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		UpdateBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.ClusterID, flag.SnapshotRetentionDays, flag.DailySnapshotRetentionDays, flag.WeeklySnapshotRetentionWeeks,
+			flag.PointInTimeWindowHours, flag.ReferenceHourOfDay, flag.ReferenceMinuteOfHour, flag.ReferenceTimeZoneOffset, flag.SnapshotIntervalHours,
+			flag.ClusterCheckpointIntervalMin,
+		},
+	)
 }

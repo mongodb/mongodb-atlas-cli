@@ -222,4 +222,15 @@ const (
 	AcceptedTos                     = "acceptedTos"                     // AcceptedTos flag
 	SSEEnabled                      = "sseEnabled"                      // SSEEnabled flag
 	PathStyleAccessEnabled          = "pathStyleAccessEnabled"          // PathStyleAccessEnabled flag
+	ReferenceTimeZoneOffset         = "referenceTimeZoneOffset"         // ReferenceTimeZoneOffset flag
+	DailySnapshotRetentionDays      = "dailySnapshotRetentionDays"      // DailySnapshotRetentionDays flag
+	ClusterCheckpointIntervalMin    = "clusterCheckpointIntervalMin"    // ClusterCheckpointIntervalMin flag
+	SnapshotIntervalHours           = "snapshotIntervalHours"           // SnapshotIntervalHours flag
+	SnapshotRetentionDays           = "SnapshotRetentionDays"           // SnapshotRetentionDays flag
+	WeeklySnapshotRetentionWeeks    = "weeklySnapshotRetentionWeeks"    // WeeklySnapshotRetentionWeeks flag
+	PointInTimeWindowHours          = "pointInTimeWindowHours"          // PointInTimeWindowHours flag
+	ReferenceHourOfDay              = "referenceHourOfDay"              // ReferenceHourOfDay flag
+	ReferenceMinuteOfHour           = "referenceMinuteOfHour"           // ReferenceMinuteOfHour flag
+	MonthlySnapshotRetentionMonths  = "monthlySnapshotRetentionMonths"  // MonthlySnapshotRetentionMonths flag
+
 )

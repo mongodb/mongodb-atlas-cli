@@ -49,7 +49,7 @@ type UserDescriber interface {
 type UserRequest struct {
 	*opsmngr.User
 	AtlasRoles []atlas.AtlasRole
-	Country    string
+	Country    string `json:"country,omitempty"`
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers

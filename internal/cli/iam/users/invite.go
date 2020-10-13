@@ -63,7 +63,6 @@ func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
 	}
 	user := &store.UserRequest{
 		AtlasRoles: atlasRoles,
-		Country:    opts.country,
 		User: &opsmngr.User{
 			Username:     opts.username,
 			Password:     opts.password,
@@ -71,6 +70,7 @@ func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
 			LastName:     opts.lastName,
 			EmailAddress: opts.email,
 			MobileNumber: opts.mobile,
+			Country:      opts.country,
 			Roles:        userRoles,
 		},
 	}
@@ -238,7 +238,7 @@ func InviteBuilder() *cobra.Command {
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if config.Service() == config.CloudService {
+			if config.Service() != config.OpsManagerService {
 				_ = cmd.MarkFlagRequired(flag.Country)
 			}
 			return opts.init()

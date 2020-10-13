@@ -46,7 +46,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup sync create [--assignment][--encryptedCredentials][--name name]
+// mongocli ops-manager admin backup sync update [--assignment][--encryptedCredentials][--name name]
 // [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
 
 func UpdateBuilder() *cobra.Command {
@@ -77,6 +77,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.WriteConcern, flag.WriteConcern, "", usage.WriteConcern)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.URI)
 
 	return cmd
 }

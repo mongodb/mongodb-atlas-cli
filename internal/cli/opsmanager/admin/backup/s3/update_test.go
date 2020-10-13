@@ -52,7 +52,7 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		CreateBuilder(),
 		0,
-		[]string{flag.Output, flag.ID, flag.EncryptedCredentials, flag.LoadFactor,
+		[]string{flag.Output, flag.EncryptedCredentials, flag.LoadFactor,
 			flag.Assignment, flag.Label, flag.URI, flag.WriteConcern,
 			flag.AWSAccessKey, flag.AWSSecretKey, flag.S3BucketName, flag.S3BucketEndpoint,
 			flag.SSEEnabled, flag.DisableProxyS3, flag.PathStyleAccessEnabled, flag.AcceptedTos,

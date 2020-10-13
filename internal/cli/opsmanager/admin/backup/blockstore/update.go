@@ -46,13 +46,13 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) update <Name> [--assignment][--encryptedCredentials]
+// mongocli ops-manager admin backup blockstore(s) update <name> [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <Name>",
+		Use:   "update <name>",
 		Short: update,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

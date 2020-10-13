@@ -52,7 +52,7 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.Output, flag.ID, flag.EncryptedCredentials, flag.LoadFactor,
+		[]string{flag.Output, flag.EncryptedCredentials, flag.LoadFactor,
 			flag.WTCompressionSetting, flag.StorePath, flag.Label, flag.MMAPV1CompressionSetting, flag.Assignment},
 	)
 }

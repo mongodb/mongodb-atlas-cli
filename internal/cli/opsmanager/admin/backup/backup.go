@@ -18,6 +18,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/oplog"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
 	"github.com/spf13/cobra"
 )
@@ -34,6 +35,7 @@ func Builder() *cobra.Command {
 		blockstore.Builder(),
 		filesystem.Builder(),
 		s3.Builder(),
+		oplog.Builder(),
 	)
 
 	return cmd

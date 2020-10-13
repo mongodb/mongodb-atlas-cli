@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockOplogsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.S3Blockstores{}
+	expected := &opsmngr.BackupStores{}
 
 	opts := &ListOpts{
 		store: mockStore,

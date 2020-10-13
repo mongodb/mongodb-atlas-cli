@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_s3_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store S3BlockstoresLister,S3BlockstoresDeleter
+//go:generate mockgen -destination=../mocks/mock_backup_s3_blockstores.go -package=mocks github.com/mongodb/mongocli/internal/store S3BlockstoresLister,S3BlockstoresDeleter,S3BlockstoresCreator,S3BlockstoresUpdater
 
 type S3BlockstoresLister interface {
 	ListS3Blockstores(*atlas.ListOptions) (*opsmngr.S3Blockstores, error)
@@ -31,6 +31,14 @@ type S3BlockstoresLister interface {
 
 type S3BlockstoresDeleter interface {
 	DeleteS3Blockstore(string) error
+}
+
+type S3BlockstoresCreator interface {
+	CreateS3Blockstores(*opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error)
+}
+
+type S3BlockstoresUpdater interface {
+	UpdateS3Blockstores(string, *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error)
 }
 
 // ListS3Blockstores encapsulates the logic to manage different cloud providers
@@ -52,5 +60,27 @@ func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateS3Blockstores encapsulates the logic to manage different cloud providers
+func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Create(context.Background(), blockstore)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateS3Blockstores encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Update(context.Background(), blockstoreID, blockstore)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

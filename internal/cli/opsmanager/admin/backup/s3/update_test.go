@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package filesystem
+package s3
 
 import (
 	"testing"
@@ -27,17 +27,17 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockFileSystemsUpdater(ctrl)
+	mockStore := mocks.NewMockS3BlockstoresUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.FileSystemStoreConfiguration{}
+	expected := &opsmngr.S3Blockstore{}
 
 	opts := &UpdateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateFileSystems(opts.newFileSystemConfiguration()).
+		EXPECT().UpdateS3Blockstores(opts.ID, opts.newS3Blockstore()).
 		Return(expected, nil).
 		Times(1)
 
@@ -50,9 +50,12 @@ func TestUpdate_Run(t *testing.T) {
 func TestUpdateBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		UpdateBuilder(),
+		CreateBuilder(),
 		0,
 		[]string{flag.Output, flag.EncryptedCredentials, flag.LoadFactor,
-			flag.WTCompressionSetting, flag.StorePath, flag.Label, flag.MMAPV1CompressionSetting, flag.Assignment},
+			flag.Assignment, flag.Label, flag.URI, flag.WriteConcern,
+			flag.AWSAccessKey, flag.AWSSecretKey, flag.S3BucketName, flag.S3BucketEndpoint,
+			flag.SSEEnabled, flag.DisableProxyS3, flag.PathStyleAccessEnabled, flag.AcceptedTos,
+		},
 	)
 }

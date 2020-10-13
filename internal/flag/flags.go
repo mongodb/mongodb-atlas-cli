@@ -212,4 +212,14 @@ const (
 	URI                             = "uri"                             // URI flag
 	WriteConcern                    = "writeConcern"                    // WriteConcern flag
 	IncludeDeleted                  = "includeDeleted"                  // IncludeDeleted flag
+	AWSAccessKey                    = "awsAccessKey"                    // AWSAccessKey flag
+	AWSSecretKey                    = "awsSecretKey"                    // AWSSecretKey fag
+	S3AuthMethod                    = "s3AuthMethod"                    // S3AuthMethod flag
+	S3BucketEndpoint                = "s3BucketEndpoint"                // S3BucketEndpoint flag
+	S3BucketName                    = "s3BucketName"                    // S3BucketName flag
+	S3MaxConnections                = "s3MaxConnections"                // S3MaxConnections flag
+	DisableProxyS3                  = "disableProxyS3"                  // DisableProxyS3 flag
+	AcceptedTos                     = "acceptedTos"                     // AcceptedTos flag
+	SSEEnabled                      = "sseEnabled"                      // SSEEnabled flag
+	PathStyleAccessEnabled          = "pathStyleAccessEnabled"          // PathStyleAccessEnabled flag
 )

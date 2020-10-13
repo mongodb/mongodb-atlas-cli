@@ -11,9 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package filesystem
+package s3
 
 import (
 	"testing"
@@ -22,37 +23,37 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestUpdate_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockFileSystemsUpdater(ctrl)
+	mockStore := mocks.NewMockS3BlockstoresDeleter(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.FileSystemStoreConfiguration{}
-
-	opts := &UpdateOpts{
-		store: mockStore,
-	}
-
 	mockStore.
-		EXPECT().UpdateFileSystems(opts.newFileSystemConfiguration()).
-		Return(expected, nil).
+		EXPECT().
+		DeleteS3Blockstore(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
 		Times(1)
 
+	opts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
+	}
 	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestUpdateBuilder(t *testing.T) {
+func TestDeleteBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		UpdateBuilder(),
+		DeleteBuilder(),
 		0,
-		[]string{flag.Output, flag.EncryptedCredentials, flag.LoadFactor,
-			flag.WTCompressionSetting, flag.StorePath, flag.Label, flag.MMAPV1CompressionSetting, flag.Assignment},
+		[]string{flag.Force},
 	)
 }

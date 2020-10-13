@@ -238,7 +238,7 @@ func InviteBuilder() *cobra.Command {
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if config.Service() == config.CloudService {
+			if config.Service() != config.OpsManagerService {
 				_ = cmd.MarkFlagRequired(flag.Country)
 			}
 			return opts.init()

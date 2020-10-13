@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
+var describeTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
 {{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}
 `
 
@@ -48,12 +48,12 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup fileSystem(s) describe <ID>
+// mongocli ops-manager admin backup fileSystem(s) describe <name>
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <name>",
 		Aliases: []string{"get"},
 		Short:   describe,
 		Args:    cobra.ExactArgs(1),

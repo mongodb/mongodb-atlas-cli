@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package filesystem
+package s3
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,14 +23,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
-{{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}
+var describeTemplate = `NAME	URI	SSL	LOAD FACTOR	AUTH METHOD
+{{.ID}}	{{.URI}}	{{.SSL}}	{{.LoadFactor}}	{{.S3AuthMethod}}
 `
 
 type DescribeOpts struct {
 	cli.OutputOpts
-	store store.FileSystemsDescriber
-	ID    string
+	store        store.S3BlockstoresDescriber
+	blockstoreID string
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -40,7 +40,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DescribeFileSystem(opts.ID)
+	r, err := opts.store.GetS3Blockstore(opts.blockstoreID)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup fileSystem(s) describe <name>
+// mongocli ops-manager admin backup s3 describe <name>
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate
@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 			return opts.initStore()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.ID = args[0]
+			opts.blockstoreID = args[0]
 			return opts.Run()
 		},
 	}

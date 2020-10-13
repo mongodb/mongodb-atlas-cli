@@ -46,7 +46,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--id id]
+// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--name name]
 // [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
@@ -65,7 +65,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
-	cmd.Flags().StringVar(&opts.ID, flag.ID, "", usage.BlockstoreID)
+	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.BlockstoreName)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
 	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
 	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
@@ -75,7 +75,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.ID)
+	_ = cmd.MarkFlagRequired(flag.Name)
 	_ = cmd.MarkFlagRequired(flag.URI)
 
 	return cmd

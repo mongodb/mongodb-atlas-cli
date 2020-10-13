@@ -11,9 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package filesystem
+package s3
 
 import (
 	"testing"
@@ -25,19 +26,19 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestUpdate_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockFileSystemsUpdater(ctrl)
+	mockStore := mocks.NewMockS3BlockstoresDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.FileSystemStoreConfiguration{}
+	expected := &opsmngr.S3Blockstore{}
 
-	opts := &UpdateOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateFileSystems(opts.newFileSystemConfiguration()).
+		EXPECT().GetS3Blockstore(opts.blockstoreID).
 		Return(expected, nil).
 		Times(1)
 
@@ -47,12 +48,11 @@ func TestUpdate_Run(t *testing.T) {
 	}
 }
 
-func TestUpdateBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		UpdateBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.Output, flag.EncryptedCredentials, flag.LoadFactor,
-			flag.WTCompressionSetting, flag.StorePath, flag.Label, flag.MMAPV1CompressionSetting, flag.Assignment},
+		[]string{flag.Output},
 	)
 }

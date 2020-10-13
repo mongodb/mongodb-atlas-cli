@@ -77,7 +77,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.Assignment)
+	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.BlockstoreAssignment)
 	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
 	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.FileSystemName)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)

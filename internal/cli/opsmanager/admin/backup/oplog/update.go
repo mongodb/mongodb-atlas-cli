@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package filesystem
+package oplog
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -22,18 +22,15 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var updateTemplate = "File System configuration '{{.ID}}' updated.\n"
+var updateTemplate = "Oplog configuration '{{.ID}}' updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store                    store.FileSystemsUpdater
-	mmapv1CompressionSetting string
-	storePath                string
-	wtCompressionSetting     string
+	store store.OplogsUpdater
+	ID    string
 }
 
 func (opts *UpdateOpts) init() error {
@@ -43,25 +40,17 @@ func (opts *UpdateOpts) init() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateFileSystems(opts.newFileSystemConfiguration())
+	r, err := opts.store.UpdateOplog(opts.ID, opts.NewBackupStore())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreConfiguration {
-	return &opsmngr.FileSystemStoreConfiguration{
-		BackupStore:              *opts.NewBackupStore(),
-		MMAPV1CompressionSetting: opts.mmapv1CompressionSetting,
-		StorePath:                opts.storePath,
-		WTCompressionSetting:     opts.wtCompressionSetting,
-	}
-}
+// mongocli ops-manager admin backup oplog(s) update <name> [--assignment]
+// [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern]
+// [--encryptedCredentials encryptedCredentials]
 
-// mongocli ops-manager admin backup fileSystem(s) update <name> [--assignment][--encryptedCredentials]
-// [--label label][--loadFactor loadFactor][--id ID][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
-// [--wtCompressionSetting wtCompressionSetting]
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate
@@ -79,19 +68,19 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.BlockstoreAssignment)
-	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
+	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.OplogName)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
-	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
-	cmd.Flags().StringVar(&opts.mmapv1CompressionSetting, flag.MMAPV1CompressionSetting, "", usage.MMAPV1CompressionSetting)
-	cmd.Flags().StringVar(&opts.wtCompressionSetting, flag.WTCompressionSetting, "", usage.WTCompressionSetting)
-	cmd.Flags().StringVar(&opts.storePath, flag.StorePath, "", usage.StorePath)
+	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.OplogAssignment)
+	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
+	cmd.Flags().StringVar(&opts.URI, flag.URI, "", usage.BlockstoreURI)
+	cmd.Flags().StringVar(&opts.WriteConcern, flag.WriteConcern, "", usage.WriteConcern)
+	cmd.Flags().BoolVar(&opts.SSL, flag.SSL, false, usage.OplogSSL)
+	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.StorePath)
-	_ = cmd.MarkFlagRequired(flag.MMAPV1CompressionSetting)
-	_ = cmd.MarkFlagRequired(flag.WTCompressionSetting)
+	_ = cmd.MarkFlagRequired(flag.Name)
+	_ = cmd.MarkFlagRequired(flag.URI)
 
 	return cmd
 }

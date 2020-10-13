@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package blockstore
+package oplog
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,12 +24,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Blockstore configuration '{{.ID}}' created.\n"
+var createTemplate = "Oplog configuration '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts
 	backupstore.AdminOpts
-	store store.BlockstoresCreator
+	store store.OplogsCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -39,15 +39,17 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateBlockstore(opts.NewBackupStore())
+	r, err := opts.store.CreateOplog(opts.NewBackupStore())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--name name]
-// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
+// mongocli ops-manager admin backup oplog(s) create [--assignment][--name name]
+// [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern]
+// [--encryptedCredentials encryptedCredentials]
+
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate
@@ -63,15 +65,14 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.BlockstoreAssignment)
-	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
-	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.BlockstoreName)
+	cmd.Flags().StringVar(&opts.ID, flag.Name, "", usage.OplogName)
 	cmd.Flags().StringSliceVar(&opts.Label, flag.Label, []string{}, usage.Label)
-	cmd.Flags().Int64Var(&opts.LoadFactor, flag.LoadFactor, 0, usage.LoadFactor)
+	cmd.Flags().BoolVar(&opts.Assignment, flag.Assignment, false, usage.OplogAssignment)
 	cmd.Flags().Int64Var(&opts.MaxCapacityGB, flag.MaxCapacityGB, 0, usage.MaxCapacityGB)
 	cmd.Flags().StringVar(&opts.URI, flag.URI, "", usage.BlockstoreURI)
-	cmd.Flags().BoolVar(&opts.SSL, flag.SSL, false, usage.BlockstoreSSL)
 	cmd.Flags().StringVar(&opts.WriteConcern, flag.WriteConcern, "", usage.WriteConcern)
+	cmd.Flags().BoolVar(&opts.SSL, flag.SSL, false, usage.OplogSSL)
+	cmd.Flags().BoolVar(&opts.EncryptedCredentials, flag.EncryptedCredentials, false, usage.EncryptedCredentials)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

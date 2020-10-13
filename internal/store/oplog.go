@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongocli/internal/store OplogsLister,OplogsDescriber
+//go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongocli/internal/store OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
 
 type OplogsLister interface {
 	ListOplogs(*atlas.ListOptions) (*opsmngr.BackupStores, error)
@@ -31,6 +31,18 @@ type OplogsLister interface {
 
 type OplogsDescriber interface {
 	GetOplog(string) (*opsmngr.BackupStore, error)
+}
+
+type OplogsCreator interface {
+	CreateOplog(*opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+}
+
+type OplogsUpdater interface {
+	UpdateOplog(string, *opsmngr.BackupStore) (*opsmngr.BackupStore, error)
+}
+
+type OplogsDeleter interface {
+	DeleteOplog(string) error
 }
 
 // ListOplogs encapsulates the logic to manage different cloud providers
@@ -52,5 +64,38 @@ func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// CreateOplog encapsulates the logic to manage different cloud providers
+func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Create(context.Background(), oplog)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// UpdateOplog encapsulates the logic to manage different cloud providers
+func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Update(context.Background(), oplogID, oplog)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOplog encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteOplog(oplogID string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).OplogStoreConfig.Delete(context.Background(), oplogID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

@@ -17,4 +17,7 @@ const (
 	short    = "Manage backup oplog configurations."
 	list     = "List backup oplog configurations."
 	describe = "Get a backup oplog configuration."
+	create   = "Create a backup oplog configuration."
+	update   = "Update a backup oplog configuration."
+	delete   = "Delete a backup oplog configuration."
 )

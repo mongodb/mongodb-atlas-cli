@@ -125,6 +125,7 @@ const (
 	BlockstoreAssignment            = "Flag indicating whether this blockstore can be assigned backup jobs."
 	OplogAssignment                 = "Flag indicating whether this oplog can be assigned backup jobs."
 	FileSystemAssignment            = "Flag indicating whether this file system store can be assigned backup jobs."
+	SyncAssignment                  = "Flag indicating whether this sync store can be assigned backup jobs."
 	EncryptedCredentials            = "Flag indicating whether the username and password were encrypted using the credentialstool."
 	MMAPV1CompressionSetting        = "The compression setting for the MMAPv1 storage engine snaphots."
 	WTCompressionSetting            = "The compression setting for the WiredTiger storage engine snaphots."
@@ -137,6 +138,7 @@ const (
 	BlockstoreName                  = "The unique name that labels this blockstore."
 	OplogName                       = "The unique name that labels this oplog store."
 	FileSystemName                  = "The unique name that labels this file system store configuration."
+	SyncName                        = "The unique name that labels this sync store."
 	WriteConcern                    = "The write concern used for this blockstore."
 	AWSAccessKey                    = "AWS Access Key ID that can access the S3 bucket specified in s3BucketName."
 	AWSSecretKey                    = "AWS Secret Access Key that can access the S3 bucket specified in s3BucketName." //nolint:gosec // This is just a message not a credential

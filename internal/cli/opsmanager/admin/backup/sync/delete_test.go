@@ -11,21 +11,49 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package backup
+package sync
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBackupBuilder(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSyncsDeleter(ctrl)
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		DeleteSync(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Return(nil).
+		Times(1)
+
+	opts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
+	}
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		5,
-		[]string{},
+		DeleteBuilder(),
+		0,
+		[]string{flag.Force},
 	)
 }

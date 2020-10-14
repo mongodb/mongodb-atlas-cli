@@ -11,26 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package versions
 
-package agents
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents/apikeys"
-	"github.com/spf13/cobra"
+const (
+	short        = "Manage MongoDB Agents versions."
 )
-
-func Builder() *cobra.Command {
-	const use = "agents"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Agents,
-	}
-	cmd.AddCommand(
-		ListBuilder(),
-		UpgradeBuilder(),
-		apikeys.Builder(),
-	)
-	return cmd
-}

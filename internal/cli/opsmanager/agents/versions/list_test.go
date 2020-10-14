@@ -21,10 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -45,9 +43,10 @@ func TestList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	config.SetService(config.OpsManagerService)
-
-	assert.NoError(t, listOpts.Run())
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestListBuilder(t *testing.T) {

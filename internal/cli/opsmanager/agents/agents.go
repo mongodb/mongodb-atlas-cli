@@ -17,6 +17,7 @@ package agents
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents/apikeys"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents/versions"
 	"github.com/spf13/cobra"
 )
 
@@ -27,9 +28,11 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   Agents,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(UpgradeBuilder())
-	cmd.AddCommand(apikeys.Builder())
-
+	cmd.AddCommand(
+		ListBuilder(),
+		UpgradeBuilder(),
+		apikeys.Builder(),
+		versions.Builder(),
+	)
 	return cmd
 }

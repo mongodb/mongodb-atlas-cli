@@ -11,22 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package versions
 
-// +build unit
-
-package opsmanager
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	short       = "Manage MongoDB Agents versions."
+	listProject = "List MongoDB Agent versions in the provided project."
 )
-
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		20,
-		[]string{},
-	)
-}

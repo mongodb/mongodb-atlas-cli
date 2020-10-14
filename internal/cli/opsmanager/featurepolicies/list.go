@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package versions
+package featurepolicies
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,7 +25,8 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AgentProjectVersionsLister
+	cli.ListOpts
+	store store.FeatureControlPoliciesLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -34,12 +35,13 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	ADDRESS	VERSION	DEPRECATED{{range .Entries}}
-{{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
+var listTemplate = `NAME	SYSTEM ID	POLICY
+{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
+{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.AgentProjectVersions(opts.ConfigProjectID())
+	r, err := opts.store.FeatureControlPolicies(opts.ConfigProjectID(), opts.NewListOptions())
 	if err != nil {
 		return err
 	}
@@ -47,13 +49,13 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om agent(s) version(s) list [--projectId projectId]
+// mongocli om featurePolicy(ies) list [--projectId projectId]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   listProject,
+		Short:   list,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
@@ -64,6 +66,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -35,7 +35,7 @@ type SnapshotScheduleUpdater interface {
 // GetSnapshotSchedule encapsulates the logic to manage different cloud providers
 func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
@@ -46,7 +46,7 @@ func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.Snaps
 // UpdateSnapshotSchedule encapsulates the logic to manage different cloud providers
 func (s *Store) UpdateSnapshotSchedule(projectID, clusterID string, snapshotSchedule *opsmngr.SnapshotSchedule) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Update(context.Background(), projectID, clusterID, snapshotSchedule)
 		return result, err
 	default:

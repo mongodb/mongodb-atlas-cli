@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `PROJECT ID	ID	MONTHLY SNAPSHOT RETENTION MONTHS	POINT IN TIME WINDOW HOURS
+var describeTemplate = `PROJECT ID	CLUSTER ID	MONTHLY SNAPSHOT RETENTION MONTHS	POINT IN TIME WINDOW HOURS
 {{.GroupID}}	{{.ClusterID}}	{{.MonthlySnapshotRetentionMonths}}	{{.PointInTimeWindowHours}}
 `
 

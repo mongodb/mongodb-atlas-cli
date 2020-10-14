@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package oplog
+package featurepolicies
 
 import (
 	"testing"
@@ -27,17 +27,17 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOplogsUpdater(ctrl)
+	mockStore := mocks.NewMockFeatureControlPoliciesUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.BackupStore{}
+	expected := &opsmngr.FeaturePolicy{}
 
 	opts := &UpdateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateOplog(opts.ID, opts.NewBackupStore()).
+		EXPECT().UpdateFeatureControlPolicy(opts.ConfigProjectID(), opts.newFeatureControl()).
 		Return(expected, nil).
 		Times(1)
 
@@ -52,8 +52,6 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.Output, flag.EncryptedCredentials, flag.MaxCapacityGB,
-			flag.Assignment, flag.Label, flag.URI, flag.WriteConcern,
-			flag.EncryptedCredentials, flag.SSL},
+		[]string{flag.Output, flag.Name, flag.SystemID, flag.Policy},
 	)
 }

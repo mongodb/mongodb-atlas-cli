@@ -11,9 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package oplog
+package featurepolicies
 
 import (
 	"testing"
@@ -25,35 +26,34 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestUpdate_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOplogsUpdater(ctrl)
+	mockStore := mocks.NewMockFeatureControlPoliciesLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.BackupStore{}
+	expected := &opsmngr.FeaturePolicy{}
 
-	opts := &UpdateOpts{
+	listOpts := ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateOplog(opts.ID, opts.NewBackupStore()).
+		EXPECT().
+		FeatureControlPolicies(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestUpdateBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		UpdateBuilder(),
+		ListBuilder(),
 		0,
-		[]string{flag.Output, flag.EncryptedCredentials, flag.MaxCapacityGB,
-			flag.Assignment, flag.Label, flag.URI, flag.WriteConcern,
-			flag.EncryptedCredentials, flag.SSL},
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
 	)
 }

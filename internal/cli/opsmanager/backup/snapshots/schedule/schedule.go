@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+<<<<<<< HEAD:internal/cli/opsmanager/agents/versions/versions.go
+package versions
+=======
 package schedule
+>>>>>>> origin/master:internal/cli/opsmanager/backup/snapshots/schedule/schedule.go
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -20,6 +24,15 @@ import (
 )
 
 func Builder() *cobra.Command {
+<<<<<<< HEAD:internal/cli/opsmanager/agents/versions/versions.go
+	const use = "versions"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+	cmd.AddCommand()
+=======
 	const use = "schedule"
 	cmd := &cobra.Command{
 		Use:     use,
@@ -31,5 +44,6 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		UpdateBuilder())
 
+>>>>>>> origin/master:internal/cli/opsmanager/backup/snapshots/schedule/schedule.go
 	return cmd
 }

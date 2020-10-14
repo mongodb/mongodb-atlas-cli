@@ -19,6 +19,9 @@ package versions
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -26,26 +29,33 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestAgentsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAgentLister(ctrl)
+	mockStore := mocks.NewMockAgentProjectVersionsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.Agents{}
+	expected := &opsmngr.AgentVersions{}
 
 	listOpts := ListOpts{
-		store:     mockStore,
-		agentType: "MONITORING",
+		store: mockStore,
 	}
-	listOpts.ProjectID = "1"
 
 	mockStore.
 		EXPECT().
-		Agents(listOpts.ProjectID, listOpts.agentType).
+		AgentProjectVersions(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 
 	config.SetService(config.OpsManagerService)
 
 	assert.NoError(t, listOpts.Run())
+}
+
+func TestListBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
+	)
 }

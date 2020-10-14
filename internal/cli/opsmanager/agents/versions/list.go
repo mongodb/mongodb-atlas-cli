@@ -14,8 +14,6 @@
 package versions
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -27,8 +25,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	agentType string
-	store     store.AgentLister
+	store store.AgentProjectVersionsLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -37,12 +34,12 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
-{{.Hostname}}	{{.TypeName}}	{{.StateName}}{{end}}
+var listTemplate = `MINIMUM VERSION	TYPE	STATE{{range .Results}}
+{{.MinimumVersion}}	{{.TypeName}}	{{.StateName}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType)
+	r, err := opts.store.AgentProjectVersions(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -50,15 +47,13 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om agent(s) list [--projectId projectId]
+// mongocli om agent(s) version(s) list [--projectId projectId]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:       "list",
-		Aliases:   []string{"ls"},
-		Args:      cobra.ExactValidArgs(1),
-		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
-		Short:     ListAgents,
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   listProject,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
@@ -66,7 +61,6 @@ func ListBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.agentType = strings.ToUpper(args[0])
 			return opts.Run()
 		},
 	}

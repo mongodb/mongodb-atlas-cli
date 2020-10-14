@@ -21,10 +21,18 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter,AgentVersionsLister,AgentProjectVersionsLister
 
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
+}
+
+type AgentVersionsLister interface {
+	AgentVersions() (*opsmngr.SoftwareVersions, error)
+}
+
+type AgentProjectVersionsLister interface {
+	AgentProjectVersions(string) (*opsmngr.AgentVersions, error)
 }
 
 type AgentUpgrader interface {
@@ -95,5 +103,27 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Agents encapsulates the logic to manage different cloud providers
+func (s *Store) AgentVersions() (*opsmngr.SoftwareVersions, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Agents.GlobalVersions(context.Background())
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// Agents encapsulates the logic to manage different cloud providers
+func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(context.Background(), projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

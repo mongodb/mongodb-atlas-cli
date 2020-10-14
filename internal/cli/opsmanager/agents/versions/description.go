@@ -14,5 +14,6 @@
 package versions
 
 const (
-	short        = "Manage MongoDB Agents versions."
+	short       = "Manage MongoDB Agents versions."
+	listProject = "List MongoDB Agent versions in the provided project."
 )

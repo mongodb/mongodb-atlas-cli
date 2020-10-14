@@ -33,8 +33,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	ADDRESS	VERSION	IS DEPRECATED{{range .Entries}}
-{{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
+var listTemplate = `AUTOMATION VERSION	BI CONNECTOR VERSION	MONGODB TOOLS VERSION
+{{.AutomationVersion}}	{{.BiConnectorVersion}}	{{.MongoDBToolsVersion}}
 `
 
 func (opts *ListOpts) Run() error {

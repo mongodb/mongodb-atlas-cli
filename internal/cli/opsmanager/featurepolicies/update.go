@@ -25,7 +25,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-var updateTemplate = "Oplog configuration '{{.ID}}' updated.\n"
+var updateTemplate = "Feature control policies updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
@@ -53,7 +53,6 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newFeatureControl() *opsmngr.FeaturePolicy {
 	return &opsmngr.FeaturePolicy{
-		ID: opts.ConfigProjectID(),
 		ExternalManagementSystem: &opsmngr.ExternalManagementSystem{
 			Name:     opts.name,
 			SystemID: opts.systemID,
@@ -63,7 +62,7 @@ func (opts *UpdateOpts) newFeatureControl() *opsmngr.FeaturePolicy {
 }
 
 func (opts *UpdateOpts) newPolicies() []*opsmngr.Policy {
-	policies := make([]*opsmngr.Policy, len(opts.policy))
+	var policies []*opsmngr.Policy
 	for _, value := range opts.policy {
 		policy := &opsmngr.Policy{
 			Policy: value,

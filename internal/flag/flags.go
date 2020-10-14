@@ -233,6 +233,6 @@ const (
 	ReferenceMinuteOfHour           = "referenceMinuteOfHour"           // ReferenceMinuteOfHour flag
 	MonthlySnapshotRetentionMonths  = "monthlySnapshotRetentionMonths"  // MonthlySnapshotRetentionMonths flag
 	Policy                          = "policy"                          // Policy flag
-	SystemID                        = "systemID"                        // SystemID flag
+	SystemID                        = "systemId"                        // SystemID flag
 
 )

@@ -35,8 +35,9 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	ADDRESS	VERSION	DEPRECATED{{range .Entries}}
-{{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
+var listTemplate = `NAME	SYSTEM ID	POLICY
+{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
+{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

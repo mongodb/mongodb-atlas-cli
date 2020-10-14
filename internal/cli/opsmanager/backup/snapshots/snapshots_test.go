@@ -11,23 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// +build unit
 
-package backup
+package snapshots
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
 )
 
-func SnapshotsBuilder() *cobra.Command {
-	const use = "snapshots"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Snapshots,
-	}
-
-	cmd.AddCommand(SnapshotsListBuilder())
-
-	return cmd
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
+	)
 }

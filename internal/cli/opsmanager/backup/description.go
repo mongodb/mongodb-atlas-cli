@@ -20,6 +20,4 @@ const (
 	Restores        = "Manage restore jobs for your project."
 	ListRestores    = "Lists restore jobs for a project and cluster."
 	StartRestore    = "Start a restore job for a project and cluster."
-	Snapshots       = "Manage backup snapshots for your project."
-	ListSnapshots   = "List snapshots for a project and cluster."
 )

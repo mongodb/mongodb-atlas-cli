@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package schedule
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -20,31 +20,28 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-const snapshotsTemplate = `ID	CREATED	COMPLETE{{range .Results}}
-{{.ID}}	{{.Created.Date}}	{{.Complete}}{{end}}
+var describeTemplate = `PROJECT ID	CLUSTER ID	MONTHLY SNAPSHOT RETENTION MONTHS	POINT IN TIME WINDOW HOURS
+{{.GroupID}}	{{.ClusterID}}	{{.MonthlySnapshotRetentionMonths}}	{{.PointInTimeWindowHours}}
 `
 
-type SnapshotsListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
+	store     store.SnapshotScheduleDescriber
 	clusterID string
-	store     store.ContinuousSnapshotsLister
 }
 
-func (opts *SnapshotsListOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *SnapshotsListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ContinuousSnapshots(opts.ConfigProjectID(), opts.clusterID, listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.GetSnapshotSchedule(opts.ConfigProjectID(), opts.clusterID)
 	if err != nil {
 		return err
 	}
@@ -52,35 +49,30 @@ func (opts *SnapshotsListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backups snapshots list <clusterId> [--projectId projectId] [--page N] [--limit N]
-func SnapshotsListBuilder() *cobra.Command {
-	opts := new(SnapshotsListOpts)
+// mongocli ops-manager backup snapshots schedule describe --clusterId clusterId --projectId projectId
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <clusterId>",
-		Short:   ListSnapshots,
-		Aliases: []string{"ls"},
-		Args:    cobra.ExactArgs(1),
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   describe,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), snapshotsTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := validate.ObjectID(args[0]); err != nil {
-				return err
-			}
-			opts.clusterID = args[0]
-
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.ClusterID)
 
 	return cmd
 }

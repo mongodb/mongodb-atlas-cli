@@ -11,31 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package snapshots
 
-package backup
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/snapshots"
-	"github.com/spf13/cobra"
+const (
+	shots = "Manage backup snapshots for your project."
+	list  = "List snapshots for a project and cluster."
 )
-
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
-	}
-
-	cmd.AddCommand(
-		snapshots.Builder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-	)
-
-	return cmd
-}

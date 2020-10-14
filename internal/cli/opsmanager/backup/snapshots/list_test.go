@@ -14,17 +14,19 @@
 
 // +build unit
 
-package backup
+package snapshots
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
 	defer ctrl.Finish()
@@ -32,7 +34,7 @@ func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 	expected := &mongodbatlas.ContinuousSnapshots{}
 	clusterID := "5ec2ac941271767f21cbaefe"
 
-	listOpts := &SnapshotsListOpts{
+	listOpts := &ListOpts{
 		store:     mockStore,
 		clusterID: clusterID,
 	}
@@ -47,4 +49,13 @@ func TestAtlasBackupsSnapshotsList_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestListBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Page, flag.Limit, flag.Output},
+	)
 }

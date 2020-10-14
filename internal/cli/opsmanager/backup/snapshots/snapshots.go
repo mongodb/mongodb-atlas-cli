@@ -12,30 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package snapshots
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/config"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/snapshots"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/backup/snapshots/schedule"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "backups"
+	const use = "snapshots"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
+		Short:   shots,
 	}
 
 	cmd.AddCommand(
-		snapshots.Builder(),
-		RestoresBuilder(),
-		CheckpointsBuilder(),
-		EnableBuilder(),
-		config.Builder(),
-	)
+		ListBuilder(),
+		schedule.Builder())
 
 	return cmd
 }

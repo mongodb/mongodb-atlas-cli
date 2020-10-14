@@ -34,7 +34,7 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `HOSTNAME	ADDRESS	VERSION	IS DEPRECATED{{range .Entries}}
+var listTemplate = `HOSTNAME	ADDRESS	VERSION	DEPRECATED{{range .Entries}}
 {{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
 `
 

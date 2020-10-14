@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
-	softwarecompotents "github.com/mongodb/mongocli/internal/cli/opsmanager/softwarecomponents"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/softwarecomponents"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/versionmanifest"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"

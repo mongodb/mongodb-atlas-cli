@@ -21,14 +21,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter,AgentVersionsLister,AgentProjectVersionsLister
+//go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter,AgentGlobalVersionsLister,AgentProjectVersionsLister
 
 type AgentLister interface {
 	Agents(string, string) (*opsmngr.Agents, error)
 }
 
-type AgentVersionsLister interface {
-	AgentVersions() (*opsmngr.SoftwareVersions, error)
+type AgentGlobalVersionsLister interface {
+	AgentGlobalVersions() (*opsmngr.SoftwareVersions, error)
 }
 
 type AgentProjectVersionsLister interface {
@@ -107,9 +107,9 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 }
 
 // Agents encapsulates the logic to manage different cloud providers
-func (s *Store) AgentVersions() (*opsmngr.SoftwareVersions, error) {
+func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.GlobalVersions(context.Background())
 		return result, err
 	default:
@@ -120,7 +120,7 @@ func (s *Store) AgentVersions() (*opsmngr.SoftwareVersions, error) {
 // Agents encapsulates the logic to manage different cloud providers
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(context.Background(), projectID)
 		return result, err
 	default:

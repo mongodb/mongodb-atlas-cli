@@ -14,40 +14,39 @@
 
 // +build unit
 
-package versions
+package softwarecompotents
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAgentProjectVersionsLister(ctrl)
+	mockStore := mocks.NewMockAgentGlobalVersionsLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.AgentVersions{}
+	expected := &opsmngr.SoftwareVersions{}
 
-	listOpts := ListOpts{
+	opts := ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		AgentProjectVersions(listOpts.ProjectID).
+		AgentGlobalVersions().
 		Return(expected, nil).
 		Times(1)
 
-	config.SetService(config.OpsManagerService)
-
-	assert.NoError(t, listOpts.Run())
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestListBuilder(t *testing.T) {
@@ -55,6 +54,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.Output},
 	)
 }

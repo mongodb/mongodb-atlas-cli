@@ -49,7 +49,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om feature policy(ies) list [--projectId projectId]
+// mongocli om featurePolicy(ies) list [--projectId projectId]
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

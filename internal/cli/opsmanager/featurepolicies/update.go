@@ -76,13 +76,14 @@ func (opts *UpdateOpts) newPolicies() []*opsmngr.Policy {
 
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
-	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update",
 		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.PreRunE(
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -94,6 +95,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.systemID, flag.SystemID, "", usage.SystemID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.Name)
 

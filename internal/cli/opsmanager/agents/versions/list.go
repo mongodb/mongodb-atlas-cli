@@ -34,8 +34,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `MINIMUM VERSION	TYPE	STATE{{range .Results}}
-{{.MinimumVersion}}	{{.TypeName}}	{{.StateName}}{{end}}
+var listTemplate = `HOSTNAME	ADDRESS	VERSION	IS DEPRECATED{{range .Entries}}
+{{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

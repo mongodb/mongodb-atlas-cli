@@ -27,10 +27,9 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   Agents,
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		UpgradeBuilder(),
-		apikeys.Builder(),
-	)
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(UpgradeBuilder())
+	cmd.AddCommand(apikeys.Builder())
+
 	return cmd
 }

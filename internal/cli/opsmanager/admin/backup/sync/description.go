@@ -11,21 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build unit
+package sync
 
-package backup
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	short    = "Manage backup sync configurations."
+	list     = "List backup sync configurations."
+	delete   = "Delete a backup sync configuration."
+	create   = "Create a backup sync configuration."
+	update   = "Update a backup sync configuration."
+	describe = "Get a backup sync configuration."
 )
-
-func TestBackupBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		5,
-		[]string{},
-	)
-}

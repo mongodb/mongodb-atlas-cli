@@ -11,21 +11,29 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build unit
 
-package backup
+package sync
 
 import (
-	"testing"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBackupBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		5,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "sync"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+		DeleteBuilder(),
+		CreateBuilder(),
+		UpdateBuilder(),
+		DescribeBuilder(),
 	)
+
+	return cmd
 }

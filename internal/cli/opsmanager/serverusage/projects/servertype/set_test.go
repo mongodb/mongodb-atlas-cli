@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestSetOpts_Run(t *testing.T) {
@@ -31,15 +30,12 @@ func TestSetOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectServerTypeUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.ServerType{}
-
 	opts := &SetOpts{
 		store: mockStore,
 	}
 
 	mockStore.
-		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newServerType()).
-		Return(expected, nil).
+		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newHostAssignment()).
 		Times(1)
 
 	err := opts.Run()

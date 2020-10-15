@@ -29,7 +29,7 @@ type ProjectServerTypeGetter interface {
 }
 
 type ProjectServerTypeUpdater interface {
-	UpdateProjectServerType(string, *opsmngr.ServerType) (*opsmngr.ServerType, error)
+	UpdateProjectServerType(string, *opsmngr.HostAssignment) error
 }
 
 type OrganizationServerTypeGetter interface {
@@ -37,7 +37,7 @@ type OrganizationServerTypeGetter interface {
 }
 
 type OrganizationServerTypeUpdater interface {
-	UpdateOrganizationServerType(string, *opsmngr.ServerType) (*opsmngr.ServerType, error)
+	UpdateOrganizationServerType(string, *opsmngr.HostAssignment) error
 }
 
 // ProjectServerType encapsulates the logic to manage different cloud providers
@@ -52,13 +52,13 @@ func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error)
 }
 
 // UpdateProjectServerType encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.ServerType) (*opsmngr.ServerType, error) {
+func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.HostAssignment) error {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.UpdateProjectServerType(context.Background(), projectID, serverType)
-		return result, err
+		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateProjectServerType(context.Background(), projectID, serverType)
+		return err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
 
@@ -74,12 +74,12 @@ func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error
 }
 
 // UpdateOrganizationServerType encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.ServerType) (*opsmngr.ServerType, error) {
+func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.HostAssignment) error {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.UpdateOrganizationServerType(context.Background(), orgID, serverType)
-		return result, err
+		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateOrganizationServerType(context.Background(), orgID, serverType)
+		return err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var getTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
-{{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}
+var getTemplate = `NAME	LABEL
+{{.Name}}	{{.Label}}
 `
 
 type GetOpts struct {

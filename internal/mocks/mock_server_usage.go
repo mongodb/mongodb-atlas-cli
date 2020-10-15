@@ -72,12 +72,11 @@ func (m *MockProjectServerTypeUpdater) EXPECT() *MockProjectServerTypeUpdaterMoc
 }
 
 // UpdateProjectServerType mocks base method
-func (m *MockProjectServerTypeUpdater) UpdateProjectServerType(arg0 string, arg1 *opsmngr.ServerType) (*opsmngr.ServerType, error) {
+func (m *MockProjectServerTypeUpdater) UpdateProjectServerType(arg0 string, arg1 *opsmngr.HostAssignment) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectServerType", arg0, arg1)
-	ret0, _ := ret[0].(*opsmngr.ServerType)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UpdateProjectServerType indicates an expected call of UpdateProjectServerType
@@ -148,12 +147,11 @@ func (m *MockOrganizationServerTypeUpdater) EXPECT() *MockOrganizationServerType
 }
 
 // UpdateOrganizationServerType mocks base method
-func (m *MockOrganizationServerTypeUpdater) UpdateOrganizationServerType(arg0 string, arg1 *opsmngr.ServerType) (*opsmngr.ServerType, error) {
+func (m *MockOrganizationServerTypeUpdater) UpdateOrganizationServerType(arg0 string, arg1 *opsmngr.HostAssignment) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationServerType", arg0, arg1)
-	ret0, _ := ret[0].(*opsmngr.ServerType)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UpdateOrganizationServerType indicates an expected call of UpdateOrganizationServerType

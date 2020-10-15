@@ -15,6 +15,8 @@
 package servertype
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -23,10 +25,6 @@ import (
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
-
-var setTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION
-{{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}
-`
 
 type SetOpts struct {
 	cli.OutputOpts
@@ -42,17 +40,18 @@ func (opts *SetOpts) initStore() error {
 }
 
 func (opts *SetOpts) Run() error {
-	r, err := opts.store.UpdateProjectServerType(opts.ConfigProjectID(), opts.newServerType())
+	err := opts.store.UpdateProjectServerType(opts.ConfigProjectID(), opts.newHostAssignment())
 	if err != nil {
 		return err
 	}
-
-	return opts.Print(r)
+	return opts.Print(fmt.Sprintf("Serve type %s correctly set", opts.serverType))
 }
 
-func (opts *SetOpts) newServerType() *opsmngr.ServerType {
-	return &opsmngr.ServerType{
-		Name: opts.serverType,
+func (opts *SetOpts) newHostAssignment() *opsmngr.HostAssignment {
+	return &opsmngr.HostAssignment{
+		ServerType: &opsmngr.ServerType{
+			Name: opts.serverType,
+		},
 	}
 }
 
@@ -65,9 +64,9 @@ func SetBuilder() *cobra.Command {
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
 		Short:     get,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), setTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -55,14 +55,14 @@ func (opts *SetOpts) newServerTypeRequest() *opsmngr.ServerTypeRequest {
 	}
 }
 
-// mongocli ops-manager serverUsage organization(s) serverType set type [--orgId orgId]
+// mongocli ops-manager serverUsage organization(s) serverType set <type> [--orgId orgId]
 func SetBuilder() *cobra.Command {
 	opts := &SetOpts{}
 	cmd := &cobra.Command{
-		Use:       "set",
-		Args:      cobra.ExactArgs(1),
+		Use:       "set <type>",
+		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
-		Short:     get,
+		Short:     set,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunEOrg(
 				opts.initStore,

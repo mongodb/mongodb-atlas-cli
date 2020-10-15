@@ -16,4 +16,5 @@ package servertype
 const (
 	short = "Manage your server type for an organization."
 	get   = "Get the default server type for an organization."
+	set   = "Set the default server type for an organization."
 )

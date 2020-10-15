@@ -27,19 +27,19 @@ var getTemplate = `NAME	LABEL
 {{.Name}}	{{.Label}}
 `
 
-type GetOpts struct {
+type DescribeOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	store store.ProjectServerTypeGetter
 }
 
-func (opts *GetOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *GetOpts) Run() error {
+func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.ProjectServerType(opts.ConfigProjectID())
 	if err != nil {
 		return err
@@ -49,11 +49,11 @@ func (opts *GetOpts) Run() error {
 }
 
 // mongocli ops-manager serverUsage project(s) serverType get [--orgId orgId]
-func GetBuilder() *cobra.Command {
-	opts := &GetOpts{}
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "get",
-		Aliases: []string{"describe"},
+		Use:     "describe",
+		Aliases: []string{"get"},
 		Short:   get,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -33,7 +33,7 @@ func TestGetOpts_Run(t *testing.T) {
 
 	expected := &opsmngr.ServerType{}
 
-	opts := &GetOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
@@ -48,10 +48,10 @@ func TestGetOpts_Run(t *testing.T) {
 	}
 }
 
-func TestGetBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		GetBuilder(),
+		DescribeBuilder(),
 		0,
 		[]string{flag.Output, flag.ProjectID},
 	)

@@ -16,4 +16,5 @@ package servertype
 const (
 	short = "Manage your server type for a project."
 	get   = "Get the default server type for a project."
+	set   = "Set the default server type for a project."
 )

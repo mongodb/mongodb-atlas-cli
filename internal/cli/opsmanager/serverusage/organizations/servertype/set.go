@@ -43,7 +43,7 @@ func (opts *SetOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Serve type %s correctly se\nt", opts.serverType)
+	fmt.Printf("Serve type %s correctly set\n", opts.serverType)
 	return nil
 }
 

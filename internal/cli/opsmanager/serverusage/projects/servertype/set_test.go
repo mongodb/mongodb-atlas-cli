@@ -14,19 +14,41 @@
 
 // +build unit
 
-package opsmanager
+package servertype
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
+func TestSetOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectServerTypeUpdater(ctrl)
+	defer ctrl.Finish()
+
+	opts := &SetOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newServerTypeRequest()).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestSetBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		22,
-		[]string{},
+		SetBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

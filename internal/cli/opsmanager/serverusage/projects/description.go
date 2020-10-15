@@ -11,22 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package projects
 
-// +build unit
-
-package opsmanager
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	short = "Manage your server usage for a project."
 )
-
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		22,
-		[]string{},
-	)
-}

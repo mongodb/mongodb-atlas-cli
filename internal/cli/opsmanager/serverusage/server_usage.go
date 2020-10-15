@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package opsmanager
+package serverusage
 
 import (
-	"testing"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/organizations"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/projects"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		22,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "serverUsage"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   short,
+	}
+
+	cmd.AddCommand(
+		projects.Builder(),
+		organizations.Builder(),
 	)
+
+	return cmd
 }

@@ -11,10 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 // +build unit
 
-package opsmanager
+package serverusage
 
 import (
 	"testing"
@@ -22,11 +21,11 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		22,
+		2,
 		[]string{},
 	)
 }

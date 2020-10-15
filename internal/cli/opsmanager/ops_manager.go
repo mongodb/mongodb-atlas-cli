@@ -33,6 +33,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/processes"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/security"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/servers"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage"
 	softwarecompotents "github.com/mongodb/mongocli/internal/cli/opsmanager/softwarecomponents"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/versionmanifest"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
@@ -80,6 +81,7 @@ func Builder() *cobra.Command {
 		admin.Builder(),
 		softwarecompotents.Builder(),
 		featurepolicies.Builder(),
+		serverusage.Builder(),
 	)
 	return cmd
 }

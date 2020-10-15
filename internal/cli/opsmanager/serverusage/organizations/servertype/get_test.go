@@ -14,19 +14,45 @@
 
 // +build unit
 
-package opsmanager
+package servertype
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestBuilder(t *testing.T) {
+func TestGetOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationServerTypeGetter(ctrl)
+	defer ctrl.Finish()
+
+	expected := &opsmngr.ServerType{}
+
+	opts := &GetOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().OrganizationServerType(opts.ConfigOrgID()).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestGetBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		22,
-		[]string{},
+		GetBuilder(),
+		0,
+		[]string{flag.Output, flag.OrgID},
 	)
 }

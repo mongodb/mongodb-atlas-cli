@@ -49,6 +49,6 @@ func TestSetBuilder(t *testing.T) {
 		t,
 		SetBuilder(),
 		0,
-		[]string{flag.Output, flag.OrgID},
+		[]string{flag.OrgID},
 	)
 }

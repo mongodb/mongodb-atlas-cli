@@ -27,7 +27,6 @@ import (
 )
 
 type SetOpts struct {
-	cli.OutputOpts
 	cli.GlobalOpts
 	store      store.OrganizationServerTypeUpdater
 	serverType string
@@ -44,8 +43,8 @@ func (opts *SetOpts) Run() error {
 	if err != nil {
 		return err
 	}
-
-	return opts.Print(fmt.Sprintf("Serve type %s correctly set", opts.serverType))
+	fmt.Printf("Serve type %s correctly se\nt", opts.serverType)
+	return nil
 }
 
 func (opts *SetOpts) newHostAssignment() *opsmngr.HostAssignment {
@@ -67,7 +66,6 @@ func SetBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunEOrg(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -77,7 +75,6 @@ func SetBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

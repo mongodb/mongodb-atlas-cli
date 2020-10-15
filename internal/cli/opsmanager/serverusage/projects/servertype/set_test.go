@@ -35,7 +35,7 @@ func TestSetOpts_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newHostAssignment()).
+		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newServerTypeRequest()).
 		Times(1)
 
 	err := opts.Run()

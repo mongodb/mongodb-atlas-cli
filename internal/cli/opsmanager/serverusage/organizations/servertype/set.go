@@ -39,7 +39,7 @@ func (opts *SetOpts) initStore() error {
 }
 
 func (opts *SetOpts) Run() error {
-	err := opts.store.UpdateOrganizationServerType(opts.ConfigOrgID(), opts.newHostAssignment())
+	err := opts.store.UpdateOrganizationServerType(opts.ConfigOrgID(), opts.newServerTypeRequest())
 	if err != nil {
 		return err
 	}
@@ -47,8 +47,8 @@ func (opts *SetOpts) Run() error {
 	return nil
 }
 
-func (opts *SetOpts) newHostAssignment() *opsmngr.HostAssignment {
-	return &opsmngr.HostAssignment{
+func (opts *SetOpts) newServerTypeRequest() *opsmngr.ServerTypeRequest {
+	return &opsmngr.ServerTypeRequest{
 		ServerType: &opsmngr.ServerType{
 			Name: opts.serverType,
 		},

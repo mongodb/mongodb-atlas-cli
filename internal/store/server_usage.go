@@ -29,7 +29,7 @@ type ProjectServerTypeGetter interface {
 }
 
 type ProjectServerTypeUpdater interface {
-	UpdateProjectServerType(string, *opsmngr.HostAssignment) error
+	UpdateProjectServerType(string, *opsmngr.ServerTypeRequest) error
 }
 
 type OrganizationServerTypeGetter interface {
@@ -37,7 +37,7 @@ type OrganizationServerTypeGetter interface {
 }
 
 type OrganizationServerTypeUpdater interface {
-	UpdateOrganizationServerType(string, *opsmngr.HostAssignment) error
+	UpdateOrganizationServerType(string, *opsmngr.ServerTypeRequest) error
 }
 
 // ProjectServerType encapsulates the logic to manage different cloud providers
@@ -52,7 +52,7 @@ func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error)
 }
 
 // UpdateProjectServerType encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.HostAssignment) error {
+func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateProjectServerType(context.Background(), projectID, serverType)
@@ -74,7 +74,7 @@ func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error
 }
 
 // UpdateOrganizationServerType encapsulates the logic to manage different cloud providers
-func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.HostAssignment) error {
+func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateOrganizationServerType(context.Background(), orgID, serverType)

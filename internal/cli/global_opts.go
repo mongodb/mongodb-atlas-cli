@@ -56,9 +56,9 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	if opts.ConfigProjectID() == "" {
 		return errMissingProjectID
 	}
-	//if err := validate.ObjectID(opts.ConfigProjectID()); err != nil {
-	//	return err
-	//}
+	if err := validate.ObjectID(opts.ConfigProjectID()); err != nil {
+		return err
+	}
 	for _, f := range cbs {
 		if err := f(); err != nil {
 			return err

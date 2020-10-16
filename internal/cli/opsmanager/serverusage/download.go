@@ -72,7 +72,7 @@ func (opts *DownloadOpts) initDefaultOut() {
 	}
 }
 
-// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
+// mongocli om serverUsage download [--startDate startDate] [--endDate endDate] [--force] [--output destination] [--projectId projectId]
 func DownloadBuilder() *cobra.Command {
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()

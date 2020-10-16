@@ -17,12 +17,13 @@ package store
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister
+//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ReportDownloader
 
 type ProjectServerTypeGetter interface {
 	ProjectServerType(string) (*opsmngr.ServerType, error)
@@ -46,6 +47,14 @@ type ProjectHostAssignmentLister interface {
 
 type OrganizationHostAssignmentLister interface {
 	OrganizationHostAssignments(string, *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error)
+}
+
+type SnapshotGenerator interface {
+	GenerateSnapshot() error
+}
+
+type ReportDownloader interface {
+	DownloadReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error
 }
 
 // ProjectServerType encapsulates the logic to manage different cloud providers
@@ -111,5 +120,27 @@ func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTy
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// GenerateSnapshot encapsulates the logic to manage different cloud providers
+func (s *Store) GenerateSnapshot() error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).ServerUsage.GenerateDailyUsageSnapshot(context.Background())
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DownloadReport encapsulate the logic to manage different cloud providers
+func (s *Store) DownloadReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*opsmngr.Client).ServerUsageReport.Download(context.Background(), opts, out)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

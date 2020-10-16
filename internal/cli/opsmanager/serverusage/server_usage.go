@@ -32,6 +32,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		projects.Builder(),
 		organizations.Builder(),
+		CaptureBuilder(),
 	)
 
 	return cmd

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
 package serverusage
@@ -18,14 +19,36 @@ package serverusage
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
+func TestCapture_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotGenerator(ctrl)
+	defer ctrl.Finish()
+
+	opts := CaptureOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		GenerateSnapshot().
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestCaptureBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
-		Builder(),
-		3,
+		CaptureBuilder(),
+		0,
 		[]string{},
 	)
 }

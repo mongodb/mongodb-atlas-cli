@@ -100,6 +100,8 @@ const (
 	AccessListIps                   = "IP addresses to add to the new user’s access list."
 	StartDate                       = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
+	ServerUsageStartDate            = "Timestamp in ISO 8601 date format when the list of host assignments starts."
+	ServerUsageEndDate              = "Timestamp in ISO 8601 date format when the list of host assignments ends."
 	AlertType                       = "Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP."
 	MaintenanceDescription          = "Description of the maintenance window."
 	Event                           = "Type of event that will trigger an alert."

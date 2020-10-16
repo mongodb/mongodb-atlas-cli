@@ -13,7 +13,7 @@
 // limitations under the License.
 // +build unit
 
-package projects
+package hosts
 
 import (
 	"testing"
@@ -21,11 +21,11 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 )
 
-func TestListBuilder(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	cli.CmdValidator(
 		t,
 		Builder(),
-		2,
+		1,
 		[]string{},
 	)
 }

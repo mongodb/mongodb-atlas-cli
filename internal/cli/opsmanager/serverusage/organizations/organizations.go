@@ -17,6 +17,7 @@ package organizations
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/organizations/servertype"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/projects/hosts"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +31,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		servertype.Builder(),
+		hosts.Builder(),
 	)
 
 	return cmd

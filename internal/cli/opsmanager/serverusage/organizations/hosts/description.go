@@ -11,21 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build unit
+package hosts
 
-package projects
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/cli"
+const (
+	short = "Manage host assignment for an organization."
+	list  = "List all host assignments for one organization."
 )
-
-func TestListBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
-}

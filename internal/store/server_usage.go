@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater
+//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister
 
 type ProjectServerTypeGetter interface {
 	ProjectServerType(string) (*opsmngr.ServerType, error)
@@ -38,6 +38,14 @@ type OrganizationServerTypeGetter interface {
 
 type OrganizationServerTypeUpdater interface {
 	UpdateOrganizationServerType(string, *opsmngr.ServerTypeRequest) error
+}
+
+type ProjectHostAssignmentLister interface {
+	ProjectHostAssignments(string, *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error)
+}
+
+type OrganizationHostAssignmentLister interface {
+	OrganizationHostAssignments(string, *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error)
 }
 
 // ProjectServerType encapsulates the logic to manage different cloud providers
@@ -81,5 +89,27 @@ func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.S
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// ProjectHostAssignments encapsulates the logic to manage different cloud providers
+func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).ServerUsage.ProjectHostAssignments(context.Background(), projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OrganizationHostAssignments encapsulates the logic to manage different cloud providers
+func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).ServerUsage.OrganizationHostAssignments(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

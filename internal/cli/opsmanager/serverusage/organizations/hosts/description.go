@@ -14,6 +14,6 @@
 package hosts
 
 const (
-	short = "Manage host assignment for a project."
+	short = "Manage host assignment for an organization."
 	list  = "List all host assignments for one organization."
 )

@@ -102,6 +102,7 @@ const (
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
 	ServerUsageStartDate            = "Timestamp in ISO 8601 date format when the list of host assignments starts."
 	ServerUsageEndDate              = "Timestamp in ISO 8601 date format when the list of host assignments ends."
+	ServerUsageFormat               = "Compression format of the resulting report. Accepted values for this option are: .zip, .tar.gz"
 	AlertType                       = "Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP."
 	MaintenanceDescription          = "Description of the maintenance window."
 	Event                           = "Type of event that will trigger an alert."

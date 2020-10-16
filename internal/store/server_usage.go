@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ReportDownloader
+//go:generate mockgen -destination=../mocks/mock_server_usage.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectServerTypeGetter,ProjectServerTypeUpdater,OrganizationServerTypeGetter,OrganizationServerTypeUpdater,ProjectHostAssignmentLister,OrganizationHostAssignmentLister,SnapshotGenerator,ServerUsageReportDownloader
 
 type ProjectServerTypeGetter interface {
 	ProjectServerType(string) (*opsmngr.ServerType, error)
@@ -53,8 +53,8 @@ type SnapshotGenerator interface {
 	GenerateSnapshot() error
 }
 
-type ReportDownloader interface {
-	DownloadReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error
+type ServerUsageReportDownloader interface {
+	DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error
 }
 
 // ProjectServerType encapsulates the logic to manage different cloud providers
@@ -134,10 +134,10 @@ func (s *Store) GenerateSnapshot() error {
 	}
 }
 
-// DownloadReport encapsulate the logic to manage different cloud providers
-func (s *Store) DownloadReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error {
+// DownloadServerUsageReport encapsulate the logic to manage different cloud providers
+func (s *Store) DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error {
 	switch s.service {
-	case config.CloudService:
+	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).ServerUsageReport.Download(context.Background(), opts, out)
 		return err
 	default:

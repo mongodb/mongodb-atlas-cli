@@ -22,7 +22,7 @@ import (
 )
 
 type CaptureOpts struct {
-	store     store.SnapshotGenerator
+	store store.SnapshotGenerator
 }
 
 func (opts *CaptureOpts) initStore() error {

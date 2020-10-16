@@ -36,7 +36,7 @@ func (opts *CaptureOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	fmt.Print("Snapshot captured\n")
+	fmt.Print("Snapshot captured.\n")
 	return nil
 }
 

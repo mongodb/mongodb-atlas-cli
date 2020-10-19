@@ -12,28 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikeys
+// +build unit
+
+package accesslists
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys/accesslists"
-	"github.com/spf13/cobra"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func Builder() *cobra.Command {
-	const use = "apiKeys"
-	var cmd = &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Aliases: cli.GenerateAliases(use),
+func TestWhitelistDelete_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		store: mockStore,
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		UpdateBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		accesslists.Builder(),
-	)
-	return cmd
+
+	mockStore.
+		EXPECT().
+		DeleteProjectIPAccessList(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
+
+	err := deleteOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

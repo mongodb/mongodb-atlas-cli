@@ -12,28 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikeys
+// +build unit
+
+package accesslists
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys/accesslists"
-	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "apiKeys"
-	var cmd = &cobra.Command{
-		Use:     use,
-		Short:   short,
-		Aliases: cli.GenerateAliases(use),
-	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		UpdateBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		accesslists.Builder(),
+func TestBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		Builder(),
+		3,
+		[]string{},
 	)
-	return cmd
 }

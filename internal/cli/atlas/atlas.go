@@ -16,7 +16,7 @@ package atlas
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
-	"github.com/mongodb/mongocli/internal/cli/atlas/accesslist"
+	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
@@ -52,7 +52,7 @@ func Builder() *cobra.Command {
 		datalake.Builder(),
 		clusters.Builder(),
 		dbusers.Builder(),
-		accesslist.Builder(),
+		accesslists.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),

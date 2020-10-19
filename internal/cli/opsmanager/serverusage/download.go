@@ -61,8 +61,9 @@ func (opts *DownloadOpts) Run() error {
 
 func (opts *DownloadOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
 	return &opsmngr.ServerTypeOptions{
-		StartDate: opts.startDate,
-		EndDate:   opts.endDate,
+		StartDate:  opts.startDate,
+		EndDate:    opts.endDate,
+		FileFormat: opts.format,
 	}
 }
 

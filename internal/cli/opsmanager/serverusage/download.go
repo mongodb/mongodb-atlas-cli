@@ -94,7 +94,6 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
-	_ = cmd.MarkFlagFilename(flag.Out)
 	_ = cmd.MarkFlagRequired(flag.StartDate)
 	_ = cmd.MarkFlagRequired(flag.EndDate)
 

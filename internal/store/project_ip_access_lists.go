@@ -22,25 +22,25 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectIPWhitelistDescriber,ProjectIPWhitelistLister,ProjectIPWhitelistCreator,ProjectIPWhitelistDeleter
+//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
 
-type ProjectIPWhitelistDescriber interface {
-	IPWhitelist(string, string) (*atlas.ProjectIPWhitelist, error)
+type ProjectIPAccessListDescriber interface {
+	IPAccessList(string, string) (*atlas.ProjectIPWhitelist, error)
 }
-type ProjectIPWhitelistLister interface {
-	ProjectIPWhitelists(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
-}
-
-type ProjectIPWhitelistCreator interface {
-	CreateProjectIPWhitelist(*atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error)
+type ProjectIPAccessListLister interface {
+	ProjectIPAccessList(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
 }
 
-type ProjectIPWhitelistDeleter interface {
-	DeleteProjectIPWhitelist(string, string) error
+type ProjectIPAccessListCreator interface {
+	CreateProjectIPAccessList(*atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error)
+}
+
+type ProjectIPAccessListDeleter interface {
+	DeleteProjectIPAccessList(string, string) error
 }
 
 // CreateProjectIPWhitelist encapsulate the logic to manage different cloud providers
-func (s *Store) CreateProjectIPWhitelist(entry *atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error) {
+func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Create(context.Background(), entry.GroupID, []*atlas.ProjectIPWhitelist{entry})
@@ -51,7 +51,7 @@ func (s *Store) CreateProjectIPWhitelist(entry *atlas.ProjectIPWhitelist) ([]atl
 }
 
 // DeleteProjectIPWhitelist encapsulate the logic to manage different cloud providers
-func (s *Store) DeleteProjectIPWhitelist(projectID, entry string) error {
+func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).ProjectIPWhitelist.Delete(context.Background(), projectID, entry)
@@ -62,7 +62,7 @@ func (s *Store) DeleteProjectIPWhitelist(projectID, entry string) error {
 }
 
 // ProjectIPWhitelists encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectIPWhitelists(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
+func (s *Store) ProjectIPAccessList(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.List(context.Background(), projectID, opts)
@@ -73,7 +73,7 @@ func (s *Store) ProjectIPWhitelists(projectID string, opts *atlas.ListOptions) (
 }
 
 // IPWhitelist encapsulate the logic to manage different cloud providers
-func (s *Store) IPWhitelist(projectID, name string) (*atlas.ProjectIPWhitelist, error) {
+func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Get(context.Background(), projectID, name)

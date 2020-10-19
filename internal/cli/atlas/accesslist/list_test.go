@@ -26,7 +26,7 @@ import (
 
 func TestWhitelistList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPWhitelistLister(ctrl)
+	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
 	defer ctrl.Finish()
 
 	var expected []mongodbatlas.ProjectIPWhitelist
@@ -37,7 +37,7 @@ func TestWhitelistList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectIPWhitelists(listOpts.ProjectID, listOpts.NewListOptions()).
+		ProjectIPAccessList(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

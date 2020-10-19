@@ -27,7 +27,7 @@ import (
 
 func TestWhitelistDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPWhitelistDeleter(ctrl)
+	mockStore := mocks.NewMockProjectIPAccessListDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -40,7 +40,7 @@ func TestWhitelistDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteProjectIPWhitelist(deleteOpts.ProjectID, deleteOpts.Entry).
+		DeleteProjectIPAccessList(deleteOpts.ProjectID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

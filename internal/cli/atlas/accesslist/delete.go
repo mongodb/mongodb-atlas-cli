@@ -26,7 +26,7 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.ProjectIPWhitelistDeleter
+	store store.ProjectIPAccessListDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -36,7 +36,7 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteProjectIPWhitelist, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeleteProjectIPAccessList, opts.ConfigProjectID())
 }
 
 // mongocli atlas accessList delete <entry> --force

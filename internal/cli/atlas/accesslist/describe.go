@@ -31,7 +31,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	name  string
-	store store.ProjectIPWhitelistDescriber
+	store store.ProjectIPAccessListDescriber
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -41,7 +41,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.IPWhitelist(opts.ConfigProjectID(), opts.name)
+	r, err := opts.store.IPAccessList(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}

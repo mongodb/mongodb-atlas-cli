@@ -30,7 +30,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProjectIPWhitelistLister
+	store store.ProjectIPAccessListLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -41,7 +41,7 @@ func (opts *ListOpts) initStore() error {
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ProjectIPWhitelists(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.ProjectIPAccessList(opts.ConfigProjectID(), listOpts)
 
 	if err != nil {
 		return err

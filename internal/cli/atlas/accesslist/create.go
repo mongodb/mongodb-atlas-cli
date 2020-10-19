@@ -38,7 +38,7 @@ type CreateOpts struct {
 	entryType   string
 	comment     string
 	deleteAfter string
-	store       store.ProjectIPWhitelistCreator
+	store       store.ProjectIPAccessListCreator
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -49,7 +49,7 @@ func (opts *CreateOpts) initStore() error {
 
 func (opts *CreateOpts) Run() error {
 	entry := opts.newWhitelist()
-	r, err := opts.store.CreateProjectIPWhitelist(entry)
+	r, err := opts.store.CreateProjectIPAccessList(entry)
 
 	if err != nil {
 		return err

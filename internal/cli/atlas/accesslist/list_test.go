@@ -37,7 +37,7 @@ func TestWhitelistList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectIPAccessList(listOpts.ProjectID, listOpts.NewListOptions()).
+		ProjectIPAccessLists(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

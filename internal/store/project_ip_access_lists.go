@@ -28,7 +28,7 @@ type ProjectIPAccessListDescriber interface {
 	IPAccessList(string, string) (*atlas.ProjectIPWhitelist, error)
 }
 type ProjectIPAccessListLister interface {
-	ProjectIPAccessList(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
+	ProjectIPAccessLists(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
 }
 
 type ProjectIPAccessListCreator interface {
@@ -39,7 +39,7 @@ type ProjectIPAccessListDeleter interface {
 	DeleteProjectIPAccessList(string, string) error
 }
 
-// CreateProjectIPWhitelist encapsulate the logic to manage different cloud providers
+// CreateProjectIPAccessList encapsulate the logic to manage different cloud providers
 func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
@@ -50,7 +50,7 @@ func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPWhitelist) ([]at
 	}
 }
 
-// DeleteProjectIPWhitelist encapsulate the logic to manage different cloud providers
+// DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService:
@@ -61,8 +61,8 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	}
 }
 
-// ProjectIPWhitelists encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectIPAccessList(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
+// ProjectIPAccessLists encapsulate the logic to manage different cloud providers
+func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.List(context.Background(), projectID, opts)
@@ -72,7 +72,7 @@ func (s *Store) ProjectIPAccessList(projectID string, opts *atlas.ListOptions) (
 	}
 }
 
-// IPWhitelist encapsulate the logic to manage different cloud providers
+// IPAccessList encapsulate the logic to manage different cloud providers
 func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPWhitelist, error) {
 	switch s.service {
 	case config.CloudService:

@@ -71,19 +71,19 @@ func (m *MockProjectIPAccessListLister) EXPECT() *MockProjectIPAccessListListerM
 	return m.recorder
 }
 
-// ProjectIPAccessList mocks base method
-func (m *MockProjectIPAccessListLister) ProjectIPAccessList(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
+// ProjectIPAccessLists mocks base method
+func (m *MockProjectIPAccessListLister) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectIPAccessList", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectIPAccessLists", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ProjectIPAccessList indicates an expected call of ProjectIPAccessList
-func (mr *MockProjectIPAccessListListerMockRecorder) ProjectIPAccessList(arg0, arg1 interface{}) *gomock.Call {
+// ProjectIPAccessLists indicates an expected call of ProjectIPAccessLists
+func (mr *MockProjectIPAccessListListerMockRecorder) ProjectIPAccessLists(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPAccessList", reflect.TypeOf((*MockProjectIPAccessListLister)(nil).ProjectIPAccessList), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectIPAccessLists", reflect.TypeOf((*MockProjectIPAccessListLister)(nil).ProjectIPAccessLists), arg0, arg1)
 }
 
 // MockProjectIPAccessListCreator is a mock of ProjectIPAccessListCreator interface

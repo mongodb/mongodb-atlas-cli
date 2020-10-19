@@ -68,8 +68,9 @@ func (opts *DownloadOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
 }
 
 func (opts *DownloadOpts) initDefaultOut() {
+	opts.format = "." + opts.format
 	if opts.Out == "" {
-		opts.Out = "serverUsageReport" + opts.format
+		opts.Out = "serverUsage-" + opts.startDate + "-" + opts.endDate + opts.format
 	}
 }
 
@@ -90,7 +91,7 @@ func DownloadBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.startDate, flag.StartDate, "", usage.ServerUsageStartDate)
 	cmd.Flags().StringVar(&opts.endDate, flag.EndDate, "", usage.ServerUsageEndDate)
-	cmd.Flags().StringVar(&opts.format, flag.Format, ".tar.gz", usage.ServerUsageFormat)
+	cmd.Flags().StringVar(&opts.format, flag.Format, "tar.gz", usage.ServerUsageFormat)
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 

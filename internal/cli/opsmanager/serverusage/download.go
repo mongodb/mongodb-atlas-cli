@@ -70,7 +70,7 @@ func (opts *DownloadOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
 func (opts *DownloadOpts) initDefaultOut() {
 	opts.format = "." + opts.format
 	if opts.Out == "" {
-		opts.Out = "serverUsage-" + opts.startDate + "-" + opts.endDate + opts.format
+		opts.Out = fmt.Sprintf("serverUsage-%s-%s%s", opts.startDate, opts.endDate, opts.format)
 	}
 }
 

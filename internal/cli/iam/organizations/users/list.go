@@ -61,7 +61,8 @@ func ListBuilder() *cobra.Command {
 		Short:   listUsers,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.PreRunEOrg(
+			opts.PreRunEOrg = true
+			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 				opts.init,
 			)

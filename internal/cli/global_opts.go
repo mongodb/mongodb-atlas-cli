@@ -24,8 +24,9 @@ import (
 )
 
 type GlobalOpts struct {
-	OrgID     string
-	ProjectID string
+	OrgID      string
+	ProjectID  string
+	PreRunEOrg bool
 }
 
 // ConfigProjectID returns the project id.
@@ -51,14 +52,20 @@ func (opts *GlobalOpts) ConfigOrgID() string {
 type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,
-// this will validate the project ID and call any additional function pass as a callback
+// this will validate the projectID or orgID and call any additional function pass as a callback
 func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
-	if opts.ConfigProjectID() == "" {
-		return errMissingProjectID
+	if opts.PreRunEOrg {
+		err := validateOrgID(opts)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := validateProjectID(opts)
+		if err != nil {
+			return err
+		}
 	}
-	if err := validate.ObjectID(opts.ConfigProjectID()); err != nil {
-		return err
-	}
+
 	for _, f := range cbs {
 		if err := f(); err != nil {
 			return err
@@ -68,21 +75,25 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
-// PreRunEOrg is a function to call before running the command,
-// this will validate the org ID and call any additional function pass as a callback
-func (opts *GlobalOpts) PreRunEOrg(cbs ...cmdOpt) error {
+// validateProjectID validates projectID
+func validateProjectID(opts *GlobalOpts) error {
+	if opts.ConfigProjectID() == "" {
+		return errMissingProjectID
+	}
+	if err := validate.ObjectID(opts.ConfigProjectID()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateOrgID validates orgID
+func validateOrgID(opts *GlobalOpts) error {
 	if opts.ConfigOrgID() == "" {
 		return ErrMissingOrgID
 	}
 	if err := validate.ObjectID(opts.ConfigOrgID()); err != nil {
 		return err
 	}
-	for _, f := range cbs {
-		if err := f(); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 

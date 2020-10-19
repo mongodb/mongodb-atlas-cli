@@ -90,7 +90,8 @@ func DescribeBuilder() *cobra.Command {
 		Short: describeTeam,
 		Args:  cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			opts.PreRunEOrg = true
+			return opts.PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,

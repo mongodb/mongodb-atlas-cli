@@ -58,7 +58,8 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   listAPIKeys,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			opts.PreRunEOrg = true
+			return opts.PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)

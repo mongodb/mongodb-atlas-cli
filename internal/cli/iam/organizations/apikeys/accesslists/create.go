@@ -87,7 +87,8 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: create,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			opts.PreRunEOrg = true
+			return opts.PreRunE(
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

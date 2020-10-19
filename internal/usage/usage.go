@@ -240,7 +240,7 @@ const (
 	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
 	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
 	APIRegion                       = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
-	FormatOut                       = `Output format.  Current available user templates are  "go-template=Template string" and "go-template-file=path/to/template" 
+	FormatOut                       = `Output format. You can define your own go template by specifying "-o go-template=Template string" or "-o go-template-file=path/to/template" 
 Valid values: json`
 	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`

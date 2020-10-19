@@ -481,6 +481,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Hostname: "example",
 						LogPath:  "/log/mongos",
 						Port:     3,
+						TLS: &opsmngr.SSL{
+							AutoPEMKeyFilePath:    "/etc/test/PEMKeyFile",
+							CAFilePath:            "/etc/test/CAFile",
+							ClientCertificateMode: "test",
+						},
 					},
 				},
 			},
@@ -675,6 +680,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Hostname: "example",
 						LogPath:  "/log/mongos",
 						Port:     3,
+						TLS: &opsmngr.SSL{
+							AutoPEMKeyFilePath:    "/etc/test/PEMKeyFile",
+							CAFilePath:            "/etc/test/CAFile",
+							ClientCertificateMode: "test",
+						},
 					},
 				},
 			},

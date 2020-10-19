@@ -49,7 +49,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalWhitelist(s) list|ls
+// mongocli iam globalAccessList(s) list|ls
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate

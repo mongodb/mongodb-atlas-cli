@@ -23,26 +23,26 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_global_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyWhitelistLister,GlobalAPIKeyWhitelistDescriber,GlobalAPIKeyWhitelistCreator,GlobalAPIKeyWhitelistDeleter
+//go:generate mockgen -destination=../mocks/mock_global_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store GlobalAPIKeyAccessListLister,GlobalAPIKeyAccessListDescriber,GlobalAPIKeyAccessListCreator,GlobalAPIKeyAccessListDeleter
 
-type GlobalAPIKeyWhitelistLister interface {
-	GlobalAPIKeyWhitelists(*atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error)
+type GlobalAPIKeyAccessListLister interface {
+	GlobalAPIKeyAccessLists(*atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error)
 }
 
-type GlobalAPIKeyWhitelistDescriber interface {
-	GlobalAPIKeyWhitelist(string) (*opsmngr.GlobalWhitelistAPIKey, error)
+type GlobalAPIKeyAccessListDescriber interface {
+	GlobalAPIKeyAccessList(string) (*opsmngr.GlobalWhitelistAPIKey, error)
 }
 
-type GlobalAPIKeyWhitelistCreator interface {
-	CreateGlobalAPIKeyWhitelist(*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error)
+type GlobalAPIKeyAccessListCreator interface {
+	CreateGlobalAPIKeyAccessList(*opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error)
 }
 
-type GlobalAPIKeyWhitelistDeleter interface {
-	DeleteGlobalAPIKeyWhitelist(string) error
+type GlobalAPIKeyAccessListDeleter interface {
+	DeleteGlobalAPIKeyAccessList(string) error
 }
 
-// GlobalAPIKeyWhitelists encapsulates the logic to manage different cloud providers
-func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
+// GlobalAPIKeyAccessLists encapsulates the logic to manage different cloud providers
+func (s *Store) GlobalAPIKeyAccessLists(opts *atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.List(context.Background(), opts)
@@ -52,8 +52,8 @@ func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.Global
 	}
 }
 
-// GlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
-func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey, error) {
+// GlobalAPIKeyAccessList encapsulates the logic to manage different cloud providers
+func (s *Store) GlobalAPIKeyAccessList(id string) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Get(context.Background(), id)
@@ -63,8 +63,8 @@ func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey
 	}
 }
 
-// CreateGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
-func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
+// CreateGlobalAPIKeyAccessList encapsulates the logic to manage different cloud providers
+func (s *Store) CreateGlobalAPIKeyAccessList(opts *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Create(context.Background(), opts)
@@ -74,8 +74,8 @@ func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (
 	}
 }
 
-// DeleteGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteGlobalAPIKeyWhitelist(id string) error {
+// DeleteGlobalAPIKeyAccessList encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteGlobalAPIKeyAccessList(id string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Delete(context.Background(), id)

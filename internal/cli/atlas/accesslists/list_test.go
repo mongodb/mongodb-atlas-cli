@@ -11,21 +11,38 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 // +build unit
 
-package admin
+package accesslists
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
+func TestWhitelistList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected []mongodbatlas.ProjectIPWhitelist
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectIPAccessLists(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

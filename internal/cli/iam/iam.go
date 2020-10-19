@@ -15,7 +15,7 @@
 package iam
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslist"
+	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
@@ -43,7 +43,7 @@ func Builder() *cobra.Command {
 		projects.Builder(),
 		organizations.Builder(),
 		globalapikeys.Builder(),
-		globalaccesslist.Builder(),
+		globalaccesslists.Builder(),
 		users.Builder(),
 		teams.Builder(),
 	)

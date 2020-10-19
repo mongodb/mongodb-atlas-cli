@@ -14,5 +14,7 @@
 package serverusage
 
 const (
-	short = "Manage your server usage."
+	short    = "Manage your server usage."
+	capture  = "Capture a snapshot of usage for the processes Ops Manager manages."
+	download = "Download the server usage report."
 )

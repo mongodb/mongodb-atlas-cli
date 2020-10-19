@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikeys
+package globalaccesslists
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys/accesslists"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "apiKeys"
+	const use = "globalAccessLists"
+	deprecated := append([]string{"globalWhitelists"}, cli.GenerateAliases("globalWhitelists")...)
 	var cmd = &cobra.Command{
 		Use:     use,
 		Short:   short,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: cli.GenerateAliases(use, deprecated...),
 	}
+
 	cmd.AddCommand(
 		ListBuilder(),
 		DescribeBuilder(),
-		UpdateBuilder(),
 		CreateBuilder(),
 		DeleteBuilder(),
-		accesslists.Builder(),
 	)
+
 	return cmd
 }

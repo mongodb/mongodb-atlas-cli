@@ -88,6 +88,7 @@ const (
 	Description                     = "desc"                            // Description flag
 	StartDate                       = "startDate"                       // StartDate flag
 	EndDate                         = "endDate"                         // EndDate flag
+	Format                          = "format"                          // Format flag
 	AlertType                       = "alertType"                       // AlertType flag
 	Mechanisms                      = "mechanisms"                      // Mechanisms flag
 	Type                            = "type"                            // Type flag

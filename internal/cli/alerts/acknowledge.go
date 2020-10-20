@@ -82,6 +82,7 @@ func AcknowledgeBuilder() *cobra.Command {
 				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)
 			}
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), ackTemplate),
 			)

@@ -62,6 +62,7 @@ func ListBuilder() *cobra.Command {
 			opts.username = args[0]
 
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)

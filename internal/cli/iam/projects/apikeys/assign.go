@@ -65,6 +65,7 @@ func AssignBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

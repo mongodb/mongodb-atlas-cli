@@ -81,6 +81,7 @@ func UpdateBuilder() *cobra.Command {
 		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

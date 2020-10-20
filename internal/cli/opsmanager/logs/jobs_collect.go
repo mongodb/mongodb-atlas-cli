@@ -86,6 +86,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 		ValidArgs: []string{"cluster", "process", "replicaset"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), collectTemplate),
 			)

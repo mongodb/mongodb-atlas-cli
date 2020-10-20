@@ -69,7 +69,7 @@ func DownloadBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   download,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

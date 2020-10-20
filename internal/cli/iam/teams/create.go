@@ -63,7 +63,8 @@ func CreateBuilder() *cobra.Command {
 		Short: createTeam,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

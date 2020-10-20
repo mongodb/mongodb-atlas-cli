@@ -68,6 +68,7 @@ func AddBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)

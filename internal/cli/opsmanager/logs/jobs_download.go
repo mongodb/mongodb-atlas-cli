@@ -60,7 +60,7 @@ func JobsDownloadOptsBuilder() *cobra.Command {
 		Short: DownloadLogCollectionJob,
 		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

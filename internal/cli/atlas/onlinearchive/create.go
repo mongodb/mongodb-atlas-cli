@@ -111,6 +111,7 @@ func CreateBuilder() *cobra.Command {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))
 			}
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

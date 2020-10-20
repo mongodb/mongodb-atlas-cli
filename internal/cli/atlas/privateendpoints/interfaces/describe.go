@@ -62,6 +62,7 @@ func DescribeBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)

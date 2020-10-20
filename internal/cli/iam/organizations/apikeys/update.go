@@ -65,7 +65,8 @@ func UpdateBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   updateAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

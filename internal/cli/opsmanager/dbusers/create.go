@@ -100,7 +100,7 @@ func CreateBuilder() *cobra.Command {
   $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
 		Args: cobra.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {

@@ -87,6 +87,7 @@ func CreateBuilder() *cobra.Command {
 				return errors.New("you can't specify fields and dynamic at the same time")
 			}
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

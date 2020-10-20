@@ -56,7 +56,8 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   get,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), getTemplate),
 			)

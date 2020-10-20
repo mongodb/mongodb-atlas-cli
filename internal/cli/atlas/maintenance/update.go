@@ -69,6 +69,7 @@ func UpdateBuilder() *cobra.Command {
 				_ = cmd.MarkFlagRequired(flag.HourOfDay)
 			}
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

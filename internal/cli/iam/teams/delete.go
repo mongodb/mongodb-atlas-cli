@@ -51,7 +51,8 @@ func DeleteBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
-			return opts.PreRunEOrg(
+			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.Prompt,
 			)

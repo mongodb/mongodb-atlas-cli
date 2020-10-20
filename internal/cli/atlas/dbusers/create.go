@@ -175,6 +175,7 @@ func CreateBuilder() *cobra.Command {
 			opts.roles = append(opts.roles, args...)
 
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.validate,

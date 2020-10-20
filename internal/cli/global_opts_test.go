@@ -84,7 +84,7 @@ func TestGlobalOpts_PreRunE(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		o := &GlobalOpts{}
 		if err := o.PreRunE(errorFunc); err == nil {
-			t.Errorf("Expected err != nill")
+			t.Errorf("Expected err != nil")
 		}
 	})
 }

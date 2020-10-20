@@ -22,7 +22,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGlobalOpts_PreRunE(t *testing.T) {
+func TestGlobalOpts_ValidateProjectID(t *testing.T) {
 	t.Run("empty project ID", func(t *testing.T) {
 		o := &GlobalOpts{}
 		if err := o.PreRunE(o.ValidateProjectID); err != errMissingProjectID {
@@ -41,6 +41,9 @@ func TestGlobalOpts_PreRunE(t *testing.T) {
 			t.Fatalf("PreRunE() unexpected error %v\n", err)
 		}
 	})
+}
+
+func TestGlobalOpts_ValidateOrgID(t *testing.T) {
 	t.Run("empty org ID", func(t *testing.T) {
 		o := &GlobalOpts{}
 		if err := o.PreRunE(o.ValidateOrgID); err != ErrMissingOrgID {

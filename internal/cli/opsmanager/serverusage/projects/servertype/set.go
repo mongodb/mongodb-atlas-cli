@@ -65,6 +65,7 @@ func SetBuilder() *cobra.Command {
 		Short:     set,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 			)
 		},

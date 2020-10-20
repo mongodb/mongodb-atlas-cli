@@ -99,7 +99,7 @@ func UpdateBuilder() *cobra.Command {
 		Short: update,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.PreRunE(opts.ValidateProjectID, opts.init)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

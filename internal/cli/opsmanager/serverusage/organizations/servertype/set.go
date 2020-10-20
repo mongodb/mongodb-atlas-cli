@@ -64,8 +64,8 @@ func SetBuilder() *cobra.Command {
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
 		Short:     set,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.PreRunEOrg = true
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.initStore,
 			)
 		},

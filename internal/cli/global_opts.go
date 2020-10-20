@@ -24,9 +24,8 @@ import (
 )
 
 type GlobalOpts struct {
-	OrgID      string
-	ProjectID  string
-	PreRunEOrg bool
+	OrgID     string
+	ProjectID string
 }
 
 // ConfigProjectID returns the project id.
@@ -52,20 +51,8 @@ func (opts *GlobalOpts) ConfigOrgID() string {
 type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,
-// this will validate the projectID or orgID and call any additional function pass as a callback
+// this will call any additional function pass as a callback
 func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
-	if opts.PreRunEOrg {
-		err := validateOrgID(opts)
-		if err != nil {
-			return err
-		}
-	} else {
-		err := validateProjectID(opts)
-		if err != nil {
-			return err
-		}
-	}
-
 	for _, f := range cbs {
 		if err := f(); err != nil {
 			return err
@@ -75,8 +62,8 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
-// validateProjectID validates projectID
-func validateProjectID(opts *GlobalOpts) error {
+// ValidateProjectID validates projectID
+func (opts *GlobalOpts) ValidateProjectID() error {
 	if opts.ConfigProjectID() == "" {
 		return errMissingProjectID
 	}
@@ -86,8 +73,8 @@ func validateProjectID(opts *GlobalOpts) error {
 	return nil
 }
 
-// validateOrgID validates orgID
-func validateOrgID(opts *GlobalOpts) error {
+// ValidateOrgID validates orgID
+func (opts *GlobalOpts) ValidateOrgID() error {
 	if opts.ConfigOrgID() == "" {
 		return ErrMissingOrgID
 	}

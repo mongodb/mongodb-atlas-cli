@@ -170,6 +170,7 @@ func RestoresStartBuilder() *cobra.Command {
 			}
 
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)

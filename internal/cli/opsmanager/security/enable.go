@@ -72,7 +72,7 @@ func EnableBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.mechanisms = args

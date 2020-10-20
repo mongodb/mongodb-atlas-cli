@@ -89,7 +89,7 @@ func DownloadBuilder() *cobra.Command {
 		Args:  cobra.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]

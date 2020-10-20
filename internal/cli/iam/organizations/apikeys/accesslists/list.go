@@ -60,8 +60,8 @@ func ListBuilder() *cobra.Command {
 		Args:    cobra.ExactArgs(1),
 		Short:   list,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.PreRunEOrg = true
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)

@@ -66,7 +66,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: UpdateAutomationConfig,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

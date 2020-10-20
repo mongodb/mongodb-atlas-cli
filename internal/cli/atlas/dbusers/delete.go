@@ -52,7 +52,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   deleteDBUser,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

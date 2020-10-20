@@ -66,6 +66,7 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 				return err
 			}
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), checkpointsTemplate),
 			)

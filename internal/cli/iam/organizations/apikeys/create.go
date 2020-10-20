@@ -67,8 +67,8 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: createAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.PreRunEOrg = true
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)

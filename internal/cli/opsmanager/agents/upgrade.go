@@ -54,6 +54,7 @@ func UpgradeBuilder() *cobra.Command {
 		Short: UpgradeAgents,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), upgradeTemplate),
 			)

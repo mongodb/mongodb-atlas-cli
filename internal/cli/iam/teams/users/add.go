@@ -57,8 +57,8 @@ func AddBuilder() *cobra.Command {
 		Short: addUser,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args
-			opts.PreRunEOrg = true
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)

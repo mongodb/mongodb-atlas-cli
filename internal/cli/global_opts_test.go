@@ -17,6 +17,7 @@
 package cli
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,19 +26,19 @@ import (
 func TestGlobalOpts_ValidateProjectID(t *testing.T) {
 	t.Run("empty project ID", func(t *testing.T) {
 		o := &GlobalOpts{}
-		if err := o.PreRunE(o.ValidateProjectID); err != errMissingProjectID {
+		if err := o.ValidateProjectID(); err != errMissingProjectID {
 			t.Errorf("Expected err: %#v, got: %#v\n", errMissingProjectID, err)
 		}
 	})
 	t.Run("invalid project ID", func(t *testing.T) {
 		o := &GlobalOpts{ProjectID: "1"}
-		if err := o.PreRunE(o.ValidateProjectID); err == nil {
+		if err := o.ValidateProjectID(); err == nil {
 			t.Errorf("Expected an error\n")
 		}
 	})
 	t.Run("valid project ID", func(t *testing.T) {
 		o := &GlobalOpts{ProjectID: "5e98249d937cfc52efdc2a9f"}
-		if err := o.PreRunE(o.ValidateProjectID); err != nil {
+		if err := o.ValidateProjectID(); err != nil {
 			t.Fatalf("PreRunE() unexpected error %v\n", err)
 		}
 	})
@@ -46,20 +47,44 @@ func TestGlobalOpts_ValidateProjectID(t *testing.T) {
 func TestGlobalOpts_ValidateOrgID(t *testing.T) {
 	t.Run("empty org ID", func(t *testing.T) {
 		o := &GlobalOpts{}
-		if err := o.PreRunE(o.ValidateOrgID); err != ErrMissingOrgID {
+		if err := o.ValidateOrgID(); err != ErrMissingOrgID {
 			t.Errorf("Expected err: %#v, got: %#v\n", ErrMissingOrgID, err)
 		}
 	})
 	t.Run("invalid org ID", func(t *testing.T) {
 		o := &GlobalOpts{OrgID: "1"}
-		if err := o.PreRunE(o.ValidateOrgID); err == nil {
+		if err := o.ValidateOrgID(); err == nil {
 			t.Errorf("Expected an error\n")
 		}
 	})
 	t.Run("valid org ID", func(t *testing.T) {
 		o := &GlobalOpts{OrgID: "5e98249d937cfc52efdc2a9f"}
-		if err := o.PreRunE(o.ValidateOrgID); err != nil {
+		if err := o.ValidateOrgID(); err != nil {
 			t.Fatalf("PreRunE() unexpected error %v\n", err)
+		}
+	})
+}
+
+func TestGlobalOpts_PreRunE(t *testing.T) {
+	noErrorFunc := func() error {
+		return nil
+	}
+
+	errorFunc := func() error {
+		return errors.New("error")
+	}
+
+	t.Run("no error", func(t *testing.T) {
+		o := &GlobalOpts{}
+		if err := o.PreRunE(noErrorFunc); err != nil {
+			t.Errorf("Expected err == nil")
+		}
+	})
+
+	t.Run("error", func(t *testing.T) {
+		o := &GlobalOpts{}
+		if err := o.PreRunE(errorFunc); err == nil {
+			t.Errorf("Expected err != nill")
 		}
 	})
 }

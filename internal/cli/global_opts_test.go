@@ -66,15 +66,11 @@ func TestGlobalOpts_ValidateOrgID(t *testing.T) {
 }
 
 func TestGlobalOpts_PreRunE(t *testing.T) {
-	noErrorFunc := func() error {
-		return nil
-	}
-
-	errorFunc := func() error {
-		return errors.New("error")
-	}
-
 	t.Run("no error", func(t *testing.T) {
+		noErrorFunc := func() error {
+			return nil
+		}
+
 		o := &GlobalOpts{}
 		if err := o.PreRunE(noErrorFunc); err != nil {
 			t.Errorf("Expected err == nil")
@@ -82,6 +78,10 @@ func TestGlobalOpts_PreRunE(t *testing.T) {
 	})
 
 	t.Run("error", func(t *testing.T) {
+		errorFunc := func() error {
+			return errors.New("error")
+		}
+
 		o := &GlobalOpts{}
 		if err := o.PreRunE(errorFunc); err == nil {
 			t.Errorf("Expected err != nil")

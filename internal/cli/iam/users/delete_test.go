@@ -21,6 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
@@ -46,4 +47,14 @@ func TestDelete_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	cli.CmdValidator(t,
+		DeleteBuilder(),
+		0,
+		[]string{
+			flag.Force,
+		},
+	)
 }

@@ -26,9 +26,11 @@ func Builder() *cobra.Command {
 		Long:    DBUsersLong,
 	}
 
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		CreateBuilder(),
+		ListBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

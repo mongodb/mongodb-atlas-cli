@@ -17,33 +17,76 @@
 package alerts
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribe_Run(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{
+			flag.ProjectID,
+			flag.Output,
+		},
+	)
+}
+
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Alert{}
-
-	describeOpts := &DescribeOpts{
-		alertID: "533dc40ae4b00835ff81eaee",
-		store:   mockStore,
+	tests := []struct {
+		name    string
+		cmd     *DescribeOpts
+		wantErr bool
+	}{
+		{
+			name: "default",
+			cmd: &DescribeOpts{
+				alertID: "533dc40ae4b00835ff81eaee",
+				store:   mockStore,
+			},
+			wantErr: false,
+		},
+		{
+			name: "default",
+			cmd: &DescribeOpts{
+				alertID: "533dc40ae4b00835ff81eaee",
+				store:   mockStore,
+			},
+			wantErr: true,
+		},
 	}
-
-	mockStore.
-		EXPECT().
-		Alert(describeOpts.ProjectID, describeOpts.alertID).
-		Return(expected, nil).
-		Times(1)
-
-	err := describeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	for _, tt := range tests {
+		cmd := tt.cmd
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if wantErr {
+				mockStore.
+					EXPECT().
+					Alert(cmd.ProjectID, cmd.alertID).
+					Return(nil, errors.New("fake")).
+					Times(1)
+				assert.Error(t, cmd.Run())
+			} else {
+				expected := &mongodbatlas.Alert{}
+				mockStore.
+					EXPECT().
+					Alert(cmd.ProjectID, cmd.alertID).
+					Return(expected, nil).
+					Times(1)
+				assert.NoError(t, cmd.Run())
+			}
+		})
 	}
 }

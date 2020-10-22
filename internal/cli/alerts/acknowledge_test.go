@@ -17,36 +17,93 @@
 package alerts
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAcknowledge_Run(t *testing.T) {
+func TestAcknowledgeBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		AcknowledgeBuilder(),
+		0,
+		[]string{
+			flag.Forever,
+			flag.Until,
+			flag.Comment,
+			flag.ProjectID,
+			flag.Output,
+		},
+	)
+}
+
+func TestAcknowledgeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Alert{}
-
-	acknowledgeOpts := &AcknowledgeOpts{
-		alertID: "533dc40ae4b00835ff81eaee",
-		comment: "Test",
-		store:   mockStore,
+	tests := []struct {
+		name    string
+		opts    AcknowledgeOpts
+		wantErr bool
+	}{
+		{
+			name: "default",
+			opts: AcknowledgeOpts{
+				alertID: "533dc40ae4b00835ff81eaee",
+				comment: "Test",
+				store:   mockStore,
+			},
+			wantErr: false,
+		},
+		{
+			name: "forever",
+			opts: AcknowledgeOpts{
+				alertID: "533dc40ae4b00835ff81eaee",
+				comment: "Test",
+				forever: true,
+				store:   mockStore,
+			},
+			wantErr: false,
+		},
+		{
+			name: "with error",
+			opts: AcknowledgeOpts{
+				alertID: "533dc40ae4b00835ff81eaee",
+				comment: "Test",
+				forever: true,
+				store:   mockStore,
+			},
+			wantErr: true,
+		},
 	}
-
-	ackReq := acknowledgeOpts.newAcknowledgeRequest()
-
-	mockStore.
-		EXPECT().
-		AcknowledgeAlert(acknowledgeOpts.ProjectID, acknowledgeOpts.alertID, ackReq).
-		Return(expected, nil).
-		Times(1)
-
-	err := acknowledgeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	for _, tt := range tests {
+		opts := tt.opts
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			ackReq := opts.newAcknowledgeRequest()
+			if wantErr {
+				mockStore.
+					EXPECT().
+					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
+					Return(nil, errors.New("fake")).
+					Times(1)
+				assert.Error(t, opts.Run())
+			} else {
+				expected := &mongodbatlas.Alert{}
+				mockStore.
+					EXPECT().
+					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
+					Return(expected, nil).
+					Times(1)
+				assert.NoError(t, opts.Run())
+			}
+		})
 	}
 }

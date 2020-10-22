@@ -161,11 +161,13 @@ func Builder() *cobra.Command {
 		Long:    long,
 	}
 
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(FieldsBuilder())
-	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(
+		CreateBuilder(),
+		ListBuilder(),
+		DeleteBuilder(),
+		FieldsBuilder(),
+		UpdateBuilder(),
+	)
 
 	return cmd
 }

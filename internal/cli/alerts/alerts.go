@@ -28,12 +28,14 @@ func Builder() *cobra.Command {
 		Short:   short,
 	}
 
-	cmd.AddCommand(settings.Builder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(AcknowledgeBuilder())
-	cmd.AddCommand(UnacknowledgeBuilder())
-	cmd.AddCommand(GlobalBuilder())
+	cmd.AddCommand(
+		settings.Builder(),
+		DescribeBuilder(),
+		ListBuilder(),
+		AcknowledgeBuilder(),
+		UnacknowledgeBuilder(),
+		GlobalBuilder(),
+	)
 
 	return cmd
 }

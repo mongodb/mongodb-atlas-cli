@@ -27,15 +27,17 @@ func Builder() *cobra.Command {
 		Short:   Clusters,
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(ShutdownBuilder())
-	cmd.AddCommand(StartupBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(ApplyBuilder())
-	cmd.AddCommand(IndexesBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		ShutdownBuilder(),
+		StartupBuilder(),
+		UpdateBuilder(),
+		DeleteBuilder(),
+		ApplyBuilder(),
+		IndexesBuilder(),
+	)
 
 	return cmd
 }

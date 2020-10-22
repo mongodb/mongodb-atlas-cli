@@ -25,9 +25,11 @@ func Builder() *cobra.Command {
 		Short:   Metrics,
 	}
 
-	cmd.AddCommand(ProcessBuilder())
-	cmd.AddCommand(DisksBuilder())
-	cmd.AddCommand(DatabasesBuilder())
+	cmd.AddCommand(
+		ProcessBuilder(),
+		DisksBuilder(),
+		DatabasesBuilder(),
+	)
 
 	return cmd
 }

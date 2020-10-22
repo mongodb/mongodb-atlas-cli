@@ -84,18 +84,14 @@ var (
 )
 
 func init() { //nolint:gochecknoinits // This is the cobra way
-	// config commands
-	rootCmd.AddCommand(cliconfig.Builder())
-	// Atlas commands
-	rootCmd.AddCommand(atlas.Builder())
-	// CM commands
-	rootCmd.AddCommand(cloudmanager.Builder())
-	// OM commands
-	rootCmd.AddCommand(opsmanager.Builder())
-	// IAM commands
-	rootCmd.AddCommand(iam.Builder())
-
-	rootCmd.AddCommand(completionCmd)
+	rootCmd.AddCommand(
+		cliconfig.Builder(),
+		atlas.Builder(),
+		cloudmanager.Builder(),
+		opsmanager.Builder(),
+		iam.Builder(),
+		completionCmd,
+	)
 
 	cobra.EnableCommandSorting = false
 

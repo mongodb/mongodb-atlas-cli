@@ -20,6 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -61,4 +63,19 @@ func TestCreate_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestAcknowledgeBuilder(t *testing.T) {
+	cli.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{
+			flag.Event,
+			flag.Enabled,
+			flag.MatcherFieldName,
+			flag.MatcherOperator,
+			flag.Output,
+		},
+	)
 }

@@ -29,29 +29,45 @@ const (
 
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
-	AuditLogPath        string       `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
-	AuditLogDestination string       `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
-	AuditLogFormat      string       `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
-	BuildIndexes        *bool        `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath              string       `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
-	BindIP              *string      `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
-	BindIPAll           *bool        `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
-	FCVersion           string       `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Hostname            string       `yaml:"hostname" json:"hostname"`
-	IPV6                *bool        `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
-	LogPath             string       `yaml:"logPath" json:"logPath"`
-	LogDestination      string       `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
-	Name                string       `yaml:"name,omitempty" json:"name,omitempty"`
-	Port                int          `yaml:"port" json:"port"`
-	Priority            *float64     `yaml:"priority,omitempty" json:"priority,omitempty"`
-	ProcessType         string       `yaml:"processType" json:"processType"`
-	SlaveDelay          *float64     `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
-	Version             string       `yaml:"version,omitempty" json:"version,omitempty"`
-	Votes               *float64     `yaml:"votes,omitempty" json:"votes,omitempty"`
-	ArbiterOnly         *bool        `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
-	Disabled            bool         `yaml:"disabled" json:"disabled"`
-	Hidden              *bool        `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	TLS                 *opsmngr.SSL `yaml:"tls,omitempty" json:"tls,omitempty"`
+	AuditLogPath        string   `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
+	AuditLogDestination string   `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
+	AuditLogFormat      string   `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	BuildIndexes        *bool    `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
+	DBPath              string   `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
+	BindIP              *string  `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
+	BindIPAll           *bool    `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	FCVersion           string   `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Hostname            string   `yaml:"hostname" json:"hostname"`
+	IPV6                *bool    `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
+	LogPath             string   `yaml:"logPath" json:"logPath"`
+	LogDestination      string   `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
+	Name                string   `yaml:"name,omitempty" json:"name,omitempty"`
+	Port                int      `yaml:"port" json:"port"`
+	Priority            *float64 `yaml:"priority,omitempty" json:"priority,omitempty"`
+	ProcessType         string   `yaml:"processType" json:"processType"`
+	SlaveDelay          *float64 `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
+	Version             string   `yaml:"version,omitempty" json:"version,omitempty"`
+	Votes               *float64 `yaml:"votes,omitempty" json:"votes,omitempty"`
+	ArbiterOnly         *bool    `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
+	Disabled            bool     `yaml:"disabled" json:"disabled"`
+	Hidden              *bool    `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	TLS                 *TLS     `yaml:"tls,omitempty" json:"tls,omitempty"`
+}
+
+// TLS defines TLS parameters for Net
+type TLS struct {
+	CAFile                     string `yaml:"CAFile,omitempty" json:"CAFile,omitempty"`
+	CertificateKeyFile         string `yaml:"certificateKeyFile,omitempty" json:"certificateKeyFile,omitempty"`
+	CertificateKeyFilePassword string `yaml:"certificateKeyFilePassword,omitempty" json:"certificateKeyFilePassword,omitempty"`
+	CertificateSelector        string `yaml:"certificateSelector,omitempty" json:"certificateSelector,omitempty"`
+	ClusterCertificateSelector string `yaml:"clusterCertificateSelector,omitempty" json:"clusterCertificateSelector,omitempty"`
+	ClusterFile                string `yaml:"clusterFile,omitempty" json:"clusterFile,omitempty"`
+	ClusterPassword            string `yaml:"clusterPassword,omitempty" json:"clusterPassword,omitempty"`
+	CRLFile                    string `yaml:"CRLFile,omitempty" json:"CRLFile,omitempty"`
+	DisabledProtocols          string `yaml:"disabledProtocols,omitempty" json:"disabledProtocols,omitempty"`
+	FIPSMode                   string `yaml:"FIPSMode,omitempty" json:"FIPSMode,omitempty"`
+	Mode                       string `yaml:"mode,omitempty" json:"mode,omitempty"`
+	PEMKeyFile                 string `yaml:"PEMKeyFile,omitempty" json:"PEMKeyFile,omitempty"`
 }
 
 // setDefaults set default values based on the parent config
@@ -111,6 +127,20 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		BindIP:         p.Args26.NET.BindIP,
 		BindIPAll:      p.Args26.NET.BindIPAll,
 		IPV6:           p.Args26.NET.IPV6,
+		TLS:			&TLS{
+			CAFile:                     p.Args26.NET.TLS.CAFile,
+			CertificateKeyFile:         p.Args26.NET.TLS.CertificateKeyFile,
+			CertificateKeyFilePassword: p.Args26.NET.TLS.CertificateKeyFilePassword,
+			CertificateSelector:        p.Args26.NET.TLS.CertificateSelector,
+			ClusterCertificateSelector: p.Args26.NET.TLS.ClusterCertificateSelector,
+			ClusterFile:                p.Args26.NET.TLS.ClusterFile,
+			ClusterPassword:            p.Args26.NET.TLS.ClusterPassword,
+			CRLFile:                    p.Args26.NET.TLS.CRLFile,
+			DisabledProtocols:          p.Args26.NET.TLS.DisabledProtocols,
+			FIPSMode:                   p.Args26.NET.TLS.FIPSMode,
+			Mode:                       p.Args26.NET.TLS.Mode,
+			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
+		},
 		ProcessType:    p.ProcessType,
 		Version:        p.Version,
 		FCVersion:      p.FeatureCompatibilityVersion,
@@ -125,7 +155,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 	return pc
 }
 
-// newReplicaSetProcessConfig maps opsmngr.Process -> convert.ProcessConfig
+// newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig
 func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	return &ProcessConfig{
 		LogPath:        p.Args26.SystemLog.Path,
@@ -204,6 +234,20 @@ func (p *ProcessConfig) net() opsmngr.Net {
 		Port:      p.Port,
 		BindIP:    p.BindIP,
 		BindIPAll: p.BindIPAll,
+		TLS: &opsmngr.TLS{
+			CAFile:                     p.TLS.CAFile,
+			CertificateKeyFile:         p.TLS.CertificateKeyFile,
+			CertificateKeyFilePassword: p.TLS.CertificateKeyFilePassword,
+			CertificateSelector:        p.TLS.CertificateSelector,
+			ClusterCertificateSelector: p.TLS.ClusterCertificateSelector,
+			ClusterFile:                p.TLS.ClusterFile,
+			ClusterPassword:            p.TLS.ClusterPassword,
+			CRLFile:                    p.TLS.CRLFile,
+			DisabledProtocols:          p.TLS.DisabledProtocols,
+			FIPSMode:                   p.TLS.FIPSMode,
+			Mode:                       p.TLS.Mode,
+			PEMKeyFile:                 p.TLS.PEMKeyFile,
+		},
 	}
 }
 

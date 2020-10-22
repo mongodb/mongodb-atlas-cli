@@ -30,6 +30,7 @@ func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 			newSC.Shards[j] = newRSConfig(c, id)
 		}
 
+
 		newSC.Config = newRSConfig(c, s.ConfigServerReplica)
 		for j, p := range c.Processes {
 			if p.Cluster == s.Name {

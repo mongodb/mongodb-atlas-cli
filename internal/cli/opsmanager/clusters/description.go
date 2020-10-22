@@ -24,4 +24,5 @@ const (
 	StartUpCluster  = "Start up a cluster for your project."
 	Indexes         = "Manage cluster rolling indexes for your project."
 	CreateIndex     = "Create a rolling index for your MongoDB cluster."
+	DeleteCluster   = "Delete a cluster for your project."
 )

@@ -27,10 +27,12 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAutomationPatcher(ctrl)
+	mockStore := mocks.NewMockCloudManagerClustersDeleter(ctrl)
+
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
+	watchExpected := fixture.AutomationStatus()
 
 	deleteOpts := &DeleteOpts{
 		store: mockStore,
@@ -44,11 +46,22 @@ func TestDelete_Run(t *testing.T) {
 		EXPECT().
 		GetAutomationConfig(deleteOpts.ProjectID).
 		Return(expected, nil).
-		Times(1)
+		Times(2)
 
 	mockStore.
 		EXPECT().
 		UpdateAutomationConfig(deleteOpts.ProjectID, expected).
+		Return(nil).
+		Times(2)
+
+	mockStore.EXPECT().
+		GetAutomationStatus(deleteOpts.ProjectID).
+		Return(watchExpected, nil).
+		Times(2)
+
+	mockStore.
+		EXPECT().
+		StopMonitoring(deleteOpts.ProjectID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/automation"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
@@ -30,7 +31,8 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.AutomationPatcher
+	automation.WatchOpts
+	store store.CloudManagerClustersDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -43,8 +45,49 @@ func (opts *DeleteOpts) Run() error {
 	if !opts.Confirm {
 		return nil
 	}
-	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 
+	// shutdown cluster
+	err := opts.shutdownCluster()
+	if err != nil {
+		return err
+	}
+
+	// Remove cluster from automation
+	err = opts.removeClusterFromAutomation()
+	if err != nil {
+		return err
+	}
+
+	// Stop monitoring
+	err = opts.Delete(opts.store.StopMonitoring, opts.ConfigProjectID())
+	if err != nil {
+		return err
+	}
+
+	fmt.Sprint("Cluster deleted")
+	return nil
+}
+
+func (opts *DeleteOpts) removeClusterFromAutomation() error {
+	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+	if err != nil {
+		return err
+	}
+
+	atmcfg.RemoveByClusterName(current, opts.Entry)
+	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
+		return err
+	}
+
+	// Wait for changes being deployed on automation
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (opts *DeleteOpts) shutdownCluster() error {
+	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -53,29 +96,44 @@ func (opts *DeleteOpts) Run() error {
 		return fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
 	}
 
-	atmcfg.RemoveByClusterName(current, opts.Entry)
-
+	// Shutdown Cluster
+	atmcfg.Shutdown(current, opts.Entry)
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
 	}
 
-	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
+	// Wait for changes being deployed on automation
+	if err := opts.Watch(opts.watcher); err != nil {
+		return err
+	}
 
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
+func (opts *DeleteOpts) watcher() (bool, error) {
+	result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
+	if err != nil {
+		return false, err
+	}
+
+	for _, p := range result.Processes {
+		if p.LastGoalVersionAchieved != result.GoalVersion {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
+// mongocli cloud-manager cluster(s) unmanage <name> --projectId projectId [--force]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
-		Aliases: []string{"rm"},
-		Short:   "This is an internal and undocumented command.",
-		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
+		Use:     "unmanage <name>",
+		Aliases: []string{"rm", "delete"},
+		Short:   DeleteCluster,
 		Args:    cobra.ExactArgs(1),
-		Hidden:  true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

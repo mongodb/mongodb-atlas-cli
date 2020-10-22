@@ -186,3 +186,58 @@ func watch(cliPath string) func(t *testing.T) {
 		}
 	}
 }
+
+func TestDeployAndDeleteReplicaSet(t *testing.T) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	const testFile = "om-new-cluster.json"
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
+
+	hostname, err := automationServerHostname(cliPath)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if err := generateConfig(testFile, hostname, clusterName, "4.2.0", "4.2"); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	t.Run("Apply", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"apply",
+			"-f",
+			testFile,
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Watch", watch(cliPath))
+
+	t.Run("Delete Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"-f",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+}

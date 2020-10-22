@@ -51,6 +51,23 @@ type ProcessConfig struct {
 	ArbiterOnly         *bool    `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
 	Disabled            bool     `yaml:"disabled" json:"disabled"`
 	Hidden              *bool    `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	TLS                 *TLS     `yaml:"tls,omitempty" json:"tls,omitempty"`
+}
+
+// TLS defines TLS parameters for Net
+type TLS struct {
+	CAFile                     string `yaml:"CAFile,omitempty" json:"CAFile,omitempty"`
+	CertificateKeyFile         string `yaml:"certificateKeyFile,omitempty" json:"certificateKeyFile,omitempty"`
+	CertificateKeyFilePassword string `yaml:"certificateKeyFilePassword,omitempty" json:"certificateKeyFilePassword,omitempty"`
+	CertificateSelector        string `yaml:"certificateSelector,omitempty" json:"certificateSelector,omitempty"`
+	ClusterCertificateSelector string `yaml:"clusterCertificateSelector,omitempty" json:"clusterCertificateSelector,omitempty"`
+	ClusterFile                string `yaml:"clusterFile,omitempty" json:"clusterFile,omitempty"`
+	ClusterPassword            string `yaml:"clusterPassword,omitempty" json:"clusterPassword,omitempty"`
+	CRLFile                    string `yaml:"CRLFile,omitempty" json:"CRLFile,omitempty"`
+	DisabledProtocols          string `yaml:"disabledProtocols,omitempty" json:"disabledProtocols,omitempty"`
+	FIPSMode                   string `yaml:"FIPSMode,omitempty" json:"FIPSMode,omitempty"`
+	Mode                       string `yaml:"mode,omitempty" json:"mode,omitempty"`
+	PEMKeyFile                 string `yaml:"PEMKeyFile,omitempty" json:"PEMKeyFile,omitempty"`
 }
 
 // setDefaults set default values based on the parent config
@@ -121,10 +138,27 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
 		pc.AuditLogPath = p.Args26.AuditLog.Path
 	}
+
+	if p.Args26.NET.TLS != nil {
+		pc.TLS = &TLS{
+			CAFile:                     p.Args26.NET.TLS.CAFile,
+			CertificateKeyFile:         p.Args26.NET.TLS.CertificateKeyFile,
+			CertificateKeyFilePassword: p.Args26.NET.TLS.CertificateKeyFilePassword,
+			CertificateSelector:        p.Args26.NET.TLS.CertificateSelector,
+			ClusterCertificateSelector: p.Args26.NET.TLS.ClusterCertificateSelector,
+			ClusterFile:                p.Args26.NET.TLS.ClusterFile,
+			ClusterPassword:            p.Args26.NET.TLS.ClusterPassword,
+			CRLFile:                    p.Args26.NET.TLS.CRLFile,
+			DisabledProtocols:          p.Args26.NET.TLS.DisabledProtocols,
+			FIPSMode:                   p.Args26.NET.TLS.FIPSMode,
+			Mode:                       p.Args26.NET.TLS.Mode,
+			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
+		}
+	}
 	return pc
 }
 
-// newReplicaSetProcessConfig maps opsmngr.Process -> convert.ProcessConfig
+// newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig
 func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	return &ProcessConfig{
 		LogPath:        p.Args26.SystemLog.Path,
@@ -199,11 +233,29 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 
 // systemLog maps convert.ProcessConfig -> opsmngr.Net
 func (p *ProcessConfig) net() opsmngr.Net {
-	return opsmngr.Net{
+	net := opsmngr.Net{
 		Port:      p.Port,
 		BindIP:    p.BindIP,
 		BindIPAll: p.BindIPAll,
 	}
+
+	if p.TLS != nil {
+		net.TLS = &opsmngr.TLS{
+			CAFile:                     p.TLS.CAFile,
+			CertificateKeyFile:         p.TLS.CertificateKeyFile,
+			CertificateKeyFilePassword: p.TLS.CertificateKeyFilePassword,
+			CertificateSelector:        p.TLS.CertificateSelector,
+			ClusterCertificateSelector: p.TLS.ClusterCertificateSelector,
+			ClusterFile:                p.TLS.ClusterFile,
+			ClusterPassword:            p.TLS.ClusterPassword,
+			CRLFile:                    p.TLS.CRLFile,
+			DisabledProtocols:          p.TLS.DisabledProtocols,
+			FIPSMode:                   p.TLS.FIPSMode,
+			Mode:                       p.TLS.Mode,
+			PEMKeyFile:                 p.TLS.PEMKeyFile,
+		}
+	}
+	return net
 }
 
 // systemLog maps convert.ProcessConfig -> opsmngr.SystemLog

@@ -127,7 +127,20 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		BindIP:         p.Args26.NET.BindIP,
 		BindIPAll:      p.Args26.NET.BindIPAll,
 		IPV6:           p.Args26.NET.IPV6,
-		TLS: &TLS{
+		ProcessType:    p.ProcessType,
+		Version:        p.Version,
+		FCVersion:      p.FeatureCompatibilityVersion,
+		Hostname:       p.Hostname,
+		Name:           p.Name,
+	}
+	if p.Args26.AuditLog != nil {
+		pc.AuditLogDestination = p.Args26.AuditLog.Destination
+		pc.AuditLogFormat = p.Args26.AuditLog.Format
+		pc.AuditLogPath = p.Args26.AuditLog.Path
+	}
+
+	if p.Args26.NET.TLS != nil {
+		pc.TLS = &TLS{
 			CAFile:                     p.Args26.NET.TLS.CAFile,
 			CertificateKeyFile:         p.Args26.NET.TLS.CertificateKeyFile,
 			CertificateKeyFilePassword: p.Args26.NET.TLS.CertificateKeyFilePassword,
@@ -140,17 +153,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 			FIPSMode:                   p.Args26.NET.TLS.FIPSMode,
 			Mode:                       p.Args26.NET.TLS.Mode,
 			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
-		},
-		ProcessType: p.ProcessType,
-		Version:     p.Version,
-		FCVersion:   p.FeatureCompatibilityVersion,
-		Hostname:    p.Hostname,
-		Name:        p.Name,
-	}
-	if p.Args26.AuditLog != nil {
-		pc.AuditLogDestination = p.Args26.AuditLog.Destination
-		pc.AuditLogFormat = p.Args26.AuditLog.Format
-		pc.AuditLogPath = p.Args26.AuditLog.Path
+		}
 	}
 	return pc
 }
@@ -230,11 +233,14 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 
 // systemLog maps convert.ProcessConfig -> opsmngr.Net
 func (p *ProcessConfig) net() opsmngr.Net {
-	return opsmngr.Net{
+	net := opsmngr.Net{
 		Port:      p.Port,
 		BindIP:    p.BindIP,
 		BindIPAll: p.BindIPAll,
-		TLS: &opsmngr.TLS{
+	}
+
+	if p.TLS != nil {
+		net.TLS = &opsmngr.TLS{
 			CAFile:                     p.TLS.CAFile,
 			CertificateKeyFile:         p.TLS.CertificateKeyFile,
 			CertificateKeyFilePassword: p.TLS.CertificateKeyFilePassword,
@@ -247,8 +253,9 @@ func (p *ProcessConfig) net() opsmngr.Net {
 			FIPSMode:                   p.TLS.FIPSMode,
 			Mode:                       p.TLS.Mode,
 			PEMKeyFile:                 p.TLS.PEMKeyFile,
-		},
+		}
 	}
+	return net
 }
 
 // systemLog maps convert.ProcessConfig -> opsmngr.SystemLog

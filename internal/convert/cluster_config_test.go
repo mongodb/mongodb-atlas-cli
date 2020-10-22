@@ -132,7 +132,23 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					// Old
 					{
 						Args26: opsmngr.Args26{
-							NET: opsmngr.Net{Port: 27017},
+							NET: opsmngr.Net{
+								Port: 27017,
+								TLS: &opsmngr.TLS{
+									CAFile:                     "CAFile",
+									CertificateKeyFile:         "CertificateKeyFile",
+									CertificateKeyFilePassword: "CertificateKeyFilePassword",
+									CertificateSelector:        "CertificateSelector",
+									ClusterCertificateSelector: "ClusterCertificateSelector",
+									ClusterFile:                "ClusterFile",
+									ClusterPassword:            "ClusterPassword",
+									CRLFile:                    "CRLFile",
+									DisabledProtocols:          "DisabledProtocols",
+									FIPSMode:                   "FIPSMode",
+									Mode:                       "Mode",
+									PEMKeyFile:                 "PEMKeyFile",
+								},
+							},
 							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
@@ -160,7 +176,9 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					// New
 					{
 						Args26: opsmngr.Args26{
-							NET: opsmngr.Net{Port: 1},
+							NET: opsmngr.Net{
+								Port: 1,
+							},
 							Replication: &opsmngr.Replication{
 								ReplSetName: "test_config",
 							},
@@ -256,7 +274,9 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					// Old
 					{
 						Args26: opsmngr.Args26{
-							NET: opsmngr.Net{Port: 27017},
+							NET: opsmngr.Net{
+								Port: 27017,
+							},
 							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
 							},
@@ -367,7 +387,23 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					// Old
 					{
 						Args26: opsmngr.Args26{
-							NET:         opsmngr.Net{Port: 27017},
+							NET: opsmngr.Net{
+								Port: 27017,
+								TLS: &opsmngr.TLS{
+									CAFile:                     "CAFile",
+									CertificateKeyFile:         "CertificateKeyFile",
+									CertificateKeyFilePassword: "CertificateKeyFilePassword",
+									CertificateSelector:        "CertificateSelector",
+									ClusterCertificateSelector: "ClusterCertificateSelector",
+									ClusterFile:                "ClusterFile",
+									ClusterPassword:            "ClusterPassword",
+									CRLFile:                    "CRLFile",
+									DisabledProtocols:          "DisabledProtocols",
+									FIPSMode:                   "FIPSMode",
+									Mode:                       "Mode",
+									PEMKeyFile:                 "PEMKeyFile",
+								},
+							},
 							Replication: &opsmngr.Replication{},
 							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",

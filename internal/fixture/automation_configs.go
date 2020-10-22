@@ -167,6 +167,20 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 				Args26: opsmngr.Args26{
 					NET: opsmngr.Net{
 						Port: 27017,
+						TLS: &opsmngr.TLS{
+							CAFile:                     "CAFile",
+							CertificateKeyFile:         "CertificateKeyFile",
+							CertificateKeyFilePassword: "CertificateKeyFilePassword",
+							CertificateSelector:        "CertificateSelector",
+							ClusterCertificateSelector: "ClusterCertificateSelector",
+							ClusterFile:                "ClusterFile",
+							ClusterPassword:            "ClusterPassword",
+							CRLFile:                    "CRLFile",
+							DisabledProtocols:          "DisabledProtocols",
+							FIPSMode:                   "FIPSMode",
+							Mode:                       "Mode",
+							PEMKeyFile:                 "PEMKeyFile",
+						},
 					},
 					Replication: &opsmngr.Replication{
 						ReplSetName: name,

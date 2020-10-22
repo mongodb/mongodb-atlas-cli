@@ -49,7 +49,7 @@ func TestDelete_Run(t *testing.T) {
 		EXPECT().
 		GetAutomationConfig(deleteOpts.ProjectID).
 		Return(expected, nil).
-		Times(2)
+		Times(3)
 
 	mockStore.
 		EXPECT().

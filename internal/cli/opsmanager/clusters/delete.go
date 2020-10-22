@@ -85,7 +85,6 @@ func (opts *DeleteOpts) newHostIds() error {
 	hostname := make(map[string][]int32)
 
 	for _, rs := range r {
-		fmt.Println("rs.Name: " + rs.Name + " Entry: " + opts.Entry)
 		if rs.Name == opts.Entry {
 			for _, s := range rs.ProcessConfigs {
 				hostname[s.Hostname] = append(hostname[s.Hostname], int32(s.Port))

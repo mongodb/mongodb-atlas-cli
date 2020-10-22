@@ -127,7 +127,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		BindIP:         p.Args26.NET.BindIP,
 		BindIPAll:      p.Args26.NET.BindIPAll,
 		IPV6:           p.Args26.NET.IPV6,
-		TLS:			&TLS{
+		TLS: &TLS{
 			CAFile:                     p.Args26.NET.TLS.CAFile,
 			CertificateKeyFile:         p.Args26.NET.TLS.CertificateKeyFile,
 			CertificateKeyFilePassword: p.Args26.NET.TLS.CertificateKeyFilePassword,
@@ -141,11 +141,11 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 			Mode:                       p.Args26.NET.TLS.Mode,
 			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
 		},
-		ProcessType:    p.ProcessType,
-		Version:        p.Version,
-		FCVersion:      p.FeatureCompatibilityVersion,
-		Hostname:       p.Hostname,
-		Name:           p.Name,
+		ProcessType: p.ProcessType,
+		Version:     p.Version,
+		FCVersion:   p.FeatureCompatibilityVersion,
+		Hostname:    p.Hostname,
+		Name:        p.Name,
 	}
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination

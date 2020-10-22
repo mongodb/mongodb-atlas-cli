@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
@@ -33,7 +34,8 @@ const defaultWait = 4 * time.Second
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.CloudManagerClustersDeleter
+	store   store.CloudManagerClustersDeleter
+	hostIds []string
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -47,8 +49,13 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
+	err := opts.newHostIds()
+	if err != nil {
+		return err
+	}
+
 	// shutdown cluster
-	err := opts.shutdownCluster()
+	err = opts.shutdownCluster()
 	if err != nil {
 		return err
 	}
@@ -60,12 +67,62 @@ func (opts *DeleteOpts) Run() error {
 	}
 
 	// Stop monitoring
-	err = opts.Delete(opts.store.StopMonitoring, opts.ConfigProjectID())
+	err = opts.stopMonitoring()
 	if err != nil {
 		return err
 	}
 
-	fmt.Print("Cluster deleted")
+	fmt.Print("Cluster deleted\n")
+	return nil
+}
+
+func (opts *DeleteOpts) newHostIds() error {
+	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
+	if err != nil {
+		return err
+	}
+	r := convert.FromAutomationConfig(current)
+	hostname := make(map[string][]int32)
+
+	for _, rs := range r {
+		fmt.Println("rs.Name: " + rs.Name + " Entry: " + opts.Entry)
+		if rs.Name == opts.Entry {
+			for _, s := range rs.ProcessConfigs {
+				hostname[s.Hostname] = append(hostname[s.Hostname], int32(s.Port))
+			}
+		}
+	}
+
+	hosts, err := opts.store.Hosts(opts.ConfigProjectID(), nil)
+	if err != nil {
+		return err
+	}
+
+	for _, host := range hosts.Results {
+		if ports, ok := hostname[host.Hostname]; ok {
+			for _, port := range ports {
+				if port == host.Port {
+					opts.hostIds = append(opts.hostIds, host.ID)
+				}
+			}
+		}
+	}
+
+	if len(opts.hostIds) == 0 {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
+	}
+
+	return nil
+}
+
+func (opts *DeleteOpts) stopMonitoring() error {
+	for _, id := range opts.hostIds {
+		err := opts.store.StopMonitoring(opts.ConfigProjectID(), id)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -92,7 +149,6 @@ func (opts *DeleteOpts) shutdownCluster() error {
 	if err != nil {
 		return err
 	}
-
 	if !search.ClusterExists(current, opts.Entry) {
 		return fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
 	}

@@ -350,6 +350,21 @@ func (mr *MockCloudManagerClustersDeleterMockRecorder) GetAutomationStatus(arg0 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationStatus", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).GetAutomationStatus), arg0)
 }
 
+// Hosts mocks base method
+func (m *MockCloudManagerClustersDeleter) Hosts(arg0 string, arg1 *opsmngr.HostListOptions) (*opsmngr.Hosts, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Hosts", arg0, arg1)
+	ret0, _ := ret[0].(*opsmngr.Hosts)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Hosts indicates an expected call of Hosts
+func (mr *MockCloudManagerClustersDeleterMockRecorder) Hosts(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Hosts", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).Hosts), arg0, arg1)
+}
+
 // StopMonitoring mocks base method
 func (m *MockCloudManagerClustersDeleter) StopMonitoring(arg0, arg1 string) error {
 	m.ctrl.T.Helper()

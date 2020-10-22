@@ -61,6 +61,7 @@ type CloudManagerClustersDeleter interface {
 	AutomationUpdater
 	AutomationStatusGetter
 	MonitoringStopper
+	HostLister
 }
 
 func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {

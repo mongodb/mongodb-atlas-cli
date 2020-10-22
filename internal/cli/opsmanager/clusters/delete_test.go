@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -33,6 +34,7 @@ func TestDelete_Run(t *testing.T) {
 
 	expected := fixture.AutomationConfig()
 	watchExpected := fixture.AutomationStatus()
+	hostExpected := &opsmngr.Hosts{}
 
 	deleteOpts := &DeleteOpts{
 		store: mockStore,
@@ -40,6 +42,7 @@ func TestDelete_Run(t *testing.T) {
 			Confirm: true,
 			Entry:   "myReplicaSet",
 		},
+		hostIds: []string{"1"},
 	}
 
 	mockStore.
@@ -61,8 +64,13 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StopMonitoring(deleteOpts.ProjectID, deleteOpts.Entry).
+		StopMonitoring(deleteOpts.ProjectID, "1").
 		Return(nil).
+		Times(1)
+	mockStore.
+		EXPECT().
+		Hosts(deleteOpts.ProjectID, nil).
+		Return(hostExpected, nil).
 		Times(1)
 
 	err := deleteOpts.Run()

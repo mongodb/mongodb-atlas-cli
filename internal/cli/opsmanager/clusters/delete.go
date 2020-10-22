@@ -16,9 +16,9 @@ package clusters
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/automation"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
@@ -28,10 +28,11 @@ import (
 	"go.mongodb.org/ops-manager/atmcfg"
 )
 
+const defaultWait = 4 * time.Second
+
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	automation.WatchOpts
 	store store.CloudManagerClustersDeleter
 }
 
@@ -64,7 +65,7 @@ func (opts *DeleteOpts) Run() error {
 		return err
 	}
 
-	fmt.Sprint("Cluster deleted")
+	fmt.Print("Cluster deleted")
 	return nil
 }
 
@@ -80,7 +81,7 @@ func (opts *DeleteOpts) removeClusterFromAutomation() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.Watch(opts.watcher); err != nil {
+	if err := opts.watch(); err != nil {
 		return err
 	}
 	return nil
@@ -103,11 +104,25 @@ func (opts *DeleteOpts) shutdownCluster() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.Watch(opts.watcher); err != nil {
+	if err := opts.watch(); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (opts *DeleteOpts) watch() error {
+	for {
+		result, err := opts.watcher()
+		if err != nil {
+			return err
+		}
+		if !result {
+			time.Sleep(defaultWait)
+		} else {
+			return nil
+		}
+	}
 }
 
 func (opts *DeleteOpts) watcher() (bool, error) {

@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/flag"
 )
 
 type WizardOpts struct {
@@ -33,8 +32,6 @@ type Flag struct {
 }
 
 func (opts WizardOpts) RunWizard(required, optional []*Flag) (map[string]string, error) {
-	// res2B, _ := json.Marshal(flags)
-	// fmt.Println("TEST" + string(res2B))
 	answers, err := opts.askRequiredFlags(required)
 	if err != nil {
 		return nil, err
@@ -108,27 +105,30 @@ func (opts WizardOpts) newOptionalFlagQuestion(optionalFlags []string) []*survey
 			},
 		},
 	}
-
 }
 
 func (opts WizardOpts) newQuestion(flag *Flag) []*survey.Question {
 	question := &survey.Question{Name: "Flag", Validate: survey.Required}
 
-	if flag.Password {
-		question.Prompt = &survey.Password{
-			Message: "Insert " + flag.Name,
-			Help:    flag.Usage,
-		}
-	} else if flag.Options != nil {
-		question.Prompt = &survey.Select{
-			Message: "Select one option for " + flag.Name + ":",
-			Help:    flag.Usage,
-			Options: flag.Options,
-		}
-	} else {
+	if flag.Options == nil && !flag.Password {
 		question.Prompt = &survey.Input{
 			Message: "Insert " + flag.Name,
 			Help:    flag.Usage,
+		}
+	} else {
+		if flag.Password {
+			question.Prompt = &survey.Password{
+				Message: "Insert " + flag.Name,
+				Help:    flag.Usage,
+			}
+		}
+
+		if flag.Options != nil {
+			question.Prompt = &survey.Select{
+				Message: "Select one option for " + flag.Name + ":",
+				Help:    flag.Usage,
+				Options: flag.Options,
+			}
 		}
 	}
 
@@ -151,13 +151,7 @@ func (opts WizardOpts) newAnswer(question []*survey.Question) (string, error) {
 func (opts WizardOpts) GetAnswer(answers map[string]string, key string) (string, error) {
 	if answer, ok := answers[key]; ok {
 		return answer, nil
-	} else {
-		return "", fmt.Errorf("the flag %s is required", flag.Username)
 	}
-}
 
-//func (opts WizardOpts) Test(flags *flag.FlagSet) {
-//
-//	res2B, _ := json.Marshal(flags.FlagUsages())
-//	fmt.Println("TEST" + string(res2B))
-//}
+	return "", fmt.Errorf("the flag %s is required", key)
+}

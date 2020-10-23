@@ -151,19 +151,21 @@ func (opts *CreateOpts) validate() error {
 
 func (opts *CreateOpts) newWizardRequiredFlags() []*cli.Flag {
 	var flags []*cli.Flag
-	flags = append(flags, &cli.Flag{Name: flag.Username, Usage: usage.DBUsername})
-	flags = append(flags, &cli.Flag{Name: flag.Password, Usage: usage.Password, Password: true})
-	flags = append(flags, &cli.Flag{Name: flag.Role, Usage: usage.Roles, Options: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase",
-		"clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding", "dbAdmin", "read", "readWrite"}})
+	flags = append(flags,
+		&cli.Flag{Name: flag.Username, Usage: usage.DBUsername},
+		&cli.Flag{Name: flag.Password, Usage: usage.Password, Password: true},
+		&cli.Flag{Name: flag.Role, Usage: usage.Roles, Options: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase",
+			"clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding", "dbAdmin", "read", "readWrite"}})
 	return flags
 }
 
 func (opts *CreateOpts) newWizardOptionalFlags() []*cli.Flag {
 	var flags []*cli.Flag
-	flags = append(flags, &cli.Flag{Name: flag.X509Type, Usage: usage.X509Type, Options: []string{"NONE", "MANAGED", "CUSTOMER"}})
-	flags = append(flags, &cli.Flag{Name: flag.DeleteAfter, Usage: usage.BDUsersDeleteAfter})
-	flags = append(flags, &cli.Flag{Name: flag.AWSIAMType, Usage: usage.AWSIAMType, Options: []string{"NONE", "USER", "ROLE"}})
-	flags = append(flags, &cli.Flag{Name: flag.LDAPType, Usage: usage.LDAPType, Options: []string{"NONE", "USER", "GROUP"}})
+	flags = append(flags,
+		&cli.Flag{Name: flag.X509Type, Usage: usage.X509Type, Options: []string{"NONE", "MANAGED", "CUSTOMER"}},
+		&cli.Flag{Name: flag.DeleteAfter, Usage: usage.BDUsersDeleteAfter},
+		&cli.Flag{Name: flag.AWSIAMType, Usage: usage.AWSIAMType, Options: []string{"NONE", "USER", "ROLE"}},
+		&cli.Flag{Name: flag.LDAPType, Usage: usage.LDAPType, Options: []string{"NONE", "USER", "GROUP"}})
 	return flags
 }
 
@@ -224,7 +226,6 @@ func CreateBuilder() *cobra.Command {
 				if err != nil {
 					return err
 				}
-
 			}
 
 			opts.roles = append(opts.roles, args...)

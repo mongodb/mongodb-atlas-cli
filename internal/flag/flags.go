@@ -235,5 +235,6 @@ const (
 	MonthlySnapshotRetentionMonths  = "monthlySnapshotRetentionMonths"  // MonthlySnapshotRetentionMonths flag
 	Policy                          = "policy"                          // Policy flag
 	SystemID                        = "systemId"                        // SystemID flag
+	Wizard                          = "wizard"                          // Wizard flag
 
 )

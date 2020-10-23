@@ -24,6 +24,7 @@ import (
 )
 
 type ListOpts struct {
+	cli.WizardOpts
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts

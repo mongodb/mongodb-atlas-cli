@@ -240,6 +240,7 @@ const (
 	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
 	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."
 	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
+	Wizard                          = "Wizard Mode."
 	APIRegion                       = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
 	FormatOut                       = `Output format.
 Valid values: json|go-template|go-template-file`

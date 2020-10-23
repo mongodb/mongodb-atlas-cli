@@ -32,6 +32,7 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.WizardOpts
 	username    string
 	password    string
 	x509Type    string
@@ -148,6 +149,46 @@ func (opts *CreateOpts) validate() error {
 	return nil
 }
 
+func (opts *CreateOpts) newWizardRequiredFlags() []*cli.Flag {
+	var flags []*cli.Flag
+	flags = append(flags, &cli.Flag{Name: flag.Username, Usage: usage.DBUsername})
+	flags = append(flags, &cli.Flag{Name: flag.Password, Usage: usage.Password, Password: true})
+	flags = append(flags, &cli.Flag{Name: flag.Role, Usage: usage.Roles, Options: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase",
+		"clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding", "dbAdmin", "read", "readWrite"}})
+	return flags
+}
+
+func (opts *CreateOpts) newWizardOptionalFlags() []*cli.Flag {
+	var flags []*cli.Flag
+	flags = append(flags, &cli.Flag{Name: flag.X509Type, Usage: usage.X509Type, Options: []string{"NONE", "MANAGED", "CUSTOMER"}})
+	flags = append(flags, &cli.Flag{Name: flag.DeleteAfter, Usage: usage.BDUsersDeleteAfter})
+	flags = append(flags, &cli.Flag{Name: flag.AWSIAMType, Usage: usage.AWSIAMType, Options: []string{"NONE", "USER", "ROLE"}})
+	flags = append(flags, &cli.Flag{Name: flag.LDAPType, Usage: usage.LDAPType, Options: []string{"NONE", "USER", "GROUP"}})
+	return flags
+}
+
+func (opts *CreateOpts) initWizardRequiredFlags(answers map[string]string) error {
+	username, err := opts.GetAnswer(answers, flag.Username)
+	if err != nil {
+		return err
+	}
+	opts.username = username
+
+	password, err := opts.GetAnswer(answers, flag.Password)
+	if err != nil {
+		return err
+	}
+	opts.password = password
+
+	role, err := opts.GetAnswer(answers, flag.Role)
+	if err != nil {
+		return err
+	}
+	opts.roles = []string{role}
+
+	return nil
+}
+
 // mongocli atlas dbuser(s) create
 //		--username username --password password
 //		--role roleName@dbName
@@ -172,6 +213,20 @@ func CreateBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if !opts.Wizard {
+				_ = cmd.MarkFlagRequired(flag.Username)
+			} else {
+				answers, err := opts.RunWizard(opts.newWizardRequiredFlags(), opts.newWizardOptionalFlags())
+				if err != nil {
+					return err
+				}
+				err = opts.initWizardRequiredFlags(answers)
+				if err != nil {
+					return err
+				}
+
+			}
+
 			opts.roles = append(opts.roles, args...)
 
 			return opts.PreRunE(
@@ -197,10 +252,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
 
+	cmd.Flags().BoolVar(&opts.Wizard, flag.Wizard, false, usage.Wizard)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

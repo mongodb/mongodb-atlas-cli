@@ -169,7 +169,7 @@ func (opts *CreateOpts) newWizardOptionalFlags() []*cli.Flag {
 	return flags
 }
 
-func (opts *CreateOpts) initWizardRequiredFlags(answers map[string]string) error {
+func (opts *CreateOpts) initWizardFlags(answers map[string]string) error {
 	username, err := opts.GetAnswer(answers, flag.Username)
 	if err != nil {
 		return err
@@ -187,6 +187,30 @@ func (opts *CreateOpts) initWizardRequiredFlags(answers map[string]string) error
 		return err
 	}
 	opts.roles = []string{role}
+
+	x509, err := opts.GetAnswer(answers, flag.X509Type)
+	if err != nil {
+		return err
+	}
+	opts.x509Type = x509
+
+	deleteAfter, err := opts.GetAnswer(answers, flag.DeleteAfter)
+	if err != nil {
+		return err
+	}
+	opts.deleteAfter = deleteAfter
+
+	awsIamType, err := opts.GetAnswer(answers, flag.AWSIAMType)
+	if err != nil {
+		return err
+	}
+	opts.awsIamType = awsIamType
+
+	ldapType, err := opts.GetAnswer(answers, flag.LDAPType)
+	if err != nil {
+		return err
+	}
+	opts.ldapType = ldapType
 
 	return nil
 }
@@ -222,7 +246,7 @@ func CreateBuilder() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				err = opts.initWizardRequiredFlags(answers)
+				err = opts.initWizardFlags(answers)
 				if err != nil {
 					return err
 				}

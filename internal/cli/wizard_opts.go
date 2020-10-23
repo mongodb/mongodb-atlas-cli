@@ -31,6 +31,7 @@ type Flag struct {
 	Options  []string
 }
 
+// RunWizard allows to set flags with interactive prompts
 func (opts WizardOpts) RunWizard(required, optional []*Flag) (map[string]string, error) {
 	answers, err := opts.askRequiredFlags(required)
 	if err != nil {
@@ -50,6 +51,7 @@ func (opts WizardOpts) RunWizard(required, optional []*Flag) (map[string]string,
 	return answers, nil
 }
 
+// askRequiredFlags allows the user to set required flags by using interactive prompts and stores the answers
 func (opts WizardOpts) askRequiredFlags(flags []*Flag) (map[string]string, error) {
 	m := make(map[string]string, len(flags))
 	for _, flag := range flags {
@@ -62,6 +64,16 @@ func (opts WizardOpts) askRequiredFlags(flags []*Flag) (map[string]string, error
 
 	return m, nil
 }
+
+// askOptionalFlags allows the user to set optional flags by using interactive prompts and stores the answers
+//
+// Workflow:
+//
+// Step 1: The user selects one optional flag from a list of flags or select "done" to exit the loop
+//
+// Step 2: The user inserts the value for the selected flag
+//
+// Repeat Step 1 and Step 2 until the user selects "done"
 
 func (opts WizardOpts) askOptionalFlags(flags []*Flag) (map[string]string, error) {
 	m := make(map[string]*Flag, len(flags))
@@ -94,6 +106,7 @@ func (opts WizardOpts) askOptionalFlags(flags []*Flag) (map[string]string, error
 	return answers, nil
 }
 
+// newOptionalFlagQuestion generates the interactive prompt for selecting an optional flag from a list of flags
 func (opts WizardOpts) newOptionalFlagQuestion(optionalFlags []string) []*survey.Question {
 	return []*survey.Question{
 		{
@@ -107,28 +120,25 @@ func (opts WizardOpts) newOptionalFlagQuestion(optionalFlags []string) []*survey
 	}
 }
 
+// newQuestion generates the interactive prompt for a flag
 func (opts WizardOpts) newQuestion(flag *Flag) []*survey.Question {
 	question := &survey.Question{Name: "Flag", Validate: survey.Required}
-
-	if flag.Options == nil && !flag.Password {
-		question.Prompt = &survey.Input{
+	switch {
+	case flag.Password:
+		question.Prompt = &survey.Password{
 			Message: "Insert " + flag.Name,
 			Help:    flag.Usage,
 		}
-	} else {
-		if flag.Password {
-			question.Prompt = &survey.Password{
-				Message: "Insert " + flag.Name,
-				Help:    flag.Usage,
-			}
+	case flag.Options != nil:
+		question.Prompt = &survey.Select{
+			Message: "Select one option for " + flag.Name + ":",
+			Help:    flag.Usage,
+			Options: flag.Options,
 		}
-
-		if flag.Options != nil {
-			question.Prompt = &survey.Select{
-				Message: "Select one option for " + flag.Name + ":",
-				Help:    flag.Usage,
-				Options: flag.Options,
-			}
+	default:
+		question.Prompt = &survey.Input{
+			Message: "Insert " + flag.Name,
+			Help:    flag.Usage,
 		}
 	}
 
@@ -140,8 +150,7 @@ func (opts WizardOpts) newAnswer(question []*survey.Question) (string, error) {
 		Flag string
 	}{}
 
-	err := survey.Ask(question, &answer)
-	if err != nil {
+	if err := survey.Ask(question, &answer); err != nil {
 		return "", err
 	}
 

@@ -15,9 +15,11 @@
 package cli
 
 import (
-	"fmt"
-
 	"github.com/AlecAivazis/survey/v2"
+)
+
+const (
+	WizardItemsPerPage = 25
 )
 
 type WizardOpts struct {
@@ -157,10 +159,10 @@ func (opts WizardOpts) newAnswer(question []*survey.Question) (string, error) {
 	return answer.Flag, nil
 }
 
-func (opts WizardOpts) GetAnswer(answers map[string]string, key string) (string, error) {
+func (opts WizardOpts) GetAnswer(answers map[string]string, key string) string {
 	if answer, ok := answers[key]; ok {
-		return answer, nil
+		return answer
 	}
 
-	return "", fmt.Errorf("the flag %s is required", key)
+	return ""
 }

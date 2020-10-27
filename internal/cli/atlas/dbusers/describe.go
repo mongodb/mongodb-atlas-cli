@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const describeTemplate = `USERNAME	DATABASE
@@ -31,6 +32,7 @@ const describeTemplate = `USERNAME	DATABASE
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.WizardOpts
 	store    store.DatabaseUserDescriber
 	authDB   string
 	username string
@@ -51,15 +53,77 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *DescribeOpts) newWizardRequiredFlags() ([]*cli.Flag, error) {
+	var flags []*cli.Flag
+	userNames, err := opts.userNames()
+	if err != nil {
+		return nil, err
+	}
+	flags = append(flags,
+		&cli.Flag{Name: flag.Username, Usage: usage.DBUsername, Options: userNames})
+	return flags, nil
+}
+
+func (opts *DescribeOpts) newWizardOptionalFlags() []*cli.Flag {
+	var flags []*cli.Flag
+	flags = append(flags,
+		&cli.Flag{Name: flag.AuthDB, Usage: usage.AuthDB})
+	return flags
+}
+
+func (opts *DescribeOpts) userNames() ([]string, error) {
+	listOpt := &atlas.ListOptions{
+		ItemsPerPage: cli.WizardItemsPerPage,
+	}
+	dbUsers, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpt)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var userNames []string
+
+	for idx := range dbUsers {
+		userNames = append(userNames, dbUsers[idx].Username)
+	}
+	return userNames, nil
+}
+
+func (opts *DescribeOpts) initWizardFlags(answers map[string]string) {
+	opts.username = opts.GetAnswer(answers, flag.Username)
+
+	authDB := opts.GetAnswer(answers, flag.AuthDB)
+	if authDB != "" {
+		opts.authDB = authDB
+	}
+}
+
 // mongocli atlas dbuser(s) describe <username> --projectId projectId --authDB authDB
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: describeDBUser,
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
+			err := opts.initStore()
+			if err != nil {
+				return err
+			}
+
+			if len(args) == 0 || opts.Wizard {
+				requiredFlags, err := opts.newWizardRequiredFlags()
+				if err != nil {
+					return err
+				}
+				answers, err := opts.RunWizard(requiredFlags, opts.newWizardOptionalFlags())
+				if err != nil {
+					return err
+				}
+				opts.initWizardFlags(answers)
+			} else {
+				opts.username = args[0]
+			}
 
 			validAuthDBs := []string{convert.AdminDB, convert.ExternalAuthDB}
 			if err := validate.FlagInSlice(opts.authDB, flag.AuthDB, validAuthDBs); err != nil {
@@ -68,7 +132,6 @@ func DescribeBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},

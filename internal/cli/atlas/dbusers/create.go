@@ -169,50 +169,26 @@ func (opts *CreateOpts) newWizardOptionalFlags() []*cli.Flag {
 	return flags
 }
 
-func (opts *CreateOpts) initWizardFlags(answers map[string]string) error {
-	username, err := opts.GetAnswer(answers, flag.Username)
-	if err != nil {
-		return err
-	}
-	opts.username = username
+func (opts *CreateOpts) initWizardFlags(answers map[string]string) {
+	opts.username = opts.GetAnswer(answers, flag.Username)
+	opts.password = opts.GetAnswer(answers, flag.Password)
+	opts.roles = []string{opts.GetAnswer(answers, flag.Role)}
+	opts.deleteAfter = opts.GetAnswer(answers, flag.DeleteAfter)
 
-	password, err := opts.GetAnswer(answers, flag.Password)
-	if err != nil {
-		return err
+	x509Type := opts.GetAnswer(answers, flag.X509Type)
+	if x509Type != "" {
+		opts.x509Type = x509Type
 	}
-	opts.password = password
 
-	role, err := opts.GetAnswer(answers, flag.Role)
-	if err != nil {
-		return err
+	awsIamType := opts.GetAnswer(answers, flag.AWSIAMType)
+	if awsIamType != "" {
+		opts.awsIamType = awsIamType
 	}
-	opts.roles = []string{role}
 
-	x509, err := opts.GetAnswer(answers, flag.X509Type)
-	if err != nil {
-		return err
+	ldapType := opts.GetAnswer(answers, flag.LDAPType)
+	if ldapType != "" {
+		opts.ldapType = ldapType
 	}
-	opts.x509Type = x509
-
-	deleteAfter, err := opts.GetAnswer(answers, flag.DeleteAfter)
-	if err != nil {
-		return err
-	}
-	opts.deleteAfter = deleteAfter
-
-	awsIamType, err := opts.GetAnswer(answers, flag.AWSIAMType)
-	if err != nil {
-		return err
-	}
-	opts.awsIamType = awsIamType
-
-	ldapType, err := opts.GetAnswer(answers, flag.LDAPType)
-	if err != nil {
-		return err
-	}
-	opts.ldapType = ldapType
-
-	return nil
 }
 
 // mongocli atlas dbuser(s) create
@@ -244,10 +220,7 @@ func CreateBuilder() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				err = opts.initWizardFlags(answers)
-				if err != nil {
-					return err
-				}
+				opts.initWizardFlags(answers)
 			}
 
 			opts.roles = append(opts.roles, args...)
@@ -278,8 +251,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Wizard, flag.Wizard, false, usage.Wizard)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

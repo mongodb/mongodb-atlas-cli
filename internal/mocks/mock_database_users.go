@@ -199,6 +199,21 @@ func (mr *MockDatabaseUserDescriberMockRecorder) DatabaseUser(arg0, arg1, arg2 i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockDatabaseUserDescriber)(nil).DatabaseUser), arg0, arg1, arg2)
 }
 
+// DatabaseUsers mocks base method
+func (m *MockDatabaseUserDescriber) DatabaseUsers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.DatabaseUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DatabaseUsers", arg0, arg1)
+	ret0, _ := ret[0].([]mongodbatlas.DatabaseUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DatabaseUsers indicates an expected call of DatabaseUsers
+func (mr *MockDatabaseUserDescriberMockRecorder) DatabaseUsers(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUsers", reflect.TypeOf((*MockDatabaseUserDescriber)(nil).DatabaseUsers), arg0, arg1)
+}
+
 // MockDBUserCertificateLister is a mock of DBUserCertificateLister interface
 type MockDBUserCertificateLister struct {
 	ctrl     *gomock.Controller

@@ -43,6 +43,7 @@ type DatabaseUserUpdater interface {
 
 type DatabaseUserDescriber interface {
 	DatabaseUser(string, string, string) (*atlas.DatabaseUser, error)
+	DatabaseUsers(groupID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error)
 }
 
 type DBUserCertificateLister interface {

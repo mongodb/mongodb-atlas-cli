@@ -239,9 +239,7 @@ func CreateBuilder() *cobra.Command {
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.Wizard {
-				_ = cmd.MarkFlagRequired(flag.Username)
-			} else {
+			if opts.Wizard || opts.username == "" {
 				answers, err := opts.RunWizard(opts.newWizardRequiredFlags(), opts.newWizardOptionalFlags())
 				if err != nil {
 					return err
@@ -280,6 +278,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Wizard, flag.Wizard, false, usage.Wizard)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Username)
 
 	return cmd
 }

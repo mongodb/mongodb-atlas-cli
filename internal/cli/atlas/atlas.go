@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/networking"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongocli/internal/cli/atlas/processes"
+	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
@@ -66,6 +67,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
 		customdns.Builder(),
+		quickstart.Builder(),
 	)
 
 	return cmd

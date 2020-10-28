@@ -62,6 +62,14 @@ type AtlasClusterGetterUpdater interface {
 	ClusterUpdater
 }
 
+type AtlasClusterQuickStarter interface {
+	ClusterStarter
+	DatabaseUserCreator
+	ProjectIPAccessListCreator
+	AtlasClusterDescriber
+	ClusterCreator
+}
+
 // CreateCluster encapsulate the logic to manage different cloud providers
 func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {

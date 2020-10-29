@@ -135,7 +135,7 @@ func TestDeployReplicaSet(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			clustersEntity,
-			"rm",
+			"unmanage",
 			clusterName,
 			"--force",
 		)
@@ -232,7 +232,7 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 			clustersEntity,
 			"delete",
 			clusterName,
-			"-f",
+			"--force",
 		)
 
 		cmd.Env = os.Environ()

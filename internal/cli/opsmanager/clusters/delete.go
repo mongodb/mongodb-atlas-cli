@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
-	hostIds, err := opts.hostIds()
+	hostIds, err := opts.hostIDs()
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (opts *DeleteOpts) Run() error {
 	return nil
 }
 
-func (opts *DeleteOpts) hostIds() ([]string, error) {
+func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err

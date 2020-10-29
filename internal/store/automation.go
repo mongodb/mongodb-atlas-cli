@@ -57,11 +57,10 @@ type CloudManagerClustersDescriber interface {
 }
 
 type CloudManagerClustersDeleter interface {
-	AutomationGetter
-	AutomationUpdater
 	AutomationStatusGetter
 	MonitoringStopper
-	HostLister
+	HostByHostnameDescriber
+	AutomationPatcher
 }
 
 func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {

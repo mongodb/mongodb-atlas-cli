@@ -16,11 +16,9 @@ package clusters
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
@@ -29,13 +27,11 @@ import (
 	"go.mongodb.org/ops-manager/atmcfg"
 )
 
-const defaultWait = 4 * time.Second
-
 type DeleteOpts struct {
 	cli.GlobalOpts
+	cli.WatchOpts
 	*cli.DeleteOpts
-	store   store.CloudManagerClustersDeleter
-	hostIds []string
+	store store.CloudManagerClustersDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -49,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
-	err := opts.newHostIds()
+	hostIds, err := opts.newHostIds()
 	if err != nil {
 		return err
 	}
@@ -67,7 +63,7 @@ func (opts *DeleteOpts) Run() error {
 	}
 
 	// Stop monitoring
-	err = opts.stopMonitoring()
+	err = opts.stopMonitoring(hostIds)
 	if err != nil {
 		return err
 	}
@@ -76,46 +72,39 @@ func (opts *DeleteOpts) Run() error {
 	return nil
 }
 
-func (opts *DeleteOpts) newHostIds() error {
+func (opts *DeleteOpts) newHostIds() ([]string, error) {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
-		return err
+		return nil, err
 	}
-	r := convert.FromAutomationConfig(current)
-	hostname := make(map[string][]int32)
 
-	for _, rs := range r {
-		if rs.Name == opts.Entry {
-			for _, s := range rs.ProcessConfigs {
-				hostname[s.Hostname] = append(hostname[s.Hostname], int32(s.Port))
-			}
+	hostnameMap := make(map[string][]int32)
+	for _, process := range current.Processes {
+		if process.Args26.Replication.ReplSetName == opts.Entry {
+			hostnameMap[process.Hostname] = append(hostnameMap[process.Hostname], int32(process.Args26.NET.Port))
 		}
 	}
 
-	hosts, err := opts.store.Hosts(opts.ConfigProjectID(), nil)
-	if err != nil {
-		return err
-	}
-
-	for _, host := range hosts.Results {
-		if ports, ok := hostname[host.Hostname]; ok {
-			for _, port := range ports {
-				if port == host.Port {
-					opts.hostIds = append(opts.hostIds, host.ID)
-				}
+	var hostIds []string
+	for k, ports := range hostnameMap {
+		for _, port := range ports {
+			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, int(port))
+			if err != nil {
+				return nil, err
 			}
+			hostIds = append(hostIds, host.ID)
 		}
 	}
 
-	if len(opts.hostIds) == 0 {
-		return fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
+	if len(hostIds) == 0 {
+		return nil, fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
 	}
 
-	return nil
+	return hostIds, nil
 }
 
-func (opts *DeleteOpts) stopMonitoring() error {
-	for _, id := range opts.hostIds {
+func (opts *DeleteOpts) stopMonitoring(hostIds []string) error {
+	for _, id := range hostIds {
 		err := opts.store.StopMonitoring(opts.ConfigProjectID(), id)
 		if err != nil {
 			return err
@@ -137,7 +126,7 @@ func (opts *DeleteOpts) removeClusterFromAutomation() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.watch(); err != nil {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 	return nil
@@ -159,25 +148,11 @@ func (opts *DeleteOpts) shutdownCluster() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.watch(); err != nil {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func (opts *DeleteOpts) watch() error {
-	for {
-		result, err := opts.watcher()
-		if err != nil {
-			return err
-		}
-		if !result {
-			time.Sleep(defaultWait)
-		} else {
-			return nil
-		}
-	}
 }
 
 func (opts *DeleteOpts) watcher() (bool, error) {
@@ -194,14 +169,14 @@ func (opts *DeleteOpts) watcher() (bool, error) {
 	return true, nil
 }
 
-// mongocli cloud-manager cluster(s) unmanage <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
 	}
 	cmd := &cobra.Command{
-		Use:     "unmanage <name>",
-		Aliases: []string{"rm", "delete"},
+		Use:     "delete",
+		Aliases: []string{"rm"},
 		Short:   DeleteCluster,
 		Args:    cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

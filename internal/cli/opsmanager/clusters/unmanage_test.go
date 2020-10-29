@@ -23,27 +23,16 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestDelete_Run(t *testing.T) {
+func TestUnmanage_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudManagerClustersDeleter(ctrl)
-
+	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 	defer ctrl.Finish()
 
 	expected := fixture.AutomationConfig()
-	watchExpected := fixture.AutomationStatus()
-	host0 := &opsmngr.Host{
-		Hostname: "host0",
-		ID:       "0",
-	}
-	host1 := &opsmngr.Host{
-		Hostname: "host1",
-		ID:       "1",
-	}
 
-	deleteOpts := &DeleteOpts{
+	deleteOpts := &UnmanageOpts{
 		store: mockStore,
 		DeleteOpts: &cli.DeleteOpts{
 			Confirm: true,
@@ -55,47 +44,12 @@ func TestDelete_Run(t *testing.T) {
 		EXPECT().
 		GetAutomationConfig(deleteOpts.ProjectID).
 		Return(expected, nil).
-		Times(3)
+		Times(1)
 
 	mockStore.
 		EXPECT().
 		UpdateAutomationConfig(deleteOpts.ProjectID, expected).
 		Return(nil).
-		Times(2)
-
-	mockStore.EXPECT().
-		GetAutomationStatus(deleteOpts.ProjectID).
-		Return(watchExpected, nil).
-		Times(2)
-
-	mockStore.
-		EXPECT().
-		StopMonitoring(deleteOpts.ProjectID, "0").
-		Return(nil).
-		Times(2)
-
-	mockStore.
-		EXPECT().
-		StopMonitoring(deleteOpts.ProjectID, "1").
-		Return(nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		HostByHostname(deleteOpts.ProjectID, "host0", 27000).
-		Return(host0, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		HostByHostname(deleteOpts.ProjectID, "host1", 27010).
-		Return(host1, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		HostByHostname(deleteOpts.ProjectID, "host0", 27020).
-		Return(host0, nil).
 		Times(1)
 
 	err := deleteOpts.Run()

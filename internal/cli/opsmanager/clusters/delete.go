@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
-	hostIds, err := opts.newHostIds()
+	hostIds, err := opts.hostIds()
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (opts *DeleteOpts) Run() error {
 	return nil
 }
 
-func (opts *DeleteOpts) newHostIds() ([]string, error) {
+func (opts *DeleteOpts) hostIds() ([]string, error) {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
@@ -175,7 +175,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [name]",
+		Use:     "delete <name>",
 		Aliases: []string{"rm"},
 		Short:   DeleteCluster,
 		Args:    cobra.ExactArgs(1),

@@ -37,7 +37,6 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		ApplyBuilder(),
 		IndexesBuilder(),
-		DeleteBuilder(),
 		UnmanageBuilder(),
 	)
 

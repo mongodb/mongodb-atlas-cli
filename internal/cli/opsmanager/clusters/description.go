@@ -25,4 +25,5 @@ const (
 	Indexes         = "Manage cluster rolling indexes for your project."
 	CreateIndex     = "Create a rolling index for your MongoDB cluster."
 	DeleteCluster   = "Delete a cluster for your project."
+	UnmanageCluster = "Remove a cluster entry from the automation config."
 )

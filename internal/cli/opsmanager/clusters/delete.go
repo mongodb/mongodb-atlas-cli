@@ -175,7 +175,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete",
+		Use:     "delete [name]",
 		Aliases: []string{"rm"},
 		Short:   DeleteCluster,
 		Args:    cobra.ExactArgs(1),
@@ -184,6 +184,7 @@ func DeleteBuilder() *cobra.Command {
 				return err
 			}
 			opts.Entry = args[0]
+			opts.OutWriter = cmd.OutOrStdout()
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

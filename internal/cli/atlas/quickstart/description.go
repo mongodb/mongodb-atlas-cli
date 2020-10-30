@@ -14,5 +14,6 @@
 package quickstart
 
 const (
-	QuickStart = "QuickStart"
+	QuickStart     = "Create an atlas cluster and get what you need to connect to it."
+	LongQuickStart = "This command creates a cluster, adds your public IP to the atlas access list, create a db user. "
 )

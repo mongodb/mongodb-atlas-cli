@@ -17,6 +17,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -28,8 +29,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const quickstartTemplate = `Now you can connect to your Atlas cluster with:
-mongo -u %s -p %s %s`
+const quickstartTemplate = "Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s"
+
 const (
 	replicaSet        = "REPLICASET"
 	diskSizeGB        = 10
@@ -40,8 +41,6 @@ const (
 	zoneName          = "Zone 1"
 	accessListComment = "IP added with mongocli atlas quickstart"
 	atlasAdmin        = "atlasAdmin"
-	dbUsername        = "quickstartUser"
-	dbUserPassword    = "Password1!"
 	none              = "NONE"
 )
 
@@ -53,6 +52,7 @@ type Opts struct {
 	region           string
 	ipAddress        string
 	dbUsername       string
+	dbUserPassword   string
 	connectionString string
 	store            store.AtlasClusterQuickStarter
 }
@@ -78,9 +78,9 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	// Create dbUser
-	if _, err = opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
-		return err
+	// Create DBUser
+	if er := opts.createDatabaseUser(); er != nil {
+		return er
 	}
 
 	fmt.Println("Creating your cluster...")
@@ -95,7 +95,7 @@ func (opts *Opts) Run() error {
 	}
 	opts.connectionString = cluster.SrvAddress
 
-	fmt.Printf(quickstartTemplate, opts.dbUsername, dbUserPassword, opts.connectionString)
+	fmt.Printf(quickstartTemplate, opts.dbUsername, opts.dbUserPassword, opts.connectionString)
 	return opts.Print(nil)
 }
 
@@ -107,15 +107,32 @@ func (opts *Opts) watcher() (bool, error) {
 	return result.StateName == "IDLE", nil
 }
 
-func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
-	if opts.dbUsername == "" {
-		opts.dbUsername = dbUsername
+func (opts *Opts) createDatabaseUser() error {
+	// Check that the user is not a
+	user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.dbUsername)
+	if err != nil {
+		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", opts.dbUsername)) {
+			return err
+		}
 	}
 
+	if user != nil {
+		return nil
+	}
+
+	// Create dbUser
+	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupID:      opts.ConfigProjectID(),
-		Password:     dbUserPassword,
+		Password:     opts.dbUserPassword,
 		X509Type:     none,
 		AWSIAMType:   none,
 		LDAPAuthType: none,
@@ -196,12 +213,16 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	}
 }
 
-// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId]
+// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
-		Use:   "quickstart",
+		Use: "quickstart",
+		Example: `mongocli atlas quickstart
+mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTest --password Test!
+`,
 		Short: QuickStart,
+		Long:  LongQuickStart,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -218,7 +239,8 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "US_EAST_1", usage.Region)
 	cmd.Flags().StringVar(&opts.ipAddress, flag.IP, "", usage.AccessListIPEntry)
-	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "quickstartUser", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.dbUserPassword, flag.Password, "Password1!", usage.Password)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

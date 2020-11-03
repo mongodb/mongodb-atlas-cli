@@ -35,7 +35,7 @@ const (
 	Hostname                        = "hostname"                        // Hostname flag
 	Port                            = "port"                            // Port flag
 	BindUsername                    = "bindUsername"                    // BindUsername flag
-	BindPassword                    = "binPassword"                     // BindPassword flag
+	BindPassword                    = "bindPassword"                    // BindPassword flag
 	CaCertificate                   = "caCertificate"                   // CaCertificate flag
 	AuthzQueryTemplate              = "authzQueryTemplate"              // AuthzQueryTemplate flag
 	AuthenticationEnabled           = "authenticationEnabled"           // AuthenticationEnabled flag

@@ -123,7 +123,11 @@ _determine_architecture() {
 
     elif uname -a | grep -q Ubuntu > /dev/null 2>&1; then # Ubuntu
         PLATFORM="ubuntu"
-        if "$LSB_RELEASE" -a 2>&1 | grep 19.04 > /dev/null 2>&1; then
+
+        if "$LSB_RELEASE" -a 2>&1 | grep 20.04 > /dev/null 2>&1; then
+            OSVER=20
+
+        elif "$LSB_RELEASE" -a 2>&1 | grep 19.04 > /dev/null 2>&1; then
             OSVER=19
 
         elif "$LSB_RELEASE" -a 2>&1 | grep 18.04 > /dev/null 2>&1; then
@@ -134,9 +138,6 @@ _determine_architecture() {
 
         elif "$LSB_RELEASE" -a 2>&1 | grep 16.04 > /dev/null 2>&1; then
             OSVER=16
-
-        elif "$LSB_RELEASE" -a 2>&1 | grep 14.04 > /dev/null 2>&1; then
-            OSVER=14
 
         else
             _unsupported_distro
@@ -207,14 +208,6 @@ _determine_architecture() {
         PLATFORM="amazon"
         OSVER=2
 
-    elif [[ -f /etc/os-release ]] && grep PRETTY /etc/os-release | grep -q 'Amazon Linux AMI' > /dev/null; then # Amazon Linux 1
-        PLATFORM="amazon"
-        OSVER=1
-
-    elif [[ -f /etc/issue ]] && grep -q 'Amazon Linux AMI' /etc/issue > /dev/null; then # Amazon Linux 1
-        PLATFORM="amazon"
-        OSVER=1
-
     elif uname -a | grep -q 'Microsoft'; then # Microsoft Windows Subsystem for Linux
         PLATFORM="wsl"
 
@@ -268,7 +261,7 @@ resolve_system_dependencies() {
     if [[ "${PLATFORM}" = "debian" ]] || [[ "${PLATFORM}" = "ubuntu" ]]; then # Debian/Ubuntu
         _wait_for_process_to_finish apt
         _wait_for_process_to_finish dpkg
-        apt-get install -y -q --no-install-recommends ca-certificates curl logrotate openssl snmp
+        apt-get install -y -q --no-install-recommends openssl
 
     elif [[ "${PLATFORM}" = "rhel" ]] || [[ "${PLATFORM}" = "amazon" ]]; then # Red Hat / Amazon Linux
         _wait_for_process_to_finish yum
@@ -307,6 +300,7 @@ install_agent() {
         _unsupported_distro
     fi
 }
+
 _user_dir() {
     if [[ -n ${SUDO_USER+x} ]]; then
          # If executing through sudo, retrieve the calling user's dir

@@ -44,9 +44,7 @@ type IndexesCreateOpts struct {
 	numericOrdering bool
 	normalization   bool
 	backwards       bool
-	unique          bool
 	sparse          bool
-	background      bool
 	keys            []string
 	store           store.AutomationPatcher
 }
@@ -104,10 +102,8 @@ func (opts *IndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) {
 
 func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	return &atlas.IndexOptions{
-		Background: opts.background,
-		Unique:     opts.unique,
-		Sparse:     opts.sparse,
-		Name:       opts.name,
+		Sparse: opts.sparse,
+		Name:   opts.name,
 	}
 }
 
@@ -175,9 +171,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.normalization, flag.Normalization, false, usage.Normalization)
 	cmd.Flags().BoolVar(&opts.backwards, flag.Backwards, false, usage.Backwards)
 	cmd.Flags().IntVar(&opts.strength, flag.Strength, 0, usage.Strength)
-	cmd.Flags().BoolVar(&opts.unique, flag.Unique, false, usage.Unique)
 	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
-	cmd.Flags().BoolVar(&opts.background, flag.Background, false, usage.Background)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
@@ -185,8 +179,6 @@ func IndexesCreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Database)
 	_ = cmd.MarkFlagRequired(flag.CollectionName)
 	_ = cmd.MarkFlagRequired(flag.Key)
-
-	_ = cmd.Flags().MarkHidden(flag.Background) // Deprecated
 
 	return cmd
 }

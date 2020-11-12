@@ -15,6 +15,7 @@
 package convert
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/Masterminds/semver/v3"
@@ -77,10 +78,21 @@ func (c *RSConfig) patchConfigServer(out *opsmngr.AutomationConfig, name string)
 // protocolVer determines the appropriate protocol based on FCV
 // returns "0" for versions <4.0 or "1" otherwise
 func (c *RSConfig) protocolVer() (string, error) {
-	if c.FCVersion == "" {
-		return "", nil
+	fcVersion := c.FCVersion
+	if fcVersion == "" {
+		// search per process, this may be the case when users get a cluster description,
+		// manually update it and then try to apply that updated config
+		for _, p := range c.ProcessConfigs {
+			if p.FCVersion != "" {
+				fcVersion = p.FCVersion
+				break
+			}
+		}
 	}
-	ver, err := semver.NewVersion(c.FCVersion)
+	if fcVersion == "" {
+		return "", errors.New("no featureCompatibilityVersion available")
+	}
+	ver, err := semver.NewVersion(fcVersion)
 	if err != nil {
 		return "", err
 	}

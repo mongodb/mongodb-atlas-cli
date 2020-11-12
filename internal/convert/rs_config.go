@@ -80,7 +80,8 @@ func (c *RSConfig) patchConfigServer(out *opsmngr.AutomationConfig, name string)
 func (c *RSConfig) protocolVer() (string, error) {
 	fcVersion := c.FCVersion
 	if fcVersion == "" {
-		// search per process, this may be the case whe users do a get first and update it
+		// search per process, this may be the case when users get a cluster description,
+		// manually update it and then try to apply that updated config
 		for _, p := range c.ProcessConfigs {
 			if p.FCVersion != "" {
 				fcVersion = p.FCVersion

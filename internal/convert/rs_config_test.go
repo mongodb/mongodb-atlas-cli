@@ -18,30 +18,46 @@ package convert
 
 import "testing"
 
-func TestProtocolVersion(t *testing.T) {
+func TestRSConfig_protocolVer(t *testing.T) {
 	testCases := map[string]struct {
-		config          *RSConfig
-		protocolVersion string
+		config                *RSConfig
+		wantedProtocolVersion string
+		wantErr               bool
 	}{
 		"empty fcv": {
-			config:          &RSConfig{},
-			protocolVersion: "",
+			config:                &RSConfig{},
+			wantedProtocolVersion: "",
+			wantErr:               true,
 		},
 		"post 4.0": {
-			config:          &RSConfig{FCVersion: "4.0"},
-			protocolVersion: "1",
+			config:                &RSConfig{FCVersion: "4.0"},
+			wantedProtocolVersion: "1",
+			wantErr:               false,
 		},
 		"pre 4.0": {
-			config:          &RSConfig{FCVersion: "3.6"},
-			protocolVersion: "0",
+			config:                &RSConfig{FCVersion: "3.6"},
+			wantedProtocolVersion: "0",
+			wantErr:               false,
+		},
+		"empty at parent but with FC in process": {
+			config: &RSConfig{
+				ProcessConfigs: []*ProcessConfig{
+					{
+						FCVersion: "4.0",
+					},
+				},
+			},
+			wantedProtocolVersion: "1",
+			wantErr:               false,
 		},
 	}
 	for name, tc := range testCases {
 		m := tc.config
-		expected := tc.protocolVersion
+		expected := tc.wantedProtocolVersion
+		wantErr := tc.wantErr
 		t.Run(name, func(t *testing.T) {
 			ver, err := m.protocolVer()
-			if err != nil {
+			if (err != nil) != wantErr {
 				t.Fatalf("protocolVer() unexpected error: %v\n", err)
 			}
 			if ver != expected {

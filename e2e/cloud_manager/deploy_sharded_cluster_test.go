@@ -61,7 +61,7 @@ func TestDeployCluster(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Shutdown", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -78,7 +78,7 @@ func TestDeployCluster(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -95,7 +95,7 @@ func TestDeployCluster(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Stop Monitoring", func(t *testing.T) {
 		hostIDs, err := hostIDs(cliPath)

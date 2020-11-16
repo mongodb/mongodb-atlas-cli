@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -243,6 +244,21 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(downloadArchive)
+}
+
+func watchAutomation(cliPath string) func(t *testing.T) {
+	return func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			"automation",
+			"watch",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	}
 }
 
 func createProject(projectName string) (string, error) {

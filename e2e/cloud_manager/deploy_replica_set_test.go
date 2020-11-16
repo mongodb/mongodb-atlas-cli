@@ -63,7 +63,7 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -129,7 +129,7 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -146,7 +146,7 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
-	t.Run("Watch", watch(cliPath))
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Stop Monitoring", func(t *testing.T) {
 		hostIDs, err := hostIDs(cliPath)
@@ -170,19 +170,4 @@ func TestDeployReplicaSet(t *testing.T) {
 			}
 		}
 	})
-}
-
-func watch(cliPath string) func(t *testing.T) {
-	return func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			"automation",
-			"watch",
-		)
-
-		cmd.Env = os.Environ()
-		if resp, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
-		}
-	}
 }

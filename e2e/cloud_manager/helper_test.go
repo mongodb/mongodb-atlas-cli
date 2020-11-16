@@ -144,6 +144,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 			Version:   version,
 		},
 		Config: &convert.RSConfig{
+			Name: "configRS",
 			ProcessConfigs: []*convert.ProcessConfig{
 				{
 					DBPath:   fmt.Sprintf("/data/%s/29000", clusterName),
@@ -173,16 +174,14 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 		},
 		Mongos: []*convert.ProcessConfig{
 			{
-				DBPath:   fmt.Sprintf("/data/%s/30000", clusterName),
 				Hostname: hostname,
 				LogPath:  fmt.Sprintf("/data/%s/30000/mongodb.log", clusterName),
 				Port:     30000,
-				Priority: &one,
-				Votes:    &one,
 			},
 		},
 		Shards: []*convert.RSConfig{
 			{
+				Name: "myShard_0",
 				ProcessConfigs: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
@@ -211,6 +210,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 				},
 			},
 			{
+				Name: "myShard_1",
 				ProcessConfigs: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28000", clusterName),

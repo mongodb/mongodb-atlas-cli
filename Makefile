@@ -6,10 +6,11 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
 
-GOLANGCI_VERSION=v1.31.0
+GOLANGCI_VERSION=v1.32.2
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
+DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
 UNIT_TAGS?=unit
@@ -66,6 +67,11 @@ gen-mocks: ## Generate mocks
 build: ## Generate a binary in ./bin
 	@echo "==> Building binary"
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ${SOURCE_FILES}
+
+.PHONY: build-debug
+build-debug: ## Generate a binary in ./bin for debugging
+	@echo "==> Building binary for debugging"
+	go build -gcflags="${DEBUG_FLAGS}" -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ${SOURCE_FILES}
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests

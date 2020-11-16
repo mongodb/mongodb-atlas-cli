@@ -40,6 +40,11 @@ const (
 	processesEntity   = "processes"
 )
 
+const (
+	testedMDBVersion = "4.2.0"
+	testedMDBFCV     = "4.2"
+)
+
 // automationServerHostname tries to list available server running the automation agent
 // and returns the first available hostname for deployments
 func automationServerHostname(cliPath string) (string, error) {

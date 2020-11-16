@@ -42,7 +42,7 @@ func TestDeployCluster(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if err := generateShardedConfig(testFile, hostname, clusterName, "4.2.0", "4.2"); err != nil {
+	if err := generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

@@ -61,7 +61,7 @@ func TestLDAP(t *testing.T) {
 			"19657",
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
-			"--binPassword",
+			"--bindPassword",
 			"admin",
 			"-o",
 			"json")
@@ -129,7 +129,7 @@ func TestLDAP(t *testing.T) {
 			"19657",
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
-			"--binPassword",
+			"--bindPassword",
 			"admin",
 			"-o",
 			"json")

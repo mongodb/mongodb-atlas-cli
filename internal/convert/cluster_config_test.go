@@ -173,6 +173,9 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
 						},
 						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
@@ -315,6 +318,9 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
 							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
 						},
 						LogRotate: &opsmngr.LogRotate{
 							SizeThresholdMB:  1000,
@@ -439,6 +445,9 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							SystemLog: opsmngr.SystemLog{
 								Destination: "file",
 								Path:        "/data/db/mongodb.log",
+							},
+							Security: &map[string]interface{}{
+								"test": "test",
 							},
 						},
 						LogRotate: &opsmngr.LogRotate{

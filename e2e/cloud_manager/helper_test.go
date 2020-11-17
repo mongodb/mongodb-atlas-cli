@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -37,6 +38,11 @@ const (
 	maintenanceEntity = "maintenanceWindows"
 	monitoringEntity  = "monitoring"
 	processesEntity   = "processes"
+)
+
+const (
+	testedMDBVersion = "4.2.0"
+	testedMDBFCV     = "4.2"
 )
 
 // automationServerHostname tries to list available server running the automation agent
@@ -81,7 +87,7 @@ func hostIDs(cliPath string) ([]string, error) {
 	return result, nil
 }
 
-func generateConfig(filename, hostname, clusterName, version, fcVersion string) error {
+func generateRSConfig(filename, hostname, clusterName, version, fcVersion string) error {
 	feedFile, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -126,6 +132,138 @@ func generateConfig(filename, hostname, clusterName, version, fcVersion string) 
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(downloadArchive)
+}
+
+func generateShardedConfig(filename, hostname, clusterName, version, fcVersion string) error {
+	feedFile, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer feedFile.Close()
+
+	var one float64 = 1
+	downloadArchive := &convert.ClusterConfig{
+		RSConfig: convert.RSConfig{
+			FCVersion: fcVersion,
+			Name:      clusterName,
+			Version:   version,
+		},
+		Config: &convert.RSConfig{
+			Name: "configRS",
+			ProcessConfigs: []*convert.ProcessConfig{
+				{
+					DBPath:   fmt.Sprintf("/data/%s/29000", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/29000/mongodb.log", clusterName),
+					Port:     29000,
+					Priority: &one,
+					Votes:    &one,
+				},
+				{
+					DBPath:   fmt.Sprintf("/data/%s/29001", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/29001/mongodb.log", clusterName),
+					Port:     29001,
+					Priority: &one,
+					Votes:    &one,
+				},
+				{
+					DBPath:   fmt.Sprintf("/data/%s/29002", clusterName),
+					Hostname: hostname,
+					LogPath:  fmt.Sprintf("/data/%s/29002/mongodb.log", clusterName),
+					Port:     29002,
+					Priority: &one,
+					Votes:    &one,
+				},
+			},
+		},
+		Mongos: []*convert.ProcessConfig{
+			{
+				Hostname: hostname,
+				LogPath:  fmt.Sprintf("/data/%s/30000/mongodb.log", clusterName),
+				Port:     30000,
+			},
+		},
+		Shards: []*convert.RSConfig{
+			{
+				Name: "myShard_0",
+				ProcessConfigs: []*convert.ProcessConfig{
+					{
+						DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/27000/mongodb.log", clusterName),
+						Port:     27000,
+						Priority: &one,
+						Votes:    &one,
+					},
+					{
+						DBPath:   fmt.Sprintf("/data/%s/27001", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/27001/mongodb.log", clusterName),
+						Port:     27001,
+						Priority: &one,
+						Votes:    &one,
+					},
+					{
+						DBPath:   fmt.Sprintf("/data/%s/27002", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/27002/mongodb.log", clusterName),
+						Port:     27002,
+						Priority: &one,
+						Votes:    &one,
+					},
+				},
+			},
+			{
+				Name: "myShard_1",
+				ProcessConfigs: []*convert.ProcessConfig{
+					{
+						DBPath:   fmt.Sprintf("/data/%s/28000", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/28000/mongodb.log", clusterName),
+						Port:     28000,
+						Priority: &one,
+						Votes:    &one,
+					},
+					{
+						DBPath:   fmt.Sprintf("/data/%s/28001", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/28001/mongodb.log", clusterName),
+						Port:     28001,
+						Priority: &one,
+						Votes:    &one,
+					},
+					{
+						DBPath:   fmt.Sprintf("/data/%s/28002", clusterName),
+						Hostname: hostname,
+						LogPath:  fmt.Sprintf("/data/%s/28002/mongodb.log", clusterName),
+						Port:     28002,
+						Priority: &one,
+						Votes:    &one,
+					},
+				},
+			},
+		},
+	}
+
+	jsonEncoder := json.NewEncoder(feedFile)
+	jsonEncoder.SetIndent("", "  ")
+	return jsonEncoder.Encode(downloadArchive)
+}
+
+func watchAutomation(cliPath string) func(t *testing.T) {
+	return func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			"automation",
+			"watch",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	}
 }
 
 func createProject(projectName string) (string, error) {

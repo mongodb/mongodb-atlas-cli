@@ -14,7 +14,16 @@
 
 package fixture
 
-import "go.mongodb.org/ops-manager/opsmngr"
+import (
+	"go.mongodb.org/ops-manager/opsmngr"
+)
+
+const (
+	defaultMongoDPort        = 27017
+	defaultTimeThresholdHrs  = 24
+	defaultAuthSchemaVersion = 5
+	defaultSizeThresholdMB   = 1000
+)
 
 func AutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
@@ -28,15 +37,13 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				Name:                        "myReplicaSet_1",
 				ProcessType:                 "mongod",
 				Version:                     "4.2.2",
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				FeatureCompatibilityVersion: "4.2",
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host0",
 				Args26: opsmngr.Args26{
-					NET: opsmngr.Net{
-						Port: 27000,
-					},
+					NET: opsmngr.Net{Port: 27000},
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs1",
 					},
@@ -49,8 +56,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 					},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000.0,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				LastGoalVersionAchieved: 0,
 				Cluster:                 "",
@@ -59,15 +66,13 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				Name:                        "myReplicaSet_2",
 				ProcessType:                 "mongod",
 				Version:                     "4.2.2",
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				FeatureCompatibilityVersion: "4.2",
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host1",
 				Args26: opsmngr.Args26{
-					NET: opsmngr.Net{
-						Port: 27010,
-					},
+					NET: opsmngr.Net{Port: 27010},
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs2",
 					},
@@ -80,8 +85,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 					},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000.0,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				LastGoalVersionAchieved: 0,
 				Cluster:                 "",
@@ -90,15 +95,13 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				Name:                        "myReplicaSet_3",
 				ProcessType:                 "mongod",
 				Version:                     "4.2.2",
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				FeatureCompatibilityVersion: "4.2",
 				Disabled:                    false,
 				ManualMode:                  false,
 				Hostname:                    "host0",
 				Args26: opsmngr.Args26{
-					NET: opsmngr.Net{
-						Port: 27020,
-					},
+					NET: opsmngr.Net{Port: 27020},
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/rs3",
 					},
@@ -111,8 +114,8 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 					},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000.0,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				LastGoalVersionAchieved: 0,
 				Cluster:                 "",
@@ -166,7 +169,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 			{
 				Args26: opsmngr.Args26{
 					NET: opsmngr.Net{
-						Port: 27017,
+						Port: defaultMongoDPort,
 						TLS: &opsmngr.TLS{
 							CAFile:                     "CAFile",
 							CertificateKeyFile:         "CertificateKeyFile",
@@ -189,19 +192,23 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/db/",
 					},
+
+					Security: &map[string]interface{}{
+						"test": "test",
+					},
 					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/db/mongodb.log",
 					},
 				},
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				Name:                        name + "_0",
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
 				Hostname:                    "host0",
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				ProcessType: "mongod",
 				Version:     "4.2.2",
@@ -248,10 +255,10 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 					},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				Name:                        name + "_myShard_0_0",
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
@@ -276,10 +283,10 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 					Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				Name:                        name + "_configRS_1",
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
@@ -297,11 +304,11 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 					},
 				},
 				LogRotate: &opsmngr.LogRotate{
-					SizeThresholdMB:  1000,
-					TimeThresholdHrs: 24,
+					SizeThresholdMB:  defaultSizeThresholdMB,
+					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				Cluster:                     name,
-				AuthSchemaVersion:           5,
+				AuthSchemaVersion:           defaultAuthSchemaVersion,
 				Name:                        name + "_mongos_2",
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",

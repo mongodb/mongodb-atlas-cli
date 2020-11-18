@@ -34,9 +34,7 @@ type IndexesCreateOpts struct {
 	db          string
 	collection  string
 	keys        []string
-	unique      bool
 	sparse      bool
-	background  bool
 	store       store.IndexCreator
 }
 
@@ -73,10 +71,8 @@ func (opts *IndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
 
 func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 	return &atlas.IndexOptions{
-		Background: opts.background,
-		Unique:     opts.unique,
-		Sparse:     opts.sparse,
-		Name:       opts.name,
+		Sparse: opts.sparse,
+		Name:   opts.name,
 	}
 }
 
@@ -118,9 +114,7 @@ func IndexesCreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.db, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringSliceVar(&opts.keys, flag.Key, []string{}, usage.Key)
-	cmd.Flags().BoolVar(&opts.unique, flag.Unique, false, usage.Unique)
 	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
-	cmd.Flags().BoolVar(&opts.background, flag.Background, false, usage.Background)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
@@ -128,8 +122,6 @@ func IndexesCreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Database)
 	_ = cmd.MarkFlagRequired(flag.Collection)
 	_ = cmd.MarkFlagRequired(flag.Key)
-
-	_ = cmd.Flags().MarkHidden(flag.Background) // Deprecated
 
 	return cmd
 }

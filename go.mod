@@ -3,7 +3,7 @@ module github.com/mongodb/mongocli
 go 1.15
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.1.1
+	github.com/AlecAivazis/survey/v2 v2.2.2
 	github.com/Masterminds/semver/v3 v3.1.0
 	github.com/briandowns/spinner v1.11.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -22,7 +22,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.5.1-0.20201007214134-b315fe7503d2
-	go.mongodb.org/ops-manager v0.12.1
+	go.mongodb.org/ops-manager v0.13.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

@@ -41,7 +41,7 @@ EOF
 for host in ${hosts}; do
     echo "Seeding ${host}"
     ./ego seed "${user}@${host}"
-    # start the app server on the remote host. Choose port 9443 as it is open on the security group.
+
     echo "bin/ego scenario_install_agent"
     ./ego run "${user}@${host}" bin/ego scenario_install_agent \
                                                   --baseUrl "${BASE_URL}"

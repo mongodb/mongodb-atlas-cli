@@ -80,11 +80,11 @@ func TestDeployCluster(t *testing.T) {
 
 	t.Run("Watch", watchAutomation(cliPath))
 
-	t.Run("Delete", func(t *testing.T) {
+	t.Run("Unmanage", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			clustersEntity,
-			"rm",
+			"unmanage",
 			clusterName,
 			"--force",
 		)
@@ -117,6 +117,61 @@ func TestDeployCluster(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error: %v, resp: %v\n", err, string(resp))
 			}
+		}
+	})
+}
+
+func TestDeployDeleteCluster(t *testing.T) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	const testFile = "om-new-cluster.json"
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	clusterName := fmt.Sprintf("e2e-cluster-%v", n)
+
+	hostname, err := automationServerHostname(cliPath)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if err := generateShardedConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	t.Run("Apply", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"apply",
+			"-f",
+			testFile,
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Watch", watchAutomation(cliPath))
+
+	t.Run("Delete Sharded Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
 		}
 	})
 }

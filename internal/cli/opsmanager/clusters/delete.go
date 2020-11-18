@@ -80,7 +80,7 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	}
 
 	hostnameMap := make(map[string][]int32)
-	opts.replicaSetHostNames(current, hostnameMap, opts.Entry)
+	replicaSetHostNames(current, hostnameMap, opts.Entry)
 	opts.shardClusterHostNames(current, hostnameMap)
 
 	var hostIds []string
@@ -101,7 +101,7 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	return hostIds, nil
 }
 
-func (opts *DeleteOpts) replicaSetHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int32, name string) {
+func replicaSetHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int32, name string) {
 	for _, process := range automationConfig.Processes {
 		if process.Cluster == name || (process.Args26.Replication != nil && process.Args26.Replication.ReplSetName == name) {
 			hostnameMap[process.Hostname] = append(hostnameMap[process.Hostname], int32(process.Args26.NET.Port))
@@ -113,10 +113,10 @@ func (opts *DeleteOpts) shardClusterHostNames(automationConfig *opsmngr.Automati
 	for _, sharding := range automationConfig.Sharding {
 		if sharding.Name == opts.Entry {
 			for _, shard := range sharding.Shards {
-				opts.replicaSetHostNames(automationConfig, hostnameMap, shard.RS)
+				replicaSetHostNames(automationConfig, hostnameMap, shard.RS)
 			}
 			// config rs
-			opts.replicaSetHostNames(automationConfig, hostnameMap, sharding.ConfigServerReplica)
+			replicaSetHostNames(automationConfig, hostnameMap, sharding.ConfigServerReplica)
 			break
 		}
 	}
@@ -124,8 +124,7 @@ func (opts *DeleteOpts) shardClusterHostNames(automationConfig *opsmngr.Automati
 
 func (opts *DeleteOpts) stopMonitoring(hostIds []string) error {
 	for _, id := range hostIds {
-		err := opts.store.StopMonitoring(opts.ConfigProjectID(), id)
-		if err != nil {
+		if err := opts.store.StopMonitoring(opts.ConfigProjectID(), id); err != nil {
 			return err
 		}
 	}

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_deployments.go -package=mocks github.com/mongodb/mongocli/internal/store HostLister,HostDescriber,HostDatabaseLister,HostDisksLister
+//go:generate mockgen -destination=../mocks/mock_deployments.go -package=mocks github.com/mongodb/mongocli/internal/store HostLister,HostDescriber,HostDatabaseLister,HostDisksLister,HostByHostnameDescriber
 
 type HostLister interface {
 	Hosts(string, *opsmngr.HostListOptions) (*opsmngr.Hosts, error)
@@ -31,6 +31,9 @@ type HostLister interface {
 
 type HostDescriber interface {
 	Host(string, string) (*opsmngr.Host, error)
+}
+type HostByHostnameDescriber interface {
+	HostByHostname(string, string, int) (*opsmngr.Host, error)
 }
 
 type HostDatabaseLister interface {
@@ -79,6 +82,17 @@ func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHost(context.Background(), groupID, hostID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// HostByHostname encapsulate the logic to manage different cloud providers
+func (s *Store) HostByHostname(groupID, hostname string, port int) (*opsmngr.Host, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHostByHostname(context.Background(), groupID, hostname, port)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

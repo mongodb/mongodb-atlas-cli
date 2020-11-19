@@ -42,7 +42,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		dbUsername:  "user",
 	}
 
-	whitelist, _ := opts.newWhitelist()
+	whitelist := opts.newWhitelist()
 
 	mockStore.
 		EXPECT().

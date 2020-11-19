@@ -108,7 +108,6 @@ func (opts *Opts) watcher() (bool, error) {
 }
 
 func (opts *Opts) createDatabaseUser() error {
-	fmt.Println("TEST: " + opts.dbUsername)
 	user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.dbUsername)
 	if err != nil {
 		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", opts.dbUsername)) {
@@ -285,7 +284,7 @@ func (opts *Opts) askRequiredFlags() {
 
 		survey.AskOne(&publicIPPrompt, &answer)
 		opts.ipAddress = publicIP
-		if answer == "" {
+		if answer != "" {
 			opts.ipAddress = answer
 		}
 	}

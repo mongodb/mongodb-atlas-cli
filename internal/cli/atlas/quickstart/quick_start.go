@@ -16,9 +16,6 @@ package quickstart
 import (
 	"errors"
 	"fmt"
-	"os/exec"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -27,6 +24,10 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
 )
 
 const quickstartTemplate = "Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s"
@@ -64,9 +65,9 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
-		return err
-	}
+	//if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+	//	return err
+	//}
 
 	// Add IP to project’s IP access list
 	entry, err := opts.newWhitelist()
@@ -143,15 +144,52 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 
 // newIPAddress returns client's public ip
 func (opts *Opts) newIPAddress() (string, error) {
-	command := "curl ifconfig.me"
-	cmd := exec.Command("bash", "-c", command)
-	stdout, err := cmd.Output()
 
-	if err != nil {
-		return "", errors.New("error in finding your public IP, please use --ip to provide your public ip")
+	publicIP := ""
+	for _, uri := range APIURIs {
+		req, err := http.NewRequest(
+			http.MethodGet,
+			uri,
+			nil,
+		)
+
+		if err == nil {
+			req.Header.Add("Accept", "application/json")
+			res, err := http.DefaultClient.Do(req)
+
+			if err == nil {
+				responseBytes, err := ioutil.ReadAll(res.Body)
+				if err == nil{
+					publicIP = string(responseBytes)
+					break
+				}
+			}
+		}
+
 	}
 
-	return string(stdout), nil
+	if publicIP == ""{
+		return publicIP, errors.New("error in finding your public IP, please use --ip to provide your public ip")
+	}
+
+	return publicIP, nil
+}
+
+
+// APIURIs is the URIs of the services used by newIPAddress to get the client's public IP.
+var APIURIs = []string{
+	"https://api.ipify.org",
+	"http://myexternalip.com/raw",
+	"http://ipinfo.io/ip",
+	"http://ipecho.net/plain",
+	"http://icanhazip.com",
+	"http://ifconfig.me/ip",
+	"http://ident.me",
+	"http://checkip.amazonaws.com",
+	"http://bot.whatismyipaddress.com",
+	"http://whatismyip.akamai.com",
+	"http://wgetip.com",
+	"http://ip.tyk.nu",
 }
 
 func (opts *Opts) newWhitelist() (*atlas.ProjectIPWhitelist, error) {
@@ -239,8 +277,8 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "US_EAST_1", usage.Region)
 	cmd.Flags().StringVar(&opts.ipAddress, flag.IP, "", usage.AccessListIPEntry)
-	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "quickstartUser", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.dbUserPassword, flag.Password, "Password1!", usage.Password)
+	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.dbUserPassword, flag.Password, "", usage.Password)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

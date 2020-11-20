@@ -20,6 +20,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -235,7 +236,7 @@ func InviteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "invite",
 		Short: inviteUser,
-		Args:  cobra.NoArgs,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if config.Service() != config.OpsManagerService {

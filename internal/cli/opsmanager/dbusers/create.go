@@ -19,6 +19,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -98,7 +99,7 @@ func CreateBuilder() *cobra.Command {
 		Example: `
   Create a user with readWriteAnyDatabase and clusterMonitor access
   $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
-		Args: cobra.NoArgs,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},

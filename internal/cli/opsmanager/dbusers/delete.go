@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -69,7 +70,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <username>",
 		Aliases: []string{"rm"},
 		Short:   DeleteDBUser,
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

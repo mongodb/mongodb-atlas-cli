@@ -16,6 +16,7 @@ package certs
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -57,7 +58,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list <username>",
 		Aliases: []string{"ls"},
 		Short:   listDBUserCerts,
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

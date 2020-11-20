@@ -15,6 +15,7 @@ package globalapikeys
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -54,7 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		Short:   describeAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

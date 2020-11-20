@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -120,7 +121,7 @@ func UpdateBuilder() *cobra.Command {
 
   Update MongoDB version for a cluster
   $ mongocli atlas cluster update <clusterName> --projectId <projectId> --mdbVersion 4.2`,
-		Args: cobra.MaximumNArgs(1),
+		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
 				opts.name = args[0]

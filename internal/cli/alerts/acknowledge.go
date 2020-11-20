@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -76,7 +77,7 @@ func AcknowledgeBuilder() *cobra.Command {
 		Use:     "acknowledge <ID>",
 		Short:   acknowledgeAlerts,
 		Aliases: []string{"ack"},
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.forever && opts.until != "" {
 				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)

@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -85,7 +86,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   ListClusters,
-		Args:    cobra.NoArgs,
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), opts.template())()
 			return opts.PreRunE(opts.ValidateProjectID, opts.init)

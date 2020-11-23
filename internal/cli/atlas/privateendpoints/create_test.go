@@ -36,7 +36,7 @@ func TestCreate_Run(t *testing.T) {
 		provider: "AWS",
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{}
+	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{}
 	mockStore.
 		EXPECT().
 		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).

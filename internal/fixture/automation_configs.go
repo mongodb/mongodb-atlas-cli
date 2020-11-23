@@ -192,7 +192,6 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/db/",
 					},
-
 					Security: &map[string]interface{}{
 						"test": "test",
 					},

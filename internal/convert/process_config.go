@@ -29,29 +29,30 @@ const (
 
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
-	AuditLogPath        string   `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
-	AuditLogDestination string   `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
-	AuditLogFormat      string   `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
-	BuildIndexes        *bool    `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath              string   `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
-	BindIP              *string  `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
-	BindIPAll           *bool    `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
-	FCVersion           string   `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Hostname            string   `yaml:"hostname" json:"hostname"`
-	IPV6                *bool    `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
-	LogPath             string   `yaml:"logPath" json:"logPath"`
-	LogDestination      string   `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
-	Name                string   `yaml:"name,omitempty" json:"name,omitempty"`
-	Port                int      `yaml:"port" json:"port"`
-	Priority            *float64 `yaml:"priority,omitempty" json:"priority,omitempty"`
-	ProcessType         string   `yaml:"processType" json:"processType"`
-	SlaveDelay          *float64 `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
-	Version             string   `yaml:"version,omitempty" json:"version,omitempty"`
-	Votes               *float64 `yaml:"votes,omitempty" json:"votes,omitempty"`
-	ArbiterOnly         *bool    `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
-	Disabled            bool     `yaml:"disabled" json:"disabled"`
-	Hidden              *bool    `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	TLS                 *TLS     `yaml:"tls,omitempty" json:"tls,omitempty"`
+	AuditLogPath        string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
+	AuditLogDestination string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
+	AuditLogFormat      string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	BuildIndexes        *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
+	DBPath              string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
+	BindIP              *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
+	BindIPAll           *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	FCVersion           string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Hostname            string                  `yaml:"hostname" json:"hostname"`
+	IPV6                *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
+	LogPath             string                  `yaml:"logPath" json:"logPath"`
+	LogDestination      string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
+	Name                string                  `yaml:"name,omitempty" json:"name,omitempty"`
+	Port                int                     `yaml:"port" json:"port"`
+	Priority            *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
+	ProcessType         string                  `yaml:"processType" json:"processType"`
+	SlaveDelay          *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
+	Version             string                  `yaml:"version,omitempty" json:"version,omitempty"`
+	Votes               *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
+	ArbiterOnly         *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
+	Disabled            bool                    `yaml:"disabled" json:"disabled"`
+	Hidden              *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	TLS                 *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Security            *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
 }
 
 // TLS defines TLS parameters for Net
@@ -155,6 +156,9 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
 		}
 	}
+	if p.Args26.Security != nil {
+		pc.Security = p.Args26.Security
+	}
 	return pc
 }
 
@@ -180,6 +184,9 @@ func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 		NET:       p.net(),
 		SystemLog: p.systemLog(),
 	}
+	if p.Security != nil {
+		process.Args26.Security = p.Security
+	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {
 		process.Args26.AuditLog = p.auditLog()
@@ -200,6 +207,9 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 			DBPath: p.DBPath,
 		},
 		SystemLog: p.systemLog(),
+	}
+	if p.Security != nil {
+		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {
@@ -222,6 +232,9 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 		},
 		Sharding:  &opsmngr.Sharding{ClusterRole: "configsvr"},
 		SystemLog: p.systemLog(),
+	}
+	if p.Security != nil {
+		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {

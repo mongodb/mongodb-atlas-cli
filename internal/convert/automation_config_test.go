@@ -67,6 +67,9 @@ func TestFromAutomationConfig(t *testing.T) {
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
 						},
 					},
 				},

@@ -16,6 +16,7 @@ package monitoring
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -48,7 +49,7 @@ func StopBuilder() *cobra.Command {
 		Use:     "stop <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Stops monitoring the MongoDB process  specified",
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

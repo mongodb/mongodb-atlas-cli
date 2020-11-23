@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -105,7 +106,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: createOnlineArchive,
-		Args:  cobra.NoArgs,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(opts.partitions) > maxPartitions {
 				return fmt.Errorf("can only define up to 2 partition fields, got: %d", len(opts.partitions))

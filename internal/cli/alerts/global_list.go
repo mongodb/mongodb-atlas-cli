@@ -16,6 +16,7 @@ package alerts
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -62,7 +63,7 @@ func GlobalListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   listGlobalAlerts,
 		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

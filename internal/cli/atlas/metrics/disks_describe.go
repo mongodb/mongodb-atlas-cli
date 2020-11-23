@@ -16,6 +16,7 @@ package metrics
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -61,7 +62,7 @@ func DisksDescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <hostname:port> <name>",
 		Short: describeDisks,
-		Args:  cobra.ExactArgs(argsN),
+		Args:  require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

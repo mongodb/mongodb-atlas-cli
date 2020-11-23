@@ -16,6 +16,7 @@ package processes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -38,8 +39,7 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	TYPE	HOSTNAME	PORT{{range .Results}}
-{{.ID}}	{{.TypeName}}	{{.Hostname}}	{{.Port}}{{end}}
+var listTemplate = `ID	TYPE	HOSTNAME	STATE NAME	PORT{{range .Results}}{{.ID}}	{{.TypeName}}	{{.ReplicaStateName}} {{.Hostname}}	{{.Port}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -66,7 +66,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   listProcesses,
 		Aliases: []string{"ls"},
-		Args:    cobra.NoArgs,
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

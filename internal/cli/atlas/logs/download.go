@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
@@ -86,7 +87,7 @@ func DownloadBuilder() *cobra.Command {
 		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
 		Short: download,
 		Long:  downloadLong,
-		Args:  cobra.ExactArgs(argsN),
+		Args:  require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

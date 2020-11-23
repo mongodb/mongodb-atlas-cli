@@ -34,10 +34,10 @@ func (m *MockPrivateEndpointLister) EXPECT() *MockPrivateEndpointListerMockRecor
 }
 
 // PrivateEndpoints mocks base method
-func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnection, error) {
+func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnection)
+	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnectionDeprecated)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,10 +72,10 @@ func (m *MockPrivateEndpointDescriber) EXPECT() *MockPrivateEndpointDescriberMoc
 }
 
 // PrivateEndpoint mocks base method
-func (m *MockPrivateEndpointDescriber) PrivateEndpoint(arg0, arg1 string) (*mongodbatlas.PrivateEndpointConnection, error) {
+func (m *MockPrivateEndpointDescriber) PrivateEndpoint(arg0, arg1 string) (*mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnection)
+	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnectionDeprecated)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockPrivateEndpointCreator) EXPECT() *MockPrivateEndpointCreatorMockRec
 }
 
 // CreatePrivateEndpoint mocks base method
-func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *mongodbatlas.PrivateEndpointConnection) (*mongodbatlas.PrivateEndpointConnection, error) {
+func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *mongodbatlas.PrivateEndpointConnectionDeprecated) (*mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnection)
+	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnectionDeprecated)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -185,10 +185,10 @@ func (m *MockInterfaceEndpointDescriber) EXPECT() *MockInterfaceEndpointDescribe
 }
 
 // InterfaceEndpoint mocks base method
-func (m *MockInterfaceEndpointDescriber) InterfaceEndpoint(arg0, arg1, arg2 string) (*mongodbatlas.InterfaceEndpointConnection, error) {
+func (m *MockInterfaceEndpointDescriber) InterfaceEndpoint(arg0, arg1, arg2 string) (*mongodbatlas.InterfaceEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InterfaceEndpoint", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.InterfaceEndpointConnection)
+	ret0, _ := ret[0].(*mongodbatlas.InterfaceEndpointConnectionDeprecated)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -223,10 +223,10 @@ func (m *MockInterfaceEndpointCreator) EXPECT() *MockInterfaceEndpointCreatorMoc
 }
 
 // CreateInterfaceEndpoint mocks base method
-func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string) (*mongodbatlas.InterfaceEndpointConnection, error) {
+func (m *MockInterfaceEndpointCreator) CreateInterfaceEndpoint(arg0, arg1, arg2 string) (*mongodbatlas.InterfaceEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInterfaceEndpoint", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.InterfaceEndpointConnection)
+	ret0, _ := ret[0].(*mongodbatlas.InterfaceEndpointConnectionDeprecated)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

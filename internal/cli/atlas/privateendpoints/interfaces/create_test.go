@@ -36,7 +36,7 @@ func TestCreate_Run(t *testing.T) {
 		interfaceEndpointID: "interfaceEndpointID",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnection{}
+	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
 	mockStore.
 		EXPECT().
 		CreateInterfaceEndpoint(createOpts.ProjectID, createOpts.privateEndpointID, createOpts.interfaceEndpointID).

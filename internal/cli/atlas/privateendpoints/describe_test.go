@@ -34,7 +34,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{}
+	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{}
 
 	mockStore.
 		EXPECT().

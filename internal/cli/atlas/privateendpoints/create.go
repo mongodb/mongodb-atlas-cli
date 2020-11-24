@@ -16,6 +16,7 @@ package privateendpoints
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -51,8 +52,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
-	createRequest := &mongodbatlas.PrivateEndpointConnection{
+func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnectionDeprecated {
+	createRequest := &mongodbatlas.PrivateEndpointConnectionDeprecated{
 		Region:       opts.region,
 		ProviderName: opts.provider,
 	}
@@ -65,7 +66,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: createPrivateEndpoint,
-		Args:  cobra.NoArgs,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

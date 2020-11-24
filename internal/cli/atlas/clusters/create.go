@@ -18,6 +18,7 @@ import (
 	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -203,7 +204,7 @@ func CreateBuilder() *cobra.Command {
   Deploy a cluster from a config file
   $ mongocli atlas cluster create --projectId <projectId> --file <path/to/cluster.json>
 `,
-		Args: cobra.MaximumNArgs(1),
+		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)

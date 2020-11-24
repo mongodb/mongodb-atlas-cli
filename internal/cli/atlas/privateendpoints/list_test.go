@@ -30,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnection
+	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
 
 	listOpts := &ListOpts{
 		store: mockStore,

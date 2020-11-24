@@ -16,6 +16,7 @@ package apikeys
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -60,7 +61,7 @@ func AssignBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "assign <ID>",
 		Aliases: []string{"update"},
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		Short:   assignProjectAPIKey,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

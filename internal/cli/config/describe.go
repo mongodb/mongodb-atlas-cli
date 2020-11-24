@@ -17,6 +17,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -43,7 +44,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <name>",
 		Short: describeShort,
-		Args:  cobra.ExactArgs(1),
+		Args:  require.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()

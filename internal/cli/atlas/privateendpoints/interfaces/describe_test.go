@@ -36,7 +36,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		id:                "id",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnection{}
+	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
 
 	mockStore.
 		EXPECT().

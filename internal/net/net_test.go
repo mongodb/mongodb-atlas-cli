@@ -14,34 +14,12 @@
 package net
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
-const publicIP = "212.129.77.106"
-
 func TestNewIPAddress(t *testing.T) {
-	srv := serverMock()
-	defer srv.Close()
-
-	ip, err := NewIPAddress()
+	_, err := NewIPAddress()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
-	if ip != publicIP {
-		t.Fatalf("expected %s, got %s", publicIP, ip)
-	}
-}
-
-func serverMock() *httptest.Server {
-	handler := http.NewServeMux()
-	handler.HandleFunc("https://api.ipify.org", responseMock)
-	srv := httptest.NewServer(handler)
-	return srv
-}
-
-func responseMock(w http.ResponseWriter, r *http.Request) {
-	_, _ = w.Write([]byte(publicIP))
 }

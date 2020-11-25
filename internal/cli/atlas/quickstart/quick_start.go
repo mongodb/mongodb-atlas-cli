@@ -17,14 +17,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/randgen"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/net"
+	"github.com/mongodb/mongocli/internal/randgen"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"

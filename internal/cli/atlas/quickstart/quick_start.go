@@ -45,6 +45,7 @@ const (
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
 	passwordLength    = 12
+	clusterName       = "GetStarted"
 )
 
 // DefaultRegions represents the regions available for each cloud service provider
@@ -57,7 +58,7 @@ var DefaultRegions = map[string][]string{
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	clusterName      string
+	ClusterName      string
 	Provider         string
 	Region           string
 	IPAddress        string
@@ -90,7 +91,7 @@ func (opts *Opts) Run() error {
 	}
 
 	// Get cluster's connection string
-	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
+	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return err
 	}
@@ -101,7 +102,7 @@ func (opts *Opts) Run() error {
 }
 
 func (opts *Opts) watcher() (bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
+	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return false, err
 	}
@@ -158,7 +159,7 @@ func (opts *Opts) newCluster() *atlas.Cluster {
 		ProviderSettings:    opts.newProviderSettings(),
 		MongoDBMajorVersion: mdbVersion,
 		DiskSizeGB:          &diskSizeGB,
-		Name:                opts.clusterName,
+		Name:                opts.ClusterName,
 	}
 }
 
@@ -195,7 +196,7 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askRequiredFlags() error {
 	qs := opts.newDBUserQuestions()
 	qs = append(qs, opts.newAccessListQuestion())
-	qs = append(qs, opts.newProviderQuestion())
+	qs = append(qs, opts.newClusterQuestions()...)
 
 	if err := survey.Ask(qs, opts); err != nil {
 		return err
@@ -267,21 +268,38 @@ func (opts *Opts) newAccessListQuestion() *survey.Question {
 	}
 }
 
-func (opts *Opts) newProviderQuestion() *survey.Question {
-	if opts.Provider != "" {
-		return nil
+func (opts *Opts) newClusterQuestions() []*survey.Question {
+	var qs []*survey.Question
+
+	if opts.ClusterName == "" {
+		q := []*survey.Question{
+			{
+				Name: "clusterName",
+				Prompt: &survey.Input{
+					Message: "Insert the cluster name",
+					Help:    usage.Provider,
+					Default: clusterName,
+				},
+			},
+		}
+		qs = append(qs, q...)
 	}
 
-	return &survey.Question{
-
-		Name: "provider",
-		Prompt: &survey.Select{
-			Message: "Insert the cloud service provider on which Atlas provisions the hosts",
-			Help:    usage.Provider,
-			Options: []string{"AWS", "GCP", "AZURE"},
-		},
+	if opts.Provider == "" {
+		q := []*survey.Question{
+			{
+				Name: "provider",
+				Prompt: &survey.Select{
+					Message: "Insert the cloud service provider on which Atlas provisions the hosts",
+					Help:    usage.Provider,
+					Options: []string{"AWS", "GCP", "AZURE"},
+				},
+			},
+		}
+		qs = append(qs, q...)
 	}
 
+	return qs
 }
 
 func (opts *Opts) newRegionQuestions() *survey.Question {
@@ -322,7 +340,7 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "GetStarted", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringVar(&opts.IPAddress, flag.IP, "", usage.AccessListIPEntry)

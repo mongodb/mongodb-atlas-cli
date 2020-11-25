@@ -34,7 +34,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	var expectedWhitelist []mongodbatlas.ProjectIPWhitelist
 
 	opts := &Opts{
-		clusterName: "ProjectBar",
+		ClusterName: "ProjectBar",
 		Region:      "US",
 		store:       mockStore,
 		IPAddress:   "0.0.0.0",
@@ -55,7 +55,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ConfigProjectID(), opts.clusterName).Return(expectedCluster, nil).
+		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
 		Times(2)
 
 	err := opts.Run()

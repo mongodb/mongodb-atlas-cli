@@ -14,21 +14,17 @@
 package quickstart
 
 import (
-	"context"
-	"crypto/rand"
-	"errors"
 	"fmt"
-	"io/ioutil"
-	"math/big"
-	"net/http"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/randgen"
+
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/net"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -49,18 +45,24 @@ const (
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
 	passwordLength    = 12
-	maxRandNum        = 10000
 )
+
+// DefaultRegions represents the regions available for each cloud service provider
+var DefaultRegions = map[string][]string{
+	"AWS":   {"US_EAST_1", "US_WEST_2", "AP_SOUTH_1", "AP_EAST_2", "EU_WEST_1", "EU_CENTRAL_1", "ME_SOUTH_1", "AF_SOUTH_1"},
+	"GCP":   {"CENTRAL_US", "CANADA_CENTRAL", "WESTERN_EUROPE", "ASIA_SOUTH_EAST", "SOUTH_AFRICA_NORTH", "UAE_NORTH"},
+	"AZURE": {"US_EAST_2", "US_WEST", "EUROPE_NORTH"},
+}
 
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	clusterName      string
-	provider         string
-	region           string
-	ipAddress        string
-	dbUsername       string
-	dbUserPassword   string
+	Provider         string
+	Region           string
+	IPAddress        string
+	DBUsername       string
+	DBUserPassword   string
 	connectionString string
 	store            store.AtlasClusterQuickStarter
 }
@@ -82,11 +84,6 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	// Create DBUser
-	if er := opts.createDatabaseUser(); er != nil {
-		return er
-	}
-
 	fmt.Println("Creating your cluster...")
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
@@ -99,7 +96,7 @@ func (opts *Opts) Run() error {
 	}
 	opts.connectionString = cluster.SrvAddress
 
-	fmt.Printf(quickstartTemplate, opts.dbUsername, opts.dbUserPassword, opts.connectionString)
+	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, opts.connectionString)
 	return nil
 }
 
@@ -112,9 +109,9 @@ func (opts *Opts) watcher() (bool, error) {
 }
 
 func (opts *Opts) createDatabaseUser() error {
-	user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.dbUsername)
+	user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.DBUsername)
 	if err != nil {
-		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", opts.dbUsername)) {
+		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", opts.DBUsername)) {
 			return err
 		}
 	}
@@ -135,70 +132,20 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 	return &atlas.DatabaseUser{
 		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupID:      opts.ConfigProjectID(),
-		Password:     opts.dbUserPassword,
+		Password:     opts.DBUserPassword,
 		X509Type:     none,
 		AWSIAMType:   none,
 		LDAPAuthType: none,
 		DatabaseName: convert.AdminDB,
-		Username:     opts.dbUsername,
+		Username:     opts.DBUsername,
 	}
-}
-
-// newIPAddress returns client's public ip
-func newIPAddress() (string, error) {
-	publicIP := ""
-	for _, uri := range APIURIs {
-		req, err := http.NewRequestWithContext(
-			context.Background(),
-			http.MethodGet,
-			uri,
-			nil,
-		)
-
-		req.Header.Add("Accept", "application/json")
-
-		if err == nil {
-			res, err := http.DefaultClient.Do(req)
-
-			if err == nil {
-				responseBytes, err := ioutil.ReadAll(res.Body)
-				res.Body.Close()
-				if err == nil {
-					publicIP = string(responseBytes)
-					break
-				}
-			}
-		}
-	}
-
-	if publicIP == "" {
-		return publicIP, errors.New("error in finding your public IP, please use --ip to provide your public ip")
-	}
-
-	return publicIP, nil
-}
-
-// APIURIs is the URIs of the services used by newIPAddress to get the client's public IP.
-var APIURIs = []string{
-	"https://api.ipify.org",
-	"http://myexternalip.com/raw",
-	"http://ipinfo.io/ip",
-	"http://ipecho.net/plain",
-	"http://icanhazip.com",
-	"http://ifconfig.me/ip",
-	"http://ident.me",
-	"http://checkip.amazonaws.com",
-	"http://bot.whatismyipaddress.com",
-	"http://whatismyip.akamai.com",
-	"http://wgetip.com",
-	"http://ip.tyk.nu",
 }
 
 func (opts *Opts) newWhitelist() *atlas.ProjectIPWhitelist {
 	return &atlas.ProjectIPWhitelist{
 		GroupID:   opts.ConfigProjectID(),
 		Comment:   accessListComment,
-		IPAddress: opts.ipAddress,
+		IPAddress: opts.IPAddress,
 	}
 }
 
@@ -226,7 +173,7 @@ func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
 		NumShards: &shards,
 		ZoneName:  zoneName,
 		RegionsConfig: map[string]atlas.RegionsConfig{
-			opts.region: {
+			opts.Region: {
 				ReadOnlyNodes:  &readOnlyNodes,
 				ElectableNodes: &members,
 				Priority:       &priority,
@@ -239,136 +186,116 @@ func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
 func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	return &atlas.ProviderSettings{
 		InstanceSizeName: tier,
-		ProviderName:     opts.provider,
-		RegionName:       opts.region,
+		ProviderName:     opts.Provider,
+		RegionName:       opts.Region,
 	}
 }
 
 // askRequiredFlags allows the user to set required flags by using interactive prompts
 func (opts *Opts) askRequiredFlags() error {
-	if opts.dbUsername == "" {
-		dbUsername := ""
-		dbUsernamePrompt := &survey.Input{
-			Message: "Insert the Username for authenticating to MongoDB [Press Enter to use an autogenerated username]",
-			Help:    usage.DBUsername,
-		}
+	qs := opts.newDBUserQuestions()
+	qs = append(qs, opts.newAccessListQuestion())
+	qs = append(qs, opts.newProviderQuestion())
 
-		if err := survey.AskOne(dbUsernamePrompt, &dbUsername); err != nil {
-			return err
-		}
-		opts.dbUsername = dbUsername
-
-		if opts.dbUsername == "" {
-			n, err := e2e.RandInt(maxRandNum)
-			if err != nil {
-				return err
-			}
-			opts.dbUsername = "quickStart_" + n.String()
-		}
-	}
-
-	if opts.dbUserPassword == "" {
-		dbPassword := ""
-		dbPasswordPrompt := &survey.Password{
-			Message: "Insert the Password for authenticating to MongoDB [Press Enter to use an autogenerated password]",
-			Help:    usage.Password,
-		}
-
-		if err := survey.AskOne(dbPasswordPrompt, &dbPassword); err != nil {
-			return err
-		}
-
-		opts.dbUserPassword = dbPassword
-		if opts.dbUserPassword == "" {
-			p, err := newAutogeneratedPassword(passwordLength)
-			if err != nil {
-				return err
-			}
-			opts.dbUserPassword = p
-		}
-	}
-
-	if opts.ipAddress == "" {
-		answer := ""
-		publicIP, err := newIPAddress()
-		message := "Insert the IP entry to add to the Access List"
-		if err == nil {
-			message = fmt.Sprintf(`Insert the IP entry to add to the Access List [Press Enter to use your public IP "%s"]`, publicIP)
-		}
-
-		publicIPPrompt := survey.Input{
-			Message: message,
-			Help:    usage.AccessListIPEntry,
-		}
-
-		if err := survey.AskOne(&publicIPPrompt, &answer); err != nil {
-			return err
-		}
-
-		opts.ipAddress = answer
-		if opts.ipAddress == "" {
-			opts.ipAddress = publicIP
-		}
-	}
-
-	err := opts.askProviderAndRegionFlags()
-	if err != nil {
+	if err := survey.Ask(qs, opts); err != nil {
 		return err
 	}
 
+	// we call survey.Ask two times because the region question needs opts.Provider to be populated
+	if err := survey.Ask([]*survey.Question{opts.newRegionQuestions()}, opts); err != nil {
+		return err
+	}
+
+	if opts.DBUserPassword == "" {
+		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+		if err != nil {
+			return err
+		}
+		opts.DBUserPassword = pwd
+	}
+
 	return nil
 }
 
-func (opts *Opts) askProviderAndRegionFlags() error {
-	if opts.provider == "" {
-		providerPrompt := &survey.Select{
+func (opts *Opts) newDBUserQuestions() []*survey.Question {
+	var qs []*survey.Question
+	if opts.DBUsername == "" {
+		q := []*survey.Question{
+			{
+				Name: "dbUsername",
+				Prompt: &survey.Input{
+					Message: "Insert the Username for authenticating to MongoDB",
+					Help:    usage.DBUsername,
+					Default: "quickStartUser",
+				},
+			},
+		}
+
+		qs = append(qs, q...)
+	}
+
+	if opts.DBUserPassword == "" {
+		q := []*survey.Question{
+			{
+				Name: "dbUserPassword",
+				Prompt: &survey.Password{
+					Message: "Insert the Password for authenticating to MongoDB [Press Enter to use an autogenerated password]",
+					Help:    usage.Password,
+				},
+			},
+		}
+
+		qs = append(qs, q...)
+	}
+
+	return qs
+}
+
+func (opts *Opts) newAccessListQuestion() *survey.Question {
+	if opts.IPAddress != "" {
+		return nil
+	}
+	publicIP, _ := net.NewIPAddress()
+	return &survey.Question{
+
+		Name: "ipAddress",
+		Prompt: &survey.Input{
+			Message: "Insert the IP entry to add to the Access List",
+			Help:    usage.AccessListIPEntry,
+			Default: publicIP,
+		},
+	}
+}
+
+func (opts *Opts) newProviderQuestion() *survey.Question {
+	if opts.Provider != "" {
+		return nil
+	}
+
+	return &survey.Question{
+
+		Name: "provider",
+		Prompt: &survey.Select{
 			Message: "Insert the cloud service provider on which Atlas provisions the hosts",
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
-		}
-
-		if err := survey.AskOne(providerPrompt, &opts.provider); err != nil {
-			return err
-		}
+		},
 	}
 
-	if opts.region == "" {
-		regionOption := []string{"US_EAST_1", "US_WEST_2", "AP_SOUTH_1", "AP_EAST_2", "EU_WEST_1", "EU_CENTRAL_1", "ME_SOUTH_1", "AF_SOUTH_1"}
-		if opts.provider == "AZURE" {
-			regionOption = []string{"US_EAST_2", "US_WEST", "EUROPE_NORTH"}
-		}
-
-		if opts.provider == "GCP" {
-			regionOption = []string{"CENTRAL_US", "CANADA_CENTRAL", "WESTERN_EUROPE", "ASIA_SOUTH_EAST", "SOUTH_AFRICA_NORTH", "UAE_NORTH"}
-		}
-
-		regionPrompt := &survey.Select{
-			Message: "Insert the physical location of your MongoDB cluster",
-			Help:    usage.Region,
-			Options: regionOption,
-		}
-
-		if err := survey.AskOne(regionPrompt, &opts.region); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
-func newAutogeneratedPassword(length int) (string, error) {
-	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-		"abcdefghijklmnopqrstuvwxyz" +
-		"0123456789")
-	var b strings.Builder
-	for i := 0; i < length; i++ {
-		index, err := rand.Int(rand.Reader, big.NewInt(int64(len(chars))))
-		if err != nil {
-			return "", err
-		}
-		b.WriteRune(chars[index.Int64()])
+func (opts *Opts) newRegionQuestions() *survey.Question {
+	if opts.Region != "" {
+		return nil
 	}
-
-	return b.String(), nil
+	return &survey.Question{
+		Name: "region",
+		Prompt: &survey.Select{
+			Message: "Insert the physical location of your MongoDB cluster",
+			Help:    usage.Region,
+			Options: DefaultRegions[strings.ToUpper(opts.Provider)],
+		},
+	}
 }
 
 // mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
@@ -387,6 +314,7 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 				opts.askRequiredFlags,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.createDatabaseUser,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -395,11 +323,11 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "GetStarted", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringVar(&opts.ipAddress, flag.IP, "", usage.AccessListIPEntry)
-	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.dbUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
+	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().StringVar(&opts.IPAddress, flag.IP, "", usage.AccessListIPEntry)
+	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

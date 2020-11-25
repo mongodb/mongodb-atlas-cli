@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -31,15 +30,15 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	expectedCluster := &mongodbatlas.Cluster{
 		StateName: "IDLE",
 	}
-	expectedDBUser := &mongodbatlas.DatabaseUser{}
+
 	var expectedWhitelist []mongodbatlas.ProjectIPWhitelist
 
 	opts := &Opts{
 		clusterName: "ProjectBar",
-		region:      "US",
+		Region:      "US",
 		store:       mockStore,
-		ipAddress:   "0.0.0.0",
-		dbUsername:  "user",
+		IPAddress:   "0.0.0.0",
+		DBUsername:  "user",
 	}
 
 	whitelist := opts.newWhitelist()
@@ -52,16 +51,6 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		CreateProjectIPAccessList(whitelist).Return(expectedWhitelist, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
-		Times(1)
-
-	mockStore.
-		EXPECT().
-		DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.dbUsername).Return(nil, nil).
 		Times(1)
 
 	mockStore.

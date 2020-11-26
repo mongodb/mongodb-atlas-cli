@@ -40,11 +40,11 @@ func IPAddress() (string, error) {
 	return ipAddress(APIURIs)
 }
 
-// IPAddress returns client's public ip
+// ipAddress returns client's public ip
 func ipAddress(services []string) (string, error) {
 	publicIP := ""
 	for _, uri := range services {
-		publicIP = ipAddressFromService(uri)
+		publicIP = ipAddressFromAPI(uri)
 		if publicIP != "" {
 			break
 		}
@@ -57,7 +57,8 @@ func ipAddress(services []string) (string, error) {
 	return publicIP, nil
 }
 
-func ipAddressFromService(uri string) string {
+// ipAddressFromAPI gets the client's public ip by calling the input endpoint
+func ipAddressFromAPI(uri string) string {
 	req, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodGet,

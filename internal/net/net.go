@@ -36,30 +36,17 @@ var APIURIs = []string{
 	"http://ip.tyk.nu",
 }
 
-// NewIPAddress returns client's public ip
-func NewIPAddress() (string, error) {
+func IPAddress() (string, error) {
+	return ipAddress(APIURIs)
+}
+
+// IPAddress returns client's public ip
+func ipAddress(services []string) (string, error) {
 	publicIP := ""
-	for _, uri := range APIURIs {
-		req, err := http.NewRequestWithContext(
-			context.Background(),
-			http.MethodGet,
-			uri,
-			nil,
-		)
-
-		req.Header.Add("Accept", "application/json")
-
-		if err == nil {
-			res, err := http.DefaultClient.Do(req)
-
-			if err == nil {
-				responseBytes, err := ioutil.ReadAll(res.Body)
-				res.Body.Close()
-				if err == nil {
-					publicIP = string(responseBytes)
-					break
-				}
-			}
+	for _, uri := range services {
+		publicIP = ipAddressFromService(uri)
+		if publicIP != "" {
+			break
 		}
 	}
 
@@ -68,4 +55,28 @@ func NewIPAddress() (string, error) {
 	}
 
 	return publicIP, nil
+}
+
+func ipAddressFromService(uri string) string {
+	req, err := http.NewRequestWithContext(
+		context.Background(),
+		http.MethodGet,
+		uri,
+		nil,
+	)
+
+	req.Header.Add("Accept", "application/json")
+
+	if err == nil {
+		res, err := http.DefaultClient.Do(req)
+
+		if err == nil {
+			responseBytes, err := ioutil.ReadAll(res.Body)
+			res.Body.Close()
+			if err == nil {
+				return string(responseBytes)
+			}
+		}
+	}
+	return ""
 }

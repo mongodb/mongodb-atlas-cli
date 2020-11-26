@@ -14,7 +14,10 @@
 package quickstart
 
 import (
+	"errors"
 	"fmt"
+	"os/exec"
+	"regexp"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -34,7 +37,7 @@ const quickstartTemplate = "Now you can connect to your Atlas cluster with: mong
 
 const (
 	replicaSet        = "REPLICASET"
-	diskSizeGB        = 10
+	diskSizeGB        = 10.0
 	mdbVersion        = "4.2"
 	shards            = 1
 	tier              = "M10"
@@ -74,7 +77,19 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
+	if err := opts.askClusterFlags(); err != nil {
+		return err
+	}
+
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+		return err
+	}
+
+	if err := opts.askDBUserAccessListFlags(); err != nil {
+		return err
+	}
+
+	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}
 
@@ -106,26 +121,6 @@ func (opts *Opts) watcher() (bool, error) {
 		return false, err
 	}
 	return result.StateName == "IDLE", nil
-}
-
-func (opts *Opts) createDatabaseUser() error {
-	user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), opts.DBUsername)
-	if err != nil {
-		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", opts.DBUsername)) {
-			return err
-		}
-	}
-
-	if user != nil {
-		return nil
-	}
-
-	// Create dbUser
-	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
@@ -191,19 +186,18 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	}
 }
 
-// askRequiredFlags allows the user to set required flags by using interactive prompts
-func (opts *Opts) askRequiredFlags() error {
+// askDBUserAccessListFlags allows the user to set required flags by using interactive prompts
+func (opts *Opts) askDBUserAccessListFlags() error {
 	qs := opts.newDBUserQuestions()
-	qs = append(qs, opts.newAccessListQuestion())
-	qs = append(qs, opts.newClusterQuestions()...)
 
-	if err := survey.Ask(qs, opts); err != nil {
-		return err
+	if q := opts.newAccessListQuestion(); q != nil {
+		qs = append(qs, q)
 	}
 
-	// we call survey.Ask two times because the region question needs opts.Provider to be populated
-	if err := survey.Ask([]*survey.Question{opts.newRegionQuestions()}, opts); err != nil {
-		return err
+	if len(qs) > 0 {
+		if err := survey.Ask(qs, opts); err != nil {
+			return err
+		}
 	}
 
 	if opts.DBUserPassword == "" {
@@ -217,15 +211,48 @@ func (opts *Opts) askRequiredFlags() error {
 	return nil
 }
 
+func (opts *Opts) askClusterFlags() error {
+	qs := opts.newClusterQuestions()
+
+	if err := survey.Ask(qs, opts); err != nil {
+		return err
+	}
+
+	if regionQ := opts.newRegionQuestions(); regionQ != nil {
+		// we call survey.Ask two times because the region question needs opts.Provider to be populated
+		if err := survey.Ask([]*survey.Question{regionQ}, opts); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (opts *Opts) newDBUserQuestions() []*survey.Question {
 	var qs []*survey.Question
 	if opts.DBUsername == "" {
+		usrDefault, _ := dbUsername()
 		q := &survey.Question{
 			Name: "dbUsername",
 			Prompt: &survey.Input{
 				Message: "Insert the Username for authenticating to MongoDB",
 				Help:    usage.DBUsername,
-				Default: "quickStartUser",
+				Default: usrDefault,
+			},
+			Validate: func(val interface{}) error {
+				username, _ := val.(string)
+				user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
+				if err != nil {
+					if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", username)) {
+						return err
+					}
+				}
+
+				if user != nil {
+					return errors.New("a user with this username already exists")
+				}
+
+				return nil
 			},
 		}
 
@@ -251,7 +278,7 @@ func (opts *Opts) newAccessListQuestion() *survey.Question {
 	if opts.IPAddress != "" {
 		return nil
 	}
-	publicIP, _ := net.NewIPAddress()
+	publicIP, _ := net.IPAddress()
 	return &survey.Question{
 		Name: "ipAddress",
 		Prompt: &survey.Input{
@@ -306,6 +333,22 @@ func (opts *Opts) newRegionQuestions() *survey.Question {
 	}
 }
 
+// dbUsername returns the username of the user by running the command 'whoami'
+func dbUsername() (string, error) {
+	command := "whoami"
+	cmd := exec.Command("bash", "-c", command)
+	stdout, err := cmd.Output()
+
+	if err != nil {
+		return "", errors.New(`error in running the command "whoami"`)
+	}
+
+	// dbUsername can only contain ASCII letters, numbers, hyphens and underscores
+	out := strings.TrimSpace(string(stdout))
+	var re = regexp.MustCompile("([^A-Za-z0-9_-])")
+	return re.ReplaceAllString(out, "_"), nil
+}
+
 // mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
 func Builder() *cobra.Command {
 	opts := &Opts{}
@@ -319,10 +362,8 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.askRequiredFlags,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.createDatabaseUser,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

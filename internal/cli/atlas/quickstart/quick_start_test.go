@@ -31,14 +31,18 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		StateName: "IDLE",
 	}
 
+	expectedDBUser := &mongodbatlas.DatabaseUser{}
+
 	var expectedWhitelist []mongodbatlas.ProjectIPWhitelist
 
 	opts := &Opts{
-		ClusterName: "ProjectBar",
-		Region:      "US",
-		store:       mockStore,
-		IPAddress:   "0.0.0.0",
-		DBUsername:  "user",
+		ClusterName:    "ProjectBar",
+		Region:         "US",
+		store:          mockStore,
+		IPAddress:      "0.0.0.0",
+		DBUsername:     "user",
+		DBUserPassword: "test",
+		Provider:       "AWS",
 	}
 
 	whitelist := opts.newWhitelist()
@@ -57,6 +61,11 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		EXPECT().
 		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
 		Times(2)
+
+	mockStore.
+		EXPECT().
+		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
+		Times(1)
 
 	err := opts.Run()
 	if err != nil {

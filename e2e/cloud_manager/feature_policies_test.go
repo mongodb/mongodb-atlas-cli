@@ -61,7 +61,6 @@ func TestFeaturePolicies(t *testing.T) {
 		}
 
 		externalManagSystemName = policy.ExternalManagementSystem.Name
-
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -111,6 +110,5 @@ func TestFeaturePolicies(t *testing.T) {
 		if !foundDisableUserManagement {
 			t.Errorf("policy %s not found", policyDisableUserManagement)
 		}
-
 	})
 }

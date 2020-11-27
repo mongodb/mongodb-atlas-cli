@@ -91,7 +91,7 @@ func TestFeaturePolicies(t *testing.T) {
 		}
 
 		if len(policy.Policies) == 0 {
-			t.Error("No policies foundExternalManagedLock")
+			t.Error("No policies found")
 		}
 
 		foundExternalManagedLock := false

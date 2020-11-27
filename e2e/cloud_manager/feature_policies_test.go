@@ -26,7 +26,7 @@ import (
 )
 
 func TestFeaturePolicies(t *testing.T) {
-	const policyDisableSetMongoDConfig = "EXTERNALLY_MANAGED_LOCK"
+	const policyExternallyManagedLock = "EXTERNALLY_MANAGED_LOCK"
 	const policyDisableUserManagement = "DISABLE_USER_MANAGEMENT"
 
 	cliPath, err := e2e.Bin()
@@ -72,7 +72,7 @@ func TestFeaturePolicies(t *testing.T) {
 			"--name",
 			externalManagSystemName,
 			"--policy",
-			policyDisableSetMongoDConfig,
+			policyExternallyManagedLock,
 			"--policy",
 			policyDisableUserManagement,
 			"-o=json",
@@ -91,18 +91,25 @@ func TestFeaturePolicies(t *testing.T) {
 		}
 
 		if len(policy.Policies) == 0 {
-			t.Error("No policies found")
+			t.Error("No policies foundExternalManagedLock")
 		}
 
-		found := false
+		foundExternalManagedLock := false
+		foundDisableUserManagement := false
 		for _, p := range policy.Policies {
-			if p.Policy == policyDisableSetMongoDConfig {
-				found = true
+			if p.Policy == policyExternallyManagedLock {
+				foundExternalManagedLock = true
+			}else if p.Policy == policyDisableUserManagement {
+				foundDisableUserManagement = true
 			}
 		}
 
-		if !found {
-			t.Errorf("policies %s found", policyDisableSetMongoDConfig)
+		if !foundExternalManagedLock {
+			t.Errorf("policy %s not found", policyExternallyManagedLock)
+		}
+
+		if !foundDisableUserManagement {
+			t.Errorf("policy %s not found", policyDisableUserManagement)
 		}
 
 	})

@@ -99,7 +99,7 @@ func TestFeaturePolicies(t *testing.T) {
 		for _, p := range policy.Policies {
 			if p.Policy == policyExternallyManagedLock {
 				foundExternalManagedLock = true
-			}else if p.Policy == policyDisableUserManagement {
+			} else if p.Policy == policyDisableUserManagement {
 				foundDisableUserManagement = true
 			}
 		}

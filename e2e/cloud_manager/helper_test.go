@@ -38,6 +38,7 @@ const (
 	maintenanceEntity = "maintenanceWindows"
 	monitoringEntity  = "monitoring"
 	processesEntity   = "processes"
+	featurePolicies   = "featurePolicies"
 )
 
 const (

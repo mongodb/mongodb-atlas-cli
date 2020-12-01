@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/AlecAivazis/survey/v2 v2.2.4
 	github.com/Masterminds/semver/v3 v3.1.1
-	github.com/briandowns/spinner v1.11.1
+	github.com/briandowns/spinner v1.12.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-test/deep v1.0.7
 	github.com/golang/mock v1.4.4

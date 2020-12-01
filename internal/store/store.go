@@ -39,9 +39,9 @@ const (
 	responseHeaderTimeout     = 10 * time.Minute
 	tlsHandshakeTimeout       = 10 * time.Second
 	timeout                   = 10 * time.Second
-	keepAlive                 = 0 * time.Second
-	maxIdleConns              = 0
-	maxIdleConnsPerHost       = 0
+	keepAlive                 = 30 * time.Second
+	maxIdleConns              = 100
+	maxIdleConnsPerHost       = 4
 	idleConnTimeout           = 90 * time.Second
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
@@ -53,24 +53,6 @@ type Store struct {
 	caCertificate string
 	skipVerify    string
 	client        interface{}
-}
-
-var defaultT = defaultTransport()
-
-func defaultTransport() http.RoundTripper {
-	return &http.Transport{
-		DisableKeepAlives: true,
-		Proxy:             http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: keepAlive,
-		}).DialContext,
-		ForceAttemptHTTP2:   true,
-		MaxIdleConns:        maxIdleConns,
-		MaxIdleConnsPerHost: maxIdleConnsPerHost,
-		IdleConnTimeout:     idleConnTimeout,
-		TLSHandshakeTimeout: expectContinueTimeout,
-	}
 }
 
 func customCATransport(ca []byte) http.RoundTripper {
@@ -138,7 +120,7 @@ func authenticatedClient(c Config) (*http.Client, error) {
 	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
 		t.Transport = skipVerifyTransport()
 	} else {
-		t.Transport = defaultT
+		t.Transport = http.DefaultTransport
 	}
 
 	return t.Client()
@@ -155,7 +137,7 @@ func defaultClient(c Config) (*http.Client, error) {
 	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
 		client.Transport = skipVerifyTransport()
 	} else {
-		client.Transport = defaultT
+		client.Transport = http.DefaultTransport
 	}
 
 	return client, nil

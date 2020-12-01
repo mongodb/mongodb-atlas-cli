@@ -16,3 +16,4 @@ package version
 
 // Version for CLI
 var Version string
+var GitCommit string

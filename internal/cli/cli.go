@@ -15,8 +15,12 @@
 package cli
 
 import (
+	"fmt"
+	"runtime"
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,4 +38,39 @@ func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags 
 	for _, f := range flags {
 		a.NotNil(subject.Flags().Lookup(f))
 	}
+}
+
+func Builder() *cobra.Command {
+	rootCmd := &cobra.Command{
+		Version: version.Version,
+		Use:     config.ToolName,
+		Short:   "CLI tool to manage your MongoDB Cloud",
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
+		Example: `
+  Display the help menu for the config command
+  $ mongocli config --help`,
+		SilenceUsage: true,
+	}
+	rootCmd.SetVersionTemplate(formattedVersion())
+
+	return rootCmd
+}
+
+const verTemplate = `%s version: %s
+git version: %s
+Go version: %s
+   os: %s
+   arch: %s
+   compiler: %s
+`
+
+func formattedVersion() string {
+	return fmt.Sprintf(verTemplate,
+		config.ToolName,
+		version.Version,
+		version.GitCommit,
+		runtime.Version(),
+		runtime.GOOS,
+		runtime.GOARCH,
+		runtime.Compiler)
 }

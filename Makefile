@@ -9,7 +9,8 @@ INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
 GOLANGCI_VERSION=v1.32.2
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
-LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
+GIT_SHA=$(shell git rev-parse HEAD)
+LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${GIT_SHA}
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test

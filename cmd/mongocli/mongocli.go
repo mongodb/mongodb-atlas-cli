@@ -19,6 +19,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
@@ -27,21 +28,11 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
 
 var (
-	rootCmd = &cobra.Command{
-		Version: version.Version,
-		Use:     config.ToolName,
-		Short:   "CLI tool to manage your MongoDB Cloud",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
-		Example: `
-  Display the help menu for the config command
-  $ mongocli config --help`,
-		SilenceUsage: true,
-	}
+	rootCmd = cli.Builder()
 
 	completionCmd = &cobra.Command{
 		Use:   "completion <bash|zsh|fish|powershell>",

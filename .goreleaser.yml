@@ -6,7 +6,7 @@ builds:
   - <<: &build_defaults
       main: ./cmd/mongocli/mongocli.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}}
+        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
     id: macos
     goos: [darwin]
     goarch: [amd64]
@@ -86,5 +86,6 @@ changelog:
 release:
   draft: true # we only publish after the Windows MSI gets uploaded
   prerelease: auto
+  name_template: "MongoDB CLI {{.Version}}"
   extra_files:
     - glob: ./dist/mongocli_macos_signed_x86_64.zip

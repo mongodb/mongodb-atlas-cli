@@ -76,7 +76,7 @@ func (opts *CreateOpts) newDBUser() *opsmngr.MongoDBUser {
 		Username:                   opts.username,
 		Roles:                      convert.BuildOMRoles(opts.roles),
 		AuthenticationRestrictions: []string{},
-		Mechanisms:                 opts.mechanisms,
+		Mechanisms:                 &opts.mechanisms,
 	}
 }
 

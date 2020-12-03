@@ -32,6 +32,7 @@ type ProcessConfig struct {
 	AuditLogPath           string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
 	AuditLogDestination    string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
 	AuditLogFormat         string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	AuditLogFilter         string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
 	BuildIndexes           *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
 	DBPath                 string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
 	BindIP                 *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
@@ -56,13 +57,13 @@ type ProcessConfig struct {
 	ProcessType            string                  `yaml:"processType" json:"processType"`
 	SlaveDelay             *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
 	SyncPeriodSecs         *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
-	Version                string                  `yaml:"version,omitempty" json:"version,omitempty"`
 	Votes                  *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
 	ArbiterOnly            *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
 	Disabled               bool                    `yaml:"disabled" json:"disabled"`
 	Hidden                 *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	TLS                    *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
 	Security               *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
+	TLS                    *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Version                string                  `yaml:"version,omitempty" json:"version,omitempty"`
 	WiredTiger             *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
 }
 
@@ -162,6 +163,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
 		pc.AuditLogPath = p.Args26.AuditLog.Path
+		pc.AuditLogFilter = p.Args26.AuditLog.Filter
 	}
 
 	if p.Args26.NET.TLS != nil {
@@ -208,6 +210,7 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
 		pc.AuditLogPath = p.Args26.AuditLog.Path
+		pc.AuditLogFilter = p.Args26.AuditLog.Filter
 	}
 	if p.Args26.NET.TLS != nil {
 		pc.TLS = &TLS{

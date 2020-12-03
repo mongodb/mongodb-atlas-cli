@@ -95,8 +95,9 @@ func TestDownloadOpts_initDefaultOut(t *testing.T) {
 				name: logName,
 			}
 			opts.Out = out
-			opts.initDefaultOut()
-			assert.Equal(t, opts.Out, want)
+			a := assert.New(t)
+			a.NoError(opts.initDefaultOut())
+			a.Equal(opts.Out, want)
 		})
 	}
 }

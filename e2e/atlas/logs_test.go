@@ -19,6 +19,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -110,7 +111,8 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 
-	if _, err := os.Stat(logFile); err != nil {
+	outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
+	if _, err := os.Stat(outputFile); err != nil {
 		t.Fatalf("%v has not been downloaded", logFile)
 	}
 }

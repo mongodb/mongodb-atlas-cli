@@ -67,11 +67,11 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log",
 							},
 							AuditLog: &opsmngr.AuditLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/audit",
 							},
 						},
@@ -226,7 +226,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log",
 							},
 						},
@@ -324,7 +324,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 							Security: &map[string]interface{}{
@@ -355,7 +355,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 						},

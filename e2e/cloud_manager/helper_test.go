@@ -109,6 +109,13 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Port:     27000,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 				{
 					DBPath:   fmt.Sprintf("/data/%s/27001", clusterName),
@@ -117,6 +124,13 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Port:     27001,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 				{
 					DBPath:   fmt.Sprintf("/data/%s/27002", clusterName),
@@ -125,6 +139,13 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Port:     27002,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 			},
 		},
@@ -159,6 +180,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Port:     29000,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 				{
 					DBPath:   fmt.Sprintf("/data/%s/29001", clusterName),
@@ -167,6 +195,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Port:     29001,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 				{
 					DBPath:   fmt.Sprintf("/data/%s/29002", clusterName),
@@ -175,6 +210,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Port:     29002,
 					Priority: &one,
 					Votes:    &one,
+					WiredTiger: &map[string]interface{}{
+						"collectionConfig": map[string]interface{}{},
+						"engineConfig": map[string]interface{}{
+							"cacheSizeGB": 1,
+						},
+						"indexConfig": map[string]interface{}{},
+					},
 				},
 			},
 		},
@@ -196,6 +238,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     27000,
 						Priority: &one,
 						Votes:    &one,
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 1,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/27001", clusterName),
@@ -204,6 +253,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     27001,
 						Priority: &one,
 						Votes:    &one,
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 1,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/27002", clusterName),
@@ -212,6 +268,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Port:     27002,
 						Priority: &one,
 						Votes:    &one,
+						WiredTiger: &map[string]interface{}{
+							"collectionConfig": map[string]interface{}{},
+							"engineConfig": map[string]interface{}{
+								"cacheSizeGB": 1,
+							},
+							"indexConfig": map[string]interface{}{},
+						},
 					},
 				},
 			},

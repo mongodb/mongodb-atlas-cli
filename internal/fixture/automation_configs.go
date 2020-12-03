@@ -192,13 +192,16 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					Storage: &opsmngr.Storage{
 						DBPath: "/data/db/",
 					},
-
 					Security: &map[string]interface{}{
 						"test": "test",
 					},
 					SystemLog: opsmngr.SystemLog{
 						Destination: "file",
 						Path:        "/data/db/mongodb.log",
+					},
+					AuditLog: &opsmngr.AuditLog{
+						Destination: "file",
+						Path:        "/data/db/audit.log",
 					},
 				},
 				AuthSchemaVersion:           defaultAuthSchemaVersion,

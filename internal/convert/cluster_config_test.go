@@ -443,7 +443,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 							Security: &map[string]interface{}{
@@ -474,7 +474,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 						},
@@ -572,7 +572,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_0",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_0",
 							},
 						},
@@ -599,7 +599,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/configRS",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/configRS",
 							},
 							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
@@ -621,7 +621,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Args26: opsmngr.Args26{
 							NET: opsmngr.Net{Port: 3},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/mongos",
 							},
 						},
@@ -766,7 +766,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_0",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_0",
 							},
 						},
@@ -793,7 +793,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/configRS",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/configRS",
 							},
 							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
@@ -815,7 +815,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Args26: opsmngr.Args26{
 							NET: opsmngr.Net{Port: 3},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/mongos",
 							},
 						},
@@ -844,7 +844,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_1",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_1",
 							},
 						},

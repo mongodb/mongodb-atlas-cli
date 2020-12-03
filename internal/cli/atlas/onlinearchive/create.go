@@ -51,7 +51,6 @@ var createTemplate = "Online archive '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	archive, err := opts.newOnlineArchive()
-	_ = opts.Print(archive)
 	if err != nil {
 		return err
 	}

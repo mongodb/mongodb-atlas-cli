@@ -49,6 +49,7 @@ const (
 	ldapEntity             = "ldap"
 	awsEntity              = "aws"
 	customDNSEntity        = "customDns"
+	logsEntity             = "logs"
 )
 
 func getHostnameAndPort() (string, error) {

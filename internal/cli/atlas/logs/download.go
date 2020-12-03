@@ -65,10 +65,11 @@ func (opts *DownloadOpts) Run() error {
 	return f.Close()
 }
 
-func (opts *DownloadOpts) initDefaultOut() {
+func (opts *DownloadOpts) initDefaultOut() error {
 	if opts.Out == "" {
 		opts.Out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
 	}
+	return nil
 }
 
 func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
@@ -89,12 +90,11 @@ func DownloadBuilder() *cobra.Command {
 		Long:  downloadLong,
 		Args:  require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.initDefaultOut()
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore, opts.initDefaultOut)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if !search.StringInSlice(cmd.ValidArgs, opts.name) {
 				return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
 			}

@@ -26,6 +26,7 @@ import (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.ListOpts
 	clusterName string
 	store       store.OnlineArchiveLister
 }
@@ -36,12 +37,13 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .}}
+var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .Results}}
 {{.ID}}	{{.DBName}}	{{.CollName}}	{{.State}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName)
+	lst := opts.NewListOptions()
+	r, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName, lst)
 	if err != nil {
 		return err
 	}
@@ -70,6 +72,8 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

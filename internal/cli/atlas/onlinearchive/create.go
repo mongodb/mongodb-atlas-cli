@@ -35,6 +35,7 @@ type CreateOpts struct {
 	dbName       string
 	collection   string
 	dateField    string
+	dateFormat   string
 	archiveAfter float64
 	partitions   []string
 	store        store.OnlineArchiveCreator
@@ -50,6 +51,7 @@ var createTemplate = "Online archive '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	archive, err := opts.newOnlineArchive()
+	_ = opts.Print(archive)
 	if err != nil {
 		return err
 	}
@@ -70,6 +72,7 @@ func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
 		CollName: opts.collection,
 		Criteria: &atlas.OnlineArchiveCriteria{
 			DateField:       opts.dateField,
+			DateFormat:      opts.dateFormat,
 			ExpireAfterDays: opts.archiveAfter,
 		},
 		DBName:          opts.dbName,
@@ -126,6 +129,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.DateField)
+	cmd.Flags().StringVar(&opts.dateFormat, flag.DateFormat, "ISODATE", usage.DateFormat)
 	cmd.Flags().Float64Var(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 

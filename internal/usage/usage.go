@@ -85,7 +85,7 @@ const (
 	LogStart                        = "Beginning of the period for which to retrieve logs as UNIX Epoch time."
 	LogEnd                          = "End of the period for which to retrieve logs as UNIX Epoch time."
 	ArchiveLimit                    = "Max number of entries for the diagnose archive."
-	ArchiveMinutes                  = "Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time. "
+	ArchiveMinutes                  = "Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time."
 	MeasurementStart                = "Beginning of the period for which to retrieve measurements."
 	MeasurementEnd                  = "End of the period for which to retrieve measurements."
 	MeasurementType                 = "Measurements to return. If it is not specified, all measurements are returned."
@@ -102,7 +102,6 @@ const (
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
 	ServerUsageStartDate            = "Timestamp in ISO 8601 date format when the list of host assignments starts."
 	ServerUsageEndDate              = "Timestamp in ISO 8601 date format when the list of host assignments ends."
-	ServerUsageFormat               = "Compression format of the resulting report. Accepted values for this option are: zip, tar.gz"
 	AlertType                       = "Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP."
 	MaintenanceDescription          = "Description of the maintenance window."
 	Event                           = "Type of event that will trigger an alert."
@@ -146,7 +145,6 @@ const (
 	AWSAccessKey                    = "AWS Access Key ID that can access the S3 bucket specified in s3BucketName."
 	AWSSecretKey                    = "AWS Secret Access Key that can access the S3 bucket specified in s3BucketName." //nolint:gosec // This is just a message not a credential
 	DisableProxyS3                  = "Flag indicating whether the HTTP proxy should be used when connecting to S3."
-	S3AuthMethod                    = "Method used to authorize access to the S3 bucket specified in s3BucketName. Accepted values for this option are: KEYS, IAM_ROLE."
 	S3BucketEndpoint                = "URL that Ops Manager uses to access this AWS S3 or S3-compatible bucket."
 	S3BucketName                    = "Name of the S3 bucket that hosts the S3 blockstore."
 	S3MaxConnections                = "Positive integer indicating the maximum number of connections to this S3 blockstore."
@@ -181,7 +179,6 @@ const (
 	SearchFields                    = "Static field specifications."
 	RSName                          = "The replica set that the index is built on."
 	Key                             = "Index keys. Should be formatted as field:type."
-	Unique                          = "Create a unique key index."
 	LogTypes                        = "Array of strings specifying the types of logs to collect."
 	SizeRequestedPerFileBytes       = "Size for each log file in bytes."
 	LogRedacted                     = "If set to true, emails, hostnames, IP addresses, and namespaces in API responses involving this job are replaced with random string values."
@@ -201,15 +198,12 @@ const (
 	ClusterID                       = "Unique identifier of the cluster."
 	ReferenceTimeZoneOffset         = "The ISO-8601 timezone offset where the Ops Manager host resides."
 	DailySnapshotRetentionDays      = "Number of days to retain daily snapshots. Accepted values for this option are: values between 1 and 365 inclusive."
-	ClusterCheckpointIntervalMin    = "Number of minutes between successive cluster checkpoints. Accepted values for this option are: 15, 30, or 60."
-	SnapshotIntervalHours           = "Number of hours between snapshots. Accepted values for this option are: 6, 8, 12, or 24."
 	SnapshotRetentionDays           = "Number of days to keep recent snapshots. Accepted values for this option are: values between 2 and 5 inclusive."
 	WeeklySnapshotRetentionWeeks    = "Number of weeks to retain weekly snapshots. Accepted values for this option are: values between 1 and 52 inclusive."
 	PointInTimeWindowHours          = "Number of hours in the past for which a point-in-time snapshot can be created."
 	ReferenceHourOfDay              = "Hour of the day to schedule snapshots using a 24 hour clock. Accepted values for this option are: values between 0 and 23 inclusive."
 	ReferenceMinuteOfHour           = "Minute of the hour to schedule snapshots. Accepted values for this option are: values between 0 and 59 inclusive."
 	MonthlySnapshotRetentionMonths  = "Number of months to retain monthly snapshots. Accepted values for this option are: values between 1 and 36 inclusive."
-	Background                      = "Create the index in the background."
 	Policy                          = "List of policies that the external system applies to this Ops Manager Project."
 	SystemID                        = "Unique identifier of the external system that manages this Ops Manager Project."
 	ExternalSystemName              = "Identifying label for the external system that manages this Ops Manager Project."
@@ -281,4 +275,14 @@ Valid values: NONE|USER|ROLE.`
 Valid values: NONE|MANAGED|CUSTOMER.`
 	LDAPType = `LDAP method by which the provided username is authenticated. 
 Valid values: NONE|USER|GROUP.`
+	DateFormat = `Date format for the date field. 
+Valid values: ISODATE|EPOCH_SECONDS|EPOCH_MILLIS|EPOCH_NANOSECONDS.`
+	ServerUsageFormat = `Compression format of the resulting report.
+Valid values: zip|tar.gz`
+	S3AuthMethod = `Method used to authorize access to the S3 bucket specified in s3BucketName. 
+Valid values: KEYS|IAM_ROLE.`
+	ClusterCheckpointIntervalMin = `Number of minutes between successive cluster checkpoints.
+Valid values: 15|30|60.`
+	SnapshotIntervalHours = `Number of hours between snapshots.
+Valid values: 6|8|12|24.`
 )

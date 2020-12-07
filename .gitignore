@@ -24,3 +24,7 @@ gon.json
 
 # We don't want to commit env variables
 *.env
+
+# IntelliJ
+.idea/
+

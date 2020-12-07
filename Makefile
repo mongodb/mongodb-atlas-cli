@@ -24,8 +24,13 @@ export PATH := ./bin:$(PATH)
 export GO111MODULE := on
 export E2E_BINARY
 
+.PHONY: deps
+deps:  ## Download go module dependencies
+	@echo "==> Installing go.mod dependencies..."
+	go mod download
+
 .PHONY: setup
-setup:  ## Install dev tools
+setup: deps ## Install dev tools
 	@echo "==> Installing dependencies..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
 

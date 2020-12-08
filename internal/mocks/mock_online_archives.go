@@ -34,18 +34,18 @@ func (m *MockOnlineArchiveLister) EXPECT() *MockOnlineArchiveListerMockRecorder 
 }
 
 // OnlineArchives mocks base method
-func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string) ([]*mongodbatlas.OnlineArchive, error) {
+func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.OnlineArchives, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OnlineArchives", arg0, arg1)
-	ret0, _ := ret[0].([]*mongodbatlas.OnlineArchive)
+	ret := m.ctrl.Call(m, "OnlineArchives", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*mongodbatlas.OnlineArchives)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // OnlineArchives indicates an expected call of OnlineArchives
-func (mr *MockOnlineArchiveListerMockRecorder) OnlineArchives(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockOnlineArchiveListerMockRecorder) OnlineArchives(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnlineArchives", reflect.TypeOf((*MockOnlineArchiveLister)(nil).OnlineArchives), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnlineArchives", reflect.TypeOf((*MockOnlineArchiveLister)(nil).OnlineArchives), arg0, arg1, arg2)
 }
 
 // MockOnlineArchiveDescriber is a mock of OnlineArchiveDescriber interface

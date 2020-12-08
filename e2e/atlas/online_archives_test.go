@@ -150,7 +150,7 @@ func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archives []*mongodbatlas.OnlineArchive
+	var archives *mongodbatlas.OnlineArchives
 	if err = json.Unmarshal(resp, &archives); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -169,7 +169,7 @@ func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
 		"--collection=test",
 		"--dateField=test",
 		"--archiveAfter=3",
-		"--partition=test:date",
+		"--partition=test",
 		"-o=json")
 
 	cmd.Env = os.Environ()

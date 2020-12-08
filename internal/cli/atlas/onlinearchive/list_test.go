@@ -33,11 +33,11 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	var expected []*mongodbatlas.OnlineArchive
+	var expected *mongodbatlas.OnlineArchives
 
 	mockStore.
 		EXPECT().
-		OnlineArchives(listOpts.ProjectID, listOpts.clusterName).
+		OnlineArchives(listOpts.ProjectID, listOpts.clusterName, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

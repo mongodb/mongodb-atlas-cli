@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongocli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
-	OnlineArchives(string, string) ([]*atlas.OnlineArchive, error)
+	OnlineArchives(string, string, *atlas.ListOptions) (*atlas.OnlineArchives, error)
 }
 
 type OnlineArchiveDescriber interface {
@@ -45,10 +45,10 @@ type OnlineArchiveDeleter interface {
 }
 
 // OnlineArchives encapsulate the logic to manage different cloud providers
-func (s *Store) OnlineArchives(projectID, clusterName string) ([]*atlas.OnlineArchive, error) {
+func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlas.OnlineArchives, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(context.Background(), projectID, clusterName)
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(context.Background(), projectID, clusterName, lstOpt)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

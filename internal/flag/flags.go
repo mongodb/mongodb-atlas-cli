@@ -177,6 +177,7 @@ const (
 	TestBucket                      = "testBucket"                      // TestBucket flag
 	Partition                       = "partition"                       // Partition flag
 	DateField                       = "dateField"                       // DateField flag
+	DateFormat                      = "dateFormat"                      // DateFormat flag
 	Analyzer                        = "analyzer"                        // Analyzer flag
 	SearchAnalyzer                  = "searchAnalyzer"                  // SearchAnalyzer flag
 	Dynamic                         = "dynamic"                         // Dynamic flag

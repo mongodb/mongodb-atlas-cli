@@ -169,7 +169,7 @@ func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
 		"--collection=test",
 		"--dateField=test",
 		"--archiveAfter=3",
-		"--partition=test:date",
+		"--partition=test",
 		"-o=json")
 
 	cmd.Env = os.Environ()

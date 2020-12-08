@@ -16,7 +16,6 @@ package onlinearchive
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -50,10 +49,8 @@ func (opts *CreateOpts) initStore() error {
 var createTemplate = "Online archive '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	archive, err := opts.newOnlineArchive()
-	if err != nil {
-		return err
-	}
+	archive := opts.newOnlineArchive()
+
 	r, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
@@ -62,11 +59,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
-	partitions, err := opts.partitionFields()
-	if err != nil {
-		return nil, err
-	}
+func (opts *CreateOpts) newOnlineArchive() *atlas.OnlineArchive {
+	partitions := opts.partitionFields()
 	a := &atlas.OnlineArchive{
 		CollName: opts.collection,
 		Criteria: &atlas.OnlineArchiveCriteria{
@@ -77,29 +71,23 @@ func (opts *CreateOpts) newOnlineArchive() (*atlas.OnlineArchive, error) {
 		DBName:          opts.dbName,
 		PartitionFields: partitions,
 	}
-	return a, nil
+	return a
 }
 
 const (
-	maxPartitions  = 2
-	partitionParts = 2
+	maxPartitions = 2
 )
 
-func (opts *CreateOpts) partitionFields() ([]*atlas.PartitionFields, error) {
+func (opts *CreateOpts) partitionFields() []*atlas.PartitionFields {
 	fields := make([]*atlas.PartitionFields, len(opts.partitions))
 	for i, p := range opts.partitions {
-		f := strings.Split(p, ":")
-		if len(f) != partitionParts {
-			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
-		}
 		order := float64(i)
 		fields[i] = &atlas.PartitionFields{
-			FieldName: f[0],
-			FieldType: f[1],
+			FieldName: p,
 			Order:     &order,
 		}
 	}
-	return fields, nil
+	return fields
 }
 
 // mongocli atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--partition fieldName:fieldType][--projectId projectId]

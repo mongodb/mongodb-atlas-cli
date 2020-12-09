@@ -17,12 +17,12 @@ package convert
 import (
 	"testing"
 
+	"github.com/openlyinc/pointy"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestNewReplicaSetProcessConfig(t *testing.T) {
-	trueValue := true
+func Test_newReplicaSetProcessConfig(t *testing.T) {
 	omp := &opsmngr.Process{
 		Args26: opsmngr.Args26{
 			AuditLog: &opsmngr.AuditLog{
@@ -40,7 +40,7 @@ func TestNewReplicaSetProcessConfig(t *testing.T) {
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
-				DirectoryPerDB: &trueValue,
+				DirectoryPerDB: pointy.Bool(true),
 				WiredTiger: &map[string]interface{}{
 					"collectionConfig": map[string]interface{}{},
 					"engineConfig": map[string]interface{}{
@@ -78,31 +78,28 @@ func TestNewReplicaSetProcessConfig(t *testing.T) {
 		Votes:        1,
 	}
 
-	one := 1.0
-	zero := 0.0
-	falseValue := false
 	expected := &ProcessConfig{
 		AuditLogPath:        "/data/audit.log",
 		AuditLogDestination: "file",
 		AuditLogFormat:      "JSON",
 		AuditLogFilter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
-		BuildIndexes:        &trueValue,
+		BuildIndexes:        pointy.Bool(true),
 		DBPath:              "/data/db",
-		DirectoryPerDB:      &trueValue,
+		DirectoryPerDB:      pointy.Bool(true),
 		FCVersion:           "4.4",
 		Hostname:            "n1.omansible.int",
 		LogDestination:      "file",
 		LogPath:             "/data/log/mongodb.log",
 		Name:                "myReplicaSet_1",
 		Port:                27017,
-		Priority:            &one,
+		Priority:            pointy.Float64(1),
 		ProcessType:         "mongod",
-		SlaveDelay:          &zero,
+		SlaveDelay:          pointy.Float64(0),
 		Version:             "4.4.1-ent",
-		Votes:               &one,
-		ArbiterOnly:         &falseValue,
+		Votes:               pointy.Float64(1),
+		ArbiterOnly:         pointy.Bool(false),
 		Disabled:            false,
-		Hidden:              &falseValue,
+		Hidden:              pointy.Bool(false),
 		TLS:                 &TLS{Mode: "disabled"},
 		WiredTiger: &map[string]interface{}{
 			"collectionConfig": map[string]interface{}{},
@@ -115,4 +112,167 @@ func TestNewReplicaSetProcessConfig(t *testing.T) {
 	result := newReplicaSetProcessConfig(omm, omp)
 
 	assert.Equal(t, expected, result)
+}
+
+func Test_newConfigRSProcess(t *testing.T) {
+	p := &ProcessConfig{
+		AuditLogPath:        "/data/audit.log",
+		AuditLogDestination: "file",
+		AuditLogFormat:      "JSON",
+		AuditLogFilter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+		BuildIndexes:        pointy.Bool(true),
+		DBPath:              "/data/db",
+		DirectoryPerDB:      pointy.Bool(true),
+		FCVersion:           "4.4",
+		Hostname:            "n1.omansible.int",
+		LogDestination:      "file",
+		LogPath:             "/data/log/mongodb.log",
+		Name:                "myReplicaSet_1",
+		Port:                27017,
+		Priority:            pointy.Float64(1),
+		ProcessType:         "mongod",
+		SlaveDelay:          pointy.Float64(0),
+		Version:             "4.4.1-ent",
+		Votes:               pointy.Float64(1),
+		ArbiterOnly:         pointy.Bool(false),
+		Disabled:            false,
+		Hidden:              pointy.Bool(false),
+		TLS:                 &TLS{Mode: "disabled"},
+		WiredTiger: &map[string]interface{}{
+			"collectionConfig": map[string]interface{}{},
+			"engineConfig": map[string]interface{}{
+				"cacheSizeGB": 1,
+			},
+			"indexConfig": map[string]interface{}{},
+		},
+	}
+
+	want := &opsmngr.Process{
+		Args26: opsmngr.Args26{
+			AuditLog: &opsmngr.AuditLog{
+				Destination: "file",
+				Path:        "/data/audit.log",
+				Format:      "JSON",
+				Filter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+			},
+			NET: opsmngr.Net{
+				Port: 27017,
+				TLS:  &opsmngr.TLS{Mode: "disabled"},
+			},
+			Replication: &opsmngr.Replication{
+				ReplSetName: "myReplicaSet",
+			},
+			Storage: &opsmngr.Storage{
+				DBPath:         "/data/db",
+				DirectoryPerDB: pointy.Bool(true),
+				WiredTiger: &map[string]interface{}{
+					"collectionConfig": map[string]interface{}{},
+					"engineConfig": map[string]interface{}{
+						"cacheSizeGB": 1,
+					},
+					"indexConfig": map[string]interface{}{},
+				},
+			},
+			SystemLog: opsmngr.SystemLog{
+				Destination: "file",
+				Path:        "/data/log/mongodb.log",
+			},
+			Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+		},
+		AuthSchemaVersion:           5,
+		Disabled:                    false,
+		FeatureCompatibilityVersion: "4.4",
+		Hostname:                    "n1.omansible.int",
+		LogRotate: &opsmngr.LogRotate{
+			SizeThresholdMB:  1000,
+			TimeThresholdHrs: 24,
+		},
+		ManualMode:  false,
+		Name:        "myReplicaSet_1",
+		ProcessType: "mongod",
+		Version:     "4.4.1-ent",
+	}
+	got := newConfigRSProcess(p, "myReplicaSet")
+	assert.Equal(t, got, want)
+}
+
+func Test_newReplicaSetProcess(t *testing.T) {
+	p := &ProcessConfig{
+		AuditLogPath:        "/data/audit.log",
+		AuditLogDestination: "file",
+		AuditLogFormat:      "JSON",
+		AuditLogFilter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+		BuildIndexes:        pointy.Bool(true),
+		DBPath:              "/data/db",
+		DirectoryPerDB:      pointy.Bool(true),
+		FCVersion:           "4.4",
+		Hostname:            "n1.omansible.int",
+		LogDestination:      "file",
+		LogPath:             "/data/log/mongodb.log",
+		Name:                "myReplicaSet_1",
+		Port:                27017,
+		Priority:            pointy.Float64(1),
+		ProcessType:         "mongod",
+		SlaveDelay:          pointy.Float64(0),
+		Version:             "4.4.1-ent",
+		Votes:               pointy.Float64(1),
+		ArbiterOnly:         pointy.Bool(false),
+		Disabled:            false,
+		Hidden:              pointy.Bool(false),
+		TLS:                 &TLS{Mode: "disabled"},
+		WiredTiger: &map[string]interface{}{
+			"collectionConfig": map[string]interface{}{},
+			"engineConfig": map[string]interface{}{
+				"cacheSizeGB": 1,
+			},
+			"indexConfig": map[string]interface{}{},
+		},
+	}
+
+	want := &opsmngr.Process{
+		Args26: opsmngr.Args26{
+			AuditLog: &opsmngr.AuditLog{
+				Destination: "file",
+				Path:        "/data/audit.log",
+				Format:      "JSON",
+				Filter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+			},
+			NET: opsmngr.Net{
+				Port: 27017,
+				TLS:  &opsmngr.TLS{Mode: "disabled"},
+			},
+			Replication: &opsmngr.Replication{
+				ReplSetName: "myReplicaSet",
+			},
+			Storage: &opsmngr.Storage{
+				DBPath:         "/data/db",
+				DirectoryPerDB: pointy.Bool(true),
+				WiredTiger: &map[string]interface{}{
+					"collectionConfig": map[string]interface{}{},
+					"engineConfig": map[string]interface{}{
+						"cacheSizeGB": 1,
+					},
+					"indexConfig": map[string]interface{}{},
+				},
+			},
+			SystemLog: opsmngr.SystemLog{
+				Destination: "file",
+				Path:        "/data/log/mongodb.log",
+			},
+		},
+		AuthSchemaVersion:           5,
+		Disabled:                    false,
+		FeatureCompatibilityVersion: "4.4",
+		Hostname:                    "n1.omansible.int",
+		LogRotate: &opsmngr.LogRotate{
+			SizeThresholdMB:  1000,
+			TimeThresholdHrs: 24,
+		},
+		ManualMode:  false,
+		Name:        "myReplicaSet_1",
+		ProcessType: "mongod",
+		Version:     "4.4.1-ent",
+	}
+	got := newReplicaSetProcess(p, "myReplicaSet")
+	assert.Equal(t, got, want)
 }

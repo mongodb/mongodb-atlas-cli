@@ -363,6 +363,7 @@ func (p *ProcessConfig) auditLog() *opsmngr.AuditLog {
 		Destination: p.auditLogDestination(),
 		Path:        p.AuditLogPath,
 		Format:      p.AuditLogFormat,
+		Filter:      p.AuditLogFilter,
 	}
 }
 

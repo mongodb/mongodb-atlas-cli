@@ -173,7 +173,7 @@ func createProject(projectName string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
 	var project mongodbatlas.Project

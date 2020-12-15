@@ -91,6 +91,6 @@ issues:
     - path: e2e # Don't check for cyclomatic complexity on e2e file.
       linters:
         - gocyclo
-    - path: internal/fixture # Don't check for magic numbers on fixtures.
+    - path: internal/test/fixture # Don't check for magic numbers on fixtures.
       linters:
         - gomnd

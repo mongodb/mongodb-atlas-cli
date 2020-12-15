@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -50,7 +50,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 }
 
 func TestDescribeBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		DescribeBuilder(),
 		0,

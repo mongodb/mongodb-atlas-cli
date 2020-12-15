@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/test/fixture"
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
-	var one float64 = 1
-
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -45,8 +44,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname:     "example",
 							LogPath:      "/log",
 							Port:         1,
-							Priority:     &one,
-							Votes:        &one,
+							Priority:     pointy.Float64(1),
+							Votes:        pointy.Float64(1),
 							AuditLogPath: "/audit",
 						},
 					},
@@ -137,8 +136,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -293,15 +292,15 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host0",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						}, {
 							DBPath:   "/data/db/",
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -416,8 +415,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -543,8 +542,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -557,8 +556,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -723,8 +722,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -737,8 +736,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_1",
 								Port:     4,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -751,8 +750,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},

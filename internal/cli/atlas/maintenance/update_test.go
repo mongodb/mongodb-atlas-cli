@@ -19,9 +19,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -33,10 +33,8 @@ func TestUpdateOpts_Run(t *testing.T) {
 		store:     mockStore,
 		hourOfDay: 2,
 		dayOfWeek: 1,
-		GlobalOpts: cli.GlobalOpts{
-			ProjectID: "21321323343243243",
-		},
 	}
+	updateOpts.ProjectID = "21321323343243243"
 
 	mockStore.
 		EXPECT().
@@ -51,7 +49,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 }
 
 func TestUpdateBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		UpdateBuilder(),
 		0,

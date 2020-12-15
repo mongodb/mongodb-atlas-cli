@@ -22,8 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
 func TestDelete_Run(t *testing.T) {

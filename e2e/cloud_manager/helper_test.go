@@ -25,6 +25,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -95,7 +96,6 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 	}
 	defer feedFile.Close()
 
-	var one float64 = 1
 	downloadArchive := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
 			FCVersion: fcVersion,
@@ -107,8 +107,8 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/27000/mongodb.log", clusterName),
 					Port:     27000,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -122,8 +122,8 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/27001/mongodb.log", clusterName),
 					Port:     27001,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -137,8 +137,8 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/27002/mongodb.log", clusterName),
 					Port:     27002,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -163,7 +163,6 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 	}
 	defer feedFile.Close()
 
-	var one float64 = 1
 	downloadArchive := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
 			FCVersion: fcVersion,
@@ -178,8 +177,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/29000/mongodb.log", clusterName),
 					Port:     29000,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -193,8 +192,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/29001/mongodb.log", clusterName),
 					Port:     29001,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -208,8 +207,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 					Hostname: hostname,
 					LogPath:  fmt.Sprintf("/data/%s/29002/mongodb.log", clusterName),
 					Port:     29002,
-					Priority: &one,
-					Votes:    &one,
+					Priority: pointy.Float64(1),
+					Votes:    pointy.Float64(1),
 					WiredTiger: &map[string]interface{}{
 						"collectionConfig": map[string]interface{}{},
 						"engineConfig": map[string]interface{}{
@@ -236,8 +235,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/27000/mongodb.log", clusterName),
 						Port:     27000,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
@@ -251,8 +250,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/27001/mongodb.log", clusterName),
 						Port:     27001,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
@@ -266,8 +265,8 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/27002/mongodb.log", clusterName),
 						Port:     27002,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 						WiredTiger: &map[string]interface{}{
 							"collectionConfig": map[string]interface{}{},
 							"engineConfig": map[string]interface{}{
@@ -286,24 +285,24 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/28000/mongodb.log", clusterName),
 						Port:     28000,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28001", clusterName),
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/28001/mongodb.log", clusterName),
 						Port:     28001,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 					},
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28002", clusterName),
 						Hostname: hostname,
 						LogPath:  fmt.Sprintf("/data/%s/28002/mongodb.log", clusterName),
 						Port:     28002,
-						Priority: &one,
-						Votes:    &one,
+						Priority: pointy.Float64(1),
+						Votes:    pointy.Float64(1),
 					},
 				},
 			},

@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package cloudmanager
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		Builder(),
 		16,

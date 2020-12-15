@@ -19,7 +19,7 @@ package search
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
 // This example demonstrates searching a cluster in an automation config.

@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,7 +51,7 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 }
 
 func TestDownloadBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		DownloadBuilder(),
 		0,

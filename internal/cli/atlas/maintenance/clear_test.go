@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestClearOpts_Run(t *testing.T) {
@@ -49,7 +50,7 @@ func TestClearOpts_Run(t *testing.T) {
 }
 
 func TestClearBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		ClearBuilder(),
 		0,

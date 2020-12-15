@@ -20,14 +20,11 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/test/fixture"
+	"github.com/openlyinc/pointy"
 )
 
 func TestFromAutomationConfig(t *testing.T) {
-	f := false
-	buildIndexes := true
-	var one float64 = 1
-	var zero float64 = 0
 	name := "cluster_1"
 	t.Run("replica set", func(t *testing.T) {
 		config := fixture.AutomationConfigWithOneReplicaSet(name, false)
@@ -37,21 +34,21 @@ func TestFromAutomationConfig(t *testing.T) {
 					Name: name,
 					ProcessConfigs: []*ProcessConfig{
 						{
-							ArbiterOnly:         &f,
-							BuildIndexes:        &buildIndexes,
+							ArbiterOnly:         pointy.Bool(false),
+							BuildIndexes:        pointy.Bool(true),
 							DBPath:              "/data/db/",
 							Disabled:            false,
-							Hidden:              &f,
+							Hidden:              pointy.Bool(false),
 							Hostname:            "host0",
 							LogPath:             "/data/db/mongodb.log",
 							LogDestination:      file,
 							AuditLogDestination: file,
 							AuditLogPath:        "/data/db/audit.log",
 							Port:                27017,
-							Priority:            &one,
+							Priority:            pointy.Float64(1),
 							ProcessType:         mongod,
-							SlaveDelay:          &zero,
-							Votes:               &one,
+							SlaveDelay:          pointy.Float64(0),
+							Votes:               pointy.Float64(1),
 							FCVersion:           "4.2",
 							Version:             "4.2.2",
 							Name:                name + "_0",
@@ -97,19 +94,19 @@ func TestFromAutomationConfig(t *testing.T) {
 						Name: "myShard_0",
 						ProcessConfigs: []*ProcessConfig{
 							{
-								ArbiterOnly:    &f,
-								BuildIndexes:   &buildIndexes,
+								ArbiterOnly:    pointy.Bool(false),
+								BuildIndexes:   pointy.Bool(true),
 								DBPath:         "/data/myShard_0",
 								Disabled:       false,
-								Hidden:         &f,
+								Hidden:         pointy.Bool(false),
 								Hostname:       "example",
 								LogPath:        "/log/myShard_0",
 								LogDestination: file,
 								Port:           1,
-								Priority:       &one,
+								Priority:       pointy.Float64(1),
 								ProcessType:    mongod,
-								SlaveDelay:     &zero,
-								Votes:          &one,
+								SlaveDelay:     pointy.Float64(0),
+								Votes:          pointy.Float64(1),
 								FCVersion:      "4.2",
 								Version:        "4.2.2",
 								Name:           name + "_myShard_0_0",
@@ -121,19 +118,19 @@ func TestFromAutomationConfig(t *testing.T) {
 					Name: "configRS",
 					ProcessConfigs: []*ProcessConfig{
 						{
-							ArbiterOnly:    &f,
-							BuildIndexes:   &buildIndexes,
+							ArbiterOnly:    pointy.Bool(false),
+							BuildIndexes:   pointy.Bool(true),
 							DBPath:         "/data/configRS",
 							Disabled:       false,
-							Hidden:         &f,
+							Hidden:         pointy.Bool(false),
 							Hostname:       "example",
 							LogPath:        "/log/configRS",
 							LogDestination: file,
 							Port:           2,
-							Priority:       &one,
+							Priority:       pointy.Float64(1),
 							ProcessType:    mongod,
-							SlaveDelay:     &zero,
-							Votes:          &one,
+							SlaveDelay:     pointy.Float64(0),
+							Votes:          pointy.Float64(1),
 							FCVersion:      "4.2",
 							Version:        "4.2.2",
 							Name:           name + "_configRS_1",

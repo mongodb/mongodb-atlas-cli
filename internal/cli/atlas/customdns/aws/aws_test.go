@@ -18,11 +18,11 @@ package aws
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestAWSBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		Builder(),
 		3,

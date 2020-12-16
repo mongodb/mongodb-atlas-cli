@@ -16,7 +16,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"path/filepath"
 	"sort"
@@ -373,7 +372,6 @@ func (p *Profile) Load(readEnvironmentVars bool) error {
 		// ignore if it doesn't exists
 		var e viper.ConfigFileNotFoundError
 		if errors.As(err, &e) {
-			fmt.Println("No file")
 			return nil
 		}
 		return err

@@ -17,7 +17,6 @@
 package config
 
 import (
-	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -43,11 +42,7 @@ func testProfile(profileContents string) *Profile {
 	if err := afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600); err != nil {
 		panic(err)
 	}
-	c, err := afero.ReadFile(fs, p.Filename())
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(c))
+
 	return p
 }
 

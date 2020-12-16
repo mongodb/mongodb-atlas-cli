@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"sort"
 	"strings"
 
@@ -313,7 +314,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return fmt.Sprintf("%s/%s.toml", p.configDir, ToolName)
+	return fmt.Sprintf("%s%c%s.toml", p.configDir, os.PathSeparator, ToolName)
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.

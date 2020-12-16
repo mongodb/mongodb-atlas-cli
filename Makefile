@@ -83,7 +83,7 @@ e2e-test: build ## Run E2E tests
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	${TEST_CMD} --tags="${INTEGRATION_TAGS}" ./internal...
+	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests

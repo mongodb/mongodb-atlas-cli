@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -314,7 +314,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return fmt.Sprintf("%s%c%s.toml", p.configDir, os.PathSeparator, ToolName)
+	return filepath.Join(p.configDir, ToolName+".toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -394,6 +394,6 @@ func (p *Profile) Save() error {
 			return err
 		}
 	}
-	configFile := fmt.Sprintf("%s/%s.toml", p.configDir, ToolName)
+	configFile := p.Filename()
 	return viper.WriteConfigAs(configFile)
 }

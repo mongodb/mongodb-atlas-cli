@@ -3,7 +3,7 @@
 </p>
 
 
-[![Build Status](https://cloud.drone.io/api/badges/mongodb/mongocli/status.svg)](https://cloud.drone.io/mongodb/mongocli)
+![CI](https://github.com/mongodb/mongocli/workflows/CI/badge.svg)
 
 `mongocli` is a tool for managing your MongoDB cloud services
 

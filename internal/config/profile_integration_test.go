@@ -38,7 +38,9 @@ func testProfile(profileContents string) *Profile {
 		fs:        fs,
 	}
 
-	_ = afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600)
+	if err := afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600); err != nil {
+		panic(err)
+	}
 	return p
 }
 

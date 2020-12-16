@@ -17,6 +17,7 @@
 package config
 
 import (
+	"os"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -30,7 +31,7 @@ const (
 
 func testProfile(profileContents string) *Profile {
 	fs := afero.NewMemMapFs()
-	testConfigDir := "/test"
+	testConfigDir := string(os.PathSeparator) + "test"
 
 	p := &Profile{
 		name:      DefaultProfile,

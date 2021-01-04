@@ -11,22 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package connetionstring
 
-// +build unit
-
-package clusters
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+const (
+	connectionString = "Manage MongoDB cluster connection string"
+	describe         = "Retrieve the connection string of your MongoDB cluster."
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		12,
-		[]string{},
-	)
-}

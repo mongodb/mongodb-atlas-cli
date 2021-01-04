@@ -12,39 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package connetionstring
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connetionstring"
-	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
-	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
-	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "clusters"
+	const use = "connectionString"
 	cmd := &cobra.Command{
-		Use:        use,
-		Aliases:    cli.GenerateAliases(use),
-		SuggestFor: []string{"replicasets"},
-		Short:      Clusters,
-		Long:       long,
+		Use:     use,
+		Aliases: append(cli.GenerateAliases(use), "cs"),
+		Short:   connectionString,
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		WatchBuilder(),
-		UpdateBuilder(),
-		PauseBuilder(),
-		StartBuilder(),
-		DeleteBuilder(),
-		indexes.Builder(),
-		search.Builder(),
-		onlinearchive.Builder(),
-		connetionstring.Builder())
+	cmd.AddCommand(DescribeBuilder())
 
 	return cmd
 }

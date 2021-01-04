@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package connetionstring
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -37,8 +37,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+var describeTemplate = `DNS SEED LIST FORMAT	STANDARD FORMAT
+{{.StandardSrv}}	{{.Standard}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -46,21 +46,16 @@ func (opts *DescribeOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
-	}
-	return opts.Print(r)
+	return opts.Print(r.ConnectionStrings)
 }
 
-// mongocli atlas cluster(s) describe <name> --projectId projectId
+// mongocli atlas cluster(s) connectionString describe <clusterName> --projectId projectId
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
-		Short:   describeCluster,
+		Short:   describe,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

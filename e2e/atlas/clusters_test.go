@@ -101,7 +101,7 @@ func TestClustersFlags(t *testing.T) {
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
 		assert.NoError(t, err)
-		assert.Equal(t, clusterName, cluster.Name)
+		assert.Equal(t, clusterName, cluster.Name, fmt.Sprintf("got=%#v\nwant=%#v\n", cluster.Name, clusterName))
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {

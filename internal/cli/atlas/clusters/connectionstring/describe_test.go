@@ -14,7 +14,7 @@
 
 // +build unit
 
-package connetionstring
+package connectionstring
 
 import (
 	"testing"
@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -45,9 +46,7 @@ func TestDescribe_Run(t *testing.T) {
 		Times(1)
 
 	err := describeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	assert.NoError(t, err)
 }
 
 func TestDescribeBuilder(t *testing.T) {

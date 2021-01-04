@@ -11,9 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package connetionstring
 
-const (
-	connectionString = "Manage MongoDB cluster connection string"
-	describe         = "Retrieve the connection string of your MongoDB cluster."
+package connectionstring
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "connectionString"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: append(cli.GenerateAliases(use), "cs"),
+		Short:   connectionString,
+	}
+	cmd.AddCommand(DescribeBuilder())
+
+	return cmd
+}

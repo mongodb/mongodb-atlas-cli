@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+// +build unit
+
+package indexes
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func IndexesBuilder() *cobra.Command {
-	const use = "indexes"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   Indexes,
-	}
-	cmd.AddCommand(IndexesCreateBuilder())
-
-	return cmd
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
+	)
 }

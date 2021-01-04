@@ -14,21 +14,23 @@
 
 // +build unit
 
-package clusters
+package indexes
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestIndexesCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIndexCreator(ctrl)
 	defer ctrl.Finish()
 
-	createOpts := &IndexesCreateOpts{
+	createOpts := &CreateOpts{
 		name:        "ProjectBar",
 		clusterName: "US",
 		db:          "test",
@@ -48,4 +50,13 @@ func TestIndexesCreate_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.ClusterName, flag.Database, flag.Collection, flag.Key, flag.Sparse, flag.ProjectID},
+	)
 }

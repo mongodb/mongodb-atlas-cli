@@ -24,8 +24,6 @@ const (
 	pauseCluster      = "Pause a running MongoDB cluster in Atlas."
 	startCluster      = "Start a paused MongoDB cluster in Atlas."
 	watchCluster      = "Watch for a cluster to be available."
-	Indexes           = "Manage cluster rolling indexes for your project."
-	createIndex       = "Create a rolling index for your MongoDB cluster."
 	createClusterLong = `You can create MongoDB clusters using this command.
 To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
 this will create a 3 member replica set with the latest available mongodb server version available.

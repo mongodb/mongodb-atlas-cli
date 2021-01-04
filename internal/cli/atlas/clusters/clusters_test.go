@@ -19,42 +19,14 @@ package clusters
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestWatch_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
-	defer ctrl.Finish()
-
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
-
-	opts := &WatchOpts{
-		name:  "test",
-		store: mockStore,
-	}
-
-	mockStore.
-		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
-		Return(expected, nil).
-		Times(1)
-
-	err := opts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
-
-func TestWatchBuilder(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		WatchBuilder(),
-		0,
-		[]string{flag.ProjectID},
+		Builder(),
+		11,
+		[]string{},
 	)
 }

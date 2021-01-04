@@ -17,20 +17,21 @@
 package indexes
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/test"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestIndexesCreate_Run(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIndexCreator(ctrl)
 	defer ctrl.Finish()
 
-	createOpts := &IndexesCreateOpts{
+	createOpts := &CreateOpts{
 		name:        "ProjectBar",
 		clusterName: "US",
 		db:          "test",

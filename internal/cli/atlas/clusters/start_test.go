@@ -17,9 +17,10 @@
 package clusters
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/test"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"

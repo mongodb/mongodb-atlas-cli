@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type IndexesCreateOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	clusterName string
 	name        string
@@ -39,13 +39,13 @@ type IndexesCreateOpts struct {
 	store       store.IndexCreator
 }
 
-func (opts *IndexesCreateOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *IndexesCreateOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	req, err := opts.newIndex()
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (opts *IndexesCreateOpts) Run() error {
 	return nil
 }
 
-func (opts *IndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
+func (opts *CreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (opts *IndexesCreateOpts) newIndex() (*atlas.IndexConfiguration, error) {
 	return i, nil
 }
 
-func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
+func (opts *CreateOpts) newIndexOptions() *atlas.IndexOptions {
 	return &atlas.IndexOptions{
 		Sparse: opts.sparse,
 		Name:   opts.name,
@@ -79,7 +79,7 @@ func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
 
 const keyParts = 2
 
-func (opts *IndexesCreateOpts) indexKeys() ([]map[string]string, error) {
+func (opts *CreateOpts) indexKeys() ([]map[string]string, error) {
 	keys := make([]map[string]string, len(opts.keys))
 	for i, key := range opts.keys {
 		value := strings.Split(key, ":")
@@ -95,7 +95,7 @@ func (opts *IndexesCreateOpts) indexKeys() ([]map[string]string, error) {
 // CreateBuilder builds a cobra.Command that can run as:
 // mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
 func CreateBuilder() *cobra.Command {
-	opts := &IndexesCreateOpts{}
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
 		Short: createIndex,

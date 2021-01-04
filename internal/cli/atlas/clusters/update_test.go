@@ -17,9 +17,10 @@
 package clusters
 
 import (
+	"testing"
+
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/test"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
@@ -121,6 +122,6 @@ func TestUpdateBuilder(t *testing.T) {
 		UpdateBuilder(),
 		0,
 		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
-			flag.File,flag.ProjectID, flag.Output},
+			flag.File, flag.ProjectID, flag.Output},
 	)
 }

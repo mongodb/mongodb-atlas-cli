@@ -14,6 +14,6 @@
 package indexes
 
 const (
-	indexes           = "Manage cluster rolling indexes for your project."
-	createIndex       = "Create a rolling index for your MongoDB cluster."
-	)
+	indexes     = "Manage cluster rolling indexes for your project."
+	createIndex = "Create a rolling index for your MongoDB cluster."
+)

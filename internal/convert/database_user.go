@@ -15,6 +15,7 @@
 package convert
 
 import (
+	"errors"
 	"strings"
 
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -66,4 +67,23 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 		}
 	}
 	return roles
+}
+
+
+// BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs
+// r contains roles in the format scopeName@scopeType
+func BuildAtlasScopes(r []string) []atlas.Scope {
+	scopes := make([]atlas.Scope, len(r))
+	for i, scopeP := range r {
+		scope := strings.Split(scopeP, roleSep)
+		if len(scope) < 2 {
+			errors.New("error in parsing the scope value. Please check that the scope is in the following format: scopeName@scopeType")
+		}
+
+		scopes[i] = atlas.Scope{
+			Name: scope[0],
+			Type: scope[1],
+		}
+	}
+	return scopes
 }

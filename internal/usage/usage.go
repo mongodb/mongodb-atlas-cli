@@ -69,6 +69,7 @@ const (
 	Mobile                          = "The user’s mobile or cell phone number."
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
+	Scopes 							= "Array of clusters and Atlas Data Lakes that this user has access to. If omitted, Atlas grants the user access to all the clusters and Atlas Data Lakes in the project by default."
 	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`

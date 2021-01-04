@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package indexes
 
 import (
 	"fmt"
@@ -92,9 +92,9 @@ func (opts *IndexesCreateOpts) indexKeys() ([]map[string]string, error) {
 	return keys, nil
 }
 
-// IndexesCreateBuilder builds a cobra.Command that can run as:
+// CreateBuilder builds a cobra.Command that can run as:
 // mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
-func IndexesCreateBuilder() *cobra.Command {
+func CreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",

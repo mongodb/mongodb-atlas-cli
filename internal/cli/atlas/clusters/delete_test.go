@@ -17,6 +17,8 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -47,4 +49,13 @@ func TestDelete_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.Force, flag.ProjectID},
+	)
 }

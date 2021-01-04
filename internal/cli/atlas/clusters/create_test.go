@@ -17,6 +17,8 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -106,4 +108,14 @@ func TestCreateOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.Provider, flag.Region,flag.Members,  flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.Backup,
+			flag.File,flag.Type, flag.Shards, flag.ProjectID, flag.Output},
+	)
 }

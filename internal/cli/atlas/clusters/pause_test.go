@@ -17,6 +17,8 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -47,4 +49,13 @@ func TestPause_Run(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestPauseBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		PauseBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID},
+	)
 }

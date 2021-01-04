@@ -17,6 +17,8 @@
 package clusters
 
 import (
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -111,4 +113,14 @@ func TestUpdate_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestUpdateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		UpdateBuilder(),
+		0,
+		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
+			flag.File,flag.ProjectID, flag.Output},
+	)
 }

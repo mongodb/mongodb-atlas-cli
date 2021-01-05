@@ -29,7 +29,10 @@ import (
 )
 
 const (
-	roleReadWrite = "readWrite"
+	roleReadWrite        = "readWrite"
+	scopeClusterDataLake = "Cluster0,Cluster0@CLUSTER"
+	clusterName          = "Cluster0"
+	clusterType          = "CLUSTER"
 )
 
 func TestDBUsers(t *testing.T) {
@@ -52,6 +55,7 @@ func TestDBUsers(t *testing.T) {
 			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
 			"--password=passW0rd",
+			"--scope", scopeClusterDataLake,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
@@ -65,7 +69,13 @@ func TestDBUsers(t *testing.T) {
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
+
 		assert.Equal(t, username, user.Username)
+		assert.Len(t, user.Scopes, 2)
+		assert.Equal(t, user.Scopes[0].Name, clusterName)
+		assert.Equal(t, user.Scopes[0].Type, clusterType)
+		assert.Equal(t, user.Scopes[1].Name, clusterName)
+		assert.Equal(t, user.Scopes[0].Type, clusterType)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -121,6 +131,8 @@ func TestDBUsers(t *testing.T) {
 			username,
 			"--role",
 			roleReadWrite,
+			"--scope",
+			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -140,6 +152,10 @@ func TestDBUsers(t *testing.T) {
 			a.Equal("admin", user.Roles[0].DatabaseName)
 			a.Equal(roleReadWrite, user.Roles[0].RoleName)
 		}
+
+		a.Len(user.Scopes, 1)
+		a.Equal(user.Scopes[0].Name, clusterName)
+		a.Equal(user.Scopes[0].Type, clusterType)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

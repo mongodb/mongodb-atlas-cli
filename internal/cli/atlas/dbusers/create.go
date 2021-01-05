@@ -39,6 +39,7 @@ type CreateOpts struct {
 	ldapType    string
 	deleteAfter string
 	roles       []string
+	scopes      []string
 	store       store.DatabaseUserCreator
 }
 
@@ -82,8 +83,8 @@ func (opts *CreateOpts) initStore() error {
 
 func (opts *CreateOpts) Run() error {
 	user := opts.newDatabaseUser()
-	r, err := opts.store.CreateDatabaseUser(user)
 
+	r, err := opts.store.CreateDatabaseUser(user)
 	if err != nil {
 		return err
 	}
@@ -100,6 +101,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 
 	return &atlas.DatabaseUser{
 		Roles:           convert.BuildAtlasRoles(opts.roles),
+		Scopes:          convert.BuildAtlasScopes(opts.scopes),
 		GroupID:         opts.ConfigProjectID(),
 		Username:        opts.username,
 		Password:        opts.password,
@@ -151,6 +153,7 @@ func (opts *CreateOpts) validate() error {
 // mongocli atlas dbuser(s) create
 //		--username username --password password
 //		--role roleName@dbName
+// 		--scope resourceName@resourceType
 //		[--projectId projectId]
 //		[--x509Type NONE|MANAGED|CUSTOMER]
 //		[--awsIAMType NONE|ROLE|USER]
@@ -167,8 +170,12 @@ func CreateBuilder() *cobra.Command {
   Create user with read/write access to any database
   $ mongocli atlas dbuser create readWriteAnyDatabase --username <username> --projectId <projectId>
 
-  Create user with multiple roles
-  $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>`,
+  Create user with multiple roles 
+  $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
+
+  Create user with multiple scopes 
+  $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope clusterName@CLUSTER,DataLakeName@DATA_LAKE --projectId <projectId>
+`,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -193,6 +200,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.BDUsersDeleteAfter)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)

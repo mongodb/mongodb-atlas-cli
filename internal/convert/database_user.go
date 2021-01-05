@@ -50,7 +50,7 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 }
 
 // BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs
-// r contains roles in the format roleName@dbName
+// r contains resources in the format roleName@dbName
 func BuildOMRoles(r []string) []*opsmngr.Role {
 	roles := make([]*opsmngr.Role, len(r))
 	for i, roleP := range r {

@@ -76,7 +76,10 @@ func UpdateBuilder() *cobra.Command {
 		Short: updateDBUser,
 		Example: `
   Update roles for a user
-  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
+  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
+
+  Update scopes for a user
+  $ mongocli atlas dbuser update <username> --scope resourceName@resourceType --projectId <projectId>`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

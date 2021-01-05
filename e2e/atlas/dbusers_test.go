@@ -30,8 +30,9 @@ import (
 
 const (
 	roleReadWrite        = "readWrite"
-	scopeClusterDataLake = "Cluster0,Cluster0@CLUSTER"
-	clusterName          = "Cluster0"
+	scopeClusterDataLake = "Cluster0,Cluster1@CLUSTER"
+	clusterName0         = "Cluster0"
+	clusterName1         = "Cluster1"
 	clusterType          = "CLUSTER"
 )
 
@@ -72,9 +73,9 @@ func TestDBUsers(t *testing.T) {
 
 		assert.Equal(t, username, user.Username)
 		assert.Len(t, user.Scopes, 2)
-		assert.Equal(t, user.Scopes[0].Name, clusterName)
+		assert.Equal(t, user.Scopes[0].Name, clusterName0)
 		assert.Equal(t, user.Scopes[0].Type, clusterType)
-		assert.Equal(t, user.Scopes[1].Name, clusterName)
+		assert.Equal(t, user.Scopes[1].Name, clusterName1)
 		assert.Equal(t, user.Scopes[0].Type, clusterType)
 	})
 
@@ -132,7 +133,7 @@ func TestDBUsers(t *testing.T) {
 			"--role",
 			roleReadWrite,
 			"--scope",
-			clusterName,
+			clusterName0,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -154,7 +155,7 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		a.Len(user.Scopes, 1)
-		a.Equal(user.Scopes[0].Name, clusterName)
+		a.Equal(user.Scopes[0].Name, clusterName0)
 		a.Equal(user.Scopes[0].Type, clusterType)
 	})
 

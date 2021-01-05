@@ -50,7 +50,7 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 }
 
 // BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs
-// r contains resources in the format roleName@dbName
+// r contains roles in the format roleName@dbName
 func BuildOMRoles(r []string) []*opsmngr.Role {
 	roles := make([]*opsmngr.Role, len(r))
 	for i, roleP := range r {
@@ -70,7 +70,7 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 }
 
 // BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs
-// r contains roles in the format resouceName@resourceType
+// r contains resources in the format resouceName@resourceType
 func BuildAtlasScopes(r []string) []atlas.Scope {
 	scopes := make([]atlas.Scope, len(r))
 	for i, scopeP := range r {

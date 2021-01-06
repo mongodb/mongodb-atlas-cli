@@ -134,8 +134,8 @@ func TestDBRoles(t *testing.T) {
 
 		assert.Equal(t, roleName, role.RoleName)
 		assert.Len(t, role.Actions, 2)
-		assert.Equal(t, find, role.Actions[0].Action)
-		assert.Equal(t, update, role.Actions[1].Action)
+		assert.Equal(t, update, role.Actions[0].Action)
+		assert.Equal(t, find, role.Actions[1].Action)
 		assert.Len(t, role.InheritedRoles, 1)
 		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -161,7 +161,7 @@ func TestDBRoles(t *testing.T) {
 
 		assert.Equal(t, roleName, role.RoleName)
 		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, update, role.Actions[1].Action)
+		assert.Equal(t, update, role.Actions[0].Action)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

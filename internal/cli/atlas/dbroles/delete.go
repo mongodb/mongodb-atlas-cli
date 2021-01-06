@@ -11,78 +11,60 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package dbusers
+
+package dbroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `USERNAME	DATABASE
-{{.Username}}	{{.DatabaseName}}
-`
-
-type DescribeOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	store    store.DatabaseUserDescriber
-	authDB   string
-	username string
+	*cli.DeleteOpts
+	store store.DatabaseRoleDeleter
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DatabaseUser(opts.authDB, opts.ConfigProjectID(), opts.username)
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteDatabaseRole, opts.ConfigProjectID(), opts.Entry)
 }
 
-// mongocli atlas dbuser(s) describe <username> --projectId projectId --authDB authDB
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas dbrole(s) delete <roleName> --force
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Custom Database role '%s' deleted\n", "Custom Database role not deleted"),
+	}
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
-		Short:   describeDBUser,
+		Use:     "delete <roleName>",
+		Aliases: []string{"rm"},
+		Short:   deleteDBRole,
 		Args:    require.ExactArgs(1),
-		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
-
-			validAuthDBs := []string{convert.AdminDB, convert.ExternalAuthDB}
-			if err := validate.FlagInSlice(opts.authDB, flag.AuthDB, validAuthDBs); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
-
-			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
-			)
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

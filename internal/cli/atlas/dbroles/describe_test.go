@@ -26,33 +26,34 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreateOpts_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseRoleDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CustomDBRole{}
+	var expected mongodbatlas.CustomDBRole
 
-	createOpts := &CreateOpts{
+	describeOpts := &DescribeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDatabaseRole(createOpts.ConfigProjectID(), createOpts.newCustomDBRole()).Return(expected, nil).
+		DatabaseRole(describeOpts.ConfigProjectID(), describeOpts.roleName).
+		Return(&expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := describeOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Database, flag.Action, flag.InheritedRole, flag.RoleName},
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

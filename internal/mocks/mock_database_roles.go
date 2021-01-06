@@ -110,17 +110,17 @@ func (m *MockDatabaseRoleDeleter) EXPECT() *MockDatabaseRoleDeleterMockRecorder 
 }
 
 // DeleteDatabaseRole mocks base method
-func (m *MockDatabaseRoleDeleter) DeleteDatabaseRole(arg0, arg1, arg2 string) error {
+func (m *MockDatabaseRoleDeleter) DeleteDatabaseRole(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteDatabaseRole", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "DeleteDatabaseRole", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteDatabaseRole indicates an expected call of DeleteDatabaseRole
-func (mr *MockDatabaseRoleDeleterMockRecorder) DeleteDatabaseRole(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockDatabaseRoleDeleterMockRecorder) DeleteDatabaseRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseRole", reflect.TypeOf((*MockDatabaseRoleDeleter)(nil).DeleteDatabaseRole), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseRole", reflect.TypeOf((*MockDatabaseRoleDeleter)(nil).DeleteDatabaseRole), arg0, arg1)
 }
 
 // MockDatabaseRoleUpdater is a mock of DatabaseRoleUpdater interface
@@ -146,19 +146,34 @@ func (m *MockDatabaseRoleUpdater) EXPECT() *MockDatabaseRoleUpdaterMockRecorder 
 	return m.recorder
 }
 
-// UpdateDatabaseRole mocks base method
-func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0 *mongodbatlas.DatabaseUser) (*mongodbatlas.DatabaseUser, error) {
+// DatabaseRole mocks base method
+func (m *MockDatabaseRoleUpdater) DatabaseRole(arg0, arg1 string) (*mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDatabaseRole", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.DatabaseUser)
+	ret := m.ctrl.Call(m, "DatabaseRole", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DatabaseRole indicates an expected call of DatabaseRole
+func (mr *MockDatabaseRoleUpdaterMockRecorder) DatabaseRole(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRole", reflect.TypeOf((*MockDatabaseRoleUpdater)(nil).DatabaseRole), arg0, arg1)
+}
+
+// UpdateDatabaseRole mocks base method
+func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0, arg1 string, arg2 *mongodbatlas.CustomDBRole) (*mongodbatlas.CustomDBRole, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateDatabaseRole", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*mongodbatlas.CustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateDatabaseRole indicates an expected call of UpdateDatabaseRole
-func (mr *MockDatabaseRoleUpdaterMockRecorder) UpdateDatabaseRole(arg0 interface{}) *gomock.Call {
+func (mr *MockDatabaseRoleUpdaterMockRecorder) UpdateDatabaseRole(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDatabaseRole", reflect.TypeOf((*MockDatabaseRoleUpdater)(nil).UpdateDatabaseRole), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDatabaseRole", reflect.TypeOf((*MockDatabaseRoleUpdater)(nil).UpdateDatabaseRole), arg0, arg1, arg2)
 }
 
 // MockDatabaseRoleDescriber is a mock of DatabaseRoleDescriber interface

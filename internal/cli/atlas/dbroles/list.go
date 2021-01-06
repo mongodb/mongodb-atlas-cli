@@ -11,40 +11,38 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package dbusers
+package dbroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `USERNAME	DATABASE
-{{.Username}}	{{.DatabaseName}}
+const listTemplate = `ROLE NAME{{range .}}
+{{.RoleName}}{{end}}
 `
 
-type DescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.DatabaseUserDescriber
-	authDB   string
-	username string
+	cli.ListOpts
+	store store.DatabaseRoleLister
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DatabaseUser(opts.authDB, opts.ConfigProjectID(), opts.username)
+func (opts *ListOpts) Run() error {
+	listOpts := opts.NewListOptions()
+	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
@@ -52,26 +50,19 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas dbuser(s) describe <username> --projectId projectId --authDB authDB
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas dbroles(s) list --projectId projectId [--page N] [--limit N]
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
-		Short:   describeDBUser,
-		Args:    require.ExactArgs(1),
-		Aliases: []string{"get"},
+		Use:     "list",
+		Short:   listDBRoles,
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
-
-			validAuthDBs := []string{convert.AdminDB, convert.ExternalAuthDB}
-			if err := validate.FlagInSlice(opts.authDB, flag.AuthDB, validAuthDBs); err != nil {
-				return err
-			}
-
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -79,7 +70,8 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

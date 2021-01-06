@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongocli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
-	DatabaseRoles(groupID string, opts *atlas.ListOptions) (*[]atlas.CustomDBRole, error)
+	DatabaseRoles(string, *atlas.ListOptions) (*[]atlas.CustomDBRole, error)
 }
 
 type DatabaseRoleCreator interface {
@@ -33,11 +33,12 @@ type DatabaseRoleCreator interface {
 }
 
 type DatabaseRoleDeleter interface {
-	DeleteDatabaseRole(string, string, string) error
+	DeleteDatabaseRole(string, string) error
 }
 
 type DatabaseRoleUpdater interface {
-	UpdateDatabaseRole(*atlas.DatabaseUser) (*atlas.DatabaseUser, error)
+	UpdateDatabaseRole(string, string, *atlas.CustomDBRole) (*atlas.CustomDBRole, error)
+	DatabaseRole(string, string) (*atlas.CustomDBRole, error)
 }
 
 type DatabaseRoleDescriber interface {
@@ -75,10 +76,10 @@ func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atl
 	}
 }
 
-func (s *Store) UpdateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
+func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(context.Background(), groupID, role.RoleName, role)
+		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(context.Background(), groupID, roleName, role)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

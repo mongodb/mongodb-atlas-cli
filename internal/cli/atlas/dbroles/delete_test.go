@@ -19,40 +19,44 @@ package dbroles
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/flag"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreateOpts_Run(t *testing.T) {
+func TestDBUsersDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseRoleDeleter(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CustomDBRole{}
-
-	createOpts := &CreateOpts{
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDatabaseRole(createOpts.ConfigProjectID(), createOpts.newCustomDBRole()).Return(expected, nil).
+		DeleteDatabaseRole(deleteOpts.ConfigProjectID(), deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := deleteOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestDeleteBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		DeleteBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Database, flag.Action, flag.InheritedRole, flag.RoleName},
+		[]string{flag.ProjectID, flag.Force},
 	)
 }

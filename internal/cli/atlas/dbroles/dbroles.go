@@ -28,10 +28,10 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.AddCommand(CreateBuilder())
-	//cmd.AddCommand(DescribeBuilder())
-	//cmd.AddCommand(CreateBuilder())
-	//cmd.AddCommand(DeleteBuilder())
-	//cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(UpdateBuilder())
 
 	return cmd
 }

@@ -157,10 +157,12 @@ const (
 	Key                             = "key"                             // Key flag
 	Collection                      = "collection"                      // Collection flag
 	Cluster                         = "cluster"                         // Cluster flag
+	Append                          = "append"                          // Append flag
 	Action                          = "action"                          // Action flag
 	InheritedRole                   = "inheritedRole"                   // InheritedRole flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
 	Database                        = "db"                              // Database flag
+	RoleName                        = "roleName"                        // RoleName flag
 	Unique                          = "unique"                          // Unique flag
 	RSName                          = "rsName"                          // RSName flag
 	Sparse                          = "sparse"                          // Sparse flag

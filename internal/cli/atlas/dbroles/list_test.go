@@ -20,39 +20,41 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreateOpts_Run(t *testing.T) {
+func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseRoleLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.CustomDBRole{}
+	var expected *[]mongodbatlas.CustomDBRole
 
-	createOpts := &CreateOpts{
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDatabaseRole(createOpts.ConfigProjectID(), createOpts.newCustomDBRole()).Return(expected, nil).
+		DatabaseRoles(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := listOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Database, flag.Action, flag.InheritedRole, flag.RoleName},
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
 	)
 }

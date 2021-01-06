@@ -81,11 +81,11 @@ func TestDBUsers(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var users *[]mongodbatlas.DatabaseUser
+		var users []mongodbatlas.DatabaseUser
 		if err := json.Unmarshal(resp, &users); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if len(*users) == 0 {
+		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})

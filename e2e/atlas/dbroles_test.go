@@ -84,7 +84,7 @@ func TestDBRoles(t *testing.T) {
 		if err := json.Unmarshal(resp, &roles); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if len(*roles) == 0 {
+		if len(roles) == 0 {
 			t.Fatalf("expected len(roles) > 0, got 0")
 		}
 	})

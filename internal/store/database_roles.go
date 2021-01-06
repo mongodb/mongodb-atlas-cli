@@ -45,7 +45,7 @@ type DatabaseRoleDescriber interface {
 	DatabaseRole(string, string) (*atlas.CustomDBRole, error)
 }
 
-// CreateDatabaseUser encapsulate the logic to manage different cloud providers
+// CreateDatabaseRole encapsulate the logic to manage different cloud providers
 func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -56,6 +56,7 @@ func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*a
 	}
 }
 
+// DeleteDatabaseRole encapsulate the logic to manage different cloud providers
 func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 	switch s.service {
 	case config.CloudService:
@@ -66,6 +67,7 @@ func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 	}
 }
 
+// DatabaseRoles encapsulate the logic to manage different cloud providers
 func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -76,6 +78,7 @@ func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atl
 	}
 }
 
+// UpdateDatabaseRole encapsulate the logic to manage different cloud providers
 func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -86,6 +89,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomD
 	}
 }
 
+// DatabaseRole encapsulate the logic to manage different cloud providers
 func (s *Store) DatabaseRole(groupID, roleName string) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:

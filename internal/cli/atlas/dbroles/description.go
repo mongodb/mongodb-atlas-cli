@@ -17,7 +17,7 @@ const (
 	dbRoles        = "Manage custom database roles for your project."
 	createDBRole   = "Create a custom database role for your project."
 	deleteDBRole   = "Delete a custom database role for your project."
-	listDBRoles    = "List Atlas custom database roles for your project."
+	listDBRoles    = "List custom database roles for your project."
 	describeDBRole = "Return a single custom database role for your project."
 	updateDBRole   = "Update a custom database role for your project."
 )

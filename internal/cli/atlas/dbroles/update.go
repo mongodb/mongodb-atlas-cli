@@ -17,10 +17,9 @@ package dbroles
 import (
 	"errors"
 
-	"github.com/mongodb/mongocli/internal/convert"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -83,18 +82,15 @@ func (opts *UpdateOpts) newCustomDBRole(role *atlas.CustomDBRole) *atlas.CustomD
 		}
 
 		out.Actions = []atlas.Action{action}
-
-		if opts.append {
-			out.Actions = append(out.Actions, role.Actions...)
-		}
 	}
 
 	if opts.inheritedRoles != nil {
 		out.InheritedRoles = convert.BuildAtlasInheritedRoles(opts.inheritedRoles)
+	}
 
-		if opts.append {
-			out.InheritedRoles = append(out.InheritedRoles, role.InheritedRoles...)
-		}
+	if opts.append {
+		out.Actions = append(out.Actions, role.Actions...)
+		out.InheritedRoles = append(out.InheritedRoles, role.InheritedRoles...)
 	}
 
 	return out

@@ -174,7 +174,7 @@ const (
 	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
 	Collection                      = "Collection name."
 	CustomDBRoleCluster             = "Set to true to indicate that the action is granted on the cluster resource."
-	Append                          = "The input action and inheritedRoles will be appended to the existing customRole"
+	Append                          = "The input action and inheritedRoles will be appended to the existing role."
 	DatabaseCustomRole              = "Database on which the action is granted."
 	CustomRoleName                  = "Name of the custom role."
 	Action                          = "Name of the privilege action."

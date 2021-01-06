@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
+	"github.com/mongodb/mongocli/internal/cli/atlas/dbroles"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/atlas/integrations"
 	"github.com/mongodb/mongocli/internal/cli/atlas/logs"
@@ -66,6 +67,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
 		customdns.Builder(),
+		dbroles.Builder(),
 	)
 
 	return cmd

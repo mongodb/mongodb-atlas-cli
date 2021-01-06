@@ -156,6 +156,9 @@ const (
 	Granularity                     = "granularity"                     // Granularity flag
 	Key                             = "key"                             // Key flag
 	Collection                      = "collection"                      // Collection flag
+	Cluster                         = "cluster"                         // Cluster flag
+	Action                          = "action"                          // Action flag
+	InheritedRole                   = "inheritedRole"                   // InheritedRole flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
 	Database                        = "db"                              // Database flag
 	Unique                          = "unique"                          // Unique flag

@@ -58,8 +58,8 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 
-		var role *mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, role); err != nil {
+		var role mongodbatlas.CustomDBRole
+		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -80,7 +80,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 
-		var roles *[]mongodbatlas.CustomDBRole
+		var roles []mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &roles); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -100,7 +100,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 
-		var role *mongodbatlas.CustomDBRole
+		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -127,7 +127,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 
-		var role *mongodbatlas.CustomDBRole
+		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -154,7 +154,7 @@ func TestDBRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err)
 
-		var role *mongodbatlas.CustomDBRole
+		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

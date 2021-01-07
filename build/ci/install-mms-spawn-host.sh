@@ -43,10 +43,17 @@ with open(sys.argv[1]) as hostsfile:
 EOF
 )
 for host in ${hosts}; do
-    echo "Seeding ${host}"
-    ego seed "${user}@${host}"
+ssh "${user}@${host}" 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
+  echo $ARG1 $ARG2
 
-    echo "bin/ego ops_manager_install_version"
-    ego run "${user}@${host}" /root/.ego/bin/ego ops_manager_install_version --version 4.2.15 --mongodb-version 4.2.8
+  #install ego
+  curl -sL https://raw.githubusercontent.com/mongodb-labs/ego/master/install.sh | bash
 
+  source ~/.bashrc
+
+  #install mms
+  ego ops_manager_install_version --version 4.2.15 --mongodb-version 4.2.8
+
+ENDSSH
 done

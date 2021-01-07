@@ -46,6 +46,7 @@ done
 echo "create first user"
 ./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email evergreenTest@gmail.com --password "evergreen1234_" -o json > apikeys.json
 
+cat apikeys.json
 export PUBLIC_KEY=$(
   cat <<EOF | python - apikeys.json
 import sys
@@ -80,6 +81,7 @@ echo "set service"
 echo "create organization"
 ./bin/mongocli iam organizations create myOrg -o json > organization.json
 
+cat organization.json
 export ORGANIZATION_ID=$(
   cat <<EOF | python - organization.json
 import sys
@@ -94,6 +96,7 @@ EOF
 echo "create project"
 ./bin/mongocli iam projects create myProj -o json > project.json
 
+cat project.json
 export PROJECT_ID=$(
   cat <<EOF | python - project.json
 import sys

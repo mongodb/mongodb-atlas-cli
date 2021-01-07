@@ -28,6 +28,7 @@ done
 
 # Install ego
 curl -sL https://raw.githubusercontent.com/mongodb-labs/ego/master/install.sh | bash
+export EGO_DEBUG=1
 
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
@@ -46,6 +47,6 @@ for host in ${hosts}; do
     ego seed "${user}@${host}"
 
     echo "bin/ego ops_manager_install_version"
-    ego run "${user}@${host}" ego ops_manager_install_version --version 4.2.15 --mongodb-version 4.2.8
+    ego run "${user}@${host}" /root/.ego/bin/ego ops_manager_install_version --version 4.2.15 --mongodb-version 4.2.8
 
 done

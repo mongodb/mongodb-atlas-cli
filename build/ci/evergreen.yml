@@ -673,8 +673,8 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "install mms"
       - func: "set-up mms"
+      - func: "install mms"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${cloud_manager_org_id}

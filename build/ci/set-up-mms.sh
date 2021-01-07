@@ -34,70 +34,73 @@ with open(sys.argv[1]) as hostsfile:
 EOF
 
 )
+
 cd ..
 cd ..
 
 for host in ${hosts}; do
   echo "set base_urs"
-  ./bin/mongocli config set base_url "http://${host}:9080/"
+  ./bin/mongocli config set base_url "http://ec2-63-35-176-208.eu-west-1.compute.amazonaws.com:9080/"
+done
 
-  echo "create first user"
-  ./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email test@gmail.com -o json > apikeys.json
+echo "create first user"
+./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email test@gmail.com -o json > apikeys.json
 
-  export PUBLIC_KEY=$(
-    cat <<EOF | python - apikeys.json
+export PUBLIC_KEY=$(
+  cat <<EOF | python - apikeys.json
 import sys
 import json
 with open(sys.argv[1]) as jsonfile:
     user = json.load(jsonfile)
     print(user["programmaticApiKey"]["publicKey"])
 EOF
-  )
 
-  export PRIVATE_KEY=$(
-    cat <<EOF | python - apikeys.json
+)
+
+export PRIVATE_KEY=$(
+  cat <<EOF | python - apikeys.json
 import sys
 import json
 with open(sys.argv[1]) as jsonfile:
     user = json.load(jsonfile)
     print(user["programmaticApiKey"]["privateKey"])
 EOF
-  )
 
-  echo "set public_api_key"
-  ./bin/mongocli config set public_api_key "${PUBLIC_KEY}"
+)
 
-  echo "set private_api_key"
-  ./bin/mongocli config set private_api_key "${PRIVATE_KEY}"
+echo "set public_api_key"
+./bin/mongocli config set public_api_key "${PUBLIC_KEY}"
 
-  echo "set service"
-  ./bin/mongocli config set service ops-manager
+echo "set private_api_key"
+./bin/mongocli config set private_api_key "${PRIVATE_KEY}"
 
-  echo "create organization"
-  ./bin/mongocli iam organizations create myOrg -o json > organization.json
+echo "set service"
+./bin/mongocli config set service ops-manager
 
-  export ORGANIZATION_ID=$(
-    cat <<EOF | python - organization.json
+echo "create organization"
+./bin/mongocli iam organizations create myOrg -o json > organization.json
+
+export ORGANIZATION_ID=$(
+  cat <<EOF | python - organization.json
 import sys
 import json
 with open(sys.argv[1]) as jsonfile:
     org = json.load(jsonfile)
     print(org["id"])
 EOF
-  )
 
-  echo "create project"
-  ./bin/mongocli iam projects create myProj -o json > project.json
+)
 
-  export PROJECT_ID=$(
-    cat <<EOF | python - project.json
+echo "create project"
+./bin/mongocli iam projects create myProj -o json > project.json
+
+export PROJECT_ID=$(
+  cat <<EOF | python - project.json
 import sys
 import json
 with open(sys.argv[1]) as jsonfile:
     proj = json.load(jsonfile)
     print(proj["id"])
 EOF
-  )
 
-
-done
+)

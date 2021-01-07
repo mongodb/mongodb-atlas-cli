@@ -233,7 +233,7 @@ const (
 	DailySnapshotRetentionDays      = "dailySnapshotRetentionDays"      // DailySnapshotRetentionDays flag
 	ClusterCheckpointIntervalMin    = "clusterCheckpointIntervalMin"    // ClusterCheckpointIntervalMin flag
 	SnapshotIntervalHours           = "snapshotIntervalHours"           // SnapshotIntervalHours flag
-	SnapshotRetentionDays           = "SnapshotRetentionDays"           // SnapshotRetentionDays flag
+	SnapshotRetentionDays           = "snapshotRetentionDays"           // SnapshotRetentionDays flag
 	WeeklySnapshotRetentionWeeks    = "weeklySnapshotRetentionWeeks"    // WeeklySnapshotRetentionWeeks flag
 	PointInTimeWindowHours          = "pointInTimeWindowHours"          // PointInTimeWindowHours flag
 	ReferenceHourOfDay              = "referenceHourOfDay"              // ReferenceHourOfDay flag

@@ -43,7 +43,7 @@ with open(sys.argv[1]) as hostsfile:
 EOF
 )
 for host in ${hosts}; do
-ssh "${user}@${host}" 'bash -s' <<'ENDSSH'
+ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}@${host}" 'bash -s' <<'ENDSSH'
   # commands to run on remote host
   echo $ARG1 $ARG2
 

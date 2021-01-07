@@ -671,9 +671,9 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "build"
-      - func: "set-up mms"
       - func: "deploy spawn host"
       - func: ssh-ready
+      - func: "set-up mms"
       - func: "install mms"
       - func: "set-up mms"
       - func: "e2e test"

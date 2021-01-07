@@ -37,7 +37,11 @@ EOF
 )
 cd ..
 cd ..
+
 for host in ${hosts}; do
-  ./bin/mongocli config set base_url "${host}:9080"
+  echo "set base_urs"
+  ./bin/mongocli config set base_url "http://${host}:9080/"
+
+  echo "create first user"
   ./bin/mongocli om owner --firstname evergreen --lastname evergreen --email test@gmail.com -o json
 done

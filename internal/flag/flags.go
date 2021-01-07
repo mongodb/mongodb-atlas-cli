@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -229,7 +229,7 @@ const (
 	DailySnapshotRetentionDays      = "dailySnapshotRetentionDays"      // DailySnapshotRetentionDays flag
 	ClusterCheckpointIntervalMin    = "clusterCheckpointIntervalMin"    // ClusterCheckpointIntervalMin flag
 	SnapshotIntervalHours           = "snapshotIntervalHours"           // SnapshotIntervalHours flag
-	SnapshotRetentionDays           = "SnapshotRetentionDays"           // SnapshotRetentionDays flag
+	SnapshotRetentionDays           = "snapshotRetentionDays"           // SnapshotRetentionDays flag
 	WeeklySnapshotRetentionWeeks    = "weeklySnapshotRetentionWeeks"    // WeeklySnapshotRetentionWeeks flag
 	PointInTimeWindowHours          = "pointInTimeWindowHours"          // PointInTimeWindowHours flag
 	ReferenceHourOfDay              = "referenceHourOfDay"              // ReferenceHourOfDay flag

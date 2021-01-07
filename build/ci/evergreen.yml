@@ -141,6 +141,15 @@ functions:
         working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./install-mms-spawn-host.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+  "set-up mms":
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./set-up-mms.sh
+        args: ['-h', 'hosts.json']
   "lint":
     - command: shell.exec
       type: test
@@ -652,6 +661,29 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
+  - name: ops_manager_generic_e2e
+    tags: ["e2e","generic","cloudmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "set-up mms"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install mms"
+      - func: "set-up mms"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -697,27 +729,6 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
-  - name: ops_manager_deploy_replica_set_e2e
-    tags: ["e2e","clusters","cloudmanager"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install mms"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,remote,replica
   - name: package_msi
     tags: ["packaging"]
     depends_on:

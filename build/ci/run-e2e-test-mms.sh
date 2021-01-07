@@ -16,42 +16,36 @@
 
 set -euo pipefail
 
-while getopts 'h:' opt; do
+# shellcheck disable=SC2034
+while getopts 's:c:t:x:h:' opt; do
   case ${opt} in
+  s) MCLI_SERVICE="${OPTARG}";;
+  c) TEST_CMD="${OPTARG}";;
+  t) E2E_TAGS="${OPTARG}";;
+  x) XDG_CONFIG_HOME="${OPTARG}";;
   h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
   *) exit 1 ;;
   esac
 done
 
-hosts=$(
+host=$(
   cat <<EOF | python - "${hostsFile}"
 import sys
 import json
 with open(sys.argv[1]) as hostsfile:
     hosts = json.load(hostsfile)
-    for host in hosts:
-        print(host["dns_name"])
+    print(hosts[0]["dns_name"])
 EOF
 
 )
 
+export MCLI_OPS_MANAGER_URL="http://${host}:9080/"
+
 cd ..
 cd ..
-
-for host in ${hosts}; do
-
-echo "set service"
-  ./bin/mongocli config set service ops-manager
-
-echo "set ops_manager_url"
-  ./bin/mongocli config set ops_manager_url "http://${host}:9080/"
-done
-
-echo "create first user"
-./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email evergreenTest@gmail.com --password "evergreen1234_" -o json > apikeys.json
 
 cat apikeys.json
-publicKey=$(
+MCLI_PUBLIC_API_KEY=$(
   cat <<EOF | python - apikeys.json
 import sys
 import json
@@ -61,8 +55,9 @@ with open(sys.argv[1]) as jsonfile:
 EOF
 
 )
+export MCLI_PUBLIC_API_KEY
 
-privateKey=$(
+MCLI_PRIVATE_API_KEY=$(
   cat <<EOF | python - apikeys.json
 import sys
 import json
@@ -72,18 +67,11 @@ with open(sys.argv[1]) as jsonfile:
 EOF
 
 )
+export MCLI_PRIVATE_API_KEY
 
-echo "set public_api_key"
-./bin/mongocli config set public_api_key "${publicKey}"
-
-echo "set private_api_key"
-./bin/mongocli config set private_api_key "${privateKey}"
-
-echo "create organization"
-./bin/mongocli iam organizations create myOrg -o json > organization.json
 
 cat organization.json
-organizationID=$(
+MCLI_ORG_ID=$(
   cat <<EOF | python - organization.json
 import sys
 import json
@@ -93,14 +81,21 @@ with open(sys.argv[1]) as jsonfile:
 EOF
 
 )
+export MCLI_ORG_ID
 
-# This mongocli command returns an error when the user has been created with mongocli om owner create but the project is created anyway
-# More info: https://jira.mongodb.org/browse/CLOUDP-76824
-set +e
-echo "create project"
-./bin/mongocli iam projects create myProj --orgId "${organizationID}" -o json
-
-set -e
-echo "get project id"
-./bin/mongocli iam project list --orgId "${organizationID}" -o json > project.json
 cat project.json
+MCLI_PROJECT_ID=$(
+  cat <<EOF | python - project.json
+import sys
+import json
+with open(sys.argv[1]) as jsonfile:
+    proj = json.load(jsonfile)
+    print(proj["results"][0]["id"])
+EOF
+
+)
+export MCLI_PROJECT_ID
+
+echo "run e2e test"
+
+make e2e-test

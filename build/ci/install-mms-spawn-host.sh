@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020 MongoDB Inc
+# Copyright 2021 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}
   source ~/.bashrc
 
   #install mms
-  ego ops_manager_install_version --version 4.2.15 --mongodb-version 4.2.8
+  ego ops_manager_install_version --version 4.4.6 --mongodb-version 4.2.8
 
   exit
 

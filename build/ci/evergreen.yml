@@ -92,6 +92,24 @@ functions:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
         command: make e2e-test
+  "e2e test mms":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - MCLI_SERVICE
+          - TEST_CMD
+          - E2E_TAGS
+        working_dir: src/github.com/mongodb/mongocli
+        binary: ./run-e2e-test-mms.sh
+        args: ['-h', 'hosts.json']
+        env:
+          XDG_CONFIG_HOME: ${workdir}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+          <<: *go_options
   "deploy spawn host":
     - command: shell.exec
       type: setup
@@ -673,15 +691,10 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "set-up mms"
       - func: "install mms"
-      - func: "e2e test"
+      - func: "set-up mms"
+      - func: "e2e test mms"
         vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e

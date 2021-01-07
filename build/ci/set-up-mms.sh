@@ -44,7 +44,7 @@ for host in ${hosts}; do
 done
 
 echo "create first user"
-./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email test@gmail.com -o json > apikeys.json
+./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email evergreenTest@gmail.com --password "evergreen1234_" -o json > apikeys.json
 
 export PUBLIC_KEY=$(
   cat <<EOF | python - apikeys.json

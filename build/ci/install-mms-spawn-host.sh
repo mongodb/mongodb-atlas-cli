@@ -28,8 +28,6 @@ done
 
 # Install ego
 curl -sL https://raw.githubusercontent.com/mongodb-labs/ego/master/install.sh | bash
-source ~/.bashrc
-
 
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 

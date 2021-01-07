@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -euo pipefail
 
 while getopts 'i:h:g:u:a:b:' opt; do
@@ -43,5 +42,62 @@ for host in ${hosts}; do
   ./bin/mongocli config set base_url "http://${host}:9080/"
 
   echo "create first user"
-  ./bin/mongocli om owner --firstName evergreen --lastName evergreen --email test@gmail.com -o json
+  ./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email test@gmail.com -o json > apikeys.json
+
+  export PUBLIC_KEY=$(
+    cat <<EOF | python - apikeys.json
+import sys
+import json
+with open(sys.argv[1]) as jsonfile:
+    user = json.load(jsonfile)
+    print(user["programmaticApiKey"]["publicKey"])
+EOF
+  )
+
+  export PRIVATE_KEY=$(
+    cat <<EOF | python - apikeys.json
+import sys
+import json
+with open(sys.argv[1]) as jsonfile:
+    user = json.load(jsonfile)
+    print(user["programmaticApiKey"]["privateKey"])
+EOF
+  )
+
+  echo "set public_api_key"
+  ./bin/mongocli config set public_api_key "${PUBLIC_KEY}"
+
+  echo "set private_api_key"
+  ./bin/mongocli config set private_api_key "${PRIVATE_KEY}"
+
+  echo "set service"
+  ./bin/mongocli config set service ops-manager
+
+  echo "create organization"
+  ./bin/mongocli iam organizations create myOrg -o json > organization.json
+
+  export ORGANIZATION_ID=$(
+    cat <<EOF | python - organization.json
+import sys
+import json
+with open(sys.argv[1]) as jsonfile:
+    org = json.load(jsonfile)
+    print(org["id"])
+EOF
+  )
+
+  echo "create project"
+  ./bin/mongocli iam projects create myProj -o json > project.json
+
+  export PROJECT_ID=$(
+    cat <<EOF | python - project.json
+import sys
+import json
+with open(sys.argv[1]) as jsonfile:
+    proj = json.load(jsonfile)
+    print(proj["id"])
+EOF
+  )
+
+
 done

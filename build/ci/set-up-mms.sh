@@ -43,5 +43,5 @@ for host in ${hosts}; do
   ./bin/mongocli config set base_url "http://${host}:9080/"
 
   echo "create first user"
-  ./bin/mongocli om owner --firstname evergreen --lastname evergreen --email test@gmail.com -o json
+  ./bin/mongocli om owner --firstName evergreen --lastName evergreen --email test@gmail.com -o json
 done

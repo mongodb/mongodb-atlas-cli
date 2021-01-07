@@ -673,7 +673,6 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "set-up mms"
       - func: "install mms"
       - func: "set-up mms"
       - func: "e2e test"

@@ -102,7 +102,7 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./run-e2e-test-mms.sh
         args: ['-h', 'hosts.json']
         env:

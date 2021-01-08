@@ -97,5 +97,4 @@ EOF
 export MCLI_PROJECT_ID
 
 echo "run e2e test"
-
 make e2e-test

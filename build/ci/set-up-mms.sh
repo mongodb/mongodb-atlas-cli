@@ -23,14 +23,13 @@ while getopts 'h:' opt; do
   esac
 done
 
-hosts=$(
+host=$(
   cat <<EOF | python - "${hostsFile}"
 import sys
 import json
 with open(sys.argv[1]) as hostsfile:
     hosts = json.load(hostsfile)
-    for host in hosts:
-        print(host["dns_name"])
+    print(hosts[0]["dns_name"])
 EOF
 
 )
@@ -38,14 +37,12 @@ EOF
 cd ..
 cd ..
 
-for host in ${hosts}; do
 
 echo "set service"
   ./bin/mongocli config set service ops-manager
 
 echo "set ops_manager_url"
   ./bin/mongocli config set ops_manager_url "http://${host}:9080/"
-done
 
 echo "create first user"
 ./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email evergreenTest@gmail.com --password "evergreen1234_" -o json > apikeys.json
@@ -94,7 +91,7 @@ EOF
 
 )
 
-# This mongocli command returns an error when the user has been created with mongocli om owner create but the project is created anyway
+# This mongocli command returns an error when the user has been created with "mongocli om owner create" but the project is created anyway
 # More info: https://jira.mongodb.org/browse/CLOUDP-76824
 set +e
 echo "create project"

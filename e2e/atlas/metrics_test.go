@@ -59,6 +59,7 @@ func TestMetrics(t *testing.T) {
 }
 
 func process(t *testing.T, cliPath, hostname string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		metricsEntity,
@@ -92,6 +93,7 @@ func process(t *testing.T, cliPath, hostname string) {
 }
 
 func databases(t *testing.T, cliPath, hostname string) {
+	t.Helper()
 	t.Run("databases list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -155,6 +157,7 @@ func databases(t *testing.T, cliPath, hostname string) {
 }
 
 func disks(t *testing.T, cliPath, hostname string) {
+	t.Helper()
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

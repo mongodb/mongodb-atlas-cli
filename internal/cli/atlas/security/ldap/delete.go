@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete",
 		Aliases: []string{"rm"},
-		Short:   delete,
+		Short:   deleteDesc,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

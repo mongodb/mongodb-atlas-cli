@@ -70,7 +70,5 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagFilename(flag.File)
-
 	return cmd
 }

@@ -71,6 +71,7 @@ func TestOnlineArchives(t *testing.T) {
 }
 
 func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -90,6 +91,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 }
 
 func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
 	const expireAfterDays = float64(4)
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -114,6 +116,7 @@ func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 }
 
 func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -137,6 +140,7 @@ func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string)
 }
 
 func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -158,6 +162,7 @@ func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
 }
 
 func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
+	t.Helper()
 	const dbName = "test"
 	cmd := exec.Command(cliPath,
 		atlasEntity,

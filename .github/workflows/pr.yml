@@ -9,7 +9,7 @@ jobs:
       - name: lint
         uses: golangci/golangci-lint-action@v2.3.0
         with:
-          version: v1.33.0
+          version: v1.35.2
 
   tests:
     needs: golangci-lint # run after golangci-lint action to not produce duplicated errors

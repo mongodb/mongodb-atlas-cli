@@ -11,8 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package cloudprovider
 
-const (
-	cloudProvider = "Manage unified IAM role access in Atlas"
+// +build unit
+
+package accessroles
+
+import (
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
+	)
+}

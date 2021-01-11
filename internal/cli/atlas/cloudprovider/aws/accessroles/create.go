@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aws
+package accessroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -25,7 +26,10 @@ import (
 
 const (
 	provider       = "AWS"
-	createTemplate = "AWS IAM role successfully created.\n"
+	createTemplate = `AWS IAM role '{{.RoleID}} successfully created.\n
+Atlas AWS Account ARN {{.AtlasAWSAccountARN}}
+Unique External ID {{.AtlasAssumedRoleExternalID}}
+`
 )
 
 type CreateOpts struct {
@@ -55,6 +59,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: create,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

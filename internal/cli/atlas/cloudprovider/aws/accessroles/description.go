@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package cloudprovider
+package accessroles
 
 const (
-	cloudProvider = "Manage unified IAM role access in Atlas"
+	accessRole = "Manage AWS IAM role access in Atlas"
+	create     = "Create an AWS IAM role."
 )

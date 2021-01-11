@@ -14,7 +14,7 @@
 
 // +build unit
 
-package aws
+package accessroles
 
 import (
 	"testing"

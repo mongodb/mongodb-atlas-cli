@@ -16,6 +16,7 @@ package aws
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/aws/accessroles"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   aws,
 	}
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(accessroles.Builder())
 
 	return cmd
 }

@@ -92,7 +92,7 @@ functions:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
         command: make e2e-test
-  "e2e test mms":
+  "e2e test ops manager":
     - command: subprocess.exec
       type: test
       params:
@@ -103,7 +103,7 @@ functions:
           - TEST_CMD
           - E2E_TAGS
         working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./run-e2e-test-mms.sh
+        binary: ./run-e2e-test-ops-manager.sh
         args: ['-h', 'hosts.json']
         env:
           XDG_CONFIG_HOME: ${workdir}
@@ -152,21 +152,21 @@ functions:
           LC_GROUP_ID: ${automation_agent_mms_group_id}
           BASE_URL: ${mcli_ops_manager_url}
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install mms":
+  "install ops manager":
     - command: subprocess.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./install-mms-spawn-host.sh
+        binary: ./install-ops-manager-spawn-host.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "set-up mms":
+  "set-up ops manager":
     - command: subprocess.exec
       type: setup
       params:
         add_to_path:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./set-up-mms.sh
+        binary: ./set-up-ops-manager.sh
         args: ['-h', 'hosts.json']
   "lint":
     - command: shell.exec
@@ -691,9 +691,9 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "install mms"
-      - func: "set-up mms"
-      - func: "e2e test mms"
+      - func: "install ops manager"
+      - func: "set-up ops manager"
+      - func: "e2e test ops manager"
         vars:
           E2E_TAGS: cloudmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config

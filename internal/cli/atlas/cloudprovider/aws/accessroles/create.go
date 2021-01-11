@@ -27,8 +27,8 @@ import (
 const (
 	provider       = "AWS"
 	createTemplate = `AWS IAM role '{{.RoleID}} successfully created.\n
-Atlas AWS Account ARN {{.AtlasAWSAccountARN}}
-Unique External ID {{.AtlasAssumedRoleExternalID}}
+Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
+Unique External ID: {{.AtlasAssumedRoleExternalID}}
 `
 )
 

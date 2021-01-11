@@ -174,7 +174,6 @@ const (
 	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
 	Collection                      = "Collection name."
 	Append                          = "The input action and inheritedRoles will be appended to the existing role."
-	DatabaseCustomRole              = "Database on which the action is granted."
 	PrivilegeAction                 = "List of actions per database and collection, if no database or collections is provided then cluster is assumed"
 	InheritedRoles                  = "Each object in the inheritedRoles array represents a key-value pair indicating the inherited role and the database on which the role is granted."
 	Analyzer                        = "Analyzer to use when creating the index"

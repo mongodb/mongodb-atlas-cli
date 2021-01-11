@@ -46,11 +46,10 @@ func TestDBRoles(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"create",
-			"--roleName", roleName,
-			"--action", find,
-			"--db=db",
+			roleName,
+			"--privilege", find,
 			"--inheritedRole", inheritedRole,
 			"-o=json",
 		)
@@ -73,7 +72,7 @@ func TestDBRoles(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -92,7 +91,7 @@ func TestDBRoles(t *testing.T) {
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"describe",
 			roleName,
 			"-o=json")
@@ -115,12 +114,10 @@ func TestDBRoles(t *testing.T) {
 	t.Run("Update with append", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"update",
 			roleName,
-			"--action",
-			update,
-			"--db=db",
+			"--privilege", update,
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -143,12 +140,10 @@ func TestDBRoles(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"update",
 			roleName,
-			"--action",
-			update,
-			"--db=db",
+			"--privilege", update,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -167,7 +162,7 @@ func TestDBRoles(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			dbrolesEntity,
+			customDBRoleEntity,
 			"delete",
 			roleName,
 			"--force")

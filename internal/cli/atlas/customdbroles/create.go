@@ -77,6 +77,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: createDBRole,
+		Args:  cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -86,6 +87,7 @@ func CreateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.roleName = args[0]
 			return opts.Run()
 		},
 	}

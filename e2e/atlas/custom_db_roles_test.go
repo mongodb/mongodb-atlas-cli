@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	find           = "FIND"
+	listSessions   = "LIST_SESSIONS"
 	update         = "UPDATE"
 	inheritedRole  = "enableSharding@admin"
 	enableSharding = "enableSharding"
@@ -49,7 +49,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", find,
+			"--privilege", listSessions,
 			"--inheritedRole", inheritedRole,
 			"-o=json",
 		)
@@ -64,7 +64,7 @@ func TestDBRoles(t *testing.T) {
 
 		assert.Equal(t, roleName, role.RoleName)
 		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, find, role.Actions[0].Action)
+		assert.Equal(t, listSessions, role.Actions[0].Action)
 		assert.Len(t, role.InheritedRoles, 1)
 		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -106,7 +106,7 @@ func TestDBRoles(t *testing.T) {
 
 		assert.Equal(t, roleName, role.RoleName)
 		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, find, role.Actions[0].Action)
+		assert.Equal(t, listSessions, role.Actions[0].Action)
 		assert.Len(t, role.InheritedRoles, 1)
 		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -117,7 +117,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
-			"--privilege", update,
+			"--privilege", fmt.Sprintf("%s@db", update),
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -132,7 +132,7 @@ func TestDBRoles(t *testing.T) {
 		assert.Equal(t, roleName, role.RoleName)
 		assert.Len(t, role.Actions, 2)
 		assert.Equal(t, update, role.Actions[0].Action)
-		assert.Equal(t, find, role.Actions[1].Action)
+		assert.Equal(t, listSessions, role.Actions[1].Action)
 		assert.Len(t, role.InheritedRoles, 1)
 		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
 	})

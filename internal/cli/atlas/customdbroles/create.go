@@ -11,38 +11,43 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package dbroles
+
+package customdbroles
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ROLE NAME{{range .}}
-{{.RoleName}}{{end}}
-`
+const createTemplate = "Custom Database Role successfully created.\n"
 
-type ListOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.DatabaseRoleLister
+	action         []string
+	roleName       string
+	inheritedRoles []string
+	store          store.DatabaseRoleCreator
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.DatabaseRoles(opts.ConfigProjectID(), listOpts)
+func (opts *CreateOpts) Run() error {
+	role := opts.newCustomDBRole()
+
+	r, err := opts.store.CreateDatabaseRole(opts.ConfigProjectID(), role)
 	if err != nil {
 		return err
 	}
@@ -50,19 +55,34 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas dbroles(s) list --projectId projectId [--page N] [--limit N]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+func (opts *CreateOpts) newCustomDBRole() *atlas.CustomDBRole {
+	return &atlas.CustomDBRole{
+		RoleName:       opts.roleName,
+		Actions:        convert.BuildAtlasActions(opts.action),
+		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
+	}
+}
+
+func (opts *CreateOpts) validate() error {
+	if len(opts.action) == 0 && opts.inheritedRoles == nil {
+		return errors.New("you must provide either actions or inherited roles")
+	}
+
+	return nil
+}
+
+// mongocli atlas dbrole(s) create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   listDBRoles,
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Use:   "create",
+		Short: createDBRole,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,8 +90,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
+	cmd.Flags().StringSliceVar(&opts.inheritedRoles, flag.InheritedRole, []string{}, usage.InheritedRoles)
+	cmd.Flags().StringSliceVar(&opts.action, flag.Privilege, []string{}, usage.PrivilegeAction)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

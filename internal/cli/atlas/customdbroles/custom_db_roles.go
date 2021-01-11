@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package dbroles
+package customdbroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "dbroles"
+	const use = "customDBRole"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

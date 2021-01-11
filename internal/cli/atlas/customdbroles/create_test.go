@@ -14,7 +14,7 @@
 
 // +build unit
 
-package dbroles
+package customdbroles
 
 import (
 	"testing"
@@ -26,34 +26,33 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestListOpts_Run(t *testing.T) {
+func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleLister(ctrl)
+	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
 	defer ctrl.Finish()
 
-	var expected *[]mongodbatlas.CustomDBRole
+	expected := &mongodbatlas.CustomDBRole{}
 
-	listOpts := &ListOpts{
+	createOpts := &CreateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DatabaseRoles(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		CreateDatabaseRole(createOpts.ConfigProjectID(), createOpts.newCustomDBRole()).Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := createOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestCreateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		CreateBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.ProjectID, flag.Output, flag.Privilege, flag.InheritedRole},
 	)
 }

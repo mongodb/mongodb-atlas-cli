@@ -14,7 +14,7 @@
 
 // +build unit
 
-package dbroles
+package customdbroles
 
 import (
 	"testing"
@@ -26,33 +26,60 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreateOpts_Run(t *testing.T) {
+func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleCreator(ctrl)
+	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.CustomDBRole{}
 
-	createOpts := &CreateOpts{
+	updateOpts := &UpdateOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateDatabaseRole(createOpts.ConfigProjectID(), createOpts.newCustomDBRole()).Return(expected, nil).
+		UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := updateOpts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestUpdateOptsWithAppend_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
+	defer ctrl.Finish()
+
+	expected := &mongodbatlas.CustomDBRole{}
+
+	updateOpts := &UpdateOpts{
+		store:  mockStore,
+		append: true,
+	}
+
+	mockStore.
+		EXPECT().
+		DatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName).Return(expected, nil).
+		Times(1)
+	mockStore.
+		EXPECT().
+		UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
+		Times(1)
+
+	err := updateOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		UpdateBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Database, flag.Action, flag.InheritedRole, flag.RoleName},
+		[]string{flag.ProjectID, flag.Output, flag.Privilege, flag.InheritedRole},
 	)
 }

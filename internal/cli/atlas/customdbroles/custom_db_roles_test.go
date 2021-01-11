@@ -14,7 +14,7 @@
 
 // +build unit
 
-package dbroles
+package customdbroles
 
 import (
 	"testing"

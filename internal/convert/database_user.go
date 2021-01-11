@@ -67,23 +67,3 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 	}
 	return roles
 }
-
-// BuildAtlasInheritedRoles converts the inherited roles inside the array of string in an array of atlas.InheritedRole structs
-// r contains roles in the format roleName@dbName
-func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
-	roles := make([]atlas.InheritedRole, len(r))
-	for i, roleP := range r {
-		role := strings.Split(roleP, roleSep)
-		roleName := role[0]
-		databaseName := defaultUserDatabase
-		if len(role) > 1 {
-			databaseName = role[1]
-		}
-
-		roles[i] = atlas.InheritedRole{
-			Db:   databaseName,
-			Role: roleName,
-		}
-	}
-	return roles
-}

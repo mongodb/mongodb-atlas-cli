@@ -14,5 +14,5 @@
 package aws
 
 const (
-	aws = "Manage AWS IAM role access in Atlas"
+	aws = "Manage AWS IAM role access in Atlas."
 )

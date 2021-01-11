@@ -14,5 +14,5 @@
 package cloudprovider
 
 const (
-	cloudProvider = "Manage unified IAM role access in Atlas"
+	cloudProvider = "Manage unified IAM role access in Atlas."
 )

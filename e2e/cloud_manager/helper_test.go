@@ -316,6 +316,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 
 func watchAutomation(cliPath string) func(t *testing.T) {
 	return func(t *testing.T) {
+		t.Helper()
 		cmd := exec.Command(cliPath,
 			entity,
 			"automation",

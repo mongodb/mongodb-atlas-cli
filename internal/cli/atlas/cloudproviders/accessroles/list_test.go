@@ -19,14 +19,41 @@ package accessroles
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestList_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
+	defer ctrl.Finish()
+
+	var expected *mongodbatlas.CloudProviderAccessRoles
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		CloudProviderAccessRoles(listOpts.ProjectID).
+		Return(expected, nil).
+		Times(1)
+
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		ListBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID},
 	)
 }

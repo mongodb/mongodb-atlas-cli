@@ -36,8 +36,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	PROVIDER{{range .AWSIAMRoles}}
-{{.RoleID}}	{{.ProviderName}}{{end}}
+var listTemplate = `ID	PROVIDER	ATLAS AWS ACCOUNT ARN	UNIQUE EXTERNAL ID{{range .AWSIAMRoles}}
+{{.RoleID}}	{{.ProviderName}}	{{.AtlasAWSAccountARN}}	{{.AtlasAssumedRoleExternalID}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

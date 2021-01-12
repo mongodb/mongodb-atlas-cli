@@ -19,14 +19,38 @@ package aws
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDisableOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockCloudProviderAccessRoleDeauthorizer(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DeauthorizeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest()).
+		Return(nil).
+		Times(1)
+
+	err := opts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		DeauthorizeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

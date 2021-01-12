@@ -25,91 +25,144 @@ import (
 )
 
 func TestBuildAtlasRoles(t *testing.T) {
-	t.Run("No database defaults to admin", func(t *testing.T) {
-		r := BuildAtlasRoles([]string{"admin"})
-		expected := []mongodbatlas.Role{
-			{
-				RoleName:     "admin",
-				DatabaseName: "admin",
-			},
-		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
-		}
-	})
+	type test struct {
+		input []string
+		want  []mongodbatlas.Role
+	}
 
-	t.Run("should split by @", func(t *testing.T) {
-		r := BuildAtlasRoles([]string{"admin@test"})
-		expected := []mongodbatlas.Role{
-			{
-				RoleName:     "admin",
-				DatabaseName: "test",
+	tests := []test{
+		{
+			input: []string{"admin"}, want: []mongodbatlas.Role{
+				{
+					RoleName:     "admin",
+					DatabaseName: "admin",
+				},
 			},
-		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
-		}
-	})
+		},
+		{
+			input: []string{"admin@test"}, want: []mongodbatlas.Role{
+				{
+					RoleName:     "admin",
+					DatabaseName: "test",
+				},
+			},
+		},
+		{
+			input: []string{"admin@test", "something"}, want: []mongodbatlas.Role{
+				{
+					RoleName:     "admin",
+					DatabaseName: "test",
+				},
+				{
+					RoleName:     "something",
+					DatabaseName: "admin",
+				},
+			},
+		},
+	}
 
-	t.Run("all", func(t *testing.T) {
-		r := BuildAtlasRoles([]string{"admin@test", "something"})
-		expected := []mongodbatlas.Role{
-			{
-				RoleName:     "admin",
-				DatabaseName: "test",
-			},
-			{
-				RoleName:     "something",
-				DatabaseName: "admin",
-			},
+	for _, tc := range tests {
+		got := BuildAtlasRoles(tc.input)
+		if err := deep.Equal(tc.want, got); err != nil {
+			t.Fatalf("expected: %v, got: %v", tc.want, got)
 		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
-		}
-	})
+	}
 }
 
 func TestBuildOMRoles(t *testing.T) {
-	t.Run("No database defaults to admin", func(t *testing.T) {
-		r := BuildOMRoles([]string{"admin"})
-		expected := []*opsmngr.Role{
-			{
-				Role:     "admin",
-				Database: "admin",
-			},
-		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
-		}
-	})
+	type test struct {
+		input []string
+		want  []*opsmngr.Role
+	}
 
-	t.Run("should split by @", func(t *testing.T) {
-		r := BuildOMRoles([]string{"admin@test"})
-		expected := []*opsmngr.Role{
-			{
-				Role:     "admin",
-				Database: "test",
+	tests := []test{
+		{
+			input: []string{"admin"}, want: []*opsmngr.Role{
+				{
+					Role:     "admin",
+					Database: "admin",
+				},
 			},
-		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
-		}
-	})
+		},
+		{
+			input: []string{"admin@test"}, want: []*opsmngr.Role{
+				{
+					Role:     "admin",
+					Database: "test",
+				},
+			},
+		},
+		{
+			input: []string{"admin@test", "something"}, want: []*opsmngr.Role{
+				{
+					Role:     "admin",
+					Database: "test",
+				},
+				{
+					Role:     "something",
+					Database: "admin",
+				},
+			},
+		},
+	}
 
-	t.Run("all", func(t *testing.T) {
-		r := BuildOMRoles([]string{"admin@test", "something"})
-		expected := []*opsmngr.Role{
-			{
-				Role:     "admin",
-				Database: "test",
-			},
-			{
-				Role:     "something",
-				Database: "admin",
-			},
+	for _, tc := range tests {
+		got := BuildOMRoles(tc.input)
+		if err := deep.Equal(tc.want, got); err != nil {
+			t.Fatalf("expected: %v, got: %v", tc.want, got)
 		}
-		if err := deep.Equal(r, expected); err != nil {
-			t.Error(err)
+	}
+}
+
+func TestBuildScope(t *testing.T) {
+	type test struct {
+		input []string
+		want  []mongodbatlas.Scope
+	}
+
+	tests := []test{
+		{
+			input: []string{"clusterName"}, want: []mongodbatlas.Scope{
+				{
+					Name: "clusterName",
+					Type: "CLUSTER",
+				},
+			},
+		},
+		{
+			input: []string{"clusterName@CLUSTER"}, want: []mongodbatlas.Scope{
+				{
+					Name: "clusterName",
+					Type: "CLUSTER",
+				},
+			},
+		},
+		{
+			input: []string{"clusterName", "name@DATA_LAKE"}, want: []mongodbatlas.Scope{
+				{
+					Name: "clusterName",
+					Type: "CLUSTER",
+				},
+				{
+					Name: "name",
+					Type: "DATA_LAKE",
+				},
+			},
+		},
+		{
+			input: []string{"name@DATA_LAKE"}, want: []mongodbatlas.Scope{
+				{
+					Name: "name",
+					Type: "DATA_LAKE",
+				},
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		got := BuildAtlasScopes(tc.input)
+		if err := deep.Equal(tc.want, got); err != nil {
+			t.Fatalf("expected: %v, got: %v", tc.want, got)
 		}
-	})
+	}
 }

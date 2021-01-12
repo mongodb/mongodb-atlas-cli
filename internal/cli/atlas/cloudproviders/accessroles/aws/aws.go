@@ -24,7 +24,9 @@ func Builder() *cobra.Command {
 		Use:   use,
 		Short: aws,
 	}
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(
+		CreateBuilder(),
+		DeauthorizeBuilder())
 
 	return cmd
 }

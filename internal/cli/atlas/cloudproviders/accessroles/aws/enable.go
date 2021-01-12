@@ -25,6 +25,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+const enableTemplate = "AWS IAM role '{{.RoleID}} successfully enabled.\n"
+
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -59,14 +61,14 @@ func (opts *EnableOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProvi
 func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: create,
+		Use:   "enable",
+		Short: enable,
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

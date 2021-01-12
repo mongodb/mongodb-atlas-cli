@@ -16,4 +16,5 @@ package aws
 const (
 	aws    = "Manage AWS IAM role access in Atlas."
 	create = "Create an AWS IAM role."
+	enable = "Authorize an AWS IAM role."
 )

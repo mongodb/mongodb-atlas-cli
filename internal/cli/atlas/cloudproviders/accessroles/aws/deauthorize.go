@@ -61,7 +61,7 @@ func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.Clo
 func DeauthorizeBuilder() *cobra.Command {
 	opts := &DeauthorizeOpts{}
 	cmd := &cobra.Command{
-		Use:   "deauthorize",
+		Use:   "deauthorize <id>",
 		Short: deauthorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -28,7 +28,7 @@ import (
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRole(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
@@ -39,7 +39,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		EnableCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
+		AuthorizeCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
 		Return(expected, nil).
 		Times(1)
 

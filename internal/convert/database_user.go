@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ const (
 	ExternalAuthDB      = "$external"
 	roleSep             = "@"
 	defaultUserDatabase = "admin"
+	defaultResourceType = "CLUSTER"
 )
 
 // BuildAtlasRoles converts the roles inside the array of string in an array of mongodbatlas.Role structs
@@ -66,4 +67,23 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 		}
 	}
 	return roles
+}
+
+// BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs
+// r contains resources in the format resouceName@resourceType
+func BuildAtlasScopes(r []string) []atlas.Scope {
+	scopes := make([]atlas.Scope, len(r))
+	for i, scopeP := range r {
+		scope := strings.Split(scopeP, roleSep)
+		resourceType := defaultResourceType
+		if len(scope) > 1 {
+			resourceType = scope[1]
+		}
+
+		scopes[i] = atlas.Scope{
+			Name: scope[0],
+			Type: strings.ToUpper(resourceType),
+		}
+	}
+	return scopes
 }

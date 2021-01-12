@@ -18,7 +18,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
-	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
@@ -67,7 +67,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
 		customdns.Builder(),
-		cloudprovider.Builder(),
+		cloudproviders.Builder(),
 	)
 
 	return cmd

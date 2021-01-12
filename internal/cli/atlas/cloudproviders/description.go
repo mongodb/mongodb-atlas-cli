@@ -11,23 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package cloudproviders
 
-package accessroles
-
-import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/accessroles/aws"
-	"github.com/spf13/cobra"
+const (
+	cloudProvider = "Manage unified IAM role access in Atlas."
 )
-
-func Builder() *cobra.Command {
-	const use = "accessRoles"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   accessRole,
-	}
-	cmd.AddCommand(aws.Builder())
-
-	return cmd
-}

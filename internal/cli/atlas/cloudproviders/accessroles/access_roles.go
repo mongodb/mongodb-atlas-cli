@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package cloudprovider
+package accessroles
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders/accessroles/aws"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "accessRoles"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   accessRole,
+	}
+	cmd.AddCommand(aws.Builder())
+
+	return cmd
 }

@@ -25,12 +25,12 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const enableTemplate = "AWS IAM role '{{.RoleID}} successfully enabled.\n"
+const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
 
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store             store.CloudProviderAccessRoleEnabler
+	store             store.CloudProviderAccessRoleAuthorizer
 	roleID            string
 	IAMAssumedRoleARN string
 }
@@ -42,7 +42,7 @@ func (opts *EnableOpts) initStore() error {
 }
 
 func (opts *EnableOpts) Run() error {
-	r, err := opts.store.EnableCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
+	r, err := opts.store.AuthorizeCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
 	if err != nil {
 		return err
 	}
@@ -57,32 +57,31 @@ func (opts *EnableOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProvi
 	}
 }
 
-// mongocli atlas cloudProvider aws accessRoles enable --roleId roleId --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
+// mongocli atlas cloudProvider aws accessRoles authorize roleId --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
 func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
-		Use:   "enable",
-		Short: enable,
-		Args:  require.NoArgs,
+		Use:   "authorize",
+		Short: authorize,
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), authorizeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.roleID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.roleID, flag.RoleID, "", usage.RoleID)
 	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagFilename(flag.RoleID)
 	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)
 	return cmd
 }

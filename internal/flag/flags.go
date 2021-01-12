@@ -85,7 +85,6 @@ const (
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
-	RoleID                          = "roleId"                          // RoleID flag
 	IAMAssumedRoleARN               = "iamAssumedRoleArn"               // IAMAssumedRoleARN flag
 	Description                     = "desc"                            // Description flag
 	StartDate                       = "startDate"                       // StartDate flag

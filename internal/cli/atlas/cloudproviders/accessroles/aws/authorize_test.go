@@ -28,7 +28,7 @@ import (
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleEnabler(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRole(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
@@ -54,6 +54,6 @@ func TestEnableBuilder(t *testing.T) {
 		t,
 		EnableBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.RoleID, flag.IAMAssumedRoleARN},
+		[]string{flag.ProjectID, flag.Output, flag.IAMAssumedRoleARN},
 	)
 }

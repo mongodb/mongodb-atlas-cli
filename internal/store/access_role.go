@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleEnabler,CloudProviderAccessRoleLister
+//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleAuthorizer,CloudProviderAccessRoleLister
 
 type CloudProviderAccessRoleCreator interface {
 	CreateCloudProviderAccessRole(string, string) (*atlas.AWSIAMRole, error)
@@ -32,11 +32,11 @@ type CloudProviderAccessRoleLister interface {
 	CloudProviderAccessRoles(string) (*atlas.CloudProviderAccessRoles, error)
 }
 
-type CloudProviderAccessRoleEnabler interface {
-	EnableCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error)
+type CloudProviderAccessRoleAuthorizer interface {
+	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error)
 }
 
-// CreateCloudProviderAccessRole encapsulate the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -50,7 +50,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 	}
 }
 
-// CloudProviderAccessRoles encapsulate the logic to manage different cloud providers
+// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService:
@@ -61,8 +61,8 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 	}
 }
 
-// EnableCloudProviderAccessRole encapsulate the logic to manage different cloud providers
-func (s *Store) EnableCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
+// AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, roleID, req)

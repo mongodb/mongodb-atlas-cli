@@ -27,7 +27,9 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   accessRole,
 	}
-	cmd.AddCommand(aws.Builder())
+	cmd.AddCommand(
+		aws.Builder(),
+		ListBuilder())
 
 	return cmd
 }

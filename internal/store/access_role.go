@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleLister
+//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleLister,CloudProviderAccessRoleDisabler
 
 type CloudProviderAccessRoleCreator interface {
 	CreateCloudProviderAccessRole(string, string) (*atlas.AWSIAMRole, error)
@@ -32,7 +32,11 @@ type CloudProviderAccessRoleLister interface {
 	CloudProviderAccessRoles(string) (*atlas.CloudProviderAccessRoles, error)
 }
 
-// CreateCloudProviderAccessRole encapsulate the logic to manage different cloud providers
+type CloudProviderAccessRoleDisabler interface {
+	DisableCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
+}
+
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -46,7 +50,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 	}
 }
 
-// CloudProviderAccessRoles encapsulate the logic to manage different cloud providers
+// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService:
@@ -54,5 +58,16 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DisableCloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+func (s *Store) DisableCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(context.Background(), req)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

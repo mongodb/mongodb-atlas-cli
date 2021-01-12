@@ -25,7 +25,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const disableTemplate = "AWS IAM role successfully deauthorized.\n"
+const deauthorizeTemplate = "AWS IAM role successfully deauthorized.\n"
 
 type DeauthorizeOpts struct {
 	cli.GlobalOpts
@@ -68,7 +68,7 @@ func DeauthorizeBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), disableTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), deauthorizeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -61,22 +61,21 @@ func TestDBUsers(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err)
 
 		var user mongodbatlas.DatabaseUser
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, username, user.Username)
-		assert.Len(t, user.Scopes, 2)
-		assert.Equal(t, user.Scopes[0].Name, clusterName0)
-		assert.Equal(t, user.Scopes[0].Type, clusterType)
-		assert.Equal(t, user.Scopes[1].Name, clusterName1)
-		assert.Equal(t, user.Scopes[0].Type, clusterType)
+		a.Equal(username, user.Username)
+		if a.Len(user.Scopes, 2) {
+			a.Equal(user.Scopes[0].Name, clusterName0)
+			a.Equal(user.Scopes[0].Type, clusterType)
+			a.Equal(user.Scopes[1].Name, clusterName1)
+			a.Equal(user.Scopes[0].Type, clusterType)
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {

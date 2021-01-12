@@ -25,50 +25,50 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const deauthorizeTemplate = "AWS IAM role successfully deauthorized.\n"
+const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
 
-type DeauthorizeOpts struct {
+type AuthorizeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.CloudProviderAccessRoleDeauthorizer
-	roleID string
+	store             store.CloudProviderAccessRoleAuthorizer
+	roleID            string
+	IAMAssumedRoleARN string
 }
 
-func (opts *DeauthorizeOpts) initStore() error {
+func (opts *AuthorizeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeauthorizeOpts) Run() error {
-	err := opts.store.DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest())
+func (opts *AuthorizeOpts) Run() error {
+	r, err := opts.store.AuthorizeCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(r)
 }
 
-func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudProviderDeauthorizationRequest {
-	return &atlas.CloudProviderDeauthorizationRequest{
-		ProviderName: provider,
-		GroupID:      opts.ConfigProjectID(),
-		RoleID:       opts.roleID,
+func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
+	return &atlas.CloudProviderAuthorizationRequest{
+		ProviderName:      provider,
+		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
 	}
 }
 
-// mongocli atlas cloudProvider aws accessRoles deauthorize <roleId> [--projectId projectId]
-func DeauthorizeBuilder() *cobra.Command {
-	opts := &DeauthorizeOpts{}
+// mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
+func AuthorizeBuilder() *cobra.Command {
+	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{
-		Use:   "deauthorize <id>",
-		Short: deauthorize,
+		Use:   "authorize <id>",
+		Short: authorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), deauthorizeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), authorizeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -77,8 +77,11 @@ func DeauthorizeBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)
 	return cmd
 }

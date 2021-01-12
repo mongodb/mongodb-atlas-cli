@@ -231,6 +231,7 @@ const (
 	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
 	VNet                            = "Name of your Azure VNet."
 	ResourceGroup                   = "Name of your Azure resource group."
+	IAMAssumedRoleARN               = "Role ARN that Atlas assumes to access your AWS account."
 	DirectoryID                     = "Unique identifier for an Azure AD directory."
 	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
 	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."

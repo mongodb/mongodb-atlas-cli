@@ -15,4 +15,5 @@ package accessroles
 
 const (
 	accessRole = "Manage AWS IAM role access in Atlas."
+	list       = "List AWS IAM roles in Atlas."
 )

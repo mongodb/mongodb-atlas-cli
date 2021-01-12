@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestDisableOpts_Run(t *testing.T) {
+func TestDeauthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleDeauthorizer(ctrl)
 	defer ctrl.Finish()
@@ -46,7 +46,7 @@ func TestDisableOpts_Run(t *testing.T) {
 	}
 }
 
-func TestDisableBuilder(t *testing.T) {
+func TestDeauthorizeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		DeauthorizeBuilder(),

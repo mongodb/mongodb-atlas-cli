@@ -26,14 +26,14 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestEnableOpts_Run(t *testing.T) {
+func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
 
-	opts := &EnableOpts{
+	opts := &AuthorizeOpts{
 		store: mockStore,
 	}
 
@@ -49,10 +49,10 @@ func TestEnableOpts_Run(t *testing.T) {
 	}
 }
 
-func TestEnableBuilder(t *testing.T) {
+func TestAuthorizeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		EnableBuilder(),
+		AuthorizeBuilder(),
 		0,
 		[]string{flag.ProjectID, flag.Output, flag.IAMAssumedRoleARN},
 	)

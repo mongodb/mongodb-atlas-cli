@@ -27,7 +27,7 @@ import (
 
 const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
 
-type EnableOpts struct {
+type AuthorizeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	store             store.CloudProviderAccessRoleAuthorizer
@@ -35,13 +35,13 @@ type EnableOpts struct {
 	IAMAssumedRoleARN string
 }
 
-func (opts *EnableOpts) initStore() error {
+func (opts *AuthorizeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *EnableOpts) Run() error {
+func (opts *AuthorizeOpts) Run() error {
 	r, err := opts.store.AuthorizeCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (opts *EnableOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *EnableOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
+func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
 	return &atlas.CloudProviderAuthorizationRequest{
 		ProviderName:      provider,
 		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
@@ -58,8 +58,8 @@ func (opts *EnableOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProvi
 }
 
 // mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
-func EnableBuilder() *cobra.Command {
-	opts := &EnableOpts{}
+func AuthorizeBuilder() *cobra.Command {
+	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{
 		Use:   "authorize <id>",
 		Short: authorize,

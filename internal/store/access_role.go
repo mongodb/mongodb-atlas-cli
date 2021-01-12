@@ -22,10 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator
+//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleEnabler
 
 type CloudProviderAccessRoleCreator interface {
 	CreateCloudProviderAccessRole(string, string) (*atlas.AWSIAMRole, error)
+}
+
+type CloudProviderAccessRoleEnabler interface {
+	EnableCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error)
 }
 
 // CreateCloudProviderAccessRole encapsulate the logic to manage different cloud providers
@@ -36,6 +40,17 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 			ProviderName: provider,
 		}
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.CreateRole(context.Background(), groupID, req)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// EnableCloudProviderAccessRole encapsulate the logic to manage different cloud providers
+func (s *Store) EnableCloudProviderAccessRole(groupID, provider string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, provider, req)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

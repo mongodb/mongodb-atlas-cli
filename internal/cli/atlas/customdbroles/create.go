@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = "Custom Database Role successfully created.\n"
+const createTemplate = "Custom Database Role {{.RoleName}} successfully created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts

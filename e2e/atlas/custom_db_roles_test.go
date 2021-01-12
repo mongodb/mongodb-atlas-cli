@@ -55,18 +55,19 @@ func TestDBRoles(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err)
+		a := assert.New(t)
+		a.NoError(err)
 
 		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, roleName, role.RoleName)
-		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, listSessions, role.Actions[0].Action)
-		assert.Len(t, role.InheritedRoles, 1)
-		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(roleName, role.RoleName)
+		a.Len(role.Actions, 1)
+		a.Equal(listSessions, role.Actions[0].Action)
+		a.Len(role.InheritedRoles, 1)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -77,15 +78,15 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err)
+		a := assert.New(t)
+		a.NoError(err)
 
 		var roles []mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &roles); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if len(roles) == 0 {
-			t.Fatalf("expected len(roles) > 0, got 0")
-		}
+
+		a.NotEmpty(roles)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -97,18 +98,19 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err)
+		a := assert.New(t)
+		a.NoError(err)
 
 		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, roleName, role.RoleName)
-		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, listSessions, role.Actions[0].Action)
-		assert.Len(t, role.InheritedRoles, 1)
-		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(roleName, role.RoleName)
+		a.Len(role.Actions, 1)
+		a.Equal(listSessions, role.Actions[0].Action)
+		a.Len(role.InheritedRoles, 1)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
@@ -122,19 +124,20 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err)
+		a := assert.New(t)
+		a.NoError(err)
 
 		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, roleName, role.RoleName)
-		assert.Len(t, role.Actions, 2)
-		assert.Equal(t, update, role.Actions[0].Action)
-		assert.Equal(t, listSessions, role.Actions[1].Action)
-		assert.Len(t, role.InheritedRoles, 1)
-		assert.Equal(t, enableSharding, role.InheritedRoles[0].Role)
+		a.Equal(roleName, role.RoleName)
+		a.Len(role.Actions, 2)
+		a.Equal(update, role.Actions[0].Action)
+		a.Equal(listSessions, role.Actions[1].Action)
+		a.Len(role.InheritedRoles, 1)
+		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -147,16 +150,17 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err)
+		a := assert.New(t)
+		a.NoError(err)
 
 		var role mongodbatlas.CustomDBRole
 		if err := json.Unmarshal(resp, &role); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		assert.Equal(t, roleName, role.RoleName)
-		assert.Len(t, role.Actions, 1)
-		assert.Equal(t, update, role.Actions[0].Action)
+		a.Equal(roleName, role.RoleName)
+		a.Len(role.Actions, 1)
+		a.Equal(update, role.Actions[0].Action)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -168,12 +172,10 @@ func TestDBRoles(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err)
 
 		expected := fmt.Sprintf("Custom Database role '%s' deleted\n", roleName)
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 }

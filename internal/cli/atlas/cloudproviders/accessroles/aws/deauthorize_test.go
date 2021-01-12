@@ -27,16 +27,16 @@ import (
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleDisabler(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRoleDeauthorizer(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DisableOpts{
+	opts := &DeauthorizeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DisableCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest()).
+		DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest()).
 		Return(nil).
 		Times(1)
 
@@ -51,6 +51,6 @@ func TestDisableBuilder(t *testing.T) {
 		t,
 		DisableBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.RoleID},
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

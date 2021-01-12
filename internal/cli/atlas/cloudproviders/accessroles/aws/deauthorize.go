@@ -25,23 +25,23 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const disableTemplate = "AWS IAM role successfully disabled.\n"
+const disableTemplate = "AWS IAM role successfully deauthorized.\n"
 
-type DisableOpts struct {
+type DeauthorizeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.CloudProviderAccessRoleDisabler
+	store  store.CloudProviderAccessRoleDeauthorizer
 	roleID string
 }
 
-func (opts *DisableOpts) initStore() error {
+func (opts *DeauthorizeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DisableOpts) Run() error {
-	err := opts.store.DisableCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest())
+func (opts *DeauthorizeOpts) Run() error {
+	err := opts.store.DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest())
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (opts *DisableOpts) Run() error {
 	return opts.Print(nil)
 }
 
-func (opts *DisableOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudProviderDeauthorizationRequest {
+func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudProviderDeauthorizationRequest {
 	return &atlas.CloudProviderDeauthorizationRequest{
 		ProviderName: provider,
 		GroupID:      opts.ConfigProjectID(),
@@ -57,13 +57,13 @@ func (opts *DisableOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudPr
 	}
 }
 
-// mongocli atlas cloudProvider aws accessRoles disable --roleId roleId [--projectId projectId]
+// mongocli atlas cloudProvider aws accessRoles deauthorize <roleId> [--projectId projectId]
 func DisableBuilder() *cobra.Command {
-	opts := &DisableOpts{}
+	opts := &DeauthorizeOpts{}
 	cmd := &cobra.Command{
-		Use:   "disable",
-		Short: disable,
-		Args:  require.NoArgs,
+		Use:   "deauthorize",
+		Short: deauthorize,
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -72,16 +72,13 @@ func DisableBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.roleID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.roleID, flag.RoleID, "", usage.RoleID)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagFilename(flag.RoleID)
 
 	return cmd
 }

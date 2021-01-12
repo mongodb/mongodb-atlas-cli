@@ -196,7 +196,6 @@ const (
 	CASFilePath                     = "Path to a PEM file containing one or more CAs for database user authentication."
 	Verbose                         = "If true, returns all child jobs in the response."
 	ClusterID                       = "Unique identifier of the cluster."
-	RoleID                          = "Unique ID of the role to authorize."
 	ReferenceTimeZoneOffset         = "The ISO-8601 timezone offset where the Ops Manager host resides."
 	DailySnapshotRetentionDays      = "Number of days to retain daily snapshots. Accepted values for this option are: values between 1 and 365 inclusive."
 	SnapshotRetentionDays           = "Number of days to keep recent snapshots. Accepted values for this option are: values between 2 and 5 inclusive."

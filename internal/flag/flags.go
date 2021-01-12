@@ -25,7 +25,6 @@ const (
 	ProjectID                       = "projectId"                       // ProjectID flag to use a project ID
 	ProcessName                     = "processName"                     // Process Name
 	HostID                          = "hostId"                          // HostID flag
-	RoleID                          = "roleId"                          // RoleID flag
 	Since                           = "since"                           // Since flag
 	Duration                        = "duration"                        // Duration Flag
 	NLog                            = "nLog"                            // NLog flag

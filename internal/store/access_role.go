@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleLister,CloudProviderAccessRoleDisabler
+//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleLister,CloudProviderAccessRoleDeauthorizer
 
 type CloudProviderAccessRoleCreator interface {
 	CreateCloudProviderAccessRole(string, string) (*atlas.AWSIAMRole, error)
@@ -32,8 +32,8 @@ type CloudProviderAccessRoleLister interface {
 	CloudProviderAccessRoles(string) (*atlas.CloudProviderAccessRoles, error)
 }
 
-type CloudProviderAccessRoleDisabler interface {
-	DisableCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
+type CloudProviderAccessRoleDeauthorizer interface {
+	DeauthorizeCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
 }
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
@@ -61,8 +61,8 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 	}
 }
 
-// DisableCloudProviderAccessRoles encapsulates the logic to manage different cloud providers
-func (s *Store) DisableCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
+// DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(context.Background(), req)

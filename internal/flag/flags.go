@@ -86,6 +86,7 @@ const (
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
 	Scope                           = "scope"                           // Scope flag
+	IAMAssumedRoleARN               = "iamAssumedRoleArn"               // IAMAssumedRoleARN flag
 	Description                     = "desc"                            // Description flag
 	StartDate                       = "startDate"                       // StartDate flag
 	EndDate                         = "endDate"                         // EndDate flag

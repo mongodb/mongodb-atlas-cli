@@ -23,21 +23,24 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDeauthorizeOpts_Run(t *testing.T) {
+func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleDeauthorizer(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRoleAuthorizer(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DeauthorizeOpts{
+	expected := &mongodbatlas.AWSIAMRole{}
+
+	opts := &AuthorizeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest()).
-		Return(nil).
+		AuthorizeCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
+		Return(expected, nil).
 		Times(1)
 
 	err := opts.Run()
@@ -46,11 +49,11 @@ func TestDeauthorizeOpts_Run(t *testing.T) {
 	}
 }
 
-func TestDeauthorizeBuilder(t *testing.T) {
+func TestAuthorizeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DeauthorizeBuilder(),
+		AuthorizeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Output, flag.IAMAssumedRoleARN},
 	)
 }

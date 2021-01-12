@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package blockstore
+package accessroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,44 +24,53 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
-	*cli.DeleteOpts
-	store store.BlockstoresDeleter
+type ListOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	store store.CloudProviderAccessRoleLister
 }
 
-func (opts *DeleteOpts) init() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteBlockstore)
+var listTemplate = `ID	PROVIDER	ATLAS AWS ACCOUNT ARN	UNIQUE EXTERNAL ID{{range .AWSIAMRoles}}
+{{.RoleID}}	{{.ProviderName}}	{{.AtlasAWSAccountARN}}	{{.AtlasAssumedRoleExternalID}}{{end}}
+`
+
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.CloudProviderAccessRoles(opts.ConfigProjectID())
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) delete <ID> [--force]
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Blockstore configuration '%s' deleted\n", "Blockstore configuration not deleted"),
-	}
+// mongocli atlas cloudProvider(s) accessRole(s) list --projectId projectId
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   deleteDesc,
-		Args:    require.ExactArgs(1),
+		Use:     "list",
+		Short:   list,
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

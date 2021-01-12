@@ -50,6 +50,8 @@ const (
 	awsEntity              = "aws"
 	customDNSEntity        = "customDns"
 	logsEntity             = "logs"
+	cloudProvidersEntity   = "cloudProviders"
+	accessRolesEntity      = "accessRoles"
 )
 
 func getHostnameAndPort() (string, error) {

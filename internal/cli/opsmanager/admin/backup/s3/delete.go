@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   delete,
+		Short:   deleteDesc,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package blockstore
+package aws
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,44 +24,56 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
-	*cli.DeleteOpts
-	store store.BlockstoresDeleter
+const (
+	provider       = "AWS"
+	createTemplate = `AWS IAM role '{{.RoleID}} successfully created.\n
+Atlas AWS Account ARN: {{.AtlasAWSAccountARN}}
+Unique External ID: {{.AtlasAssumedRoleExternalID}}
+`
+)
+
+type CreateOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	store store.CloudProviderAccessRoleCreator
 }
 
-func (opts *DeleteOpts) init() error {
+func (opts *CreateOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteBlockstore)
+func (opts *CreateOpts) Run() error {
+	r, err := opts.store.CreateCloudProviderAccessRole(opts.ConfigProjectID(), provider)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) delete <ID> [--force]
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Blockstore configuration '%s' deleted\n", "Blockstore configuration not deleted"),
-	}
+// mongocli atlas cloudProvider aws accessRoles create [--projectId projectId]
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
-		Aliases: []string{"rm"},
-		Short:   deleteDesc,
-		Args:    require.ExactArgs(1),
+		Use:   "create",
+		Short: create,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.init(); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

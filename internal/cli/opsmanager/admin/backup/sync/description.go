@@ -14,10 +14,10 @@
 package sync
 
 const (
-	short    = "Manage backup sync configurations."
-	list     = "List backup sync configurations."
-	delete   = "Delete a backup sync configuration."
-	create   = "Create a backup sync configuration."
-	update   = "Update a backup sync configuration."
-	describe = "Get a backup sync configuration."
+	short      = "Manage backup sync configurations."
+	list       = "List backup sync configurations."
+	deleteDesc = "Delete a backup sync configuration."
+	create     = "Create a backup sync configuration."
+	update     = "Update a backup sync configuration."
+	describe   = "Get a backup sync configuration."
 )

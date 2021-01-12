@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,13 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package s3
 
-const (
-	short      = "Manage backup s3 blockstore configurations."
-	list       = "List backup s3 blockstore configurations."
-	deleteDesc = "Delete a backup s3 blockstore configuration."
-	create     = "Create a backup S3 blockstore configuration."
-	update     = "Update a backup S3 blockstore configuration."
-	describe   = "Get a backup s3 blockstore configuration."
+package accessroles
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders/accessroles/aws"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "accessRoles"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   accessRole,
+	}
+	cmd.AddCommand(
+		aws.Builder(),
+		ListBuilder())
+
+	return cmd
+}

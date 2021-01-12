@@ -44,15 +44,18 @@ linters:
     - govet
     - ineffassign
     - interfacer
+    - makezero
     - misspell
     - nakedret
     - noctx
     - nolintlint
+    - predeclared
     - rowserrcheck
     - scopelint
     - staticcheck
     - structcheck
     - stylecheck
+    - thelper
     - typecheck
     - unconvert
     - unparam

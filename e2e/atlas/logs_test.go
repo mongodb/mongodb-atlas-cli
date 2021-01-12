@@ -45,21 +45,18 @@ func TestLogs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	t.Run("Download mongodb.gz", func(t *testing.T) {
-		downloadLogTmpPath(t, cliPath, hostname, "mongodb.gz")
-	})
-
-	t.Run("Download mongos.gz", func(t *testing.T) {
-		downloadLogTmpPath(t, cliPath, hostname, "mongos.gz")
-	})
-
-	t.Run("Download mongodb-audit-log.gz", func(t *testing.T) {
-		downloadLogTmpPath(t, cliPath, hostname, "mongodb-audit-log.gz")
-	})
-
-	t.Run("Download mongos-audit-log.gz", func(t *testing.T) {
-		downloadLogTmpPath(t, cliPath, hostname, "mongos-audit-log.gz")
-	})
+	logTypes := []string{
+		"mongodb.gz",
+		"mongos.gz",
+		"mongodb-audit-log.gz",
+		"mongos-audit-log.gz",
+	}
+	for _, logType := range logTypes {
+		lt := logType
+		t.Run("Download "+lt, func(t *testing.T) {
+			downloadLogTmpPath(t, cliPath, hostname, lt)
+		})
+	}
 
 	t.Run("Download mongodb.gz no output path", func(t *testing.T) {
 		downloadLog(t, cliPath, hostname, "mongodb.gz")
@@ -67,6 +64,7 @@ func TestLogs(t *testing.T) {
 }
 
 func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
+	t.Helper()
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -96,6 +94,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
 }
 
 func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
+	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		logsEntity,

@@ -307,6 +307,7 @@ func TestShardedCluster(t *testing.T) {
 }
 
 func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
+	t.Helper()
 	if cluster.Name != clusterName {
 		t.Errorf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName)
 	}

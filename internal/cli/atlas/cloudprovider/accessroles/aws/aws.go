@@ -11,9 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package accessroles
 
-const (
-	accessRole = "Manage AWS IAM role access in Atlas."
-	create     = "Create an AWS IAM role."
+package aws
+
+import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
+
+func Builder() *cobra.Command {
+	const use = "aws"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   aws,
+	}
+	cmd.AddCommand(CreateBuilder())
+
+	return cmd
+}

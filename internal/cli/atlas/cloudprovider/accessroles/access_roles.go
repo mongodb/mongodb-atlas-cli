@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aws
+package accessroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/aws/accessroles"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/accessroles/aws"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "aws"
+	const use = "accessRole"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   aws,
+		Short:   accessRole,
 	}
-	cmd.AddCommand(accessroles.Builder())
+	cmd.AddCommand(aws.Builder())
 
 	return cmd
 }

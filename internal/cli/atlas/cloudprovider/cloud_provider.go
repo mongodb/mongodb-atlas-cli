@@ -16,7 +16,7 @@ package cloudprovider
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/aws"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudprovider/accessroles"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   cloudProvider,
 	}
-	cmd.AddCommand(aws.Builder())
+	cmd.AddCommand(accessroles.Builder())
 
 	return cmd
 }

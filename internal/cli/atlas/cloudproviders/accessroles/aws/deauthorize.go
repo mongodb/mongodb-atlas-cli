@@ -58,7 +58,7 @@ func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.Clo
 }
 
 // mongocli atlas cloudProvider aws accessRoles deauthorize <roleId> [--projectId projectId]
-func DisableBuilder() *cobra.Command {
+func DeauthorizeBuilder() *cobra.Command {
 	opts := &DeauthorizeOpts{}
 	cmd := &cobra.Command{
 		Use:   "deauthorize",

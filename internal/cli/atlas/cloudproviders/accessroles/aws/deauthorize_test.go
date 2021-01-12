@@ -49,7 +49,7 @@ func TestDisableOpts_Run(t *testing.T) {
 func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DisableBuilder(),
+		DeauthorizeBuilder(),
 		0,
 		[]string{flag.ProjectID, flag.Output},
 	)

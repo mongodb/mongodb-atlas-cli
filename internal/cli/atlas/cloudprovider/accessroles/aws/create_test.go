@@ -28,7 +28,7 @@ import (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAccessRoleCreator(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRoleCreator(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
@@ -39,7 +39,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AccessRole(createOpts.ProjectID, provider).
+		CreateCloudProviderAccessRole(createOpts.ProjectID, provider).
 		Return(expected, nil).
 		Times(1)
 

@@ -15,16 +15,14 @@
 package aws
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "aws"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   aws,
+		Use:   use,
+		Short: aws,
 	}
 	cmd.AddCommand(CreateBuilder())
 

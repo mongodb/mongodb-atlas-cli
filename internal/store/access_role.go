@@ -22,14 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store AccessRoleCreator
+//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderAccessRoleCreator
 
-type AccessRoleCreator interface {
-	AccessRole(string, string) (*atlas.AWSIAMRole, error)
+type CloudProviderAccessRoleCreator interface {
+	CreateCloudProviderAccessRole(string, string) (*atlas.AWSIAMRole, error)
 }
 
-// ProjectEvents encapsulate the logic to manage different cloud providers
-func (s *Store) AccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
+// CreateCloudProviderAccessRole encapsulate the logic to manage different cloud providers
+func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
 		req := &atlas.CloudProviderAccessRoleRequest{

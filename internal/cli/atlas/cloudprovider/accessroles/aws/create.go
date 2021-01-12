@@ -35,7 +35,7 @@ Unique External ID: {{.AtlasAssumedRoleExternalID}}
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.AccessRoleCreator
+	store store.CloudProviderAccessRoleCreator
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -45,7 +45,7 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.AccessRole(opts.ConfigProjectID(), provider)
+	r, err := opts.store.CreateCloudProviderAccessRole(opts.ConfigProjectID(), provider)
 	if err != nil {
 		return err
 	}

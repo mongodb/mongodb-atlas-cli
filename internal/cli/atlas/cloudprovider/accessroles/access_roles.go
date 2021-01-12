@@ -21,7 +21,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "accessRole"
+	const use = "accessRoles"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

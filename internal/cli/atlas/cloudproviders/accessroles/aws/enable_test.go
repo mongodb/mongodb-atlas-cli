@@ -28,22 +28,22 @@ import (
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleCreator(ctrl)
+	mockStore := mocks.NewMockCloudProviderAccessRoleEnabler(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.AWSIAMRole{}
 
-	createOpts := &CreateOpts{
+	opts := &EnableOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		CreateCloudProviderAccessRole(createOpts.ProjectID, provider).
+		EnableCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
 		Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
@@ -54,6 +54,6 @@ func TestEnableBuilder(t *testing.T) {
 		t,
 		EnableBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Output, flag.RoleID, flag.IAMAssumedRoleARN},
 	)
 }

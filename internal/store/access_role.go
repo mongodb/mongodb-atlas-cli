@@ -47,10 +47,10 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 }
 
 // EnableCloudProviderAccessRole encapsulate the logic to manage different cloud providers
-func (s *Store) EnableCloudProviderAccessRole(groupID, provider string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
+func (s *Store) EnableCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, provider, req)
+		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, roleID, req)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

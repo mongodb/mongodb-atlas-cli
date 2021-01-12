@@ -22,12 +22,15 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CloudProviderAccessRoleCreator
+	store             store.CloudProviderAccessRoleEnabler
+	roleID            string
+	IAMAssumedRoleARN string
 }
 
 func (opts *EnableOpts) initStore() error {
@@ -37,7 +40,7 @@ func (opts *EnableOpts) initStore() error {
 }
 
 func (opts *EnableOpts) Run() error {
-	r, err := opts.store.CreateCloudProviderAccessRole(opts.ConfigProjectID(), provider)
+	r, err := opts.store.EnableCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
 	if err != nil {
 		return err
 	}
@@ -45,9 +48,16 @@ func (opts *EnableOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cloudProvider aws accessRoles enable [--projectId projectId]
+func (opts *EnableOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
+	return &atlas.CloudProviderAuthorizationRequest{
+		ProviderName:      provider,
+		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
+	}
+}
+
+// mongocli atlas cloudProvider aws accessRoles enable --roleId roleId --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
 func EnableBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+	opts := &EnableOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: create,
@@ -64,8 +74,13 @@ func EnableBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.roleID, flag.RoleID, "", usage.RoleID)
+	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	_ = cmd.MarkFlagFilename(flag.RoleID)
+	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)
 	return cmd
 }

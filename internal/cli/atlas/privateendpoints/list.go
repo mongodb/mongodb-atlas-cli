@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,14 +25,15 @@ import (
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+{{.ID}}{{if .EndpointServiceName}}	{{.EndpointServiceName}}{{else}}	PrivateLinkServiceName{{end}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PrivateEndpointLister
+	store    store.PrivateEndpointLister
+	provider string
 }
 
 func (opts *ListOpts) init() error {
@@ -42,7 +43,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), opts.NewListOptions())
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), opts.provider, opts.NewListOptions())
 
 	if err != nil {
 		return err
@@ -70,6 +71,8 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)

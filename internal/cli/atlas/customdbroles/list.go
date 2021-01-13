@@ -25,7 +25,7 @@ import (
 
 const listTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{range .}}{{- $roleName := .RoleName }} {{range .Actions}} 
 {{- $actionName := .Action }} {{- range .Resources}}
-{{ $roleName }}	{{ $actionName }}	{{ .Db }}{{if .Collection }}	{{ .Collection }}{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{end}}
+{{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{end}}
 `
 
 type ListOpts struct {

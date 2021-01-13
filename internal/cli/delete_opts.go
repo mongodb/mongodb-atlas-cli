@@ -89,7 +89,7 @@ func (opts *DeleteOpts) PromptWithMessage(message string) error {
 		return nil
 	}
 
-	p := prompt.NewConfirm(message, opts.Entry)
+	p := prompt.NewConfirm(fmt.Sprintf(message, opts.Entry))
 	return survey.AskOne(p, &opts.Confirm)
 }
 

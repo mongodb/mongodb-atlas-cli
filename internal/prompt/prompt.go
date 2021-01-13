@@ -29,9 +29,9 @@ func NewDeleteConfirm(entry string) survey.Prompt {
 }
 
 // NewConfirm creates a prompt to confirm if the entry should be deleted
-func NewConfirm(message, entry string) survey.Prompt {
+func NewConfirm(message string) survey.Prompt {
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf(message, entry),
+		Message: message,
 	}
 	return prompt
 }

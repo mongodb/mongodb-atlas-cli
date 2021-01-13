@@ -268,6 +268,8 @@ Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
+	ProviderPrivateEndpoint = `Name of your cloud service provider.
+Valid values: AWS|AZURE.`
 	ClusterTypes = `Type of the cluster that you want to create.
 Valid values: REPLICASET|SHARDED.`
 	Region = `Physical location of your MongoDB cluster.

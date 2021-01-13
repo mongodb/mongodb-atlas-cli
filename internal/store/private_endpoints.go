@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ type PrivateEndpointLister interface {
 }
 
 type PrivateEndpointDescriber interface {
-	PrivateEndpoint(string, string) (*atlas.PrivateEndpointConnectionDeprecated, error)
+	PrivateEndpoint(string, string, string) (*atlas.PrivateEndpointConnection, error)
 }
 
 type PrivateEndpointCreator interface {
@@ -64,10 +64,10 @@ func (s *Store) PrivateEndpoints(projectID string, opts *atlas.ListOptions) ([]a
 }
 
 // PrivateEndpoint encapsulates the logic to manage different cloud providers
-func (s *Store) PrivateEndpoint(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
+func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(context.Background(), projectID, privateLinkID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(context.Background(), projectID, provider, privateLinkID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

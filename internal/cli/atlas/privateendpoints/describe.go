@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,14 +25,15 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
+{{.ID}}{{if .EndpointServiceName}}	{{.EndpointServiceName}}{{else}}	PrivateLinkServiceName{{end}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.PrivateEndpointDescriber
+	id       string
+	provider string
+	store    store.PrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -42,7 +43,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.provider, opts.id)
 
 	if err != nil {
 		return err
@@ -51,7 +52,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> --provider provider[--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -71,6 +72,8 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,11 +34,11 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{Status: "WAITING_FOR_USER"}
+	expected := &mongodbatlas.PrivateEndpointConnection{Status: "WAITING_FOR_USER"}
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoint(describeOpts.ProjectID, describeOpts.id).
+		PrivateEndpoint(describeOpts.ProjectID, describeOpts.provider, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 

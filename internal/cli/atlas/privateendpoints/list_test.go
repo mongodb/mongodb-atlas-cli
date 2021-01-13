@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package privateendpoints
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -30,7 +33,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
+	var expected []mongodbatlas.PrivateEndpointConnection
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -38,10 +41,19 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoints(listOpts.ProjectID, listOpts.NewListOptions()).
+		PrivateEndpoints(listOpts.ProjectID, listOpts.provider, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
 	err := listOpts.Run()
 	assert.NoError(t, err)
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Provider, flag.Limit},
+	)
 }

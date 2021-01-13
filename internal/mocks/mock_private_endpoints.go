@@ -34,18 +34,18 @@ func (m *MockPrivateEndpointLister) EXPECT() *MockPrivateEndpointListerMockRecor
 }
 
 // PrivateEndpoints mocks base method
-func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
+func (m *MockPrivateEndpointLister) PrivateEndpoints(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnection, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnectionDeprecated)
+	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // PrivateEndpoints indicates an expected call of PrivateEndpoints
-func (mr *MockPrivateEndpointListerMockRecorder) PrivateEndpoints(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockPrivateEndpointListerMockRecorder) PrivateEndpoints(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrivateEndpoints", reflect.TypeOf((*MockPrivateEndpointLister)(nil).PrivateEndpoints), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrivateEndpoints", reflect.TypeOf((*MockPrivateEndpointLister)(nil).PrivateEndpoints), arg0, arg1, arg2)
 }
 
 // MockPrivateEndpointDescriber is a mock of PrivateEndpointDescriber interface

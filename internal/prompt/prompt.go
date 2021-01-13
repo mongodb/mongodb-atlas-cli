@@ -28,8 +28,8 @@ func NewDeleteConfirm(entry string) survey.Prompt {
 	return prompt
 }
 
-// NewCustomizeConfirm creates a prompt to confirm if the entry should be deleted
-func NewCustomizeConfirm(message, entry string) survey.Prompt {
+// NewConfirm creates a prompt to confirm if the entry should be deleted
+func NewConfirm(message, entry string) survey.Prompt {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf(message, entry),
 	}

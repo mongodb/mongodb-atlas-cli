@@ -83,13 +83,13 @@ func (opts *DeleteOpts) Prompt() error {
 	return survey.AskOne(p, &opts.Confirm)
 }
 
-// CustomizedPrompt confirms that the resource should be deleted
-func (opts *DeleteOpts) CustomizedPrompt(message string) error {
+// PromptWithMessage confirms that the resource should be deleted
+func (opts *DeleteOpts) PromptWithMessage(message string) error {
 	if opts.Confirm {
 		return nil
 	}
 
-	p := prompt.NewCustomizeConfirm(message, opts.Entry)
+	p := prompt.NewConfirm(message, opts.Entry)
 	return survey.AskOne(p, &opts.Confirm)
 }
 

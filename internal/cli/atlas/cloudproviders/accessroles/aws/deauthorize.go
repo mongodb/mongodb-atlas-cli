@@ -79,7 +79,7 @@ func DeauthorizeBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
-			if err := opts.CustomizedPrompt(confirmationMessage); err != nil {
+			if err := opts.PromptWithMessage(confirmationMessage); err != nil {
 				return err
 			}
 			return opts.Run()

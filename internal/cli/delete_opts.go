@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -80,6 +80,16 @@ func (opts *DeleteOpts) Prompt() error {
 	}
 
 	p := prompt.NewDeleteConfirm(opts.Entry)
+	return survey.AskOne(p, &opts.Confirm)
+}
+
+// CustomizedPrompt confirms that the resource should be deleted
+func (opts *DeleteOpts) CustomizedPrompt(message string) error {
+	if opts.Confirm {
+		return nil
+	}
+
+	p := prompt.NewCustomizeConfirm(message, opts.Entry)
 	return survey.AskOne(p, &opts.Confirm)
 }
 

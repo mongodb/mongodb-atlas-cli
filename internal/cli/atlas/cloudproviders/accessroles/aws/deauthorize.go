@@ -25,13 +25,17 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const deauthorizeTemplate = "AWS IAM role successfully deauthorized.\n"
+const (
+	deauthorizeSuccess  = "AWS IAM role successfully deauthorized.\n"
+	deauthorizeFail     = "AWS IAM role not deauthorized.\n"
+	confirmationMessage = "Are you sure you want to deauthorize"
+)
 
 type DeauthorizeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store  store.CloudProviderAccessRoleDeauthorizer
-	roleID string
+	*cli.DeleteOpts
+	store store.CloudProviderAccessRoleDeauthorizer
 }
 
 func (opts *DeauthorizeOpts) initStore() error {
@@ -41,44 +45,50 @@ func (opts *DeauthorizeOpts) initStore() error {
 }
 
 func (opts *DeauthorizeOpts) Run() error {
+	if !opts.Confirm {
+		return opts.Print(deauthorizeFail)
+	}
+
 	err := opts.store.DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest())
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(deauthorizeSuccess)
 }
 
 func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudProviderDeauthorizationRequest {
 	return &atlas.CloudProviderDeauthorizationRequest{
 		ProviderName: provider,
 		GroupID:      opts.ConfigProjectID(),
-		RoleID:       opts.roleID,
+		RoleID:       opts.Entry,
 	}
 }
 
 // mongocli atlas cloudProvider aws accessRoles deauthorize <roleId> [--projectId projectId]
 func DeauthorizeBuilder() *cobra.Command {
-	opts := &DeauthorizeOpts{}
+	opts := &DeauthorizeOpts{
+		DeleteOpts: cli.NewDeleteOpts(deauthorizeSuccess, deauthorizeFail),
+	}
 	cmd := &cobra.Command{
 		Use:   "deauthorize <id>",
 		Short: deauthorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), deauthorizeTemplate),
-			)
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.CustomizedPrompt(confirmationMessage)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.roleID = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

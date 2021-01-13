@@ -28,7 +28,7 @@ import (
 const (
 	deauthorizeSuccess  = "AWS IAM role successfully deauthorized.\n"
 	deauthorizeFail     = "AWS IAM role not deauthorized.\n"
-	confirmationMessage = "Are you sure you want to deauthorize"
+	confirmationMessage = "Are you sure you want to deauthorize: %s"
 )
 
 type DeauthorizeOpts struct {
@@ -75,13 +75,11 @@ func DeauthorizeBuilder() *cobra.Command {
 		Short: deauthorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.CustomizedPrompt(confirmationMessage)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = args[0]
+			opts.CustomizedPrompt(confirmationMessage)
 			return opts.Run()
 		},
 	}

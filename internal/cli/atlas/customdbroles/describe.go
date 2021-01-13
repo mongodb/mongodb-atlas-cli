@@ -11,30 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package dbusers
+package customdbroles
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `USERNAME	DATABASE
-{{.Username}}	{{.DatabaseName}}
+const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .RoleName }} {{range .Actions}} 
+{{- $actionName := .Action }} {{- range .Resources}}
+{{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
 `
 
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.DatabaseUserDescriber
-	authDB   string
-	username string
+	store    store.DatabaseRoleDescriber
+	roleName string
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -44,7 +42,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DatabaseUser(opts.authDB, opts.ConfigProjectID(), opts.username)
+	r, err := opts.store.DatabaseRole(opts.ConfigProjectID(), opts.roleName)
 	if err != nil {
 		return err
 	}
@@ -52,22 +50,16 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas dbuser(s) describe <username> --projectId projectId --authDB authDB
+// mongocli atlas dbroles(s) describe <roleName> --projectId projectId
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
-		Short:   describeDBUser,
+		Use:     "describe <roleName>",
+		Short:   describeDBRole,
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.username = args[0]
-
-			validAuthDBs := []string{convert.AdminDB, convert.ExternalAuthDB}
-			if err := validate.FlagInSlice(opts.authDB, flag.AuthDB, validAuthDBs); err != nil {
-				return err
-			}
-
+			opts.roleName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
@@ -78,8 +70,6 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AuthDB)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ const (
 	logsEntity             = "logs"
 	cloudProvidersEntity   = "cloudProviders"
 	accessRolesEntity      = "accessRoles"
+	customDBRoleEntity     = "customDBRole"
 )
 
 func getHostnameAndPort() (string, error) {

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	"github.com/mongodb/mongocli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
@@ -67,6 +68,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		performanceadvisor.Builder(),
 		customdns.Builder(),
+		customdbroles.Builder(),
 		cloudproviders.Builder(),
 	)
 

@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package atlas
+package customdbroles
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		19,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "customDBRoles"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   dbRoles,
+	}
+
+	cmd.AddCommand(
+		CreateBuilder(),
+		DescribeBuilder(),
+		ListBuilder(),
+		DeleteBuilder(),
+		UpdateBuilder())
+
+	return cmd
 }

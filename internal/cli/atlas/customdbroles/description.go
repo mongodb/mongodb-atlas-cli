@@ -11,22 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package customdbroles
 
-// +build unit
-
-package atlas
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+const (
+	dbRoles        = "Manage custom database roles for your project."
+	createDBRole   = "Create a custom database role for your project."
+	deleteDBRole   = "Delete a custom database role for your project."
+	listDBRoles    = "List custom database roles for your project."
+	describeDBRole = "Return a single custom database role for your project."
+	updateDBRole   = "Update a custom database role for your project."
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		19,
-		[]string{},
-	)
-}

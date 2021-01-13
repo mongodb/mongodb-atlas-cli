@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
@@ -32,6 +33,10 @@ func TestDeauthorizeOpts_Run(t *testing.T) {
 
 	opts := &DeauthorizeOpts{
 		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
 	}
 
 	mockStore.
@@ -51,6 +56,6 @@ func TestDeauthorizeBuilder(t *testing.T) {
 		t,
 		DeauthorizeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Force},
 	)
 }

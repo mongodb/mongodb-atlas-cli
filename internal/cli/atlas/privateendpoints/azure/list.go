@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -25,14 +25,14 @@ import (
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+{{.ID}}	{{.PrivateLinkServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PrivateEndpointListerDeprecated
+	store store.PrivateEndpointLister
 }
 
 func (opts *ListOpts) init() error {
@@ -42,7 +42,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewListOptions())
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
 
 	if err != nil {
 		return err
@@ -76,8 +76,6 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoint(s)|privateendpoint(s) aws|azure list|ls [--projectId projectId]"
 
 	return cmd
 }

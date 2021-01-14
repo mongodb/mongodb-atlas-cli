@@ -19,20 +19,21 @@ package privateendpoints
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointListerDeprecated(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnection
+	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -40,7 +41,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PrivateEndpoints(listOpts.ProjectID, listOpts.provider, listOpts.NewListOptions()).
+		PrivateEndpointsDeprecated(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -53,6 +54,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Provider, flag.Limit},
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
 	)
 }

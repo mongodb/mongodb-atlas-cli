@@ -14,46 +14,45 @@
 
 // +build unit
 
-package privateendpoints
+package aws
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribeOpts_Run(t *testing.T) {
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriberDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DescribeOpts{
+	var expected []mongodbatlas.PrivateEndpointConnection
+
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{}
-
 	mockStore.
 		EXPECT().
-		PrivateEndpointDeprecated(opts.ProjectID, opts.id).
+		PrivateEndpoints(listOpts.ProjectID, provider, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
+	err := listOpts.Run()
 	assert.NoError(t, err)
 }
 
-func TestDescribeBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DescribeBuilder(),
+		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
 	)
 }

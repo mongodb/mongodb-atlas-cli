@@ -25,15 +25,14 @@ import (
 )
 
 var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
-{{.ID}}{{if .EndpointServiceName}}	{{.EndpointServiceName}}{{else}}	PrivateLinkServiceName{{end}}	{{.Status}}	{{.ErrorMessage}}
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id       string
-	provider string
-	store    store.PrivateEndpointDescriber
+	id    string
+	store store.PrivateEndpointDescriberDeprecated
 }
 
 func (opts *DescribeOpts) init() error {
@@ -43,7 +42,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.provider, opts.id)
+	r, err := opts.store.PrivateEndpointDeprecated(opts.ConfigProjectID(), opts.id)
 
 	if err != nil {
 		return err
@@ -52,7 +51,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> --provider provider[--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -73,10 +72,10 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoint(s)|privateendpoint(s) aws|azure describe <ID> [--projectId projectId]"
 
 	return cmd
 }

@@ -14,34 +14,33 @@
 
 // +build unit
 
-package privateendpoints
+package aws
 
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriberDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{}
+	expected := &mongodbatlas.PrivateEndpointConnection{}
 
 	mockStore.
 		EXPECT().
-		PrivateEndpointDeprecated(opts.ProjectID, opts.id).
+		PrivateEndpoint(opts.ProjectID, provider, opts.id).
 		Return(expected, nil).
 		Times(1)
 

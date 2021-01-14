@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package aws
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,25 +24,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.PrivateEndpointListerDeprecated
+	id    string
+	store store.PrivateEndpointDescriber
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewListOptions())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.id)
 
 	if err != nil {
 		return err
@@ -51,19 +51,20 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) list|ls [--projectId projectId]
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) describe|get <ID> [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   listPrivateEndpoints,
-		Args:    require.NoArgs,
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Args:    require.ExactArgs(1),
+		Short:   describePrivateEndpoints,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.init,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -71,13 +72,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoint(s)|privateendpoint(s) aws|azure list|ls [--projectId projectId]"
 
 	return cmd
 }

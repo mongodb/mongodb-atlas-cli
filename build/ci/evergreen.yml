@@ -388,15 +388,19 @@ functions:
         content_type: ${content_type|application/x-gzip}
         display_name: inernal-bucket
   "generate docs":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
-        add_to_path:
-          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          <<: *go_options
-        command: go run internal/docs/main.go
+        script: |
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+
+          go mod download
+          go run internal/docs/main.go
+        command:
   "upload docs":
     - command: s3.put
       params:

@@ -55,7 +55,7 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   describePrivateEndpoints,

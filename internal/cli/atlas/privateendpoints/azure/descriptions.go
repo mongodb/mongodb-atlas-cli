@@ -15,7 +15,7 @@
 package azure
 
 const (
-	privateEndpoints         = "Manage AZURE private endpoints."
-	listPrivateEndpoints     = "List AZURE Private Endpoints for your project."
-	describePrivateEndpoints = "Return a specific AZURE Private Endpoints for your project."
+	privateEndpoints         = "Manage Azure private endpoints."
+	listPrivateEndpoints     = "List Azure Private Endpoints for your project."
+	describePrivateEndpoints = "Return a specific Azure Private Endpoints for your project."
 )

@@ -77,7 +77,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoint(s)|privateendpoint(s) aws|azure list|ls [--projectId projectId]"
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]"
 
 	return cmd
 }

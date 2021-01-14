@@ -66,7 +66,7 @@ func (opts *UpdateOpts) newMaintenanceWindow() *opsmngr.MaintenanceWindow {
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:   "update <id>",
+		Use:   "update <ID>",
 		Short: updateMaintenanceWindow,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

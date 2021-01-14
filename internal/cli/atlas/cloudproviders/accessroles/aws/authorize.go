@@ -61,7 +61,7 @@ func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudPr
 func AuthorizeBuilder() *cobra.Command {
 	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{
-		Use:   "authorize <id>",
+		Use:   "authorize <ID>",
 		Short: authorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

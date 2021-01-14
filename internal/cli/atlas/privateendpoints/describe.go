@@ -55,7 +55,7 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   describePrivateEndpoints,
@@ -75,7 +75,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoint(s)|privateendpoint(s) aws|azure describe <ID> [--projectId projectId]"
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]"
 
 	return cmd
 }

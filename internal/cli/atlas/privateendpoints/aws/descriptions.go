@@ -15,7 +15,8 @@
 package aws
 
 const (
-	privateEndpoints         = "Manage AWS private endpoints."
+	privateEndpoints         = "Manage AWS Private Endpoints."
 	listPrivateEndpoints     = "List AWS Private Endpoints for your project."
 	describePrivateEndpoints = "Return a specific AWS Private Endpoints for your project."
+	createPrivateEndpoint    = "Create a new AWS Private Endpoint for your project."
 )

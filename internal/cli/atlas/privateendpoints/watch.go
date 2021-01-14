@@ -74,7 +74,7 @@ func WatchBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	return cmd

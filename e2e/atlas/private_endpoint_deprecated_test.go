@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-var regionsAWS = []string{
+var regions = []string{
 	"us-east-1",
 	"us-east-2",
 	"us-west-1",
@@ -48,8 +48,8 @@ var regionsAWS = []string{
 	"ap-east-1",
 }
 
-func TestPrivateEndpointsAWS(t *testing.T) {
-	n, err := e2e.RandInt(int64(len(regionsAWS)))
+func TestPrivateEndpointsDeprecated(t *testing.T) {
+	n, err := e2e.RandInt(int64(len(regions)))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -58,14 +58,13 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	region := regionsAWS[n.Int64()]
+	region := regions[n.Int64()]
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
-			awsEntity,
 			"create",
 			"--region="+region,
 			"-o=json")
@@ -87,7 +86,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
-			awsEntity,
 			"describe",
 			id,
 			"-o=json")
@@ -105,7 +103,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
-			awsEntity,
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -123,101 +120,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
-			awsEntity,
-			"delete",
-			id,
-			"--force")
-		cmd.Env = os.Environ()
-
-		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
-		a.Equal(expected, string(resp))
-	})
-}
-
-var regionsAzure = []string{
-	"eastus2",
-	"canadacentral",
-}
-
-func TestPrivateEndpointsAzure(t *testing.T) {
-	n, err := e2e.RandInt(int64(len(regionsAzure)))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	region := regionsAzure[n.Int64()]
-	var id string
-
-	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			privateEndpointsEntity,
-			azureEntity,
-			"create",
-			"--region="+region,
-			"-o=json")
-		cmd.Env = os.Environ()
-
-		a := assert.New(t)
-		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
-			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				id = r.ID
-			}
-		}
-	})
-	if id == "" {
-		assert.FailNow(t, "Failed to create alert private endpoint")
-	}
-
-	t.Run("Describe", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			privateEndpointsEntity,
-			azureEntity,
-			"describe",
-			id,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		var r atlas.PrivateEndpointConnection
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(id, r.ID)
-		}
-	})
-
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			privateEndpointsEntity,
-			azureEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
-	})
-
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			privateEndpointsEntity,
-			azureEntity,
 			"delete",
 			id,
 			"--force")

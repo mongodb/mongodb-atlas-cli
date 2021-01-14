@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -27,9 +27,8 @@ import (
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	id       string
-	provider string
-	store    store.PrivateEndpointDescriberDeprecated
+	id    string
+	store store.PrivateEndpointDescriber
 }
 
 func (opts *WatchOpts) initStore() error {
@@ -39,7 +38,7 @@ func (opts *WatchOpts) initStore() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.PrivateEndpointDeprecated(opts.ConfigProjectID(), opts.id)
+	result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.id)
 	if err != nil {
 		return false, err
 	}
@@ -74,11 +73,6 @@ func WatchBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]"
-
 	return cmd
 }

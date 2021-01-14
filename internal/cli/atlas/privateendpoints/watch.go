@@ -27,8 +27,9 @@ import (
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	id    string
-	store store.PrivateEndpointDescriber
+	id       string
+	provider string
+	store    store.PrivateEndpointDescriber
 }
 
 func (opts *WatchOpts) initStore() error {
@@ -38,7 +39,7 @@ func (opts *WatchOpts) initStore() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.provider, opts.id)
 	if err != nil {
 		return false, err
 	}
@@ -72,6 +73,8 @@ func WatchBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	return cmd

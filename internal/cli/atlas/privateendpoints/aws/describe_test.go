@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package aws
 
 import (
 	"testing"
@@ -27,32 +27,32 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointListerDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
-
-	listOpts := &ListOpts{
+	opts := &DescribeOpts{
 		store: mockStore,
 	}
 
+	expected := &mongodbatlas.PrivateEndpointConnection{}
+
 	mockStore.
 		EXPECT().
-		PrivateEndpointsDeprecated(listOpts.ProjectID, listOpts.NewListOptions()).
+		PrivateEndpoint(opts.ProjectID, provider, opts.id).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := opts.Run()
 	assert.NoError(t, err)
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

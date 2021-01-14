@@ -19,31 +19,14 @@ package privateendpoints
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestWatch_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
-	defer ctrl.Finish()
-
-	describeOpts := &WatchOpts{
-		id:    "test",
-		store: mockStore,
-	}
-
-	expected := &mongodbatlas.PrivateEndpointConnection{Status: "WAITING_FOR_USER"}
-
-	mockStore.
-		EXPECT().
-		PrivateEndpoint(describeOpts.ProjectID, describeOpts.provider, describeOpts.id).
-		Return(expected, nil).
-		Times(1)
-
-	err := describeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		8,
+		[]string{},
+	)
 }

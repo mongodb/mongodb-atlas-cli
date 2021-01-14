@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aws
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -22,27 +22,28 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
+var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
+{{.ID}}	{{.PrivateLinkServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+`
 
-type AuthorizeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store             store.CloudProviderAccessRoleAuthorizer
-	roleID            string
-	IAMAssumedRoleARN string
+	cli.ListOpts
+	store store.PrivateEndpointLister
 }
 
-func (opts *AuthorizeOpts) initStore() error {
+func (opts *ListOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *AuthorizeOpts) Run() error {
-	r, err := opts.store.AuthorizeCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
+
 	if err != nil {
 		return err
 	}
@@ -50,38 +51,31 @@ func (opts *AuthorizeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
-	return &atlas.CloudProviderAuthorizationRequest{
-		ProviderName:      provider,
-		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
-	}
-}
-
-// mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
-func AuthorizeBuilder() *cobra.Command {
-	opts := &AuthorizeOpts{}
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) azure list|ls [--projectId projectId]
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:   "authorize <ID>",
-		Short: authorize,
-		Args:  require.ExactArgs(1),
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   listPrivateEndpoints,
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), authorizeTemplate),
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.roleID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)
 	return cmd
 }

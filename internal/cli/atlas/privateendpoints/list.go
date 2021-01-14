@@ -25,15 +25,14 @@ import (
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
-{{.ID}}{{if .EndpointServiceName}}	{{.EndpointServiceName}}{{else}}	PrivateLinkServiceName{{end}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store    store.PrivateEndpointLister
-	provider string
+	store store.PrivateEndpointListerDeprecated
 }
 
 func (opts *ListOpts) init() error {
@@ -43,7 +42,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), opts.provider, opts.NewListOptions())
+	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewListOptions())
 
 	if err != nil {
 		return err
@@ -72,13 +71,13 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.ProviderPrivateEndpoint)
-
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]"
 
 	return cmd
 }

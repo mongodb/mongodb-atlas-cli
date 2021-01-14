@@ -52,8 +52,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnectionDeprecated {
-	createRequest := &mongodbatlas.PrivateEndpointConnectionDeprecated{
+func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
+	createRequest := &mongodbatlas.PrivateEndpointConnection{
 		Region:       opts.region,
 		ProviderName: opts.provider,
 	}

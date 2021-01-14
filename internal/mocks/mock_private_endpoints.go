@@ -110,10 +110,10 @@ func (m *MockPrivateEndpointCreator) EXPECT() *MockPrivateEndpointCreatorMockRec
 }
 
 // CreatePrivateEndpoint mocks base method
-func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *mongodbatlas.PrivateEndpointConnectionDeprecated) (*mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
+func (m *MockPrivateEndpointCreator) CreatePrivateEndpoint(arg0 string, arg1 *mongodbatlas.PrivateEndpointConnection) (*mongodbatlas.PrivateEndpointConnection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePrivateEndpoint", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnectionDeprecated)
+	ret0, _ := ret[0].(*mongodbatlas.PrivateEndpointConnection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

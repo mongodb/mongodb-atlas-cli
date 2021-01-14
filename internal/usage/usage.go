@@ -74,6 +74,7 @@ const (
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
 	PrivateEndpointRegion           = "Cloud provider region in which you want to create the private endpoint connection."
+	PrivateEndpointProvider         = "Name of the cloud provider you want to create the private endpoint connection for."
 	Comment                         = "Optional description or comment for the entry."
 	AccessListsDeleteAfter          = "ISO-8601-formatted UTC date after which Atlas removes the entry from the entry."
 	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
@@ -267,8 +268,6 @@ Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 Valid values: cloud|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
-	PrivateEndpointProvider = `Name of your cloud service provider.
-Valid values: AWS|AZURE.`
 	ClusterTypes = `Type of the cluster that you want to create.
 Valid values: REPLICASET|SHARDED.`
 	Region = `Physical location of your MongoDB cluster.

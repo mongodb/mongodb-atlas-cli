@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package azure
 
 import (
 	"testing"
@@ -29,7 +29,7 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDeleterDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -42,7 +42,7 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeletePrivateEndpointDeprecated(deleteOpts.ProjectID, deleteOpts.Entry).
+		DeletePrivateEndpoint(deleteOpts.ProjectID, provider, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

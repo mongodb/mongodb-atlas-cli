@@ -19,4 +19,5 @@ const (
 	listPrivateEndpoints     = "List Azure Private Endpoints for your project."
 	describePrivateEndpoints = "Return a specific Azure Private Endpoints for your project."
 	createPrivateEndpoint    = "Create a new Azure Private Endpoint for your project."
+	deletePrivateEndpoint    = "Delete a specific Azure Private Endpoint for your project."
 )

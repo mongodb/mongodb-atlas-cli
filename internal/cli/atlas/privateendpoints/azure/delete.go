@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -27,7 +27,7 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.PrivateEndpointDeleterDeprecated
+	store store.PrivateEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -37,10 +37,10 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeletePrivateEndpointDeprecated, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), provider)
 }
 
-// mongocli atlas privateEndpoint(s) delete <ID> --projectId projectId
+// mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
@@ -65,8 +65,6 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]"
 
 	return cmd
 }

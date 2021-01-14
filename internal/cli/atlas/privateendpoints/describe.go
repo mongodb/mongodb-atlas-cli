@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
-	store store.PrivateEndpointDescriber
+	store store.PrivateEndpointDescriberDeprecated
 }
 
 func (opts *DescribeOpts) init() error {
@@ -42,7 +42,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.PrivateEndpointDeprecated(opts.ConfigProjectID(), opts.id)
 
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   describePrivateEndpoints,
@@ -74,6 +74,8 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]"
 
 	return cmd
 }

@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package azure
 
 import (
 	"testing"
@@ -29,10 +29,10 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointListerDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.PrivateEndpointConnectionDeprecated
+	var expected []mongodbatlas.PrivateEndpointConnection
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -40,7 +40,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PrivateEndpointsDeprecated(listOpts.ProjectID, listOpts.NewListOptions()).
+		PrivateEndpoints(listOpts.ProjectID, provider, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

@@ -22,27 +22,28 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const authorizeTemplate = "AWS IAM role '{{.RoleID}} successfully authorized.\n"
+var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
+{{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
+`
 
-type AuthorizeOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store             store.CloudProviderAccessRoleAuthorizer
-	roleID            string
-	IAMAssumedRoleARN string
+	id    string
+	store store.PrivateEndpointDescriber
 }
 
-func (opts *AuthorizeOpts) initStore() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *AuthorizeOpts) Run() error {
-	r, err := opts.store.AuthorizeCloudProviderAccessRole(opts.ConfigProjectID(), opts.roleID, opts.newCloudProviderAuthorizationRequest())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.id)
+
 	if err != nil {
 		return err
 	}
@@ -50,38 +51,29 @@ func (opts *AuthorizeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
-	return &atlas.CloudProviderAuthorizationRequest{
-		ProviderName:      provider,
-		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
-	}
-}
-
-// mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
-func AuthorizeBuilder() *cobra.Command {
-	opts := &AuthorizeOpts{}
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) aws describe|get <ID> [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "authorize <ID>",
-		Short: authorize,
-		Args:  require.ExactArgs(1),
+		Use:     "describe <ID>",
+		Aliases: []string{"get"},
+		Args:    require.ExactArgs(1),
+		Short:   describePrivateEndpoints,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), authorizeTemplate),
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.roleID = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)
 	return cmd
 }

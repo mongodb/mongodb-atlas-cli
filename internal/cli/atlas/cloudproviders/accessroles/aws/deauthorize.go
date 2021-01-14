@@ -71,7 +71,7 @@ func DeauthorizeBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts(deauthorizeSuccess, deauthorizeFail),
 	}
 	cmd := &cobra.Command{
-		Use:   "deauthorize <id>",
+		Use:   "deauthorize <ID>",
 		Short: deauthorize,
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

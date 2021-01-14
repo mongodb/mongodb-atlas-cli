@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,32 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
 	"github.com/spf13/cobra"
 )
 
+const provider = "AZURE"
+
 func Builder() *cobra.Command {
-	const use = "privateEndpoints"
+	const use = "azure"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   privateEndpoints,
+		Use:   use,
+		Short: privateEndpoints,
 	}
 	cmd.AddCommand(
 		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		WatchBuilder(),
-		interfaces.Builder(),
-		aws.Builder(),
-		azure.Builder())
+		DescribeBuilder())
 
 	return cmd
 }

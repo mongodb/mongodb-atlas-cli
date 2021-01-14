@@ -387,6 +387,28 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
         display_name: inernal-bucket
+  "generate docs":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        command: go run internal/docs/main.go
+  "upload docs":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongocli/docs/*.rst
+        remote_file: ${project}/docs/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/x-gzip}
+        display_name: docs
 
   "push":
     - command: subprocess.exec
@@ -957,6 +979,16 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
       - func: "upload dist"
+  - name: generate_docs
+    tags: ["docs"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "generate docs"
+      - func: "upload docs"
   - name: release
     stepback: false
     git_tag_only: true
@@ -1568,6 +1600,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .clusters .opsmanager"
+  - name: generate_docs
+    display_name: "Generate Docs"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".docs"
   - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

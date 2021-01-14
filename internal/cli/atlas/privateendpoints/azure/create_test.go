@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package azure
 
 import (
 	"testing"
@@ -29,19 +29,18 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointCreatorDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointCreator(ctrl)
 	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
-		store:    mockStore,
-		region:   "region",
-		provider: "AWS",
+		store:  mockStore,
+		region: "region",
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{}
+	expected := &mongodbatlas.PrivateEndpointConnection{}
 	mockStore.
 		EXPECT().
-		CreatePrivateEndpointDeprecated(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).
+		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).
 		Return(expected, nil).
 		Times(1)
 

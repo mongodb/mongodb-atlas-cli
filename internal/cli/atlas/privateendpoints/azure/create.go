@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -28,9 +28,8 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.PrivateEndpointCreatorDeprecated
-	region   string
-	provider string
+	store  store.PrivateEndpointCreator
+	region string
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -44,7 +43,7 @@ var createTemplate = "Private endpoint '{{.ID}}' created.\n"
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newPrivateEndpointConnection()
 
-	r, err := opts.store.CreatePrivateEndpointDeprecated(opts.ConfigProjectID(), createRequest)
+	r, err := opts.store.CreatePrivateEndpoint(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -52,15 +51,15 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnectionDeprecated {
-	createRequest := &mongodbatlas.PrivateEndpointConnectionDeprecated{
+func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
+	createRequest := &mongodbatlas.PrivateEndpointConnection{
 		Region:       opts.region,
-		ProviderName: opts.provider,
+		ProviderName: provider,
 	}
 	return createRequest
 }
 
-// mongocli atlas privateEndpoint(s) create [--provider AWS] [--region <name>] --projectId projectId
+// mongocli atlas privateEndpoint(s) azure create [--region <name>] --projectId projectId
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -78,15 +77,13 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
+
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Region)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]"
 
 	return cmd
 }

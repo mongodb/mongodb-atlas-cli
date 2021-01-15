@@ -80,6 +80,6 @@ func TestUpdateBuilder(t *testing.T) {
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Privilege, flag.InheritedRole},
+		[]string{flag.ProjectID, flag.Output, flag.Privilege, flag.InheritedRole, flag.Append},
 	)
 }

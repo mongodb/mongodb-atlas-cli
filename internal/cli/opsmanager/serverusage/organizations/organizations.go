@@ -17,7 +17,7 @@ package organizations
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/organizations/servertype"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/projects/hosts"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/serverusage/organizations/hosts"
 	"github.com/spf13/cobra"
 )
 

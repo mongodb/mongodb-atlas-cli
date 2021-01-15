@@ -36,7 +36,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{Status: "WAITING_FOR_USER"}
+	expected := &mongodbatlas.PrivateEndpointConnection{Status: "AVAILABLE"}
 
 	mockStore.
 		EXPECT().

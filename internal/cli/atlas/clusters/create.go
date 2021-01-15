@@ -30,14 +30,13 @@ import (
 )
 
 const (
-	replicaSet        = "REPLICASET"
-	tenant            = "TENANT"
-	atlasM2           = "M2"
-	atlasM5           = "M5"
-	zoneName          = "Zone 1"
-	currentMDBVersion = "4.2"
-	labelKey          = "Infrastructure Tool"
-	labelValue        = "mongoCLI"
+	replicaSet = "REPLICASET"
+	tenant     = "TENANT"
+	atlasM2    = "M2"
+	atlasM5    = "M5"
+	zoneName   = "Zone 1"
+	labelKey   = "Infrastructure Tool"
+	labelValue = "mongoCLI"
 )
 
 type CreateOpts struct {
@@ -227,6 +226,10 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	currentMDBVersion, err := DefaultMongoDBMajorVersion()
+	if err != nil {
+		panic(err)
+	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
@@ -245,4 +248,18 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
+}
+
+var defaultMongoDBMajorVersion string
+
+func DefaultMongoDBMajorVersion() (string, error) {
+	if defaultMongoDBMajorVersion != "" {
+		return defaultMongoDBMajorVersion, nil
+	}
+	s, err := store.NewForPrivateUnauth(config.Default())
+	if err != nil {
+		return "", err
+	}
+	defaultMongoDBMajorVersion, err = s.DefaultMongoDBVersion()
+	return defaultMongoDBMajorVersion, err
 }

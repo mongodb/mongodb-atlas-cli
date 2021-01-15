@@ -34,7 +34,6 @@ import (
 var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 const (
-	atlasAPIPath              = "api/atlas/v1.0/"
 	yes                       = "yes"
 	responseHeaderTimeout     = 10 * time.Minute
 	tlsHandshakeTimeout       = 10 * time.Second
@@ -201,10 +200,12 @@ func NewUnauthenticated(c Config) (*Store, error) {
 	return s, nil
 }
 
-func NewStaticPath(c Config) (*Store, error) {
+func NewForVersionManifest(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
-	s.skipVerify = yes
+	if s.service != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 	s.baseURL = versionManifestStaticPath
 
 	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
@@ -221,6 +222,31 @@ func NewStaticPath(c Config) (*Store, error) {
 	}
 
 	return s, nil
+}
+
+// NewPrivate get the appropriate client for the profile/service selected
+func NewForPrivateUnauth(c Config) (*Store, error) {
+	s := new(Store)
+	s.service = c.Service()
+	if s.service != config.CloudService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+	s.baseURL = atlas.CloudURL
+
+	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
+		s.baseURL = baseURL
+	}
+
+	client, err := defaultClient(c)
+	if err != nil {
+		return nil, err
+	}
+	err = s.setAtlasClient(client)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, err
 }
 
 func (s *Store) setAtlasClient(client *http.Client) error {
@@ -253,7 +279,7 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 
 func (s *Store) apiPath(baseURL string) string {
 	if s.service == config.CloudService {
-		return baseURL + atlasAPIPath
+		return baseURL + atlas.APIPublicV1Path
 	}
 	return baseURL + opsmngr.APIPublicV1Path
 }

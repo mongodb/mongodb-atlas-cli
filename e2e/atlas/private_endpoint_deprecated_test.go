@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -83,11 +84,13 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
 
+		newResp := strings.ReplaceAll(string(resp), `Command "create" is deprecated, Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]`, "")
 		a := assert.New(t)
-		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
+		if a.NoError(err, resp) {
 			var r atlas.PrivateEndpointConnectionDeprecated
-			if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
 				id = r.ID
 			}
 		}
@@ -124,8 +127,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
+		newResp := strings.ReplaceAll(string(resp), `Command "describe" is deprecated, Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]`, "")
 		var r atlas.PrivateEndpointConnectionDeprecated
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+		if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
 			a.Equal(id, r.ID)
 		}
 	})
@@ -144,7 +148,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		a := assert.New(t)
 		a.NoError(err, string(resp))
 		var r []atlas.PrivateEndpointConnectionDeprecated
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+		newResp := strings.ReplaceAll(string(resp), `Command "list" is deprecated, Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]`, "")
+		if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
 	})
@@ -163,8 +168,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
+		newResp := strings.ReplaceAll(string(resp), `Command delete is deprecated, Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]`, "")
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
-		a.Equal(expected, string(resp))
+		a.Equal(expected, newResp)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

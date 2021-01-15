@@ -59,6 +59,9 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	region := regionsAWS[n.Int64()]
 	var id string
 
+	n, err = e2e.RandInt(1000)
+	a.NoError(err)
+
 	projectName := fmt.Sprintf("e2e-integration-private-endpoint-aws-%v", n)
 	projectID, err := createProject(projectName)
 	a.NoError(err)
@@ -92,6 +95,22 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	if id == "" {
 		assert.FailNow(t, "Failed to create alert private endpoint")
 	}
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			awsEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		_, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err)
+	})
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -151,6 +170,24 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		a.Equal(expected, string(resp))
 	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			awsEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		// We expect a 404 error once the private endpoint has been completely deleted
+		a.Error(err)
+		a.Contains(string(resp), "404")
+	})
 }
 
 var regionsAzure = []string{
@@ -171,7 +208,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	region := regionsAzure[n.Int64()]
 	var id string
 
-	n, err = e2e.RandInt(100)
+	n, err = e2e.RandInt(1000)
 	a.NoError(err)
 
 	projectName := fmt.Sprintf("e2e-integration-private-endpoint-azure-%v", n)
@@ -207,6 +244,22 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	if id == "" {
 		assert.FailNow(t, "Failed to create alert private endpoint")
 	}
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			azureEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		_, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err)
+	})
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -265,5 +318,23 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		a.NoError(err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			azureEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		// We expect a 404 error once the private endpoint has been completely deleted
+		a.Error(err)
+		a.Contains(string(resp), "404")
 	})
 }

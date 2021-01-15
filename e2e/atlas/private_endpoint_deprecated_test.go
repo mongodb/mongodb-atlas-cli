@@ -59,6 +59,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 	region := regions[n.Int64()]
 	var id string
 
+	n, err = e2e.RandInt(1000)
+	a.NoError(err)
+
 	projectName := fmt.Sprintf("e2e-integration-private-endpoint-deprecated-%v", n)
 	projectID, err := createProject(projectName)
 	a.NoError(err)
@@ -74,7 +77,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			"create",
-			"--region="+region,
+			"--region",
+			region,
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -82,7 +86,7 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
+			var r atlas.PrivateEndpointConnectionDeprecated
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
 				id = r.ID
 			}
@@ -91,6 +95,21 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 	if id == "" {
 		assert.FailNow(t, "Failed to create alert private endpoint")
 	}
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		_, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err)
+	})
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -105,7 +124,7 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r atlas.PrivateEndpointConnection
+		var r atlas.PrivateEndpointConnectionDeprecated
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.Equal(id, r.ID)
 		}
@@ -124,7 +143,7 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
+		var r []atlas.PrivateEndpointConnectionDeprecated
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -146,5 +165,22 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		a.NoError(err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			"watch",
+			id,
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		// We expect a 404 error once the private endpoint has been completely deleted
+		a.Error(err)
+		a.Contains(string(resp), "404")
 	})
 }

@@ -50,16 +50,24 @@ var regions = []string{
 
 func TestPrivateEndpointsDeprecated(t *testing.T) {
 	n, err := e2e.RandInt(int64(len(regions)))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a := assert.New(t)
+	a.NoError(err)
+
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a.NoError(err)
 
 	region := regions[n.Int64()]
 	var id string
+
+	projectName := fmt.Sprintf("e2e-integration-private-endpoint-deprecated-%v", n)
+	projectID, err := createProject(projectName)
+	a.NoError(err)
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -67,6 +75,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			privateEndpointsEntity,
 			"create",
 			"--region="+region,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -88,6 +98,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			privateEndpointsEntity,
 			"describe",
 			id,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -104,6 +116,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -122,6 +136,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			privateEndpointsEntity,
 			"delete",
 			id,
+			"--projectId",
+			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 

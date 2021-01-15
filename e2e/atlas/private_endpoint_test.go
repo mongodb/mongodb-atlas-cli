@@ -50,16 +50,24 @@ var regionsAWS = []string{
 
 func TestPrivateEndpointsAWS(t *testing.T) {
 	n, err := e2e.RandInt(int64(len(regionsAWS)))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a := assert.New(t)
+	a.NoError(err)
+
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a.NoError(err)
 
 	region := regionsAWS[n.Int64()]
 	var id string
+
+	projectName := fmt.Sprintf("e2e-integration-private-endpoint-aws-%v", n)
+	projectID, err := createProject(projectName)
+	a.NoError(err)
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -68,6 +76,8 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			awsEntity,
 			"create",
 			"--region="+region,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -90,6 +100,8 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			awsEntity,
 			"describe",
 			id,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -107,6 +119,8 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			privateEndpointsEntity,
 			awsEntity,
 			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -126,6 +140,8 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			awsEntity,
 			"delete",
 			id,
+			"--projectId",
+			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 
@@ -138,22 +154,35 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 }
 
 var regionsAzure = []string{
-	"eastus2",
-	"canadacentral",
+	"US_EAST_2",
+	"EUROPE_NORTH",
+	"US_WEST_2",
+	"ASIA_SOUTH_EAST",
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
 	n, err := e2e.RandInt(int64(len(regionsAzure)))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a := assert.New(t)
+	a.NoError(err)
+
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a.NoError(err)
 
 	region := regionsAzure[n.Int64()]
 	var id string
+
+	n, err = e2e.RandInt(100)
+	a.NoError(err)
+
+	projectName := fmt.Sprintf("e2e-integration-private-endpoint-azure-%v", n)
+	projectID, err := createProject(projectName)
+	a.NoError(err)
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -162,6 +191,8 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			azureEntity,
 			"create",
 			"--region="+region,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -184,6 +215,8 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			azureEntity,
 			"describe",
 			id,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -201,6 +234,8 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			privateEndpointsEntity,
 			azureEntity,
 			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -220,7 +255,9 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			azureEntity,
 			"delete",
 			id,
-			"--force")
+			"--force",
+			"--projectId",
+			projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()

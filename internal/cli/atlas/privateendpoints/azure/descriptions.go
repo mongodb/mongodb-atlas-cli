@@ -20,5 +20,5 @@ const (
 	describePrivateEndpoints = "Return a specific Azure Private Endpoints for your project."
 	createPrivateEndpoint    = "Create a new Azure Private Endpoint for your project."
 	deletePrivateEndpoint    = "Delete a specific Azure Private Endpoint for your project."
-	watchPrivateEndpoint     = "Watch for a specific AWS Private Endpoint to be available."
+	watchPrivateEndpoint     = "Watch for a specific Azure Private Endpoint to be available."
 )

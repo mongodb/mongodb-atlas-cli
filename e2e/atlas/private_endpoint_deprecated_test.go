@@ -168,9 +168,8 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		newResp := strings.ReplaceAll(string(resp), `Command delete is deprecated, Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]`, "")
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
-		a.Equal(expected, newResp)
+		a.Contains(string(resp), expected)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

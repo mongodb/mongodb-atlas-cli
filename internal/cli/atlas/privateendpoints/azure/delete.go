@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package azure
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,61 +24,47 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type WatchOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.WatchOpts
-	id       string
-	provider string
-	store    store.PrivateEndpointDescriberDeprecated
+	*cli.DeleteOpts
+	store store.PrivateEndpointDeleter
 }
 
-func (opts *WatchOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.PrivateEndpointDeprecated(opts.ConfigProjectID(), opts.id)
-	if err != nil {
-		return false, err
-	}
-	return result.Status == "WAITING_FOR_USER" || result.Status == "FAILED", nil
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), provider)
 }
 
-func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
-		return err
+// mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
 	}
-
-	return opts.Print(nil)
-}
-
-// mongocli atlas cluster(s) watch <name> [--projectId projectId]
-func WatchBuilder() *cobra.Command {
-	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <name>",
-		Short: watchPrivateEndpoint,
-		Args:  require.ExactArgs(1),
+		Use:     "delete <ID>",
+		Aliases: []string{"rm"},
+		Short:   deletePrivateEndpoint,
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
-			)
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]"
 
 	return cmd
 }

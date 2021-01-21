@@ -192,6 +192,7 @@ const (
 	IP                              = "ip"                              // IP flag
 	CIDR                            = "cidr"                            // CIDR flag
 	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
+	PrivateEndpointIPAddress        = "privateEndpointIPAddress"        // PrivateEndpointIPAddress flag
 	Retention                       = "retention"                       // Retention flag
 	AtlasCIDRBlock                  = "atlasCidrBlock"                  // AtlasCIDRBlock flag
 	DirectoryID                     = "directoryId"                     // DirectoryID flag

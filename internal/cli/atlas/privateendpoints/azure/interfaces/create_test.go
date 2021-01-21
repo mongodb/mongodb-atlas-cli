@@ -19,18 +19,17 @@ package interfaces
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointCreatorDeprecated(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointCreator(ctrl)
 	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
@@ -39,10 +38,10 @@ func TestCreate_Run(t *testing.T) {
 		interfaceEndpointID: "interfaceEndpointID",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
+	expected := &mongodbatlas.InterfaceEndpointConnection{}
 	mockStore.
 		EXPECT().
-		CreateInterfaceEndpointDeprecated(createOpts.ProjectID, createOpts.privateEndpointID, createOpts.interfaceEndpointID).
+		CreateInterfaceEndpoint(createOpts.ProjectID, provider, createOpts.interfaceEndpointID, createOpts.newInterfaceEndpointConnection()).
 		Return(expected, nil).
 		Times(1)
 

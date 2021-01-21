@@ -22,14 +22,16 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store               store.InterfaceEndpointCreatorDeprecated
-	privateEndpointID   string
-	interfaceEndpointID string
+	store                    store.InterfaceEndpointCreator
+	privateEndpointID        string
+	interfaceEndpointID      string
+	privateEndpointIPAddress string
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -41,7 +43,7 @@ func (opts *CreateOpts) initStore() error {
 var createTemplate = "Interface endpoint '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateInterfaceEndpointDeprecated(opts.ConfigProjectID(), opts.privateEndpointID, opts.interfaceEndpointID)
+	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), provider, opts.interfaceEndpointID, opts.newInterfaceEndpointConnection())
 	if err != nil {
 		return err
 	}
@@ -49,7 +51,14 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpointConnection {
+	return &atlas.InterfaceEndpointConnection{
+		ID:                       opts.privateEndpointID,
+		PrivateEndpointIPAddress: opts.privateEndpointIPAddress,
+	}
+}
+
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <interfaceEndpointId> [--privateEndpointId privateEndpointID][--privateEndpointIPAddress privateEndpointIPAddress][--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -69,14 +78,14 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
+	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointIDAzure)
+	cmd.Flags().StringVar(&opts.privateEndpointIPAddress, flag.PrivateEndpointIPAddress, "", usage.PrivateEndpointIPAddressAzure)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces create <interfaceEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
+	_ = cmd.MarkFlagRequired(flag.PrivateEndpointIPAddress)
 
 	return cmd
 }

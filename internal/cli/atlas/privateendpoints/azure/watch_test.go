@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package azure
 
 import (
 	"testing"
@@ -28,7 +28,7 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriberDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
 	defer ctrl.Finish()
 
 	describeOpts := &WatchOpts{
@@ -36,11 +36,11 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{Status: "WAITING_FOR_USER"}
+	expected := &mongodbatlas.PrivateEndpointConnection{Status: "AVAILABLE"}
 
 	mockStore.
 		EXPECT().
-		PrivateEndpointDeprecated(describeOpts.ProjectID, describeOpts.id).
+		PrivateEndpoint(describeOpts.ProjectID, provider, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 

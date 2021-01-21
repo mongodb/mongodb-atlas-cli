@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,PrivateEndpointListerDeprecated,PrivateEndpointDescriberDeprecated,PrivateEndpointCreatorDeprecated
+//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,PrivateEndpointListerDeprecated,PrivateEndpointDescriberDeprecated,PrivateEndpointCreatorDeprecated,PrivateEndpointDeleterDeprecated
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error)
@@ -45,7 +45,11 @@ type PrivateEndpointCreator interface {
 }
 
 type PrivateEndpointDeleter interface {
-	DeletePrivateEndpoint(string, string) error
+	DeletePrivateEndpoint(string, string, string) error
+}
+
+type PrivateEndpointDeleterDeprecated interface {
+	DeletePrivateEndpointDeprecated(string, string) error
 }
 
 type InterfaceEndpointDescriber interface {
@@ -120,7 +124,18 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 }
 
 // DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
-func (s *Store) DeletePrivateEndpoint(projectID, privateLinkID string) error {
+func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(context.Background(), projectID, provider, privateLinkID)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
+func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(context.Background(), projectID, privateLinkID)

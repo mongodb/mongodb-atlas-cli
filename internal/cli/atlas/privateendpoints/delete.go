@@ -27,7 +27,7 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.PrivateEndpointDeleter
+	store store.PrivateEndpointDeleterDeprecated
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -37,10 +37,10 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeletePrivateEndpointDeprecated, opts.ConfigProjectID())
 }
 
-// mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId
+// mongocli atlas privateEndpoint(s) delete <ID> --projectId projectId
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
@@ -65,6 +65,8 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]"
 
 	return cmd
 }

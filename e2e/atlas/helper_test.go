@@ -48,6 +48,7 @@ const (
 	securityEntity         = "security"
 	ldapEntity             = "ldap"
 	awsEntity              = "aws"
+	azureEntity            = "azure"
 	customDNSEntity        = "customDns"
 	logsEntity             = "logs"
 	cloudProvidersEntity   = "cloudProviders"

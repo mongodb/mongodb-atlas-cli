@@ -14,47 +14,47 @@
 
 // +build unit
 
-package privateendpoints
+package azure
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestWatch_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriberDeprecated(ctrl)
+	mockStore := mocks.NewMockPrivateEndpointDeleter(ctrl)
 	defer ctrl.Finish()
 
-	describeOpts := &WatchOpts{
-		id:    "test",
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "to_delete",
+			Confirm: true,
+		},
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnectionDeprecated{Status: "WAITING_FOR_USER"}
-
 	mockStore.
 		EXPECT().
-		PrivateEndpointDeprecated(describeOpts.ProjectID, describeOpts.id).
-		Return(expected, nil).
+		DeletePrivateEndpoint(deleteOpts.ProjectID, provider, deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	err := describeOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	err := deleteOpts.Run()
+	assert.NoError(t, err)
 }
 
-func TestWatchBuilder(t *testing.T) {
+func TestDeleteBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		WatchBuilder(),
+		DeleteBuilder(),
 		0,
-		[]string{flag.ProjectID},
+		[]string{flag.ProjectID, flag.Force},
 	)
 }

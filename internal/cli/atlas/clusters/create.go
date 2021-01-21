@@ -208,6 +208,7 @@ func CreateBuilder() *cobra.Command {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)
 				_ = cmd.MarkFlagRequired(flag.Region)
+				_ = cmd.MarkFlagRequired(flag.MDBVersion)
 
 				if len(args) == 0 {
 					return errors.New("cluster name missing")
@@ -226,10 +227,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	currentMDBVersion, err := DefaultMongoDBMajorVersion()
-	if err != nil {
-		panic(err)
-	}
+	currentMDBVersion, _ := DefaultMongoDBMajorVersion()
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)

@@ -12,21 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
+package interfaces
 
-package aws
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+const (
+	interfaces              = "Manage Atlas AWS private endpoint interfaces."
+	createInterfaceEndpoint = "Add a new interface to a AWS private endpoint."
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		6,
-		[]string{},
-	)
-}

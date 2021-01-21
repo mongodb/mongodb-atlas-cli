@@ -15,6 +15,7 @@
 package aws
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws/interfaces"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,8 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		CreateBuilder(),
 		DeleteBuilder(),
-		WatchBuilder())
+		WatchBuilder(),
+		interfaces.Builder())
 
 	return cmd
 }

@@ -218,6 +218,8 @@ const (
 	AccessListIPEntry               = "IP address to be allowed for a given API key."
 	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
+	PrivateEndpointIDAzure          = "Unique identifier of the Azure private endpoint resource."
+	PrivateEndpointIPAddressAzure   = "Private IP address of the private endpoint network interface you created in your Azure VNet."
 	AccountID                       = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
 	LicenceKey                      = "Your License Key."

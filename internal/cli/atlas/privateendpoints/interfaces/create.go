@@ -49,11 +49,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <interfaceEndpointId>",
+		Use:     "create <atlasPrivateEndpointId>",
 		Aliases: []string{"add"},
 		Short:   createInterfaceEndpoint,
 		Args:    require.ExactArgs(1),
@@ -76,7 +76,7 @@ func CreateBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces create <interfaceEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

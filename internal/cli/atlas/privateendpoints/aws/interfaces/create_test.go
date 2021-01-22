@@ -29,7 +29,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointCreatorDeprecated(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointCreator(ctrl)
 	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
@@ -38,10 +38,10 @@ func TestCreate_Run(t *testing.T) {
 		interfaceEndpointID: "interfaceEndpointID",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
+	expected := &mongodbatlas.InterfaceEndpointConnection{}
 	mockStore.
 		EXPECT().
-		CreateInterfaceEndpointDeprecated(createOpts.ProjectID, createOpts.privateEndpointID, createOpts.interfaceEndpointID).
+		CreateInterfaceEndpoint(createOpts.ProjectID, provider, createOpts.interfaceEndpointID, createOpts.newInterfaceEndpointConnection()).
 		Return(expected, nil).
 		Times(1)
 

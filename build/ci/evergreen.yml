@@ -1,3 +1,17 @@
+# Copyright 2021 MongoDB Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
 stepback: true
 command_type: system
@@ -224,6 +238,18 @@ functions:
           <<: *go_options
         silent: true
         binary: build/package/set-up-gon.sh
+  "check license header":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - workdir
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
@@ -401,6 +427,11 @@ tasks:
       - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
+  - name: license_check
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:

@@ -20,6 +20,7 @@ import (
 	"strings"
 	"testing"
 
+	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -38,8 +39,8 @@ func TestStore_apiPath(t *testing.T) {
 			service: "cloud",
 		}
 		result := s.apiPath("localhost")
-		if !strings.Contains(result, atlasAPIPath) {
-			t.Errorf("apiPath() = %s; want '%s'", result, atlasAPIPath)
+		if !strings.Contains(result, mongodbatlas.APIPublicV1Path) {
+			t.Errorf("apiPath() = %s; want '%s'", result, mongodbatlas.APIPublicV1Path)
 		}
 	})
 }

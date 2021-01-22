@@ -40,7 +40,7 @@ func TestUpdate_Run(t *testing.T) {
 			name:       "ProjectBar",
 			tier:       atlasM2,
 			diskSizeGB: 10,
-			mdbVersion: currentMDBVersion,
+			mdbVersion: "4.2",
 			store:      mockStore,
 		}
 

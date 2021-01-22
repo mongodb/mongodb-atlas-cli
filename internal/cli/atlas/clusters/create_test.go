@@ -42,7 +42,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			members:    3,
 			diskSizeGB: 10,
 			backup:     false,
-			mdbVersion: currentMDBVersion,
+			mdbVersion: "4.2",
 			store:      mockStore,
 		}
 

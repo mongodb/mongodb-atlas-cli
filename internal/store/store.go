@@ -200,7 +200,8 @@ func NewUnauthenticated(c Config) (*Store, error) {
 	return s, nil
 }
 
-func NewForVersionManifest(c Config) (*Store, error) {
+// NewVersionManifest ets the appropriate client for the manifest version page
+func NewVersionManifest(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
@@ -216,16 +217,16 @@ func NewForVersionManifest(c Config) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = s.setOpsManagerClient(client)
-	if err != nil {
+
+	if err := s.setOpsManagerClient(client); err != nil {
 		return nil, err
 	}
 
 	return s, nil
 }
 
-// NewPrivate get the appropriate client for the profile/service selected
-func NewForPrivateUnauth(c Config) (*Store, error) {
+// NewPrivateUnauth gets the appropriate client for the atlas private api
+func NewPrivateUnauth(c Config) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 	if s.service != config.CloudService {
@@ -233,17 +234,17 @@ func NewForPrivateUnauth(c Config) (*Store, error) {
 	}
 	s.baseURL = atlas.CloudURL
 
-	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
-		s.baseURL = baseURL
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		s.baseURL = s.apiPath(configURL)
 	}
 
 	client, err := defaultClient(c)
 	if err != nil {
 		return nil, err
 	}
-	err = s.setAtlasClient(client)
-	if err != nil {
-		return nil, err
+
+	if err2 := s.setAtlasClient(client); err2 != nil {
+		return nil, err2
 	}
 
 	return s, err

@@ -41,7 +41,7 @@ func (opts *UpdateOpts) initStore() error {
 	if err != nil {
 		return err
 	}
-	opts.storeStaticPath, err = store.NewForVersionManifest(config.Default())
+	opts.storeStaticPath, err = store.NewVersionManifest(config.Default())
 	return err
 }
 

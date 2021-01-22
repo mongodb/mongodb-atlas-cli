@@ -249,7 +249,7 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
-        binary: build/package/generate-notices.sh
+        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test

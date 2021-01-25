@@ -60,6 +60,8 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 		err = f(a[0], opts.Entry)
 	case func(string, string, string) error:
 		err = f(a[0], a[1], opts.Entry)
+	case func(string, string, string, string) error:
+		err = f(a[0], a[1], a[2], opts.Entry)
 	default:
 		return errors.New("invalid")
 	}

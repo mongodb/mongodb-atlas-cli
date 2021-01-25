@@ -15,6 +15,7 @@
 package interfaces
 
 const (
-	interfaces              = "Manage Atlas Azure private endpoint interfaces."
-	createInterfaceEndpoint = "Add a new Azure interface to a private endpoint."
+	interfaces                = "Manage Atlas Azure private endpoint interfaces."
+	createInterfaceEndpoint   = "Add a new Azure interface to a private endpoint."
+	describeInterfaceEndpoint = "Return a specific Azure private endpoint interface for your project."
 )

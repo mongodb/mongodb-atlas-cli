@@ -52,7 +52,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) aws interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -79,7 +79,7 @@ func DescribeBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
 
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces describe <interfaceEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

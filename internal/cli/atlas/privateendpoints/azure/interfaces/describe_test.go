@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointDescriberDeprecated(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointDescriber(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
@@ -38,11 +38,11 @@ func TestDescribeOpts_Run(t *testing.T) {
 		id:                "id",
 	}
 
-	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
+	expected := &mongodbatlas.InterfaceEndpointConnection{}
 
 	mockStore.
 		EXPECT().
-		InterfaceEndpointDeprecated(opts.ProjectID, opts.privateEndpointID, opts.id).
+		InterfaceEndpoint(opts.ProjectID, provider, opts.id, opts.privateEndpointID).
 		Return(expected, nil).
 		Times(1)
 

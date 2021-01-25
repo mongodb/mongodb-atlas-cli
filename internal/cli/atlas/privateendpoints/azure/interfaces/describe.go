@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ type DescribeOpts struct {
 	cli.OutputOpts
 	id                string
 	privateEndpointID string
-	store             store.InterfaceEndpointDescriberDeprecated
+	store             store.InterfaceEndpointDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -38,12 +38,12 @@ func (opts *DescribeOpts) init() error {
 	return err
 }
 
-var describeTemplate = `ID	STATUS	ERROR
-{{.ID}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
+var describeTemplate = `ID	IP ADDRESS	STATUS	ERROR
+{{.PrivateEndpointResourceID}}	{{.PrivateEndpointIPAddress}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpointDeprecated(opts.ConfigProjectID(), opts.privateEndpointID, opts.id)
+	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.id, opts.privateEndpointID)
 
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) azure interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -78,8 +78,6 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

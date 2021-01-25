@@ -28,7 +28,9 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   interfaces,
 	}
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(
+		CreateBuilder(),
+		DescribeBuilder())
 
 	return cmd
 }

@@ -104,6 +104,7 @@ func deployCluster() (string, error) {
 		clustersEntity,
 		"create",
 		clusterName,
+		"--mdbVersion=4.2",
 		"--region=US_EAST_1",
 		"--tier=M10",
 		"--provider=AWS",

@@ -94,6 +94,7 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.MongoURIUpdated = ""
 		cluster.StateName = ""
 		cluster.MongoDBVersion = ""
+		cluster.ConnectionStrings = nil
 	} else {
 		opts.applyOpts(cluster)
 	}

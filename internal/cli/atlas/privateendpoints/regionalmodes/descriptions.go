@@ -12,21 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
+package regionalmodes
 
-package privateendpoints
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+const (
+	regionalMode = "Manage regionalized private endpoint setting for one Atlas project."
+	enable       = "Enable the regionalized private endpoint setting for one Atlas project."
+	disable      = "Disable the regionalized private endpoint setting for one Atlas project."
+	describe     = "Get the regionalized private endpoint setting for one Atlas project."
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		9,
-		[]string{},
-	)
-}

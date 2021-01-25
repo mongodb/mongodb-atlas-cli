@@ -208,8 +208,6 @@ func CreateBuilder() *cobra.Command {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)
 				_ = cmd.MarkFlagRequired(flag.Region)
-				_ = cmd.MarkFlagRequired(flag.MDBVersion)
-
 				if len(args) == 0 {
 					return errors.New("cluster name missing")
 				}

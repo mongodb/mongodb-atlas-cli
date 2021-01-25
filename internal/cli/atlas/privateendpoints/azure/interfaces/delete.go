@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	privateEndpointID string
-	store             store.InterfaceEndpointDeleterDeprecated
+	store             store.InterfaceEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -38,18 +38,18 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteInterfaceEndpointDeprecated, opts.ConfigProjectID(), opts.privateEndpointID)
+	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), provider, opts.privateEndpointID)
 }
 
-// mongocli atlas privateEndpoint(s) interface(s) delete <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) azure interface(s) delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <atlasPrivateEndpointId>",
 		Aliases: []string{"rm"},
-		Short:   deleteInterfaceEndpoint,
+		Short:   remove,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
@@ -69,8 +69,6 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

@@ -344,12 +344,27 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	a := assert.New(t)
 	a.NoError(err)
 
+	n, err := e2e.RandInt(1000)
+	a.NoError(err)
+
+	projectName := fmt.Sprintf("e2e-integration-regionalized-private-endpoint-setting-%v", n)
+	projectID, err := createProject(projectName)
+	a.NoError(err)
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
+
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"enable")
+			"enable",
+			"--projectId",
+			projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -363,7 +378,9 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"disable")
+			"disable",
+			"--projectId",
+			projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -377,7 +394,9 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"get")
+			"get",
+			"--projectId",
+			projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()

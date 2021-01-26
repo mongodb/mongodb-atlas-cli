@@ -405,7 +405,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		a.NoError(err, string(resp))
 		var r atlas.RegionalizedPrivateEndpointSetting
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(false, r.Enabled)
+			a.False(r.Enabled)
 		}
 	})
 }

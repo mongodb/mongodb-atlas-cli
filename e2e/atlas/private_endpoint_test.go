@@ -396,7 +396,8 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"get",
 			"--projectId",
-			projectID)
+			projectID,
+			"-o=json")
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()

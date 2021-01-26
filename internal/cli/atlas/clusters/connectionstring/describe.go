@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,9 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.AtlasClusterDescriber
+	name   string
+	store  store.AtlasClusterDescriber
+	csType string
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -37,8 +38,12 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `DNS SEED LIST FORMAT	STANDARD FORMAT
-{{.StandardSrv}}	{{.Standard}}
+var describeTemplateStandard = `STANDARD CONNECTION STRING
+{{.StandardSrv}}
+`
+
+var describeTemplatePrivate = `PRIVATE CONNECTION STRING
+{{.PrivateSrv}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -49,7 +54,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r.ConnectionStrings)
 }
 
-// mongocli atlas cluster(s) connectionString describe <clusterName> --projectId projectId
+// mongocli atlas cluster(s) connectionString describe <clusterName> --type standard|private --projectId projectId
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -58,19 +63,25 @@ func DescribeBuilder() *cobra.Command {
 		Short:   describe,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
+			opts.Template = describeTemplateStandard
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
+
+			if opts.csType == "private" {
+				opts.Template = describeTemplatePrivate
+			}
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.csType, flag.Type, "standard", usage.ConnectionStringType)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

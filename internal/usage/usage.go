@@ -39,6 +39,7 @@ const (
 	Forever                         = "Acknowledge an alert “forever”."
 	Status                          = "Alert's status."
 	Until                           = "Acknowledged until a date."
+	ConnectionStringType            = "When set to 'private' retrieves the private connection string. "
 	Limit                           = "Number of items per page."
 	Username                        = "Username of the user."
 	BackupStatus                    = "Current (or desired) status of the backup configuration."

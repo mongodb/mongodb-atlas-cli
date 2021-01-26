@@ -94,6 +94,7 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.MongoURIUpdated = ""
 		cluster.StateName = ""
 		cluster.MongoDBVersion = ""
+		cluster.ConnectionStrings = nil
 	} else {
 		opts.applyOpts(cluster)
 	}
@@ -208,8 +209,6 @@ func CreateBuilder() *cobra.Command {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)
 				_ = cmd.MarkFlagRequired(flag.Region)
-				_ = cmd.MarkFlagRequired(flag.MDBVersion)
-
 				if len(args) == 0 {
 					return errors.New("cluster name missing")
 				}

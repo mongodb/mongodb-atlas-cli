@@ -14,7 +14,7 @@
 
 // +build unit
 
-package privateendpoints
+package regionalmodes
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		9,
+		3,
 		[]string{},
 	)
 }

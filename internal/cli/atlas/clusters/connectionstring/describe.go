@@ -63,11 +63,10 @@ func DescribeBuilder() *cobra.Command {
 		Short:   describe,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.Template = describeTemplateStandard
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplateStandard),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

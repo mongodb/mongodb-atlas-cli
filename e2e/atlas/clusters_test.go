@@ -24,15 +24,17 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestClustersFlags(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	a := assert.New(t)
-	a.NoError(err)
+	req := require.New(t)
+	req.NoError(err)
 	clusterName, err := RandClusterName()
-	a.NoError(err)
+	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -50,7 +52,7 @@ func TestClustersFlags(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster *mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
@@ -68,8 +70,8 @@ func TestClustersFlags(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-		a.Contains(string(resp), "Cluster available", fmt.Sprintf("got=%#v\nwant=%#v\n", string(resp), "Cluster available at:"))
+		req.NoError(err)
+		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -80,11 +82,11 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var clusters []mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &clusters)
-		a.NoError(err)
+		req.NoError(err)
 		a.NotEmpty(clusters)
 	})
 
@@ -97,12 +99,12 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
-		a.Equal(clusterName, cluster.Name, fmt.Sprintf("got=%#v\nwant=%#v\n", cluster.Name, clusterName))
+		req.NoError(err)
+		a.Equal(clusterName, cluster.Name)
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {
@@ -115,11 +117,11 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var connectionString mongodbatlas.ConnectionStrings
 		err = json.Unmarshal(resp, &connectionString)
-		a.NoError(err)
+		req.NoError(err)
 
 		a.NotEmpty(connectionString.Standard)
 		a.NotEmpty(connectionString.StandardSrv)
@@ -137,7 +139,7 @@ func TestClustersFlags(t *testing.T) {
 			"--key=name:1")
 		cmd.Env = os.Environ()
 		_, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -151,11 +153,11 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
+		req.NoError(err)
 
 		ensureCluster(t, &cluster, clusterName, "4.2", 20)
 	})
@@ -164,10 +166,10 @@ func TestClustersFlags(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
-		a.Equal(expected, string(resp), fmt.Sprintf("got=%#v\nwant=%#v\n", string(resp), expected))
+		a.Equal(expected, string(resp))
 	})
 }
 
@@ -224,17 +226,18 @@ func TestClustersFile(t *testing.T) {
 		a.NoError(err)
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
-		a.Equal(expected, string(resp), fmt.Sprintf("got=%#v\nwant=%#v\n", string(resp), expected))
+		a.Equal(expected, string(resp))
 	})
 }
 
 func TestShardedCluster(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	a := assert.New(t)
-	a.NoError(err)
+	req := require.New(t)
+	req.NoError(err)
 
 	shardedClusterName, err := RandClusterName()
-	a.NoError(err)
+	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -254,11 +257,11 @@ func TestShardedCluster(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
+		req.NoError(err)
 
 		ensureCluster(t, &cluster, shardedClusterName, "4.2", 10)
 	})
@@ -267,17 +270,17 @@ func TestShardedCluster(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
-		a.Equal(expected, string(resp), fmt.Sprintf("got=%#v\nwant=%#v\n", string(resp), expected))
+		a.Equal(expected, string(resp))
 	})
 }
 
 func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
 	t.Helper()
 	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name, fmt.Sprintf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName))
-	a.Equal(version, cluster.MongoDBMajorVersion, fmt.Sprintf("MongoDBMajorVersion, got=%s\nwant=%s\n", cluster.MongoDBMajorVersion, version))
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB, fmt.Sprintf("DiskSizeGB, got=%#v\nwant=%f\n", cluster.DiskSizeGB, diskSizeGB))
+	a.Equal(clusterName, cluster.Name)
+	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
 }

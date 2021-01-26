@@ -14,6 +14,6 @@
 package connectionstring
 
 const (
-	connectionString = "Manage MongoDB cluster connection string"
-	describe         = "Retrieve the connection string of your MongoDB cluster."
+	connectionString = "Manage MongoDB cluster connection string."
+	describe         = "Retrieve the SRV connection string of your MongoDB cluster."
 )

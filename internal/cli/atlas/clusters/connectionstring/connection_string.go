@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "connectionString"
+	const use = "connectionStrings"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: append(cli.GenerateAliases(use), "cs"),

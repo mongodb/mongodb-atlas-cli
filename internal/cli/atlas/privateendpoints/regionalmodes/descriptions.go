@@ -15,8 +15,8 @@
 package regionalmodes
 
 const (
-	regionalMode = "Manage regionalized private endpoint setting for one Atlas project."
-	enable       = "Enable the regionalized private endpoint setting for one Atlas project."
-	disable      = "Disable the regionalized private endpoint setting for one Atlas project."
-	describe     = "Get the regionalized private endpoint setting for one Atlas project."
+	regionalMode = "Manage regionalized private endpoint setting for your Atlas project."
+	enable       = "Enable the regionalized private endpoint setting for your Atlas project."
+	disable      = "Disable the regionalized private endpoint setting for your Atlas project."
+	describe     = "Get the regionalized private endpoint setting for your Atlas project."
 )

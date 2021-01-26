@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,14 +32,14 @@ const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
 	n, err := e2e.RandInt(255)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
 	projectID, err := createProject(projectName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {
@@ -46,6 +47,7 @@ func TestAccessRoles(t *testing.T) {
 		}
 	}()
 
+	var roleID string
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -65,6 +67,7 @@ func TestAccessRoles(t *testing.T) {
 		var iamRole mongodbatlas.AWSIAMRole
 		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
 			a.Equal(aws, iamRole.ProviderName)
+			roleID = iamRole.RoleID
 		}
 	})
 
@@ -86,6 +89,51 @@ func TestAccessRoles(t *testing.T) {
 		var roles mongodbatlas.CloudProviderAccessRoles
 		if err := json.Unmarshal(resp, &roles); a.NoError(err) {
 			a.Len(roles.AWSIAMRoles, 1)
+		}
+	})
+
+	t.Run("Authorize", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			cloudProvidersEntity,
+			accessRolesEntity,
+			awsEntity,
+			"authorize",
+			roleID,
+			"--iamAssumedRoleArn",
+			os.Getenv("IAM_ASSUMED_ROLE_ARN"),
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var iamRole mongodbatlas.AWSIAMRole
+		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
+			a.Equal(aws, iamRole.ProviderName)
+		}
+	})
+
+	t.Run("Deauthorize", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			cloudProvidersEntity,
+			accessRolesEntity,
+			awsEntity,
+			"deauthorize",
+			roleID,
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			a.Equal("AWS IAM role successfully deauthorized.\n", string(resp))
 		}
 	})
 }

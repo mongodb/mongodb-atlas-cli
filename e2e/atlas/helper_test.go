@@ -210,10 +210,27 @@ func createAWSAccessRole(projectID string) (string, error) {
 	}
 
 	var iamRole mongodbatlas.AWSIAMRole
-	if err := json.Unmarshal(resp, &iamRole); err != nil {
-		return "", err
+	if err2 := json.Unmarshal(resp, &iamRole); err2 != nil {
+		return "", err2
 	}
 
+	cmd2 := exec.Command(cliPath,
+		atlasEntity,
+		cloudProvidersEntity,
+		accessRolesEntity,
+		awsEntity,
+		"authorize",
+		iamRole.RoleID,
+		"--iamAssumedRoleArn",
+		os.Getenv("IAM_ASSUMED_ROLE_ARN"),
+		"--projectId",
+		projectID,
+		"-o=json")
+	cmd2.Env = os.Environ()
+	resp2, err2 := cmd2.CombinedOutput()
+	if err2 != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp2), err2)
+	}
 	return iamRole.RoleID, nil
 }
 

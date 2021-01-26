@@ -99,6 +99,7 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
+          - IAM_ASSUMED_ROLE_ARN
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}
@@ -479,6 +480,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
+          IAM_ASSUMED_ROLE_ARN: ${iam_assumed_role_arn}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_e2e
     tags: ["e2e","clusters","atlas"]

@@ -54,6 +54,7 @@ const (
 	cloudProvidersEntity   = "cloudProviders"
 	accessRolesEntity      = "accessRoles"
 	customDBRoleEntity     = "customDBRole"
+	regionalModeEntity     = "regionalModes"
 )
 
 func getHostnameAndPort() (string, error) {

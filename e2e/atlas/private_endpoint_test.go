@@ -337,4 +337,55 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		a.Error(err)
 		a.Contains(string(resp), "404")
 	})
+
+	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			regionalModeEntity,
+			"enable",
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		a.Equal("Regionalized private endpoint setting enabled.", string(resp))
+	})
+
+	t.Run("Disable regionalized private endpoint setting", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			regionalModeEntity,
+			"disable",
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		a.Equal("Regionalized private endpoint setting disabled", string(resp))
+	})
+
+	t.Run("Get regionalized private endpoint setting", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			regionalModeEntity,
+			"get",
+			"--projectId",
+			projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var r atlas.RegionalizedPrivateEndpointSetting
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.Equal(false, r.Enabled)
+		}
+	})
 }

@@ -49,7 +49,7 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	entry := opts.newWhitelist()
+	entry := opts.newProjectIPAccessList()
 	r, err := opts.store.CreateProjectIPAccessList(entry)
 
 	if err != nil {
@@ -59,8 +59,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
-	entry := &atlas.ProjectIPWhitelist{
+func (opts *CreateOpts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
+	entry := &atlas.ProjectIPAccessList{
 		GroupID:         opts.ConfigProjectID(),
 		Comment:         opts.comment,
 		DeleteAfterDate: opts.deleteAfter,

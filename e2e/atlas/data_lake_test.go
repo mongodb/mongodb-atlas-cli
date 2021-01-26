@@ -28,13 +28,29 @@ import (
 )
 
 func TestDataLakes(t *testing.T) {
+	project, err := e2e.RandInt(255)
+	assert.NoError(t, err)
+
+	cliPath, err := e2e.Bin()
+	assert.NoError(t, err)
+
+	projectName := fmt.Sprintf("e2e-access-roles-%v", project)
+	projectID, err := createProject(projectName)
+	assert.NoError(t, err)
+
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
+
 	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
-	cliPath, err := e2e.Bin()
+	roleID, err := createAWSAccessRole(projectID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -44,9 +60,12 @@ func TestDataLakes(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"create",
-			"--role=1a234bcd5e67f89a12b345c6",
+			"--role",
+			roleID,
 			"--testBucket=user-metric-data-bucket",
 			dataLakeName,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -66,6 +85,8 @@ func TestDataLakes(t *testing.T) {
 			datalakeEntity,
 			"describe",
 			dataLakeName,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -84,6 +105,8 @@ func TestDataLakes(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"ls",
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -105,6 +128,8 @@ func TestDataLakes(t *testing.T) {
 			dataLakeName,
 			"--region",
 			updateRegion,
+			"--projectId",
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -124,6 +149,8 @@ func TestDataLakes(t *testing.T) {
 			datalakeEntity,
 			"delete",
 			dataLakeName,
+			"--projectId",
+			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 

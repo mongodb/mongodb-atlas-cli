@@ -36,7 +36,7 @@ func TestAccessRoles(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	assert.NoError(t, err)
 
-	projectName := fmt.Sprintf("e2e-integration-access-roles-%v", n)
+	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
 	projectID, err := createProject(projectName)
 	assert.NoError(t, err)
 

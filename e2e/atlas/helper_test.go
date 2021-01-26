@@ -189,6 +189,34 @@ func createProject(projectName string) (string, error) {
 	return project.ID, nil
 }
 
+func createAWSAccessRole(projectID string) (string, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		cloudProvidersEntity,
+		accessRolesEntity,
+		awsEntity,
+		"create",
+		"--projectId",
+		projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var iamRole mongodbatlas.AWSIAMRole
+	if err := json.Unmarshal(resp, &iamRole); err != nil {
+		return "", err
+	}
+
+	return iamRole.RoleID, nil
+}
+
 func deleteProject(projectID string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {

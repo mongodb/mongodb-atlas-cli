@@ -44,6 +44,8 @@ func TestDataLakes(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"create",
+			"--role=1a234bcd5e67f89a12b345c6",
+			"--testBucket=user-metric-data-bucket",
 			dataLakeName,
 			"-o=json")
 		cmd.Env = os.Environ()

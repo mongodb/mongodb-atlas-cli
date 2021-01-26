@@ -337,21 +337,25 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		a.Error(err)
 		a.Contains(string(resp), "404")
 	})
+}
+
+func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	cliPath, err := e2e.Bin()
+	a := assert.New(t)
+	a.NoError(err)
 
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"enable",
-			"--projectId",
-			projectID)
+			"enable")
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		a.Equal("Regionalized private endpoint setting enabled.", string(resp))
+		a.Equal("Regionalized private endpoint setting enabled.\n", string(resp))
 	})
 
 	t.Run("Disable regionalized private endpoint setting", func(t *testing.T) {
@@ -359,15 +363,13 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"disable",
-			"--projectId",
-			projectID)
+			"disable")
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		a.Equal("Regionalized private endpoint setting disabled", string(resp))
+		a.Equal("Regionalized private endpoint setting disabled.\n", string(resp))
 	})
 
 	t.Run("Get regionalized private endpoint setting", func(t *testing.T) {
@@ -375,9 +377,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
-			"get",
-			"--projectId",
-			projectID)
+			"get")
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()

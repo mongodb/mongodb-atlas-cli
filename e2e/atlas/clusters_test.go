@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -272,7 +273,14 @@ func TestShardedCluster(t *testing.T) {
 }
 
 func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
-	assert.Equal(t, clusterName, cluster.Name, fmt.Sprintf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName))
-	assert.Equal(t, version, cluster.MongoDBMajorVersion, fmt.Sprintf("MongoDBMajorVersion, got=%s\nwant=%s\n", cluster.MongoDBMajorVersion, version))
-	assert.Equal(t, diskSizeGB, *cluster.DiskSizeGB, fmt.Sprintf("DiskSizeGB, got=%#v\nwant=%f\n", cluster.DiskSizeGB, diskSizeGB))
+	t.Helper()
+	if cluster.Name != clusterName {
+		t.Errorf("Name, got=%s\nwant=%s\n", cluster.Name, clusterName)
+	}
+	if cluster.MongoDBMajorVersion != version {
+		t.Errorf("MongoDBMajorVersion, got=%s\nwant=%s\n", cluster.MongoDBMajorVersion, version)
+	}
+	if *cluster.DiskSizeGB != diskSizeGB {
+		t.Errorf("DiskSizeGB, got=%#v\nwant=%f\n", cluster.DiskSizeGB, diskSizeGB)
+	}
 }

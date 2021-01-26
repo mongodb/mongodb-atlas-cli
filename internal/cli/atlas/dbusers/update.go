@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ type UpdateOpts struct {
 	username string
 	password string
 	roles    []string
+	scopes   []string
 	store    store.DatabaseUserUpdater
 }
 
@@ -46,6 +47,7 @@ func (opts *UpdateOpts) initStore() error {
 func (opts *UpdateOpts) Run() error {
 	current := new(atlas.DatabaseUser)
 	opts.update(current)
+
 	r, err := opts.store.UpdateDatabaseUser(current)
 
 	if err != nil {
@@ -62,6 +64,7 @@ func (opts *UpdateOpts) update(out *atlas.DatabaseUser) {
 		out.Password = opts.password
 	}
 
+	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
 	out.Roles = convert.BuildAtlasRoles(opts.roles)
 }
 
@@ -73,7 +76,10 @@ func UpdateBuilder() *cobra.Command {
 		Short: updateDBUser,
 		Example: `
   Update roles for a user
-  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>`,
+  $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>
+
+  Update scopes for a user
+  $ mongocli atlas dbuser update <username> --scope resourceName@resourceType --projectId <projectId>`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -91,6 +97,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles)
+	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

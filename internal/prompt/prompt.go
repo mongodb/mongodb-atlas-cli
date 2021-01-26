@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,14 @@ import (
 func NewDeleteConfirm(entry string) survey.Prompt {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("Are you sure you want to delete: %s", entry),
+	}
+	return prompt
+}
+
+// NewConfirm creates a prompt to confirm if the entry should be deleted
+func NewConfirm(message string) survey.Prompt {
+	prompt := &survey.Confirm{
+		Message: message,
 	}
 	return prompt
 }

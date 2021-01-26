@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store               store.InterfaceEndpointCreator
+	store               store.InterfaceEndpointCreatorDeprecated
 	privateEndpointID   string
 	interfaceEndpointID string
 }
@@ -41,7 +41,7 @@ func (opts *CreateOpts) initStore() error {
 var createTemplate = "Interface endpoint '{{.ID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), opts.privateEndpointID, opts.interfaceEndpointID)
+	r, err := opts.store.CreateInterfaceEndpointDeprecated(opts.ConfigProjectID(), opts.privateEndpointID, opts.interfaceEndpointID)
 	if err != nil {
 		return err
 	}
@@ -49,11 +49,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create <interfaceEndpointId>",
+		Use:     "create <atlasPrivateEndpointId>",
 		Aliases: []string{"add"},
 		Short:   createInterfaceEndpoint,
 		Args:    require.ExactArgs(1),
@@ -75,6 +75,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

@@ -16,6 +16,8 @@ package privateendpoints
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
 	"github.com/spf13/cobra"
 )
@@ -27,12 +29,15 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   privateEndpoints,
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(interfaces.Builder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		WatchBuilder(),
+		interfaces.Builder(),
+		aws.Builder(),
+		azure.Builder())
 
 	return cmd
 }

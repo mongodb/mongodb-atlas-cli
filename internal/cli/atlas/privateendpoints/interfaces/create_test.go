@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,14 +20,16 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointCreator(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointCreatorDeprecated(ctrl)
 	defer ctrl.Finish()
 
 	createOpts := &CreateOpts{
@@ -39,10 +41,19 @@ func TestCreate_Run(t *testing.T) {
 	expected := &mongodbatlas.InterfaceEndpointConnectionDeprecated{}
 	mockStore.
 		EXPECT().
-		CreateInterfaceEndpoint(createOpts.ProjectID, createOpts.privateEndpointID, createOpts.interfaceEndpointID).
+		CreateInterfaceEndpointDeprecated(createOpts.ProjectID, createOpts.privateEndpointID, createOpts.interfaceEndpointID).
 		Return(expected, nil).
 		Times(1)
 
 	err := createOpts.Run()
 	assert.NoError(t, err)
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.PrivateEndpointID},
+	)
 }

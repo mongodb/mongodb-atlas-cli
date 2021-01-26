@@ -20,14 +20,16 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointDescriber(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointDescriberDeprecated(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
@@ -40,10 +42,19 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		InterfaceEndpoint(opts.ProjectID, opts.privateEndpointID, opts.id).
+		InterfaceEndpointDeprecated(opts.ProjectID, opts.privateEndpointID, opts.id).
 		Return(expected, nil).
 		Times(1)
 
 	err := opts.Run()
 	assert.NoError(t, err)
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.PrivateEndpointID},
+	)
 }

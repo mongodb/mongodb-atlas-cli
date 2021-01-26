@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,6 +85,8 @@ const (
 	FirstName                       = "firstName"                       // FirstName flag
 	LastName                        = "lastName"                        // LastName flag
 	Role                            = "role"                            // Role flag
+	Scope                           = "scope"                           // Scope flag
+	IAMAssumedRoleARN               = "iamAssumedRoleArn"               // IAMAssumedRoleARN flag
 	Description                     = "desc"                            // Description flag
 	StartDate                       = "startDate"                       // StartDate flag
 	EndDate                         = "endDate"                         // EndDate flag
@@ -156,6 +158,9 @@ const (
 	Granularity                     = "granularity"                     // Granularity flag
 	Key                             = "key"                             // Key flag
 	Collection                      = "collection"                      // Collection flag
+	Append                          = "append"                          // Append flag
+	Privilege                       = "privilege"                       // Privilege flag
+	InheritedRole                   = "inheritedRole"                   // InheritedRole flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
 	Database                        = "db"                              // Database flag
 	Unique                          = "unique"                          // Unique flag
@@ -187,6 +192,7 @@ const (
 	IP                              = "ip"                              // IP flag
 	CIDR                            = "cidr"                            // CIDR flag
 	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
+	PrivateEndpointIPAddress        = "privateEndpointIpAddress"        // PrivateEndpointIPAddress flag
 	Retention                       = "retention"                       // Retention flag
 	AtlasCIDRBlock                  = "atlasCidrBlock"                  // AtlasCIDRBlock flag
 	DirectoryID                     = "directoryId"                     // DirectoryID flag
@@ -228,7 +234,7 @@ const (
 	DailySnapshotRetentionDays      = "dailySnapshotRetentionDays"      // DailySnapshotRetentionDays flag
 	ClusterCheckpointIntervalMin    = "clusterCheckpointIntervalMin"    // ClusterCheckpointIntervalMin flag
 	SnapshotIntervalHours           = "snapshotIntervalHours"           // SnapshotIntervalHours flag
-	SnapshotRetentionDays           = "SnapshotRetentionDays"           // SnapshotRetentionDays flag
+	SnapshotRetentionDays           = "snapshotRetentionDays"           // SnapshotRetentionDays flag
 	WeeklySnapshotRetentionWeeks    = "weeklySnapshotRetentionWeeks"    // WeeklySnapshotRetentionWeeks flag
 	PointInTimeWindowHours          = "pointInTimeWindowHours"          // PointInTimeWindowHours flag
 	ReferenceHourOfDay              = "referenceHourOfDay"              // ReferenceHourOfDay flag

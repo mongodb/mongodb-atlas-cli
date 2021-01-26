@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,9 +56,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: describeDBUser,
-		Args:  require.ExactArgs(1),
+		Use:     "describe <name>",
+		Short:   describeDBUser,
+		Args:    require.ExactArgs(1),
+		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

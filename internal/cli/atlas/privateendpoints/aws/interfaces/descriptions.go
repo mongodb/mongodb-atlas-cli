@@ -15,7 +15,8 @@
 package interfaces
 
 const (
-	interfaces                = "Manage Atlas AWS private endpoint interfaces."
-	createInterfaceEndpoint   = "Add a new interface to a AWS private endpoint."
-	describeInterfaceEndpoint = "Return a specific AWS private endpoint interface for your project."
+	interfaces = "Manage Atlas AWS private endpoint interfaces."
+	create     = "Add a new interface to a AWS private endpoint."
+	describe   = "Return a specific AWS private endpoint interface for your project."
+	remove     = "Delete a specific AWS private endpoint interface for your project."
 )

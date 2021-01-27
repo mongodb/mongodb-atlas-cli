@@ -19,7 +19,7 @@ package convert
 import (
 	"testing"
 
-	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

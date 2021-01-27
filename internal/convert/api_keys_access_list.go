@@ -14,9 +14,15 @@
 
 package convert
 
-import atlas "go.mongodb.org/atlas/mongodbatlas"
+import (
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
 
 func FromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
+	if in == nil {
+		return nil
+	}
+
 	out := &atlas.AccessListAPIKeys{
 		TotalCount: in.TotalCount,
 		Links:      in.Links,
@@ -44,6 +50,10 @@ func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.Acc
 }
 
 func FromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
+	if in == nil {
+		return nil
+	}
+
 	var out []*atlas.WhitelistAPIKeysReq
 
 	for _, element := range in {

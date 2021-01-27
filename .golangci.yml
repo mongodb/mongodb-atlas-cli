@@ -87,6 +87,7 @@ run:
     - integration
   skip-dirs:
     - internal/mocks
+  modules-download-mode: readonly
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source

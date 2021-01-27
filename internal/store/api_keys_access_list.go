@@ -77,7 +77,6 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 				return e
 			}
 		}
-
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -99,7 +98,6 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
 		}
-
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

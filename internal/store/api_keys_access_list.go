@@ -17,6 +17,9 @@ package store
 import (
 	"context"
 	"fmt"
+	"strings"
+
+	"github.com/mongodb/mongocli/internal/convert"
 
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -27,17 +30,14 @@ import (
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
-	OrganizationAPIKeyAccessListsDeprecated(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
 }
 
 type OrganizationAPIKeyAccessListDeleter interface {
 	DeleteOrganizationAPIKeyAccessList(string, string, string) error
-	DeleteOrganizationAPIKeyAccessListDeprecated(string, string, string) error
 }
 
 type OrganizationAPIKeyAccessListCreator interface {
 	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
-	CreateOrganizationAPIKeyAccessListDeprecated(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers
@@ -48,6 +48,14 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		if err != nil {
+			// We keep supporting OM 4.2 and OM 4.4
+			if strings.Contains(err.Error(), "404") {
+				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, convert.FromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
+				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
+			}
+		}
+
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -62,6 +70,14 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		if err != nil {
+			// We keep supporting OM 4.2 and OM 4.4
+			if strings.Contains(err.Error(), "404") {
+				_, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+				return e
+			}
+		}
+
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -76,50 +92,16 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		if err != nil {
+			// We keep supporting OM 4.2 and OM 4.4
+			if strings.Contains(err.Error(), "404") {
+				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
+			}
+		}
+
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// OrganizationAPIKeyAccessListsDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) OrganizationAPIKeyAccessListsDeprecated(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// CreateOrganizationAPIKeyAccessListDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) CreateOrganizationAPIKeyAccessListDeprecated(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// DeleteOrganizationAPIKeyAccessListDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteOrganizationAPIKeyAccessListDeprecated(orgID, apiKeyID, ipAddress string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
-		return err
-	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
-		return err
-	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
 	}
 }

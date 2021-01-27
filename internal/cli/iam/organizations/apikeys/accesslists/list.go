@@ -15,8 +15,6 @@
 package accesslists
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -46,21 +44,9 @@ func (opts *ListOpts) init() error {
 
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-
 	if err != nil {
-		// We keep supporting OM 4.2 and OM 4.4
-		if strings.Contains(err.Error(), "404") {
-			r, e := opts.store.OrganizationAPIKeyAccessListsDeprecated(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-			if e != nil {
-				return e
-			}
-
-			return opts.Print(r)
-		}
-
 		return err
 	}
-
 	return opts.Print(r)
 }
 

@@ -15,8 +15,6 @@
 package accesslists
 
 import (
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -40,18 +38,7 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	err := opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
-
-	if err != nil {
-		// We keep supporting OM 4.2 and OM 4.4
-		if strings.Contains(err.Error(), "404") {
-			return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessListDeprecated, opts.ConfigOrgID(), opts.apiKey)
-		}
-
-		return err
-	}
-
-	return nil
+	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force

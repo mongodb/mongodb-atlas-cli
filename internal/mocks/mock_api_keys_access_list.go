@@ -48,21 +48,6 @@ func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizatio
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessList), arg0, arg1, arg2)
 }
 
-// CreateOrganizationAPIKeyAccessListDeprecated mocks base method
-func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessListDeprecated(arg0, arg1 string, arg2 []*mongodbatlas.WhitelistAPIKeysReq) (*mongodbatlas.WhitelistAPIKeys, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessListDeprecated", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.WhitelistAPIKeys)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateOrganizationAPIKeyAccessListDeprecated indicates an expected call of CreateOrganizationAPIKeyAccessListDeprecated
-func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizationAPIKeyAccessListDeprecated(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessListDeprecated", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessListDeprecated), arg0, arg1, arg2)
-}
-
 // MockOrganizationAPIKeyAccessListDeleter is a mock of OrganizationAPIKeyAccessListDeleter interface
 type MockOrganizationAPIKeyAccessListDeleter struct {
 	ctrl     *gomock.Controller
@@ -98,20 +83,6 @@ func (m *MockOrganizationAPIKeyAccessListDeleter) DeleteOrganizationAPIKeyAccess
 func (mr *MockOrganizationAPIKeyAccessListDeleterMockRecorder) DeleteOrganizationAPIKeyAccessList(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListDeleter)(nil).DeleteOrganizationAPIKeyAccessList), arg0, arg1, arg2)
-}
-
-// DeleteOrganizationAPIKeyAccessListDeprecated mocks base method
-func (m *MockOrganizationAPIKeyAccessListDeleter) DeleteOrganizationAPIKeyAccessListDeprecated(arg0, arg1, arg2 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteOrganizationAPIKeyAccessListDeprecated", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DeleteOrganizationAPIKeyAccessListDeprecated indicates an expected call of DeleteOrganizationAPIKeyAccessListDeprecated
-func (mr *MockOrganizationAPIKeyAccessListDeleterMockRecorder) DeleteOrganizationAPIKeyAccessListDeprecated(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKeyAccessListDeprecated", reflect.TypeOf((*MockOrganizationAPIKeyAccessListDeleter)(nil).DeleteOrganizationAPIKeyAccessListDeprecated), arg0, arg1, arg2)
 }
 
 // MockOrganizationAPIKeyAccessListLister is a mock of OrganizationAPIKeyAccessListLister interface
@@ -150,19 +121,4 @@ func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(a
 func (mr *MockOrganizationAPIKeyAccessListListerMockRecorder) OrganizationAPIKeyAccessLists(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyAccessLists", reflect.TypeOf((*MockOrganizationAPIKeyAccessListLister)(nil).OrganizationAPIKeyAccessLists), arg0, arg1, arg2)
-}
-
-// OrganizationAPIKeyAccessListsDeprecated mocks base method
-func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessListsDeprecated(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.WhitelistAPIKeys, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessListsDeprecated", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.WhitelistAPIKeys)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// OrganizationAPIKeyAccessListsDeprecated indicates an expected call of OrganizationAPIKeyAccessListsDeprecated
-func (mr *MockOrganizationAPIKeyAccessListListerMockRecorder) OrganizationAPIKeyAccessListsDeprecated(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyAccessListsDeprecated", reflect.TypeOf((*MockOrganizationAPIKeyAccessListLister)(nil).OrganizationAPIKeyAccessListsDeprecated), arg0, arg1, arg2)
 }

@@ -16,7 +16,6 @@ package accesslists
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -42,28 +41,6 @@ func (opts *CreateOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
-}
-
-func (opts *CreateOpts) newWhitelistAPIKeysReq() ([]*atlas.WhitelistAPIKeysReq, error) {
-	req := make([]*atlas.WhitelistAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
-	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
-		return nil, fmt.Errorf("either --ip or --cidr must be set")
-	}
-	for _, v := range opts.ips {
-		entry := &atlas.WhitelistAPIKeysReq{
-			IPAddress: v,
-		}
-		req = append(req, entry)
-	}
-
-	for _, v := range opts.cidrs {
-		entry := &atlas.WhitelistAPIKeysReq{
-			CidrBlock: v,
-		}
-		req = append(req, entry)
-	}
-
-	return req, nil
 }
 
 func (opts *CreateOpts) newAccessListAPIKeysReq() ([]*atlas.AccessListAPIKeysReq, error) {
@@ -95,23 +72,7 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	r, err := opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
-
 	if err != nil {
-		// We keep supporting OM 4.2 and OM 4.4
-		if strings.Contains(err.Error(), "404") {
-			req, e := opts.newWhitelistAPIKeysReq()
-			if e != nil {
-				return e
-			}
-
-			r, e := opts.store.CreateOrganizationAPIKeyAccessListDeprecated(opts.ConfigOrgID(), opts.apyKey, req)
-			if e != nil {
-				return e
-			}
-
-			return opts.Print(r)
-		}
-
 		return err
 	}
 

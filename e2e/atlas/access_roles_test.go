@@ -47,7 +47,6 @@ func TestAccessRoles(t *testing.T) {
 		}
 	}()
 
-	var roleID string
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -67,7 +66,6 @@ func TestAccessRoles(t *testing.T) {
 		var iamRole mongodbatlas.AWSIAMRole
 		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
 			a.Equal(aws, iamRole.ProviderName)
-			roleID = iamRole.RoleID
 		}
 	})
 
@@ -89,27 +87,6 @@ func TestAccessRoles(t *testing.T) {
 		var roles mongodbatlas.CloudProviderAccessRoles
 		if err := json.Unmarshal(resp, &roles); a.NoError(err) {
 			a.Len(roles.AWSIAMRoles, 1)
-		}
-	})
-
-	t.Run("Authorize", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			cloudProvidersEntity,
-			accessRolesEntity,
-			awsEntity,
-			"authorize",
-			roleID,
-			"--iamAssumedRoleArn=invalid",
-			"--projectId",
-			projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.Error(err) {
-			a.Equal("", string(resp))
 		}
 	})
 }

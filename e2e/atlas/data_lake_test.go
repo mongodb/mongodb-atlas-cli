@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+// +build e2e atlas,datalake
 
 package atlas_test
 
@@ -24,20 +24,24 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDataLakes(t *testing.T) {
+	cliPath, err := e2e.Bin()
+	require.NoError(t, err)
+
 	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
+	testBucket := os.Getenv("E2E_TEST_BUCKET")
+	require.NotEmpty(t, testBucket)
+	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
+	require.NotEmpty(t, roleID)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -45,6 +49,10 @@ func TestDataLakes(t *testing.T) {
 			datalakeEntity,
 			"create",
 			dataLakeName,
+			"--role",
+			roleID,
+			"--testBucket",
+			testBucket,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

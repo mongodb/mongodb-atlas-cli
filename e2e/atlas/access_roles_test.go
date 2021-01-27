@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,14 +32,14 @@ const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
 	n, err := e2e.RandInt(255)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	projectName := fmt.Sprintf("e2e-integration-access-roles-%v", n)
+	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
 	projectID, err := createProject(projectName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {

@@ -24,6 +24,8 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,15 +33,15 @@ const accessListEntity = "accessList"
 
 func TestAccessList(t *testing.T) {
 	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	a := assert.New(t)
+	req := require.New(t)
+	req.NoError(err)
+
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
+
 	t.Run("Create Forever", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -50,25 +52,21 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		var entries *mongodbatlas.ProjectIPAccessLists
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 
-		var entries []*mongodbatlas.ProjectIPWhitelist
-		if err := json.Unmarshal(resp, &entries); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
 		found := false
-		for i := range entries {
-			if entries[i].IPAddress == entry {
+		for i := range entries.Results {
+			if entries.Results[i].IPAddress == entry {
 				found = true
 				break
 			}
 		}
-		if !found {
-			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
-		}
+
+		a.True(found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -79,10 +77,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		req.NoError(err)
+		var entries *mongodbatlas.ProjectIPAccessLists
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -94,10 +92,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		req.NoError(err)
+		var entry *mongodbatlas.ProjectIPAccessList
+		err = json.Unmarshal(resp, &entry)
+		req.NoError(err)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -109,15 +107,10 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
-		if string(resp) != expected {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), expected)
-		}
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("Create Delete After", func(t *testing.T) {
@@ -131,24 +124,19 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		var entries *mongodbatlas.ProjectIPAccessLists
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 
-		var entries []*mongodbatlas.ProjectIPWhitelist
-		if err := json.Unmarshal(resp, &entries); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
 		found := false
-		for i := range entries {
-			if entries[i].IPAddress == entry {
+		for i := range entries.Results {
+			if entries.Results[i].IPAddress == entry {
 				found = true
 				break
 			}
 		}
-		if !found {
-			t.Errorf("entry=%#v not found in %#v\n", entry, entries)
-		}
+		a.True(found)
 	})
 }

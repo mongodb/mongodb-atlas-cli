@@ -23,22 +23,67 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyWhitelistDeleter
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
-type OrganizationAPIKeyWhitelistLister interface {
-	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
+type OrganizationAPIKeyAccessListLister interface {
+	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
+	OrganizationAPIKeyAccessListsDeprecated(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
 }
 
-type OrganizationAPIKeyWhitelistCreator interface {
-	CreateOrganizationAPIKeyWhite(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
+type OrganizationAPIKeyAccessListDeleter interface {
+	DeleteOrganizationAPIKeyAccessList(string, string, string) error
+	DeleteOrganizationAPIKeyAccessListDeprecated(string, string, string) error
 }
 
-type OrganizationAPIKeyWhitelistDeleter interface {
-	DeleteOrganizationAPIKeyWhitelist(string, string, string) error
+type OrganizationAPIKeyAccessListCreator interface {
+	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
+	CreateOrganizationAPIKeyAccessListDeprecated(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
 }
 
-// OrganizationAPIKeys encapsulates the logic to manage different cloud providers
-func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
+// CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers
+func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		return err
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		return err
+	default:
+		return fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers
+func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// OrganizationAPIKeyAccessListsDeprecated encapsulates the logic to manage different cloud providers
+func (s *Store) OrganizationAPIKeyAccessListsDeprecated(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
@@ -51,8 +96,8 @@ func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas
 	}
 }
 
-// CreateOrganizationAPIKeyWhite encapsulates the logic to manage different cloud providers
-func (s *Store) CreateOrganizationAPIKeyWhite(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
+// CreateOrganizationAPIKeyAccessListDeprecated encapsulates the logic to manage different cloud providers
+func (s *Store) CreateOrganizationAPIKeyAccessListDeprecated(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
@@ -65,8 +110,8 @@ func (s *Store) CreateOrganizationAPIKeyWhite(orgID, apiKeyID string, opts []*at
 	}
 }
 
-// DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress string) error {
+// DeleteOrganizationAPIKeyAccessListDeprecated encapsulates the logic to manage different cloud providers
+func (s *Store) DeleteOrganizationAPIKeyAccessListDeprecated(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)

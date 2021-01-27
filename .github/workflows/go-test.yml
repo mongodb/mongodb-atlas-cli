@@ -1,6 +1,10 @@
 ---
-name: CI
-on: [push, pull_request]
+name: GO tests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   tests:
     strategy:

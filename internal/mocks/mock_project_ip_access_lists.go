@@ -34,10 +34,10 @@ func (m *MockProjectIPAccessListDescriber) EXPECT() *MockProjectIPAccessListDesc
 }
 
 // IPAccessList mocks base method
-func (m *MockProjectIPAccessListDescriber) IPAccessList(arg0, arg1 string) (*mongodbatlas.ProjectIPWhitelist, error) {
+func (m *MockProjectIPAccessListDescriber) IPAccessList(arg0, arg1 string) (*mongodbatlas.ProjectIPAccessList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IPAccessList", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.ProjectIPWhitelist)
+	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,10 +72,10 @@ func (m *MockProjectIPAccessListLister) EXPECT() *MockProjectIPAccessListListerM
 }
 
 // ProjectIPAccessLists mocks base method
-func (m *MockProjectIPAccessListLister) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.ProjectIPWhitelist, error) {
+func (m *MockProjectIPAccessListLister) ProjectIPAccessLists(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ProjectIPAccessLists, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectIPAccessLists", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
+	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockProjectIPAccessListCreator) EXPECT() *MockProjectIPAccessListCreato
 }
 
 // CreateProjectIPAccessList mocks base method
-func (m *MockProjectIPAccessListCreator) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPWhitelist) ([]mongodbatlas.ProjectIPWhitelist, error) {
+func (m *MockProjectIPAccessListCreator) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
+	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

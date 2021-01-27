@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -53,8 +52,8 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
 			if target.HTTPCode == resourceNotFound {
-				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, convert.FromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
-				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
+				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
+				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
 		}
 
@@ -99,11 +98,65 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 			// We keep supporting OM 4.2 and OM 4.4
 			if target.HTTPCode == resourceNotFound {
 				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
+				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
 		}
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
+}
+
+// fromWhitelistAPIKeysToAccessListAPIKeys convert from atlas.WhitelistAPIKeys format to atlas.AccessListAPIKeys
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+func fromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
+	if in == nil {
+		return nil
+	}
+
+	out := &atlas.AccessListAPIKeys{
+		TotalCount: in.TotalCount,
+		Links:      in.Links,
+	}
+
+	results := make([]*atlas.AccessListAPIKey, len(in.Results))
+	for i, element := range in.Results {
+		results[i] = fromWhitelistAPIKeyToAccessListAPIKey(element)
+	}
+
+	out.Results = results
+	return out
+}
+
+// fromWhitelistAPIKeyToAccessListAPIKey convert from atlas.WhitelistAPIKey format to atlas.AccessListAPIKey
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.AccessListAPIKey {
+	return &atlas.AccessListAPIKey{
+		CidrBlock:       in.CidrBlock,
+		Count:           in.Count,
+		Created:         in.Created,
+		IPAddress:       in.IPAddress,
+		LastUsed:        in.LastUsed,
+		LastUsedAddress: in.LastUsedAddress,
+		Links:           in.Links,
+	}
+}
+
+// fromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+func fromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
+	if in == nil {
+		return nil
+	}
+
+	out := make([]*atlas.WhitelistAPIKeysReq, len(in))
+
+	for i, element := range in {
+		accessListElement := &atlas.WhitelistAPIKeysReq{
+			IPAddress: element.IPAddress,
+			CidrBlock: element.CidrBlock,
+		}
+		out[i] = accessListElement
+	}
+	return out
 }

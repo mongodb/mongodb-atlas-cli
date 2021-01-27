@@ -30,9 +30,9 @@ func FromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.
 		Links:      in.Links,
 	}
 
-	var results []*atlas.AccessListAPIKey
-	for _, element := range in.Results {
-		results = append(results, fromWhitelistAPIKeyToAccessListAPIKey(element))
+	results := make([]*atlas.AccessListAPIKey, len(in.Results))
+	for i, element := range in.Results {
+		results[i] = fromWhitelistAPIKeyToAccessListAPIKey(element)
 	}
 
 	out.Results = results
@@ -58,14 +58,14 @@ func FromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeys
 		return nil
 	}
 
-	var out []*atlas.WhitelistAPIKeysReq
+	out := make([]*atlas.WhitelistAPIKeysReq, len(in))
 
-	for _, element := range in {
+	for i, element := range in {
 		accessListElement := &atlas.WhitelistAPIKeysReq{
 			IPAddress: element.IPAddress,
 			CidrBlock: element.CidrBlock,
 		}
-		out = append(out, accessListElement)
+		out[i] = accessListElement
 	}
 	return out
 }

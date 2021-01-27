@@ -25,7 +25,7 @@ import (
 )
 
 const describeTemplate = `CIDR BLOCK	SECURITY GROUP
-{{.CIDRBlock}}	{{.AwsSecurityGroup}}
+{{.CIDRBlock}}	{{if .AwsSecurityGroup}}.AwsSecurityGroup {{else}}N/A{{end}}
 `
 
 type DescribeOpts struct {
@@ -54,9 +54,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: describe,
-		Args:  require.ExactArgs(1),
+		Use:     "describe <name>",
+		Aliases: []string{"get"},
+		Short:   describe,
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

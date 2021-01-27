@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 // +build unit
 
-package accesslists
+package connectionstring
 
 import (
 	"testing"
@@ -23,37 +23,37 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestWhitelistList_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
+	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.ProjectIPAccessLists
+	expected := &mongodbatlas.Cluster{}
 
-	listOpts := &ListOpts{
+	describeOpts := &DescribeOpts{
+		name:  "test",
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		ProjectIPAccessLists(listOpts.ProjectID, listOpts.NewListOptions()).
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	err := describeOpts.Run()
+	assert.NoError(t, err)
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

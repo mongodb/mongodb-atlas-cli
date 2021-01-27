@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package accesslists
+
+package regionalmodes
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -23,26 +23,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range .Results}}
-{{.CIDRBlock}}	{{if .AwsSecurityGroup}}.AwsSecurityGroup {{else}}N/A{{end}}{{end}}
+var describeTemplate = `ENABLED
+{{.Enabled}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.ProjectIPAccessListLister
+	store store.RegionalizedPrivateEndpointSettingDescriber
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ProjectIPAccessLists(opts.ConfigProjectID(), listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.RegionalizedPrivateEndpointSetting(opts.ConfigProjectID())
 
 	if err != nil {
 		return err
@@ -51,28 +49,24 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas accessList(s) list --projectId projectId [--page N] [--limit N]
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) regionalMode(s) describe|get [--projectId projectId]
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   list,
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   describe,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.init,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

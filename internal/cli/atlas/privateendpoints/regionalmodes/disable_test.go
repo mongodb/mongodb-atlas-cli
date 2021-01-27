@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 // +build unit
 
-package accesslists
+package regionalmodes
 
 import (
 	"testing"
@@ -23,37 +23,39 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestWhitelistList_Run(t *testing.T) {
+func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
+	mockStore := mocks.NewMockRegionalizedPrivateEndpointSettingUpdater(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.ProjectIPAccessLists
+	expected := &atlas.RegionalizedPrivateEndpointSetting{
+		Enabled: true,
+	}
 
-	listOpts := &ListOpts{
+	opts := &DisableOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		ProjectIPAccessLists(listOpts.ProjectID, listOpts.NewListOptions()).
+		UpdateRegionalizedPrivateEndpointSetting(opts.ProjectID, false).
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
+	err := opts.Run()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		DisableBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

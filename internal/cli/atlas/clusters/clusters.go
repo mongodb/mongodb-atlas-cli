@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
@@ -42,7 +43,8 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		indexes.Builder(),
 		search.Builder(),
-		onlinearchive.Builder())
+		onlinearchive.Builder(),
+		connectionstring.Builder())
 
 	return cmd
 }

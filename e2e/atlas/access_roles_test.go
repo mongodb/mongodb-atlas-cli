@@ -100,8 +100,7 @@ func TestAccessRoles(t *testing.T) {
 			awsEntity,
 			"authorize",
 			roleID,
-			"--iamAssumedRoleArn",
-			os.Getenv("IAM_ASSUMED_ROLE_ARN"),
+			"--iamAssumedRoleArn=invalid",
 			"--projectId",
 			projectID,
 			"-o=json")
@@ -109,31 +108,8 @@ func TestAccessRoles(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
-		var iamRole mongodbatlas.AWSIAMRole
-		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
-			a.Equal(aws, iamRole.ProviderName)
-		}
-	})
-
-	t.Run("Deauthorize", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			cloudProvidersEntity,
-			accessRolesEntity,
-			awsEntity,
-			"deauthorize",
-			roleID,
-			"--projectId",
-			projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			a.Equal("AWS IAM role successfully deauthorized.\n", string(resp))
+		if a.Error(err) {
+			a.Equal("", string(resp))
 		}
 	})
 }

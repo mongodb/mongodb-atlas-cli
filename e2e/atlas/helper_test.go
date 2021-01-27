@@ -189,51 +189,6 @@ func createProject(projectName string) (string, error) {
 	return project.ID, nil
 }
 
-func createAWSAccessRole(projectID string) (string, error) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return "", err
-	}
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		cloudProvidersEntity,
-		accessRolesEntity,
-		awsEntity,
-		"create",
-		"--projectId",
-		projectID,
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	var iamRole mongodbatlas.AWSIAMRole
-	if err2 := json.Unmarshal(resp, &iamRole); err2 != nil {
-		return "", err2
-	}
-
-	cmd2 := exec.Command(cliPath,
-		atlasEntity,
-		cloudProvidersEntity,
-		accessRolesEntity,
-		awsEntity,
-		"authorize",
-		iamRole.RoleID,
-		"--iamAssumedRoleArn",
-		os.Getenv("IAM_ASSUMED_ROLE_ARN"),
-		"--projectId",
-		projectID,
-		"-o=json")
-	cmd2.Env = os.Environ()
-	resp2, err2 := cmd2.CombinedOutput()
-	if err2 != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp2), err2)
-	}
-	return iamRole.RoleID, nil
-}
-
 func deleteProject(projectID string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+// +build e2e atlas,datalake
 
 package atlas_test
 
@@ -24,48 +24,35 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDataLakes(t *testing.T) {
-	project, err := e2e.RandInt(255)
-	assert.NoError(t, err)
-
 	cliPath, err := e2e.Bin()
-	assert.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-access-roles-%v", project)
-	projectID, err := createProject(projectName)
-	assert.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 
-	roleID, err := createAWSAccessRole(projectID)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
+	testBucket := os.Getenv("E2E_TEST_BUCKET")
+	require.NotEmpty(t, testBucket)
+	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
+	require.NotEmpty(t, roleID)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			datalakeEntity,
 			"create",
+			dataLakeName,
 			"--role",
 			roleID,
-			"--testBucket=user-metric-data-bucket",
-			dataLakeName,
-			"--projectId",
-			projectID,
+			"--testBucket",
+			testBucket,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -85,8 +72,6 @@ func TestDataLakes(t *testing.T) {
 			datalakeEntity,
 			"describe",
 			dataLakeName,
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -105,8 +90,6 @@ func TestDataLakes(t *testing.T) {
 			atlasEntity,
 			datalakeEntity,
 			"ls",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -128,8 +111,6 @@ func TestDataLakes(t *testing.T) {
 			dataLakeName,
 			"--region",
 			updateRegion,
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -149,8 +130,6 @@ func TestDataLakes(t *testing.T) {
 			datalakeEntity,
 			"delete",
 			dataLakeName,
-			"--projectId",
-			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 

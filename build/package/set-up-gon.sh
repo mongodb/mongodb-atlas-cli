@@ -25,8 +25,8 @@ cat <<EOF_GON_JSON > gon.json
     "source" : ["./dist/macos_darwin_amd64/mongocli"],
     "bundle_id" : "com.mongodb.mongocli",
     "apple_id": {
-      "username": "${ac_username}",
-      "password": "${ac_password}"
+      "username": "${ac_username:?}",
+      "password": "${ac_password:?}"
     },
     "sign" :{
       "application_identity" : "Developer ID Application: MongoDB, Inc. (4XWMY46275)"

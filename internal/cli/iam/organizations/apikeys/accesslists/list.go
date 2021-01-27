@@ -33,7 +33,7 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.ListOpts
 	id    string
-	store store.OrganizationAPIKeyWhitelistLister
+	store store.OrganizationAPIKeyAccessListLister
 }
 
 func (opts *ListOpts) init() error {
@@ -43,20 +43,18 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-
+	r, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) accessList list|ls <ID> [--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) accessList list|ls <apiKeyID> [--orgId orgId]
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list <apiKeyID>",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Short:   list,

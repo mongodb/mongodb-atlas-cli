@@ -45,6 +45,12 @@ func TestOutputOpts_parseTemplate(t *testing.T) {
 			want:    "default",
 			wantErr: false,
 		},
+		{
+			name:    "json-path",
+			fields:  fields{Output: "json-path=$.[0].id", Template: ""},
+			want:    "$.[0].id",
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		opts := &OutputOpts{
@@ -55,7 +61,7 @@ func TestOutputOpts_parseTemplate(t *testing.T) {
 		wantErr := tt.wantErr
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := opts.parseTemplate()
+			_, got, err := opts.parseTemplate()
 			if (err != nil) != wantErr {
 				t.Errorf("parseTemplate() error = %v, wantErr %v", err, wantErr)
 				return

@@ -23,17 +23,19 @@ import (
 
 	"github.com/mattn/go-isatty"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/jsonpathwriter"
 	"github.com/mongodb/mongocli/internal/jsonwriter"
 	"github.com/mongodb/mongocli/internal/templatewriter"
 )
 
 const (
 	jsonFormat     = "json"
+	jsonPath       = "json-path"
 	goTemplate     = "go-template"
 	goTemplateFile = "go-template-file"
 )
 
-var templateFormats = []string{goTemplate, goTemplateFile}
+var templateFormats = []string{goTemplate, goTemplateFile, jsonPath}
 
 type OutputOpts struct {
 	Template  string
@@ -93,10 +95,16 @@ func (opts *OutputOpts) Print(v interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
 		return jsonwriter.Print(opts.ConfigWriter(), v)
 	}
-	t, err := opts.parseTemplate()
+
+	outputFormat, t, err := opts.parseTemplate()
 	if err != nil {
 		return err
 	}
+
+	if outputFormat == jsonPath && t != "" {
+		return jsonpathwriter.Print(opts.ConfigWriter(), t, v)
+	}
+
 	if t != "" {
 		return templatewriter.Print(opts.ConfigWriter(), t, v)
 	}
@@ -105,8 +113,8 @@ func (opts *OutputOpts) Print(v interface{}) error {
 }
 
 // parseTemplate will try to find if the given format is a user given template, either by string or file and use it.
-// Current available user templates are  "go-template=Template string" and "go-template-file=path/to/template"
-func (opts *OutputOpts) parseTemplate() (string, error) {
+// Current available user templates are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
+func (opts *OutputOpts) parseTemplate() (outputTemplate, v string, e error) {
 	value := opts.Template
 	templateFormat := ""
 	for _, format := range templateFormats {
@@ -117,13 +125,14 @@ func (opts *OutputOpts) parseTemplate() (string, error) {
 			break
 		}
 	}
+
 	if templateFormat == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {
-			return "", fmt.Errorf("error loading template: %s, %v", value, err)
+			return "", "", fmt.Errorf("error loading template: %s, %v", value, err)
 		}
 
 		value = string(data)
 	}
-	return value, nil
+	return templateFormat, value, nil
 }

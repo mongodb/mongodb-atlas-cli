@@ -99,7 +99,8 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
-          - IAM_ASSUMED_ROLE_ARN
+          - E2E_TEST_BUCKET
+          - E2E_CLOUD_ROLE_ID
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}

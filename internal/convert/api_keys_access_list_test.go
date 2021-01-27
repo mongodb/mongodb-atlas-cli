@@ -17,9 +17,9 @@
 package convert
 
 import (
-	"reflect"
 	"testing"
 
+	"github.com/magiconair/properties/assert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,6 +30,10 @@ func TestFromWhitelistAPIKeysToAccessListAPIKeys(t *testing.T) {
 	}
 
 	tests := []test{
+		{
+			input: nil,
+			want:  nil,
+		},
 		{
 			input: &atlas.WhitelistAPIKeys{
 				Results: []*atlas.WhitelistAPIKey{
@@ -112,9 +116,7 @@ func TestFromWhitelistAPIKeysToAccessListAPIKeys(t *testing.T) {
 
 	for _, tc := range tests {
 		got := FromWhitelistAPIKeysToAccessListAPIKeys(tc.input)
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		assert.Equal(t, tc.want, got)
 	}
 }
 
@@ -125,6 +127,10 @@ func TestFromAccessListAPIKeysReqToWhitelistAPIKeysReq(t *testing.T) {
 	}
 
 	tests := []test{
+		{
+			input: nil,
+			want:  nil,
+		},
 		{
 			input: []*atlas.AccessListAPIKeysReq{
 				{
@@ -165,8 +171,6 @@ func TestFromAccessListAPIKeysReqToWhitelistAPIKeysReq(t *testing.T) {
 
 	for _, tc := range tests {
 		got := FromAccessListAPIKeysReqToWhitelistAPIKeysReq(tc.input)
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		assert.Equal(t, tc.want, got)
 	}
 }

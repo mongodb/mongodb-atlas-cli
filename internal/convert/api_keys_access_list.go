@@ -18,6 +18,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+// FromWhitelistAPIKeysToAccessListAPIKeys convert from atlas.WhitelistAPIKeys format to atlas.AccessListAPIKeys
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
 func FromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
 	if in == nil {
 		return nil
@@ -49,6 +51,8 @@ func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.Acc
 	}
 }
 
+// FromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
 func FromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
 	if in == nil {
 		return nil

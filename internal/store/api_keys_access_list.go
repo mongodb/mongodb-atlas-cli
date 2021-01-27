@@ -16,17 +16,18 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"strings"
-
-	"github.com/mongodb/mongocli/internal/convert"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/convert"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
+
+const resourceNotFound = 404
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
@@ -48,9 +49,10 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
-		if err != nil {
+		var target *atlas.ErrorResponse
+		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
-			if strings.Contains(err.Error(), "404") {
+			if target.HTTPCode == resourceNotFound {
 				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, convert.FromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
 				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
@@ -70,9 +72,10 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
-		if err != nil {
+		var target *atlas.ErrorResponse
+		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
-			if strings.Contains(err.Error(), "404") {
+			if target.HTTPCode == resourceNotFound {
 				_, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
 				return e
 			}
@@ -91,9 +94,10 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-		if err != nil {
+		var target *atlas.ErrorResponse
+		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
-			if strings.Contains(err.Error(), "404") {
+			if target.HTTPCode == resourceNotFound {
 				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
 				return convert.FromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}

@@ -20,17 +20,19 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistLister(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected = &mongodbatlas.WhitelistAPIKeys{
-		Results: []*mongodbatlas.WhitelistAPIKey{},
+	var expected = &mongodbatlas.AccessListAPIKeys{
+		Results: []*mongodbatlas.AccessListAPIKey{},
 	}
 
 	opts := &ListOpts{
@@ -39,11 +41,20 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		OrganizationAPIKeyWhitelists(opts.OrgID, opts.id, opts.NewListOptions()).
+		OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.OrgID, flag.Output, flag.Page, flag.Limit},
+	)
 }

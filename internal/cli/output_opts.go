@@ -23,17 +23,19 @@ import (
 
 	"github.com/mattn/go-isatty"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/jsonpathwriter"
 	"github.com/mongodb/mongocli/internal/jsonwriter"
 	"github.com/mongodb/mongocli/internal/templatewriter"
 )
 
 const (
 	jsonFormat     = "json"
+	jsonPath       = "json-path"
 	goTemplate     = "go-template"
 	goTemplateFile = "go-template-file"
 )
 
-var templateFormats = []string{goTemplate, goTemplateFile}
+var templateFormats = []string{goTemplate, goTemplateFile, jsonPath}
 
 type OutputOpts struct {
 	Template  string
@@ -89,35 +91,47 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 }
 
 // Print will evaluate the defined format and try to parse it accordingly outputting to the set writer
-func (opts *OutputOpts) Print(v interface{}) error {
+func (opts *OutputOpts) Print(o interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
-		return jsonwriter.Print(opts.ConfigWriter(), v)
+		return jsonwriter.Print(opts.ConfigWriter(), o)
 	}
-	t, err := opts.parseTemplate()
+
+	outputType, val := opts.outputTypeAndValue()
+	if outputType == jsonPath {
+		return jsonpathwriter.Print(opts.ConfigWriter(), val, o)
+	}
+
+	t, err := opts.template(outputType, val)
 	if err != nil {
 		return err
 	}
+
 	if t != "" {
-		return templatewriter.Print(opts.ConfigWriter(), t, v)
+		return templatewriter.Print(opts.ConfigWriter(), t, o)
 	}
-	_, err = fmt.Fprintln(opts.ConfigWriter(), v)
+	_, err = fmt.Fprintln(opts.ConfigWriter(), o)
 	return err
 }
 
-// parseTemplate will try to find if the given format is a user given template, either by string or file and use it.
-// Current available user templates are  "go-template=Template string" and "go-template-file=path/to/template"
-func (opts *OutputOpts) parseTemplate() (string, error) {
-	value := opts.Template
-	templateFormat := ""
+// outputTypeAndValue returns the output type and the associated value
+// Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
+func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
+	v = opts.Template
 	for _, format := range templateFormats {
 		format += "="
 		if strings.HasPrefix(opts.ConfigOutput(), format) {
-			value = opts.ConfigOutput()[len(format):]
-			templateFormat = format[:len(format)-1]
+			v = opts.ConfigOutput()[len(format):]
+			outputType = format[:len(format)-1]
 			break
 		}
 	}
-	if templateFormat == goTemplateFile {
+
+	return
+}
+
+// template returns the correct template from the output type
+func (opts *OutputOpts) template(outputType, value string) (string, error) {
+	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {
 			return "", fmt.Errorf("error loading template: %s, %v", value, err)

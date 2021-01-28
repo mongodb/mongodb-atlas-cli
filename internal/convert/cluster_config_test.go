@@ -958,6 +958,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		current := tc.current
 		expected := tc.expected
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			if err := changes.PatchAutomationConfig(current); err != nil {
 				t.Fatalf("PatchAutomationConfig() unexpected error: %v\n", err)
 			}

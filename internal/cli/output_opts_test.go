@@ -56,6 +56,7 @@ func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 		}
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			_, got := opts.outputTypeAndValue()
 			if got != want {
 				t.Errorf("parseTemplate() got = %v, want %v", got, want)

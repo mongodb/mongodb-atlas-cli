@@ -119,6 +119,7 @@ func TestGenerateAliases(t *testing.T) {
 		want := tt.want
 		args := tt.args
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := GenerateAliases(args.use, args.extra...)
 			assert.Equal(t, got, want)
 		})

@@ -120,6 +120,7 @@ func TestCredentials(t *testing.T) {
 }
 
 func TestFlagInSlice(t *testing.T) {
+	t.Parallel()
 	type args struct {
 		value       string
 		flag        string
@@ -155,6 +156,7 @@ func TestFlagInSlice(t *testing.T) {
 		validValues := tt.args.validValues
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if err := FlagInSlice(value, flag, validValues); (err != nil) != wantErr {
 				t.Errorf("FlagInSlice() error = %v, wantErr %v", err, wantErr)
 			}
@@ -163,6 +165,7 @@ func TestFlagInSlice(t *testing.T) {
 }
 
 func TestOptionalURL(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name    string
 		val     interface{}
@@ -193,6 +196,7 @@ func TestOptionalURL(t *testing.T) {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if err := OptionalURL(val); (err != nil) != wantErr {
 				t.Errorf("OptionalURL() error = %v, wantErr %v", err, wantErr)
 			}

@@ -28,28 +28,24 @@ func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 		Output    string
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    string
-		wantErr bool
+		name   string
+		fields fields
+		want   string
 	}{
 		{
-			name:    "go-template",
-			fields:  fields{Output: "go-template=test", Template: ""},
-			want:    "test",
-			wantErr: false,
+			name:   "go-template",
+			fields: fields{Output: "go-template=test", Template: ""},
+			want:   "test",
 		},
 		{
-			name:    "not-valid",
-			fields:  fields{Output: "not-valid", Template: "default"},
-			want:    "default",
-			wantErr: false,
+			name:   "not-valid",
+			fields: fields{Output: "not-valid", Template: "default"},
+			want:   "default",
 		},
 		{
-			name:    "json-path",
-			fields:  fields{Output: "json-path=$.[0].id", Template: ""},
-			want:    "$.[0].id",
-			wantErr: false,
+			name:   "json-path",
+			fields: fields{Output: "json-path=$.[0].id", Template: ""},
+			want:   "$.[0].id",
 		},
 	}
 	for _, tt := range tests {

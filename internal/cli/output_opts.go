@@ -115,19 +115,18 @@ func (opts *OutputOpts) Print(o interface{}) error {
 
 // outputTypeAndValue returns the output type and the associated value
 // Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
-func (opts *OutputOpts) outputTypeAndValue() (outputTemplate, v string) {
-	value := opts.Template
-	outputType := ""
+func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
+	v = opts.Template
 	for _, format := range templateFormats {
 		format += "="
 		if strings.HasPrefix(opts.ConfigOutput(), format) {
-			value = opts.ConfigOutput()[len(format):]
+			v = opts.ConfigOutput()[len(format):]
 			outputType = format[:len(format)-1]
 			break
 		}
 	}
 
-	return outputType, value
+	return
 }
 
 // template returns the correct template from the output type

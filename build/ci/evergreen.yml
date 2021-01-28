@@ -1,3 +1,17 @@
+# Copyright 2021 MongoDB Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
 stepback: true
 command_type: system
@@ -85,6 +99,8 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
+          - E2E_TEST_BUCKET
+          - E2E_CLOUD_ROLE_ID
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}
@@ -258,6 +274,18 @@ functions:
           <<: *go_options
         silent: true
         binary: build/package/set-up-gon.sh
+  "check license header":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - workdir
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
@@ -435,6 +463,11 @@ tasks:
       - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
+  - name: license_check
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:
@@ -626,6 +659,26 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,networking
+  # datalake requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datalake_e2e
+    tags: ["e2e","datalake","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datalake
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
@@ -1369,6 +1422,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .networking .atlas"
+  - name: e2e_atlas_datalake
+    display_name: "E2E Atlas Datalake Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
     display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:

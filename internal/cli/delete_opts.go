@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 		err = f(a[0], opts.Entry)
 	case func(string, string, string) error:
 		err = f(a[0], a[1], opts.Entry)
+	case func(string, string, string, string) error:
+		err = f(a[0], a[1], a[2], opts.Entry)
 	default:
 		return errors.New("invalid")
 	}
@@ -80,6 +82,16 @@ func (opts *DeleteOpts) Prompt() error {
 	}
 
 	p := prompt.NewDeleteConfirm(opts.Entry)
+	return survey.AskOne(p, &opts.Confirm)
+}
+
+// PromptWithMessage confirms that the resource should be deleted
+func (opts *DeleteOpts) PromptWithMessage(message string) error {
+	if opts.Confirm {
+		return nil
+	}
+
+	p := prompt.NewConfirm(fmt.Sprintf(message, opts.Entry))
 	return survey.AskOne(p, &opts.Confirm)
 }
 

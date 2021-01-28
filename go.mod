@@ -12,7 +12,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.3.1 // indirect
-	github.com/mongodb-forks/digest v1.0.1
+	github.com/mongodb-forks/digest v1.0.2
 	github.com/openlyinc/pointy v1.1.2
 	github.com/pelletier/go-toml v1.8.1
 	github.com/spf13/afero v1.5.1
@@ -20,10 +20,10 @@ require (
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
-	go.mongodb.org/atlas v0.6.0
-	go.mongodb.org/ops-manager v0.16.2
+	go.mongodb.org/atlas v0.7.1-0.20210127130323-908c0535d2f7
+	go.mongodb.org/ops-manager v0.16.3
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect

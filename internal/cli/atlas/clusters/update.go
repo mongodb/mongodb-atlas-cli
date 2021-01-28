@@ -90,6 +90,7 @@ func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
 	out.MongoURIUpdated = ""
 	out.StateName = ""
 	out.MongoDBVersion = ""
+	out.ConnectionStrings = nil
 
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = opts.mdbVersion

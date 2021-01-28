@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ const (
 	Forever                         = "Acknowledge an alert “forever”."
 	Status                          = "Alert's status."
 	Until                           = "Acknowledged until a date."
+	ConnectionStringType            = "When set to 'private' retrieves the Network-peering-endpoint-aware connection string."
 	Limit                           = "Number of items per page."
 	Username                        = "Username of the user."
 	BackupStatus                    = "Current (or desired) status of the backup configuration."
@@ -69,6 +70,7 @@ const (
 	Mobile                          = "The user’s mobile or cell phone number."
 	Period                          = "Duration in ISO 8601 notation that specifies how far back in the past to retrieve measurements."
 	Roles                           = "User's roles and the databases or collections on which the roles apply."
+	Scopes                          = "Array of clusters and Atlas Data Lakes that this user has access to."
 	DataLakeRole                    = "Amazon Resource Name (ARN) of the role which Atlas Data Lake uses for accessing the data stores."
 	DataLakeRegion                  = "Name of the region to which Data Lake routes client connections for data processing."
 	DataLakeTestBucket              = `Name of an S3 data bucket which Data Lake uses to validate the provided role.`
@@ -173,6 +175,9 @@ const (
 	DatabaseUser                    = "Username of a database user."
 	MonthsUntilExpiration           = "Number of months that the certificate is valid for."
 	Collection                      = "Collection name."
+	Append                          = "The input action and inheritedRoles will be appended to the existing role."
+	PrivilegeAction                 = "List of actions per database and collection, if no database or collections is provided then cluster is assumed"
+	InheritedRoles                  = "Each object in the inheritedRoles array represents a key-value pair indicating the inherited role and the database on which the role is granted."
 	Analyzer                        = "Analyzer to use when creating the index"
 	SearchAnalyzer                  = "Analyzer to use when searching the index."
 	Dynamic                         = "Indicates whether the index uses dynamic or static mappings."
@@ -214,6 +219,8 @@ const (
 	AccessListIPEntry               = "IP address to be allowed for a given API key."
 	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
+	PrivateEndpointIDAzure          = "Unique identifier of the Azure private endpoint resource."
+	PrivateEndpointIPAddressAzure   = "Private IP address of the private endpoint network interface you created in your Azure VNet."
 	AccountID                       = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID               = "Unique identifier of your New Relic account."
 	LicenceKey                      = "Your License Key."
@@ -230,6 +237,7 @@ const (
 	AtlasCIDRBlock                  = "CIDR block that Atlas uses for your clusters."
 	VNet                            = "Name of your Azure VNet."
 	ResourceGroup                   = "Name of your Azure resource group."
+	IAMAssumedRoleARN               = "Role ARN that Atlas assumes to access your AWS account."
 	DirectoryID                     = "Unique identifier for an Azure AD directory."
 	SubscriptionID                  = "Unique identifier of the Azure subscription in which the VNet resides."
 	GCPProjectID                    = "Unique identifier of the GCP project in which the network peer resides."

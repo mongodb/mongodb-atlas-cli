@@ -36,8 +36,8 @@ func (opts *ListOpts) initStore() error {
 }
 
 var listTemplate = `NAME	SYSTEM ID	POLICY
-{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
-{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}
+{{if .ExternalManagementSystem}}{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
+{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

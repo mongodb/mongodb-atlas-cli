@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestOutputOpts_parseTemplate(t *testing.T) {
+func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 	type fields struct {
 		Template  string
 		OutWriter io.Writer
@@ -58,14 +58,9 @@ func TestOutputOpts_parseTemplate(t *testing.T) {
 			OutWriter: tt.fields.OutWriter,
 			Output:    tt.fields.Output,
 		}
-		wantErr := tt.wantErr
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
-			_, got, err := opts.parseTemplate()
-			if (err != nil) != wantErr {
-				t.Errorf("parseTemplate() error = %v, wantErr %v", err, wantErr)
-				return
-			}
+			_, got := opts.outputTypeAndValue()
 			if got != want {
 				t.Errorf("parseTemplate() got = %v, want %v", got, want)
 			}

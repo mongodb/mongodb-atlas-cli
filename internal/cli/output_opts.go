@@ -91,48 +91,54 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 }
 
 // Print will evaluate the defined format and try to parse it accordingly outputting to the set writer
-func (opts *OutputOpts) Print(v interface{}) error {
+func (opts *OutputOpts) Print(o interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
-		return jsonwriter.Print(opts.ConfigWriter(), v)
+		return jsonwriter.Print(opts.ConfigWriter(), o)
 	}
 
-	outputFormat, t, err := opts.parseTemplate()
+	outputType, val := opts.outputTypeAndValue()
+	if outputType == jsonPath {
+		return jsonpathwriter.Print(opts.ConfigWriter(), val, o)
+	}
+
+	t, err := opts.template(outputType, val)
 	if err != nil {
-		return err
-	}
-
-	if outputFormat == jsonPath && t != "" {
-		return jsonpathwriter.Print(opts.ConfigWriter(), t, v)
+		return nil
 	}
 
 	if t != "" {
-		return templatewriter.Print(opts.ConfigWriter(), t, v)
+		return templatewriter.Print(opts.ConfigWriter(), t, o)
 	}
-	_, err = fmt.Fprintln(opts.ConfigWriter(), v)
+	_, err = fmt.Fprintln(opts.ConfigWriter(), o)
 	return err
 }
 
-// parseTemplate will try to find if the given format is a user given template, either by string or file and use it.
-// Current available user templates are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
-func (opts *OutputOpts) parseTemplate() (outputTemplate, v string, e error) {
+// outputTypeAndValue returns the output type and the associated value
+// Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
+func (opts *OutputOpts) outputTypeAndValue() (outputTemplate, v string) {
 	value := opts.Template
-	templateFormat := ""
+	outputType := ""
 	for _, format := range templateFormats {
 		format += "="
 		if strings.HasPrefix(opts.ConfigOutput(), format) {
 			value = opts.ConfigOutput()[len(format):]
-			templateFormat = format[:len(format)-1]
+			outputType = format[:len(format)-1]
 			break
 		}
 	}
 
-	if templateFormat == goTemplateFile {
+	return outputType, value
+}
+
+// template returns the correct template from the output type
+func (opts *OutputOpts) template(outputType, value string) (v string, e error) {
+	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {
-			return "", "", fmt.Errorf("error loading template: %s, %v", value, err)
+			return "", fmt.Errorf("error loading template: %s, %v", value, err)
 		}
 
 		value = string(data)
 	}
-	return templateFormat, value, nil
+	return value, nil
 }

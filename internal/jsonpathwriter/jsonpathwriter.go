@@ -23,15 +23,18 @@ import (
 )
 
 func Print(w io.Writer, path string, obj interface{}) error {
+	if path == "" {
+		return fmt.Errorf("path not found. Please use -o json-path='path'")
+	}
+
 	jsonString, err := json.Marshal(obj)
 	if err != nil {
 		return err
 	}
 
-	val := interface{}(nil)
-	err = json.Unmarshal(jsonString, &val)
-	if err != nil {
-		return err
+	var val interface{}
+	if e := json.Unmarshal(jsonString, &val); e != nil {
+		return e
 	}
 
 	v, err := jsonpath.Get(path, val)

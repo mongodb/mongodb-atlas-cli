@@ -130,7 +130,7 @@ func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 }
 
 // template returns the correct template from the output type
-func (opts *OutputOpts) template(outputType, value string) (v string, e error) {
+func (opts *OutputOpts) template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {

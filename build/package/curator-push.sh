@@ -19,13 +19,13 @@ export BARQUE_USERNAME
 export BARQUE_API_KEY
 case "${NOTARY_KEY_NAME}" in
     server-4.2)
-        export NOTARY_TOKEN=${signing_auth_token_42}
+        export NOTARY_TOKEN=${signing_auth_token_42:?}
         ;;
     server-4.4)
-        export NOTARY_TOKEN=${signing_auth_token_44}
+        export NOTARY_TOKEN=${signing_auth_token_44:?}
         ;;
     server-4.6)
-        export NOTARY_TOKEN=${signing_auth_token_46}
+        export NOTARY_TOKEN=${signing_auth_token_46:?}
         ;;
 esac
 
@@ -38,10 +38,10 @@ set -Eeou pipefail
 curator \
     --level debug \
     repo submit \
-    --service "${barque_url}" \
+    --service "${barque_url:?}" \
     --config build/ci/repo_config.yaml \
-    --distro "${distro}" \
-    --edition "${edition}" \
-    --version "${server_version}" \
+    --distro "${distro:?}" \
+    --edition "${edition:?}" \
+    --version "${server_version:?}" \
     --arch x86_64 \
-    --packages "https://s3.amazonaws.com/mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/${ext}.tgz"
+    --packages "https://s3.amazonaws.com/mongodb-mongocli-build/${project:?}/dist/${revision:?}_${created_at:?}/${ext:?}.tgz"

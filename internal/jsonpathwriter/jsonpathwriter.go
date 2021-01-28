@@ -24,7 +24,7 @@ import (
 
 func Print(w io.Writer, path string, obj interface{}) error {
 	if path == "" {
-		return fmt.Errorf("path not found. Please use -o json-path='path'")
+		return errors.New("empty jsonpath")
 	}
 
 	jsonString, err := json.Marshal(obj)

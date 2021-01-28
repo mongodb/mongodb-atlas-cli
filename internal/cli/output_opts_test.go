@@ -21,29 +21,31 @@ import (
 	"testing"
 )
 
-func TestOutputOpts_parseTemplate(t *testing.T) {
+func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 	type fields struct {
 		Template  string
 		OutWriter io.Writer
 		Output    string
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    string
-		wantErr bool
+		name   string
+		fields fields
+		want   string
 	}{
 		{
-			name:    "go-template",
-			fields:  fields{Output: "go-template=test", Template: ""},
-			want:    "test",
-			wantErr: false,
+			name:   "go-template",
+			fields: fields{Output: "go-template=test", Template: ""},
+			want:   "test",
 		},
 		{
-			name:    "not-valid",
-			fields:  fields{Output: "not-valid", Template: "default"},
-			want:    "default",
-			wantErr: false,
+			name:   "not-valid",
+			fields: fields{Output: "not-valid", Template: "default"},
+			want:   "default",
+		},
+		{
+			name:   "json-path",
+			fields: fields{Output: "json-path=$.[0].id", Template: ""},
+			want:   "$.[0].id",
 		},
 	}
 	for _, tt := range tests {
@@ -52,14 +54,9 @@ func TestOutputOpts_parseTemplate(t *testing.T) {
 			OutWriter: tt.fields.OutWriter,
 			Output:    tt.fields.Output,
 		}
-		wantErr := tt.wantErr
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := opts.parseTemplate()
-			if (err != nil) != wantErr {
-				t.Errorf("parseTemplate() error = %v, wantErr %v", err, wantErr)
-				return
-			}
+			_, got := opts.outputTypeAndValue()
 			if got != want {
 				t.Errorf("parseTemplate() got = %v, want %v", got, want)
 			}

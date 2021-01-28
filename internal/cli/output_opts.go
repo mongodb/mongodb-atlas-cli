@@ -103,7 +103,7 @@ func (opts *OutputOpts) Print(o interface{}) error {
 
 	t, err := opts.template(outputType, val)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	if t != "" {

@@ -39,11 +39,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const atlasShort = "Atlas operations."
+const (
+	Use        = "atlas"
+	atlasShort = "Atlas operations."
+)
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
+		Use:   Use,
 		Short: atlasShort,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudService)

@@ -257,5 +257,7 @@ func DefaultMongoDBMajorVersion() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return s.DefaultMongoDBVersion()
+	defaultMongoDBMajorVersion, _ = s.DefaultMongoDBVersion()
+
+	return defaultMongoDBMajorVersion, nil
 }

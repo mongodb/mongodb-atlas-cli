@@ -35,13 +35,13 @@ var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, r
 
 const (
 	yes                       = "yes"
-	responseHeaderTimeout     = 10 * time.Minute
-	tlsHandshakeTimeout       = 10 * time.Second
-	timeout                   = 10 * time.Second
+	responseHeaderTimeout     = 1 * time.Minute
+	tlsHandshakeTimeout       = 5 * time.Second
+	timeout                   = 5 * time.Second
 	keepAlive                 = 30 * time.Second
-	maxIdleConns              = 100
+	maxIdleConns              = 5
 	maxIdleConnsPerHost       = 4
-	idleConnTimeout           = 90 * time.Second
+	idleConnTimeout           = 30 * time.Second
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
 )
@@ -52,6 +52,18 @@ type Store struct {
 	caCertificate string
 	skipVerify    string
 	client        interface{}
+}
+
+var defaultTransport = &http.Transport{
+	DialContext: (&net.Dialer{
+		Timeout:   timeout,
+		KeepAlive: keepAlive,
+	}).DialContext,
+	MaxIdleConns:          maxIdleConns,
+	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+	Proxy:                 http.ProxyFromEnvironment,
+	IdleConnTimeout:       idleConnTimeout,
+	ExpectContinueTimeout: expectContinueTimeout,
 }
 
 func customCATransport(ca []byte) http.RoundTripper {
@@ -136,7 +148,7 @@ func defaultClient(c Config) (*http.Client, error) {
 	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
 		client.Transport = skipVerifyTransport()
 	} else {
-		client.Transport = http.DefaultTransport
+		client.Transport = defaultTransport
 	}
 
 	return client, nil

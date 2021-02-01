@@ -89,13 +89,13 @@ func rootBuilder() {
 		rootCmd.AddCommand(atlas.Builder())
 	}
 	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == cloudmanager.Use {
-		cloudmanager.Builder()
+		rootCmd.AddCommand(cloudmanager.Builder())
 	}
 	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == opsmanager.Use {
-		opsmanager.Builder()
+		rootCmd.AddCommand(opsmanager.Builder())
 	}
 	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == iam.Use {
-		iam.Builder()
+		rootCmd.AddCommand(iam.Builder())
 	}
 	rootCmd.AddCommand(
 		completionCmd,

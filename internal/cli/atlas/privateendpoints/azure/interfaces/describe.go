@@ -39,7 +39,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 var describeTemplate = `ID	IP ADDRESS	STATUS	ERROR
-{{.PrivateEndpointResourceID}}	{{.PrivateEndpointIPAddress}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
+{{.PrivateEndpointResourceID}}	{{.PrivateEndpointIPAddress}}	{{.AzureStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {

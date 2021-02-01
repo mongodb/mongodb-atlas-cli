@@ -39,7 +39,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 var describeTemplate = `ID	STATUS	ERROR
-{{.InterfaceEndpointID}}	{{.ConnectionStatus}}	{{.ErrorMessage}}
+{{.InterfaceEndpointID}}	{{.AWSConnectionStatus}}	{{.ErrorMessage}}
 `
 
 func (opts *DescribeOpts) Run() error {

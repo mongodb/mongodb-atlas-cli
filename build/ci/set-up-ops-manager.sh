@@ -36,7 +36,7 @@ EOF
 
 cd ../..
 
-export MCLI_OPS_MANAGER_URL="http://${host}:9080/"
+MCLI_OPS_MANAGER_URL="http://${host}:9080/"
 
 echo "set service"
   ./bin/mongocli config set service "${ops_manager_service:?}"
@@ -53,8 +53,6 @@ email=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team.com
 echo "create first user"
 MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" -o="go-template={{.APIKey}}")
 
-echo "MCLI_PRIVATE_API_KEY= ${MCLI_PRIVATE_API_KEY}"
-
 echo "set public_api_key"
 ./bin/mongocli config set public_api_key "${email}"
 
@@ -63,8 +61,6 @@ echo "set private_api_key"
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
-
-cat "${XDG_CONFIG_HOME}/mongocli.toml"
 
 echo "create project"
 MCLI_PROJECT_ID=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.ID}}")

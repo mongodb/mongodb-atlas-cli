@@ -253,8 +253,8 @@ github.com/xdg/stringprep v1.0.0/go.mod h1:Jhud4/sHMO4oL310DaZAKk9ZaJ08SJfe+sJh0
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.mongodb.org/atlas v0.7.0/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
-go.mongodb.org/atlas v0.7.1-0.20210127130323-908c0535d2f7 h1:w6CIsU2FVrVKabYbfHF5VxZkz8hRdfRHokkNaau0Ll8=
-go.mongodb.org/atlas v0.7.1-0.20210127130323-908c0535d2f7/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
+go.mongodb.org/atlas v0.7.2-0.20210201161153-9669ea80d4d2 h1:097127emSQhG6Mnbs0wich0Oh0YjmMzxnQlso5vF06Y=
+go.mongodb.org/atlas v0.7.2-0.20210201161153-9669ea80d4d2/go.mod h1:CIaBeO8GLHhtYLw7xSSXsw7N90Z4MFY87Oy9qcPyuEs=
 go.mongodb.org/ops-manager v0.16.3 h1:+2f1apbhbbv7YrCedwMdeBYXYqj4iqnJFKN/Kmfs3BU=
 go.mongodb.org/ops-manager v0.16.3/go.mod h1:IVzTSchrHhmKPOAx91WCueO0U/YHS04ItVMC443eX8U=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

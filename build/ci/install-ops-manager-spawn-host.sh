@@ -42,8 +42,9 @@ with open(sys.argv[1]) as hostsfile:
         print(host["dns_name"])
 EOF
 )
+
 for host in ${hosts}; do
-ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}@${host}" 'bash -s' <<'ENDSSH'
+ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}@${host}" ARCHIVE="${ARCHIVE:?}" 'bash -s' <<'ENDSSH'
   # commands to run on remote host
 
   #install ego
@@ -52,8 +53,7 @@ ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}
   source ~/.bashrc
 
   #install mms
-  ego ops_manager_install_version --version 4.4.6 --mongodb-version 4.2.8
-
+  ego ops_manager_install_from_link --archive "$ARCHIVE" --mongodb-version "4.2.8" --central-url "http://localhost:9080"
   exit
 
 ENDSSH

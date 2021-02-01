@@ -34,70 +34,52 @@ EOF
 
 )
 
-cd ..
-cd ..
+cd ../..
 
+export MCLI_OPS_MANAGER_URL="http://${host}:9080/"
 
 echo "set service"
-  ./bin/mongocli config set service ops-manager
+  ./bin/mongocli config set service "${ops_manager_service:?}"
 
 echo "set ops_manager_url"
-  ./bin/mongocli config set ops_manager_url "http://${host}:9080/"
+  ./bin/mongocli config set ops_manager_url "${MCLI_OPS_MANAGER_URL}"
+
+echo "generate password for owner"
+password=$(date +%s | sha256sum | base64 | head -c 8)0_
+
+echo "generate email for owner"
+email=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team.com
 
 echo "create first user"
-./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email evergreenTest@gmail.com --password "evergreen1234_" -o json > apikeys.json
+MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" -o="go-template={{.APIKey}}")
 
-cat apikeys.json
-publicKey=$(
-  cat <<EOF | python - apikeys.json
-import sys
-import json
-with open(sys.argv[1]) as jsonfile:
-    user = json.load(jsonfile)
-    print(user["programmaticApiKey"]["publicKey"])
-EOF
-
-)
-
-privateKey=$(
-  cat <<EOF | python - apikeys.json
-import sys
-import json
-with open(sys.argv[1]) as jsonfile:
-    user = json.load(jsonfile)
-    print(user["programmaticApiKey"]["privateKey"])
-EOF
-
-)
+echo "MCLI_PRIVATE_API_KEY= ${MCLI_PRIVATE_API_KEY}"
 
 echo "set public_api_key"
-./bin/mongocli config set public_api_key "${publicKey}"
+./bin/mongocli config set public_api_key "${email}"
 
 echo "set private_api_key"
-./bin/mongocli config set private_api_key "${privateKey}"
+./bin/mongocli config set private_api_key "${MCLI_PRIVATE_API_KEY}"
 
 echo "create organization"
-./bin/mongocli iam organizations create myOrg -o json > organization.json
+MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
 
-cat organization.json
-organizationID=$(
-  cat <<EOF | python - organization.json
-import sys
-import json
-with open(sys.argv[1]) as jsonfile:
-    org = json.load(jsonfile)
-    print(org["id"])
+cat "${XDG_CONFIG_HOME}/mongocli.toml"
+
+echo "create project"
+MCLI_PROJECT_ID=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.ID}}")
+
+
+cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
+[default]
+  ops_manager_url = "${MCLI_OPS_MANAGER_URL}"
+  service = "${ops_manager_service:?}"
+  public_api_key = "${email}"
+  private_api_key = "${MCLI_PRIVATE_API_KEY}"
+  org_id = "${MCLI_ORG_ID}"
+  project_id = "${MCLI_PROJECT_ID}"
+
 EOF
 
-)
-
-# This mongocli command returns an error when the user has been created with "mongocli om owner create" but the project is created anyway
-# More info: https://jira.mongodb.org/browse/CLOUDP-76824
-set +e
-echo "create project"
-./bin/mongocli iam projects create myProj --orgId "${organizationID}" -o json
-
-set -e
-echo "get project id"
-./bin/mongocli iam project list --orgId "${organizationID}" -o json > project.json
-cat project.json
+echo "print mongocli.toml"
+cat "${XDG_CONFIG_HOME}/mongocli.toml"

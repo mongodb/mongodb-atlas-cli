@@ -1,0 +1,8 @@
+[default]
+  ops_manager_url = "11111"
+  private_api_key = ""
+  public_api_key = ""
+  org_id = ""
+  project_id = ""
+  service = "ops-manager"
+

@@ -118,14 +118,12 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
-        working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./run-e2e-test-ops-manager.sh
-        args: ['-h', 'hosts.json']
+        working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
+        command: make e2e-test
   "deploy spawn host":
     - command: shell.exec
       type: setup
@@ -168,13 +166,24 @@ functions:
           LC_GROUP_ID: ${automation_agent_mms_group_id}
           BASE_URL: ${mcli_ops_manager_url}
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install ops manager":
+  "install ops manager 4.4":
     - command: subprocess.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./install-ops-manager-spawn-host.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+        env:
+          ARCHIVE: ${ops_manager_4_4_archive}
+  "install ops manager 4.2":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./install-ops-manager-spawn-host.sh
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+        env:
+          ARCHIVE: ${ops_manager_4_2_archive}
   "set-up ops manager":
     - command: subprocess.exec
       type: setup
@@ -182,8 +191,12 @@ functions:
         add_to_path:
           - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli/build/ci
+        include_expansions_in_env:
+          - ops_manager_service
         binary: ./set-up-ops-manager.sh
         args: ['-h', 'hosts.json']
+        env:
+          XDG_CONFIG_HOME: ${workdir}
   "lint":
     - command: shell.exec
       type: test
@@ -732,8 +745,8 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
-  - name: ops_manager_generic_e2e
-    tags: ["e2e","generic","cloudmanager"]
+  - name: ops_manager_generic_4_4_e2e
+    tags: ["e2e","generic","opsmanager"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -744,11 +757,28 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "install ops manager"
+      - func: "install ops manager 4.4"
       - func: "set-up ops manager"
       - func: "e2e test ops manager"
         vars:
-          E2E_TAGS: cloudmanager,generic
+          E2E_TAGS: opsmanager,generic
+  - name: ops_manager_generic_4_2_e2e
+    tags: ["e2e","generic","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager 4.2"
+      - func: "set-up ops manager"
+      - func: "e2e test ops manager"
+        vars:
+          E2E_TAGS: opsmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]

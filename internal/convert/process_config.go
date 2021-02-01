@@ -62,6 +62,7 @@ type ProcessConfig struct {
 	Disabled               bool                    `yaml:"disabled" json:"disabled"`
 	Hidden                 *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
 	Security               *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
+	SetParameter           *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
 	TLS                    *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
 	Version                string                  `yaml:"version,omitempty" json:"version,omitempty"`
 	WiredTiger             *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
@@ -147,6 +148,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		FCVersion:      p.FeatureCompatibilityVersion,
 		Hostname:       p.Hostname,
 		Name:           p.Name,
+		SetParameter:   p.Args26.SetParameter,
 	}
 
 	if p.Args26.Storage != nil {
@@ -205,6 +207,7 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 		FCVersion:      p.FeatureCompatibilityVersion,
 		Hostname:       p.Hostname,
 		Name:           p.Name,
+		SetParameter:   p.Args26.SetParameter,
 	}
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
@@ -385,6 +388,9 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 		FeatureCompatibilityVersion: p.FCVersion,
 		Hostname:                    p.Hostname,
 		Name:                        p.Name,
+	}
+	if p.SetParameter != nil {
+		process.Args26.SetParameter = p.SetParameter
 	}
 	return process
 }

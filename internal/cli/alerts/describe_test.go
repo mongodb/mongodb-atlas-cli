@@ -71,7 +71,6 @@ func TestDescribeOpts_Run(t *testing.T) {
 		cmd := tt.cmd
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			if wantErr {
 				mockStore.
 					EXPECT().

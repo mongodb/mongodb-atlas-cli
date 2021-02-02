@@ -24,78 +24,120 @@ import (
 )
 
 func TestURL(t *testing.T) {
-	t.Run("Valid URL", func(t *testing.T) {
-		err := URL("http://test.com/")
-		if err != nil {
-			t.Fatalf("URL() unexpected error %v\n", err)
-		}
-	})
-	t.Run("invalid value", func(t *testing.T) {
-		err := URL(1)
-		if err == nil {
-			t.Fatalf("URL() unexpected error %v\n", err)
-		}
-	})
-	t.Run("missing trailing slash", func(t *testing.T) {
-		err := URL("http://test.com")
-		if err == nil {
-			t.Fatalf("URL() unexpected error %v\n", err)
-		}
-	})
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "Valid URL",
+			val:     "http://test.com/",
+			wantErr: false,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
+		{
+			name:    "missing trailing slash",
+			val:     "http://test.com",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if err := URL(val); (err != nil) != wantErr {
+				t.Errorf("URL() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
 }
 
 func TestOptionalObjectID(t *testing.T) {
-	t.Run("Empty value", func(t *testing.T) {
-		err := OptionalObjectID("")
-		if err != nil {
-			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
-		}
-	})
-	t.Run("nil value", func(t *testing.T) {
-		err := OptionalObjectID(nil)
-		if err != nil {
-			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
-		}
-	})
-	t.Run("Valid ObjectID", func(t *testing.T) {
-		err := OptionalObjectID("5e9f088b4797476aa0a5d56a")
-		if err != nil {
-			t.Fatalf("OptionalObjectID() unexpected error %v\n", err)
-		}
-	})
-	t.Run("Short ObjectID", func(t *testing.T) {
-		err := OptionalObjectID("5e9f088b4797476aa0a5d56")
-		if err == nil {
-			t.Fatal("OptionalObjectID() expected an error\n")
-		}
-	})
-	t.Run("Invalid ObjectID", func(t *testing.T) {
-		err := OptionalObjectID("5e9f088b4797476aa0a5d56z")
-		if err == nil {
-			t.Fatal("OptionalObjectID() expected an error\n")
-		}
-	})
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "Empty value",
+			val:     "",
+			wantErr: false,
+		},
+		{
+			name:    "nil value",
+			val:     nil,
+			wantErr: false,
+		},
+		{
+			name:    "Valid ObjectID",
+			val:     "5e9f088b4797476aa0a5d56a",
+			wantErr: false,
+		},
+		{
+			name:    "Short ObjectID",
+			val:     "5e9f088b4797476aa0a5d56",
+			wantErr: true,
+		},
+		{
+			name:    "Invalid ObjectID",
+			val:     "5e9f088b4797476aa0a5d56z",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if err := OptionalObjectID(val); (err != nil) != wantErr {
+				t.Errorf("OptionalObjectID() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
 }
 
 func TestObjectID(t *testing.T) {
-	t.Run("Valid ObjectID", func(t *testing.T) {
-		err := ObjectID("5e9f088b4797476aa0a5d56a")
-		if err != nil {
-			t.Fatalf("ObjectID() unexpected error %v\n", err)
-		}
-	})
-	t.Run("Short ObjectID", func(t *testing.T) {
-		err := ObjectID("5e9f088b4797476aa0a5d56")
-		if err == nil {
-			t.Fatal("ObjectID() expected an error\n")
-		}
-	})
-	t.Run("Invalid ObjectID", func(t *testing.T) {
-		err := ObjectID("5e9f088b4797476aa0a5d56z")
-		if err == nil {
-			t.Fatal("ObjectID() expected an error\n")
-		}
-	})
+	tests := []struct {
+		name    string
+		val     string
+		wantErr bool
+	}{
+		{
+			name:    "Empty value",
+			val:     "",
+			wantErr: true,
+		},
+		{
+			name:    "Valid ObjectID",
+			val:     "5e9f088b4797476aa0a5d56a",
+			wantErr: false,
+		},
+		{
+			name:    "Short ObjectID",
+			val:     "5e9f088b4797476aa0a5d56",
+			wantErr: true,
+		},
+		{
+			name:    "Invalid ObjectID",
+			val:     "5e9f088b4797476aa0a5d56z",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if err := ObjectID(val); (err != nil) != wantErr {
+				t.Errorf("OptionalObjectID() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
 }
 
 func TestCredentials(t *testing.T) {

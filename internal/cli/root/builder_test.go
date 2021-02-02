@@ -92,6 +92,13 @@ func TestBuilder(t *testing.T) {
 				argsWithoutProg: []string{"completion"},
 			},
 		},
+		{
+			name: "--version",
+			want: 6,
+			args: args{
+				argsWithoutProg: []string{"completion"},
+			},
+		},
 	}
 	var profile string
 	for _, tt := range tests {

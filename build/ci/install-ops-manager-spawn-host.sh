@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020 MongoDB Inc
+# Copyright 2021 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,9 +29,13 @@ while getopts 'i:h:g:u:a:b:' opt; do
   i) keyfile="${OPTARG}" ;; # SSH identity file
   u) user="${OPTARG}" ;; # Username on the remote host
   h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
-  *) echo "invalid option for install-agent-spawn-host $1" ; _print_usage "$@" ; exit 1 ;;
+  *) echo "invalid option for install-ops-manager-spawn-host $1" ; _print_usage "$@" ; exit 1 ;;
   esac
 done
+
+# Install ego
+curl -sL https://raw.githubusercontent.com/mongodb-labs/ego/master/install.sh | bash
+export EGO_DEBUG=1
 
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
@@ -45,12 +49,19 @@ with open(sys.argv[1]) as hostsfile:
         print(host["dns_name"])
 EOF
 )
+
 for host in ${hosts}; do
-    echo "Seeding ${host}"
-    ./ego seed "${user}@${host}"
+ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}@${host}" ARCHIVE="${ARCHIVE:?}" 'bash -s' <<'ENDSSH'
+  # commands to run on remote host
 
-    echo "bin/ego scenario_install_agent"
-    ./ego run "${user}@${host}" bin/ego scenario_install_agent \
-                                                  --baseUrl "${BASE_URL}"
+  #install ego
+  curl -sL https://raw.githubusercontent.com/mongodb-labs/ego/master/install.sh | bash
 
+  source ~/.bashrc
+
+  #install mms
+  ego ops_manager_install_from_link --archive "$ARCHIVE" --mongodb-version "4.2.8" --central-url "http://localhost:9080"
+  exit
+
+ENDSSH
 done

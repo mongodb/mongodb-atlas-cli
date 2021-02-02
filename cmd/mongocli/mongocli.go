@@ -32,6 +32,8 @@ import (
 )
 
 var (
+	profile string
+
 	rootCmd = cli.Builder()
 
 	completionCmd = &cobra.Command{
@@ -65,30 +67,40 @@ no additional shell configuration is necessary, see https://docs.brew.sh/Shell-C
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	rootBuilder()
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
 
-var (
-	profile string
-)
+// rootBuilder conditionally adds children commands as needed.
+// This is important in particular for Atlas as it dynamically sets flags for cluster creation and
+// this can be slow to timeout on environments with limited internet access (Ops Manager)
+func rootBuilder() {
+	argsWithoutProg := os.Args[1:]
+	if len(argsWithoutProg) != 0 && argsWithoutProg[0] == "--version" {
+		return
+	}
+	rootCmd.AddCommand(cliconfig.Builder())
 
-func init() { //nolint:gochecknoinits // This is the cobra way
+	// We realistically only care about not adding Atlas to the chain of commands
+	// but given we can reuse the pattern for the rest we can save some initialization time here
+	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == atlas.Use {
+		rootCmd.AddCommand(atlas.Builder())
+	}
+	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == cloudmanager.Use {
+		rootCmd.AddCommand(cloudmanager.Builder())
+	}
+	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == opsmanager.Use {
+		rootCmd.AddCommand(opsmanager.Builder())
+	}
+	if len(argsWithoutProg) == 0 || argsWithoutProg[0] == iam.Use {
+		rootCmd.AddCommand(iam.Builder())
+	}
 	rootCmd.AddCommand(
-		cliconfig.Builder(),
-		atlas.Builder(),
-		cloudmanager.Builder(),
-		opsmanager.Builder(),
-		iam.Builder(),
 		completionCmd,
 	)
-
-	cobra.EnableCommandSorting = false
-
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-
-	cobra.OnInitialize(initConfig)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -106,5 +118,8 @@ func initConfig() {
 }
 
 func main() {
+	cobra.EnableCommandSorting = false
+	cobra.OnInitialize(initConfig)
+
 	Execute()
 }

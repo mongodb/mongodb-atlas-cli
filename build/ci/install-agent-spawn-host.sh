@@ -34,6 +34,7 @@ while getopts 'i:h:g:u:a:b:' opt; do
 done
 
 
+flags=()
 # get the information that you need from the toml file if exists
 if test -f "${XDG_CONFIG_HOME}/mongocli.toml"; then
   IFS="="
@@ -58,7 +59,11 @@ if test -f "${XDG_CONFIG_HOME}/mongocli.toml"; then
       echo "FIND BASE_URL ${name}=${value}"
     fi
   done < "${XDG_CONFIG_HOME}/mongocli.toml"
+
+  flags+=("--ops-manager")
 fi
+
+flags+=("--baseUrl ${BASE_URL}")
 
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
@@ -77,7 +82,6 @@ for host in ${hosts}; do
     ./ego seed "${user}@${host}"
 
     echo "bin/ego scenario_install_agent"
-    ./ego run "${user}@${host}" bin/ego scenario_install_agent \
-                                                  --baseUrl "${BASE_URL}"
+    ./ego run "${user}@${host}" bin/ego scenario_install_agent "${flags[@]}"
 
 done

@@ -17,12 +17,19 @@
 
 set -euo pipefail
 
+_print_usage() {
+    echo
+    echo '  --i <keyfile>                SSH identity file'
+    echo '  --u <user>                   Username on the remote host'
+    echo '  --h <hostsFile>              Output of Evergreen host.list'
+}
+
 while getopts 'i:h:g:u:a:b:' opt; do
   case ${opt} in
   i) keyfile="${OPTARG}" ;; # SSH identity file
   u) user="${OPTARG}" ;; # Username on the remote host
   h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
-  *) exit 1 ;;
+  *) echo "invalid option for install-agent-spawn-host $1" ; _print_usage "$@" ; exit 1 ;;
   esac
 done
 

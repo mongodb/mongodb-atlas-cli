@@ -101,23 +101,7 @@ functions:
           - E2E_TAGS
           - E2E_TEST_BUCKET
           - E2E_CLOUD_ROLE_ID
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          XDG_CONFIG_HOME: ${workdir}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          <<: *go_options
-        command: make e2e-test
-  "e2e test ops manager":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - MCLI_SERVICE
-          - TEST_CMD
-          - E2E_TAGS
+          - MCLI_OPS_MANAGER_URL
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}
@@ -166,24 +150,15 @@ functions:
           LC_GROUP_ID: ${automation_agent_mms_group_id}
           BASE_URL: ${mcli_ops_manager_url}
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install ops manager 4.4":
+  "install ops manager":
     - command: subprocess.exec
       type: setup
       params:
+        include_expansions_in_env:
+          - ARCHIVE
         working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./install-ops-manager-spawn-host.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-        env:
-          ARCHIVE: ${ops_manager_4_4_archive}
-  "install ops manager 4.2":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./install-ops-manager-spawn-host.sh
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-        env:
-          ARCHIVE: ${ops_manager_4_2_archive}
   "set-up ops manager":
     - command: subprocess.exec
       type: setup
@@ -508,6 +483,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
   # If your e2e tests depend on a cluster running please consider setting it on its own task
@@ -526,6 +502,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
   # This is all about cluster which tends to be slow to get a healthy one
@@ -544,6 +521,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
   # LDAP Configuration depends on a cluster running
@@ -562,6 +540,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,ldap
   # Logs depend on a cluster running to get logs from
@@ -580,6 +559,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,logs
   # Metrics depend on a cluster running to get metrics from
@@ -598,6 +578,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,metrics
   # Processes depend on a cluster running
@@ -616,6 +597,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,processes
   # Online archives depend on a cluster to create the archive against
@@ -634,6 +616,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,onlinearchive
   # Search depend on a cluster to create the indexes against
@@ -652,6 +635,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,search
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
@@ -670,6 +654,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,networking
   # datalake requires cloud provider role authentication and an s3 bucket created
@@ -688,6 +673,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,datalake
           E2E_TEST_BUCKET: ${e2e_test_bucket}
@@ -708,6 +694,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: iam
   # Cloud Manager and Ops Manager (indirectly) tests
@@ -726,6 +713,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: iam
   - name: cloud_manager_generic_e2e
@@ -743,6 +731,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
   - name: ops_manager_generic_4_4_e2e
@@ -757,9 +746,11 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "install ops manager 4.4"
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
       - func: "set-up ops manager"
-      - func: "e2e test ops manager"
+      - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,generic
   - name: ops_manager_generic_4_2_e2e
@@ -774,9 +765,11 @@ tasks:
       - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
-      - func: "install ops manager 4.2"
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_2_archive}
       - func: "set-up ops manager"
-      - func: "e2e test ops manager"
+      - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
@@ -798,6 +791,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,replica
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
@@ -822,6 +816,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
   - name: package_msi

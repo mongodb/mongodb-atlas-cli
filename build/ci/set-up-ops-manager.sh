@@ -16,10 +16,15 @@
 
 set -euo pipefail
 
+_print_usage() {
+    echo
+    echo '  --h <hostsFile>                Output of Evergreen host.list'
+}
+
 while getopts 'h:' opt; do
   case ${opt} in
   h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
-  *) exit 1 ;;
+  * ) echo "invalid option for set-up-ops-manager $1" ; _print_usage "$@" ; exit 1 ;;
   esac
 done
 
@@ -34,30 +39,21 @@ EOF
 
 )
 
-cd ../..
+pushd ../..
 
-MCLI_OPS_MANAGER_URL="http://${host}:9080/"
-
-echo "set service"
-  ./bin/mongocli config set service "${ops_manager_service:?}"
-
-echo "set ops_manager_url"
-  ./bin/mongocli config set ops_manager_url "${MCLI_OPS_MANAGER_URL}"
+export MCLI_OPS_MANAGER_URL="http://${host}:9080/"
+export MCLI_SERVICE="${ops_manager_service:?}"
 
 echo "generate password for owner"
 password=$(date +%s | sha256sum | base64 | head -c 8)0_
 
 echo "generate email for owner"
-email=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team.com
+MCLI_PUBLIC_API_KEY=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team
+export MCLI_PUBLIC_API_KEY
 
 echo "create first user"
-MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" -o="go-template={{.APIKey}}")
-
-echo "set public_api_key"
-./bin/mongocli config set public_api_key "${email}"
-
-echo "set private_api_key"
-./bin/mongocli config set private_api_key "${MCLI_PRIVATE_API_KEY}"
+MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" -o="go-template={{.APIKey}}")
+export MCLI_PRIVATE_API_KEY
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
@@ -65,17 +61,14 @@ MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.I
 echo "create project"
 MCLI_PROJECT_ID=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.ID}}")
 
-
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
 [default]
   ops_manager_url = "${MCLI_OPS_MANAGER_URL}"
-  service = "${ops_manager_service:?}"
-  public_api_key = "${email}"
+  service = "${MCLI_SERVICE}"
+  public_api_key = "${MCLI_PUBLIC_API_KEY}"
   private_api_key = "${MCLI_PRIVATE_API_KEY}"
   org_id = "${MCLI_ORG_ID}"
   project_id = "${MCLI_PROJECT_ID}"
 
 EOF
 
-echo "print mongocli.toml"
-cat "${XDG_CONFIG_HOME}/mongocli.toml"

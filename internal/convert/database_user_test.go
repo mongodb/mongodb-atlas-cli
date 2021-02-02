@@ -32,7 +32,8 @@ func TestBuildAtlasRoles(t *testing.T) {
 
 	tests := []test{
 		{
-			input: []string{"admin"}, want: []mongodbatlas.Role{
+			input: []string{"admin"},
+			want: []mongodbatlas.Role{
 				{
 					RoleName:     "admin",
 					DatabaseName: "admin",
@@ -40,7 +41,8 @@ func TestBuildAtlasRoles(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"admin@test"}, want: []mongodbatlas.Role{
+			input: []string{"admin@test"},
+			want: []mongodbatlas.Role{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -48,7 +50,8 @@ func TestBuildAtlasRoles(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"admin@test", "something"}, want: []mongodbatlas.Role{
+			input: []string{"admin@test", "something"},
+			want: []mongodbatlas.Role{
 				{
 					RoleName:     "admin",
 					DatabaseName: "test",
@@ -62,10 +65,15 @@ func TestBuildAtlasRoles(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := BuildAtlasRoles(tc.input)
-		if err := deep.Equal(tc.want, got); err != nil {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		input := tc.input
+		want := tc.want
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := BuildAtlasRoles(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
+			}
+		})
 	}
 }
 
@@ -77,7 +85,8 @@ func TestBuildOMRoles(t *testing.T) {
 
 	tests := []test{
 		{
-			input: []string{"admin"}, want: []*opsmngr.Role{
+			input: []string{"admin"},
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "admin",
@@ -85,7 +94,8 @@ func TestBuildOMRoles(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"admin@test"}, want: []*opsmngr.Role{
+			input: []string{"admin@test"},
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "test",
@@ -93,7 +103,8 @@ func TestBuildOMRoles(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"admin@test", "something"}, want: []*opsmngr.Role{
+			input: []string{"admin@test", "something"},
+			want: []*opsmngr.Role{
 				{
 					Role:     "admin",
 					Database: "test",
@@ -107,22 +118,30 @@ func TestBuildOMRoles(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := BuildOMRoles(tc.input)
-		if err := deep.Equal(tc.want, got); err != nil {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		input := tc.input
+		want := tc.want
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := BuildOMRoles(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
+			}
+		})
 	}
 }
 
-func TestBuildScope(t *testing.T) {
+func TestBuildAtlasScopes(t *testing.T) {
 	type test struct {
+		name  string
 		input []string
 		want  []mongodbatlas.Scope
 	}
 
 	tests := []test{
 		{
-			input: []string{"clusterName"}, want: []mongodbatlas.Scope{
+			name:  "default to cluster",
+			input: []string{"clusterName"},
+			want: []mongodbatlas.Scope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -130,7 +149,9 @@ func TestBuildScope(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"clusterName@CLUSTER"}, want: []mongodbatlas.Scope{
+			name:  "with cluster type",
+			input: []string{"clusterName:CLUSTER"},
+			want: []mongodbatlas.Scope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -138,7 +159,9 @@ func TestBuildScope(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"clusterName", "name@DATA_LAKE"}, want: []mongodbatlas.Scope{
+			name:  "default to cluster and a DATA_LAKE",
+			input: []string{"clusterName", "name:DATA_LAKE"},
+			want: []mongodbatlas.Scope{
 				{
 					Name: "clusterName",
 					Type: "CLUSTER",
@@ -150,7 +173,9 @@ func TestBuildScope(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"name@DATA_LAKE"}, want: []mongodbatlas.Scope{
+			name:  "data lake",
+			input: []string{"name:DATA_LAKE"},
+			want: []mongodbatlas.Scope{
 				{
 					Name: "name",
 					Type: "DATA_LAKE",
@@ -160,9 +185,15 @@ func TestBuildScope(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := BuildAtlasScopes(tc.input)
-		if err := deep.Equal(tc.want, got); err != nil {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		input := tc.input
+		want := tc.want
+		name := tc.name
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := BuildAtlasScopes(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
+			}
+		})
 	}
 }

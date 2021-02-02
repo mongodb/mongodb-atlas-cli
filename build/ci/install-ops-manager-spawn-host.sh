@@ -19,9 +19,9 @@ set -euo pipefail
 
 _print_usage() {
     echo
-    echo '  --i <keyfile>                SSH identity file'
-    echo '  --u <user>                   Username on the remote host'
-    echo '  --h <hostsFile>              Output of Evergreen host.list'
+    echo '  -i <keyfile>                SSH identity file'
+    echo '  -u <user>                   Username on the remote host'
+    echo '  -h <hostsFile>              Output of Evergreen host.list'
 }
 
 while getopts 'i:h:g:u:a:b:' opt; do

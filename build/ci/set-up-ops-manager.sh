@@ -18,7 +18,7 @@ set -euo pipefail
 
 _print_usage() {
     echo
-    echo '  --h <hostsFile>                Output of Evergreen host.list'
+    echo '  -h <hostsFile>                Output of Evergreen host.list'
 }
 
 while getopts 'h:' opt; do

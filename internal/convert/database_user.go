@@ -25,6 +25,7 @@ const (
 	AdminDB             = "admin"
 	ExternalAuthDB      = "$external"
 	roleSep             = "@"
+	scopeSep            = ":"
 	defaultUserDatabase = "admin"
 	defaultResourceType = "CLUSTER"
 )
@@ -74,7 +75,7 @@ func BuildOMRoles(r []string) []*opsmngr.Role {
 func BuildAtlasScopes(r []string) []atlas.Scope {
 	scopes := make([]atlas.Scope, len(r))
 	for i, scopeP := range r {
-		scope := strings.Split(scopeP, roleSep)
+		scope := strings.Split(scopeP, scopeSep)
 		resourceType := defaultResourceType
 		if len(scope) > 1 {
 			resourceType = scope[1]

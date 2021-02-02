@@ -59,7 +59,9 @@ echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
 
 echo "create project"
-MCLI_PROJECT_ID=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.ID}}")
+AGENT_API_KEY=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.AgentAPIKey}}")
+MCLI_PROJECT_ID=$(./bin/mongocli iam project list -o="go-template={{ (index .Results 0).ID }}")
+
 
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
 [default]
@@ -69,6 +71,6 @@ cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
   private_api_key = "${MCLI_PRIVATE_API_KEY}"
   org_id = "${MCLI_ORG_ID}"
   project_id = "${MCLI_PROJECT_ID}"
+  agent_api_key = "${AGENT_API_KEY}"
 
 EOF
-

@@ -33,6 +33,33 @@ while getopts 'i:h:g:u:a:b:' opt; do
   esac
 done
 
+
+# get the information that you need from the toml file if exists
+if test -f "${XDG_CONFIG_HOME}/mongocli.toml"; then
+  IFS="="
+  while read -r name value
+  do
+    name=${name//[[:blank:]]/}
+    if [[ "${name}" == "project_id" ]]; then
+      LC_GROUP_ID=$(echo "${value}" | tr -d '"')
+      export LC_GROUP_ID
+      echo "FIND LC_GROUP_ID ${name}=${value}"
+    fi
+
+    if [[ "${name}" == "agent_api_key" ]]; then
+      LC_AGENT_KEY=$(echo "${value}" | tr -d '"')
+      export LC_AGENT_KEY
+      echo "FIND LC_AGENT_KEY ${name}=${value}"
+    fi
+
+    if [[ "${name}" == "ops_manager_url" ]]; then
+      BASE_URL=$(echo "${value}" | tr -d '"')
+      export BASE_URL
+      echo "FIND BASE_URL ${name}=${value}"
+    fi
+  done < "${XDG_CONFIG_HOME}/mongocli.toml"
+fi
+
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
 hosts=$(

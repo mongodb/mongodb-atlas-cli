@@ -26,13 +26,14 @@ import (
 )
 
 const (
+	Use  = "iam"
 	iam  = "Organization and projects operations."
 	long = "Identity and Access Management."
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "iam",
+		Use: Use,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return validate.Credentials()
 		},

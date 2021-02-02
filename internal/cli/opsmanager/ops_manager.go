@@ -42,11 +42,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const opsManager = "Ops Manager operations."
+const (
+	Use        = "ops-manager"
+	opsManager = "Ops Manager operations."
+)
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "ops-manager",
+		Use:     Use,
 		Aliases: []string{"om"},
 		Short:   opsManager,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {

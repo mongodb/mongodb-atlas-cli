@@ -174,7 +174,7 @@ func CreateBuilder() *cobra.Command {
   $ mongocli atlas dbuser create --username <username> --role clusterMonitor,backup --projectId <projectId>
 
   Create user with multiple scopes 
-  $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope clusterName@CLUSTER,DataLakeName@DATA_LAKE --projectId <projectId>
+  $ mongocli atlas dbuser create --username <username> --role clusterMonitor --scope clusterName:CLUSTER,DataLakeName:DATA_LAKE --projectId <projectId>
 `,
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{"atlasAdmin", "readWriteAnyDatabase", "readAnyDatabase", "clusterMonitor", "backup", "dbAdminAnyDatabase", "enableSharding"},

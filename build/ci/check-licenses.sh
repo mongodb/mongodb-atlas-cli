@@ -37,5 +37,5 @@ find_files() {
 }
 
 for FILE in $(find_files); do
-    addlicense -c "MongoDB Inc" "${FILE}" -check
+    addlicense -c "MongoDB Inc" -check "${FILE}"
 done

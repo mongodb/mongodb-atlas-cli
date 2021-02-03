@@ -52,7 +52,7 @@ MCLI_PUBLIC_API_KEY=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-tea
 export MCLI_PUBLIC_API_KEY
 
 echo "create first user"
-MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" -o="go-template={{.APIKey}}")
+MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template={{.APIKey}}")
 export MCLI_PRIVATE_API_KEY
 
 echo "create organization"

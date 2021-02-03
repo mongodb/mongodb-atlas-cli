@@ -797,7 +797,7 @@ tasks:
           E2E_TAGS: cloudmanager,remote,replica
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: ops_manager_deploy_replica_set_e2e
-    tags: ["e2e","clusters","cloudmanager"]
+    tags: ["e2e","clusters","opsmanager"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -816,6 +816,27 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,remote,replica
+  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
+  - name: ops_manager_deploy_sharded_cluster_e2e
+    tags: ["e2e","clusters","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,sharded
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1487,6 +1508,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
+  - name: e2e_ops_manager_remote
+    display_name: "E2E Ops Manager Remote Host Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .clusters .opsmanager"
   - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

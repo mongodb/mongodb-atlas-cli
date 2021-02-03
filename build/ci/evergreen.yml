@@ -796,7 +796,7 @@ tasks:
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,replica
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
-  - name: ops_manager_deploy_replica_set_e2e
+  - name: ops_manager_4_4_deploy_replica_set_e2e
     tags: ["e2e","clusters","opsmanager"]
     depends_on:
       - name: compile
@@ -817,7 +817,7 @@ tasks:
         vars:
           E2E_TAGS: opsmanager,remote,replica
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
-  - name: ops_manager_deploy_sharded_cluster_e2e
+  - name: ops_manager_4_4_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","opsmanager"]
     depends_on:
       - name: compile
@@ -832,6 +832,48 @@ tasks:
       - func: "install ops manager"
         vars:
           ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,sharded
+  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
+  - name: ops_manager_4_2_deploy_replica_set_e2e
+    tags: ["e2e","clusters","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_2_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,replica
+  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
+  - name: ops_manager_4_2_deploy_sharded_cluster_e2e
+    tags: ["e2e","clusters","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_2_archive}
       - func: "set-up ops manager"
       - func: "install automation agent"
       - func: "e2e test"

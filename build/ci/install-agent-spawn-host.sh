@@ -44,19 +44,16 @@ if test -f "${XDG_CONFIG_HOME}/mongocli.toml"; then
     if [[ "${name}" == "project_id" ]]; then
       LC_GROUP_ID=$(echo "${value}" | tr -d '"')
       export LC_GROUP_ID
-      echo "FIND LC_GROUP_ID ${name}=${value}"
     fi
 
     if [[ "${name}" == "agent_api_key" ]]; then
       LC_AGENT_KEY=$(echo "${value}" | tr -d '"')
       export LC_AGENT_KEY
-      echo "FIND LC_AGENT_KEY ${name}=${value}"
     fi
 
     if [[ "${name}" == "ops_manager_url" ]]; then
       BASE_URL=$(echo "${value}" | tr -d '"')
       export BASE_URL
-      echo "FIND BASE_URL ${name}=${value}"
     fi
   done < "${XDG_CONFIG_HOME}/mongocli.toml"
 

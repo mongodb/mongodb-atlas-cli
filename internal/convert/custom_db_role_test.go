@@ -30,35 +30,49 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 	}
 
 	tests := []test{
-		{input: []string{"admin"}, want: []mongodbatlas.InheritedRole{
-			{
-				Role: "admin",
-				Db:   "admin",
-			}},
-		},
-		{input: []string{"admin@test"}, want: []mongodbatlas.InheritedRole{
-			{
-				Role: "admin",
-				Db:   "test",
-			}},
-		},
-		{input: []string{"admin@test", "something"}, want: []mongodbatlas.InheritedRole{
-			{
-				Role: "admin",
-				Db:   "test",
+		{
+			input: []string{"admin"},
+			want: []mongodbatlas.InheritedRole{
+				{
+					Role: "admin",
+					Db:   "admin",
+				},
 			},
-			{
-				Role: "something",
-				Db:   "admin",
-			}},
+		},
+		{
+			input: []string{"admin@test"},
+			want: []mongodbatlas.InheritedRole{
+				{
+					Role: "admin",
+					Db:   "test",
+				},
+			},
+		},
+		{
+			input: []string{"admin@test", "something"},
+			want: []mongodbatlas.InheritedRole{
+				{
+					Role: "admin",
+					Db:   "test",
+				},
+				{
+					Role: "something",
+					Db:   "admin",
+				},
+			},
 		},
 	}
 
 	for _, tc := range tests {
-		got := BuildAtlasInheritedRoles(tc.input)
-		if err := deep.Equal(tc.want, got); err != nil {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		input := tc.input
+		want := tc.want
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := BuildAtlasInheritedRoles(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
+			}
+		})
 	}
 }
 
@@ -71,51 +85,65 @@ func TestBuildAtlasActions(t *testing.T) {
 	cluster := true
 
 	tests := []test{
-		{input: []string{"clusterName"}, want: []mongodbatlas.Action{
-			{
-				Action: "clusterName",
-				Resources: []mongodbatlas.Resource{
-					{
-						Cluster: &cluster,
+		{
+			input: []string{"clusterName"},
+			want: []mongodbatlas.Action{
+				{
+					Action: "clusterName",
+					Resources: []mongodbatlas.Resource{
+						{
+							Cluster: &cluster,
+						},
 					},
 				},
 			},
-		}},
-		{input: []string{"clusterName@testdb.collection"}, want: []mongodbatlas.Action{
-			{
-				Action: "clusterName",
-				Resources: []mongodbatlas.Resource{
-					{
-						Db:         "testdb",
-						Collection: "collection",
+		},
+		{
+			input: []string{"clusterName@testdb.collection"},
+			want: []mongodbatlas.Action{
+				{
+					Action: "clusterName",
+					Resources: []mongodbatlas.Resource{
+						{
+							Db:         "testdb",
+							Collection: "collection",
+						},
 					},
 				},
 			},
-		}},
-		{input: []string{"clusterName", "name@DATA_LAKE"}, want: []mongodbatlas.Action{
-			{
-				Action: "clusterName",
-				Resources: []mongodbatlas.Resource{
-					{
-						Cluster: &cluster,
+		},
+		{
+			input: []string{"clusterName", "name@DATA_LAKE"},
+			want: []mongodbatlas.Action{
+				{
+					Action: "clusterName",
+					Resources: []mongodbatlas.Resource{
+						{
+							Cluster: &cluster,
+						},
+					},
+				},
+				{
+					Action: "name",
+					Resources: []mongodbatlas.Resource{
+						{
+							Db: "DATA_LAKE",
+						},
 					},
 				},
 			},
-			{
-				Action: "name",
-				Resources: []mongodbatlas.Resource{
-					{
-						Db: "DATA_LAKE",
-					},
-				},
-			},
-		}},
+		},
 	}
 
 	for _, tc := range tests {
-		got := BuildAtlasActions(tc.input)
-		if err := deep.Equal(tc.want, got); err != nil {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+		input := tc.input
+		want := tc.want
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := BuildAtlasActions(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
+			}
+		})
 	}
 }

@@ -62,6 +62,26 @@ func TestBuildAtlasRoles(t *testing.T) {
 				},
 			},
 		},
+		{
+			input: []string{"admin@db.collection"},
+			want: []mongodbatlas.Role{
+				{
+					RoleName:       "admin",
+					DatabaseName:   "db",
+					CollectionName: "collection",
+				},
+			},
+		},
+		{
+			input: []string{"admin@db.collection.name"},
+			want: []mongodbatlas.Role{
+				{
+					RoleName:       "admin",
+					DatabaseName:   "db",
+					CollectionName: "collection.name",
+				},
+			},
+		},
 	}
 
 	for _, tc := range tests {

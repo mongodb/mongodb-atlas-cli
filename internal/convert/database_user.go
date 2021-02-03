@@ -26,6 +26,7 @@ const (
 	ExternalAuthDB      = "$external"
 	roleSep             = "@"
 	scopeSep            = ":"
+	collectionSep       = "."
 	defaultUserDatabase = "admin"
 	defaultResourceType = "CLUSTER"
 )
@@ -35,19 +36,30 @@ const (
 func BuildAtlasRoles(r []string) []atlas.Role {
 	roles := make([]atlas.Role, len(r))
 	for i, roleP := range r {
-		role := strings.Split(roleP, roleSep)
-		roleName := role[0]
-		databaseName := defaultUserDatabase
-		if len(role) > 1 {
-			databaseName = role[1]
+		roleName, databaseName := splitRoleAndDBName(roleP)
+		var collectionName string
+		dbCollection := strings.Split(databaseName, collectionSep)
+		databaseName = dbCollection[0]
+		if len(dbCollection) > 1 {
+			collectionName = strings.Join(dbCollection[1:], ".")
 		}
-
 		roles[i] = atlas.Role{
-			RoleName:     roleName,
-			DatabaseName: databaseName,
+			RoleName:       roleName,
+			DatabaseName:   databaseName,
+			CollectionName: collectionName,
 		}
 	}
 	return roles
+}
+
+func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
+	rd := strings.Split(roleAndDBNAme, roleSep)
+	dbName = defaultUserDatabase
+	role = rd[0]
+	if len(rd) > 1 {
+		dbName = rd[1]
+	}
+	return
 }
 
 // BuildOMRoles converts the roles inside the array of string in an array of opsmngr.Role structs.
@@ -55,12 +67,7 @@ func BuildAtlasRoles(r []string) []atlas.Role {
 func BuildOMRoles(r []string) []*opsmngr.Role {
 	roles := make([]*opsmngr.Role, len(r))
 	for i, roleP := range r {
-		role := strings.Split(roleP, roleSep)
-		roleName := role[0]
-		databaseName := defaultUserDatabase
-		if len(role) > 1 {
-			databaseName = role[1]
-		}
+		roleName, databaseName := splitRoleAndDBName(roleP)
 
 		roles[i] = &opsmngr.Role{
 			Role:     roleName,

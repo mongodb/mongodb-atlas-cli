@@ -241,10 +241,7 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	process := p.process()
 	process.Cluster = cluster
-	process.Args26 = opsmngr.Args26{
-		NET:       p.net(),
-		SystemLog: p.systemLog(),
-	}
+	process.Args26 = p.args26()
 	if p.Security != nil {
 		process.Args26.Security = p.Security
 	}
@@ -255,18 +252,27 @@ func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	return process
 }
 
+func (p *ProcessConfig) args26() opsmngr.Args26 {
+	return opsmngr.Args26{
+		NET:          p.net(),
+		SystemLog:    p.systemLog(),
+		SetParameter: p.SetParameter,
+	}
+}
+
+func (p *ProcessConfig) args26RS(rsSetName string) opsmngr.Args26 {
+	args26 := p.args26()
+	args26.Replication = &opsmngr.Replication{ReplSetName: rsSetName}
+	args26.Storage = p.storage()
+	return args26
+}
+
 // newReplicaSetProcess generates a mongo process for a replica set mongod
 func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = opsmngr.Args26{
-		NET: p.net(),
-		Replication: &opsmngr.Replication{
-			ReplSetName: replSetName,
-		},
-		Storage:   p.storage(),
-		SystemLog: p.systemLog(),
-	}
+	process.Args26 = p.args26RS(replSetName)
+
 	if p.Security != nil {
 		process.Args26.Security = p.Security
 	}
@@ -281,15 +287,8 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = opsmngr.Args26{
-		NET: p.net(),
-		Replication: &opsmngr.Replication{
-			ReplSetName: rsSetName,
-		},
-		Storage:   p.storage(),
-		Sharding:  &opsmngr.Sharding{ClusterRole: "configsvr"},
-		SystemLog: p.systemLog(),
-	}
+	process.Args26 = p.args26RS(rsSetName)
+	process.Args26.Sharding = &opsmngr.Sharding{ClusterRole: "configsvr"}
 	if p.Security != nil {
 		process.Args26.Security = p.Security
 	}

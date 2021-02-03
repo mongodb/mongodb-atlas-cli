@@ -27,6 +27,7 @@ import (
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
 	t.Run("replica set", func(t *testing.T) {
+		t.Parallel()
 		config := fixture.AutomationConfigWithOneReplicaSet(name, false)
 		expected := []*ClusterConfig{
 			{
@@ -82,6 +83,7 @@ func TestFromAutomationConfig(t *testing.T) {
 		}
 	})
 	t.Run("sharded cluster", func(t *testing.T) {
+		t.Parallel()
 		config := fixture.AutomationConfigWithOneShardedCluster(name, false)
 		expected := []*ClusterConfig{
 			{

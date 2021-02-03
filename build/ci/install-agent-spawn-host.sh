@@ -36,7 +36,7 @@ done
 
 flags=()
 # get the information that you need from the toml file if exists
-if test -f "${XDG_CONFIG_HOME}/mongocli.toml"; then
+if [[ -f "${XDG_CONFIG_HOME}/mongocli.toml" ]]; then
   IFS="="
   while read -r name value
   do

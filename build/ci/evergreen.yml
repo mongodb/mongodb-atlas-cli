@@ -735,7 +735,7 @@ tasks:
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
   - name: ops_manager_generic_4_4_e2e
-    tags: ["opsmanager"]
+    tags: ["opsmanager", "general"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -754,7 +754,7 @@ tasks:
         vars:
           E2E_TAGS: opsmanager,generic
   - name: ops_manager_generic_4_2_e2e
-    tags: ["opsmanager"]
+    tags: ["opsmanager", "general"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1522,7 +1522,7 @@ buildvariants:
       go_root: "/opt/golang/go1.15"
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
-      - name: ".opsmanager"
+      - name: ".opsmanager .general"
   - name: e2e_atlas_clusters
     display_name: "E2E Atlas Cluster Tests"
     run_on:

@@ -14,6 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# automation_agent_settings.sh constains the configurations needed
+# to install the automation agent with ops manager.
+# this script is created in set-up-ops-manager.sh
+# run this script before setting set - so it's safe if it is not there
+# shellcheck disable=SC1091
+source automation_agent_settings.sh
 
 set -euo pipefail
 
@@ -33,6 +39,13 @@ while getopts 'i:h:g:u:a:b:' opt; do
   esac
 done
 
+flags=()
+if [[ -n "${MCLI_SERVICE+x}" ]]; then
+    flags+=("--ops-manager")
+fi
+
+flags+=("--baseUrl ${BASE_URL}")
+
 export SSH_OPTS="-i ${keyfile} -o SendEnv=LC_GROUP_ID -o SendEnv=LC_AGENT_KEY"
 
 hosts=$(
@@ -50,7 +63,6 @@ for host in ${hosts}; do
     ./ego seed "${user}@${host}"
 
     echo "bin/ego scenario_install_agent"
-    ./ego run "${user}@${host}" bin/ego scenario_install_agent \
-                                                  --baseUrl "${BASE_URL}"
+    ./ego run "${user}@${host}" bin/ego scenario_install_agent "${flags[@]}"
 
 done

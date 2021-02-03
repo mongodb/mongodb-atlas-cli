@@ -52,14 +52,16 @@ MCLI_PUBLIC_API_KEY=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-tea
 export MCLI_PUBLIC_API_KEY
 
 echo "create first user"
-MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" -o="go-template={{.APIKey}}")
+MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template={{.APIKey}}")
 export MCLI_PRIVATE_API_KEY
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
 
 echo "create project"
-MCLI_PROJECT_ID=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.ID}}")
+AGENT_API_KEY=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.AgentAPIKey}}")
+MCLI_PROJECT_ID=$(./bin/mongocli iam project list -o="go-template={{ (index .Results 0).ID }}")
+
 
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
 [default]
@@ -69,6 +71,15 @@ cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
   private_api_key = "${MCLI_PRIVATE_API_KEY}"
   org_id = "${MCLI_ORG_ID}"
   project_id = "${MCLI_PROJECT_ID}"
+  agent_api_key = "${AGENT_API_KEY}"
 
+EOF
+
+popd
+cat <<EOF > automation_agent_settings.sh
+export BASE_URL=${MCLI_OPS_MANAGER_URL}
+export LC_AGENT_KEY=${AGENT_API_KEY}
+export LC_GROUP_ID=${MCLI_PROJECT_ID}
+export MCLI_SERVICE=ops-manager
 EOF
 

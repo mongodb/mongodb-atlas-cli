@@ -317,10 +317,12 @@ _user_dir() {
 
 scenario_install_agent() {
     local baseUrl="https://cloud.mongodb.com"
+    local ops_manager=0
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
             --baseUrl) baseUrl=$2; shift 2 ;;
+            --ops-manager) ops_manager=1; shift;;
             * ) echo "Invalid option for installing mongodb $1"; return 1 ;;
         esac
     done
@@ -338,6 +340,11 @@ scenario_install_agent() {
     echo "Replacing mmsGroupId and mmsApiKey"
     replace_property_in_file /etc/mongodb-mms/automation-agent.config mmsGroupId "${LC_GROUP_ID}"
     replace_property_in_file /etc/mongodb-mms/automation-agent.config mmsApiKey "${LC_AGENT_KEY}"
+
+    if [[ "${ops_manager}" -eq 1 ]]; then
+      echo "Replacing mmsBaseUrl with ${baseUrl::-1}"
+      replace_property_in_file /etc/mongodb-mms/automation-agent.config mmsBaseUrl "${baseUrl::-1}"
+    fi
 
     echo "Preparing the /data directory to store your MongoDB data"
     mkdir -p /data

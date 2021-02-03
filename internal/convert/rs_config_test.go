@@ -56,6 +56,7 @@ func TestRSConfig_protocolVer(t *testing.T) {
 		expected := tc.wantedProtocolVersion
 		wantErr := tc.wantErr
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ver, err := m.protocolVer()
 			if (err != nil) != wantErr {
 				t.Fatalf("protocolVer() unexpected error: %v\n", err)

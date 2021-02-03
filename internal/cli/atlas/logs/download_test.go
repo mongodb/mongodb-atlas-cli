@@ -91,6 +91,7 @@ func TestDownloadOpts_initDefaultOut(t *testing.T) {
 		out := tt.fields.out
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			opts := &DownloadOpts{
 				name: logName,
 			}

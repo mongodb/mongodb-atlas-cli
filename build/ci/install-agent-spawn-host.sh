@@ -14,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# automation_agent_settings.sh constains the configurations needed
+# to install the automation agent with ops manager.
+# this script is created in set-up-ops-manager.sh
+# run this script before setting set - so it's safe if it is not there
+source automation_agent_settings.sh
 
 set -euo pipefail
 
@@ -33,31 +38,9 @@ while getopts 'i:h:g:u:a:b:' opt; do
   esac
 done
 
-
 flags=()
-# get the information that you need from the toml file if exists
-if [[ -f "${XDG_CONFIG_HOME}/mongocli.toml" ]]; then
-  IFS="="
-  while read -r name value
-  do
-    name=${name//[[:blank:]]/}
-    if [[ "${name}" == "project_id" ]]; then
-      LC_GROUP_ID=$(echo "${value}" | tr -d '"')
-      export LC_GROUP_ID
-    fi
-
-    if [[ "${name}" == "agent_api_key" ]]; then
-      LC_AGENT_KEY=$(echo "${value}" | tr -d '"')
-      export LC_AGENT_KEY
-    fi
-
-    if [[ "${name}" == "ops_manager_url" ]]; then
-      BASE_URL=$(echo "${value}" | tr -d '"')
-      export BASE_URL
-    fi
-  done < "${XDG_CONFIG_HOME}/mongocli.toml"
-
-  flags+=("--ops-manager")
+if [[ -n "${MCLI_SERVICE+x}" ]]; then
+    flags+=("--ops-manager")
 fi
 
 flags+=("--baseUrl ${BASE_URL}")

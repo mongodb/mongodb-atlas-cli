@@ -74,3 +74,13 @@ cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
   agent_api_key = "${AGENT_API_KEY}"
 
 EOF
+
+popd
+cat <<EOF > automation_agent_settings.sh
+export BASE_URL=${MCLI_OPS_MANAGER_URL}
+export LC_AGENT_KEY=${AGENT_API_KEY}
+export LC_GROUP_ID=${MCLI_PROJECT_ID}
+export MCLI_SERVICE=${MCLI_SERVICE}
+EOF
+
+chmod +x automation_agent_settings.sh

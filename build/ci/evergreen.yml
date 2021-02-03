@@ -149,7 +149,6 @@ functions:
           LC_AGENT_KEY: ${automation_agent_mms_api_key}
           LC_GROUP_ID: ${automation_agent_mms_group_id}
           BASE_URL: ${mcli_ops_manager_url}
-          XDG_CONFIG_HOME: ${workdir}
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "install ops manager":
     - command: subprocess.exec

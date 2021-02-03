@@ -83,4 +83,3 @@ export LC_GROUP_ID=${MCLI_PROJECT_ID}
 export MCLI_SERVICE=${MCLI_SERVICE}
 EOF
 
-chmod +x automation_agent_settings.sh

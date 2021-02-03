@@ -55,6 +55,9 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 				Destination: "file",
 				Path:        "/data/log/mongodb.log",
 			},
+			SetParameter: &map[string]interface{}{
+				"param": "param",
+			},
 		},
 		AuthSchemaVersion:           5,
 		Disabled:                    false,
@@ -103,6 +106,9 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		Disabled:            false,
 		Hidden:              pointy.Bool(false),
 		TLS:                 &TLS{Mode: "disabled"},
+		SetParameter: &map[string]interface{}{
+			"param": "param",
+		},
 		WiredTiger: &map[string]interface{}{
 			"collectionConfig": map[string]interface{}{},
 			"engineConfig": map[string]interface{}{
@@ -147,6 +153,9 @@ func Test_newConfigRSProcess(t *testing.T) {
 			},
 			"indexConfig": map[string]interface{}{},
 		},
+		SetParameter: &map[string]interface{}{
+			"param": "param",
+		},
 	}
 
 	want := &opsmngr.Process{
@@ -180,6 +189,9 @@ func Test_newConfigRSProcess(t *testing.T) {
 				Path:        "/data/log/mongodb.log",
 			},
 			Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+			SetParameter: &map[string]interface{}{
+				"param": "param",
+			},
 		},
 		AuthSchemaVersion:           5,
 		Disabled:                    false,
@@ -229,6 +241,9 @@ func Test_newReplicaSetProcess(t *testing.T) {
 			},
 			"indexConfig": map[string]interface{}{},
 		},
+		SetParameter: &map[string]interface{}{
+			"param": "param",
+		},
 	}
 
 	want := &opsmngr.Process{
@@ -261,6 +276,9 @@ func Test_newReplicaSetProcess(t *testing.T) {
 				Destination: "file",
 				Path:        "/data/log/mongodb.log",
 			},
+			SetParameter: &map[string]interface{}{
+				"param": "param",
+			},
 		},
 		AuthSchemaVersion:           5,
 		Disabled:                    false,
@@ -276,5 +294,62 @@ func Test_newReplicaSetProcess(t *testing.T) {
 		Version:     "4.4.1-ent",
 	}
 	got := newReplicaSetProcess(p, "myReplicaSet")
+	assert.Equal(t, got, want)
+}
+
+func Test_newMongosProcessConfig(t *testing.T) {
+	p := &opsmngr.Process{
+		Args26: opsmngr.Args26{
+			NET: opsmngr.Net{
+				Port: 27017,
+			},
+			SystemLog: opsmngr.SystemLog{
+				Destination: "file",
+				Path:        "/data/mongos/mongodb.log",
+			},
+			SetParameter: &map[string]interface{}{
+				"param": "param",
+			},
+			AuditLog: &opsmngr.AuditLog{
+				Path:        "/data/mongos/audit.log",
+				Destination: "file",
+				Format:      "JSON",
+				Filter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+			},
+		},
+		AuthSchemaVersion:           5,
+		Cluster:                     "myCluster",
+		Disabled:                    false,
+		FeatureCompatibilityVersion: "3.6",
+		Hostname:                    "n1.omansible.int",
+		LogRotate: &opsmngr.LogRotate{
+			SizeThresholdMB:  1000,
+			TimeThresholdHrs: 24,
+		},
+		ManualMode:  false,
+		Name:        "myCluster_mongos_4",
+		ProcessType: "mongos",
+		Version:     "3.6.21-ent",
+	}
+
+	want := &ProcessConfig{
+		AuditLogPath:        "/data/mongos/audit.log",
+		AuditLogDestination: "file",
+		AuditLogFormat:      "JSON",
+		AuditLogFilter:      "{ atype: { $in: [ \"createCollection\", \"dropCollection\" ] } }",
+		FCVersion:           "3.6",
+		Hostname:            "n1.omansible.int",
+		LogDestination:      "file",
+		LogPath:             "/data/mongos/mongodb.log",
+		Name:                "myCluster_mongos_4",
+		Port:                27017,
+		ProcessType:         "mongos",
+		Version:             "3.6.21-ent",
+		Disabled:            false,
+		SetParameter: &map[string]interface{}{
+			"param": "param",
+		},
+	}
+	got := newMongosProcessConfig(p)
 	assert.Equal(t, got, want)
 }

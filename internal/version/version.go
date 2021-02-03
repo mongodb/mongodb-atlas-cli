@@ -16,4 +16,6 @@ package version
 
 // Version for CLI
 var Version string
+
+// GitCommit git sha of the build
 var GitCommit string

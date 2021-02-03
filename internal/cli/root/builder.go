@@ -68,7 +68,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	hasArgs := len(argsWithoutProg) != 0
 
 	if hasArgs && argsWithoutProg[0] == "--version" {
-		return nil
+		return rootCmd
 	}
 	rootCmd.AddCommand(cliconfig.Builder())
 

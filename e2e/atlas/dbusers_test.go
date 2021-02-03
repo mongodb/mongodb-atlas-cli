@@ -30,7 +30,7 @@ import (
 
 const (
 	roleReadWrite        = "readWrite"
-	scopeClusterDataLake = "Cluster0,Cluster1@CLUSTER"
+	scopeClusterDataLake = "Cluster0,Cluster1:CLUSTER"
 	clusterName0         = "Cluster0"
 	clusterName1         = "Cluster1"
 	clusterType          = "CLUSTER"

@@ -18,6 +18,7 @@
 # to install the automation agent with ops manager.
 # this script is created in set-up-ops-manager.sh
 # run this script before setting set - so it's safe if it is not there
+# shellcheck disable=SC1091
 source automation_agent_settings.sh
 
 set -euo pipefail

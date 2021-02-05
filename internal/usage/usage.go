@@ -29,6 +29,7 @@ const (
 	SlowQueryNamespaces             = "Namespaces from which to retrieve suggested slow query logs."
 	DiskSizeGB                      = "Capacity, in gigabytes, of the host’s root volume."
 	Backup                          = "If true, enables Continuous Cloud Backup for your cluster."
+	BIConnector                     = "If true, enables BI Connector for Atlas on the cluster."
 	SuggestedIndexNamespaces        = "Namespaces from which to retrieve suggested indexes. "
 	NExamples                       = "Maximum number of examples queries to provide that will be improved by a suggested index."
 	NIndexes                        = "Maximum number of indexes to suggest."

@@ -53,6 +53,7 @@ const (
 	DiskSizeGB                      = "diskSizeGB"                      // DiskSizeGB flag
 	MDBVersion                      = "mdbVersion"                      // MDBVersion flag
 	Backup                          = "backup"                          // Backup flag
+	BIConnector                     = "biConnector"                     // BIConnector flag
 	ID                              = "id"                              // ID flag
 	Username                        = "username"                        // Username flag
 	StorageEngine                   = "storageEngine"                   // StorageEngine flag

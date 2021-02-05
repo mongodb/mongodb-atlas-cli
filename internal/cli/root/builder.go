@@ -72,9 +72,14 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	}
 	rootCmd.AddCommand(cliconfig.Builder())
 
-	// We realistically only care about not adding Atlas to the chain of commands
-	// but given we can reuse the pattern for the rest we can save some initialization time here
-	if !hasArgs || search.StringInSlice([]string{atlas.Use, "completion", "__complete"}, argsWithoutProg[0]) {
+	shouldIncludeAtlas := []string{
+		atlas.Use,
+		"help",
+		"--help",
+		"completion",
+		"__complete",
+	}
+	if !hasArgs || search.StringInSlice(shouldIncludeAtlas, argsWithoutProg[0]) {
 		rootCmd.AddCommand(atlas.Builder())
 	}
 	rootCmd.AddCommand(

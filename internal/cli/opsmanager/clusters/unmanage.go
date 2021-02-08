@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
@@ -74,7 +75,7 @@ func UnmanageBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   UnmanageCluster,
 		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
-		Args:    cobra.ExactArgs(1),
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

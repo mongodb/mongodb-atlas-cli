@@ -109,7 +109,8 @@ func deployCluster() (string, error) {
 		"--region=US_EAST_1",
 		"--tier=M10",
 		"--provider=AWS",
-		"--diskSizeGB=10")
+		"--diskSizeGB=10",
+		"--biConnector")
 	create.Env = os.Environ()
 	if err := create.Run(); err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)

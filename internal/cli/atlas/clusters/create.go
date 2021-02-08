@@ -51,6 +51,7 @@ type CreateOpts struct {
 	clusterType string
 	diskSizeGB  float64
 	backup      bool
+	biConnector bool
 	mdbVersion  string
 	filename    string
 	fs          afero.Fs
@@ -131,6 +132,9 @@ func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {
 	if opts.backup {
 		out.ProviderBackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
+	}
+	if opts.biConnector {
+		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.ClusterType = opts.clusterType
 	out.DiskSizeGB = &opts.diskSizeGB
@@ -235,6 +239,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
+	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
 	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)

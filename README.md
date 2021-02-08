@@ -10,7 +10,7 @@
 
 ## Installing
 
-### Hombrew on macOS
+### Homebrew on macOS
 
 ```bash
 brew tap mongodb/brew

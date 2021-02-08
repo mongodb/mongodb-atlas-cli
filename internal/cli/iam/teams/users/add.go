@@ -16,6 +16,7 @@ package users
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -53,7 +54,7 @@ func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{
 		Use:   "add <userId> [userId]...",
-		Args:  cobra.MinimumNArgs(1),
+		Args:  require.MinimumNObjectIDArgs(1),
 		Short: addUser,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args

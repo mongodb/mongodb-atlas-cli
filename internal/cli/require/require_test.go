@@ -103,7 +103,7 @@ func TestExactArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: ExactArgs(3), Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("ExactArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}
@@ -142,7 +142,7 @@ func TestExactObjectIDArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: ExactObjectIDArgs(1), Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("ExactObjectIDArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}
@@ -181,7 +181,7 @@ func TestMaximumNArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: MaximumNArgs(3), Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("MaximumNArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}
@@ -220,7 +220,7 @@ func TestMinimumNArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: MinimumNArgs(2), Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("MinimumNArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}
@@ -259,7 +259,7 @@ func TestExactValidArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: ExactValidArgs(1), ValidArgs: []string{"a"}, Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("ExactValidArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}
@@ -298,7 +298,7 @@ func TestMinimumNObjectIDArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &cobra.Command{Use: "c", Args: MinimumNObjectIDArgs(1), ValidArgs: []string{"a"}, Run: emptyRun}
 			if _, err := executeCommand(c, args...); (err != nil) != wantErr {
-				t.Errorf("NoArgs() error = %v, wantErr %v", err, wantErr)
+				t.Errorf("MinimumNObjectIDArgs() error = %v, wantErr %v", err, wantErr)
 			}
 		})
 	}

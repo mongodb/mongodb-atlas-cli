@@ -54,8 +54,7 @@ func TestDisableOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

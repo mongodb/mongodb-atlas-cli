@@ -49,8 +49,7 @@ func TestStartup_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := startupOpts.Run()
-	if err != nil {
+	if err := startupOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

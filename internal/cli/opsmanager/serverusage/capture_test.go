@@ -38,8 +38,7 @@ func TestCapture_Run(t *testing.T) {
 		GenerateSnapshot().
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

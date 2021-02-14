@@ -41,8 +41,7 @@ func TestDescribe_Run_ByID(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := descOpts.Run()
-	if err != nil {
+	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
@@ -65,8 +64,7 @@ func TestDescribe_Run_ByName(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := descOpts.Run()
-	if err != nil {
+	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

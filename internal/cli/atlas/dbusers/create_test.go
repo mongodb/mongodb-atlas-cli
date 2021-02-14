@@ -43,8 +43,7 @@ func TestDBUserCreateOpts_Run(t *testing.T) {
 		CreateDatabaseUser(createOpts.newDatabaseUser()).Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

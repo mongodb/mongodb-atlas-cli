@@ -41,8 +41,8 @@ func TestCreate_Run(t *testing.T) {
 		name:  "ProjectBar",
 	}
 	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
-	err := createOpts.Run()
-	if err != nil {
+
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

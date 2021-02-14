@@ -59,9 +59,7 @@ func TestUpdates_Run(t *testing.T) {
 		UpdateAlertConfiguration(alert).
 		Return(expected, nil).
 		Times(1)
-
-	err := updateOpts.Run()
-	if err != nil {
+	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

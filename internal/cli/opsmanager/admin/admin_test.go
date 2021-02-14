@@ -29,3 +29,12 @@ func TestBuilder(t *testing.T) {
 		[]string{},
 	)
 }
+
+func TestBackupBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		BackupBuilder(),
+		5,
+		[]string{},
+	)
+}

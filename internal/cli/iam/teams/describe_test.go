@@ -23,50 +23,43 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribe_Run_ByID(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamDescriber(ctrl)
 	defer ctrl.Finish()
 
 	var expected *mongodbatlas.Team
 
-	descOpts := &DescribeOpts{
-		store: mockStore,
-		id:    "id",
-	}
+	t.Run("by ID", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store: mockStore,
+			id:    "id",
+		}
 
-	mockStore.
-		EXPECT().
-		TeamByID(descOpts.OrgID, descOpts.id).
-		Return(expected, nil).
-		Times(1)
+		mockStore.
+			EXPECT().
+			TeamByID(descOpts.OrgID, descOpts.id).
+			Return(expected, nil).
+			Times(1)
 
-	err := descOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
+		if err := descOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+	t.Run("by name", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store: mockStore,
+			name:  "test",
+		}
 
-func TestDescribe_Run_ByName(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockTeamDescriber(ctrl)
-	defer ctrl.Finish()
+		mockStore.
+			EXPECT().
+			TeamByName(descOpts.OrgID, descOpts.name).
+			Return(expected, nil).
+			Times(1)
 
-	var expected *mongodbatlas.Team
-
-	descOpts := &DescribeOpts{
-		store: mockStore,
-		name:  "test",
-	}
-
-	mockStore.
-		EXPECT().
-		TeamByName(descOpts.OrgID, descOpts.name).
-		Return(expected, nil).
-		Times(1)
-
-	err := descOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		if err := descOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }

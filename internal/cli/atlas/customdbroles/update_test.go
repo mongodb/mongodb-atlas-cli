@@ -37,42 +37,32 @@ func TestUpdateOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	mockStore.
-		EXPECT().
-		UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
-		Times(1)
+	t.Run("default", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
+			Times(1)
 
-	err := updateOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
+		if err := updateOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+	t.Run("with append", func(t *testing.T) {
+		updateOpts.append = true
+		mockStore.
+			EXPECT().
+			DatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName).Return(expected, nil).
+			Times(1)
+		mockStore.
+			EXPECT().
+			UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
+			Times(1)
 
-func TestUpdateOptsWithAppend_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseRoleUpdater(ctrl)
-	defer ctrl.Finish()
-
-	expected := &mongodbatlas.CustomDBRole{}
-
-	updateOpts := &UpdateOpts{
-		store:  mockStore,
-		append: true,
-	}
-
-	mockStore.
-		EXPECT().
-		DatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName).Return(expected, nil).
-		Times(1)
-	mockStore.
-		EXPECT().
-		UpdateDatabaseRole(updateOpts.ConfigProjectID(), updateOpts.roleName, updateOpts.newCustomDBRole(expected)).Return(expected, nil).
-		Times(1)
-
-	err := updateOpts.Run()
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		err := updateOpts.Run()
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }
 
 func TestUpdateBuilder(t *testing.T) {

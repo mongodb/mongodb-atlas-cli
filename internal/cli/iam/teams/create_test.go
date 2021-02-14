@@ -39,8 +39,7 @@ func TestCreate_Run(t *testing.T) {
 		CreateTeam(createOpts.OrgID, createOpts.newTeam()).Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

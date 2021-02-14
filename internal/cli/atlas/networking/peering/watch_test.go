@@ -55,6 +55,7 @@ func TestWatchOpts_Run(t *testing.T) {
 	for _, tt := range tests {
 		expected := tt.expected
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			describeOpts := &WatchOpts{
 				id:    "test",
 				store: mockStore,

@@ -100,8 +100,7 @@ func TestDeleteReplicaSet_Run(t *testing.T) {
 		Return(host0, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
@@ -190,8 +189,7 @@ func TestDeleteShardedCluster_Run(t *testing.T) {
 		Return(host2, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

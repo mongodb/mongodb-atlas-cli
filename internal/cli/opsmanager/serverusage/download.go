@@ -79,7 +79,7 @@ func DownloadBuilder() *cobra.Command {
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download",
-		Short: download,
+		Short: "Download the server usage report.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
 			return opts.initStore()

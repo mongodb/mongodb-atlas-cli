@@ -59,7 +59,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Short:   listServer,
+		Short:   "List all available servers running an automation agent for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

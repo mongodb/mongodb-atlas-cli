@@ -89,8 +89,8 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: CreateOwner,
-		Long:  CreateLong,
+		Short: "Create the first user for Ops Manager.",
+		Long:  "Create the first user for Ops Manager. Use this command to automate Ops Manager Installations.",
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), createTemplate)()

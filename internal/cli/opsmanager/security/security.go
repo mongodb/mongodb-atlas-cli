@@ -15,13 +15,15 @@
 package security
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "security",
-		Short: security,
+		Short: "Manage security configuration for your project.",
+		Args:  require.NoArgs,
 	}
 
 	cmd.AddCommand(EnableBuilder())

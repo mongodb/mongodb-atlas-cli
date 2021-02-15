@@ -21,7 +21,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "owner",
-		Short: Owner,
+		Short: "Manage Ops Manager owners.",
 	}
 
 	cmd.AddCommand(CreateBuilder())

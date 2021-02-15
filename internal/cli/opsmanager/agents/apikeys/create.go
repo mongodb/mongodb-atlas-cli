@@ -60,7 +60,7 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: CreateAgentAPIKey,
+		Short: "Create an Agent API Key for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

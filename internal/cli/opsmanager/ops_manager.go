@@ -43,15 +43,14 @@ import (
 )
 
 const (
-	Use        = "ops-manager"
-	opsManager = "Ops Manager operations."
+	use = "ops-manager"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     Use,
+		Use:     use,
 		Aliases: []string{"om"},
-		Short:   opsManager,
+		Short:   "Ops Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.OpsManagerService)
 			// do not validate to create an owner

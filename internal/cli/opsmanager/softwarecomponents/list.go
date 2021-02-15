@@ -53,7 +53,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   list,
+		Short:   "List versions of MongoDB Agent, MongoDB Tools, and BI Connector in your environment.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()

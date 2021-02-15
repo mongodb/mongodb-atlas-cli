@@ -59,7 +59,7 @@ func ListBuilder() *cobra.Command {
 		Aliases:   []string{"ls"},
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
-		Short:     ListAgents,
+		Short:     "List available MongoDB Agents for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

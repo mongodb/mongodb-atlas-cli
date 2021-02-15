@@ -45,7 +45,7 @@ func CaptureBuilder() *cobra.Command {
 	opts := &CaptureOpts{}
 	cmd := &cobra.Command{
 		Use:   "capture",
-		Short: capture,
+		Short: "Capture a snapshot of usage for the processes Ops Manager manages.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.initStore()
 		},

@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Performance Advisor operations.",
 	}
 	cmd.AddCommand(
 		namespaces.Builder(),

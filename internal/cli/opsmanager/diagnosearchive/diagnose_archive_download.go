@@ -67,7 +67,7 @@ func DownloadBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "download",
 		Aliases: []string{"get"},
-		Short:   download,
+		Short:   "Download diagnose archives.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},

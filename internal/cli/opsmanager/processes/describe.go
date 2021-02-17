@@ -55,7 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
-		Short:   describeProcesses,
+		Short:   "Describe MongoDB processes for your project.",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

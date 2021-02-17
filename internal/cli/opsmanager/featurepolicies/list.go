@@ -55,7 +55,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   list,
+		Short:   "List feature control policies for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

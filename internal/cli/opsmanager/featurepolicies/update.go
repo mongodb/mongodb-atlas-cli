@@ -76,7 +76,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update",
-		Short: update,
+		Short: "Update feature control policies for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

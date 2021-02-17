@@ -50,7 +50,7 @@ func StatusBuilder() *cobra.Command {
 	opts := &StatusOpts{}
 	cmd := &cobra.Command{
 		Use:   "status",
-		Short: ShowAutomationStatus,
+		Short: "Show the current status of the automation config.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

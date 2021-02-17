@@ -63,7 +63,7 @@ func SetBuilder() *cobra.Command {
 		Use:       "set <type>",
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
-		Short:     set,
+		Short:     "Set the default server type for a project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

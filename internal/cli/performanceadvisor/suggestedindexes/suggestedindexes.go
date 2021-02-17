@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Get suggested indexes for collections experiencing slow queries",
 	}
 	cmd.AddCommand(
 		ListBuilder())

@@ -21,13 +21,15 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "automation",
-		Short: Automation,
+		Short: "Manage automation configuration for your project.",
 	}
 
-	cmd.AddCommand(StatusBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(WatchBuilder())
+	cmd.AddCommand(
+		StatusBuilder(),
+		DescribeBuilder(),
+		UpdateBuilder(),
+		WatchBuilder(),
+	)
 
 	return cmd
 }

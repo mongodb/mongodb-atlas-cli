@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -60,7 +61,7 @@ func SetBuilder() *cobra.Command {
 	opts := &SetOpts{}
 	cmd := &cobra.Command{
 		Use:       "set <type>",
-		Args:      cobra.ExactValidArgs(1),
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"DEV_SERVER", "TEST_SERVER", "PRODUCTION_SERVER", "RAM_POOL"},
 		Short:     set,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

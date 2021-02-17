@@ -23,6 +23,7 @@ import (
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -34,7 +35,7 @@ var (
 
 	completionCmd = &cobra.Command{
 		Use:   "completion <bash|zsh|fish|powershell>",
-		Args:  cobra.ExactValidArgs(1),
+		Args:  require.ExactValidArgs(1),
 		Short: "Generate shell completion scripts",
 		Long: `Generate shell completion scripts for MongoDB CLI commands.
 The output of this command will be computer code and is meant to be saved to a

@@ -16,6 +16,7 @@ package ldap
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -54,7 +55,7 @@ func StatusBuilder() *cobra.Command {
 	opts := &StatusOpts{}
 	cmd := &cobra.Command{
 		Use:   "status <ID>",
-		Args:  cobra.ExactValidArgs(1),
+		Args:  require.ExactValidArgs(1),
 		Short: status,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

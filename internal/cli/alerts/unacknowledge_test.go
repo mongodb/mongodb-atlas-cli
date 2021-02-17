@@ -45,8 +45,7 @@ func TestUnacknowledge_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := acknowledgeOpts.Run()
-	if err != nil {
+	if err := acknowledgeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

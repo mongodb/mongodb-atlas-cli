@@ -15,30 +15,50 @@
 package backup
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/oplog"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/sync"
-	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func Builder() *cobra.Command {
-	const use = "backups"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   backup,
+type AdminOpts struct {
+	Assignment           bool
+	EncryptedCredentials bool
+	SSL                  bool
+	WriteConcern         string
+	URI                  string
+	LoadFactor           int64
+	MaxCapacityGB        int64
+	ID                   string
+	Label                []string
+}
+
+func (opts *AdminOpts) NewBackupStore() *opsmngr.BackupStore {
+	backupStore := &opsmngr.BackupStore{
+		AdminBackupConfig: opsmngr.AdminBackupConfig{
+			ID:           opts.ID,
+			URI:          opts.URI,
+			WriteConcern: opts.WriteConcern,
+			Labels:       opts.Label,
+		},
 	}
 
-	cmd.AddCommand(
-		blockstore.Builder(),
-		filesystem.Builder(),
-		s3.Builder(),
-		oplog.Builder(),
-		sync.Builder(),
-	)
+	if opts.SSL {
+		backupStore.SSL = &opts.SSL
+	}
 
-	return cmd
+	if opts.EncryptedCredentials {
+		backupStore.EncryptedCredentials = &opts.EncryptedCredentials
+	}
+
+	if opts.Assignment {
+		backupStore.AssignmentEnabled = &opts.Assignment
+	}
+
+	if opts.MaxCapacityGB != 0 {
+		backupStore.MaxCapacityGB = &opts.MaxCapacityGB
+	}
+
+	if opts.LoadFactor != 0 {
+		backupStore.LoadFactor = &opts.LoadFactor
+	}
+
+	return backupStore
 }

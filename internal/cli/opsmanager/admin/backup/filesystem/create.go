@@ -16,7 +16,7 @@ package filesystem
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backupstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -29,7 +29,7 @@ var createTemplate = "File System configuration '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts
-	backupstore.AdminOpts
+	backup.AdminOpts
 	store                    store.FileSystemsCreator
 	mmapv1CompressionSetting string
 	storePath                string

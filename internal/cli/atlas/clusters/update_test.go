@@ -57,8 +57,7 @@ func TestUpdate_Run(t *testing.T) {
 			UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).Return(expected, nil).
 			Times(1)
 
-		err := updateOpts.Run()
-		if err != nil {
+		if err := updateOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
@@ -108,8 +107,7 @@ func TestUpdate_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		err := updateOpts.Run()
-		if err != nil {
+		if err := updateOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})

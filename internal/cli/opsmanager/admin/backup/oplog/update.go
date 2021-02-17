@@ -16,7 +16,7 @@ package oplog
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backupstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -29,7 +29,7 @@ var updateTemplate = "Oplog configuration '{{.ID}}' updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	backupstore.AdminOpts
+	backup.AdminOpts
 	store store.OplogsUpdater
 	ID    string
 }

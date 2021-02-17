@@ -64,9 +64,7 @@ func TestIndexesCreate_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
-
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

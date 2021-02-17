@@ -49,8 +49,7 @@ func TestShutdown_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := shutdownOpts.Run()
-	if err != nil {
+	if err := shutdownOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

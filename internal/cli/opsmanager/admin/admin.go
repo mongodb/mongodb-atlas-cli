@@ -16,9 +16,32 @@ package admin
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/blockstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/filesystem"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/oplog"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/s3"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup/sync"
 	"github.com/spf13/cobra"
 )
+
+func BackupBuilder() *cobra.Command {
+	const use = "backups"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage backup administration.",
+	}
+
+	cmd.AddCommand(
+		blockstore.Builder(),
+		filesystem.Builder(),
+		s3.Builder(),
+		oplog.Builder(),
+		sync.Builder(),
+	)
+
+	return cmd
+}
 
 func Builder() *cobra.Command {
 	const use = "admin"
@@ -29,7 +52,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		backup.Builder(),
+		BackupBuilder(),
 	)
 
 	return cmd

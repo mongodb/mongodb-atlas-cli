@@ -16,7 +16,7 @@ package s3
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backupstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -30,7 +30,7 @@ var updateTemplate = "S3 blockstore configuration '{{.ID}}' updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	backupstore.AdminOpts
+	backup.AdminOpts
 	store                  store.S3BlockstoresUpdater
 	awsAccessKey           string
 	awsSecretKey           string

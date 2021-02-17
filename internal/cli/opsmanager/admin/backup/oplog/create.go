@@ -16,7 +16,7 @@ package oplog
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backupstore"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -28,7 +28,7 @@ var createTemplate = "Oplog configuration '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.OutputOpts
-	backupstore.AdminOpts
+	backup.AdminOpts
 	store store.OplogsCreator
 }
 
@@ -49,7 +49,6 @@ func (opts *CreateOpts) Run() error {
 // mongocli ops-manager admin backup oplog(s) create [--assignment][--name name]
 // [--label label][--loadFactor loadFactor][--uri uri][--ssl][--writeConcern writeConcern]
 // [--encryptedCredentials encryptedCredentials]
-
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate

@@ -16,7 +16,6 @@ package featurepolicies
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backupstore"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -29,7 +28,6 @@ var updateTemplate = "Feature control policies updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	backupstore.AdminOpts
 	cli.GlobalOpts
 	store    store.FeatureControlPoliciesUpdater
 	name     string

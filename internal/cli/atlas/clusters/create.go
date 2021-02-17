@@ -193,8 +193,11 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: createCluster,
-		Long:  createClusterLong,
+		Short: "Create a MongoDB cluster for your project.",
+		Long: `You can create MongoDB clusters using this command.
+To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
+this will create a 3 member replica set with the latest available mongodb server version available.
+Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`,
 		Example: `  
   Deploy a 3 members replica set in AWS
   $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10

@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{"update"},
-		Short:   short,
+		Short:   "Create operations.",
 	}
 	cmd.AddCommand(
 		NewRelicBuilder(),

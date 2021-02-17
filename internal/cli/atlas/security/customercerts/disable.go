@@ -67,7 +67,7 @@ func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{
 		Use:   "disable",
-		Short: disableCertConfig,
+		Short: "Disables customer-managed X.509 for a project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

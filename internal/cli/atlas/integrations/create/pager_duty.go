@@ -63,7 +63,7 @@ func PagerDutyBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     pagerDutyIntegrationType,
 		Aliases: []string{"pager_duty", "pagerDuty"},
-		Short:   newRelic,
+		Short:   "Create or update the PagerDuty integration.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

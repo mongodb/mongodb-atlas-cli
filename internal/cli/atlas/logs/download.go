@@ -86,9 +86,10 @@ func DownloadBuilder() *cobra.Command {
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
-		Short: download,
-		Long:  downloadLong,
-		Args:  require.ExactArgs(argsN),
+		Short: "Download a host mongodb logs.",
+		Long: `Download a gzipped file containing the logs for the selected hostname.
+To find the hostnames for an Atlas project, you can use the process list command.`,
+		Args: require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]

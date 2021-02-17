@@ -65,7 +65,7 @@ func OpsGenieBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     opsGenieType,
 		Aliases: []string{"ops_genie", "opsGenie"},
-		Short:   opsGenie,
+		Short:   "Create or update the Ops Genie integration.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

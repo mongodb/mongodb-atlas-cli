@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: create,
+		Short: "Create a connection with AWS, Azure and Google Cloud.",
 	}
 	cmd.AddCommand(AzureBuilder())
 	cmd.AddCommand(AwsBuilder())

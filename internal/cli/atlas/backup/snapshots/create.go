@@ -67,7 +67,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create <clusterName>",
 		Aliases: []string{"take"},
-		Short:   createSnapshot,
+		Short:   "Create a backup snapshot for your project and cluster.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

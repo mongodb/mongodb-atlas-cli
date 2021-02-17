@@ -52,7 +52,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:     "describe",
-		Short:   describe,
+		Short:   "Describe the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

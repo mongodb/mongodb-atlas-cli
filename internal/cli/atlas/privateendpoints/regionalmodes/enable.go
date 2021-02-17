@@ -50,7 +50,7 @@ func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
 		Use:   "enable",
-		Short: enable,
+		Short: "Enable the regionalized private endpoint setting for your Atlas project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

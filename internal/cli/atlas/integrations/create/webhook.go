@@ -65,7 +65,7 @@ func WebhookBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     webhookIntegrationType,
 		Aliases: []string{"webhook"},
-		Short:   webhook,
+		Short:   "Create or update the Webhook integration",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

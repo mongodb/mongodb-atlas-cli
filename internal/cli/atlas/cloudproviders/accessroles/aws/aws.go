@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	const use = "aws"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: aws,
+		Short: "Manage AWS IAM role access in Atlas.",
 	}
 	cmd.AddCommand(
 		CreateBuilder(),

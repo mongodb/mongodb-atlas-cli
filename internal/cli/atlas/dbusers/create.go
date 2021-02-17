@@ -162,7 +162,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: createDBUser,
+		Short: "Create a database user for your project.",
 		Example: `  
   Create an Atlas admin user
   $ mongocli atlas dbuser create atlasAdmin --username <username>  --projectId <projectId>

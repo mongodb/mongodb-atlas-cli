@@ -100,7 +100,7 @@ func GCPBuilder() *cobra.Command {
 	opts := &GCPOpts{}
 	cmd := &cobra.Command{
 		Use:   "gcp",
-		Short: createGCPConnection,
+		Short: "Create a connection with GCP.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

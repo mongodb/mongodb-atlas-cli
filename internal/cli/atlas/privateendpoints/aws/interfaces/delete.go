@@ -49,7 +49,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <atlasPrivateEndpointId>",
 		Aliases: []string{"rm"},
-		Short:   remove,
+		Short:   "Delete a specific AWS private endpoint interface for your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

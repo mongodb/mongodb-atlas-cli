@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   onlineArchives,
+		Short:   "Manage online archives for your cluster.",
 	}
 
 	cmd.AddCommand(ListBuilder())

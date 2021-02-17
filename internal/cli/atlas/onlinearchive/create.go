@@ -95,7 +95,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: createOnlineArchive,
+		Short: "Create an online archive for a cluster.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(opts.partitions) > maxPartitions {

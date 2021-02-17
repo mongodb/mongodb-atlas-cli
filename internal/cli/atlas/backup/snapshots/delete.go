@@ -49,7 +49,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <snapshotId>",
 		Aliases: []string{"rm"},
-		Short:   deleteSnapshot,
+		Short:   "Delete a backup snapshot.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

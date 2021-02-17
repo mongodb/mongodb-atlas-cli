@@ -48,7 +48,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <roleName>",
 		Aliases: []string{"rm"},
-		Short:   deleteDBRole,
+		Short:   "Delete a custom database role for your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

@@ -72,7 +72,7 @@ func DeauthorizeBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "deauthorize <ID>",
-		Short: deauthorize,
+		Short: "Deauthorize an AWS IAM role.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

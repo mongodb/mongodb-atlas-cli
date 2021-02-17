@@ -78,7 +78,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: createSearchIndexes,
+		Short: "Create a search index for a cluster.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !opts.dynamic && len(opts.fields) == 0 {

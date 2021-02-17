@@ -65,7 +65,7 @@ func VictorOpsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     victorOpsIntegrationType,
 		Aliases: []string{"victor_ops", "victorOps"},
-		Short:   newRelic,
+		Short:   "Create or update the VictorOps integrations",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

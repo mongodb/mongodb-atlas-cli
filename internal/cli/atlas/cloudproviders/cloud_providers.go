@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   cloudProvider,
+		Short:   "Manage unified IAM role access in Atlas.",
 	}
 	cmd.AddCommand(accessroles.Builder())
 

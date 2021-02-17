@@ -119,7 +119,7 @@ func AzureBuilder() *cobra.Command {
 	opts := &AzureOpts{}
 	cmd := &cobra.Command{
 		Use:   "azure",
-		Short: createAzureConnection,
+		Short: "Create a connection with Azure.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

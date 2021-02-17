@@ -20,12 +20,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const short = "Networking operations."
-
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "networking",
-		Short: short,
+		Short: "Networking operations.",
 	}
 	cmd.AddCommand(containers.Builder())
 	cmd.AddCommand(peering.Builder())

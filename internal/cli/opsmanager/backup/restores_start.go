@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -170,7 +171,7 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s>", automatedRestore, httpRestore),
 		Short:     StartRestore,
-		Args:      cobra.ExactValidArgs(1),
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {

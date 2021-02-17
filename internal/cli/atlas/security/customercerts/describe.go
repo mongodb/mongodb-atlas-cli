@@ -53,7 +53,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe",
-		Short: describeCertConfig,
+		Short: "Get the current customer-managed X.509 configuration details for an Atlas project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

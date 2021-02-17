@@ -50,7 +50,7 @@ func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
 		Use:   "enable",
-		Short: enable,
+		Short: "Enable the custom DNS configuration of an Atlas project’s cluster deployed to AWS.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

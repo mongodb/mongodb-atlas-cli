@@ -48,7 +48,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <name>",
 		Aliases: []string{"rm"},
-		Short:   deleteDataLake,
+		Short:   "Delete a data lake from your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

@@ -119,7 +119,7 @@ func AwsBuilder() *cobra.Command {
 	opts := &AWSOpts{}
 	cmd := &cobra.Command{
 		Use:   "aws",
-		Short: createAWSConnection,
+		Short: "Create a connection with AWS.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

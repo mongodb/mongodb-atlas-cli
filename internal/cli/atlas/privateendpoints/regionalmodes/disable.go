@@ -50,7 +50,7 @@ func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{
 		Use:   "disable",
-		Short: disable,
+		Short: "Disable the regionalized private endpoint setting for your Atlas project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

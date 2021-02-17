@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "certs"),
-		Short:   certs,
+		Short:   "Manage customer x509 certificates for your project.",
 	}
 	cmd.AddCommand(DescribeBuilder())
 	cmd.AddCommand(CreateBuilder())

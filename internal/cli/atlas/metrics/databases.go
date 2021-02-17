@@ -24,7 +24,7 @@ func DatabasesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   databases,
+		Short:   "List available databases or databases measurements for a given host.",
 	}
 	cmd.AddCommand(
 		DatabasesListBuilder(),

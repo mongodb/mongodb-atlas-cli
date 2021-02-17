@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete",
 		Aliases: []string{"rm"},
-		Short:   deleteDesc,
+		Short:   "Delete an LDAP configuration userToDNMapping from an LDAP configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -98,7 +98,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: createIndex,
+		Short: "Create a rolling index for your MongoDB cluster.",
 		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

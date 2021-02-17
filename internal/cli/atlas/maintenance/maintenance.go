@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   maintenanceWindows,
+		Short:   "Manage Atlas maintenance windows.",
 	}
 
 	cmd.AddCommand(

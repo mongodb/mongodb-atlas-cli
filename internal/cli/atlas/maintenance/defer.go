@@ -50,7 +50,7 @@ func DeferBuilder() *cobra.Command {
 	opts := &DeferOpts{}
 	cmd := &cobra.Command{
 		Use:   "defer",
-		Short: deferMaintenanceWindow,
+		Short: "Defer the maintenance window.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

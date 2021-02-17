@@ -58,7 +58,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   describePrivateEndpoints,
+		Short:   "Return a specific Private Endpoints for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   snapshotsShort,
+		Short:   "Manage cloud backup snapshots for your project.",
 	}
 
 	cmd.AddCommand(ListBuilder())

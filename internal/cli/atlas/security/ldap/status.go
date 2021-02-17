@@ -56,7 +56,7 @@ func StatusBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "status <ID>",
 		Args:  require.ExactValidArgs(1),
-		Short: status,
+		Short: "Get the status of an LDAP configuration request.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -67,7 +67,7 @@ func FlowdockBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     flowdockType,
 		Aliases: []string{"flowdock"},
-		Short:   flowdock,
+		Short:   "Create or update the Flowdock integration.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

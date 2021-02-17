@@ -56,7 +56,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <name>",
 		Aliases: []string{"get"},
-		Short:   describe,
+		Short:   "Describe an IP access list entry.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

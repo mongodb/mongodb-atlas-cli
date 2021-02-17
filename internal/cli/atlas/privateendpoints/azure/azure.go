@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	const use = "azure"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: privateEndpoints,
+		Short: "Manage Azure Private Endpoints.",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

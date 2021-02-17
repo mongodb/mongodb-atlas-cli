@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   regionalMode,
+		Short:   "Manage regionalized private endpoint setting for your Atlas project.",
 	}
 	cmd.AddCommand(
 		EnableBuilder(),

@@ -60,7 +60,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <name>",
 		Aliases: []string{"get"},
-		Short:   describeCluster,
+		Short:   "Describe a cluster.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

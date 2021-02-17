@@ -55,7 +55,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create <atlasPrivateEndpointId>",
 		Aliases: []string{"add"},
-		Short:   createInterfaceEndpoint,
+		Short:   "Add a new interface to a private endpoint.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

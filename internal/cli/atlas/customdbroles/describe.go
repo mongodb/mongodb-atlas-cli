@@ -55,7 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe <roleName>",
-		Short:   describeDBRole,
+		Short:   "Return a single custom database role for your project.",
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

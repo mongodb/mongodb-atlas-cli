@@ -69,7 +69,7 @@ func NewRelicBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "NEW_RELIC",
 		Aliases: []string{"new_relic", "newRelic"},
-		Short:   newRelic,
+		Short:   "Create or update the New Relic integration.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

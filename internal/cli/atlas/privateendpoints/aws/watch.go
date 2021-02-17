@@ -58,7 +58,7 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <name>",
-		Short: watchPrivateEndpoint,
+		Short: "Watch for a specific AWS Private Endpoint to be available.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

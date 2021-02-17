@@ -60,7 +60,7 @@ func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:   "start <ID>",
-		Short: startOnlineArchive,
+		Short: "Start a paused online archive from a cluster.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

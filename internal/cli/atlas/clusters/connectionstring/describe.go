@@ -60,7 +60,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
-		Short:   describe,
+		Short:   "Retrieve the SRV connection string of your MongoDB cluster.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

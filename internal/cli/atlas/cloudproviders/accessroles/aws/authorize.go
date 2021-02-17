@@ -62,7 +62,7 @@ func AuthorizeBuilder() *cobra.Command {
 	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{
 		Use:   "authorize <ID>",
-		Short: authorize,
+		Short: "Authorize an AWS IAM role.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

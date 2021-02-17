@@ -73,7 +73,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <username>",
-		Short: updateDBUser,
+		Short: "Update a database user for your project.",
 		Example: `
   Update roles for a user
   $ mongocli atlas dbuser update <username> --role readWriteAnyDatabase --projectId <projectId>

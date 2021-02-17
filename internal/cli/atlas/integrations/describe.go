@@ -96,7 +96,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:       "describe <TYPE>",
-		Short:     describeIntegration,
+		Short:     "Get a third party integration",
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"WEBHOOK", "OPS_GENIE", "VICTOR_OPS", "PAGER_DUTY", "NEW_RELIC", "FLOWDOCK", "DATADOG", "SLACK"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

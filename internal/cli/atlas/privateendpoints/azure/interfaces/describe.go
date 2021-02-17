@@ -59,7 +59,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <atlasPrivateEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   describe,
+		Short:   "Return a specific Azure private endpoint interface for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

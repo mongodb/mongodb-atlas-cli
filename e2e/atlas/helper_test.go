@@ -53,7 +53,7 @@ const (
 	logsEntity             = "logs"
 	cloudProvidersEntity   = "cloudProviders"
 	accessRolesEntity      = "accessRoles"
-	customDBRoleEntity     = "customDBRole"
+	customDBRoleEntity     = "customDbRoles"
 	regionalModeEntity     = "regionalModes"
 )
 

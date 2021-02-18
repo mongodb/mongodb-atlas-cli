@@ -24,24 +24,25 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	listSessions   = "LIST_SESSIONS"
-	update         = "UPDATE"
-	inheritedRole  = "enableSharding@admin"
-	enableSharding = "enableSharding"
+	createPrivilege = "UPDATE"
+	updatePrivilege = "LIST_SESSIONS"
+	inheritedRole   = "enableSharding@admin"
+	enableSharding  = "enableSharding"
 )
 
 func TestDBRoles(t *testing.T) {
 	n, err := e2e.RandInt(1000)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	roleName := fmt.Sprintf("role-%v", n)
 
 	cliPath, err := e2e.Bin()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -49,23 +50,21 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", listSessions,
+			"--privilege", fmt.Sprintf("%s@db.collection", createPrivilege),
 			"--inheritedRole", inheritedRole,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var role mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, &role); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &role))
 
+		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
-		a.Equal(listSessions, role.Actions[0].Action)
+		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
 		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -78,15 +77,12 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var roles []mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, &roles); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &roles))
 
-		a.NotEmpty(roles)
+		assert.NotEmpty(t, roles)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -98,17 +94,15 @@ func TestDBRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var role mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, &role); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &role))
 
+		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
-		a.Equal(listSessions, role.Actions[0].Action)
+		a.Equal(createPrivilege, role.Actions[0].Action)
 		a.Len(role.InheritedRoles, 1)
 		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -119,23 +113,23 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db", update),
+			"--privilege", updatePrivilege,
+			"--privilege", fmt.Sprintf("%s@db2.collection", createPrivilege),
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var role mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, &role); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &role))
 
+		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 2)
-		a.Equal(update, role.Actions[0].Action)
-		a.Equal(listSessions, role.Actions[1].Action)
+		a.ElementsMatch(
+			[]string{role.Actions[0].Action, role.Actions[1].Action},
+			[]string{updatePrivilege, createPrivilege})
 		a.Len(role.InheritedRoles, 1)
 		a.Equal(enableSharding, role.InheritedRoles[0].Role)
 	})
@@ -146,21 +140,19 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db", update),
+			"--privilege", updatePrivilege,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var role mongodbatlas.CustomDBRole
-		if err := json.Unmarshal(resp, &role); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &role))
 
+		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.Actions, 1)
-		a.Equal(update, role.Actions[0].Action)
+		a.Equal(updatePrivilege, role.Actions[0].Action)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -172,10 +164,10 @@ func TestDBRoles(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		require.NoError(t, err, string(resp))
 
-		expected := fmt.Sprintf("Custom Database role '%s' deleted\n", roleName)
+		a := assert.New(t)
+		expected := fmt.Sprintf("Custom database role '%s' deleted\n", roleName)
 		a.Equal(expected, string(resp))
 	})
 }

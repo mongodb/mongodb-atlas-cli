@@ -68,7 +68,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd = cli.Builder()
 	hasArgs := len(argsWithoutProg) != 0
 
-	if hasArgs && argsWithoutProg[0] == "--version" {
+	if hasArgs && (argsWithoutProg[0] == "--version" || argsWithoutProg[0] == "-v") {
 		return rootCmd
 	}
 	rootCmd.AddCommand(cliconfig.Builder())
@@ -77,6 +77,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		atlas.Use,
 		"help",
 		"--help",
+		"-h",
 		"completion",
 		"__complete",
 	}

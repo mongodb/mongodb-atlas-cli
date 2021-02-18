@@ -16,6 +16,7 @@ package convert
 import (
 	"strings"
 
+	"github.com/openlyinc/pointy"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -47,7 +48,6 @@ func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
 // r contains roles in the format action[@dbName.collection]
 func BuildAtlasActions(a []string) []atlas.Action {
 	actions := make([]atlas.Action, len(a))
-	cluster := true
 	for i, actionP := range a {
 		resourceStruct := atlas.Resource{}
 		action := strings.Split(actionP, roleSep)
@@ -59,7 +59,7 @@ func BuildAtlasActions(a []string) []atlas.Action {
 				resourceStruct.Collection = resource[1]
 			}
 		} else {
-			resourceStruct.Cluster = &cluster
+			resourceStruct.Cluster = pointy.Bool(true)
 		}
 
 		actions[i] = atlas.Action{

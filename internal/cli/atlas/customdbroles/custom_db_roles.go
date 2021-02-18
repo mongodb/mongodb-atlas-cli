@@ -17,6 +17,7 @@ package customdbroles
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func Builder() *cobra.Command {
@@ -35,4 +36,42 @@ func Builder() *cobra.Command {
 	)
 
 	return cmd
+}
+
+// appendActions adds existing actions to the request, ti will also take care in.
+func appendActions(existingActions, newActions []atlas.Action) []atlas.Action {
+	out := make([]atlas.Action, 0)
+	actionMap := make(map[string]atlas.Action)
+	for _, action := range existingActions {
+		actionMap[action.Action] = action
+	}
+	for _, action := range newActions {
+		if a, ok := actionMap[action.Action]; ok {
+			action.Resources = append(action.Resources, a.Resources...)
+			out = append(out, action)
+			delete(actionMap, action.Action)
+			continue
+		}
+		out = append(out, action)
+	}
+	for _, action := range actionMap {
+		out = append(out, action)
+	}
+	return out
+}
+
+// joinActions will merge the resources for a same action given actions must be unique.
+func joinActions(newActions []atlas.Action) []atlas.Action {
+	out := make([]atlas.Action, 0)
+	actionMap := make(map[string]atlas.Action)
+	for _, action := range newActions {
+		if a, ok := actionMap[action.Action]; ok {
+			action.Resources = append(action.Resources, a.Resources...)
+		}
+		actionMap[action.Action] = action
+	}
+	for _, action := range actionMap {
+		out = append(out, action)
+	}
+	return out
 }

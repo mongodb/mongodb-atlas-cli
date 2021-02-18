@@ -67,7 +67,7 @@ func (opts *UpdateOpts) newCustomDBRole(existingRole *atlas.CustomDBRole) *atlas
 	out := &atlas.CustomDBRole{
 		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
 	}
-	actions := convert.BuildAtlasActions(opts.action)
+	actions := joinActions(convert.BuildAtlasActions(opts.action))
 
 	if opts.append {
 		actions = appendActions(existingRole.Actions, actions)
@@ -76,24 +76,6 @@ func (opts *UpdateOpts) newCustomDBRole(existingRole *atlas.CustomDBRole) *atlas
 	out.Actions = actions
 
 	return out
-}
-
-func appendActions(existingActions, newActions []atlas.Action) []atlas.Action {
-	actionMap := make(map[string]atlas.Action)
-	for _, action := range existingActions {
-		actionMap[action.Action] = action
-	}
-	for i, action := range newActions {
-		if a, ok := actionMap[action.Action]; ok {
-			action.Resources = append(action.Resources, a.Resources...)
-			newActions[i] = action
-			delete(actionMap, action.Action)
-		}
-	}
-	for _, action := range actionMap {
-		newActions = append(newActions, action)
-	}
-	return newActions
 }
 
 func (opts *UpdateOpts) validate() error {

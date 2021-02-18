@@ -140,7 +140,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db", updatePrivilege),
+			"--privilege", updatePrivilege,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

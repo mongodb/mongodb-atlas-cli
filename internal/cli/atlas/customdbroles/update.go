@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const updateTemplate = "Custom Database Role successfully updated.\n"
+const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
 
 type UpdateOpts struct {
 	cli.GlobalOpts
@@ -48,8 +48,8 @@ func (opts *UpdateOpts) initStore() error {
 
 func (opts *UpdateOpts) Run() error {
 	var role *atlas.CustomDBRole
-	var err error
 	if opts.append {
+		var err error
 		if role, err = opts.store.DatabaseRole(opts.ConfigProjectID(), opts.roleName); err != nil {
 			return err
 		}
@@ -63,30 +63,41 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(out)
 }
 
-func (opts *UpdateOpts) newCustomDBRole(role *atlas.CustomDBRole) *atlas.CustomDBRole {
+func (opts *UpdateOpts) newCustomDBRole(existingRole *atlas.CustomDBRole) *atlas.CustomDBRole {
 	out := &atlas.CustomDBRole{
-		Actions:        []atlas.Action{},
-		InheritedRoles: []atlas.InheritedRole{},
+		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
 	}
-
-	if len(opts.action) > 0 {
-		out.Actions = convert.BuildAtlasActions(opts.action)
-	}
-
-	if len(opts.inheritedRoles) > 0 {
-		out.InheritedRoles = convert.BuildAtlasInheritedRoles(opts.inheritedRoles)
-	}
+	actions := convert.BuildAtlasActions(opts.action)
 
 	if opts.append {
-		out.Actions = append(out.Actions, role.Actions...)
-		out.InheritedRoles = append(out.InheritedRoles, role.InheritedRoles...)
+		actions = appendActions(existingRole.Actions, actions)
+		out.InheritedRoles = append(out.InheritedRoles, existingRole.InheritedRoles...)
 	}
+	out.Actions = actions
 
 	return out
 }
 
+func appendActions(existingActions, newActions []atlas.Action) []atlas.Action {
+	actionMap := make(map[string]atlas.Action)
+	for _, action := range existingActions {
+		actionMap[action.Action] = action
+	}
+	for i, action := range newActions {
+		if a, ok := actionMap[action.Action]; ok {
+			action.Resources = append(action.Resources, a.Resources...)
+			newActions[i] = action
+			delete(actionMap, action.Action)
+		}
+	}
+	for _, action := range actionMap {
+		newActions = append(newActions, action)
+	}
+	return newActions
+}
+
 func (opts *UpdateOpts) validate() error {
-	if len(opts.action) == 0 && opts.inheritedRoles == nil {
+	if len(opts.action) == 0 && len(opts.inheritedRoles) == 0 {
 		return errors.New("you must provide either actions or inherited roles")
 	}
 	return nil
@@ -96,7 +107,7 @@ func (opts *UpdateOpts) validate() error {
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update",
+		Use:   "update <roleName>",
 		Short: "Update a custom database role for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

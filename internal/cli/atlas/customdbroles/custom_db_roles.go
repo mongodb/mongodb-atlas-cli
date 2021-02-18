@@ -20,19 +20,19 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "customDBRoles"
+	const use = "customDbRoles"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: cli.GenerateAliases(use, "customDBRoles"),
 		Short:   "Manage custom database roles for your project.",
 	}
-
 	cmd.AddCommand(
 		CreateBuilder(),
 		DescribeBuilder(),
 		ListBuilder(),
 		DeleteBuilder(),
-		UpdateBuilder())
+		UpdateBuilder(),
+	)
 
 	return cmd
 }

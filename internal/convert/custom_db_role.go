@@ -45,10 +45,10 @@ func BuildAtlasInheritedRoles(r []string) []atlas.InheritedRole {
 
 // BuildAtlasActions converts the actions inside the array of string in an array of atlas.Action structs
 // r contains roles in the format action[@dbName.collection]
-func BuildAtlasActions(r []string) []atlas.Action {
-	actions := make([]atlas.Action, len(r))
+func BuildAtlasActions(a []string) []atlas.Action {
+	actions := make([]atlas.Action, len(a))
 	cluster := true
-	for i, actionP := range r {
+	for i, actionP := range a {
 		resourceStruct := atlas.Resource{}
 		action := strings.Split(actionP, roleSep)
 		actionName := action[0]

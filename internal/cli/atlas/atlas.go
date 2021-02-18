@@ -54,14 +54,16 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		datalake.Builder(),
 		clusters.Builder(),
 		dbusers.Builder(),
+		customdbroles.Builder(),
 		accesslists.Builder(),
+		datalake.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),
 		metrics.Builder(),
+		performanceadvisor.Builder(),
 		logs.Builder(),
 		processes.Builder(),
 		privateendpoints.Builder(),
@@ -69,9 +71,7 @@ func Builder() *cobra.Command {
 		security.Builder(),
 		integrations.Builder(),
 		maintenance.Builder(),
-		performanceadvisor.Builder(),
 		customdns.Builder(),
-		customdbroles.Builder(),
 		cloudproviders.Builder(),
 	)
 

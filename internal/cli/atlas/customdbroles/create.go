@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const createTemplate = "Custom Database Role {{.RoleName}} successfully created.\n"
+const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -76,7 +76,7 @@ func (opts *CreateOpts) validate() error {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create <roleName>",
 		Short: "Create a custom database role for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

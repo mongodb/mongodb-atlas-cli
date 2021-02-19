@@ -68,7 +68,7 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   listAlerts,
+		Short:   "List alerts for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

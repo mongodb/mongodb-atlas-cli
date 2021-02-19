@@ -21,7 +21,7 @@ import (
 func GlobalBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "global",
-		Short: global,
+		Short: "List alerts for your project.",
 	}
 
 	cmd.AddCommand(GlobalListBuilder())

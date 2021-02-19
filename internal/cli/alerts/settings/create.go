@@ -58,7 +58,7 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: createAlertsConfig,
+		Short: "Create an alert configuration for your project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

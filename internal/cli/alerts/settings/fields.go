@@ -15,14 +15,16 @@
 package settings
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func FieldsBuilder() *cobra.Command {
+	const use = "fields"
 	cmd := &cobra.Command{
-		Use:     "fields",
-		Aliases: []string{"field"},
-		Short:   configFields,
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage alert configuration fields for your project.",
 	}
 
 	cmd.AddCommand(FieldsTypeBuilder())

@@ -64,7 +64,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:     "assign <ID>",
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
-		Short:   updateAPIKey,
+		Short:   "Update an Organization API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

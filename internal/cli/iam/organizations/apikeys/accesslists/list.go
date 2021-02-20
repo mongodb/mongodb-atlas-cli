@@ -57,7 +57,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list <apiKeyID>",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
-		Short:   list,
+		Short:   "List IP access list entries for your API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

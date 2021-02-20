@@ -88,7 +88,7 @@ func DescribeBuilder() *cobra.Command {
   Describe a team by Name
   $ mongocli iam team(s) describe --name teamName --orgId <orgId>
 `,
-		Short: describeTeam,
+		Short: "Get a team in an organization.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

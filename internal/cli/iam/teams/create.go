@@ -61,7 +61,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: createTeam,
+		Short: "Create a team in an organization.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

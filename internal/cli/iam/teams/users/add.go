@@ -55,7 +55,7 @@ func AddBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add <userId> [userId]...",
 		Args:  require.MinimumNObjectIDArgs(1),
-		Short: addUser,
+		Short: "Add a user to a team.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args
 			return opts.PreRunE(

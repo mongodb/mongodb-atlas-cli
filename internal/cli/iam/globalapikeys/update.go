@@ -63,7 +63,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Args:  require.ExactArgs(1),
-		Short: updateAPIKey,
+		Short: "Update a Global API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

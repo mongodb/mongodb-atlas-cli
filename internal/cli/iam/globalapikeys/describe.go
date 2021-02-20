@@ -56,7 +56,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
-		Short:   describeAPIKey,
+		Short:   "Get a specific Global API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

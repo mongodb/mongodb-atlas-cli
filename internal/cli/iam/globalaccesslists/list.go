@@ -58,7 +58,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Short:   list,
+		Short:   "List Atlas IP access list entries for Global API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

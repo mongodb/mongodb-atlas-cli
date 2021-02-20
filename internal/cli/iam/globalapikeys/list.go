@@ -16,6 +16,7 @@ package globalapikeys
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -57,6 +58,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List Global API Keys.",
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

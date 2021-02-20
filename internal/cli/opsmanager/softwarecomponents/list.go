@@ -15,6 +15,7 @@ package softwarecompotents
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -54,6 +55,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List versions of MongoDB Agent, MongoDB Tools, and BI Connector in your environment.",
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore()

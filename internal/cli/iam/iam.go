@@ -25,20 +25,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	Use  = "iam"
-	iam  = "Organization and projects operations."
-	long = "Identity and Access Management."
-)
-
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: Use,
+		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return validate.Credentials()
 		},
-		Short: iam,
-		Long:  long,
+		Short: "Organization and projects operations.",
+		Long:  "Identity and Access Management.",
 	}
 	cmd.AddCommand(
 		projects.Builder(),

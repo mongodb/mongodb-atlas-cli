@@ -65,7 +65,7 @@ func AddBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add <teamId>",
 		Args:  require.ExactArgs(1),
-		Short: addTeam,
+		Short: "Add team to a project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

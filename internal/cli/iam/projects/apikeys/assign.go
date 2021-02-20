@@ -62,7 +62,7 @@ func AssignBuilder() *cobra.Command {
 		Use:     "assign <ID>",
 		Aliases: []string{"update"},
 		Args:    require.ExactArgs(1),
-		Short:   assignProjectAPIKey,
+		Short:   "Assign an API Key to a project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(

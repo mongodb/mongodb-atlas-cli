@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   projectIAMUsers,
+		Short:   "Manage users for a project.",
 		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(

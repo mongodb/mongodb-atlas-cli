@@ -100,7 +100,7 @@ func DescribeBuilder() *cobra.Command {
   Describe a user by username
   $ mongocli iam users describe --username <username>
 `,
-		Short: describeIAMUser,
+		Short: "Get a user by username or id.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return PreRunE(

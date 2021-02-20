@@ -36,16 +36,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	Use          = "cloud-manager"
-	cloudManager = "MongoDB Cloud Manager operations."
-)
-
 func Builder() *cobra.Command {
+	const use = "cloud-manager"
 	cmd := &cobra.Command{
-		Use:     Use,
+		Use:     use,
 		Aliases: []string{"cm"},
-		Short:   cloudManager,
+		Short:   "MongoDB Cloud Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudManagerService)
 			return validate.Credentials()

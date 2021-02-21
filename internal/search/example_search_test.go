@@ -24,10 +24,8 @@ import (
 
 // This example demonstrates searching a cluster in an automation config.
 func ExampleClusterExists() {
-	a := fixture.AutomationConfig()
-	x := "myReplicaSet"
-	found := ClusterExists(a, x)
-	if found {
+	const x = "myReplicaSet"
+	if found := ClusterExists(fixture.AutomationConfig(), x); found {
 		fmt.Printf("found %v\n", x)
 	} else {
 		fmt.Printf("%s not found\n", x)

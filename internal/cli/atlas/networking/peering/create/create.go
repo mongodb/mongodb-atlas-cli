@@ -24,9 +24,11 @@ func Builder() *cobra.Command {
 		Use:   use,
 		Short: "Create a connection with AWS, Azure and Google Cloud.",
 	}
-	cmd.AddCommand(AzureBuilder())
-	cmd.AddCommand(AwsBuilder())
-	cmd.AddCommand(GCPBuilder())
+	cmd.AddCommand(
+		AzureBuilder(),
+		AwsBuilder(),
+		GCPBuilder(),
+	)
 
 	return cmd
 }

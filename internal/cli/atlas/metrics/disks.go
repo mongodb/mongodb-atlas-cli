@@ -27,8 +27,10 @@ func DisksBuilder() *cobra.Command {
 		Short:   "List available disks or disks measurements for a given host.",
 	}
 
-	cmd.AddCommand(DisksListBuilder())
-	cmd.AddCommand(DisksDescribeBuilder())
+	cmd.AddCommand(
+		DisksListBuilder(),
+		DisksDescribeBuilder(),
+	)
 
 	return cmd
 }

@@ -27,11 +27,13 @@ func Builder() *cobra.Command {
 		Short:   "Manage cloud backup snapshots for your project.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+		DescribeBuilder(),
+		WatchBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

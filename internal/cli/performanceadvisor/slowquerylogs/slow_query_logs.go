@@ -27,7 +27,8 @@ func Builder() *cobra.Command {
 		Short:   "Get log lines for slow queries for a specified host",
 	}
 	cmd.AddCommand(
-		ListBuilder())
+		ListBuilder(),
+	)
 
 	return cmd
 }

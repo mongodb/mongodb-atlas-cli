@@ -25,8 +25,9 @@ func Builder() *cobra.Command {
 		Use:   "networking",
 		Short: "Networking operations.",
 	}
-	cmd.AddCommand(containers.Builder())
-	cmd.AddCommand(peering.Builder())
-
+	cmd.AddCommand(
+		containers.Builder(),
+		peering.Builder(),
+	)
 	return cmd
 }

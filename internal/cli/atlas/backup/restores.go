@@ -27,8 +27,10 @@ func RestoresBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 	}
 
-	cmd.AddCommand(RestoresListBuilder())
-	cmd.AddCommand(RestoresStartBuilder())
+	cmd.AddCommand(
+		RestoresListBuilder(),
+		RestoresStartBuilder(),
+	)
 
 	return cmd
 }

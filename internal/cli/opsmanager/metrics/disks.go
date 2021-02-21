@@ -25,8 +25,10 @@ func DisksBuilder() *cobra.Command {
 		Short:   Disks,
 	}
 
-	cmd.AddCommand(DisksListBuilder())
-	cmd.AddCommand(DisksDescribeBuilder())
+	cmd.AddCommand(
+		DisksListBuilder(),
+		DisksDescribeBuilder(),
+	)
 
 	return cmd
 }

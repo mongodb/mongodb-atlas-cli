@@ -26,9 +26,10 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas private endpoint interfaces.",
 	}
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(DeleteBuilder())
-
+	cmd.AddCommand(
+		CreateBuilder(),
+		DescribeBuilder(),
+		DeleteBuilder(),
+	)
 	return cmd
 }

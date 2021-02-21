@@ -26,10 +26,12 @@ func Builder() *cobra.Command {
 		Short:   "Manage API Keys for your project.",
 		Aliases: cli.GenerateAliases(use),
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(AssignBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		AssignBuilder(),
+	)
 
 	return cmd
 }

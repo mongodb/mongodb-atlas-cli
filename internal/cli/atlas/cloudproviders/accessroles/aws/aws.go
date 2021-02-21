@@ -27,7 +27,8 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		CreateBuilder(),
 		AuthorizeBuilder(),
-		DeauthorizeBuilder())
+		DeauthorizeBuilder(),
+	)
 
 	return cmd
 }

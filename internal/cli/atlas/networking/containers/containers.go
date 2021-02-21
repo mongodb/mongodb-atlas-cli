@@ -27,8 +27,10 @@ func Builder() *cobra.Command {
 		Short:   "Manage Network Peering containers.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

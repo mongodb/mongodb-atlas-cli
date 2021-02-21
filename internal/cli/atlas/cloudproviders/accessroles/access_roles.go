@@ -29,7 +29,8 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		aws.Builder(),
-		ListBuilder())
+		ListBuilder(),
+	)
 
 	return cmd
 }

@@ -26,11 +26,12 @@ func IndexesBuilder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas Search indexes for your cluster.",
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+		DescribeBuilder(),
+		UpdateBuilder(),
+		DeleteBuilder(),
+	)
 	return cmd
 }

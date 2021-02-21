@@ -39,7 +39,8 @@ func Builder() *cobra.Command {
 		interfaces.Builder(),
 		aws.Builder(),
 		azure.Builder(),
-		regionalmodes.Builder())
+		regionalmodes.Builder(),
+	)
 
 	return cmd
 }

@@ -27,13 +27,14 @@ func Builder() *cobra.Command {
 		Short:   "Manage online archives for your cluster.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(PauseBuilder())
-	cmd.AddCommand(StartBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		UpdateBuilder(),
+		PauseBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

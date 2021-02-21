@@ -26,8 +26,10 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas x509 certificates for your database users.",
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+	)
 
 	return cmd
 }

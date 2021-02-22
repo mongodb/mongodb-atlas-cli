@@ -212,8 +212,13 @@ func Builder() *cobra.Command {
 	opts := &configOpts{}
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: short,
-		Long:  long,
+		Short: "Configure a profile to store access settings for your MongoDB deployment.",
+		Long: `Configure settings in a user profile.
+All settings are optional. You can specify settings individually by running: 
+  $ mongocli config set --help 
+
+You can also use environment variables (MCLI_*) when running the tool.
+To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,
 		Example: `
   To configure the tool to work with Atlas
   $ mongocli config
@@ -229,11 +234,13 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
-	cmd.AddCommand(SetBuilder())
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(RenameBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		SetBuilder(),
+		ListBuilder(),
+		DescribeBuilder(),
+		RenameBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

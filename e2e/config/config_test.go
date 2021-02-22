@@ -16,6 +16,7 @@
 package config_test
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"strings"
@@ -30,13 +31,15 @@ func TestConfig(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const configEntity = "config"
-	const existingProfile = "e2e"
+	const (
+		configEntity    = "config"
+		existingProfile = "e2e"
+	)
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -46,26 +49,39 @@ func TestConfig(t *testing.T) {
 	})
 	t.Run("Describe", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
-		cmd := exec.Command(cliPath, configEntity, "describe", "e2e")
+		cmd := exec.Command(
+			cliPath,
+			configEntity,
+			"describe",
+			"e2e",
+			"-o=json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		const expected = `org_id = 5e429e7706822c6eac4d5971
-public_api_key = redacted
-service = cloud
-`
-		if string(resp) != expected {
-			t.Errorf("expected %s, got %s\n", expected, string(resp))
+		var config map[string]interface{}
+		if err := json.Unmarshal(resp, &config); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if _, ok := config["org_id"]; !ok {
+			t.Errorf("expected %v, to have key %s\n", config, "org_id")
+		}
+		if _, ok := config["service"]; !ok {
+			t.Errorf("expected %v, to have key %s\n", config, "service")
 		}
 	})
 	t.Run("Rename", func(t *testing.T) {
-		cmd := exec.Command(cliPath, configEntity, "rename", "e2e", "renamed")
+		cmd := exec.Command(
+			cliPath,
+			configEntity,
+			"rename",
+			"e2e",
+			"renamed",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}

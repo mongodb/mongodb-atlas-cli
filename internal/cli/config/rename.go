@@ -62,7 +62,7 @@ func RenameBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "rename <oldName> <newName>",
 		Aliases: []string{"mv"},
-		Short:   renameShort,
+		Short:   "Rename a profile.",
 		Args:    require.ExactArgs(argsN),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.oldName = args[0]

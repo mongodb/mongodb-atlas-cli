@@ -55,8 +55,9 @@ func SetBuilder() *cobra.Command {
 	const argsN = 2
 	cmd := &cobra.Command{
 		Use:   "set <property> <value>",
-		Short: setShort,
-		Long:  fmt.Sprintf(setLong, config.Properties()),
+		Short: "Configure specific properties of a profile.",
+		Long: fmt.Sprintf(`Configure specific properties of the profile.
+Available properties include: %v.`, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))

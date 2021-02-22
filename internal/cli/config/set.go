@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
-
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -59,8 +59,8 @@ func SetBuilder() *cobra.Command {
 		Long: fmt.Sprintf(`Configure specific properties of the profile.
 Available properties include: %v.`, config.Properties()),
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != argsN {
-				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
+			if err := require.ExactArgs(argsN)(cmd, args); err != nil {
+				return err
 			}
 			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
 				return fmt.Errorf("invalid property: %q", args[0])

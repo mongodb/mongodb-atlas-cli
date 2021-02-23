@@ -32,21 +32,31 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DownloadOpts{
-		name:  "mongo.gz",
-		store: mockStore,
+	validLogsToDownload := []string{
+		"mongodb.gz",
+		"mongos.gz",
+		"mongosqld.gz",
+		"mongodb-audit-log.gz",
+		"mongos-audit-log.gz",
 	}
-	opts.Out = opts.name
-	opts.Fs = afero.NewMemMapFs()
 
-	mockStore.
-		EXPECT().
-		DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
-		Return(nil).
-		Times(1)
+	for _, validLogToDownload := range validLogsToDownload {
+		opts := &DownloadOpts{
+			name:  validLogToDownload,
+			store: mockStore,
+		}
+		opts.Out = opts.name
+		opts.Fs = afero.NewMemMapFs()
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+		mockStore.
+			EXPECT().
+			DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
+			Return(nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error downloading %v logs: %v", validLogToDownload, err)
+		}
 	}
 }
 

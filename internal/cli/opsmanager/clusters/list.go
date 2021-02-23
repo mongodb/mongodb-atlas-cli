@@ -86,8 +86,9 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List clusters for your project.",
-		Long:    "",
-		Args:    require.NoArgs,
+		Long: `When listing clusters with no output format the information provided is defined by monitoring.
+When using an output format the information will be provided by automation.`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), opts.template())()
 			return opts.PreRunE(opts.ValidateProjectID, opts.init)

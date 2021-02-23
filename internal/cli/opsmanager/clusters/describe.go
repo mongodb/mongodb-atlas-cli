@@ -76,8 +76,9 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <id|name>",
 		Short: "Describe a cluster.",
-		Long:  "",
-		Args:  require.ExactArgs(1),
+		Long: `When describing cluster with no output format please provide the cluster ID.
+When using an output format the please provide the cluster name.`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

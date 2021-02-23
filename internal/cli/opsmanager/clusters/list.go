@@ -38,8 +38,8 @@ func (opts *ListOpts) init() error {
 }
 
 // listTemplate used when project ID is given
-var listTemplate = `ID	NAME	TYPE{{range .Results}}
-{{.ID}}	{{.ClusterName}}	{{.TypeName}}{{end}}
+var listTemplate = `ID	NAME	TYPE	REPLICASET NAME{{range .Results}}
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}	{{.ReplicaSetName}}{{end}}
 `
 
 // listAllTemplate used fetching all clusters for all projects
@@ -85,7 +85,8 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   ListClusters,
+		Short:   "List clusters for your project.",
+		Long:    "",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), opts.template())()

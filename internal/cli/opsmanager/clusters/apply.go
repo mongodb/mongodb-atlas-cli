@@ -73,7 +73,7 @@ func ApplyBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "apply",
-		Short: ApplyCluster,
+		Short: "Apply a new cluster configuration for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},

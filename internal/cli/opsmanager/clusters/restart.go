@@ -82,7 +82,7 @@ func RestartOptsBuilder() *cobra.Command {
 	opts := &RestartOpts{}
 	cmd := &cobra.Command{
 		Use:   "restart <name>",
-		Short: ShutdownCluster,
+		Short: "Restart a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

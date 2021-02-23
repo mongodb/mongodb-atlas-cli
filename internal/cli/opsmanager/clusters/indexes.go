@@ -24,7 +24,7 @@ func IndexesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Indexes,
+		Short:   "Manage cluster rolling indexes for your project.",
 	}
 	cmd.AddCommand(IndexesCreateBuilder())
 

@@ -79,13 +79,13 @@ func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
-// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
+// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
+		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
 		Short: "Download a host mongodb logs.",
 		Long: `Download a gzipped file containing the logs for the selected hostname.
 To find the hostnames for an Atlas project, you can use the process list command.`,
@@ -101,7 +101,7 @@ To find the hostnames for an Atlas project, you can use the process list command
 			}
 			return opts.Run()
 		},
-		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
+		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongosqld.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
 	}
 
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)

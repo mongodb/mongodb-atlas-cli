@@ -127,7 +127,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 }
 
 // DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
+func (s *Store) DeleteInterfaceEndpoint(projectID, provider, privateEndpointID, endpointServiceID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, privateEndpointID)

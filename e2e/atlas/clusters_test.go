@@ -30,9 +30,9 @@ import (
 
 func TestClustersFlags(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
+
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
@@ -56,7 +56,7 @@ func TestClustersFlags(t *testing.T) {
 
 		var cluster *mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
+		req.NoError(err)
 
 		ensureCluster(t, cluster, clusterName, "4.0", 10)
 	})
@@ -71,6 +71,8 @@ func TestClustersFlags(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
+
+		a := assert.New(t)
 		a.Contains(string(resp), "Cluster available")
 	})
 
@@ -87,6 +89,8 @@ func TestClustersFlags(t *testing.T) {
 		var clusters []mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
+
+		a := assert.New(t)
 		a.NotEmpty(clusters)
 	})
 
@@ -104,6 +108,8 @@ func TestClustersFlags(t *testing.T) {
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
+
+		a := assert.New(t)
 		a.Equal(clusterName, cluster.Name)
 	})
 
@@ -123,6 +129,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &connectionString)
 		req.NoError(err)
 
+		a := assert.New(t)
 		a.NotEmpty(connectionString.Standard)
 		a.NotEmpty(connectionString.StandardSrv)
 	})
@@ -169,17 +176,18 @@ func TestClustersFlags(t *testing.T) {
 		req.NoError(err)
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
 }
 
 func TestClustersFile(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	a := assert.New(t)
-	a.NoError(err)
+	req := require.New(t)
+	req.NoError(err)
 
 	clusterFileName, err := RandClusterName()
-	a.NoError(err)
+	req.NoError(err)
 
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -191,11 +199,11 @@ func TestClustersFile(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
+		req.NoError(err)
 
 		ensureCluster(t, &cluster, clusterFileName, "4.2", 10)
 	})
@@ -210,11 +218,11 @@ func TestClustersFile(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
-		a.NoError(err)
+		req.NoError(err)
 
 		ensureCluster(t, &cluster, clusterFileName, "4.2", 25)
 	})
@@ -223,9 +231,10 @@ func TestClustersFile(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
+		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
 }

@@ -22,22 +22,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,PrivateEndpointListerDeprecated,PrivateEndpointDescriberDeprecated,PrivateEndpointCreatorDeprecated,PrivateEndpointDeleterDeprecated,InterfaceEndpointCreatorDeprecated,InterfaceEndpointDescriberDeprecated,InterfaceEndpointDeleterDeprecated,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber
+//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error)
 }
 
-type PrivateEndpointListerDeprecated interface {
-	PrivateEndpointsDeprecated(string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)
-}
-
 type PrivateEndpointDescriber interface {
 	PrivateEndpoint(string, string, string) (*atlas.PrivateEndpointConnection, error)
-}
-
-type PrivateEndpointDescriberDeprecated interface {
-	PrivateEndpointDeprecated(string, string) (*atlas.PrivateEndpointConnectionDeprecated, error)
 }
 
 type PrivateEndpointCreator interface {
@@ -48,32 +40,12 @@ type PrivateEndpointDeleter interface {
 	DeletePrivateEndpoint(string, string, string) error
 }
 
-type PrivateEndpointDeleterDeprecated interface {
-	DeletePrivateEndpointDeprecated(string, string) error
-}
-
 type InterfaceEndpointDescriber interface {
 	InterfaceEndpoint(string, string, string, string) (*atlas.InterfaceEndpointConnection, error)
 }
 
-type InterfaceEndpointDescriberDeprecated interface {
-	InterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)
-}
-
 type InterfaceEndpointCreator interface {
 	CreateInterfaceEndpoint(string, string, string, *atlas.InterfaceEndpointConnection) (*atlas.InterfaceEndpointConnection, error)
-}
-
-type InterfaceEndpointCreatorDeprecated interface {
-	CreateInterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)
-}
-
-type PrivateEndpointCreatorDeprecated interface {
-	CreatePrivateEndpointDeprecated(string, *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error)
-}
-
-type InterfaceEndpointDeleterDeprecated interface {
-	DeleteInterfaceEndpointDeprecated(string, string, string) error
 }
 
 type InterfaceEndpointDeleter interface {
@@ -99,33 +71,11 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 	}
 }
 
-// PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.List(context.Background(), projectID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
 // PrivateEndpoint encapsulates the logic to manage different cloud providers
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(context.Background(), projectID, provider, privateLinkID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// PrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(context.Background(), projectID, privateLinkID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -154,44 +104,11 @@ func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string)
 	}
 }
 
-// DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(context.Background(), projectID, privateLinkID)
-		return err
-	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// CreateInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
 // CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlas.InterfaceEndpointConnection) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.AddOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, createRequest)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// CreatePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Create(context.Background(), projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -209,33 +126,11 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 	}
 }
 
-// InterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
 // DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteInterfaceEndpoint(projectID, provider, privateEndpointID, endpointServiceID string) error {
+func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, privateEndpointID)
-		return err
-	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
-	}
-}
-
-// DeleteInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
-func (s *Store) DeleteInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)

@@ -31,10 +31,6 @@ func TestWatchBuilder(t *testing.T) {
 }
 
 func TestWatchOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
-	defer ctrl.Finish()
-
 	tests := []struct {
 		name     string
 		expected *mongodbatlas.Peer
@@ -56,6 +52,10 @@ func TestWatchOpts_Run(t *testing.T) {
 		expected := tt.expected
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
+			defer ctrl.Finish()
 			describeOpts := &WatchOpts{
 				id:    "test",
 				store: mockStore,

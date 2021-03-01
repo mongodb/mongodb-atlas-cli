@@ -94,7 +94,7 @@ func (opts *Opts) Run() error {
 	}
 
 	// Add IP to project’s IP access list
-	entry := opts.newWhitelist()
+	entry := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entry); err != nil {
 		return err
 	}
@@ -136,8 +136,8 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 	}
 }
 
-func (opts *Opts) newWhitelist() *atlas.ProjectIPWhitelist {
-	return &atlas.ProjectIPWhitelist{
+func (opts *Opts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
+	return &atlas.ProjectIPAccessList{
 		GroupID:   opts.ConfigProjectID(),
 		Comment:   accessListComment,
 		IPAddress: opts.IPAddress,

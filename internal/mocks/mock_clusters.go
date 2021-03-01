@@ -436,10 +436,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 }
 
 // CreateProjectIPAccessList mocks base method
-func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPWhitelist) ([]mongodbatlas.ProjectIPWhitelist, error) {
+func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.ProjectIPWhitelist)
+	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

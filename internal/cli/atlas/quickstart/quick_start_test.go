@@ -33,7 +33,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 
 	expectedDBUser := &mongodbatlas.DatabaseUser{}
 
-	var expectedWhitelist []mongodbatlas.ProjectIPWhitelist
+	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
 
 	opts := &Opts{
 		ClusterName:    "ProjectBar",
@@ -45,7 +45,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		Provider:       "AWS",
 	}
 
-	whitelist := opts.newWhitelist()
+	projectIPAccessList := opts.newProjectIPAccessList()
 
 	mockStore.
 		EXPECT().
@@ -54,7 +54,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateProjectIPAccessList(whitelist).Return(expectedWhitelist, nil).
+		CreateProjectIPAccessList(projectIPAccessList).Return(expectedProjectAccessLists, nil).
 		Times(1)
 
 	mockStore.
@@ -67,8 +67,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

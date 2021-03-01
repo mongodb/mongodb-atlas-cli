@@ -78,7 +78,7 @@ func SaveBuilder() *cobra.Command {
 	opts := &SaveOpts{}
 	cmd := &cobra.Command{
 		Use:   "save",
-		Short: save,
+		Short: "Save an LDAP configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

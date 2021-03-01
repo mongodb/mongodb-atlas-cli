@@ -40,8 +40,7 @@ func TestCreate_Run(t *testing.T) {
 		store: mockStore,
 		name:  "Org 0",
 	}
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

@@ -1,3 +1,17 @@
+# Copyright 2021 MongoDB Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
 stepback: true
 command_type: system
@@ -85,10 +99,12 @@ functions:
           - MCLI_SERVICE
           - TEST_CMD
           - E2E_TAGS
+          - E2E_TEST_BUCKET
+          - E2E_CLOUD_ROLE_ID
+          - MCLI_OPS_MANAGER_URL
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           <<: *go_options
         command: make e2e-test
@@ -134,6 +150,28 @@ functions:
           LC_GROUP_ID: ${automation_agent_mms_group_id}
           BASE_URL: ${mcli_ops_manager_url}
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+  "install ops manager":
+    - command: subprocess.exec
+      type: setup
+      params:
+        include_expansions_in_env:
+          - ARCHIVE
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./install-ops-manager-spawn-host.sh
+        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
+  "set-up ops manager":
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        include_expansions_in_env:
+          - ops_manager_service
+        binary: ./set-up-ops-manager.sh
+        args: ['-h', 'hosts.json']
+        env:
+          XDG_CONFIG_HOME: ${workdir}
   "lint":
     - command: shell.exec
       type: test
@@ -144,7 +182,7 @@ functions:
 
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
-          golangci-lint run --out-format junit-xml > lint-tests.xml
+          golangci-lint run --timeout 2m0s --out-format junit-xml > lint-tests.xml
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -224,6 +262,18 @@ functions:
           <<: *go_options
         silent: true
         binary: build/package/set-up-gon.sh
+  "check license header":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        include_expansions_in_env:
+          - workdir
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        binary: build/ci/check-licenses.sh
   "generate notices":
     - command: subprocess.exec
       type: test
@@ -337,6 +387,32 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
         display_name: inernal-bucket
+  "generate docs":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        script: |
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+
+          go mod download
+          go run internal/docs/main.go
+        command:
+  "upload docs":
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongocli/docs/*.rst
+        remote_file: ${project}/docs/${revision}_${created_at}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/x-gzip}
+        display_name: docs
 
   "push":
     - command: subprocess.exec
@@ -401,6 +477,11 @@ tasks:
       - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
+  - name: license_check
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
     depends_on:
@@ -428,6 +509,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
   # If your e2e tests depend on a cluster running please consider setting it on its own task
@@ -446,6 +528,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
   # This is all about cluster which tends to be slow to get a healthy one
@@ -464,6 +547,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
   # LDAP Configuration depends on a cluster running
@@ -482,6 +566,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,ldap
   # Logs depend on a cluster running to get logs from
@@ -500,6 +585,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,logs
   # Metrics depend on a cluster running to get metrics from
@@ -518,6 +604,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,metrics
   # Processes depend on a cluster running
@@ -536,6 +623,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,processes
   # Online archives depend on a cluster to create the archive against
@@ -554,6 +642,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,onlinearchive
   # Search depend on a cluster to create the indexes against
@@ -572,6 +661,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,search
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
@@ -590,8 +680,30 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,networking
+  # datalake requires cloud provider role authentication and an s3 bucket created
+  - name: atlas_datalake_e2e
+    tags: ["e2e","datalake","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,datalake
+          E2E_TEST_BUCKET: ${e2e_test_bucket}
+          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
@@ -608,6 +720,7 @@ tasks:
           MCLI_PROJECT_ID: ${atlas_project_id}
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: iam
   # Cloud Manager and Ops Manager (indirectly) tests
@@ -626,6 +739,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: iam
   - name: cloud_manager_generic_e2e
@@ -643,8 +757,47 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
+  - name: ops_manager_generic_4_4_e2e
+    tags: ["opsmanager", "general"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,generic
+  - name: ops_manager_generic_4_2_e2e
+    tags: ["opsmanager", "general"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_2_archive}
+      - func: "set-up ops manager"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -664,8 +817,94 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,replica
+  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
+  - name: ops_manager_4_4_deploy_replica_set_e2e
+    tags: ["e2e","clusters","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,replica
+  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
+  - name: ops_manager_4_4_deploy_sharded_cluster_e2e
+    tags: ["e2e","clusters","opsmanager"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,sharded
+  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
+  # 4.2 tests are failing because of this https://github.com/mongodb/mongocli/pull/601#issuecomment-772401224
+#  - name: ops_manager_4_2_deploy_replica_set_e2e
+#    tags: ["opsmanager","clusters"]
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "clone"
+#      - func: "install gotestsum"
+#      - func: "build"
+#      - func: "deploy spawn host"
+#      - func: ssh-ready
+#      - func: "install ops manager"
+#        vars:
+#          ARCHIVE: ${ops_manager_4_2_archive}
+#      - func: "set-up ops manager"
+#      - func: "install automation agent"
+#      - func: "e2e test"
+#        vars:
+#          E2E_TAGS: opsmanager,remote,replica
+#  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
+#  - name: ops_manager_4_2_deploy_sharded_cluster_e2e
+#    tags: ["opsmanager","clusters"]
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "clone"
+#      - func: "install gotestsum"
+#      - func: "build"
+#      - func: "deploy spawn host"
+#      - func: ssh-ready
+#      - func: "install ops manager"
+#        vars:
+#          ARCHIVE: ${ops_manager_4_2_archive}
+#      - func: "set-up ops manager"
+#      - func: "install automation agent"
+#      - func: "e2e test"
+#        vars:
+#          E2E_TAGS: opsmanager,remote,sharded
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -688,6 +927,7 @@ tasks:
           MCLI_PROJECT_ID: ${cloud_manager_project_id}
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
   - name: package_msi
@@ -743,6 +983,16 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
       - func: "upload dist"
+  - name: generate_docs
+    tags: ["docs"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "generate docs"
+      - func: "upload docs"
   - name: release
     stepback: false
     git_tag_only: true
@@ -1300,6 +1550,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .generic"
+  - name: opsmanager_e2e_generic
+    display_name: "Ops Manager E2E Tests Generic"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".opsmanager .general"
   - name: e2e_atlas_clusters
     display_name: "E2E Atlas Cluster Tests"
     run_on:
@@ -1318,6 +1577,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .networking .atlas"
+  - name: e2e_atlas_datalake
+    display_name: "E2E Atlas Datalake Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
     display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:
@@ -1327,6 +1595,24 @@ buildvariants:
       go_bin: "/opt/golang/go1.15/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
+  - name: e2e_ops_manager_remote
+    display_name: "E2E Ops Manager Remote Host Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".e2e .clusters .opsmanager"
+  - name: generate_docs
+    display_name: "Generate Docs"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.15"
+      go_bin: "/opt/golang/go1.15/bin"
+    tasks:
+      - name: ".docs"
   - name: goreleaser_snapshot
     display_name: "Packaging and Publishing (goreleaser, apt, yum)"
     run_on:

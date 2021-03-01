@@ -68,7 +68,7 @@ func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
-		Short:     enableSecurity,
+		Short:     "Enable authentication mechanisms for your project.",
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

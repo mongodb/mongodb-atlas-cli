@@ -57,7 +57,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
-		Short:   describeOrganizations,
+		Short:   "Describe an organizations.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

@@ -41,7 +41,7 @@ func (opts *UpdateOpts) initStore() error {
 	if err != nil {
 		return err
 	}
-	opts.storeStaticPath, err = store.NewStaticPath(config.Default())
+	opts.storeStaticPath, err = store.NewVersionManifest(config.Default())
 	return err
 }
 
@@ -72,7 +72,7 @@ func UpdateBuilder() *cobra.Command {
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update <version>",
-		Short: update,
+		Short: "Update Ops Manager version manifest.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

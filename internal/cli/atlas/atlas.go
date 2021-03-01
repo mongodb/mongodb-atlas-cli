@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
+	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	"github.com/mongodb/mongocli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
@@ -38,11 +40,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const atlasShort = "Atlas operations."
+const (
+	Use        = "atlas"
+	atlasShort = "Atlas operations."
+)
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "atlas",
+		Use:   Use,
 		Short: atlasShort,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudService)
@@ -50,14 +55,16 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		datalake.Builder(),
 		clusters.Builder(),
 		dbusers.Builder(),
+		customdbroles.Builder(),
 		accesslists.Builder(),
+		datalake.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),
 		metrics.Builder(),
+		performanceadvisor.Builder(),
 		logs.Builder(),
 		processes.Builder(),
 		privateendpoints.Builder(),
@@ -65,8 +72,8 @@ func Builder() *cobra.Command {
 		security.Builder(),
 		integrations.Builder(),
 		maintenance.Builder(),
-		performanceadvisor.Builder(),
 		customdns.Builder(),
+		cloudproviders.Builder(),
 		quickstart.Builder(),
 	)
 

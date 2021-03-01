@@ -23,12 +23,14 @@ func Builder() *cobra.Command {
 	const use = "apiKeys"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   APIKeys,
+		Short:   "Agent API Keys operations.",
 		Aliases: cli.GenerateAliases(use),
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

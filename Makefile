@@ -6,10 +6,11 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
 
-GOLANGCI_VERSION=v1.32.2
+GOLANGCI_VERSION=v1.36.0
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
-LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION}
+GIT_SHA=$(shell git rev-parse HEAD)
+LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${GIT_SHA}
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
@@ -82,7 +83,7 @@ e2e-test: build ## Run E2E tests
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	${TEST_CMD} --tags="${INTEGRATION_TAGS}" ./internal...
+	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests

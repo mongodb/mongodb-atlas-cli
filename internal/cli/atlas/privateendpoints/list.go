@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PrivateEndpointLister
+	store store.PrivateEndpointListerDeprecated
 }
 
 func (opts *ListOpts) init() error {
@@ -42,7 +42,7 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), opts.NewListOptions())
+	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewListOptions())
 
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   listPrivateEndpoints,
+		Short:   "List Atlas Private Endpoints for your project.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -76,6 +76,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]"
 
 	return cmd
 }

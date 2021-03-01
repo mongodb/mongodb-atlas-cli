@@ -28,7 +28,7 @@ type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	privateEndpointID string
-	store             store.InterfaceEndpointDeleter
+	store             store.InterfaceEndpointDeleterDeprecated
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -38,7 +38,7 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), opts.privateEndpointID)
+	return opts.Delete(opts.store.DeleteInterfaceEndpointDeprecated, opts.ConfigProjectID(), opts.privateEndpointID)
 }
 
 // mongocli atlas privateEndpoint(s) interface(s) delete <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
@@ -49,7 +49,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   deleteInterfaceEndpoint,
+		Short:   "Delete a private endpoint interface from your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
@@ -69,6 +69,8 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

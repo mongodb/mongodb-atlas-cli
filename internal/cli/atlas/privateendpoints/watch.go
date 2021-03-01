@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,9 @@ import (
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	id    string
-	store store.PrivateEndpointDescriber
+	id       string
+	provider string
+	store    store.PrivateEndpointDescriberDeprecated
 }
 
 func (opts *WatchOpts) initStore() error {
@@ -38,7 +39,7 @@ func (opts *WatchOpts) initStore() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	result, err := opts.store.PrivateEndpointDeprecated(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return false, err
 	}
@@ -58,7 +59,7 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <name>",
-		Short: watchPrivateEndpoint,
+		Short: "Watch for a private endpoint to be available.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -73,6 +74,11 @@ func WatchBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]"
+
 	return cmd
 }

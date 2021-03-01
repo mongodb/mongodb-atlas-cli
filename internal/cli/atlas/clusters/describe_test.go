@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -42,8 +44,16 @@ func TestDescribe_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
-	if err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID},
+	)
 }

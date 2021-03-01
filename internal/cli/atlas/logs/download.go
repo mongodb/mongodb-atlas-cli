@@ -65,10 +65,11 @@ func (opts *DownloadOpts) Run() error {
 	return f.Close()
 }
 
-func (opts *DownloadOpts) initDefaultOut() {
+func (opts *DownloadOpts) initDefaultOut() error {
 	if opts.Out == "" {
 		opts.Out = strings.ReplaceAll(opts.name, ".gz", ".log.gz")
 	}
+	return nil
 }
 
 func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
@@ -78,29 +79,29 @@ func (opts *DownloadOpts) newDateRangeOpts() *atlas.DateRangetOptions {
 	}
 }
 
-// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
+// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId]
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
-		Short: download,
-		Long:  downloadLong,
-		Args:  require.ExactArgs(argsN),
+		Use:   "download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz>",
+		Short: "Download a host mongodb logs.",
+		Long: `Download a gzipped file containing the logs for the selected hostname.
+To find the hostnames for an Atlas project, you can use the process list command.`,
+		Args: require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.initDefaultOut()
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore, opts.initDefaultOut)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if !search.StringInSlice(cmd.ValidArgs, opts.name) {
 				return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
 			}
 			return opts.Run()
 		},
-		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
+		ValidArgs: []string{"mongodb.gz", "mongos.gz", "mongosqld.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"},
 	}
 
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)

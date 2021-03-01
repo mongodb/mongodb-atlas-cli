@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -35,6 +36,9 @@ type Watcher func() (bool, error)
 
 // InitOutput allow to init the OutputOpts in a functional way
 func (opts *WatchOpts) Watch(f Watcher) error {
+	if f == nil {
+		return errors.New("no watcher provided")
+	}
 	opts.start()
 	for {
 		done, err := f()

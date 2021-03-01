@@ -39,7 +39,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	TYPE	HOSTNAME	STATE NAME	PORT{{range .Results}}{{.ID}}	{{.TypeName}}	{{.ReplicaStateName}} {{.Hostname}}	{{.Port}}{{end}}
+var listTemplate = `ID	TYPE	HOSTNAME	STATE NAME	PORT{{range .Results}}
+{{.ID}}	{{.TypeName}}	{{.Hostname}}	{{.ReplicaStateName}}	{{.Port}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -64,7 +65,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   listProcesses,
+		Short:   "List MongoDB processes for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

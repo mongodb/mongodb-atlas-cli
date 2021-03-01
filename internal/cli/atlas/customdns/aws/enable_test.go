@@ -20,14 +20,14 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestEnableBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		EnableBuilder(),
 		0,
@@ -54,8 +54,7 @@ func TestEnableOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

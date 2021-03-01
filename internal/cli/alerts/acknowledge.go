@@ -75,7 +75,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	opts.Template = ackTemplate
 	cmd := &cobra.Command{
 		Use:     "acknowledge <ID>",
-		Short:   acknowledgeAlerts,
+		Short:   "Acknowledge an alert for your project.",
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

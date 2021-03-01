@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -32,26 +32,36 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
 	defer ctrl.Finish()
 
-	opts := &DownloadOpts{
-		name:  "mongo.gz",
-		store: mockStore,
+	validLogsToDownload := []string{
+		"mongodb.gz",
+		"mongos.gz",
+		"mongosqld.gz",
+		"mongodb-audit-log.gz",
+		"mongos-audit-log.gz",
 	}
-	opts.Out = opts.name
-	opts.Fs = afero.NewMemMapFs()
 
-	mockStore.
-		EXPECT().
-		DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
-		Return(nil).
-		Times(1)
+	for _, validLogToDownload := range validLogsToDownload {
+		opts := &DownloadOpts{
+			name:  validLogToDownload,
+			store: mockStore,
+		}
+		opts.Out = opts.name
+		opts.Fs = afero.NewMemMapFs()
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+		mockStore.
+			EXPECT().
+			DownloadLog(opts.ProjectID, opts.host, opts.name, gomock.Any(), opts.newDateRangeOpts()).
+			Return(nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error downloading %v logs: %v", validLogToDownload, err)
+		}
 	}
 }
 
 func TestDownloadBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		DownloadBuilder(),
 		0,
@@ -91,12 +101,14 @@ func TestDownloadOpts_initDefaultOut(t *testing.T) {
 		out := tt.fields.out
 		want := tt.want
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			opts := &DownloadOpts{
 				name: logName,
 			}
 			opts.Out = out
-			opts.initDefaultOut()
-			assert.Equal(t, opts.Out, want)
+			a := assert.New(t)
+			a.NoError(opts.initDefaultOut())
+			a.Equal(opts.Out, want)
 		})
 	}
 }

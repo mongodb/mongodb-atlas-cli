@@ -39,8 +39,7 @@ func TestList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := listOpts.Run()
-	if err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

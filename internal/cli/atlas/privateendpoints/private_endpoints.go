@@ -16,7 +16,10 @@ package privateendpoints
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/regionalmodes"
 	"github.com/spf13/cobra"
 )
 
@@ -25,14 +28,19 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   privateEndpoints,
+		Short:   "Manage Atlas private endpoints.",
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(interfaces.Builder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		WatchBuilder(),
+		interfaces.Builder(),
+		aws.Builder(),
+		azure.Builder(),
+		regionalmodes.Builder(),
+	)
 
 	return cmd
 }

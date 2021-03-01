@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `CIDR BLOCK	SECURITY GROUP{{range .}}
-{{.CIDRBlock}}	{{.AwsSecurityGroup}}{{end}}
+const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range .Results}}
+{{.CIDRBlock}}	{{if .AwsSecurityGroup}}.AwsSecurityGroup {{else}}N/A{{end}}{{end}}
 `
 
 type ListOpts struct {
@@ -56,7 +56,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   list,
+		Short:   "List Atlas IP access list entries for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -57,7 +57,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <username>",
 		Aliases: []string{"ls"},
-		Short:   listDBUserCerts,
+		Short:   "List of all Atlas-managed, unexpired certificates for a database user.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

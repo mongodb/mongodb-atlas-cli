@@ -34,7 +34,7 @@ type CreateOpts struct {
 	apyKey string
 	ips    []string
 	cidrs  []string
-	store  store.OrganizationAPIKeyWhitelistCreator
+	store  store.OrganizationAPIKeyAccessListCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -43,20 +43,20 @@ func (opts *CreateOpts) init() error {
 	return err
 }
 
-func (opts *CreateOpts) newWhitelistAPIKeysReq() ([]*atlas.WhitelistAPIKeysReq, error) {
-	req := make([]*atlas.WhitelistAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
+func (opts *CreateOpts) newAccessListAPIKeysReq() ([]*atlas.AccessListAPIKeysReq, error) {
+	req := make([]*atlas.AccessListAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
 	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
 		return nil, fmt.Errorf("either --ip or --cidr must be set")
 	}
 	for _, v := range opts.ips {
-		entry := &atlas.WhitelistAPIKeysReq{
+		entry := &atlas.AccessListAPIKeysReq{
 			IPAddress: v,
 		}
 		req = append(req, entry)
 	}
 
 	for _, v := range opts.cidrs {
-		entry := &atlas.WhitelistAPIKeysReq{
+		entry := &atlas.AccessListAPIKeysReq{
 			CidrBlock: v,
 		}
 		req = append(req, entry)
@@ -66,13 +66,12 @@ func (opts *CreateOpts) newWhitelistAPIKeysReq() ([]*atlas.WhitelistAPIKeysReq, 
 }
 
 func (opts *CreateOpts) Run() error {
-	req, err := opts.newWhitelistAPIKeysReq()
+	req, err := opts.newAccessListAPIKeysReq()
 	if err != nil {
 		return err
 	}
 
-	r, err := opts.store.CreateOrganizationAPIKeyWhite(opts.ConfigOrgID(), opts.apyKey, req)
-
+	r, err := opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
 	if err != nil {
 		return err
 	}
@@ -85,7 +84,7 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: create,
+		Short: "Create an IP access list for your API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

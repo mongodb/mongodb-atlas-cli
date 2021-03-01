@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Manage automated servers for your project.",
 	}
 
 	cmd.AddCommand(ListBuilder())

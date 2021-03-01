@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,7 +48,13 @@ const (
 	securityEntity         = "security"
 	ldapEntity             = "ldap"
 	awsEntity              = "aws"
+	azureEntity            = "azure"
 	customDNSEntity        = "customDns"
+	logsEntity             = "logs"
+	cloudProvidersEntity   = "cloudProviders"
+	accessRolesEntity      = "accessRoles"
+	customDBRoleEntity     = "customDbRoles"
+	regionalModeEntity     = "regionalModes"
 )
 
 func getHostnameAndPort() (string, error) {
@@ -99,10 +105,12 @@ func deployCluster() (string, error) {
 		clustersEntity,
 		"create",
 		clusterName,
+		"--mdbVersion=4.2",
 		"--region=US_EAST_1",
 		"--tier=M10",
 		"--provider=AWS",
-		"--diskSizeGB=10")
+		"--diskSizeGB=10",
+		"--biConnector")
 	create.Env = os.Environ()
 	if err := create.Run(); err != nil {
 		return "", fmt.Errorf("error creating cluster %w", err)
@@ -172,7 +180,7 @@ func createProject(projectName string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
 	var project mongodbatlas.Project

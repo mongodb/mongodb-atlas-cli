@@ -83,7 +83,7 @@ func ListBuilder() *cobra.Command {
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   listEvents,
+		Short:   "List events for an organization or project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

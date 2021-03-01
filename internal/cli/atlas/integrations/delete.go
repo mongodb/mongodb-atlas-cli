@@ -48,7 +48,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <TYPE>",
 		Aliases: []string{"rm"},
-		Short:   deleteIntegration,
+		Short:   "Delete a third party integration",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

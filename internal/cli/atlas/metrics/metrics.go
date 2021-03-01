@@ -29,11 +29,13 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "measurements", "measurement"),
-		Short:   metrics,
+		Short:   "Get measurements on the state of the MongoDB process.",
 	}
-	cmd.AddCommand(ProcessBuilder())
-	cmd.AddCommand(DisksBuilder())
-	cmd.AddCommand(DatabasesBuilder())
+	cmd.AddCommand(
+		ProcessBuilder(),
+		DisksBuilder(),
+		DatabasesBuilder(),
+	)
 
 	return cmd
 }

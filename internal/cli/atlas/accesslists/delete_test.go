@@ -19,10 +19,11 @@ package accesslists
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestWhitelistDelete_Run(t *testing.T) {
@@ -44,8 +45,16 @@ func TestWhitelistDelete_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Force},
+	)
 }

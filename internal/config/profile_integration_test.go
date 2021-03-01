@@ -17,6 +17,7 @@
 package config
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -30,7 +31,7 @@ const (
 
 func testProfile(profileContents string) *Profile {
 	fs := afero.NewMemMapFs()
-	testConfigDir := "/test"
+	testConfigDir, _ := filepath.Abs("test")
 
 	p := &Profile{
 		name:      DefaultProfile,
@@ -38,7 +39,10 @@ func testProfile(profileContents string) *Profile {
 		fs:        fs,
 	}
 
-	_ = afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600)
+	if err := afero.WriteFile(fs, p.Filename(), []byte(profileContents), 0600); err != nil {
+		panic(err)
+	}
+
 	return p
 }
 

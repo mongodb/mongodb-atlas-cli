@@ -51,7 +51,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"show", "get"},
-		Short:   DescribeAutomationConfig,
+		Short:   "Get the current automation configuration for a project.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

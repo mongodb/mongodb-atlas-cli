@@ -21,9 +21,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -99,8 +100,7 @@ func TestDeleteReplicaSet_Run(t *testing.T) {
 		Return(host0, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
@@ -189,14 +189,13 @@ func TestDeleteShardedCluster_Run(t *testing.T) {
 		Return(host2, nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
 func TestDeleteBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		DeleteBuilder(),
 		0,

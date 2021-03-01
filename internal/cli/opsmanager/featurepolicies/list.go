@@ -15,6 +15,7 @@ package featurepolicies
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -36,8 +37,8 @@ func (opts *ListOpts) initStore() error {
 }
 
 var listTemplate = `NAME	SYSTEM ID	POLICY
-{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
-{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}
+{{if .ExternalManagementSystem}}{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
+{{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -55,7 +56,8 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   list,
+		Short:   "List feature control policies for your project.",
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

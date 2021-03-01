@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,7 +31,7 @@ func TestWhitelistCreate_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.ProjectIPWhitelist
+	var expected *mongodbatlas.ProjectIPAccessLists
 
 	createOpts := &CreateOpts{
 		entry:     "37.228.254.100",
@@ -39,11 +41,19 @@ func TestWhitelistCreate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateProjectIPAccessList(createOpts.newWhitelist()).Return(expected, nil).
+		CreateProjectIPAccessList(createOpts.newProjectIPAccessList()).Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output, flag.Type, flag.Comment, flag.DeleteAfter},
+	)
 }

@@ -28,7 +28,7 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
 	apiKey string
-	store  store.OrganizationAPIKeyWhitelistDeleter
+	store  store.OrganizationAPIKeyAccessListDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -38,7 +38,7 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyWhitelist, opts.ConfigOrgID(), opts.apiKey)
+	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force
@@ -50,7 +50,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
-		Short:   deleteEntry,
+		Short:   "Delete an IP access list from your API Key.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateOrgID, opts.init); err != nil {

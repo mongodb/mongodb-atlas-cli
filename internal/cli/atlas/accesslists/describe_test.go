@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,7 +31,7 @@ func TestWhitelistDescribe_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProjectIPWhitelist{}
+	expected := &mongodbatlas.ProjectIPAccessList{}
 
 	describeOpts := &DescribeOpts{
 		name:  "test",
@@ -42,8 +44,16 @@ func TestWhitelistDescribe_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := describeOpts.Run()
-	if err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
+	)
 }

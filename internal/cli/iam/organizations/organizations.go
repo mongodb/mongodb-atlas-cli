@@ -25,8 +25,8 @@ func Builder() *cobra.Command {
 	const use = "organizations"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   short,
-		Long:    long,
+		Short:   "Organization operations.",
+		Long:    "Create, list and manage your MongoDB organizations.",
 		Aliases: cli.GenerateAliases(use, "orgs", "org"),
 	}
 	cmd.AddCommand(

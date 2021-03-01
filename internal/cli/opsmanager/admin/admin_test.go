@@ -18,14 +18,23 @@ package admin
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		Builder(),
 		1,
+		[]string{},
+	)
+}
+
+func TestBackupBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		BackupBuilder(),
+		5,
 		[]string{},
 	)
 }

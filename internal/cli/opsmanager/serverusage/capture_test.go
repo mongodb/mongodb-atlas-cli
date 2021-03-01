@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestCapture_Run(t *testing.T) {
@@ -38,14 +38,13 @@ func TestCapture_Run(t *testing.T) {
 		GenerateSnapshot().
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
 func TestCaptureBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		CaptureBuilder(),
 		0,

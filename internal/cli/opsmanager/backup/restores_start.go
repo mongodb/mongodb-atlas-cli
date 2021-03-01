@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -69,9 +70,8 @@ func (opts *RestoresStartOpts) Run() error {
 }
 
 func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobRequest {
-	request := new(atlas.ContinuousJobRequest)
+	request := &atlas.ContinuousJobRequest{SnapshotID: opts.snapshotID}
 	request.Delivery.MethodName = opts.method
-	request.SnapshotID = opts.snapshotID
 
 	if opts.isAutomatedRestore() {
 		request.Delivery.TargetGroupID = opts.targetProjectID
@@ -158,10 +158,7 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 		return err
 	}
 
-	if config.Service() == config.CloudService {
-		return cmd.MarkFlagRequired(flag.ClusterName)
-	}
-	return cmd.MarkFlagRequired(flag.ClusterID)
+	return cmd.MarkFlagRequired(flag.TargetClusterID)
 }
 
 // mongocli atlas backup(s) restore(s) job(s) start
@@ -170,9 +167,10 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s>", automatedRestore, httpRestore),
 		Short:     StartRestore,
-		Args:      cobra.ExactValidArgs(1),
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, httpRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.method = args[0]
 			if opts.isAutomatedRestore() {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {
 					return err
@@ -181,33 +179,25 @@ func RestoresStartBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
+				opts.validateParams,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.method = args[0]
-
-			if e := opts.validateParams(); e != nil {
-				return e
-			}
-
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
-	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
-
-	// For Automatic restore
-	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
-	// C/OM uses cluster ID
 	cmd.Flags().StringVar(&opts.targetClusterID, flag.TargetClusterID, "", usage.TargetClusterID)
 	cmd.Flags().StringVar(&opts.checkpointID, flag.CheckpointID, "", usage.CheckpointID)
 	cmd.Flags().StringVar(&opts.oplogTS, flag.OplogTS, "", usage.OplogTS)
 	cmd.Flags().Int64Var(&opts.oplogInc, flag.OplogInc, 0, usage.OplogInc)
 	cmd.Flags().Float64Var(&opts.pointInTimeUTCMillis, flag.PointInTimeUTCMillis, 0, usage.PointInTimeUTCMillis)
 
+	// For Automatic restore
+	cmd.Flags().StringVar(&opts.targetProjectID, flag.TargetProjectID, "", usage.TargetProjectID)
 	// For http restore
 	cmd.Flags().StringVar(&opts.expires, flag.Expires, "", usage.Expires)
 	cmd.Flags().Int64Var(&opts.maxDownloads, flag.MaxDownloads, 0, usage.MaxDownloads)
@@ -217,6 +207,6 @@ func RestoresStartBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterID)
-	_ = cmd.MarkFlagRequired(flag.TargetClusterID)
+
 	return cmd
 }

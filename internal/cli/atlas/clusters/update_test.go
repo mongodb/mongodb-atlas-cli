@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/spf13/afero"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -38,7 +40,7 @@ func TestUpdate_Run(t *testing.T) {
 			name:       "ProjectBar",
 			tier:       atlasM2,
 			diskSizeGB: 10,
-			mdbVersion: currentMDBVersion,
+			mdbVersion: "4.2",
 			store:      mockStore,
 		}
 
@@ -55,8 +57,7 @@ func TestUpdate_Run(t *testing.T) {
 			UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, expected).Return(expected, nil).
 			Times(1)
 
-		err := updateOpts.Run()
-		if err != nil {
+		if err := updateOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
@@ -106,9 +107,18 @@ func TestUpdate_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		err := updateOpts.Run()
-		if err != nil {
+		if err := updateOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestUpdateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		UpdateBuilder(),
+		0,
+		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
+			flag.File, flag.ProjectID, flag.Output},
+	)
 }

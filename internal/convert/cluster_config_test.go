@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongocli/internal/fixture"
+	"github.com/mongodb/mongocli/internal/test/fixture"
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
-	var one float64 = 1
-
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -41,12 +40,13 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					Version:   "4.2.2",
 					ProcessConfigs: []*ProcessConfig{
 						{
-							DBPath:   "/data",
-							Hostname: "example",
-							LogPath:  "/log",
-							Port:     1,
-							Priority: &one,
-							Votes:    &one,
+							DBPath:       "/data",
+							Hostname:     "example",
+							LogPath:      "/log",
+							Port:         1,
+							Priority:     pointy.Float64(1),
+							Votes:        pointy.Float64(1),
+							AuditLogPath: "/audit",
 						},
 					},
 				},
@@ -66,8 +66,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log",
+							},
+							AuditLog: &opsmngr.AuditLog{
+								Destination: file,
+								Path:        "/audit",
 							},
 						},
 						LogRotate: &opsmngr.LogRotate{
@@ -132,8 +136,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -170,8 +174,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
+							},
+							AuditLog: &opsmngr.AuditLog{
+								Destination: file,
+								Path:        "/data/db/audit.log",
 							},
 							Security: &map[string]interface{}{
 								"test": "test",
@@ -217,7 +225,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log",
 							},
 						},
@@ -284,15 +292,15 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host0",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						}, {
 							DBPath:   "/data/db/",
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -315,7 +323,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 							Security: &map[string]interface{}{
@@ -346,7 +354,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 						},
@@ -407,8 +415,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "host1",
 							LogPath:  "/data/db/mongodb.log",
 							Port:     27017,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -443,8 +451,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
+							},
+							AuditLog: &opsmngr.AuditLog{
+								Destination: file,
+								Path:        "/data/db/audit.log",
 							},
 							Security: &map[string]interface{}{
 								"test": "test",
@@ -474,7 +486,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/db/",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/data/db/mongodb.log",
 							},
 						},
@@ -530,8 +542,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -544,8 +556,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -572,7 +584,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_0",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_0",
 							},
 						},
@@ -599,7 +611,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/configRS",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/configRS",
 							},
 							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
@@ -621,7 +633,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Args26: opsmngr.Args26{
 							NET: opsmngr.Net{Port: 3},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/mongos",
 							},
 						},
@@ -710,8 +722,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_0",
 								Port:     1,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -724,8 +736,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hostname: "example",
 								LogPath:  "/log/myShard_1",
 								Port:     4,
-								Priority: &one,
-								Votes:    &one,
+								Priority: pointy.Float64(1),
+								Votes:    pointy.Float64(1),
 							},
 						},
 					},
@@ -738,8 +750,8 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Hostname: "example",
 							LogPath:  "/log/configRS",
 							Port:     2,
-							Priority: &one,
-							Votes:    &one,
+							Priority: pointy.Float64(1),
+							Votes:    pointy.Float64(1),
 						},
 					},
 				},
@@ -766,7 +778,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_0",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_0",
 							},
 						},
@@ -793,7 +805,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/configRS",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/configRS",
 							},
 							Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
@@ -815,7 +827,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						Args26: opsmngr.Args26{
 							NET: opsmngr.Net{Port: 3},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/mongos",
 							},
 						},
@@ -844,7 +856,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								DBPath: "/data/myShard_1",
 							},
 							SystemLog: opsmngr.SystemLog{
-								Destination: "file",
+								Destination: file,
 								Path:        "/log/myShard_1",
 							},
 						},
@@ -946,6 +958,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 		current := tc.current
 		expected := tc.expected
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			if err := changes.PatchAutomationConfig(current); err != nil {
 				t.Fatalf("PatchAutomationConfig() unexpected error: %v\n", err)
 			}

@@ -19,14 +19,13 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 )
 
 func TestLogs(t *testing.T) {
-	const logsEntity = "logs"
-
 	clusterName, err := deployCluster()
 	if err != nil {
 		t.Fatalf("failed to deploy a cluster: %v", err)
@@ -46,126 +45,73 @@ func TestLogs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	t.Run("Download mongodb.gz", func(t *testing.T) {
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-		logFile := "mongodb.gz"
-		filepath := dir + logFile
+	logTypes := []string{
+		"mongodb.gz",
+		"mongos.gz",
+		"mongodb-audit-log.gz",
+		"mongos-audit-log.gz",
+	}
+	for _, logType := range logTypes {
+		lt := logType
+		t.Run("Download "+lt, func(t *testing.T) {
+			downloadLogTmpPath(t, cliPath, hostname, lt)
+		})
+	}
 
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			logsEntity,
-			"download",
-			hostname,
-			logFile,
-			"--out",
-			filepath,
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if _, err := os.Stat(filepath); err != nil {
-			t.Fatalf("%v has not been downloaded", filepath)
-		}
+	t.Run("Download mongodb.gz no output path", func(t *testing.T) {
+		downloadLog(t, cliPath, hostname, "mongodb.gz")
 	})
+}
 
-	t.Run("Download mongos.gz", func(t *testing.T) {
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
+func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
+	t.Helper()
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	filepath := dir + logFile
 
-		logFile := "mongos.gz"
-		filepath := dir + logFile
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		logsEntity,
+		"download",
+		hostname,
+		logFile,
+		"--out",
+		filepath,
+	)
 
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			logsEntity,
-			"download",
-			hostname,
-			logFile,
-			"--out",
-			filepath,
-		)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
 
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+	if _, err := os.Stat(filepath); err != nil {
+		t.Fatalf("%v has not been downloaded", filepath)
+	}
+}
 
-		if _, err := os.Stat(filepath); err != nil {
-			t.Fatalf("%v has not been downloaded", filepath)
-		}
-	})
+func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		logsEntity,
+		"download",
+		hostname,
+		logFile,
+	)
 
-	t.Run("Download mongodb-audit-log.gz", func(t *testing.T) {
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
 
-		logFile := "mongodb-audit-log.gz"
-		filepath := dir + logFile
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
 
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			logsEntity,
-			"download",
-			hostname,
-			logFile,
-			"--out",
-			filepath,
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if _, err := os.Stat(filepath); err != nil {
-			t.Fatalf("%v has not been downloaded", filepath)
-		}
-	})
-
-	t.Run("Download mongos-audit-log.gz", func(t *testing.T) {
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		logFile := "mongos-audit-log.gz"
-		filepath := dir + logFile
-
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			logsEntity,
-			"download",
-			hostname,
-			logFile,
-			"--out",
-			filepath,
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if _, err := os.Stat(filepath); err != nil {
-			t.Fatalf("%v has not been downloaded", filepath)
-		}
-	})
+	outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
+	if _, err := os.Stat(outputFile); err != nil {
+		t.Fatalf("%v has not been downloaded", logFile)
+	}
 }

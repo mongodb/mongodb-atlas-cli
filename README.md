@@ -3,13 +3,14 @@
 </p>
 
 
-[![Build Status](https://cloud.drone.io/api/badges/mongodb/mongocli/status.svg)](https://cloud.drone.io/mongodb/mongocli)
+![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
+![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
 
 `mongocli` is a tool for managing your MongoDB cloud services
 
 ## Installing
 
-### Hombrew on macOS
+### Homebrew on macOS
 
 ```bash
 brew tap mongodb/brew

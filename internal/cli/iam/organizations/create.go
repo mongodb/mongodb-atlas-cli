@@ -54,7 +54,7 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: createOrganization,
+		Short: "Create an organization.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

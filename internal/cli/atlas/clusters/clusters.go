@@ -16,6 +16,8 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
@@ -27,20 +29,22 @@ func Builder() *cobra.Command {
 		Use:        use,
 		Aliases:    cli.GenerateAliases(use),
 		SuggestFor: []string{"replicasets"},
-		Short:      Clusters,
-		Long:       long,
+		Short:      "Manage clusters for your project.",
+		Long:       "The clusters command provides access to your cluster configurations. You can create, edit, and delete clusters.",
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(PauseBuilder())
-	cmd.AddCommand(StartBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(IndexesBuilder())
-	cmd.AddCommand(search.Builder())
-	cmd.AddCommand(onlinearchive.Builder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		WatchBuilder(),
+		UpdateBuilder(),
+		PauseBuilder(),
+		StartBuilder(),
+		DeleteBuilder(),
+		indexes.Builder(),
+		search.Builder(),
+		onlinearchive.Builder(),
+		connectionstring.Builder())
 
 	return cmd
 }

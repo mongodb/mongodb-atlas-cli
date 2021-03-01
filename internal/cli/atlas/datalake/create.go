@@ -28,8 +28,10 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.DataLakeCreator
-	name  string
+	store      store.DataLakeCreator
+	name       string
+	awsRoleID  string
+	testBucket string
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -41,9 +43,7 @@ func (opts *CreateOpts) initStore() error {
 var createTemplate = "Data lake '{{.Name}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	createRequest := &mongodbatlas.DataLakeCreateRequest{
-		Name: opts.name,
-	}
+	createRequest := opts.newDataLakeRequest()
 
 	r, err := opts.store.CreateDataLake(opts.ConfigProjectID(), createRequest)
 	if err != nil {
@@ -53,12 +53,24 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *CreateOpts) newDataLakeRequest() *mongodbatlas.DataLakeCreateRequest {
+	return &mongodbatlas.DataLakeCreateRequest{
+		Name: opts.name,
+		CloudProviderConfig: &mongodbatlas.CloudProviderConfig{
+			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
+				RoleID:       opts.awsRoleID,
+				TestS3Bucket: opts.testBucket,
+			},
+		},
+	}
+}
+
 // mongocli atlas datalake(s) create name --projectId projectId
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: createDataLake,
+		Short: "Create a new data lake for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
@@ -73,8 +85,14 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.awsRoleID, flag.Role, "", usage.DataLakeRole)
+	cmd.Flags().StringVar(&opts.testBucket, flag.TestBucket, "", usage.DataLakeTestBucket)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Role)
+	_ = cmd.MarkFlagRequired(flag.TestBucket)
 
 	return cmd
 }

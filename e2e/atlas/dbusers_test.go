@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,11 @@ import (
 )
 
 const (
-	roleReadWrite = "readWrite"
+	roleReadWrite        = "readWrite"
+	scopeClusterDataLake = "Cluster0,Cluster1:CLUSTER"
+	clusterName0         = "Cluster0"
+	clusterName1         = "Cluster1"
+	clusterType          = "CLUSTER"
 )
 
 func TestDBUsers(t *testing.T) {
@@ -52,20 +56,26 @@ func TestDBUsers(t *testing.T) {
 			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
 			"--password=passW0rd",
+			"--scope", scopeClusterDataLake,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		a := assert.New(t)
+		a.NoError(err)
 
 		var user mongodbatlas.DatabaseUser
 		if err := json.Unmarshal(resp, &user); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		assert.Equal(t, username, user.Username)
+
+		a.Equal(username, user.Username)
+		if a.Len(user.Scopes, 2) {
+			a.Equal(user.Scopes[0].Name, clusterName0)
+			a.Equal(user.Scopes[0].Type, clusterType)
+			a.Equal(user.Scopes[1].Name, clusterName1)
+			a.Equal(user.Scopes[0].Type, clusterType)
+		}
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -121,6 +131,8 @@ func TestDBUsers(t *testing.T) {
 			username,
 			"--role",
 			roleReadWrite,
+			"--scope",
+			clusterName0,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -140,6 +152,10 @@ func TestDBUsers(t *testing.T) {
 			a.Equal("admin", user.Roles[0].DatabaseName)
 			a.Equal(roleReadWrite, user.Roles[0].RoleName)
 		}
+
+		a.Len(user.Scopes, 1)
+		a.Equal(user.Scopes[0].Name, clusterName0)
+		a.Equal(user.Scopes[0].Type, clusterType)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

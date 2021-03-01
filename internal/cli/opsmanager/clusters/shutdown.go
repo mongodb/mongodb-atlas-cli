@@ -82,7 +82,7 @@ func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
 	cmd := &cobra.Command{
 		Use:   "shutdown <name>",
-		Short: ShutdownCluster,
+		Short: "Shutdown a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

@@ -24,11 +24,13 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   containers,
+		Short:   "Manage Network Peering containers.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

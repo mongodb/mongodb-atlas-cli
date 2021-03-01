@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "search",
 		Aliases: []string{"fts"},
-		Short:   Search,
+		Short:   "Manage Atlas Search for your cluster.",
 	}
 	cmd.AddCommand(IndexesBuilder())
 

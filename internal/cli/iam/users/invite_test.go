@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package users
 
 import (
@@ -48,8 +50,7 @@ func TestInvite_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err = opts.Run()
-	if err != nil {
+	if err = opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

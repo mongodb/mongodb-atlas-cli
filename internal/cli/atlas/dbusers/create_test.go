@@ -43,8 +43,7 @@ func TestDBUserCreateOpts_Run(t *testing.T) {
 		CreateDatabaseUser(createOpts.newDatabaseUser()).Return(expected, nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
@@ -184,6 +183,7 @@ func TestCreateOpts_validate(t *testing.T) {
 		fields := tt.fields
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			opts := &CreateOpts{
 				x509Type:   fields.x509Type,
 				awsIamType: fields.awsIamType,

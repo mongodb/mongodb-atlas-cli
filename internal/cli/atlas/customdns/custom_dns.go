@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Manage DNS configuration of Atlas project’s clusters deployed to AWS.",
 	}
 
 	cmd.AddCommand(aws.Builder())

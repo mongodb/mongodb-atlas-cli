@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   events,
+		Short:   "Manage events for your organization or project.",
 	}
 
 	cmd.AddCommand(ListBuilder())

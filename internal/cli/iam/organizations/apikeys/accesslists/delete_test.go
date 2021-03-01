@@ -21,12 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistDeleter(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListDeleter(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -42,12 +44,20 @@ func TestDelete_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		DeleteOrganizationAPIKeyWhitelist(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		DeleteOrganizationAPIKeyAccessList(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
 		Return(nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.OrgID, flag.Force, flag.APIKey},
+	)
 }

@@ -40,8 +40,8 @@ func (opts *DescribeOpts) initStore() error {
 	return err
 }
 
-var describeTemplate = `ID	NAME	TYPE
-{{.ID}}	{{.ClusterName}}	{{.TypeName}}
+var describeTemplate = `ID	NAME	TYPE	REPLICASET NAME
+{{.ID}}	{{.ClusterName}}	{{.TypeName}}	{{.ReplicaSetName}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -74,9 +74,11 @@ func (opts *DescribeOpts) cluster() (interface{}, error) {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: DescribeCluster,
-		Args:  require.ExactArgs(1),
+		Use:   "describe <id|name>",
+		Short: "Describe a cluster.",
+		Long: `When describing cluster with no output format please provide the cluster ID.
+When using an output format the please provide the cluster name.`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -21,13 +21,15 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointDeleter(ctrl)
+	mockStore := mocks.NewMockInterfaceEndpointDeleterDeprecated(ctrl)
 	defer ctrl.Finish()
 
 	deleteOpts := &DeleteOpts{
@@ -40,10 +42,19 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteInterfaceEndpoint(deleteOpts.ProjectID, deleteOpts.privateEndpointID, deleteOpts.Entry).
+		DeleteInterfaceEndpointDeprecated(deleteOpts.ProjectID, deleteOpts.privateEndpointID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 
 	err := deleteOpts.Run()
 	assert.NoError(t, err)
+}
+
+func TestDeleteBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DeleteBuilder(),
+		0,
+		[]string{flag.Force, flag.ProjectID, flag.PrivateEndpointID},
+	)
 }

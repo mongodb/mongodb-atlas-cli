@@ -29,29 +29,43 @@ const (
 
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
-	AuditLogPath        string   `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
-	AuditLogDestination string   `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
-	AuditLogFormat      string   `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
-	BuildIndexes        *bool    `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath              string   `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
-	BindIP              *string  `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
-	BindIPAll           *bool    `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
-	FCVersion           string   `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Hostname            string   `yaml:"hostname" json:"hostname"`
-	IPV6                *bool    `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
-	LogPath             string   `yaml:"logPath" json:"logPath"`
-	LogDestination      string   `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
-	Name                string   `yaml:"name,omitempty" json:"name,omitempty"`
-	Port                int      `yaml:"port" json:"port"`
-	Priority            *float64 `yaml:"priority,omitempty" json:"priority,omitempty"`
-	ProcessType         string   `yaml:"processType" json:"processType"`
-	SlaveDelay          *float64 `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
-	Version             string   `yaml:"version,omitempty" json:"version,omitempty"`
-	Votes               *float64 `yaml:"votes,omitempty" json:"votes,omitempty"`
-	ArbiterOnly         *bool    `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
-	Disabled            bool     `yaml:"disabled" json:"disabled"`
-	Hidden              *bool    `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	TLS                 *TLS     `yaml:"tls,omitempty" json:"tls,omitempty"`
+	AuditLogPath           string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
+	AuditLogDestination    string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
+	AuditLogFormat         string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	AuditLogFilter         string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
+	BuildIndexes           *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
+	DBPath                 string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
+	BindIP                 *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
+	BindIPAll              *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	DirectoryPerDB         *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
+	Engine                 string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
+	FCVersion              string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Hostname               string                  `yaml:"hostname" json:"hostname"`
+	InMemory               *map[string]interface{} `yaml:"inMemory,omitempty" json:"inMemory,omitempty"`
+	IndexBuildRetry        *bool                   `yaml:"indexBuildRetry,omitempty" json:"indexBuildRetry,omitempty"`
+	IPV6                   *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
+	Journal                *map[string]interface{} `yaml:"journal,omitempty" json:"journal,omitempty"`
+	LogAppend              bool                    `yaml:"logAppend,omitempty" json:"logAppend,omitempty"`
+	LogDestination         string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
+	LogPath                string                  `yaml:"logPath" json:"logPath"`
+	LogRotate              string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
+	LogVerbosity           int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
+	Name                   string                  `yaml:"name,omitempty" json:"name,omitempty"`
+	OplogMinRetentionHours *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
+	Port                   int                     `yaml:"port" json:"port"`
+	Priority               *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
+	ProcessType            string                  `yaml:"processType" json:"processType"`
+	SlaveDelay             *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
+	SyncPeriodSecs         *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
+	Votes                  *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
+	ArbiterOnly            *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
+	Disabled               bool                    `yaml:"disabled" json:"disabled"`
+	Hidden                 *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	Security               *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
+	SetParameter           *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
+	TLS                    *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Version                string                  `yaml:"version,omitempty" json:"version,omitempty"`
+	WiredTiger             *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
 }
 
 // TLS defines TLS parameters for Net
@@ -120,9 +134,11 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		Votes:          &rs.Votes,
 		ArbiterOnly:    &rs.ArbiterOnly,
 		Hidden:         &rs.Hidden,
-		DBPath:         p.Args26.Storage.DBPath,
 		LogPath:        p.Args26.SystemLog.Path,
 		LogDestination: p.Args26.SystemLog.Destination,
+		LogAppend:      p.Args26.SystemLog.LogAppend,
+		LogVerbosity:   p.Args26.SystemLog.Verbosity,
+		LogRotate:      p.Args26.SystemLog.LogRotate,
 		Port:           p.Args26.NET.Port,
 		BindIP:         p.Args26.NET.BindIP,
 		BindIPAll:      p.Args26.NET.BindIPAll,
@@ -132,11 +148,24 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		FCVersion:      p.FeatureCompatibilityVersion,
 		Hostname:       p.Hostname,
 		Name:           p.Name,
+		SetParameter:   p.Args26.SetParameter,
 	}
+
+	if p.Args26.Storage != nil {
+		pc.DBPath = p.Args26.Storage.DBPath
+		pc.DirectoryPerDB = p.Args26.Storage.DirectoryPerDB
+		pc.SyncPeriodSecs = p.Args26.Storage.SyncPeriodSecs
+		pc.Engine = p.Args26.Storage.Engine
+		pc.WiredTiger = p.Args26.Storage.WiredTiger
+		pc.OplogMinRetentionHours = p.Args26.Storage.OplogMinRetentionHours
+		pc.Journal = p.Args26.Storage.Journal
+	}
+
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
 		pc.AuditLogPath = p.Args26.AuditLog.Path
+		pc.AuditLogFilter = p.Args26.AuditLog.Filter
 	}
 
 	if p.Args26.NET.TLS != nil {
@@ -155,30 +184,66 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
 		}
 	}
+	if p.Args26.Security != nil {
+		pc.Security = p.Args26.Security
+	}
 	return pc
 }
 
 // newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig
 func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
-	return &ProcessConfig{
+	pc := &ProcessConfig{
 		LogPath:        p.Args26.SystemLog.Path,
 		LogDestination: p.Args26.SystemLog.Destination,
+		LogAppend:      p.Args26.SystemLog.LogAppend,
+		LogVerbosity:   p.Args26.SystemLog.Verbosity,
+		LogRotate:      p.Args26.SystemLog.LogRotate,
 		Port:           p.Args26.NET.Port,
+		BindIP:         p.Args26.NET.BindIP,
+		BindIPAll:      p.Args26.NET.BindIPAll,
+		IPV6:           p.Args26.NET.IPV6,
 		ProcessType:    p.ProcessType,
 		Version:        p.Version,
 		FCVersion:      p.FeatureCompatibilityVersion,
 		Hostname:       p.Hostname,
 		Name:           p.Name,
+		SetParameter:   p.Args26.SetParameter,
 	}
+	if p.Args26.AuditLog != nil {
+		pc.AuditLogDestination = p.Args26.AuditLog.Destination
+		pc.AuditLogFormat = p.Args26.AuditLog.Format
+		pc.AuditLogPath = p.Args26.AuditLog.Path
+		pc.AuditLogFilter = p.Args26.AuditLog.Filter
+	}
+	if p.Args26.NET.TLS != nil {
+		pc.TLS = &TLS{
+			CAFile:                     p.Args26.NET.TLS.CAFile,
+			CertificateKeyFile:         p.Args26.NET.TLS.CertificateKeyFile,
+			CertificateKeyFilePassword: p.Args26.NET.TLS.CertificateKeyFilePassword,
+			CertificateSelector:        p.Args26.NET.TLS.CertificateSelector,
+			ClusterCertificateSelector: p.Args26.NET.TLS.ClusterCertificateSelector,
+			ClusterFile:                p.Args26.NET.TLS.ClusterFile,
+			ClusterPassword:            p.Args26.NET.TLS.ClusterPassword,
+			CRLFile:                    p.Args26.NET.TLS.CRLFile,
+			DisabledProtocols:          p.Args26.NET.TLS.DisabledProtocols,
+			FIPSMode:                   p.Args26.NET.TLS.FIPSMode,
+			Mode:                       p.Args26.NET.TLS.Mode,
+			PEMKeyFile:                 p.Args26.NET.TLS.PEMKeyFile,
+		}
+	}
+	if p.Args26.Security != nil {
+		pc.Security = p.Args26.Security
+	}
+	return pc
 }
 
 // newMongosProcess generates a mongo process for a mongos
 func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	process := p.process()
 	process.Cluster = cluster
-	process.Args26 = opsmngr.Args26{
-		NET:       p.net(),
-		SystemLog: p.systemLog(),
+	process.Args26 = p.args26()
+	if p.Security != nil {
+		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {
@@ -187,19 +252,29 @@ func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	return process
 }
 
+func (p *ProcessConfig) args26() opsmngr.Args26 {
+	return opsmngr.Args26{
+		NET:          p.net(),
+		SystemLog:    p.systemLog(),
+		SetParameter: p.SetParameter,
+	}
+}
+
+func (p *ProcessConfig) args26RS(rsSetName string) opsmngr.Args26 {
+	args26 := p.args26()
+	args26.Replication = &opsmngr.Replication{ReplSetName: rsSetName}
+	args26.Storage = p.storage()
+	return args26
+}
+
 // newReplicaSetProcess generates a mongo process for a replica set mongod
 func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = opsmngr.Args26{
-		NET: p.net(),
-		Replication: &opsmngr.Replication{
-			ReplSetName: replSetName,
-		},
-		Storage: &opsmngr.Storage{
-			DBPath: p.DBPath,
-		},
-		SystemLog: p.systemLog(),
+	process.Args26 = p.args26RS(replSetName)
+
+	if p.Security != nil {
+		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {
@@ -212,16 +287,10 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = opsmngr.Args26{
-		NET: p.net(),
-		Replication: &opsmngr.Replication{
-			ReplSetName: rsSetName,
-		},
-		Storage: &opsmngr.Storage{
-			DBPath: p.DBPath,
-		},
-		Sharding:  &opsmngr.Sharding{ClusterRole: "configsvr"},
-		SystemLog: p.systemLog(),
+	process.Args26 = p.args26RS(rsSetName)
+	process.Args26.Sharding = &opsmngr.Sharding{ClusterRole: "configsvr"}
+	if p.Security != nil {
+		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
 	if p.AuditLogPath != "" {
@@ -231,7 +300,7 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	return process
 }
 
-// systemLog maps convert.ProcessConfig -> opsmngr.Net
+// net maps convert.ProcessConfig -> opsmngr.Net
 func (p *ProcessConfig) net() opsmngr.Net {
 	net := opsmngr.Net{
 		Port:      p.Port,
@@ -258,11 +327,28 @@ func (p *ProcessConfig) net() opsmngr.Net {
 	return net
 }
 
+// storage maps convert.ProcessConfig -> opsmngr.Storage
+func (p *ProcessConfig) storage() *opsmngr.Storage {
+	return &opsmngr.Storage{
+		DBPath:                 p.DBPath,
+		DirectoryPerDB:         p.DirectoryPerDB,
+		SyncPeriodSecs:         p.SyncPeriodSecs,
+		Engine:                 p.Engine,
+		WiredTiger:             p.WiredTiger,
+		InMemory:               p.InMemory,
+		OplogMinRetentionHours: p.OplogMinRetentionHours,
+		Journal:                p.Journal,
+	}
+}
+
 // systemLog maps convert.ProcessConfig -> opsmngr.SystemLog
 func (p *ProcessConfig) systemLog() opsmngr.SystemLog {
 	return opsmngr.SystemLog{
 		Destination: p.systemLogDestination(),
 		Path:        p.LogPath,
+		LogAppend:   p.LogAppend,
+		Verbosity:   p.LogVerbosity,
+		LogRotate:   p.LogRotate,
 	}
 }
 
@@ -276,10 +362,18 @@ func (p *ProcessConfig) systemLogDestination() string {
 // auditLog maps convert.ProcessConfig -> opsmngr.AuditLog
 func (p *ProcessConfig) auditLog() *opsmngr.AuditLog {
 	return &opsmngr.AuditLog{
-		Destination: p.AuditLogDestination,
+		Destination: p.auditLogDestination(),
 		Path:        p.AuditLogPath,
 		Format:      p.AuditLogFormat,
+		Filter:      p.AuditLogFilter,
 	}
+}
+
+func (p *ProcessConfig) auditLogDestination() string {
+	if p.AuditLogDestination != "" {
+		return p.AuditLogDestination
+	}
+	return file
 }
 
 // process maps convert.ProcessConfig -> opsmngr.Process
@@ -293,6 +387,9 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 		FeatureCompatibilityVersion: p.FCVersion,
 		Hostname:                    p.Hostname,
 		Name:                        p.Name,
+	}
+	if p.SetParameter != nil {
+		process.Args26.SetParameter = p.SetParameter
 	}
 	return process
 }

@@ -53,7 +53,7 @@ func GetBuilder() *cobra.Command {
 	opts := &GetOpts{}
 	cmd := &cobra.Command{
 		Use:   "get",
-		Short: get,
+		Short: "Get an LDAP configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

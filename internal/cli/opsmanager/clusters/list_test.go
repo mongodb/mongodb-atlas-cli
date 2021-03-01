@@ -21,8 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -45,8 +45,7 @@ func TestList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		err := listOpts.Run()
-		if err != nil {
+		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
@@ -66,8 +65,7 @@ func TestList_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		err := listOpts.Run()
-		if err != nil {
+		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 		config.SetOutput("")
@@ -86,8 +84,7 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 
-		err := listOpts.Run()
-		if err != nil {
+		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})

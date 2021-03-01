@@ -90,6 +90,7 @@ func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
 	out.MongoURIUpdated = ""
 	out.StateName = ""
 	out.MongoDBVersion = ""
+	out.ConnectionStrings = nil
 
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = opts.mdbVersion
@@ -111,7 +112,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update [name]",
-		Short: updateCluster,
+		Short: "Update a MongoDB cluster.",
 		Example: `
   Update tier for a cluster
   $ mongocli atlas cluster update <clusterName> --projectId <projectId> --tier M50

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store    store.PrivateEndpointCreator
+	store    store.PrivateEndpointCreatorDeprecated
 	region   string
 	provider string
 }
@@ -44,7 +44,7 @@ var createTemplate = "Private endpoint '{{.ID}}' created.\n"
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newPrivateEndpointConnection()
 
-	r, err := opts.store.CreatePrivateEndpoint(opts.ConfigProjectID(), createRequest)
+	r, err := opts.store.CreatePrivateEndpointDeprecated(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: createPrivateEndpoint,
+		Short: "Create a new private endpoint for your project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -85,6 +85,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Region)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]"
 
 	return cmd
 }

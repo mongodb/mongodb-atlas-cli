@@ -82,7 +82,7 @@ func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
 	cmd := &cobra.Command{
 		Use:   "startup <name>",
-		Short: StartUpCluster,
+		Short: "Start up a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

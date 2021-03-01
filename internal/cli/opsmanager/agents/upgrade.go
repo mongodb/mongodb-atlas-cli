@@ -52,7 +52,7 @@ func UpgradeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "upgrade",
 		Args:  require.NoArgs,
-		Short: UpgradeAgents,
+		Short: "Upgrade MongoDB Agents to the latest available version.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

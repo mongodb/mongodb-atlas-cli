@@ -17,6 +17,7 @@ package require
 import (
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )
@@ -49,6 +50,17 @@ func ExactArgs(n int) cobra.PositionalArgs {
 	}
 }
 
+// ExactArgsObjectID returns an error if there are not exactly n args and
+// any of those args is not an ObjectID.
+func ExactObjectIDArgs(n int) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		if err := ExactArgs(n)(cmd, args); err != nil {
+			return err
+		}
+		return objectIDArgs(args)
+	}
+}
+
 // MaximumNArgs returns an error if there are more than N args.
 func MaximumNArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
@@ -78,6 +90,38 @@ func MinimumNArgs(n int) cobra.PositionalArgs {
 			)
 		}
 		return nil
+	}
+}
+
+// MinimumNObjectIDArgs returns an error if there is not at least N args and
+// any of those args is not an ObjectID.
+func MinimumNObjectIDArgs(n int) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		if err := MinimumNArgs(n)(cmd, args); err != nil {
+			return err
+		}
+		return objectIDArgs(args)
+	}
+}
+
+func objectIDArgs(args []string) error {
+	for _, arg := range args {
+		if err := validate.ObjectID(arg); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ExactValidArgs returns an error if
+// there are not exactly N positional args OR
+// there are any positional args that are not in the `ValidArgs` field of `Command`
+func ExactValidArgs(n int) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		if err := ExactArgs(n)(cmd, args); err != nil {
+			return err
+		}
+		return cobra.OnlyValidArgs(cmd, args)
 	}
 }
 

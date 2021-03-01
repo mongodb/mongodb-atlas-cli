@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -42,8 +44,16 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestWatchBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		WatchBuilder(),
+		0,
+		[]string{flag.ProjectID},
+	)
 }

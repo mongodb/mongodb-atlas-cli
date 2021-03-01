@@ -20,16 +20,18 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyWhitelistCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.WhitelistAPIKeys{}
+	expected := &mongodbatlas.AccessListAPIKeys{}
 
 	createOpts := &CreateOpts{
 		store:  mockStore,
@@ -37,19 +39,27 @@ func TestCreate_Run(t *testing.T) {
 		ips:    []string{"77.54.32.11"},
 	}
 
-	r, err := createOpts.newWhitelistAPIKeysReq()
+	r, err := createOpts.newAccessListAPIKeysReq()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
 	mockStore.
 		EXPECT().
-		CreateOrganizationAPIKeyWhite(createOpts.OrgID, createOpts.apyKey, r).
+		CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
 		Return(expected, nil).
 		Times(1)
 
-	err = createOpts.Run()
-	if err != nil {
+	if err = createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.OrgID, flag.Output, flag.APIKey, flag.CIDR, flag.IP},
+	)
 }

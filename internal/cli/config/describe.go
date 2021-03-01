@@ -17,39 +17,49 @@ package config
 import (
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ListOpts struct {
+type describeOpts struct {
 	name string
+	cli.OutputOpts
 }
 
-func (opts *ListOpts) Run() error {
+var descTemplate = `SETTING	VALUE{{ range $key, $value := . }}
+{{$key}}	{{$value}}{{end}}
+`
+
+func (opts *describeOpts) Run() error {
 	if !config.Exists(opts.name) {
 		return fmt.Errorf("no profile with name '%s'", opts.name)
 	}
 	config.SetName(opts.name)
-	c := config.Map()
-	for _, k := range config.SortedKeys() {
-		fmt.Printf("%s = %s\n", k, c[k])
-	}
-
-	return nil
+	return opts.Print(config.Map())
 }
 
 func DescribeBuilder() *cobra.Command {
-	opts := &ListOpts{}
+	opts := &describeOpts{}
+	opts.Template = descTemplate
 	cmd := &cobra.Command{
-		Use:   "describe <name>",
-		Short: describeShort,
-		Args:  require.ExactArgs(1),
+		Use:     "describe <name>",
+		Aliases: []string{"get"},
+		Short:   "Return a specific profile.",
+		Args:    require.ExactArgs(1),
+		PreRun: func(cmd *cobra.Command, args []string) {
+			opts.OutWriter = cmd.OutOrStdout()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

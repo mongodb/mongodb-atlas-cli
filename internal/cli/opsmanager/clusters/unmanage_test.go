@@ -21,8 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
 func TestUnmanage_Run(t *testing.T) {
@@ -52,8 +52,7 @@ func TestUnmanage_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

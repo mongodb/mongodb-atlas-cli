@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	deprecated := append([]string{"globalWhitelists"}, cli.GenerateAliases("globalWhitelists")...)
 	var cmd = &cobra.Command{
 		Use:     use,
-		Short:   short,
+		Short:   "Manage IP access list for Global API Key.",
 		Aliases: cli.GenerateAliases(use, deprecated...),
 	}
 

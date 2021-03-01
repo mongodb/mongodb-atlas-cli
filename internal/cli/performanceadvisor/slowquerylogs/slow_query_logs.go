@@ -24,10 +24,11 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Get log lines for slow queries for a specified host",
 	}
 	cmd.AddCommand(
-		ListBuilder())
+		ListBuilder(),
+	)
 
 	return cmd
 }

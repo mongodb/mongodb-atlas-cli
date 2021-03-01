@@ -49,7 +49,7 @@ func (opts *CreateOpts) initStore() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	entry := opts.newWhitelist()
+	entry := opts.newProjectIPAccessList()
 	r, err := opts.store.CreateProjectIPAccessList(entry)
 
 	if err != nil {
@@ -59,8 +59,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newWhitelist() *atlas.ProjectIPWhitelist {
-	entry := &atlas.ProjectIPWhitelist{
+func (opts *CreateOpts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
+	entry := &atlas.ProjectIPAccessList{
 		GroupID:         opts.ConfigProjectID(),
 		Comment:         opts.comment,
 		DeleteAfterDate: opts.deleteAfter,
@@ -81,7 +81,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <entry>",
-		Short: create,
+		Short: "Create an IP access list for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

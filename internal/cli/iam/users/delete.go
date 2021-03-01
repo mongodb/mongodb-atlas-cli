@@ -47,7 +47,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <UserID>",
 		Aliases: []string{"rm"},
-		Short:   deleteUser,
+		Short:   "Delete an Ops Manager user.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

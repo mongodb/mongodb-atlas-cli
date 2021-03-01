@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestSetOpts_Run(t *testing.T) {
@@ -38,14 +38,13 @@ func TestSetOpts_Run(t *testing.T) {
 		EXPECT().UpdateProjectServerType(opts.ConfigProjectID(), opts.newServerTypeRequest()).
 		Times(1)
 
-	err := opts.Run()
-	if err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
 func TestSetBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		SetBuilder(),
 		0,

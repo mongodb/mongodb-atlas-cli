@@ -43,8 +43,7 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	err := watchOpts.Run()
-	if err != nil {
+	if err := watchOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

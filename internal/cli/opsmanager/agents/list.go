@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -56,9 +57,9 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "list",
 		Aliases:   []string{"ls"},
-		Args:      cobra.ExactValidArgs(1),
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
-		Short:     ListAgents,
+		Short:     "List available MongoDB Agents for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

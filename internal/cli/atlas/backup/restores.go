@@ -23,12 +23,14 @@ func RestoresBuilder() *cobra.Command {
 	const use = "restores"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   restoresShort,
+		Short:   "Manage cloud backup restore jobs for your project.",
 		Aliases: cli.GenerateAliases(use),
 	}
 
-	cmd.AddCommand(RestoresListBuilder())
-	cmd.AddCommand(RestoresStartBuilder())
+	cmd.AddCommand(
+		RestoresListBuilder(),
+		RestoresStartBuilder(),
+	)
 
 	return cmd
 }

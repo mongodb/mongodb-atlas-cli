@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -147,8 +148,8 @@ func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{
 		Use:       fmt.Sprintf("start <%s|%s|%s>", automatedRestore, downloadRestore, pointInTimeRestore),
-		Short:     startRestore,
-		Args:      cobra.ExactValidArgs(1),
+		Short:     "Start a restore job for your project and cluster.",
+		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {

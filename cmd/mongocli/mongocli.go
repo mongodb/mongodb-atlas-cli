@@ -15,89 +15,25 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/cli/atlas"
-	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
-	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
-	"github.com/mongodb/mongocli/internal/cli/iam"
-	"github.com/mongodb/mongocli/internal/cli/opsmanager"
+	"github.com/mongodb/mongocli/internal/cli/root"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
-
-var (
-	rootCmd = &cobra.Command{
-		Version: version.Version,
-		Use:     config.ToolName,
-		Short:   "CLI tool to manage your MongoDB Cloud",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
-		Example: `
-  Display the help menu for the config command
-  $ mongocli config --help`,
-		SilenceUsage: true,
-	}
-
-	completionCmd = &cobra.Command{
-		Use:   "completion <bash|zsh|fish|powershell>",
-		Args:  cobra.ExactValidArgs(1),
-		Short: "Generate shell completion scripts",
-		Long: `Generate shell completion scripts for MongoDB CLI commands.
-The output of this command will be computer code and is meant to be saved to a
-file or immediately evaluated by an interactive shell.
-
-When installing MongoDB CLI through brew, it's possible that
-no additional shell configuration is necessary, see https://docs.brew.sh/Shell-Completion.`,
-		ValidArgs: []string{"bash", "zsh", "powershell", "fish"},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			switch args[0] {
-			case "bash":
-				return rootCmd.GenBashCompletion(cmd.OutOrStdout())
-			case "zsh":
-				return rootCmd.GenZshCompletion(cmd.OutOrStdout())
-			case "powershell":
-				return rootCmd.GenPowerShellCompletion(cmd.OutOrStdout())
-			case "fish":
-				return rootCmd.GenFishCompletion(cmd.OutOrStdout(), true)
-			default:
-				return fmt.Errorf("unsupported shell type %q", args[0])
-			}
-		},
-	}
-)
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		os.Exit(1)
-	}
-}
 
 var (
 	profile string
 )
 
-func init() { //nolint:gochecknoinits // This is the cobra way
-	rootCmd.AddCommand(
-		cliconfig.Builder(),
-		atlas.Builder(),
-		cloudmanager.Builder(),
-		opsmanager.Builder(),
-		iam.Builder(),
-		completionCmd,
-	)
-
-	cobra.EnableCommandSorting = false
-
-	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-
-	cobra.OnInitialize(initConfig)
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute() {
+	rootCmd := root.Builder(&profile, os.Args[1:])
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -115,5 +51,8 @@ func initConfig() {
 }
 
 func main() {
+	cobra.EnableCommandSorting = false
+	cobra.OnInitialize(initConfig)
+
 	Execute()
 }

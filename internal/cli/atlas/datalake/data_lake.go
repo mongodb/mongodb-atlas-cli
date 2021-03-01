@@ -24,15 +24,17 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   DataLakes,
-		Long:    dataLakesLong,
+		Short:   "Manage Atlas Data Lakes for your project.",
+		Long:    "The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(UpdateBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		UpdateBuilder(),
+	)
 
 	return cmd
 }

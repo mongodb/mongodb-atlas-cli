@@ -7,3 +7,10 @@ updates:
       day: tuesday
     reviewers:
       - "mongodb/mongocli"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+    reviewers:
+      - "mongodb/mongocli"

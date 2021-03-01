@@ -43,8 +43,7 @@ func TestDelete_Run(t *testing.T) {
 			Confirm: true,
 		},
 	}
-	err := deleteOpts.Run()
-	if err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

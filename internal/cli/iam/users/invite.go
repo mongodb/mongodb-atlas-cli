@@ -235,7 +235,7 @@ func InviteBuilder() *cobra.Command {
 	opts.Template = inviteTemplate
 	cmd := &cobra.Command{
 		Use:   "invite",
-		Short: inviteUser,
+		Short: "Invite a user.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

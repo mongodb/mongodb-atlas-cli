@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   short,
+		Short:   "Manage earliest and latest versions of MongoDB Agent, MongoDB Tools, and BI Connector in your environment.",
 	}
 
 	cmd.AddCommand(ListBuilder())

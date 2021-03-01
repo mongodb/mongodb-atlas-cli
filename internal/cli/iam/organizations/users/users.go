@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   short,
+		Short:   "Users operations.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

@@ -20,21 +20,17 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestWatchBuilder(t *testing.T) {
-	cli.CmdValidator(t, WatchBuilder(), 0, []string{flag.ProjectID, flag.Output})
+	test.CmdValidator(t, WatchBuilder(), 0, []string{flag.ProjectID, flag.Output})
 }
 
 func TestWatchOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
-	defer ctrl.Finish()
-
 	tests := []struct {
 		name     string
 		expected *mongodbatlas.Peer
@@ -55,6 +51,11 @@ func TestWatchOpts_Run(t *testing.T) {
 	for _, tt := range tests {
 		expected := tt.expected
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
+			defer ctrl.Finish()
 			describeOpts := &WatchOpts{
 				id:    "test",
 				store: mockStore,

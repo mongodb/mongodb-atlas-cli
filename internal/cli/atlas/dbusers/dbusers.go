@@ -25,16 +25,20 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   dbUsers,
-		Long:    dbUsersLong,
+		Short:   "Manage database users for your project.",
+		Long: `The dbusers command retrieves, creates and modifies the MongoDB database users in your project.
+Each user has a set of roles that provide access to the project’s databases. 
+A user’s roles apply to all the clusters in the project.`,
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(CreateBuilder())
-	cmd.AddCommand(DeleteBuilder())
-	cmd.AddCommand(UpdateBuilder())
-	cmd.AddCommand(certs.Builder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		DeleteBuilder(),
+		UpdateBuilder(),
+		certs.Builder(),
+	)
 
 	return cmd
 }

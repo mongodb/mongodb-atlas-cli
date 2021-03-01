@@ -18,11 +18,11 @@ package namespaces
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {
-	cli.CmdValidator(
+	test.CmdValidator(
 		t,
 		Builder(),
 		1,

@@ -22,8 +22,8 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/fixture"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -54,8 +54,7 @@ func TestDelete_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err := createOpts.Run()
-	if err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

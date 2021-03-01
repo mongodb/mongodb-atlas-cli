@@ -24,24 +24,39 @@ import (
 )
 
 func TestGlobalOpts_ValidateProjectID(t *testing.T) {
-	t.Run("empty project ID", func(t *testing.T) {
-		o := &GlobalOpts{}
-		if err := o.ValidateProjectID(); err != errMissingProjectID {
-			t.Errorf("Expected err: %#v, got: %#v\n", errMissingProjectID, err)
-		}
-	})
-	t.Run("invalid project ID", func(t *testing.T) {
-		o := &GlobalOpts{ProjectID: "1"}
-		if err := o.ValidateProjectID(); err == nil {
-			t.Errorf("Expected an error\n")
-		}
-	})
-	t.Run("valid project ID", func(t *testing.T) {
-		o := &GlobalOpts{ProjectID: "5e98249d937cfc52efdc2a9f"}
-		if err := o.ValidateProjectID(); err != nil {
-			t.Fatalf("PreRunE() unexpected error %v\n", err)
-		}
-	})
+	tests := []struct {
+		name      string
+		projectID string
+		wantErr   bool
+	}{
+		{
+			name:      "empty project ID",
+			projectID: "",
+			wantErr:   true,
+		},
+		{
+			name:      "invalid project ID",
+			projectID: "1",
+			wantErr:   true,
+		},
+		{
+			name:      "valid project ID",
+			projectID: "5e98249d937cfc52efdc2a9f",
+			wantErr:   false,
+		},
+	}
+	for _, tt := range tests {
+		projectID := tt.projectID
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &GlobalOpts{
+				ProjectID: projectID,
+			}
+			if err := opts.ValidateProjectID(); (err != nil) != wantErr {
+				t.Errorf("ValidateProjectID() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
 }
 
 func TestGlobalOpts_ValidateOrgID(t *testing.T) {
@@ -119,6 +134,7 @@ func TestGenerateAliases(t *testing.T) {
 		want := tt.want
 		args := tt.args
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := GenerateAliases(args.use, args.extra...)
 			assert.Equal(t, got, want)
 		})

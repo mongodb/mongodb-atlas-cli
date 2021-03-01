@@ -33,10 +33,8 @@ func TestCreateOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	request, err := opts.newOnlineArchive()
-	if err != nil {
-		t.Fatalf("newOnlineArchive() unexpected error: %v", err)
-	}
+	request := opts.newOnlineArchive()
+
 	expected := &mongodbatlas.OnlineArchive{}
 	mockStore.
 		EXPECT().

@@ -23,13 +23,14 @@ func Builder() *cobra.Command {
 	const use = "peering"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: peering,
+		Short: "Manage Network Peering connections.",
 	}
 
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(create.Builder())
-	cmd.AddCommand(WatchBuilder())
-	cmd.AddCommand(DeleteBuilder())
-
+	cmd.AddCommand(
+		ListBuilder(),
+		create.Builder(),
+		WatchBuilder(),
+		DeleteBuilder(),
+	)
 	return cmd
 }

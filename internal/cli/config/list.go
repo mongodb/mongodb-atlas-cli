@@ -15,25 +15,41 @@
 package config
 
 import (
-	"fmt"
-
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
+var listTemplate = `PROFILE NAME{{range .}}
+{{.}}{{end}}
+`
+
+type listOpts struct {
+	cli.OutputOpts
+}
+
+func (opts *listOpts) Run() error {
+	return opts.Print(config.List())
+}
+
 func ListBuilder() *cobra.Command {
+	opts := &listOpts{}
+	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   listShort,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Available profiles:")
-			profiles := config.List()
-			for _, p := range profiles {
-				fmt.Printf("  %s\n", p)
-			}
+		Short:   "List available profiles.",
+		PreRun: func(cmd *cobra.Command, args []string) {
+			opts.OutWriter = cmd.OutOrStdout()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

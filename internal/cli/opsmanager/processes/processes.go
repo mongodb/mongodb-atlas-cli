@@ -22,10 +22,12 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "processes",
 		Aliases: []string{"process"},
-		Short:   processes,
+		Short:   "Manage MongoDB processes for your project.",
 	}
-	cmd.AddCommand(ListBuilder())
-	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+	)
 
 	return cmd
 }

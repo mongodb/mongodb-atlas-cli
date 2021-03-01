@@ -30,14 +30,13 @@ import (
 )
 
 const (
-	replicaSet        = "REPLICASET"
-	tenant            = "TENANT"
-	atlasM2           = "M2"
-	atlasM5           = "M5"
-	zoneName          = "Zone 1"
-	currentMDBVersion = "4.2"
-	labelKey          = "Infrastructure Tool"
-	labelValue        = "mongoCLI"
+	replicaSet = "REPLICASET"
+	tenant     = "TENANT"
+	atlasM2    = "M2"
+	atlasM5    = "M5"
+	zoneName   = "Zone 1"
+	labelKey   = "Infrastructure Tool"
+	labelValue = "mongoCLI"
 )
 
 type CreateOpts struct {
@@ -52,6 +51,7 @@ type CreateOpts struct {
 	clusterType string
 	diskSizeGB  float64
 	backup      bool
+	biConnector bool
 	mdbVersion  string
 	filename    string
 	fs          afero.Fs
@@ -95,6 +95,7 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.MongoURIUpdated = ""
 		cluster.StateName = ""
 		cluster.MongoDBVersion = ""
+		cluster.ConnectionStrings = nil
 	} else {
 		opts.applyOpts(cluster)
 	}
@@ -131,6 +132,9 @@ func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {
 	if opts.backup {
 		out.ProviderBackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
+	}
+	if opts.biConnector {
+		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.ClusterType = opts.clusterType
 	out.DiskSizeGB = &opts.diskSizeGB
@@ -189,8 +193,11 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: createCluster,
-		Long:  createClusterLong,
+		Short: "Create a MongoDB cluster for your project.",
+		Long: `You can create MongoDB clusters using this command.
+To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
+this will create a 3 member replica set with the latest available mongodb server version available.
+Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.`,
 		Example: `  
   Deploy a 3 members replica set in AWS
   $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
@@ -209,7 +216,6 @@ func CreateBuilder() *cobra.Command {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Provider)
 				_ = cmd.MarkFlagRequired(flag.Region)
-
 				if len(args) == 0 {
 					return errors.New("cluster name missing")
 				}
@@ -227,6 +233,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	currentMDBVersion, _ := DefaultMongoDBMajorVersion()
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
@@ -235,6 +242,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 2, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
+	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
 	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)
@@ -245,4 +253,19 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
+}
+
+var defaultMongoDBMajorVersion string
+
+func DefaultMongoDBMajorVersion() (string, error) {
+	if defaultMongoDBMajorVersion != "" {
+		return defaultMongoDBMajorVersion, nil
+	}
+	s, err := store.NewPrivateUnauth(config.Default())
+	if err != nil {
+		return "", err
+	}
+	defaultMongoDBMajorVersion, _ = s.DefaultMongoDBVersion()
+
+	return defaultMongoDBMajorVersion, nil
 }

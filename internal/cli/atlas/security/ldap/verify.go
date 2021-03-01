@@ -71,7 +71,7 @@ func VerifyBuilder() *cobra.Command {
 	opts := &VerifyOpts{}
 	cmd := &cobra.Command{
 		Use:   "verify",
-		Short: verify,
+		Short: "Request verification of an LDAP configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

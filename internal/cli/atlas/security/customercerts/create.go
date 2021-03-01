@@ -64,7 +64,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: saveCertConfig,
+		Short: "Saves a customer-managed X.509 configuration for an Atlas project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

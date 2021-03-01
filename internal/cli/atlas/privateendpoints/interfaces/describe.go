@@ -29,7 +29,7 @@ type DescribeOpts struct {
 	cli.OutputOpts
 	id                string
 	privateEndpointID string
-	store             store.InterfaceEndpointDescriber
+	store             store.InterfaceEndpointDescriberDeprecated
 }
 
 func (opts *DescribeOpts) init() error {
@@ -43,7 +43,7 @@ var describeTemplate = `ID	STATUS	ERROR
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), opts.privateEndpointID, opts.id)
+	r, err := opts.store.InterfaceEndpointDeprecated(opts.ConfigProjectID(), opts.privateEndpointID, opts.id)
 
 	if err != nil {
 		return err
@@ -52,14 +52,14 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) interface(s) describe <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
+		Use:     "describe <atlasPrivateEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   describeInterfaceEndpoint,
+		Short:   "Return a specific private endpoint interface for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(
@@ -78,6 +78,8 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
+
+	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

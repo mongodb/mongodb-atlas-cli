@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "globalApiKeys"
 	var cmd = &cobra.Command{
 		Use:     use,
-		Short:   short,
+		Short:   "Global API Keys operations.",
 		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(

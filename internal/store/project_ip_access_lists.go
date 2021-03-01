@@ -25,14 +25,14 @@ import (
 //go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
 
 type ProjectIPAccessListDescriber interface {
-	IPAccessList(string, string) (*atlas.ProjectIPWhitelist, error)
+	IPAccessList(string, string) (*atlas.ProjectIPAccessList, error)
 }
 type ProjectIPAccessListLister interface {
-	ProjectIPAccessLists(string, *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error)
+	ProjectIPAccessLists(string, *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error)
 }
 
 type ProjectIPAccessListCreator interface {
-	CreateProjectIPAccessList(*atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error)
+	CreateProjectIPAccessList(*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error)
 }
 
 type ProjectIPAccessListDeleter interface {
@@ -40,10 +40,10 @@ type ProjectIPAccessListDeleter interface {
 }
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers
-func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPWhitelist) ([]atlas.ProjectIPWhitelist, error) {
+func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Create(context.Background(), entry.GroupID, []*atlas.ProjectIPWhitelist{entry})
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entry.GroupID, []*atlas.ProjectIPAccessList{entry})
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -54,7 +54,7 @@ func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPWhitelist) ([]at
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).ProjectIPWhitelist.Delete(context.Background(), projectID, entry)
+		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(context.Background(), projectID, entry)
 		return err
 	default:
 		return fmt.Errorf("unsupported service: %s", s.service)
@@ -62,10 +62,10 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 }
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers
-func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) ([]atlas.ProjectIPWhitelist, error) {
+func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(context.Background(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
@@ -73,10 +73,10 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 }
 
 // IPAccessList encapsulate the logic to manage different cloud providers
-func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPWhitelist, error) {
+func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPWhitelist.Get(context.Background(), projectID, name)
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(context.Background(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

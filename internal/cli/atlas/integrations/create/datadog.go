@@ -65,7 +65,7 @@ func DatadogBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     datadogType,
 		Aliases: []string{"datadog"},
-		Short:   datadog,
+		Short:   "Create or update the Datadog integration.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

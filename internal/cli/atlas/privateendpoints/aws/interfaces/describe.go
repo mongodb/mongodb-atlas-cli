@@ -52,11 +52,11 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) aws interface(s) describe <privateEndpointID> [--privateEndpointServiceID privateEndpointServiceID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) aws interface(s) describe <endpointId> [--endpointServiceID endpointServiceID][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <privateEndpointID>",
+		Use:     "describe <endpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific AWS private endpoint interface for your project.",
@@ -72,12 +72,12 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.PrivateEndpointServiceID, "", usage.PrivateEndpointServiceID)
+	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.PrivateEndpointServiceID)
+	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 
 	return cmd
 }

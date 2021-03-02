@@ -55,6 +55,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.Output, flag.ProjectID, flag.PrivateEndpointServiceID},
+		[]string{flag.Output, flag.ProjectID, flag.EndpointServiceID},
 	)
 }

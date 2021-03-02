@@ -55,6 +55,6 @@ func TestDeleteBuilder(t *testing.T) {
 		t,
 		DeleteBuilder(),
 		0,
-		[]string{flag.Force, flag.ProjectID, flag.PrivateEndpointServiceID},
+		[]string{flag.Force, flag.ProjectID, flag.EndpointServiceID},
 	)
 }

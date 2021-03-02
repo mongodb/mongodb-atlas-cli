@@ -42,7 +42,7 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteInterfaceEndpoint(deleteOpts.ProjectID, provider, deleteOpts.privateEndpointID, deleteOpts.Entry).
+		DeleteInterfaceEndpoint(deleteOpts.ProjectID, provider, deleteOpts.privateEndpointServiceID, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 
@@ -55,6 +55,6 @@ func TestDeleteBuilder(t *testing.T) {
 		t,
 		DeleteBuilder(),
 		0,
-		[]string{flag.Force, flag.ProjectID, flag.PrivateEndpointID},
+		[]string{flag.Force, flag.ProjectID, flag.PrivateEndpointServiceID},
 	)
 }

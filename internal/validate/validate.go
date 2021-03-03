@@ -92,7 +92,7 @@ func ObjectID(s string) error {
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
 		return fmt.Errorf(
-			"missing credentials\n\nStart with:  %s %s",
+			"missing credentials\n\nTo set credentials, run: %s %s",
 			config.ToolName,
 			"config",
 		)

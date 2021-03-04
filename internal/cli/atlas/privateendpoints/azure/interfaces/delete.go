@@ -27,8 +27,8 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	privateEndpointID string
-	store             store.InterfaceEndpointDeleter
+	privateEndpointServiceID string
+	store                    store.InterfaceEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore() error {
@@ -38,18 +38,18 @@ func (opts *DeleteOpts) initStore() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), provider, opts.privateEndpointID)
+	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), provider, opts.privateEndpointServiceID)
 }
 
-// mongocli atlas privateEndpoint(s) azure interface(s) delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) azure interface(s) delete <endpointId> [--endpointServiceID endpointServiceID][--projectId projectId]
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <atlasPrivateEndpointId>",
+		Use:     "delete <endpointId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a specific Azure private endpoint interface for your project.",
+		Short:   "Delete a specific Azure private endpoint interface and related service for your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
@@ -64,7 +64,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
+	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

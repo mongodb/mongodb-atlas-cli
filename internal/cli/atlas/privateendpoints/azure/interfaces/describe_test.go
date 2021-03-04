@@ -33,16 +33,16 @@ func TestDescribeOpts_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
-		store:             mockStore,
-		privateEndpointID: "privateEndpointID",
-		id:                "id",
+		store:                    mockStore,
+		privateEndpointServiceID: "privateEndpointID",
+		privateEndpointID:        "id",
 	}
 
 	expected := &mongodbatlas.InterfaceEndpointConnection{}
 
 	mockStore.
 		EXPECT().
-		InterfaceEndpoint(opts.ProjectID, provider, opts.id, opts.privateEndpointID).
+		InterfaceEndpoint(opts.ProjectID, provider, opts.privateEndpointServiceID, opts.privateEndpointID).
 		Return(expected, nil).
 		Times(1)
 
@@ -55,6 +55,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.Output, flag.ProjectID, flag.PrivateEndpointID},
+		[]string{flag.Output, flag.ProjectID, flag.EndpointServiceID},
 	)
 }

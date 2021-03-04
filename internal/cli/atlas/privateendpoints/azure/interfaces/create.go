@@ -40,7 +40,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Interface endpoint '{{.ID}}' created.\n"
+var createTemplate = "Interface endpoint '{{.PrivateEndpointResourceID}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateInterfaceEndpoint(opts.ConfigProjectID(), provider, opts.interfaceEndpointID, opts.newInterfaceEndpointConnection())

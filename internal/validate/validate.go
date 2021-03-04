@@ -16,14 +16,12 @@ package validate
 
 import (
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"net/url"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/search"
-
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/search"
 )
 
 // toString tries to cast an interface to string
@@ -75,11 +73,8 @@ func OptionalObjectID(val interface{}) error {
 		return nil
 	}
 	s, err := toString(val)
-	if err != nil {
+	if err != nil || s == "" {
 		return err
-	}
-	if s == "" {
-		return nil
 	}
 	return ObjectID(s)
 }
@@ -96,7 +91,11 @@ func ObjectID(s string) error {
 // Credentials validates public and private API keys have been set
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
-		return errors.New("missing credentials")
+		return fmt.Errorf(
+			"missing credentials\n\nTo set credentials, run: %s %s",
+			config.ToolName,
+			"config",
+		)
 	}
 	return nil
 }

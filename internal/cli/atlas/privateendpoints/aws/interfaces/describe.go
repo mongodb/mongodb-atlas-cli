@@ -27,9 +27,9 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id                string
-	privateEndpointID string
-	store             store.InterfaceEndpointDescriber
+	privateEndpointServiceID string
+	privateEndpointID        string
+	store                    store.InterfaceEndpointDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -43,7 +43,7 @@ var describeTemplate = `ID	STATUS	ERROR
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.id, opts.privateEndpointID)
+	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointID)
 
 	if err != nil {
 		return err
@@ -52,16 +52,16 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) aws interface(s) describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId]
+// mongocli atlas privateEndpoint(s) aws interface(s) describe <endpointId> [--endpointServiceID endpointServiceID][--projectId projectId]
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <atlasPrivateEndpointId>",
+		Use:     "describe <endpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific AWS private endpoint interface for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
+			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.init,
@@ -72,12 +72,12 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
+	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
-	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
+	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 
 	return cmd
 }

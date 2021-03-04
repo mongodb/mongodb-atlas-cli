@@ -28,10 +28,7 @@ func TestNewIPAddress(t *testing.T) {
 	srv := serverMock()
 	defer srv.Close()
 
-	ip, err := ipAddress([]string{srv.URL + service})
-	if err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	ip := ipAddress([]string{srv.URL + service})
 
 	if ip != publicIP {
 		t.Fatalf("expected %s, got %s", "1", ip)

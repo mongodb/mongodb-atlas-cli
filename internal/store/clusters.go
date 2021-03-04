@@ -64,6 +64,7 @@ type AtlasClusterGetterUpdater interface {
 
 type AtlasClusterQuickStarter interface {
 	ClusterStarter
+	ClusterLister
 	DatabaseUserCreator
 	DatabaseUserDescriber
 	ProjectIPAccessListCreator

@@ -15,7 +15,6 @@ package net
 
 import (
 	"context"
-	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -36,12 +35,12 @@ var APIURIs = []string{
 	"http://ip.tyk.nu",
 }
 
-func IPAddress() (string, error) {
+func IPAddress() string {
 	return ipAddress(APIURIs)
 }
 
 // ipAddress returns client's public ip
-func ipAddress(services []string) (string, error) {
+func ipAddress(services []string) string {
 	publicIP := ""
 	for _, uri := range services {
 		publicIP = ipAddressFromAPI(uri)
@@ -50,11 +49,7 @@ func ipAddress(services []string) (string, error) {
 		}
 	}
 
-	if publicIP == "" {
-		return publicIP, errors.New("error in finding your public IP")
-	}
-
-	return publicIP, nil
+	return publicIP
 }
 
 // ipAddressFromAPI gets the client's public ip by calling the input endpoint

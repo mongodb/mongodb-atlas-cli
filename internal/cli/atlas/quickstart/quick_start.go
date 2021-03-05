@@ -35,14 +35,14 @@ const (
 	replicaSet        = "REPLICASET"
 	mdbVersion        = "4.4"
 	shards            = 1
-	tier              = "M10"
+	tier              = "M2"
+	tenant            = "TENANT"
 	members           = 3
 	zoneName          = "Zone 1"
 	accessListComment = "IP added with mongocli atlas quickstart"
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
 	passwordLength    = 12
-	max               = 1000000
 )
 
 // DefaultRegions represents the regions available for each cloud service provider
@@ -192,9 +192,10 @@ func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
 
 func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	return &atlas.ProviderSettings{
-		InstanceSizeName: tier,
-		ProviderName:     opts.Provider,
-		RegionName:       opts.Region,
+		InstanceSizeName:    tier,
+		ProviderName:        tenant,
+		RegionName:          opts.Region,
+		BackingProviderName: opts.Provider,
 	}
 }
 

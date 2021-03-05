@@ -15,12 +15,12 @@
 package quickstart
 
 import (
-	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/big"
 	"os/exec"
 	"regexp"
+	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -75,12 +75,6 @@ func (opts *Opts) newDBUserQuestions() []*survey.Question {
 			message = fmt.Sprintf("Insert the Username for authenticating to MongoDB [Press Enter to use '%s']", usrDefault)
 		}
 		q := &survey.Question{
-			Name: "dbUsername",
-			Prompt: &survey.Input{
-				Message: message,
-				Help:    usage.DBUsername,
-				Default: usrDefault,
-			},
 			Validate: func(val interface{}) error {
 				username, _ := val.(string)
 				user, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
@@ -95,6 +89,12 @@ func (opts *Opts) newDBUserQuestions() []*survey.Question {
 				}
 
 				return nil
+			},
+			Name: "dbUsername",
+			Prompt: &survey.Input{
+				Message: message,
+				Help:    usage.DBUsername,
+				Default: usrDefault,
 			},
 		}
 
@@ -155,6 +155,11 @@ func (opts *Opts) newClusterQuestions() []*survey.Question {
 func dbUsername() string {
 	command := "whoami"
 	cmd := exec.Command("bash", "-c", command)
+
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("powershell", "", command)
+	}
+
 	stdout, err := cmd.Output()
 
 	if err != nil {
@@ -170,13 +175,10 @@ func dbUsername() string {
 // newClusterName returns an auto-generate Cluster name
 func (opts *Opts) newClusterName() string {
 	cs, _ := opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
+	i := 0
 	if clusters, ok := cs.([]atlas.Cluster); ok {
 		for {
-			i, err := rand.Int(rand.Reader, big.NewInt(max))
-			if err != nil {
-				return ""
-			}
-			clusterName := "QuickstartCluster" + i.String()
+			clusterName := "QuickstartCluster" + strconv.Itoa(i)
 			found := false
 			for i := range clusters {
 				if clusters[i].Name == clusterName {
@@ -188,6 +190,7 @@ func (opts *Opts) newClusterName() string {
 			if !found {
 				return clusterName
 			}
+			i++
 		}
 	}
 

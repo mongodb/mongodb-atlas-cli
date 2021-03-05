@@ -287,7 +287,9 @@ func (opts *Opts) newAccessListQuestion() *survey.Question {
 	}
 
 	message := "Insert the IP entry to add to the Access List"
+	//nolint:ifshort //false positive
 	publicIP := net.IPAddress()
+
 	if publicIP != "" {
 		message = fmt.Sprintf("Insert the IP entry to add to the Access List [Press Enter to use your public IP address '%s']", publicIP)
 	}

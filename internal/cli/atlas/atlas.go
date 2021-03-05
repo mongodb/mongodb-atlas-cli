@@ -55,6 +55,7 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
+		quickstart.Builder(),
 		clusters.Builder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),
@@ -74,7 +75,6 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		quickstart.Builder(),
 	)
 
 	return cmd

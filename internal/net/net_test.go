@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	service  = "/api.ipify.org"
+	service  = "/checkip.amazonaws.com"
 	publicIP = "1"
 )
 
@@ -28,7 +28,7 @@ func TestNewIPAddress(t *testing.T) {
 	srv := serverMock()
 	defer srv.Close()
 
-	ip := ipAddress([]string{srv.URL + service})
+	ip := ipAddressFromAPI(srv.URL + service)
 
 	if ip != publicIP {
 		t.Fatalf("expected %s, got %s", "1", ip)

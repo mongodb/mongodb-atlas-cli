@@ -19,37 +19,10 @@ import (
 	"net/http"
 )
 
-// APIURIs is the URIs of the services used by newIPAddress to get the client's public IP.
-var APIURIs = []string{
-	"https://api.ipify.org",
-	"http://myexternalip.com/raw",
-	"http://ipinfo.io/ip",
-	"http://ipecho.net/plain",
-	"http://icanhazip.com",
-	"http://ifconfig.me/ip",
-	"http://ident.me",
-	"http://checkip.amazonaws.com",
-	"http://bot.whatismyipaddress.com",
-	"http://whatismyip.akamai.com",
-	"http://wgetip.com",
-	"http://ip.tyk.nu",
-}
+const APIURI = "http://checkip.amazonaws.com"
 
 func IPAddress() string {
-	return ipAddress(APIURIs)
-}
-
-// ipAddress returns client's public ip
-func ipAddress(services []string) string {
-	publicIP := ""
-	for _, uri := range services {
-		publicIP = ipAddressFromAPI(uri)
-		if publicIP != "" {
-			break
-		}
-	}
-
-	return publicIP
+	return ipAddressFromAPI(APIURI)
 }
 
 // ipAddressFromAPI gets the client's public ip by calling the input endpoint
@@ -65,13 +38,16 @@ func ipAddressFromAPI(uri string) string {
 		return ""
 	}
 
-	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Accept", "text/plain")
 	res, err := http.DefaultClient.Do(req)
+
+	defer func() {
+		_ = res.Body.Close()
+	}()
 
 	if err == nil {
 		responseBytes, err1 := ioutil.ReadAll(res.Body)
-		err2 := res.Body.Close()
-		if err1 == nil && err2 == nil {
+		if err1 == nil {
 			return string(responseBytes)
 		}
 	}

@@ -61,18 +61,20 @@ func ipAddressFromAPI(uri string) string {
 		nil,
 	)
 
+	if err != nil {
+		return ""
+	}
+
 	req.Header.Add("Accept", "application/json")
+	res, err := http.DefaultClient.Do(req)
 
 	if err == nil {
-		res, err := http.DefaultClient.Do(req)
-
-		if err == nil {
-			responseBytes, err := ioutil.ReadAll(res.Body)
-			res.Body.Close()
-			if err == nil {
-				return string(responseBytes)
-			}
+		responseBytes, err1 := ioutil.ReadAll(res.Body)
+		err2 := res.Body.Close()
+		if err1 == nil && err2 == nil {
+			return string(responseBytes)
 		}
 	}
+
 	return ""
 }

@@ -15,6 +15,7 @@ package quickstart
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -34,7 +35,7 @@ const (
 	replicaSet        = "REPLICASET"
 	mdbVersion        = "4.4"
 	shards            = 1
-	tier              = "M2"
+	tier              = "M10"
 	members           = 3
 	zoneName          = "Zone 1"
 	accessListComment = "IP added with mongocli atlas quickstart"
@@ -156,7 +157,7 @@ func (opts *Opts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
 }
 
 func (opts *Opts) newCluster() *atlas.Cluster {
-	diskSizeGB := atlas.DefaultDiskSizeGB["TENANT"]["M2"]
+	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.Provider)]["M10"]
 	return &atlas.Cluster{
 		GroupID:             opts.ConfigProjectID(),
 		ClusterType:         replicaSet,

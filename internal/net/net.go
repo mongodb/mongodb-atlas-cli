@@ -17,6 +17,7 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const APIURI = "http://checkip.amazonaws.com"
@@ -48,7 +49,7 @@ func ipAddressFromAPI(uri string) string {
 	if err == nil {
 		responseBytes, err1 := ioutil.ReadAll(res.Body)
 		if err1 == nil {
-			return string(responseBytes)
+			return strings.TrimSpace(string(responseBytes))
 		}
 	}
 

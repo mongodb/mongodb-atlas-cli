@@ -1537,8 +1537,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1546,8 +1546,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .generic"
   - name: opsmanager_e2e_generic
@@ -1555,8 +1555,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".opsmanager .general"
   - name: e2e_atlas_clusters
@@ -1564,8 +1564,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_atlas_networking
@@ -1573,8 +1573,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_datalake
@@ -1582,8 +1582,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
@@ -1591,8 +1591,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_remote
@@ -1600,8 +1600,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .clusters .opsmanager"
   - name: generate_docs
@@ -1609,8 +1609,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".docs"
   - name: goreleaser_snapshot
@@ -1618,8 +1618,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
       server_version: "4.4.0-rc3"
     tasks:
       - name: package_goreleaser
@@ -1631,8 +1631,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.15"
-      go_bin: "c:\\golang\\go1.15/bin"
+      go_root: "c:\\golang\\go1.16"
+      go_bin: "c:\\golang\\go1.16/bin"
     tasks:
       - name: package_msi
   - name: release_msi
@@ -1640,8 +1640,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.15"
-      go_bin: "c:\\golang\\go1.15/bin"
+      go_root: "c:\\golang\\go1.16"
+      go_bin: "c:\\golang\\go1.16/bin"
     tasks:
       - name: release_msi
   - name: release_github
@@ -1649,8 +1649,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.15"
-      go_bin: "/opt/golang/go1.15/bin"
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: release
   - name: release_publish_42

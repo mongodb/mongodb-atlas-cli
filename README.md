@@ -30,7 +30,7 @@ Ideally, you should place this binary somewhere in your `PATH` for easy use. `/u
 
 #### Prerequisite Tools 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.15)](https://golang.org/dl/)
+- [Go (at least Go 1.16)](https://golang.org/dl/)
 
 #### Fetch Source
 

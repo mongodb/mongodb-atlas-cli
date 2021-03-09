@@ -17,10 +17,10 @@
 package search
 
 import (
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/test/fixture"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestStringInSlice(t *testing.T) {

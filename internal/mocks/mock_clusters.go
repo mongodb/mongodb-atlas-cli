@@ -436,7 +436,7 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 }
 
 // CreateProjectIPAccessList mocks base method
-func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
+func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
 	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)
@@ -478,19 +478,4 @@ func (m *MockAtlasClusterQuickStarter) ProjectClusters(arg0 string, arg1 *mongod
 func (mr *MockAtlasClusterQuickStarterMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).ProjectClusters), arg0, arg1)
-}
-
-// StartCluster mocks base method
-func (m *MockAtlasClusterQuickStarter) StartCluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartCluster", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Cluster)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// StartCluster indicates an expected call of StartCluster
-func (mr *MockAtlasClusterQuickStarterMockRecorder) StartCluster(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).StartCluster), arg0, arg1)
 }

@@ -32,7 +32,7 @@ type ProjectIPAccessListLister interface {
 }
 
 type ProjectIPAccessListCreator interface {
-	CreateProjectIPAccessList(*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error)
+	CreateProjectIPAccessList([]*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error)
 }
 
 type ProjectIPAccessListDeleter interface {
@@ -40,10 +40,10 @@ type ProjectIPAccessListDeleter interface {
 }
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers
-func (s *Store) CreateProjectIPAccessList(entry *atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
+func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entry.GroupID, []*atlas.ProjectIPAccessList{entry})
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

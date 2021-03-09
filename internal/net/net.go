@@ -20,10 +20,10 @@ import (
 	"strings"
 )
 
-const APIURI = "http://checkip.amazonaws.com"
+const apiURI = "http://checkip.amazonaws.com"
 
 func IPAddress() string {
-	return ipAddressFromAPI(APIURI)
+	return ipAddressFromAPI(apiURI)
 }
 
 // ipAddressFromAPI gets the client's public ip by calling the input endpoint

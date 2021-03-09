@@ -59,7 +59,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
+func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	entry := &atlas.ProjectIPAccessList{
 		GroupID:         opts.ConfigProjectID(),
 		Comment:         opts.comment,
@@ -73,7 +73,7 @@ func (opts *CreateOpts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
 	case awsSecurityGroup:
 		entry.AwsSecurityGroup = opts.entry
 	}
-	return entry
+	return []*atlas.ProjectIPAccessList{entry}
 }
 
 // mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId]

@@ -39,7 +39,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		ClusterName:    "ProjectBar",
 		Region:         "US",
 		store:          mockStore,
-		IPAddress:      "0.0.0.0",
+		IPAddresses:    []string{"0.0.0.0"},
 		DBUsername:     "user",
 		DBUserPassword: "test",
 		Provider:       "AWS",

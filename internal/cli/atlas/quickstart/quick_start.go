@@ -14,7 +14,11 @@
 package quickstart
 
 import (
+	"errors"
 	"fmt"
+	"os/user"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -22,7 +26,9 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/net"
 	"github.com/mongodb/mongocli/internal/randgen"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -55,14 +61,13 @@ var DefaultRegions = map[string][]string{
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	ClusterName      string
-	Provider         string
-	Region           string
-	IPAddress        string
-	DBUsername       string
-	DBUserPassword   string
-	connectionString string
-	store            store.AtlasClusterQuickStarter
+	ClusterName    string
+	Provider       string
+	Region         string
+	IPAddresses    []string
+	DBUsername     string
+	DBUserPassword string
+	store          store.AtlasClusterQuickStarter
 }
 
 func (opts *Opts) initStore() error {
@@ -89,8 +94,8 @@ func (opts *Opts) Run() error {
 	}
 
 	// Add IP to project’s IP access list
-	entry := opts.newProjectIPAccessList()
-	if _, err := opts.store.CreateProjectIPAccessList(entry); err != nil {
+	entries := opts.newProjectIPAccessList()
+	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
 		return err
 	}
 
@@ -104,9 +109,8 @@ func (opts *Opts) Run() error {
 	if err != nil {
 		return err
 	}
-	opts.connectionString = cluster.SrvAddress
 
-	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, opts.connectionString)
+	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
 	return nil
 }
 
@@ -116,23 +120,6 @@ func (opts *Opts) watcher() (bool, error) {
 		return false, err
 	}
 	return result.StateName == "IDLE", nil
-}
-
-func (opts *Opts) askClusterFlags() error {
-	qs := opts.newClusterQuestions()
-
-	if err := survey.Ask(qs, opts); err != nil {
-		return err
-	}
-
-	if regionQ := newRegionQuestions(opts.Region, opts.Provider); regionQ != nil {
-		// we call survey.Ask two times because the region question needs opts.Provider to be populated
-		if err := survey.Ask([]*survey.Question{regionQ}, opts); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
@@ -148,12 +135,18 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 	}
 }
 
-func (opts *Opts) newProjectIPAccessList() *atlas.ProjectIPAccessList {
-	return &atlas.ProjectIPAccessList{
-		GroupID:   opts.ConfigProjectID(),
-		Comment:   accessListComment,
-		IPAddress: opts.IPAddress,
+func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
+	accessListArray := make([]*atlas.ProjectIPAccessList, len(opts.IPAddresses))
+	for i, addr := range opts.IPAddresses {
+		accessList := &atlas.ProjectIPAccessList{
+			GroupID:   opts.ConfigProjectID(),
+			Comment:   accessListComment,
+			IPAddress: addr,
+		}
+
+		accessListArray[i] = accessList
 	}
+	return accessListArray
 }
 
 func (opts *Opts) newCluster() *atlas.Cluster {
@@ -199,11 +192,72 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	}
 }
 
+func (opts *Opts) askClusterFlags() error {
+	var qs []*survey.Question
+
+	message := "Insert the cluster name"
+	clusterName := opts.ClusterName
+	if clusterName == "" {
+		clusterName = opts.newClusterName()
+		if clusterName != "" {
+			message = fmt.Sprintf("Insert the cluster name [Press Enter to use the auto-generated name '%s']", clusterName)
+		}
+		qs = append(qs, newClusterNameQuestion(clusterName, message))
+	}
+
+	if opts.Provider == "" {
+		qs = append(qs, newClusterProviderQuestion())
+	}
+
+	if err := survey.Ask(qs, opts); err != nil {
+		return err
+	}
+
+	if regionQ := newRegionQuestions(opts.Region, opts.Provider); regionQ != nil {
+		// we call survey.Ask two times because the region question needs opts.Provider to be populated
+		if err := survey.Ask([]*survey.Question{regionQ}, opts); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // askDBUserAccessListFlags allows the user to set required flags by using interactive prompts
 func (opts *Opts) askDBUserAccessListFlags() error {
-	qs := opts.newDBUserQuestions()
+	var qs []*survey.Question
 
-	if q := newAccessListQuestion(opts.IPAddress); q != nil {
+	message := "Insert the Username for authenticating to MongoDB"
+	dbUser := opts.DBUsername
+	if dbUser == "" {
+		dbUser = dbUsername()
+		if dbUser != "" {
+			message = fmt.Sprintf("Insert the Username for authenticating to MongoDB [Press Enter to use '%s']", dbUser)
+		}
+
+		qs = append(qs, newDBUsernameQuestion(dbUser, message, opts.validateUniqueUsername))
+	}
+
+	if opts.DBUserPassword == "" {
+		qs = append(qs, newDBUserPassword())
+	}
+
+	if opts.DBUserPassword == "" {
+		// The user wants to auto-generate the password
+		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+		if err != nil {
+			return err
+		}
+		opts.DBUserPassword = pwd
+	}
+
+	if len(opts.IPAddresses) == 0 {
+		message = "Insert the IP entry to add to the Access List"
+		publicIP := net.IPAddress()
+		if publicIP != "" {
+			message = fmt.Sprintf("Insert the IP entry to add to the Access List [Press Enter to use your public IP address '%s']", publicIP)
+		}
+		q := newAccessListQuestion(publicIP, message)
 		qs = append(qs, q)
 	}
 
@@ -213,15 +267,53 @@ func (opts *Opts) askDBUserAccessListFlags() error {
 		}
 	}
 
-	if opts.DBUserPassword == "" {
-		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
-		if err != nil {
+	return nil
+}
+
+func (opts *Opts) validateUniqueUsername(val interface{}) error {
+	username, _ := val.(string)
+	dbUser, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
+	if err != nil {
+		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", username)) {
 			return err
 		}
-		opts.DBUserPassword = pwd
+	}
+
+	if dbUser != nil {
+		return errors.New("a user with this username already exists")
 	}
 
 	return nil
+}
+
+// dbUsername returns the username of the user by running the command 'whoami'
+func dbUsername() string {
+	userStruct, err := user.Current()
+	if err != nil {
+		return ""
+	}
+
+	// dbUsername can only contain ASCII letters, numbers, hyphens and underscores
+	out := strings.TrimSpace(userStruct.Username)
+	var re = regexp.MustCompile("([^A-Za-z0-9_-])")
+	return re.ReplaceAllString(out, "_")
+}
+
+// newClusterName returns an auto-generate Cluster name
+func (opts *Opts) newClusterName() string {
+	cs, _ := opts.store.ProjectClusters(opts.ConfigProjectID(), nil)
+	i := 0
+	if clusters, ok := cs.([]atlas.Cluster); ok {
+		for {
+			clusterName := "QuickstartCluster" + strconv.Itoa(i)
+			if !search.IsClusterFound(clusters, clusterName) {
+				return clusterName
+			}
+			i++
+		}
+	}
+
+	return ""
 }
 
 // mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
@@ -249,7 +341,7 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringVar(&opts.IPAddress, flag.IP, "", usage.AccessListIPEntry)
+	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntry)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 

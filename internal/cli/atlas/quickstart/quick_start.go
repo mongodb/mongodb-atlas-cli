@@ -78,7 +78,7 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	if err := opts.askClusterFlags(); err != nil {
+	if err := opts.askClusterOptions(); err != nil {
 		return err
 	}
 
@@ -86,7 +86,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	if err := opts.askDBUserAccessListFlags(); err != nil {
+	if err := opts.askDBUserAccessListOptions(); err != nil {
 		return err
 	}
 
@@ -151,7 +151,7 @@ func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 }
 
 func (opts *Opts) newCluster() *atlas.Cluster {
-	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.Provider)]["M10"]
+	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][tier]
 	return &atlas.Cluster{
 		GroupID:             opts.ConfigProjectID(),
 		ClusterType:         replicaSet,
@@ -193,7 +193,7 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 	}
 }
 
-func (opts *Opts) askClusterFlags() error {
+func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
 	message := "Insert the cluster name"
@@ -216,16 +216,14 @@ func (opts *Opts) askClusterFlags() error {
 
 	if regionQ := newRegionQuestions(opts.Region, opts.Provider); regionQ != nil {
 		// we call survey.Ask two times because the region question needs opts.Provider to be populated
-		if err := survey.Ask([]*survey.Question{regionQ}, opts); err != nil {
-			return err
-		}
+		return survey.Ask([]*survey.Question{regionQ}, opts)
 	}
 
 	return nil
 }
 
-// askDBUserAccessListFlags allows the user to set required flags by using interactive prompts
-func (opts *Opts) askDBUserAccessListFlags() error {
+// askDBUserAccessListOptions allows the user to set required flags by using interactive prompts
+func (opts *Opts) askDBUserAccessListOptions() error {
 	var qs []*survey.Question
 
 	message := "Insert the Username for authenticating to MongoDB"
@@ -276,19 +274,22 @@ func (opts *Opts) askDBUserAccessListFlags() error {
 }
 
 func (opts *Opts) validateUniqueUsername(val interface{}) error {
-	username, _ := val.(string)
-	dbUser, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
-	if err != nil {
-		if !strings.Contains(err.Error(), fmt.Sprintf("No user with username %s exists.", username)) {
-			return err
+	username, ok := val.(string)
+	if !ok {
+		return errors.New("the username is not valid")
+	}
+
+	_, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
+	var target *atlas.ErrorResponse
+
+	if err != nil && errors.As(err, &target) {
+		if target.ErrorCode == "USERNAME_NOT_FOUND" {
+			return nil
 		}
+		return err
 	}
 
-	if dbUser != nil {
-		return errors.New("a user with this username already exists")
-	}
-
-	return nil
+	return errors.New("a user with this username already exists")
 }
 
 // dbUsername returns the username of the user by running the command 'whoami'
@@ -326,8 +327,8 @@ func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
 		Use: "quickstart",
-		Example: `mongocli atlas quickstart
-mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTest --password Test!
+		Example: `Skip setting cluster name, provider or database username by using the command options
+  $ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTest
 `,
 		Short: QuickStart,
 		Long:  LongQuickStart,

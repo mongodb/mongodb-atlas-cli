@@ -58,9 +58,9 @@ func newDBUsernameQuestion(dbUser, message string, validation func(val interface
 	return q
 }
 
-func newDBUserPassword() *survey.Question {
+func newDBUserPasswordQuestion() *survey.Question {
 	return &survey.Question{
-		Name: "dbUserPassword",
+		Name: "DBUserPassword",
 		Prompt: &survey.Password{
 			Message: "Insert the Password for authenticating to MongoDB [Press Enter to use an auto-generated password]",
 			Help:    usage.Password,

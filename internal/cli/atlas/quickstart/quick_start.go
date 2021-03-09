@@ -65,6 +65,7 @@ type Opts struct {
 	Provider       string
 	Region         string
 	IPAddresses    []string
+	IPAddress      string
 	DBUsername     string
 	DBUserPassword string
 	store          store.AtlasClusterQuickStarter
@@ -239,16 +240,7 @@ func (opts *Opts) askDBUserAccessListFlags() error {
 	}
 
 	if opts.DBUserPassword == "" {
-		qs = append(qs, newDBUserPassword())
-	}
-
-	if opts.DBUserPassword == "" {
-		// The user wants to auto-generate the password
-		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
-		if err != nil {
-			return err
-		}
-		opts.DBUserPassword = pwd
+		qs = append(qs, newDBUserPasswordQuestion())
 	}
 
 	if len(opts.IPAddresses) == 0 {
@@ -265,6 +257,19 @@ func (opts *Opts) askDBUserAccessListFlags() error {
 		if err := survey.Ask(qs, opts); err != nil {
 			return err
 		}
+	}
+
+	if len(opts.IPAddresses) == 0 && opts.IPAddress != "" {
+		opts.IPAddresses = []string{opts.IPAddress}
+	}
+
+	if opts.DBUserPassword == "" {
+		// The user wants to auto-generate the password
+		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+		if err != nil {
+			return err
+		}
+		opts.DBUserPassword = pwd
 	}
 
 	return nil

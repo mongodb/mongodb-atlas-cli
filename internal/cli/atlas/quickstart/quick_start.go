@@ -346,7 +346,7 @@ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTes
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntry)
+	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntries)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 

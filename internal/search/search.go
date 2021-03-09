@@ -42,8 +42,8 @@ func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
 	return rsFound || shardedFound
 }
 
-// IsClusterFound returns true if a cluster exists for the given name
-func IsClusterFound(clusters []atlas.Cluster, name string) bool {
+// AtlasClusterExists returns true if a cluster exists for the given name
+func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
 	for i := range clusters {
 		if clusters[i].Name == name {
 			return true

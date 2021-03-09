@@ -312,7 +312,7 @@ func (opts *Opts) newClusterName() string {
 	if clusters, ok := cs.([]atlas.Cluster); ok {
 		for {
 			clusterName := "QuickstartCluster" + strconv.Itoa(i)
-			if !search.IsClusterFound(clusters, clusterName) {
+			if !search.AtlasClusterExists(clusters, clusterName) {
 				return clusterName
 			}
 			i++

@@ -276,7 +276,7 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	username, ok := val.(string)
 	if !ok {
-		return errors.New("the username is not valid")
+		return fmt.Errorf("the username %s is not valid", username)
 	}
 
 	_, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
@@ -289,7 +289,7 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 		return err
 	}
 
-	return errors.New("a user with this username already exists")
+	return fmt.Errorf("a user with this username %s already exists", username)
 }
 
 // dbUsername returns the username of the user by running the command 'whoami'
@@ -330,8 +330,8 @@ func Builder() *cobra.Command {
 		Example: `Skip setting cluster name, provider or database username by using the command options
   $ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTest
 `,
-		Short: QuickStart,
-		Long:  LongQuickStart,
+		Short: "Create and access an Atlas Cluster.",
+		Long:  "This command creates a cluster, adds your public IP to the atlas access list and creates a db user to access your MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

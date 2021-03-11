@@ -39,7 +39,7 @@ func newRegionQuestions(region, provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
-			Message: "Insert the physical location of your MongoDB cluster",
+			Message: "Select the physical location of your MongoDB cluster",
 			Help:    usage.Region,
 			Options: DefaultRegions[strings.ToUpper(provider)],
 		},

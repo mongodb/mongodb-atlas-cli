@@ -15,6 +15,7 @@
 package search
 
 import (
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 	"go.mongodb.org/ops-manager/search"
 )
@@ -28,7 +29,7 @@ func StringInSlice(a []string, x string) bool {
 	return false
 }
 
-// ClusterExists return true if a cluster exists for the given name
+// ClusterExists returns true if a cluster exists in the automation config for the given name
 func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
 	_, rsFound := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == name
@@ -39,4 +40,15 @@ func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
 	})
 
 	return rsFound || shardedFound
+}
+
+// AtlasClusterExists returns true if a cluster exists for the given name
+func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
+	for i := range clusters {
+		if clusters[i].Name == name {
+			return true
+		}
+	}
+
+	return false
 }

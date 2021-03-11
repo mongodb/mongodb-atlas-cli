@@ -5,9 +5,10 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
 // MockProjectIPAccessListDescriber is a mock of ProjectIPAccessListDescriber interface
@@ -110,7 +111,7 @@ func (m *MockProjectIPAccessListCreator) EXPECT() *MockProjectIPAccessListCreato
 }
 
 // CreateProjectIPAccessList mocks base method
-func (m *MockProjectIPAccessListCreator) CreateProjectIPAccessList(arg0 *mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
+func (m *MockProjectIPAccessListCreator) CreateProjectIPAccessList(arg0 []*mongodbatlas.ProjectIPAccessList) (*mongodbatlas.ProjectIPAccessLists, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
 	ret0, _ := ret[0].(*mongodbatlas.ProjectIPAccessLists)

@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/test/fixture"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestStringInSlice(t *testing.T) {
@@ -55,4 +56,70 @@ func TestClusterExists(t *testing.T) {
 			t.Error("ClusterExists() should not find the value")
 		}
 	})
+}
+
+func TestAtlasClusterExists(t *testing.T) {
+	tests := []struct {
+		name          string
+		inputName     string
+		inputClusters []atlas.Cluster
+		want          bool
+	}{
+		{
+			name:      "empty name",
+			inputName: "",
+			inputClusters: []atlas.Cluster{
+				{
+					Name: "test",
+				},
+			},
+			want: false,
+		},
+		{
+			name:          "empty cluster list",
+			inputName:     "test",
+			inputClusters: []atlas.Cluster{},
+			want:          false,
+		},
+		{
+			name:      "name not found",
+			inputName: "test2",
+			inputClusters: []atlas.Cluster{
+				{
+					Name: "test",
+				},
+			},
+			want: false,
+		},
+		{
+			name:      "name found",
+			inputName: "test2",
+			inputClusters: []atlas.Cluster{
+				{
+					Name: "test2",
+				},
+			},
+			want: false,
+		},
+		{
+			name:      "name found with multiple clusters",
+			inputName: "test2",
+			inputClusters: []atlas.Cluster{
+				{
+					Name: "test",
+				},
+				{
+					Name: "test2",
+				},
+			},
+			want: false,
+		},
+	}
+
+	for _, test := range tests {
+		out := AtlasClusterExists(test.inputClusters, test.name)
+		if out != test.want {
+			t.Errorf("AtlasClusterExists() got = %v, want %v", out, test.want)
+		}
+	}
 }

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -60,6 +60,15 @@ type ClusterStarter interface {
 type AtlasClusterGetterUpdater interface {
 	AtlasClusterDescriber
 	ClusterUpdater
+}
+
+type AtlasClusterQuickStarter interface {
+	ClusterLister
+	DatabaseUserCreator
+	DatabaseUserDescriber
+	ProjectIPAccessListCreator
+	AtlasClusterDescriber
+	ClusterCreator
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers

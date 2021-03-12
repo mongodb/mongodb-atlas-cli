@@ -44,7 +44,6 @@ linters:
     - govet
     - ifshort
     - ineffassign
-    - interfacer
     - makezero
     - misspell
     - nakedret

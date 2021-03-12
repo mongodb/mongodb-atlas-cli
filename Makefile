@@ -6,7 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/${BINARY_NAME}
 INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
 
-GOLANGCI_VERSION=v1.36.0
+GOLANGCI_VERSION=v1.38.0
 COVERAGE=coverage.out
 VERSION=$(shell git describe --always --tags)
 GIT_SHA=$(shell git rev-parse HEAD)

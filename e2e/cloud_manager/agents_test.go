@@ -23,19 +23,15 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
-)
-
-const (
-	agentsEntity = "agents"
 )
 
 func TestAgents(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
+	var hostname string
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
@@ -52,8 +48,55 @@ func TestAgents(t *testing.T) {
 		if a.NoError(err, string(resp)) {
 			var servers *opsmngr.Agents
 			err := json.Unmarshal(resp, &servers)
-			a.NoError(err)
+			require.NoError(t, err)
 			a.NotZero(servers.TotalCount)
+			hostname = servers.Results[0].Hostname
 		}
+	})
+
+	t.Run("Enable backup", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			backupEntity,
+			"enable",
+			hostname,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+	t.Run("Disable backup", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			backupEntity,
+			"disable",
+			hostname,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+
+	t.Run("Enable monitoring", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			monitoringEntity,
+			"enable",
+			hostname,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+	})
+	t.Run("Disable monitoring", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			monitoringEntity,
+			"disable",
+			hostname,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	})
 }

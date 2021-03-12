@@ -50,11 +50,15 @@ type ProcessConfig struct {
 	LogPath                string                  `yaml:"logPath" json:"logPath"`
 	LogRotate              string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
 	LogVerbosity           int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
+	LogQuiet               bool                    `yaml:"logQuiet,omitempty" json:"logQuiet,omitempty"`
+	SyslogFacility         string                  `yaml:"syslogFacility,omitempty" json:"syslogFacility,omitempty"`
+	LogTimeStampFormat     string                  `yaml:"logTimeStampFormat,omitempty" json:"logTimeStampFormat,omitempty"`
 	Name                   string                  `yaml:"name,omitempty" json:"name,omitempty"`
 	OplogMinRetentionHours *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
 	Port                   int                     `yaml:"port" json:"port"`
 	Priority               *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
 	ProcessType            string                  `yaml:"processType" json:"processType"`
+	SmallFiles             *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
 	SlaveDelay             *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
 	SyncPeriodSecs         *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
 	Votes                  *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
@@ -125,31 +129,38 @@ func newLogRotate() *opsmngr.LogRotate {
 	}
 }
 
+func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
+	return &ProcessConfig{
+		BuildIndexes:       &rs.BuildIndexes,
+		Priority:           &rs.Priority,
+		SlaveDelay:         &rs.SlaveDelay,
+		Votes:              &rs.Votes,
+		ArbiterOnly:        &rs.ArbiterOnly,
+		Hidden:             &rs.Hidden,
+		LogPath:            p.Args26.SystemLog.Path,
+		LogDestination:     p.Args26.SystemLog.Destination,
+		LogAppend:          p.Args26.SystemLog.LogAppend,
+		LogVerbosity:       p.Args26.SystemLog.Verbosity,
+		LogRotate:          p.Args26.SystemLog.LogRotate,
+		LogQuiet:           p.Args26.SystemLog.Quiet,
+		LogTimeStampFormat: p.Args26.SystemLog.TimeStampFormat,
+		SyslogFacility:     p.Args26.SystemLog.SyslogFacility,
+		Port:               p.Args26.NET.Port,
+		BindIP:             p.Args26.NET.BindIP,
+		BindIPAll:          p.Args26.NET.BindIPAll,
+		IPV6:               p.Args26.NET.IPV6,
+		ProcessType:        p.ProcessType,
+		Version:            p.Version,
+		FCVersion:          p.FeatureCompatibilityVersion,
+		Hostname:           p.Hostname,
+		Name:               p.Name,
+		SetParameter:       p.Args26.SetParameter,
+	}
+}
+
 // newReplicaSetProcessConfig maps opsmngr.member -> convert.ProcessConfig
 func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
-	pc := &ProcessConfig{
-		BuildIndexes:   &rs.BuildIndexes,
-		Priority:       &rs.Priority,
-		SlaveDelay:     &rs.SlaveDelay,
-		Votes:          &rs.Votes,
-		ArbiterOnly:    &rs.ArbiterOnly,
-		Hidden:         &rs.Hidden,
-		LogPath:        p.Args26.SystemLog.Path,
-		LogDestination: p.Args26.SystemLog.Destination,
-		LogAppend:      p.Args26.SystemLog.LogAppend,
-		LogVerbosity:   p.Args26.SystemLog.Verbosity,
-		LogRotate:      p.Args26.SystemLog.LogRotate,
-		Port:           p.Args26.NET.Port,
-		BindIP:         p.Args26.NET.BindIP,
-		BindIPAll:      p.Args26.NET.BindIPAll,
-		IPV6:           p.Args26.NET.IPV6,
-		ProcessType:    p.ProcessType,
-		Version:        p.Version,
-		FCVersion:      p.FeatureCompatibilityVersion,
-		Hostname:       p.Hostname,
-		Name:           p.Name,
-		SetParameter:   p.Args26.SetParameter,
-	}
+	pc := newProcessConfig(rs, p)
 
 	if p.Args26.Storage != nil {
 		pc.DBPath = p.Args26.Storage.DBPath
@@ -159,6 +170,8 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		pc.WiredTiger = p.Args26.Storage.WiredTiger
 		pc.OplogMinRetentionHours = p.Args26.Storage.OplogMinRetentionHours
 		pc.Journal = p.Args26.Storage.Journal
+		pc.IndexBuildRetry = p.Args26.Storage.IndexBuildRetry
+		pc.SmallFiles = p.Args26.Storage.SmallFiles
 	}
 
 	if p.Args26.AuditLog != nil {
@@ -246,7 +259,7 @@ func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
-	if p.AuditLogPath != "" {
+	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
 		process.Args26.AuditLog = p.auditLog()
 	}
 	return process
@@ -277,7 +290,7 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
-	if p.AuditLogPath != "" {
+	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
 		process.Args26.AuditLog = p.auditLog()
 	}
 	return process
@@ -293,7 +306,7 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 		process.Args26.Security = p.Security
 	}
 	process.LogRotate = newLogRotate()
-	if p.AuditLogPath != "" {
+	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
 		process.Args26.AuditLog = p.auditLog()
 	}
 
@@ -332,23 +345,28 @@ func (p *ProcessConfig) storage() *opsmngr.Storage {
 	return &opsmngr.Storage{
 		DBPath:                 p.DBPath,
 		DirectoryPerDB:         p.DirectoryPerDB,
-		SyncPeriodSecs:         p.SyncPeriodSecs,
 		Engine:                 p.Engine,
-		WiredTiger:             p.WiredTiger,
+		IndexBuildRetry:        p.IndexBuildRetry,
 		InMemory:               p.InMemory,
-		OplogMinRetentionHours: p.OplogMinRetentionHours,
 		Journal:                p.Journal,
+		OplogMinRetentionHours: p.OplogMinRetentionHours,
+		SmallFiles:             p.SmallFiles,
+		SyncPeriodSecs:         p.SyncPeriodSecs,
+		WiredTiger:             p.WiredTiger,
 	}
 }
 
 // systemLog maps convert.ProcessConfig -> opsmngr.SystemLog
 func (p *ProcessConfig) systemLog() opsmngr.SystemLog {
 	return opsmngr.SystemLog{
-		Destination: p.systemLogDestination(),
-		Path:        p.LogPath,
-		LogAppend:   p.LogAppend,
-		Verbosity:   p.LogVerbosity,
-		LogRotate:   p.LogRotate,
+		Destination:     p.systemLogDestination(),
+		Path:            p.LogPath,
+		LogAppend:       p.LogAppend,
+		Verbosity:       p.LogVerbosity,
+		Quiet:           p.LogQuiet,
+		SyslogFacility:  p.SyslogFacility,
+		LogRotate:       p.LogRotate,
+		TimeStampFormat: p.LogTimeStampFormat,
 	}
 }
 

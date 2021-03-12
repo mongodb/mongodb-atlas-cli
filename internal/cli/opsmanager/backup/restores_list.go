@@ -59,7 +59,7 @@ func RestoresListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list <clusterId>",
 		Aliases: []string{"ls"},
-		Short:   ListRestores,
+		Short:   "Lists restore jobs for a project and cluster.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

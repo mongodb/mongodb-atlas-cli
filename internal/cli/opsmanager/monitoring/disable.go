@@ -12,77 +12,72 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package backup
+package monitoring
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/ops-manager/atmcfg"
 )
 
-const checkpointsTemplate = `ID	TIMESTAMP{{range .Results}}
-{{.ID}}	{{.Timestamp}}{{end}}
-`
-
-type CheckpointsListOpts struct {
+type DisableOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	cli.ListOpts
-	clusterID string
-	store     store.CheckpointsLister
+	hostname string
+	store    store.AutomationPatcher
 }
 
-func (opts *CheckpointsListOpts) initStore() error {
+func (opts *DisableOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-func (opts *CheckpointsListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+func (opts *DisableOpts) Run() error {
+	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 
-	r, err := opts.store.Checkpoints(opts.ConfigProjectID(), opts.clusterID, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	if err := atmcfg.DisableMonitoring(current, opts.hostname); err != nil {
+		return err
+	}
+	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
+		return err
+	}
+
+	fmt.Print(cli.DeploymentStatus(config.OpsManagerURL(), opts.ConfigProjectID()))
+
+	return nil
 }
 
-// mongocli atlas backup(s) checkpoint(s) list <clusterId> [--projectId projectId]
-func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
-	opts := new(CheckpointsListOpts)
+// mongocli ops-manager monitoring disable <hostname> [--projectId projectId]
+func DisableBuilder() *cobra.Command {
+	opts := &DisableOpts{}
 	cmd := &cobra.Command{
-		Use:     "list <clusterId>",
-		Aliases: []string{"ls"},
-		Short:   "List continuous backup checkpoints for your project.",
-		Args:    require.ExactArgs(1),
+		Use:   "disable <hostname>",
+		Short: "Disable monitoring for a given hostname",
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := validate.ObjectID(args[0]); err != nil {
-				return err
-			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), checkpointsTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterID = args[0]
+			opts.hostname = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

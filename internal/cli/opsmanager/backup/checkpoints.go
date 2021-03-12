@@ -24,7 +24,7 @@ func CheckpointsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Checkpoints,
+		Short:   "Manage backup checkpoints for your project.",
 	}
 
 	cmd.AddCommand(AtlasBackupsCheckpointsListBuilder())

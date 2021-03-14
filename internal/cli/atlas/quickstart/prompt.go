@@ -22,6 +22,11 @@ import (
 	"github.com/mongodb/mongocli/internal/usage"
 )
 
+const (
+	mongoshHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
+	mongoshNotFoundHelp = "MongoDB CLI will store the path in your default profile, type ‘mongocli config’ to change it."
+)
+
 func newAccessListQuestion(publicIP, message string) *survey.Question {
 	return &survey.Question{
 		Name: "ipAddress",
@@ -94,21 +99,27 @@ func newClusterProviderQuestion() *survey.Question {
 func newMongoShellQuestion(clusterName string) *survey.Confirm {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
-		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments",
+		Help:    mongoshHelp,
 	}
 }
 
 func newMongoShellQuestionNotFound() *survey.Confirm {
 	return &survey.Confirm{
 		Message: "No MongoDB shell version detected. Do you want to provide the path to your MongoDB shell binary?",
-		Help:    "MongoDB CLI will store the path in your default profile, type ‘mongocli config’ to change it",
+		Help:    mongoshNotFoundHelp,
 	}
 }
 
 func newMongoShellPathInput(defaultValue string) survey.Prompt {
 	return &survey.Input{
 		Message: "Default MongoDB Shell Path:",
-		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments",
+		Help:    mongoshHelp,
 		Default: defaultValue,
+	}
+}
+
+func newMongoShellQuestionBrowser() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you want to download MongoDB Shell?",
 	}
 }

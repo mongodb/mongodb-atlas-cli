@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -50,6 +51,7 @@ const (
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
 	passwordLength    = 12
+	mongoshURL        = "https://www.mongodb.com/try/download/shell"
 )
 
 // DefaultRegions represents the regions available for each cloud service provider
@@ -62,14 +64,15 @@ var DefaultRegions = map[string][]string{
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	ClusterName    string
-	Provider       string
-	Region         string
-	IPAddresses    []string
-	IPAddress      string
-	DBUsername     string
-	DBUserPassword string
-	store          store.AtlasClusterQuickStarter
+	ClusterName             string
+	Provider                string
+	Region                  string
+	IPAddresses             []string
+	IPAddress               string
+	DBUsername              string
+	DBUserPassword          string
+	SkipMongoShellQuestions bool
+	store                   store.AtlasClusterQuickStarter
 }
 
 func (opts *Opts) initStore() error {
@@ -101,6 +104,11 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
+	runMongoShell, err := opts.askMongoShellQuestion()
+	if err != nil {
+		return err
+	}
+
 	fmt.Println("Creating your cluster...")
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
@@ -108,11 +116,6 @@ func (opts *Opts) Run() error {
 
 	// Get cluster's connection string
 	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
-	if err != nil {
-		return err
-	}
-
-	runMongoShell, err := opts.askMongoShellQuestion()
 	if err != nil {
 		return err
 	}
@@ -285,19 +288,39 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 }
 
 func (opts *Opts) askMongoShellQuestion() (bool, error) {
-	if opts.ConfigMongoShellPath() == "" {
-		path := false
-		prompt := newMongoShellQuestionNotFound()
-		_ = survey.AskOne(prompt, &path)
+	if opts.SkipMongoShellQuestions {
+		return false, nil
+	}
 
-		if path {
-			var mongoShellPath string
-			prompt := newMongoShellPathInput(mongosh.FindBinaryInPath())
-			if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
+	if opts.ConfigMongoShellPath() == "" {
+		answer := false
+		prompt := newMongoShellQuestionNotFound()
+		if err := survey.AskOne(prompt, &answer); err != nil {
+			return false, err
+		}
+
+		if answer {
+			if err := askMongoShellAndSetConfig(); err != nil {
+				return false, err
+			}
+		} else {
+			openURL := false
+			prompt := newMongoShellQuestionBrowser()
+			if err := survey.AskOne(prompt, &openURL); err != nil {
 				return false, err
 			}
 
-			config.SetMongoShellPath(mongoShellPath)
+			if openURL {
+				if err := browser.OpenURL(mongoshURL); err != nil {
+					return false, err
+				}
+
+				if err := askMongoShellAndSetConfig(); err != nil {
+					return false, err
+				}
+			} else {
+				return false, nil
+			}
 		}
 	}
 
@@ -328,6 +351,17 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("a user with this username %s already exists", username)
+}
+
+func askMongoShellAndSetConfig() error {
+	var mongoShellPath string
+	prompt := newMongoShellPathInput(mongosh.FindBinaryInPath())
+	if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
+		return err
+	}
+
+	config.SetMongoShellPath(mongoShellPath)
+	return nil
 }
 
 // dbUsername returns the username of the user by running the command 'whoami'
@@ -388,6 +422,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntries)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().BoolVar(&opts.SkipMongoShellQuestions, flag.SkipMongoShellQuestions, false, usage.SkipMongoShellQuestions)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -21,6 +21,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/mongosh"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -111,7 +113,17 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
+	runMongoShell, err := opts.askMongoShellQuestion()
+	if err != nil {
+		return err
+	}
+
+	if runMongoShell {
+		return mongosh.Run(opts.ConfigMongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+	}
+
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+
 	return nil
 }
 
@@ -196,9 +208,9 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	message := "Insert the cluster name"
 	clusterName := opts.ClusterName
 	if clusterName == "" {
+		message := "Insert the cluster name"
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
 			message = fmt.Sprintf("Insert the cluster name [Press Enter to use the auto-generated name '%s']", clusterName)
@@ -271,6 +283,33 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 	}
 
 	return nil
+}
+
+func (opts *Opts) askMongoShellQuestion() (bool, error) {
+	if opts.ConfigMongoShellPath() == "" {
+		path := false
+		prompt := newMongoShellQuestionNotFound()
+		_ = survey.AskOne(prompt, &path)
+
+		if path {
+			var mongoShellPath string
+			prompt := newMongoShellPathInput(mongosh.FindBinaryInPath())
+			if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
+				return false, err
+			}
+
+			config.SetMongoShellPath(mongoShellPath)
+		}
+	}
+
+	runMongoShell := false
+	if opts.ConfigMongoShellPath() != "" {
+		prompt := newMongoShellQuestion(opts.ClusterName)
+		_ = survey.AskOne(prompt, &runMongoShell)
+		return runMongoShell, nil
+	}
+
+	return runMongoShell, nil
 }
 
 func (opts *Opts) validateUniqueUsername(val interface{}) error {

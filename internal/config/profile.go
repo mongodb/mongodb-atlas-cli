@@ -60,6 +60,7 @@ func Properties() []string {
 		baseURL,
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
+		mongoShellPath,
 	}
 }
 
@@ -223,6 +224,18 @@ func (p *Profile) OrgID() string {
 func SetOrgID(v string) { p.SetOrgID(v) }
 func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
+}
+
+// MongoShellPath get the configured MongoDB Shell path
+func MongoShellPath() string { return p.MongoShellPath() }
+func (p *Profile) MongoShellPath() string {
+	return p.GetString(mongoShellPath)
+}
+
+// SetMongoShellPath sets the global MongoDB Shell path
+func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
+func (p *Profile) SetMongoShellPath(v string) {
+	p.Set(mongoShellPath, v)
 }
 
 // Output get configured output format

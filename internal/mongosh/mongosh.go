@@ -26,8 +26,8 @@ func FindBinaryInPath() string {
 	return ""
 }
 
-func Run(binary, mongoURI, username, password string) error {
-	args := []string{"mongosh", mongoURI, "-u", username, "-p", password}
+func Run(binary, username, password, mongoURI string) error {
+	args := []string{"mongosh", "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
 	err := syscall.Exec(binary, args, env)
 

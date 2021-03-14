@@ -15,6 +15,7 @@
 package quickstart
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -87,5 +88,27 @@ func newClusterProviderQuestion() *survey.Question {
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},
+	}
+}
+
+func newMongoShellQuestion(clusterName string) *survey.Confirm {
+	return &survey.Confirm{
+		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
+		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments",
+	}
+}
+
+func newMongoShellQuestionNotFound() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "No MongoDB shell version detected. Do you want to provide the path to your MongoDB shell binary?",
+		Help:    "MongoDB CLI will store the path in your default profile, type ‘mongocli config’ to change it",
+	}
+}
+
+func newMongoShellPathInput(defaultValue string) survey.Prompt {
+	return &survey.Input{
+		Message: "Default MongoDB Shell Path:",
+		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments",
+		Default: defaultValue,
 	}
 }

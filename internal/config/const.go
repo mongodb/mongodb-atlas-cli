@@ -26,6 +26,7 @@ const (
 	JSON                         = "json"          // JSON output format as json
 	projectID                    = "project_id"
 	orgID                        = "org_id"
+	mongoShellPath               = "mongosh_path"
 	configType                   = "toml"
 	service                      = "service"
 	publicAPIKey                 = "public_api_key"

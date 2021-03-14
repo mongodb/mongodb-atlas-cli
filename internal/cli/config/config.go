@@ -17,6 +17,8 @@ package config
 import (
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/mongosh"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -38,13 +40,14 @@ type ProjectOrgsLister interface {
 }
 
 type configOpts struct {
-	Service       string
-	PublicAPIKey  string
-	PrivateAPIKey string
-	OpsManagerURL string
-	ProjectID     string
-	OrgID         string
-	store         ProjectOrgsLister
+	Service        string
+	PublicAPIKey   string
+	PrivateAPIKey  string
+	OpsManagerURL  string
+	ProjectID      string
+	OrgID          string
+	MongoShellPath string
+	store          ProjectOrgsLister
 }
 
 func (opts *configOpts) initStore() error {
@@ -86,6 +89,12 @@ func (opts *configOpts) SetUpOrg() {
 	}
 }
 
+func (opts *configOpts) setUpMongoSHPath() {
+	if opts.MongoShellPath != "" {
+		config.SetMongoShellPath(opts.MongoShellPath)
+	}
+}
+
 func (opts *configOpts) Run() error {
 	fmt.Printf(`You are configuring a profile for %s.
 
@@ -119,8 +128,13 @@ Enter [?] on any option to get help.
 		}
 	}
 
+	if err := opts.askMongoShellPath(); err != nil {
+		return err
+	}
+
 	opts.SetUpProject()
 	opts.SetUpOrg()
+	opts.setUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err
@@ -185,6 +199,24 @@ func (opts *configOpts) askOrg() error {
 		return err
 	}
 	opts.OrgID = oMap[orgID]
+	return nil
+}
+
+// askMongoShellPath will try to search MongoDB Shell binary in your $PATH to use as default value.
+// If it fails, there would not be a default value
+func (opts *configOpts) askMongoShellPath() error {
+	var mongoShellPath string
+
+	path := config.MongoShellPath()
+	if path == "" {
+		path = mongosh.FindBinaryInPath()
+	}
+	prompt := newMongoShellPathInput(path)
+
+	if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
+		return err
+	}
+	opts.MongoShellPath = mongoShellPath
 	return nil
 }
 

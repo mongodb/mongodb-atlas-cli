@@ -41,7 +41,7 @@ import (
 )
 
 const quickstartTemplate = `
-Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s
+Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
 
 `
 const quickstartTemplateCloseHandler = `
@@ -401,7 +401,11 @@ func askMongoShellAndSetConfig() error {
 		return err
 	}
 
+
 	config.SetMongoShellPath(mongoShellPath)
+	if err := config.Save(); err != nil {
+		return err
+	}
 	return nil
 }
 

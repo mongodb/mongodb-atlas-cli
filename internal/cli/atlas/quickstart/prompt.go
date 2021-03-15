@@ -24,7 +24,7 @@ import (
 
 const (
 	mongoshHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
-	mongoshNotFoundHelp = "MongoDB CLI will store the path in your default profile, type ‘mongocli config’ to change it."
+	mongoshNotFoundHelp = "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it."
 )
 
 func newAccessListQuestion(publicIP, message string) *survey.Question {

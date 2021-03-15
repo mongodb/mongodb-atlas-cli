@@ -301,6 +301,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							Port:     27017,
 							Priority: pointy.Float64(1),
 							Votes:    pointy.Float64(1),
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
+							SetParameter: &map[string]interface{}{
+								"test": "test",
+							},
 						},
 					},
 				},
@@ -325,9 +331,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							SystemLog: opsmngr.SystemLog{
 								Destination: file,
 								Path:        "/data/db/mongodb.log",
-							},
-							Security: &map[string]interface{}{
-								"test": "test",
 							},
 						},
 						LogRotate: &opsmngr.LogRotate{
@@ -356,6 +359,12 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							SystemLog: opsmngr.SystemLog{
 								Destination: file,
 								Path:        "/data/db/mongodb.log",
+							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
+							SetParameter: &map[string]interface{}{
+								"test": "test",
 							},
 						},
 						LogRotate: &opsmngr.LogRotate{

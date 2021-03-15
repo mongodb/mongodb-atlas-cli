@@ -324,7 +324,8 @@ func Test_newReplicaSetProcess(t *testing.T) {
 			"indexConfig": map[string]interface{}{},
 		},
 		SetParameter: &map[string]interface{}{
-			"param": "param",
+			"enableLocalhostAuthBypass": "false",
+			"auditAuthorizationSuccess": "true",
 		},
 	}
 
@@ -359,7 +360,8 @@ func Test_newReplicaSetProcess(t *testing.T) {
 				Path:        "/data/log/mongodb.log",
 			},
 			SetParameter: &map[string]interface{}{
-				"param": "param",
+				"enableLocalhostAuthBypass": "false",
+				"auditAuthorizationSuccess": "true",
 			},
 		},
 		AuthSchemaVersion:           5,

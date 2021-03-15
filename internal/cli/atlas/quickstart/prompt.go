@@ -103,7 +103,7 @@ func newMongoShellQuestion(clusterName string) *survey.Confirm {
 	}
 }
 
-func newMongoShellQuestionNotFound() *survey.Confirm {
+func newMongoShellQuestionProvidePath() *survey.Confirm {
 	return &survey.Confirm{
 		Message: "No MongoDB shell version detected. Do you want to provide the path to your MongoDB shell binary?",
 		Help:    mongoshNotFoundHelp,
@@ -118,7 +118,7 @@ func newMongoShellPathInput(defaultValue string) survey.Prompt {
 	}
 }
 
-func newMongoShellQuestionBrowser() *survey.Confirm {
+func newMongoShellQuestionOpenBrowser() *survey.Confirm {
 	return &survey.Confirm{
 		Message: "Do you want to download MongoDB Shell?",
 	}

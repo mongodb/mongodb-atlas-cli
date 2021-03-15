@@ -334,7 +334,7 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 	}
 
 	wantToProvidePath := false
-	prompt = newMongoShellQuestionNotFound()
+	prompt = newMongoShellQuestionProvidePath()
 	if err := survey.AskOne(prompt, &wantToProvidePath); err != nil {
 		return false, err
 	}
@@ -374,7 +374,7 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 
 func openMogoshDownloadPageAndSetPath() (bool, error) {
 	openURL := false
-	prompt := newMongoShellQuestionBrowser()
+	prompt := newMongoShellQuestionOpenBrowser()
 	if err := survey.AskOne(prompt, &openURL); err != nil {
 		return false, err
 	}

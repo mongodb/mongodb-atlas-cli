@@ -48,11 +48,6 @@ func (opts *GlobalOpts) ConfigOrgID() string {
 	return opts.OrgID
 }
 
-// ConfigMongoShellPath returns the MongoDB Shell path.
-func (opts *GlobalOpts) ConfigMongoShellPath() string {
-	return config.MongoShellPath()
-}
-
 type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,

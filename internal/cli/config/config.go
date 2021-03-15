@@ -127,13 +127,15 @@ Enter [?] on any option to get help.
 		}
 	}
 
-	if err := opts.askMongoShellPath(); err != nil {
-		return err
+	if opts.IsCloud() {
+		if err := opts.askMongoShellPath(); err != nil {
+			return err
+		}
+		opts.setUpMongoSHPath()
 	}
 
 	opts.SetUpProject()
 	opts.SetUpOrg()
-	opts.setUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err

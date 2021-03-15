@@ -64,6 +64,7 @@ var DefaultRegions = map[string][]string{
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
+	cli.MongoShellOpts
 	ClusterName             string
 	Provider                string
 	Region                  string
@@ -109,7 +110,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Println("Creating your cluster...")
+	fmt.Println("Creating your cluster... [Press 'Ctrl + C' to stop waiting]")
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
 	}
@@ -304,21 +305,12 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 				return false, err
 			}
 		} else {
-			openURL := false
-			prompt := newMongoShellQuestionBrowser()
-			if err := survey.AskOne(prompt, &openURL); err != nil {
+			runMongoShell, err := askOpenBrowser()
+			if err != nil {
 				return false, err
 			}
 
-			if openURL {
-				if err := browser.OpenURL(mongoshURL); err != nil {
-					return false, err
-				}
-
-				if err := askMongoShellAndSetConfig(); err != nil {
-					return false, err
-				}
-			} else {
+			if !runMongoShell {
 				return false, nil
 			}
 		}
@@ -351,6 +343,28 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("a user with this username %s already exists", username)
+}
+
+func askOpenBrowser() (bool, error) {
+	openURL := false
+	prompt := newMongoShellQuestionBrowser()
+	if err := survey.AskOne(prompt, &openURL); err != nil {
+		return false, err
+	}
+
+	if openURL {
+		if err := browser.OpenURL(mongoshURL); err != nil {
+			return false, err
+		}
+
+		if err := askMongoShellAndSetConfig(); err != nil {
+			return false, err
+		}
+	} else {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func askMongoShellAndSetConfig() error {

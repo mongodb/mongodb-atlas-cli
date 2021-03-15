@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 // +build unit
 
-package monitoring
+package backup
 
 import (
 	"testing"
@@ -26,32 +26,23 @@ import (
 	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		3,
-		[]string{},
-	)
-}
-
-func TestEnableBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		EnableBuilder(),
+		DisableBuilder(),
 		0,
 		[]string{flag.ProjectID},
 	)
 }
 
-func TestEnableOpts_Run(t *testing.T) {
+func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAutomationPatcher(ctrl)
 	defer ctrl.Finish()
 
-	expected := fixture.AutomationConfig()
+	expected := fixture.AutomationConfigWithBackup()
 
-	createOpts := &EnableOpts{
+	createOpts := &DisableOpts{
 		hostname: "test",
 		store:    mockStore,
 	}

@@ -163,6 +163,28 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 	}
 }
 
+func AutomationConfigWithBackup() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		BackupVersions: []*opsmngr.ConfigVersion{
+			{
+				Hostname: "test",
+			},
+		},
+		Version: 1,
+	}
+}
+
+func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
+	return &opsmngr.AutomationConfig{
+		MonitoringVersions: []*opsmngr.ConfigVersion{
+			{
+				Hostname: "test",
+			},
+		},
+		Version: 1,
+	}
+}
+
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{

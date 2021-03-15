@@ -210,6 +210,88 @@ func Test_newConfigRSProcess(t *testing.T) {
 	assert.Equal(t, got, want)
 }
 
+func Test_newConfigRSProcess_audit(t *testing.T) {
+	p := &ProcessConfig{
+		AuditLogDestination: "sysfile",
+		BuildIndexes:        pointy.Bool(true),
+		DBPath:              "/data/db",
+		DirectoryPerDB:      pointy.Bool(true),
+		FCVersion:           "4.4",
+		Hostname:            "n1.omansible.int",
+		LogDestination:      "file",
+		LogPath:             "/data/log/mongodb.log",
+		Name:                "myReplicaSet_1",
+		Port:                27017,
+		Priority:            pointy.Float64(1),
+		ProcessType:         "mongod",
+		SlaveDelay:          pointy.Float64(0),
+		Version:             "4.4.1-ent",
+		Votes:               pointy.Float64(1),
+		ArbiterOnly:         pointy.Bool(false),
+		Disabled:            false,
+		Hidden:              pointy.Bool(false),
+		TLS:                 &TLS{Mode: "disabled"},
+		WiredTiger: &map[string]interface{}{
+			"collectionConfig": map[string]interface{}{},
+			"engineConfig": map[string]interface{}{
+				"cacheSizeGB": 1,
+			},
+			"indexConfig": map[string]interface{}{},
+		},
+		SetParameter: &map[string]interface{}{
+			"param": "param",
+		},
+	}
+
+	want := &opsmngr.Process{
+		Args26: opsmngr.Args26{
+			AuditLog: &opsmngr.AuditLog{
+				Destination: "sysfile",
+			},
+			NET: opsmngr.Net{
+				Port: 27017,
+				TLS:  &opsmngr.TLS{Mode: "disabled"},
+			},
+			Replication: &opsmngr.Replication{
+				ReplSetName: "myReplicaSet",
+			},
+			Storage: &opsmngr.Storage{
+				DBPath:         "/data/db",
+				DirectoryPerDB: pointy.Bool(true),
+				WiredTiger: &map[string]interface{}{
+					"collectionConfig": map[string]interface{}{},
+					"engineConfig": map[string]interface{}{
+						"cacheSizeGB": 1,
+					},
+					"indexConfig": map[string]interface{}{},
+				},
+			},
+			SystemLog: opsmngr.SystemLog{
+				Destination: "file",
+				Path:        "/data/log/mongodb.log",
+			},
+			Sharding: &opsmngr.Sharding{ClusterRole: "configsvr"},
+			SetParameter: &map[string]interface{}{
+				"param": "param",
+			},
+		},
+		AuthSchemaVersion:           5,
+		Disabled:                    false,
+		FeatureCompatibilityVersion: "4.4",
+		Hostname:                    "n1.omansible.int",
+		LogRotate: &opsmngr.LogRotate{
+			SizeThresholdMB:  1000,
+			TimeThresholdHrs: 24,
+		},
+		ManualMode:  false,
+		Name:        "myReplicaSet_1",
+		ProcessType: "mongod",
+		Version:     "4.4.1-ent",
+	}
+	got := newConfigRSProcess(p, "myReplicaSet")
+	assert.Equal(t, got, want)
+}
+
 func Test_newReplicaSetProcess(t *testing.T) {
 	p := &ProcessConfig{
 		AuditLogPath:        "/data/audit.log",

@@ -401,7 +401,6 @@ func askMongoShellAndSetConfig() error {
 		return err
 	}
 
-
 	config.SetMongoShellPath(mongoShellPath)
 	if err := config.Save(); err != nil {
 		return err

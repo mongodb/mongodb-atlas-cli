@@ -40,7 +40,10 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const quickstartTemplate = "Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s\n"
+const quickstartTemplate = `
+Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s
+
+`
 const quickstartTemplateCloseHandler = `
 You can connect to your Atlas cluster with the following user: 
 username:%s 
@@ -120,7 +123,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Println("Creating your cluster... [Press 'Ctrl + C' to stop waiting]")
+	fmt.Println("Creating your cluster... [It's safe to 'Ctrl + C']")
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
 	}
@@ -131,11 +134,13 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	if runMongoShell {
-		return mongosh.Run(opts.ConfigMongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
-	}
-
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+
+	if runMongoShell {
+		if err := mongosh.Run(opts.ConfigMongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
@@ -316,34 +321,33 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 		return false, nil
 	}
 
-	if opts.ConfigMongoShellPath() == "" {
-		answer := false
-		prompt := newMongoShellQuestionNotFound()
-		if err := survey.AskOne(prompt, &answer); err != nil {
-			return false, err
-		}
+	runMongoShell := false
+	prompt := newMongoShellQuestion(opts.ClusterName)
+	err := survey.AskOne(prompt, &runMongoShell)
 
-		if answer {
-			if err := askMongoShellAndSetConfig(); err != nil {
-				return false, err
-			}
-		} else {
-			runMongoShell, err := askOpenBrowser()
-			if err != nil {
-				return false, err
-			}
-
-			if !runMongoShell {
-				return false, nil
-			}
-		}
+	if !runMongoShell || err != nil {
+		return false, err
 	}
 
-	runMongoShell := false
 	if opts.ConfigMongoShellPath() != "" {
-		prompt := newMongoShellQuestion(opts.ClusterName)
-		_ = survey.AskOne(prompt, &runMongoShell)
-		return runMongoShell, nil
+		return true, nil
+	}
+
+	wantToProvidePath := false
+	prompt = newMongoShellQuestionNotFound()
+	if err := survey.AskOne(prompt, &wantToProvidePath); err != nil {
+		return false, err
+	}
+
+	if wantToProvidePath {
+		if err := askMongoShellAndSetConfig(); err != nil {
+			return false, err
+		}
+	} else {
+		runShell, err := openMogoshDownloadPageAndSetPath()
+		if !runShell || err != nil {
+			return runShell, err
+		}
 	}
 
 	return runMongoShell, nil
@@ -368,7 +372,7 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	return fmt.Errorf("a user with this username %s already exists", username)
 }
 
-func askOpenBrowser() (bool, error) {
+func openMogoshDownloadPageAndSetPath() (bool, error) {
 	openURL := false
 	prompt := newMongoShellQuestionBrowser()
 	if err := survey.AskOne(prompt, &openURL); err != nil {

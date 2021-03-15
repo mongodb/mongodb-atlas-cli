@@ -38,14 +38,14 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	var expectedProjectAccessLists *mongodbatlas.ProjectIPAccessLists
 
 	opts := &Opts{
-		ClusterName:             "ProjectBar",
-		Region:                  "US",
-		store:                   mockStore,
-		IPAddresses:             []string{"0.0.0.0"},
-		DBUsername:              "user",
-		DBUserPassword:          "test",
-		Provider:                "AWS",
-		SkipMongoShellQuestions: true,
+		ClusterName:    "ProjectBar",
+		Region:         "US",
+		store:          mockStore,
+		IPAddresses:    []string{"0.0.0.0"},
+		DBUsername:     "user",
+		DBUserPassword: "test",
+		Provider:       "AWS",
+		SkipMongosh:    true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()

@@ -65,15 +65,15 @@ type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	cli.MongoShellOpts
-	ClusterName             string
-	Provider                string
-	Region                  string
-	IPAddresses             []string
-	IPAddress               string
-	DBUsername              string
-	DBUserPassword          string
-	SkipMongoShellQuestions bool
-	store                   store.AtlasClusterQuickStarter
+	ClusterName    string
+	Provider       string
+	Region         string
+	IPAddresses    []string
+	IPAddress      string
+	DBUsername     string
+	DBUserPassword string
+	SkipMongosh    bool
+	store          store.AtlasClusterQuickStarter
 }
 
 func (opts *Opts) initStore() error {
@@ -289,7 +289,7 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 }
 
 func (opts *Opts) askMongoShellQuestion() (bool, error) {
-	if opts.SkipMongoShellQuestions {
+	if opts.SkipMongosh {
 		return false, nil
 	}
 
@@ -436,7 +436,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntries)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
-	cmd.Flags().BoolVar(&opts.SkipMongoShellQuestions, flag.SkipMongoShellQuestions, false, usage.SkipMongoShellQuestions)
+	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

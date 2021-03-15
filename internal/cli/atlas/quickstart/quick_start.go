@@ -16,10 +16,13 @@ package quickstart
 import (
 	"errors"
 	"fmt"
+	"os"
+	"os/signal"
 	"os/user"
 	"regexp"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -38,6 +41,11 @@ import (
 )
 
 const quickstartTemplate = "Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s\n"
+const quickstartTemplateCloseHandler = `
+You can connect to your Atlas cluster with the following user: 
+username:%s 
+password:%s
+`
 
 const (
 	replicaSet        = "REPLICASET"
@@ -98,6 +106,8 @@ func (opts *Opts) Run() error {
 	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}
+
+	opts.setupCloseHandler()
 
 	// Add IP to project’s IP access list
 	entries := opts.newProjectIPAccessList()
@@ -235,6 +245,19 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	return nil
+}
+
+// setupCloseHandler creates a 'listener' on a new goroutine which will notify the
+// program if it receives an interrupt from the OS. We then handle this by printing
+// the dbUsername and dbPassword
+func (opts *Opts) setupCloseHandler() {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		fmt.Printf(quickstartTemplateCloseHandler, opts.DBUsername, opts.DBUserPassword)
+		os.Exit(0)
+	}()
 }
 
 // askDBUserAccessListOptions allows the user to set required flags by using interactive prompts

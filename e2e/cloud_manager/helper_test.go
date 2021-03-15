@@ -31,6 +31,8 @@ import (
 )
 
 const (
+	testedMDBVersion  = "4.2.0"
+	testedMDBFCV      = "4.2"
 	entity            = "cloud-manager"
 	serversEntity     = "servers"
 	iamEntity         = "iam"
@@ -41,11 +43,8 @@ const (
 	processesEntity   = "processes"
 	featurePolicies   = "featurePolicies"
 	eventsEntity      = "events"
-)
-
-const (
-	testedMDBVersion = "4.2.0"
-	testedMDBFCV     = "4.2"
+	agentsEntity      = "agents"
+	backupEntity      = "backup"
 )
 
 // automationServerHostname tries to list available server running the automation agent

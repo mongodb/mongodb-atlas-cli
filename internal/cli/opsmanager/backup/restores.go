@@ -23,7 +23,7 @@ func RestoresBuilder() *cobra.Command {
 	const use = "restores"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   Restores,
+		Short:   "Manage restore jobs for your project.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

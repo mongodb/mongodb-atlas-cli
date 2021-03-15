@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   Backup,
+		Short:   "Manage continuous backups for your project.",
 	}
 
 	cmd.AddCommand(
@@ -34,6 +34,7 @@ func Builder() *cobra.Command {
 		RestoresBuilder(),
 		CheckpointsBuilder(),
 		EnableBuilder(),
+		DisableBuilder(),
 		config.Builder(),
 	)
 

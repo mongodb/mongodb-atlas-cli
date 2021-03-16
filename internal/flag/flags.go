@@ -192,7 +192,6 @@ const (
 	CASFilePath                     = "casFile"                         // CASFilePath flag
 	MonthsUntilExpiration           = "monthsUntilExpiration"           // MonthsUntilExpiration flag
 	IP                              = "ip"                              // IP flag
-	IPAddresses                     = "ipAddresses"                     // IPAddresses flag
 	CIDR                            = "cidr"                            // CIDR flag
 	PrivateEndpointID               = "privateEndpointId"               // PrivateEndpointID flag
 	EndpointServiceID               = "endpointServiceId"               // EndpointServiceId flag

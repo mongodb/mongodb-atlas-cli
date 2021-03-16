@@ -82,6 +82,6 @@ func TestBuilder(t *testing.T) {
 		t,
 		Builder(),
 		0,
-		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.IPAddresses, flag.Username, flag.Password, flag.SkipMongosh},
+		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh},
 	)
 }

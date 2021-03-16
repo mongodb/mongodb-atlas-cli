@@ -46,8 +46,8 @@ Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
 `
 const quickstartTemplateCloseHandler = `
 You can connect to your Atlas cluster with the following user: 
-username:%s 
-password:%s
+username: %s 
+password: %s
 `
 
 const (
@@ -75,7 +75,6 @@ var DefaultRegions = map[string][]string{
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	cli.MongoShellOpts
 	ClusterName    string
 	Provider       string
 	Region         string
@@ -137,7 +136,7 @@ func (opts *Opts) Run() error {
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
 
 	if runMongoShell {
-		if err := mongosh.Run(opts.ConfigMongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress); err != nil {
+		if err := mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress); err != nil {
 			return err
 		}
 	}
@@ -329,9 +328,11 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 		return false, err
 	}
 
-	if opts.ConfigMongoShellPath() != "" {
+	if config.MongoShellPath() != "" {
 		return true, nil
 	}
+
+	fmt.Println("No MongoDB shell version detected.")
 
 	wantToProvidePath := false
 	prompt = newMongoShellQuestionProvidePath()
@@ -438,7 +439,7 @@ func (opts *Opts) newClusterName() string {
 	return ""
 }
 
-// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
+// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password] [--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
@@ -463,7 +464,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntries)
+	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IPAddresses, []string{}, usage.AccessListIPEntries)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)

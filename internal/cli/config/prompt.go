@@ -21,11 +21,12 @@ import (
 )
 
 const (
-	omBaseURLHelp = "FQDN and port number of the Ops Manager Application."
-	projectHelp   = "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it."
-	orgHelp       = "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it."
-	atlasAPIHelp  = "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-	omAPIHelp     = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
+	omBaseURLHelp  = "FQDN and port number of the Ops Manager Application."
+	projectHelp    = "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it."
+	orgHelp        = "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it."
+	atlasAPIHelp   = "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
+	omAPIHelp      = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
+	mongoShellHelp = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments"
 )
 
 func newOMURLInput() survey.Prompt {
@@ -63,6 +64,14 @@ func newProjectSelect(options []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default project:",
 		Options: options,
+	}
+}
+
+func newMongoShellPathInput(defaultValue string) survey.Prompt {
+	return &survey.Input{
+		Message: "Default MongoDB Shell Path:",
+		Help:    mongoShellHelp,
+		Default: defaultValue,
 	}
 }
 

@@ -16,26 +16,39 @@ package quickstart
 import (
 	"errors"
 	"fmt"
+	"os"
+	"os/signal"
 	"os/user"
 	"regexp"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mongosh"
 	"github.com/mongodb/mongocli/internal/net"
 	"github.com/mongodb/mongocli/internal/randgen"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const quickstartTemplate = "Now you can connect to your Atlas cluster with: mongo -u %s -p %s %s\n"
+const quickstartTemplate = `
+Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
+
+`
+const quickstartTemplateCloseHandler = `
+You can connect to your Atlas cluster with the following user: 
+username: %s 
+password: %s
+`
 
 const (
 	replicaSet        = "REPLICASET"
@@ -49,6 +62,7 @@ const (
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
 	passwordLength    = 12
+	mongoshURL        = "https://www.mongodb.com/try/download/shell"
 )
 
 // DefaultRegions represents the regions available for each cloud service provider
@@ -68,6 +82,7 @@ type Opts struct {
 	IPAddress      string
 	DBUsername     string
 	DBUserPassword string
+	SkipMongosh    bool
 	store          store.AtlasClusterQuickStarter
 }
 
@@ -94,13 +109,20 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
+	opts.setupCloseHandler()
+
 	// Add IP to project’s IP access list
 	entries := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
 		return err
 	}
 
-	fmt.Println("Creating your cluster...")
+	runMongoShell, err := opts.askMongoShellQuestion()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Creating your cluster... [It's safe to 'Ctrl + C']")
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
 	}
@@ -112,6 +134,13 @@ func (opts *Opts) Run() error {
 	}
 
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+
+	if runMongoShell {
+		if err := mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -196,9 +225,9 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	message := "Insert the cluster name"
 	clusterName := opts.ClusterName
 	if clusterName == "" {
+		message := "Insert the cluster name"
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
 			message = fmt.Sprintf("Insert the cluster name [Press Enter to use the auto-generated name '%s']", clusterName)
@@ -220,6 +249,19 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	return nil
+}
+
+// setupCloseHandler creates a 'listener' on a new goroutine which will notify the
+// program if it receives an interrupt from the OS. We then handle this by printing
+// the dbUsername and dbPassword
+func (opts *Opts) setupCloseHandler() {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		fmt.Printf(quickstartTemplateCloseHandler, opts.DBUsername, opts.DBUserPassword)
+		os.Exit(0)
+	}()
 }
 
 // askDBUserAccessListOptions allows the user to set required flags by using interactive prompts
@@ -273,6 +315,45 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 	return nil
 }
 
+func (opts *Opts) askMongoShellQuestion() (bool, error) {
+	if opts.SkipMongosh {
+		return false, nil
+	}
+
+	runMongoShell := false
+	prompt := newMongoShellQuestion(opts.ClusterName)
+	err := survey.AskOne(prompt, &runMongoShell)
+
+	if !runMongoShell || err != nil {
+		return false, err
+	}
+
+	if config.MongoShellPath() != "" {
+		return true, nil
+	}
+
+	fmt.Println("No MongoDB shell version detected.")
+
+	wantToProvidePath := false
+	prompt = newMongoShellQuestionProvidePath()
+	if err := survey.AskOne(prompt, &wantToProvidePath); err != nil {
+		return false, err
+	}
+
+	if wantToProvidePath {
+		if err := askMongoShellAndSetConfig(); err != nil {
+			return false, err
+		}
+	} else {
+		runShell, err := openMogoshDownloadPageAndSetPath()
+		if !runShell || err != nil {
+			return runShell, err
+		}
+	}
+
+	return runMongoShell, nil
+}
+
 func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	username, ok := val.(string)
 	if !ok {
@@ -290,6 +371,42 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("a user with this username %s already exists", username)
+}
+
+func openMogoshDownloadPageAndSetPath() (bool, error) {
+	openURL := false
+	prompt := newMongoShellQuestionOpenBrowser()
+	if err := survey.AskOne(prompt, &openURL); err != nil {
+		return false, err
+	}
+
+	if openURL {
+		if err := browser.OpenURL(mongoshURL); err != nil {
+			return false, err
+		}
+
+		if err := askMongoShellAndSetConfig(); err != nil {
+			return false, err
+		}
+	} else {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func askMongoShellAndSetConfig() error {
+	var mongoShellPath string
+	prompt := newMongoShellPathInput(mongosh.FindBinaryInPath())
+	if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
+		return err
+	}
+
+	config.SetMongoShellPath(mongoShellPath)
+	if err := config.Save(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // dbUsername returns the username of the user by running the command 'whoami'
@@ -322,7 +439,7 @@ func (opts *Opts) newClusterName() string {
 	return ""
 }
 
-// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password]
+// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password] [--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
@@ -347,9 +464,10 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.IP, []string{}, usage.AccessListIPEntries)
+	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.AccessListIPEntries)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

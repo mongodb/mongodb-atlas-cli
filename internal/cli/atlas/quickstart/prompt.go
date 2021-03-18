@@ -45,7 +45,7 @@ func newRegionQuestions(region, provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
-			Message: "Cluster Region",
+			Message: "Cluster Region:",
 			Help:    usage.Region,
 			Options: DefaultRegions[strings.ToUpper(provider)],
 		},
@@ -90,14 +90,14 @@ func newClusterProviderQuestion() *survey.Question {
 	return &survey.Question{
 		Name: "provider",
 		Prompt: &survey.Select{
-			Message: "Cloud Provider",
+			Message: "Cloud Provider:",
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},
 	}
 }
 
-func newMongoShellQuestion(clusterName string) *survey.Confirm {
+func newMongoShellQuestionAccessDeployment(clusterName string) *survey.Confirm {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
 		Help:    mongoshHelp,
@@ -108,6 +108,12 @@ func newMongoShellQuestionProvidePath() *survey.Confirm {
 	return &survey.Confirm{
 		Message: "Do you want to provide the path to your MongoDB shell binary?",
 		Help:    mongoshNotFoundHelp,
+	}
+}
+
+func newMongoShellQuestion() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you have a MongoDB shell version installed on your machine?",
 	}
 }
 

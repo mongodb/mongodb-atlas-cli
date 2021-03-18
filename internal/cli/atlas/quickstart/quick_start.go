@@ -50,6 +50,26 @@ username: %s
 password: %s
 `
 
+const clusterDetails = `
+[Cluster Details]
+`
+
+const databaseUserDetails = `
+[Database User Details]
+`
+
+const accessListDetails = `
+[Access List Details]
+`
+
+const mongoShellDetails = `
+[MongoDB Shell]
+`
+
+const creatingClusterDetails = `
+Creating your cluster... [It's safe to 'Ctrl + C']
+`
+
 const (
 	replicaSet        = "REPLICASET"
 	mdbVersion        = "4.4"
@@ -93,7 +113,7 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	fmt.Println("Cluster Details:")
+	fmt.Print(clusterDetails)
 
 	if err := opts.askClusterOptions(); err != nil {
 		return err
@@ -103,32 +123,37 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	if err := opts.askDBUserAccessListOptions(); err != nil {
+	fmt.Println("We are deploying your cluster....")
+
+	fmt.Print(databaseUserDetails)
+	if err := opts.askDBUserOptions(); err != nil {
 		return err
 	}
 
-	fmt.Println("We are deploying your cluster....")
+	fmt.Print(accessListDetails)
+	if err := opts.askAccessListOptions(); err != nil {
+		return err
+	}
 
-	fmt.Println("Database user Details:")
 	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}
 
 	opts.setupCloseHandler()
 
-	fmt.Println("Access List Details:")
 	// Add IP to project’s IP access list
 	entries := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
 		return err
 	}
 
+	fmt.Print(mongoShellDetails)
 	runMongoShell, err := opts.askMongoShellQuestion()
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Creating your cluster... [It's safe to 'Ctrl + C']")
+	fmt.Print(creatingClusterDetails)
 	if er := opts.Watch(opts.watcher); er != nil {
 		return er
 	}
@@ -233,10 +258,10 @@ func (opts *Opts) askClusterOptions() error {
 
 	clusterName := opts.ClusterName
 	if clusterName == "" {
-		message := "Cluster Name"
+		message := "Cluster Name:"
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
-			message = fmt.Sprintf("Cluster Name [Press Enter to use the auto-generated name '%s']", clusterName)
+			message = fmt.Sprintf("Cluster Name [Press Enter to use the auto-generated name '%s']:", clusterName)
 		}
 		qs = append(qs, newClusterNameQuestion(clusterName, message))
 	}
@@ -270,16 +295,16 @@ func (opts *Opts) setupCloseHandler() {
 	}()
 }
 
-// askDBUserAccessListOptions allows the user to set required flags by using interactive prompts
-func (opts *Opts) askDBUserAccessListOptions() error {
+// askDBUserOptions allows the user to set required flags by using interactive prompts
+func (opts *Opts) askDBUserOptions() error {
 	var qs []*survey.Question
 
-	message := "Database user username"
+	message := "Database user username:"
 	dbUser := opts.DBUsername
 	if dbUser == "" {
 		dbUser = dbUsername()
 		if dbUser != "" {
-			message = fmt.Sprintf("Database User Username [Press Enter to use '%s']", dbUser)
+			message = fmt.Sprintf("Database User Username [Press Enter to use '%s']:", dbUser)
 		}
 
 		qs = append(qs, newDBUsernameQuestion(dbUser, message, opts.validateUniqueUsername))
@@ -288,29 +313,38 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 	if opts.DBUserPassword == "" {
 		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
 
-		message = "Database User Password"
+		message = "Database User Password:"
 		if err == nil {
-			message = fmt.Sprintf("Database user password [Press Enter to use an auto-generated password %s]", pwd)
+			message = fmt.Sprintf("Database user password [Press Enter to use an auto-generated password '%s']:", pwd)
 			opts.DBUserPassword = pwd
 		}
 
 		qs = append(qs, newDBUserPasswordQuestion(opts.DBUserPassword, message))
 	}
 
-	if len(opts.IPAddresses) == 0 {
-		message = "Access List Entry"
-		publicIP := net.IPAddress()
-		if publicIP != "" {
-			message = fmt.Sprintf("Access List Entry [Press Enter to use your public IP address '%s']", publicIP)
-		}
-		q := newAccessListQuestion(publicIP, message)
-		qs = append(qs, q)
-	}
-
 	if len(qs) > 0 {
 		if err := survey.Ask(qs, opts); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (opts *Opts) askAccessListOptions() error {
+	if len(opts.IPAddresses) > 0 {
+		return nil
+	}
+
+	message := "Access List Entry:"
+	publicIP := net.IPAddress()
+	if publicIP != "" {
+		message = fmt.Sprintf("Access List Entry [Press Enter to use your public IP address '%s']:", publicIP)
+	}
+	q := newAccessListQuestion(publicIP, message)
+
+	if err := survey.Ask([]*survey.Question{q}, opts); err != nil {
+		return err
 	}
 
 	if len(opts.IPAddresses) == 0 && opts.IPAddress != "" {
@@ -326,7 +360,7 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 	}
 
 	runMongoShell := false
-	prompt := newMongoShellQuestion(opts.ClusterName)
+	prompt := newMongoShellQuestionAccessDeployment(opts.ClusterName)
 	err := survey.AskOne(prompt, &runMongoShell)
 
 	if !runMongoShell || err != nil {
@@ -339,15 +373,23 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 
 	fmt.Println("No MongoDB shell version detected.")
 
-	wantToProvidePath := false
-	prompt = newMongoShellQuestionProvidePath()
-	if err := survey.AskOne(prompt, &wantToProvidePath); err != nil {
+	isInstalled := false
+	prompt = newMongoShellQuestion()
+	if err := survey.AskOne(prompt, &isInstalled); err != nil {
 		return false, err
 	}
 
-	if wantToProvidePath {
-		if err := askMongoShellAndSetConfig(); err != nil {
+	if isInstalled {
+		wantToProvidePath := false
+		prompt = newMongoShellQuestionProvidePath()
+		if err := survey.AskOne(prompt, &wantToProvidePath); err != nil {
 			return false, err
+		}
+
+		if wantToProvidePath {
+			if err := askMongoShellAndSetConfig(); err != nil {
+				return false, err
+			}
 		}
 	} else {
 		runShell, err := openMogoshDownloadPageAndSetPath()

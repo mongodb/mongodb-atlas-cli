@@ -27,6 +27,7 @@ export E2E_BINARY
 .PHONY: setup
 setup:  ## Install dev tools
 	@echo "==> Installing dependencies..."
+	go install github.com/google/addlicense@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
 
 .PHONY: link-git-hooks

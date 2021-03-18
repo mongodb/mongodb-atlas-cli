@@ -231,10 +231,9 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	message := "Cluster Name"
 	clusterName := opts.ClusterName
 	if clusterName == "" {
-		message := "Insert the cluster name"
+		message := "Cluster Name"
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
 			message = fmt.Sprintf("Cluster Name [Press Enter to use the auto-generated name '%s']", clusterName)

@@ -123,7 +123,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Println("We are deploying your cluster....")
+	fmt.Println("We are deploying your cluster...")
 
 	fmt.Print(databaseUserDetails)
 	if err := opts.askDBUserOptions(); err != nil {

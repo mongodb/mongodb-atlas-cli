@@ -32,7 +32,7 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 		Name: "ipAddress",
 		Prompt: &survey.Input{
 			Message: message,
-			Help:    usage.AccessListIPEntriesQuickstart,
+			Help:    usage.AccessListIPEntryQuickstart,
 			Default: publicIP,
 		},
 	}

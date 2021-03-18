@@ -119,16 +119,14 @@ func newMongoShellQuestion() *survey.Confirm {
 
 func newMongoShellPathInput(defaultValue string, validation func(val interface{}) error) *survey.Question {
 	return &survey.Question{
-		Validate:  validation,
+		Validate: validation,
 		Name:     "mongoShellPath",
-		Prompt:    &survey.Input{
+		Prompt: &survey.Input{
 			Message: "Default MongoDB Shell Path:",
 			Help:    mongoshHelp,
 			Default: defaultValue,
 		},
 	}
-
-
 }
 
 func newMongoShellQuestionOpenBrowser() *survey.Confirm {

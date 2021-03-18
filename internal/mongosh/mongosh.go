@@ -58,10 +58,9 @@ func ValidateUniqueUsername(val interface{}) error {
 		return fmt.Errorf("the path %s is not valid", path)
 	}
 
-	if _, err := os.Stat(path); err != nil{
+	if _, err := os.Stat(path); err != nil {
 		return fmt.Errorf("the path %s is not valid", path)
 	}
-
 
 	return nil
 }

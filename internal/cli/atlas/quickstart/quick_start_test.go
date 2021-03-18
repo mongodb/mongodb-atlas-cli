@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -45,6 +47,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		DBUsername:     "user",
 		DBUserPassword: "test",
 		Provider:       "AWS",
+		SkipMongosh:    true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()
@@ -72,4 +75,13 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		0,
+		[]string{flag.ProjectID, flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh},
+	)
 }

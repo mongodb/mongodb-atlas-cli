@@ -15,10 +15,16 @@
 package quickstart
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/usage"
+)
+
+const (
+	mongoshHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
+	mongoshNotFoundHelp = "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it."
 )
 
 func newAccessListQuestion(publicIP, message string) *survey.Question {
@@ -88,5 +94,33 @@ func newClusterProviderQuestion() *survey.Question {
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},
+	}
+}
+
+func newMongoShellQuestion(clusterName string) *survey.Confirm {
+	return &survey.Confirm{
+		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
+		Help:    mongoshHelp,
+	}
+}
+
+func newMongoShellQuestionProvidePath() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you want to provide the path to your MongoDB shell binary?",
+		Help:    mongoshNotFoundHelp,
+	}
+}
+
+func newMongoShellPathInput(defaultValue string) survey.Prompt {
+	return &survey.Input{
+		Message: "Default MongoDB Shell Path:",
+		Help:    mongoshHelp,
+		Default: defaultValue,
+	}
+}
+
+func newMongoShellQuestionOpenBrowser() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you want to download MongoDB Shell [This will open www.mongodb.com on your browser]?",
 	}
 }

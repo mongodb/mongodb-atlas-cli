@@ -60,6 +60,7 @@ func Properties() []string {
 		baseURL,
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
+		mongoShellPath,
 	}
 }
 
@@ -117,6 +118,11 @@ func (p *Profile) Set(name, value string) {
 	settings := viper.GetStringMapString(p.Name())
 	settings[name] = value
 	viper.Set(p.name, settings)
+}
+
+func SetGlobal(name, value string) { p.SetGlobal(name, value) }
+func (p *Profile) SetGlobal(name, value string) {
+	viper.Set(name, value)
 }
 
 func GetString(name string) string { return p.GetString(name) }
@@ -223,6 +229,18 @@ func (p *Profile) OrgID() string {
 func SetOrgID(v string) { p.SetOrgID(v) }
 func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
+}
+
+// MongoShellPath get the configured MongoDB Shell path
+func MongoShellPath() string { return p.MongoShellPath() }
+func (p *Profile) MongoShellPath() string {
+	return p.GetString(mongoShellPath)
+}
+
+// SetMongoShellPath sets the global MongoDB Shell path
+func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
+func (p *Profile) SetMongoShellPath(v string) {
+	p.SetGlobal(mongoShellPath, v)
 }
 
 // Output get configured output format

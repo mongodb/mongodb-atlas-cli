@@ -45,7 +45,7 @@ func newRegionQuestions(region, provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
-			Message: "Cluster Region:",
+			Message: "Cloud Provider Region:",
 			Help:    usage.Region,
 			Options: DefaultRegions[strings.ToUpper(provider)],
 		},
@@ -117,12 +117,18 @@ func newMongoShellQuestion() *survey.Confirm {
 	}
 }
 
-func newMongoShellPathInput(defaultValue string) survey.Prompt {
-	return &survey.Input{
-		Message: "Default MongoDB Shell Path:",
-		Help:    mongoshHelp,
-		Default: defaultValue,
+func newMongoShellPathInput(defaultValue string, validation func(val interface{}) error) *survey.Question {
+	return &survey.Question{
+		Validate:  validation,
+		Name:     "mongoShellPath",
+		Prompt:    &survey.Input{
+			Message: "Default MongoDB Shell Path:",
+			Help:    mongoshHelp,
+			Default: defaultValue,
+		},
 	}
+
+
 }
 
 func newMongoShellQuestionOpenBrowser() *survey.Confirm {

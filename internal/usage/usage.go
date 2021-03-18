@@ -219,6 +219,7 @@ const (
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	AccessListIPEntry               = "IP address to be allowed for a given API key."
 	AccessListIPEntries             = "List of IP addresses to be allowed to access the deployment."
+	AccessListIPEntriesQuickstart   = "IP address to be allowed to access the deployment."
 	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	EndpointServiceID               = "Unique identifier of the private endpoint service for which you want to retrieve a private endpoint."

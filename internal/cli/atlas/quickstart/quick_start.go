@@ -78,6 +78,8 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
+	fmt.Println("Cluster Details:")
+
 	if err := opts.askClusterOptions(); err != nil {
 		return err
 	}
@@ -90,10 +92,14 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
+	fmt.Println("We are deploying your cluster....")
+
+	fmt.Println("Database user Details:")
 	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}
 
+	fmt.Println("Access List Details:")
 	// Add IP to project’s IP access list
 	entries := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
@@ -196,12 +202,12 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	message := "Insert the cluster name"
+	message := "Cluster Name"
 	clusterName := opts.ClusterName
 	if clusterName == "" {
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
-			message = fmt.Sprintf("Insert the cluster name [Press Enter to use the auto-generated name '%s']", clusterName)
+			message = fmt.Sprintf("Cluster Name [Press Enter to use the auto-generated name '%s']", clusterName)
 		}
 		qs = append(qs, newClusterNameQuestion(clusterName, message))
 	}
@@ -226,26 +232,34 @@ func (opts *Opts) askClusterOptions() error {
 func (opts *Opts) askDBUserAccessListOptions() error {
 	var qs []*survey.Question
 
-	message := "Insert the Username for authenticating to MongoDB"
+	message := "Database user username"
 	dbUser := opts.DBUsername
 	if dbUser == "" {
 		dbUser = dbUsername()
 		if dbUser != "" {
-			message = fmt.Sprintf("Insert the Username for authenticating to MongoDB [Press Enter to use '%s']", dbUser)
+			message = fmt.Sprintf("Database User Username [Press Enter to use '%s']", dbUser)
 		}
 
 		qs = append(qs, newDBUsernameQuestion(dbUser, message, opts.validateUniqueUsername))
 	}
 
 	if opts.DBUserPassword == "" {
-		qs = append(qs, newDBUserPasswordQuestion())
+		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+
+		message = "Database User Password"
+		if err == nil {
+			message = fmt.Sprintf("Database user password [Press Enter to use an auto-generated password %s]", pwd)
+			opts.DBUserPassword = pwd
+		}
+
+		qs = append(qs, newDBUserPasswordQuestion(opts.DBUserPassword, message))
 	}
 
 	if len(opts.IPAddresses) == 0 {
-		message = "Insert the IP entry to add to the Access List"
+		message = "Access List Entry"
 		publicIP := net.IPAddress()
 		if publicIP != "" {
-			message = fmt.Sprintf("Insert the IP entry to add to the Access List [Press Enter to use your public IP address '%s']", publicIP)
+			message = fmt.Sprintf("Access List Entry [Press Enter to use your public IP address '%s']", publicIP)
 		}
 		q := newAccessListQuestion(publicIP, message)
 		qs = append(qs, q)
@@ -259,15 +273,6 @@ func (opts *Opts) askDBUserAccessListOptions() error {
 
 	if len(opts.IPAddresses) == 0 && opts.IPAddress != "" {
 		opts.IPAddresses = []string{opts.IPAddress}
-	}
-
-	if opts.DBUserPassword == "" {
-		// The user wants to auto-generate the password
-		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
-		if err != nil {
-			return err
-		}
-		opts.DBUserPassword = pwd
 	}
 
 	return nil

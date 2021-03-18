@@ -26,7 +26,7 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 		Name: "ipAddress",
 		Prompt: &survey.Input{
 			Message: message,
-			Help:    usage.AccessListIPEntry,
+			Help:    usage.AccessListIPEntriesQuickstart,
 			Default: publicIP,
 		},
 	}
@@ -39,7 +39,7 @@ func newRegionQuestions(region, provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
-			Message: "Select the physical location of your MongoDB cluster",
+			Message: "Cluster Region",
 			Help:    usage.Region,
 			Options: DefaultRegions[strings.ToUpper(provider)],
 		},
@@ -58,12 +58,13 @@ func newDBUsernameQuestion(dbUser, message string, validation func(val interface
 	return q
 }
 
-func newDBUserPasswordQuestion() *survey.Question {
+func newDBUserPasswordQuestion(password, message string) *survey.Question {
 	return &survey.Question{
 		Name: "DBUserPassword",
-		Prompt: &survey.Password{
-			Message: "Insert the Password for authenticating to MongoDB [Press Enter to use an auto-generated password]",
+		Prompt: &survey.Input{
+			Message: message,
 			Help:    usage.Password,
+			Default: password,
 		},
 	}
 }
@@ -83,7 +84,7 @@ func newClusterProviderQuestion() *survey.Question {
 	return &survey.Question{
 		Name: "provider",
 		Prompt: &survey.Select{
-			Message: "Insert the cloud service provider on which Atlas provisions the hosts",
+			Message: "Cloud Provider",
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},

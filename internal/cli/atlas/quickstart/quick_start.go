@@ -51,19 +51,19 @@ password: %s
 `
 
 const clusterDetails = `
-[Cluster Details]
+[Set up your Atlas cluster]
 `
 
 const databaseUserDetails = `
-[Database User Details]
+[Set up your database access details]
 `
 
 const accessListDetails = `
-[Access List Details]
+[Set up your Access list details]
 `
 
 const mongoShellDetails = `
-[MongoDB Shell]
+[Connect to your new cluster]
 `
 
 const creatingClusterDetails = `

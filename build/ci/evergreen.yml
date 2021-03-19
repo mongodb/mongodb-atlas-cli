@@ -197,7 +197,7 @@ functions:
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
-        command: make setup
+        command: make setupgolangcilint
   "install gon":
     - command: shell.exec
       type: setup

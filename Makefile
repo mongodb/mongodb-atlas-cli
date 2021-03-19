@@ -27,7 +27,6 @@ export E2E_BINARY
 .PHONY: setupgolangcilint
 setupgolangcilint:  ## Install golangci-lint
 	@echo "==> Installing golangci-lint..."
-	go install github.com/google/addlicense@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
 
 .PHONY: deps

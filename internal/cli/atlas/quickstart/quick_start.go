@@ -258,10 +258,10 @@ func (opts *Opts) askClusterOptions() error {
 
 	clusterName := opts.ClusterName
 	if clusterName == "" {
-		message := "Cluster Name:"
+		message := ""
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
-			message = fmt.Sprintf("Cluster Name [Press Enter to use the auto-generated name '%s']:", clusterName)
+			message = fmt.Sprintf("[Press Enter to use the auto-generated name '%s']:", clusterName)
 		}
 		qs = append(qs, newClusterNameQuestion(clusterName, message))
 	}
@@ -299,12 +299,12 @@ func (opts *Opts) setupCloseHandler() {
 func (opts *Opts) askDBUserOptions() error {
 	var qs []*survey.Question
 
-	message := "Database user username:"
+	message := ""
 	dbUser := opts.DBUsername
 	if dbUser == "" {
 		dbUser = dbUsername()
 		if dbUser != "" {
-			message = fmt.Sprintf("Database User Username [Press Enter to use '%s']:", dbUser)
+			message = fmt.Sprintf("Press Enter to use '%s']:", dbUser)
 		}
 
 		qs = append(qs, newDBUsernameQuestion(dbUser, message, opts.validateUniqueUsername))
@@ -313,9 +313,9 @@ func (opts *Opts) askDBUserOptions() error {
 	if opts.DBUserPassword == "" {
 		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
 
-		message = "Database User Password:"
+		message = ""
 		if err == nil {
-			message = fmt.Sprintf("Database user password [Press Enter to use an auto-generated password '%s']:", pwd)
+			message = fmt.Sprintf("[Press Enter to use an auto-generated password '%s']:", pwd)
 			opts.DBUserPassword = pwd
 		}
 
@@ -336,10 +336,10 @@ func (opts *Opts) askAccessListOptions() error {
 		return nil
 	}
 
-	message := "Access List Entry:"
+	message := ""
 	publicIP := net.IPAddress()
 	if publicIP != "" {
-		message = fmt.Sprintf("Access List Entry [Press Enter to use your public IP address '%s']:", publicIP)
+		message = fmt.Sprintf("[Press Enter to use your public IP address '%s']:", publicIP)
 	}
 	q := newAccessListQuestion(publicIP, message)
 

@@ -24,11 +24,22 @@ export PATH := ./bin:$(PATH)
 export GO111MODULE := on
 export E2E_BINARY
 
-.PHONY: setup
-setup:  ## Install dev tools
-	@echo "==> Installing dependencies..."
+.PHONY: setupgolangcilint
+setupgolangcilint:  ## Install golangci-lint
+	@echo "==> Installing golangci-lint..."
 	go install github.com/google/addlicense@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
+
+.PHONY: deps
+deps:  ## Download go module dependencies
+	@echo "==> Installing go.mod dependencies..."
+	go mod download
+	go mod tidy
+
+.PHONY: setup
+setup: deps setupgolangcilint ## Set up dev env
+	@echo "==> Installing dev tools..."
+	go install github.com/google/addlicense@latest
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

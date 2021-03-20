@@ -59,7 +59,7 @@ const databaseUserDetails = `
 `
 
 const accessListDetails = `
-[Set up your Access list details]
+[Set up your network access list details]
 `
 
 const mongoShellDetails = `
@@ -261,7 +261,7 @@ func (opts *Opts) askClusterOptions() error {
 		message := ""
 		clusterName = opts.newClusterName()
 		if clusterName != "" {
-			message = fmt.Sprintf("[Press Enter to use the auto-generated name '%s']:", clusterName)
+			message = fmt.Sprintf(" [Press Enter to use the auto-generated name '%s']", clusterName)
 		}
 		qs = append(qs, newClusterNameQuestion(clusterName, message))
 	}
@@ -299,12 +299,12 @@ func (opts *Opts) setupCloseHandler() {
 func (opts *Opts) askDBUserOptions() error {
 	var qs []*survey.Question
 
-	message := ""
 	dbUser := opts.DBUsername
 	if dbUser == "" {
+		message := ""
 		dbUser = dbUsername()
 		if dbUser != "" {
-			message = fmt.Sprintf("Press Enter to use '%s']:", dbUser)
+			message = fmt.Sprintf(" [Press Enter to use '%s']", dbUser)
 		}
 
 		qs = append(qs, newDBUsernameQuestion(dbUser, message, opts.validateUniqueUsername))
@@ -313,9 +313,9 @@ func (opts *Opts) askDBUserOptions() error {
 	if opts.DBUserPassword == "" {
 		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
 
-		message = ""
+		message := ""
 		if err == nil {
-			message = fmt.Sprintf("[Press Enter to use an auto-generated password '%s']:", pwd)
+			message = fmt.Sprintf(" [Press Enter to use an auto-generated password '%s']", pwd)
 			opts.DBUserPassword = pwd
 		}
 
@@ -339,7 +339,7 @@ func (opts *Opts) askAccessListOptions() error {
 	message := ""
 	publicIP := net.IPAddress()
 	if publicIP != "" {
-		message = fmt.Sprintf("[Press Enter to use your public IP address '%s']:", publicIP)
+		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}
 	q := newAccessListQuestion(publicIP, message)
 

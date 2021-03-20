@@ -31,7 +31,7 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 	return &survey.Question{
 		Name: "ipAddress",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Access List Entry %s:", message),
+			Message: fmt.Sprintf("Access List Entry%s:", message),
 			Help:    usage.NetworkAccessListIPEntry,
 			Default: publicIP,
 		},
@@ -56,7 +56,7 @@ func newDBUsernameQuestion(dbUser, message string, validation func(val interface
 		Validate: validation,
 		Name:     "dbUsername",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Database User Username %s:", message),
+			Message: fmt.Sprintf("Database User Username%s:", message),
 			Help:    usage.DBUsername,
 			Default: dbUser,
 		},
@@ -68,7 +68,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 	return &survey.Question{
 		Name: "DBUserPassword",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Database User Password %s:", message),
+			Message: fmt.Sprintf("Database User Password%s:", message),
 			Help:    usage.Password,
 			Default: password,
 		},
@@ -79,7 +79,7 @@ func newClusterNameQuestion(clusterName, message string) *survey.Question {
 	return &survey.Question{
 		Name: "clusterName",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Cluster Name %s:", message),
+			Message: fmt.Sprintf("Cluster Name%s:", message),
 			Help:    usage.ClusterName,
 			Default: clusterName,
 		},

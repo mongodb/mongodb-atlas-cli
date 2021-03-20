@@ -51,6 +51,11 @@ func Builder() *cobra.Command {
 		Short: atlasShort,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudService)
+
+			if cmd.Name() == "quickstart" { // quickstart has its own check
+				return nil
+			}
+
 			return validate.Credentials()
 		},
 	}

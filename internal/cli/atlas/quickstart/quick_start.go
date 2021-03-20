@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -63,6 +64,8 @@ const (
 	none              = "NONE"
 	passwordLength    = 12
 	mongoshURL        = "https://www.mongodb.com/try/download/shell"
+	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/"
+	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/#std-label-mcli-configure"
 )
 
 // DefaultRegions represents the regions available for each cloud service provider
@@ -409,6 +412,35 @@ func askMongoShellAndSetConfig() error {
 	return nil
 }
 
+func askAtlasAccountAndProfile() error {
+	fmt.Println("missing default profile.")
+	openBrowserAtlasAccount := false
+	prompt := newAtlasAccountQuestionOpenBrowser()
+	if err := survey.AskOne(prompt, &openBrowserAtlasAccount); err != nil {
+		return err
+	}
+
+	if openBrowserAtlasAccount {
+		if err := browser.OpenURL(atlasAccountURL); err != nil {
+			return err
+		}
+	}
+
+	openBrowserProfileDoc := false
+	prompt = newProfileDocQuestionOpenBrowser()
+	if err := survey.AskOne(prompt, &openBrowserProfileDoc); err != nil {
+		return err
+	}
+
+	if openBrowserProfileDoc {
+		if err := browser.OpenURL(profileDocURL); err != nil {
+			return err
+		}
+	}
+
+	return validate.Credentials()
+}
+
 // dbUsername returns the username of the user by running the command 'whoami'
 func dbUsername() string {
 	userStruct, err := user.Current()
@@ -450,8 +482,12 @@ func Builder() *cobra.Command {
 		Short: "Create and access an Atlas Cluster.",
 		Long:  "This command creates a cluster, adds your public IP to the atlas access list and creates a db user to access your MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.ValidateProjectID(); err != nil {
+				// no profile set
+				return askAtlasAccountAndProfile()
+			}
+
 			return opts.PreRunE(
-				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)

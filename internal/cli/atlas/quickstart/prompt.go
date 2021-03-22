@@ -134,3 +134,15 @@ func newMongoShellQuestionOpenBrowser() *survey.Confirm {
 		Message: "Do you want to download MongoDB Shell [This will open www.mongodb.com on your browser]?",
 	}
 }
+
+func newAtlasAccountQuestionOpenBrowser() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you want to create an Atlas account [This will open www.mongodb.com on your browser]?",
+	}
+}
+
+func newProfileDocQuestionOpenBrowser() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you want more information to set up your profile [This will open www.mongodb.com on your browser]?",
+	}
+}

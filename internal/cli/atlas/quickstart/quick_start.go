@@ -460,7 +460,7 @@ func askMongoShellAndSetConfig() error {
 }
 
 func askAtlasAccountAndProfile() error {
-	fmt.Println("missing default profile.")
+	_, _ = fmt.Fprintln(os.Stderr, "No API credentials set.")
 	openBrowserAtlasAccount := false
 	prompt := newAtlasAccountQuestionOpenBrowser()
 	if err := survey.AskOne(prompt, &openBrowserAtlasAccount); err != nil {

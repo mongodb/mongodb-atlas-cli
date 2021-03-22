@@ -74,7 +74,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.cidr, flag.CIDR, "", usage.AccessListCIDREntry)
-	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.AccessListIPEntry)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIAccessListIPEntry)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

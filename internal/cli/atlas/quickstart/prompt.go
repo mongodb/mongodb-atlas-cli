@@ -31,8 +31,8 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 	return &survey.Question{
 		Name: "ipAddress",
 		Prompt: &survey.Input{
-			Message: message,
-			Help:    usage.AccessListIPEntry,
+			Message: fmt.Sprintf("Access List Entry%s:", message),
+			Help:    usage.NetworkAccessListIPEntry,
 			Default: publicIP,
 		},
 	}
@@ -45,7 +45,7 @@ func newRegionQuestions(region, provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
-			Message: "Select the physical location of your MongoDB cluster",
+			Message: "Cloud Provider Region:",
 			Help:    usage.Region,
 			Options: DefaultRegions[strings.ToUpper(provider)],
 		},
@@ -56,7 +56,7 @@ func newDBUsernameQuestion(dbUser, message string, validation func(val interface
 		Validate: validation,
 		Name:     "dbUsername",
 		Prompt: &survey.Input{
-			Message: message,
+			Message: fmt.Sprintf("Database User Username%s:", message),
 			Help:    usage.DBUsername,
 			Default: dbUser,
 		},
@@ -64,12 +64,13 @@ func newDBUsernameQuestion(dbUser, message string, validation func(val interface
 	return q
 }
 
-func newDBUserPasswordQuestion() *survey.Question {
+func newDBUserPasswordQuestion(password, message string) *survey.Question {
 	return &survey.Question{
 		Name: "DBUserPassword",
-		Prompt: &survey.Password{
-			Message: "Insert the Password for authenticating to MongoDB [Press Enter to use an auto-generated password]",
+		Prompt: &survey.Input{
+			Message: fmt.Sprintf("Database User Password%s:", message),
 			Help:    usage.Password,
+			Default: password,
 		},
 	}
 }
@@ -78,7 +79,7 @@ func newClusterNameQuestion(clusterName, message string) *survey.Question {
 	return &survey.Question{
 		Name: "clusterName",
 		Prompt: &survey.Input{
-			Message: message,
+			Message: fmt.Sprintf("Cluster Name%s:", message),
 			Help:    usage.ClusterName,
 			Default: clusterName,
 		},
@@ -89,14 +90,14 @@ func newClusterProviderQuestion() *survey.Question {
 	return &survey.Question{
 		Name: "provider",
 		Prompt: &survey.Select{
-			Message: "Insert the cloud service provider on which Atlas provisions the hosts",
+			Message: "Cloud Provider:",
 			Help:    usage.Provider,
 			Options: []string{"AWS", "GCP", "AZURE"},
 		},
 	}
 }
 
-func newMongoShellQuestion(clusterName string) *survey.Confirm {
+func newMongoShellQuestionAccessDeployment(clusterName string) *survey.Confirm {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
 		Help:    mongoshHelp,
@@ -110,11 +111,21 @@ func newMongoShellQuestionProvidePath() *survey.Confirm {
 	}
 }
 
-func newMongoShellPathInput(defaultValue string) survey.Prompt {
-	return &survey.Input{
-		Message: "Default MongoDB Shell Path:",
-		Help:    mongoshHelp,
-		Default: defaultValue,
+func newMongoShellQuestion() *survey.Confirm {
+	return &survey.Confirm{
+		Message: "Do you have a MongoDB shell version installed on your machine?",
+	}
+}
+
+func newMongoShellPathInput(defaultValue string, validation func(val interface{}) error) *survey.Question {
+	return &survey.Question{
+		Validate: validation,
+		Name:     "mongoShellPath",
+		Prompt: &survey.Input{
+			Message: "Default MongoDB Shell Path:",
+			Help:    mongoshHelp,
+			Default: defaultValue,
+		},
 	}
 }
 

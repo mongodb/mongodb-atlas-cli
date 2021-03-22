@@ -14,6 +14,7 @@
 package mongosh
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -46,6 +47,19 @@ func Run(binary, username, password, mongoURI string) error {
 
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func ValidateUniqueUsername(val interface{}) error {
+	path, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("the path %s is not valid", path)
+	}
+
+	if _, err := os.Stat(path); err != nil {
+		return fmt.Errorf("the path %s is not valid", path)
 	}
 
 	return nil

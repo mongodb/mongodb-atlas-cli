@@ -5,11 +5,10 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
+	reflect "reflect"
 )
 
 // MockClusterLister is a mock of ClusterLister interface
@@ -464,19 +463,4 @@ func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*m
 func (mr *MockAtlasClusterQuickStarterMockRecorder) DatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).DatabaseUser), arg0, arg1, arg2)
-}
-
-// ProjectClusters mocks base method
-func (m *MockAtlasClusterQuickStarter) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ProjectClusters indicates an expected call of ProjectClusters
-func (mr *MockAtlasClusterQuickStarterMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).ProjectClusters), arg0, arg1)
 }

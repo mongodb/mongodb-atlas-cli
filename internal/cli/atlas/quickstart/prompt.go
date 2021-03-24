@@ -38,10 +38,7 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 	}
 }
 
-func newRegionQuestions(region, provider string) *survey.Question {
-	if region != "" {
-		return nil
-	}
+func newRegionQuestions(provider string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{

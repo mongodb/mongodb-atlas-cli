@@ -86,11 +86,11 @@ const (
 	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/#std-label-mcli-configure"
 )
 
-// DefaultRegions represents the regions available for each cloud service provider
+// DefaultRegions represents the regions available for each cloud service provider for the M2 tier
 var DefaultRegions = map[string][]string{
-	"AWS":   {"US_EAST_1", "US_WEST_2", "AP_SOUTH_1", "AP_EAST_2", "EU_WEST_1", "EU_CENTRAL_1", "ME_SOUTH_1", "AF_SOUTH_1"},
-	"GCP":   {"CENTRAL_US", "CANADA_CENTRAL", "WESTERN_EUROPE", "ASIA_SOUTH_EAST", "SOUTH_AFRICA_NORTH", "UAE_NORTH"},
-	"AZURE": {"US_EAST_2", "US_WEST", "EUROPE_NORTH"},
+	"AWS":   {"US_EAST_1"},
+	"GCP":   {"CENTRAL_US"},
+	"AZURE": {"US_EAST_2"},
 }
 
 type Opts struct {
@@ -275,9 +275,72 @@ func (opts *Opts) askClusterOptions() error {
 		return err
 	}
 
-	if regionQ := newRegionQuestions(opts.Region, opts.Provider); regionQ != nil {
-		// we call survey.Ask two times because the region question needs opts.Provider to be populated
-		return survey.Ask([]*survey.Question{regionQ}, opts)
+	if opts.Region == "" {
+		regions := opts.defaultRegions()
+		if regionQ := newRegionQuestions(regions); regionQ != nil {
+			// we call survey.Ask two times because the region question needs opts.Provider to be populated
+			return survey.Ask([]*survey.Question{regionQ}, opts)
+		}
+	}
+
+	return nil
+}
+
+func (opts *Opts) defaultRegions() []string {
+	cloudProviders, err := opts.store.Regions(opts.ConfigProjectID(), opts.Provider, tier, false)
+
+	if err != nil {
+		return DefaultRegions[strings.ToUpper(opts.Provider)]
+	}
+
+	if err := validateDefaultRegions(cloudProviders); err != nil {
+		return DefaultRegions[strings.ToUpper(opts.Provider)]
+	}
+
+	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
+
+	defaultRegions := make([]string, len(availableRegions))
+
+	// the most popular region must be the first in the list
+	var popularRegion string
+	for _, v := range availableRegions {
+		if v.Default {
+			popularRegion = v.Name
+			break
+		}
+	}
+
+	defaultRegions[0] = popularRegion
+	i := 1
+
+	for _, v := range availableRegions {
+		if v.Name != popularRegion {
+			defaultRegions[i] = v.Name
+			i++
+		}
+	}
+
+	return defaultRegions
+}
+
+func validateDefaultRegions(cloudProviders *atlas.CloudProviders) error {
+	if cloudProviders.TotalCount != 1 {
+		return fmt.Errorf("expected availableRegions.TotalCount == 1, but was %d", cloudProviders.TotalCount)
+	}
+
+	instanceSizes := cloudProviders.Results[0].InstanceSizes
+	if len(instanceSizes) != 1 {
+		return fmt.Errorf("expected len(instanceSizes) == 1, but was %d", len(instanceSizes))
+	}
+
+	if instanceSizes[0].Name != tier {
+		return fmt.Errorf("expected tie name == %s, but was %s", tier, instanceSizes[0].Name)
+	}
+
+	regions := instanceSizes[0].AvailableRegions
+
+	if len(regions) == 0 {
+		return fmt.Errorf("expected len(regions) > 0, but was %d", len(regions))
 	}
 
 	return nil

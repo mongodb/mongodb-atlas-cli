@@ -86,13 +86,6 @@ const (
 	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/#std-label-mcli-configure"
 )
 
-// DefaultRegions represents the regions available for each cloud service provider for the M2 tier
-var DefaultRegions = map[string][]string{
-	"AWS":   {"US_EAST_1"},
-	"GCP":   {"CENTRAL_US"},
-	"AZURE": {"US_EAST_2"},
-}
-
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
@@ -275,7 +268,10 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	if opts.Region == "" {
-		regions := opts.defaultRegions()
+		regions, err := opts.defaultRegions()
+		if err != nil {
+			return err
+		}
 		if regionQ := newRegionQuestions(regions); regionQ != nil {
 			// we call survey.Ask two times because the region question needs opts.Provider to be populated
 			return survey.Ask([]*survey.Question{regionQ}, opts)
@@ -285,15 +281,15 @@ func (opts *Opts) askClusterOptions() error {
 	return nil
 }
 
-func (opts *Opts) defaultRegions() []string {
+func (opts *Opts) defaultRegions() ([]string, error) {
 	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.Provider, tier, false)
 
 	if err != nil {
-		return DefaultRegions[strings.ToUpper(opts.Provider)]
+		return nil, err
 	}
 
 	if err := validateDefaultRegions(cloudProviders); err != nil {
-		return DefaultRegions[strings.ToUpper(opts.Provider)]
+		return nil, err
 	}
 
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
@@ -314,7 +310,7 @@ func (opts *Opts) defaultRegions() []string {
 		defaultRegions = append(defaultRegions, v.Name)
 	}
 
-	return defaultRegions
+	return defaultRegions, nil
 }
 
 func findPopularRegionIndex(regions []*atlas.AvailableRegion) int {

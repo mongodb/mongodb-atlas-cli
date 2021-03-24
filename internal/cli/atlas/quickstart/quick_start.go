@@ -288,10 +288,6 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 		return nil, err
 	}
 
-	if err := validateDefaultRegions(cloudProviders); err != nil {
-		return nil, err
-	}
-
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
 	var defaultRegions []string
@@ -320,29 +316,6 @@ func findPopularRegionIndex(regions []*atlas.AvailableRegion) int {
 		}
 	}
 	return -1
-}
-
-func validateDefaultRegions(cloudProviders *atlas.CloudProviders) error {
-	if cloudProviders.TotalCount != 1 {
-		return fmt.Errorf("expected availableRegions.TotalCount == 1, but was %d", cloudProviders.TotalCount)
-	}
-
-	instanceSizes := cloudProviders.Results[0].InstanceSizes
-	if len(instanceSizes) != 1 {
-		return fmt.Errorf("expected len(instanceSizes) == 1, but was %d", len(instanceSizes))
-	}
-
-	if instanceSizes[0].Name != tier {
-		return fmt.Errorf("expected tie name == %s, but was %s", tier, instanceSizes[0].Name)
-	}
-
-	regions := instanceSizes[0].AvailableRegions
-
-	if len(regions) == 0 {
-		return fmt.Errorf("expected len(regions) > 0, but was %d", len(regions))
-	}
-
-	return nil
 }
 
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the

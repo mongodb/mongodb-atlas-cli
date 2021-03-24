@@ -288,6 +288,10 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 		return nil, err
 	}
 
+	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0{
+		return nil, fmt.Errorf("no regions available")
+	}
+
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
 	var defaultRegions []string

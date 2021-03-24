@@ -302,7 +302,7 @@ func (opts *Opts) defaultRegions() []string {
 	defaultRegions := make([]string, len(availableRegions))
 
 	// the most popular region must be the first in the list
-	var popularRegion string
+	popularRegion := ""
 	for _, v := range availableRegions {
 		if v.Default {
 			popularRegion = v.Name

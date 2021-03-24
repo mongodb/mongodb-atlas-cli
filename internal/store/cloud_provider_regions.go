@@ -25,11 +25,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_cloud_provider_regions.go -package=mocks github.com/mongodb/mongocli/internal/store CloudProviderRegionsLister
 
 type CloudProviderRegionsLister interface {
-	Regions(string, string, string, bool) (*atlas.CloudProviders, error)
+	CloudProviderRegions(string, string, string, bool) (*atlas.CloudProviders, error)
 }
 
-// Regions encapsulates the logic to manage different cloud providers
-func (s *Store) Regions(projectID, provierName, tier string, crossCloudProvider bool) (*atlas.CloudProviders, error) {
+// CloudProviderRegions encapsulates the logic to manage different cloud providers
+func (s *Store) CloudProviderRegions(projectID, provierName, tier string, crossCloudProvider bool) (*atlas.CloudProviders, error) {
 	options := &atlas.CloudProviderRegionsOptions{
 		Provider:           provierName,
 		Tier:               tier,

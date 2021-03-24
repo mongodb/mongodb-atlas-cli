@@ -5,10 +5,9 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	reflect "reflect"
 )
 
 // MockCloudProviderRegionsLister is a mock of CloudProviderRegionsLister interface
@@ -34,17 +33,17 @@ func (m *MockCloudProviderRegionsLister) EXPECT() *MockCloudProviderRegionsListe
 	return m.recorder
 }
 
-// Regions mocks base method
-func (m *MockCloudProviderRegionsLister) Regions(arg0, arg1, arg2 string, arg3 bool) (*mongodbatlas.CloudProviders, error) {
+// CloudProviderRegions mocks base method
+func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1, arg2 string, arg3 bool) (*mongodbatlas.CloudProviders, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Regions", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Regions indicates an expected call of Regions
-func (mr *MockCloudProviderRegionsListerMockRecorder) Regions(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+// CloudProviderRegions indicates an expected call of CloudProviderRegions
+func (mr *MockCloudProviderRegionsListerMockRecorder) CloudProviderRegions(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Regions", reflect.TypeOf((*MockCloudProviderRegionsLister)(nil).Regions), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockCloudProviderRegionsLister)(nil).CloudProviderRegions), arg0, arg1, arg2, arg3)
 }

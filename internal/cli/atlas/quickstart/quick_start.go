@@ -287,7 +287,7 @@ func (opts *Opts) askClusterOptions() error {
 }
 
 func (opts *Opts) defaultRegions() []string {
-	cloudProviders, err := opts.store.Regions(opts.ConfigProjectID(), opts.Provider, tier, false)
+	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.Provider, tier, false)
 
 	if err != nil {
 		return DefaultRegions[strings.ToUpper(opts.Provider)]

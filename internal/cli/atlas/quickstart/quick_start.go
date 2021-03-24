@@ -114,8 +114,6 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	fmt.Print(clusterDetails)
-
 	if err := opts.askClusterOptions(); err != nil {
 		return err
 	}
@@ -126,12 +124,10 @@ func (opts *Opts) Run() error {
 
 	fmt.Println("We are deploying your cluster...")
 
-	fmt.Print(databaseUserDetails)
 	if err := opts.askDBUserOptions(); err != nil {
 		return err
 	}
 
-	fmt.Print(accessListDetails)
 	if err := opts.askAccessListOptions(); err != nil {
 		return err
 	}
@@ -148,7 +144,6 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Print(mongoShellDetails)
 	runMongoShell, err := opts.askMongoShellQuestion()
 	if err != nil {
 		return err
@@ -271,14 +266,21 @@ func (opts *Opts) askClusterOptions() error {
 		qs = append(qs, newClusterProviderQuestion())
 	}
 
+	if opts.Provider == "" || opts.ClusterName == "" || opts.Region == ""{
+		fmt.Print(clusterDetails)
+	}
+
 	if err := survey.Ask(qs, opts); err != nil {
 		return err
 	}
 
-	if regionQ := newRegionQuestions(opts.Region, opts.Provider); regionQ != nil {
-		// we call survey.Ask two times because the region question needs opts.Provider to be populated
-		return survey.Ask([]*survey.Question{regionQ}, opts)
+	if opts.Region == ""{
+		if regionQ := newRegionQuestions(opts.Provider); regionQ != nil {
+			// we call survey.Ask two times because the region question needs opts.Provider to be populated
+			return survey.Ask([]*survey.Question{regionQ}, opts)
+		}
 	}
+
 
 	return nil
 }
@@ -324,6 +326,7 @@ func (opts *Opts) askDBUserOptions() error {
 	}
 
 	if len(qs) > 0 {
+		fmt.Print(databaseUserDetails)
 		if err := survey.Ask(qs, opts); err != nil {
 			return err
 		}
@@ -344,6 +347,8 @@ func (opts *Opts) askAccessListOptions() error {
 	}
 	q := newAccessListQuestion(publicIP, message)
 
+
+	fmt.Print(accessListDetails)
 	if err := survey.Ask([]*survey.Question{q}, opts); err != nil {
 		return err
 	}
@@ -359,6 +364,8 @@ func (opts *Opts) askMongoShellQuestion() (bool, error) {
 	if opts.SkipMongosh {
 		return false, nil
 	}
+
+	fmt.Print(mongoShellDetails)
 
 	runMongoShell := false
 	prompt := newMongoShellQuestionAccessDeployment(opts.ClusterName)

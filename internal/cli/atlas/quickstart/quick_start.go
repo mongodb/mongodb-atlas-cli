@@ -86,13 +86,6 @@ const (
 	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/#std-label-mcli-configure"
 )
 
-// DefaultRegions represents the regions available for each cloud service provider
-var DefaultRegions = map[string][]string{
-	"AWS":   {"US_EAST_1", "US_WEST_2", "AP_SOUTH_1", "AP_EAST_2", "EU_WEST_1", "EU_CENTRAL_1", "ME_SOUTH_1", "AF_SOUTH_1"},
-	"GCP":   {"CENTRAL_US", "CANADA_CENTRAL", "WESTERN_EUROPE", "ASIA_SOUTH_EAST", "SOUTH_AFRICA_NORTH", "UAE_NORTH"},
-	"AZURE": {"US_EAST_2", "US_WEST", "EUROPE_NORTH"},
-}
-
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
@@ -275,13 +268,58 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	if opts.Region == "" {
-		if regionQ := newRegionQuestions(opts.Provider); regionQ != nil {
+		regions, err := opts.defaultRegions()
+		if err != nil {
+			return err
+		}
+		if regionQ := newRegionQuestions(regions); regionQ != nil {
 			// we call survey.Ask two times because the region question needs opts.Provider to be populated
 			return survey.Ask([]*survey.Question{regionQ}, opts)
 		}
 	}
 
 	return nil
+}
+
+func (opts *Opts) defaultRegions() ([]string, error) {
+	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.Provider, tier, false)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+		return nil, errors.New("no regions available")
+	}
+
+	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
+
+	defaultRegions := make([]string, 0, len(availableRegions))
+	popularRegionIndex := findPopularRegionIndex(availableRegions)
+
+	if popularRegionIndex != -1 {
+		// the most popular region must be the first in the list
+		popularRegion := availableRegions[popularRegionIndex]
+		defaultRegions = append(defaultRegions, popularRegion.Name)
+
+		// remove popular region from availableRegions
+		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
+	}
+
+	for _, v := range availableRegions {
+		defaultRegions = append(defaultRegions, v.Name)
+	}
+
+	return defaultRegions, nil
+}
+
+func findPopularRegionIndex(regions []*atlas.AvailableRegion) int {
+	for i, v := range regions {
+		if v.Default {
+			return i
+		}
+	}
+	return -1
 }
 
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the

@@ -63,6 +63,8 @@ type AtlasClusterGetterUpdater interface {
 }
 
 type AtlasClusterQuickStarter interface {
+	CloudProviderRegionsLister
+	ClusterLister
 	DatabaseUserCreator
 	DatabaseUserDescriber
 	ProjectIPAccessListCreator

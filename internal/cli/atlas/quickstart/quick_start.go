@@ -289,12 +289,12 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
-		return nil, fmt.Errorf("no regions available")
+		return nil, errors.New("no regions available")
 	}
 
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
-	var defaultRegions []string
+	defaultRegions := make([]string, 0, len(availableRegions))
 	popularRegionIndex := findPopularRegionIndex(availableRegions)
 
 	if popularRegionIndex != -1 {

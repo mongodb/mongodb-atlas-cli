@@ -266,7 +266,7 @@ func (opts *Opts) askClusterOptions() error {
 		qs = append(qs, newClusterProviderQuestion())
 	}
 
-	if opts.Provider == "" || opts.ClusterName == "" || opts.Region == ""{
+	if opts.Provider == "" || opts.ClusterName == "" || opts.Region == "" {
 		fmt.Print(clusterDetails)
 	}
 
@@ -274,13 +274,12 @@ func (opts *Opts) askClusterOptions() error {
 		return err
 	}
 
-	if opts.Region == ""{
+	if opts.Region == "" {
 		if regionQ := newRegionQuestions(opts.Provider); regionQ != nil {
 			// we call survey.Ask two times because the region question needs opts.Provider to be populated
 			return survey.Ask([]*survey.Question{regionQ}, opts)
 		}
 	}
-
 
 	return nil
 }
@@ -346,7 +345,6 @@ func (opts *Opts) askAccessListOptions() error {
 		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}
 	q := newAccessListQuestion(publicIP, message)
-
 
 	fmt.Print(accessListDetails)
 	if err := survey.Ask([]*survey.Question{q}, opts); err != nil {

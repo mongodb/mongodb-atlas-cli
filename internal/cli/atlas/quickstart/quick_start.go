@@ -298,28 +298,32 @@ func (opts *Opts) defaultRegions() []string {
 
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
-	defaultRegions := make([]string, len(availableRegions))
+	var defaultRegions []string
+	popularRegionIndex := findPopularRegionIndex(availableRegions)
 
-	// the most popular region must be the first in the list
-	popularRegion := ""
-	for _, v := range availableRegions {
-		if v.Default {
-			popularRegion = v.Name
-			break
-		}
+	if popularRegionIndex != -1 {
+		// the most popular region must be the first in the list
+		popularRegion := availableRegions[popularRegionIndex]
+		defaultRegions = append(defaultRegions, popularRegion.Name)
+
+		// remove popular region from availableRegions
+		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
 	}
 
-	defaultRegions[0] = popularRegion
-	i := 1
-
 	for _, v := range availableRegions {
-		if v.Name != popularRegion {
-			defaultRegions[i] = v.Name
-			i++
-		}
+		defaultRegions = append(defaultRegions, v.Name)
 	}
 
 	return defaultRegions
+}
+
+func findPopularRegionIndex(regions []*atlas.AvailableRegion) int {
+	for i, v := range regions {
+		if v.Default {
+			return i
+		}
+	}
+	return -1
 }
 
 func validateDefaultRegions(cloudProviders *atlas.CloudProviders) error {

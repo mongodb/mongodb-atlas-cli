@@ -406,6 +406,21 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).AtlasCluster), arg0, arg1)
 }
 
+// CloudProviderRegions mocks base method
+func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1, arg2 string, arg3 bool) (*mongodbatlas.CloudProviders, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CloudProviderRegions indicates an expected call of CloudProviderRegions
+func (mr *MockAtlasClusterQuickStarterMockRecorder) CloudProviderRegions(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CloudProviderRegions), arg0, arg1, arg2, arg3)
+}
+
 // CreateCluster mocks base method
 func (m *MockAtlasClusterQuickStarter) CreateCluster(arg0 *mongodbatlas.Cluster) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
@@ -464,4 +479,19 @@ func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*m
 func (mr *MockAtlasClusterQuickStarterMockRecorder) DatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).DatabaseUser), arg0, arg1, arg2)
+}
+
+// ProjectClusters mocks base method
+func (m *MockAtlasClusterQuickStarter) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectClusters indicates an expected call of ProjectClusters
+func (mr *MockAtlasClusterQuickStarterMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).ProjectClusters), arg0, arg1)
 }

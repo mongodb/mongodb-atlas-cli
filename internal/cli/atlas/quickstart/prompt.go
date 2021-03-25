@@ -16,7 +16,6 @@ package quickstart
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -38,13 +37,13 @@ func newAccessListQuestion(publicIP, message string) *survey.Question {
 	}
 }
 
-func newRegionQuestions(provider string) *survey.Question {
+func newRegionQuestions(defaultRegions []string) *survey.Question {
 	return &survey.Question{
 		Name: "region",
 		Prompt: &survey.Select{
 			Message: "Cloud Provider Region:",
 			Help:    usage.Region,
-			Options: DefaultRegions[strings.ToUpper(provider)],
+			Options: defaultRegions,
 		},
 	}
 }

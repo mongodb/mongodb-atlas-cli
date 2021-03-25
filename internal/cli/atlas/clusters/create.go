@@ -16,7 +16,6 @@ package clusters
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -68,7 +67,6 @@ func (opts *CreateOpts) initStore() error {
 var createTmpl = "Deploying cluster {{.Name}}.\n"
 
 func (opts *CreateOpts) Run() error {
-	fmt.Println("ANDREA: " + opts.mdbVersion)
 	cluster, err := opts.newCluster()
 	if err != nil {
 		return err

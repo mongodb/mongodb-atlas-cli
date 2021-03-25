@@ -378,7 +378,7 @@ func (opts *Opts) askAccessListOptions() error {
 	}
 
 	message := ""
-	publicIP := net.IPAddress()
+	publicIP := store.IPAddress()
 	if publicIP != "" {
 		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}

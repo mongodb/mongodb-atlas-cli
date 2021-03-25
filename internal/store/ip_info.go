@@ -35,3 +35,17 @@ func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 		return nil, fmt.Errorf("unsupported service: %s", s.service)
 	}
 }
+
+// IPAddress gets the client's public ip by calling the atlas private endpoint
+func IPAddress() string {
+	s, err := NewPrivate(config.Default())
+	if err != nil {
+		return ""
+	}
+
+	ip, err := s.IPInfo()
+	if err != nil {
+		return ""
+	}
+	return ip.CurrentIPv4Address
+}

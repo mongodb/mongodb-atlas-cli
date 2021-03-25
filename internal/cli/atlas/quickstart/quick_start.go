@@ -29,7 +29,6 @@ import (
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mongosh"
-	"github.com/mongodb/mongocli/internal/net"
 	"github.com/mongodb/mongocli/internal/randgen"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
@@ -378,7 +377,7 @@ func (opts *Opts) askAccessListOptions() error {
 	}
 
 	message := ""
-	publicIP := net.IPAddress()
+	publicIP := store.IPAddress()
 	if publicIP != "" {
 		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}

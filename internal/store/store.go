@@ -247,10 +247,35 @@ func NewPrivateUnauth(c Config) (*Store, error) {
 	s.baseURL = atlas.CloudURL
 
 	if configURL := c.OpsManagerURL(); configURL != "" {
-		s.baseURL = s.apiPath(configURL)
+		s.baseURL = configURL
 	}
 
 	client, err := defaultClient(c)
+	if err != nil {
+		return nil, err
+	}
+
+	if err2 := s.setAtlasClient(client); err2 != nil {
+		return nil, err2
+	}
+
+	return s, err
+}
+
+// NewPrivate gets the appropriate client for the atlas private api with authentication
+func NewPrivate(c Config) (*Store, error) {
+	s := new(Store)
+	s.service = c.Service()
+	if s.service != config.CloudService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+	s.baseURL = atlas.CloudURL
+
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		s.baseURL = configURL
+	}
+
+	client, err := authenticatedClient(c)
 	if err != nil {
 		return nil, err
 	}

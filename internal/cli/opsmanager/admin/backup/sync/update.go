@@ -56,7 +56,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <name>",
 		Args:  require.ExactArgs(1),
-		Short: update,
+		Short: "Update a backup sync configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

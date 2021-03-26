@@ -60,7 +60,7 @@ func DatabasesDescribeBuilder() *cobra.Command {
 	opts := &DatabasesDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostId> <name>",
-		Short: describeDatabases,
+		Short: "Describe database measurements for a given host database.",
 		Args:  require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

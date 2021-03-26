@@ -58,7 +58,7 @@ func DatabasesListBuilder() *cobra.Command {
 	opts := &DatabasesListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <ID>",
-		Short:   ListDatabases,
+		Short:   "List available databases for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "logs",
 		Aliases: []string{"log"},
-		Short:   LogCollection,
+		Short:   "Manage log collection jobs for your project.",
 	}
 
 	cmd.AddCommand(JobsBuilder())

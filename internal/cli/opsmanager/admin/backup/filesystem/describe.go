@@ -56,7 +56,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <name>",
 		Aliases: []string{"get"},
-		Short:   describe,
+		Short:   "Get a file system configuration.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

@@ -22,7 +22,7 @@ func DisksBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "disks",
 		Aliases: []string{"disk"},
-		Short:   Disks,
+		Short:   "List available disks or disks measurements for a given host.",
 	}
 
 	cmd.AddCommand(

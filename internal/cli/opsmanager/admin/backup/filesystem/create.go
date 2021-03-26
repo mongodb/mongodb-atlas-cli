@@ -67,7 +67,7 @@ func CreateBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: create,
+		Short: "Create a file system configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

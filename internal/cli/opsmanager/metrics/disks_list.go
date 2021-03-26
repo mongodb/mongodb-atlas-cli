@@ -57,7 +57,7 @@ func DisksListBuilder() *cobra.Command {
 	opts := &DisksListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <ID>",
-		Short:   ListDisks,
+		Short:   "List available disks for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

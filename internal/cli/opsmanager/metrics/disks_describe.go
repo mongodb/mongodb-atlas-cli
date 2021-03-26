@@ -60,7 +60,7 @@ func DisksDescribeBuilder() *cobra.Command {
 	opts := &DisksDescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostId> <name>",
-		Short: DescribeDisks,
+		Short: "Describe disks measurements for a given host partition.",
 		Args:  require.ExactArgs(argsN),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

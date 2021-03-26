@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "metrics",
 		Aliases: []string{"metric", "measurements", "measurement"},
-		Short:   Metrics,
+		Short:   "Get measurements on the state of the MongoDB process.",
 	}
 
 	cmd.AddCommand(

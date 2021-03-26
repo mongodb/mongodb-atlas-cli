@@ -64,7 +64,7 @@ func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: createMaintenanceWindow,
+		Short: "Create a maintenance window.",
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

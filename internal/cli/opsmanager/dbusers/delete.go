@@ -69,7 +69,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <username>",
 		Aliases: []string{"rm"},
-		Short:   DeleteDBUser,
+		Short:   "Delete a database user for your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

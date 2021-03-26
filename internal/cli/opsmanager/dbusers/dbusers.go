@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 		Use:     "dbusers",
 		Aliases: []string{"dbuser", "databaseUsers", "databaseUser"},
 		Short:   "Manage database users for your project.",
-		Long:    `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
+		Long: `The dbusers command retrieves, creates and modifies the MongoDB database users in your cluster.
 Each user has a set of roles that provide access to the project’s databases. 
 A user’s roles apply to all the clusters in the project.`,
 	}

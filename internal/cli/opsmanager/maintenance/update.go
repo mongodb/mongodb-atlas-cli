@@ -67,7 +67,7 @@ func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
-		Short: updateMaintenanceWindow,
+		Short: "Update a maintenance window.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

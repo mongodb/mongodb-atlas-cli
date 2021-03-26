@@ -58,7 +58,7 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list <clusterId>",
-		Short:   list,
+		Short:   "List snapshots for a project and cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

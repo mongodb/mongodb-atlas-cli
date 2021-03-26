@@ -95,7 +95,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: CreateDBUser,
+		Short: "Create a database user for your project.",
 		Example: `
   Create a user with readWriteAnyDatabase and clusterMonitor access
   $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,

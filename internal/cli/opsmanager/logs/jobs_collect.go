@@ -71,7 +71,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 	opts := &JobsCollectOpts{}
 	cmd := &cobra.Command{
 		Use:   "collect <resourceType> <resourceName>",
-		Short: StartLogCollectionJob,
+		Short: "Start a job to collect logs for your project.",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != argsN {
 				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))

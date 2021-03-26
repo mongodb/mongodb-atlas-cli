@@ -56,7 +56,7 @@ func ListBuilder() *cobra.Command {
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   list,
+		Short:   "List file system configurations.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

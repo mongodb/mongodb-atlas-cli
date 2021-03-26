@@ -98,7 +98,7 @@ func UpdateBuilder() *cobra.Command {
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update <clusterID>",
-		Short: update,
+		Short: "Update a backup configuration.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

@@ -54,7 +54,7 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Short:   listMaintenanceWindows,
+		Short:   "List maintenance windows.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

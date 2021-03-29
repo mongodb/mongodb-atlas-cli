@@ -81,8 +81,8 @@ const (
 	none              = "NONE"
 	passwordLength    = 12
 	mongoshURL        = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/"
-	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/#std-label-mcli-configure"
+	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
+	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
 )
 
 type Opts struct {

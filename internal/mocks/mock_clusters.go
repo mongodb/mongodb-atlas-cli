@@ -5,11 +5,10 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
+	reflect "reflect"
 )
 
 // MockClusterLister is a mock of ClusterLister interface
@@ -407,18 +406,18 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 inte
 }
 
 // CloudProviderRegions mocks base method
-func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1, arg2 string, arg3 bool) (*mongodbatlas.CloudProviders, error) {
+func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []*string) (*mongodbatlas.CloudProviders, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CloudProviderRegions indicates an expected call of CloudProviderRegions
-func (mr *MockAtlasClusterQuickStarterMockRecorder) CloudProviderRegions(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockAtlasClusterQuickStarterMockRecorder) CloudProviderRegions(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CloudProviderRegions), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CloudProviderRegions), arg0, arg1, arg2)
 }
 
 // CreateCluster mocks base method

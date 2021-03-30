@@ -29,7 +29,7 @@ type CloudProviderRegionsLister interface {
 }
 
 // CloudProviderRegions encapsulates the logic to manage different cloud providers
-func (s *Store) CloudProviderRegions(projectID, tier string,  providerName []*string,) (*atlas.CloudProviders, error) {
+func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*string) (*atlas.CloudProviders, error) {
 	options := &atlas.CloudProviderRegionsOptions{
 		Providers: providerName,
 		Tier:      tier,

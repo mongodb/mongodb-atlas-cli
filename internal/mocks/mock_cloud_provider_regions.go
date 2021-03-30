@@ -35,16 +35,16 @@ func (m *MockCloudProviderRegionsLister) EXPECT() *MockCloudProviderRegionsListe
 }
 
 // CloudProviderRegions mocks base method
-func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1, arg2 string, arg3 bool) (*mongodbatlas.CloudProviders, error) {
+func (m *MockCloudProviderRegionsLister) CloudProviderRegions(arg0, arg1 string, arg2 []*string) (*mongodbatlas.CloudProviders, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.CloudProviders)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CloudProviderRegions indicates an expected call of CloudProviderRegions
-func (mr *MockCloudProviderRegionsListerMockRecorder) CloudProviderRegions(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockCloudProviderRegionsListerMockRecorder) CloudProviderRegions(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockCloudProviderRegionsLister)(nil).CloudProviderRegions), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderRegions", reflect.TypeOf((*MockCloudProviderRegionsLister)(nil).CloudProviderRegions), arg0, arg1, arg2)
 }

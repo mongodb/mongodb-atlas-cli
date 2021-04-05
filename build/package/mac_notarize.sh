@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2020 MongoDB Inc
+# Copyright 2021 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,18 +16,10 @@
 
 set -Eeou pipefail
 
-VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
-FILENAME=mongocli_"${VERSION}"_linux_x86_64
-if [[ "${unstable-}" == "-unstable" ]]; then
-    FILENAME="mongocli_next_linux_x86_64"
-fi
+gon -log-level=error gon_x86_64.json
 
-cd dist
+unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
 
-mkdir yum apt
+gon -log-level=error gon_arm64.json
 
-# we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later
-cp "$FILENAME.deb" apt/
-mv "apt/$FILENAME.deb" "apt/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-cp "$FILENAME.rpm" yum/
-mv "yum/$FILENAME.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip

@@ -14,15 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -o errexit
 
-OUTPUT_PATH="./dist/mongocli_macos_signed_x86_64.zip"
+X86_64_OUTPUT_PATH="./dist/mongocli_macos_signed_x86_64.zip"
 
 # gon settings
-cat <<EOF_GON_JSON > gon.json
+cat <<EOF_GON_JSON > gon_x86_64.json
 {
-    "source" : ["./dist/macos_darwin_amd64/mongocli"],
+    "source" : ["./dist/macos_darwin_amd64/bin/mongocli"],
     "bundle_id" : "com.mongodb.mongocli",
     "apple_id": {
       "username": "${ac_username:?}",
@@ -32,7 +31,27 @@ cat <<EOF_GON_JSON > gon.json
       "application_identity" : "Developer ID Application: MongoDB, Inc. (4XWMY46275)"
     },
     "zip" :{
-      "output_path": "$OUTPUT_PATH"
+      "output_path": "$X86_64_OUTPUT_PATH"
+    }
+}
+EOF_GON_JSON
+
+ARM64_OUTPUT_PATH="./dist/mongocli_macos_signed_arm64.zip"
+
+# gon settings
+cat <<EOF_GON_JSON > gon_arm64.json
+{
+    "source" : ["./dist/macos_darwin_arm64/bin/mongocli"],
+    "bundle_id" : "com.mongodb.mongocli",
+    "apple_id": {
+      "username": "${ac_username:?}",
+      "password": "${ac_password:?}"
+    },
+    "sign" :{
+      "application_identity" : "Developer ID Application: MongoDB, Inc. (4XWMY46275)"
+    },
+    "zip" :{
+      "output_path": "$ARM64_OUTPUT_PATH"
     }
 }
 EOF_GON_JSON

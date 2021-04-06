@@ -26,7 +26,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestAddOpts_Run(t *testing.T) {
+func TestLoadSampleDataOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockSampleDataAdder(ctrl)
 	defer ctrl.Finish()

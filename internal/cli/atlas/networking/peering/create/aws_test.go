@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -100,4 +102,13 @@ func TestNormalizeAtlasRegion(t *testing.T) {
 			t.Errorf("expected: %s, got: %s", tc.want, got)
 		}
 	}
+}
+
+func TestAwsBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		AwsBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.AccountID, flag.RouteTableCidrBlock, flag.AtlasCIDRBlock, flag.Region, flag.VpcID},
+	)
 }

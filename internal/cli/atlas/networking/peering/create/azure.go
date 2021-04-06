@@ -137,7 +137,7 @@ func AzureBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.subscriptionID, flag.SubscriptionID, "", usage.SubscriptionID)
 	cmd.Flags().StringVar(&opts.resourceGroup, flag.ResourceGroup, "", usage.ResourceGroup)
 	cmd.Flags().StringVar(&opts.vNetName, flag.VNet, "", usage.VNet)
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ContainerRegion)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

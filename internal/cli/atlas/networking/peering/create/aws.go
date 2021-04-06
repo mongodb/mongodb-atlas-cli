@@ -134,7 +134,7 @@ func AwsBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.accountID, flag.AccountID, "", usage.AccountID)
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ContainerRegion)
 	cmd.Flags().StringVar(&opts.routeTableCidrBlock, flag.RouteTableCidrBlock, "", usage.RouteTableCidrBlock)
 	cmd.Flags().StringVar(&opts.vpcID, flag.VpcID, "", usage.VpcID)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)

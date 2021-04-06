@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -79,4 +81,13 @@ func TestAzureOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestAzureBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		AzureBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.ResourceGroup, flag.VNet, flag.AtlasCIDRBlock, flag.Region, flag.DirectoryID, flag.SubscriptionID},
+	)
 }

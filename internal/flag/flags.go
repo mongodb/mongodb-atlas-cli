@@ -42,6 +42,7 @@ const (
 	AuthorizationEnabled            = "authorizationEnabled"            // AuthorizationEnabled flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider
 	Region                          = "region"                          // Region flag
+	Regions                         = "regions"                         // Regions flag
 	RegionShort                     = "r"                               // RegionShort flag
 	Members                         = "members"                         // Members flag
 	Shards                          = "shards"                          // Shards flag

@@ -31,6 +31,7 @@ type GCPOpts struct {
 	atlasCIDRBlock string
 	gcpProjectID   string
 	network        string
+	regions        []string
 	store          store.GCPPeeringConnectionCreator
 }
 
@@ -74,6 +75,7 @@ func (opts *GCPOpts) containerExists() (*atlas.Container, error) {
 func (opts *GCPOpts) newContainer() *atlas.Container {
 	c := &atlas.Container{
 		AtlasCIDRBlock: opts.atlasCIDRBlock,
+		Regions:        opts.regions,
 		ProviderName:   "GCP",
 	}
 	return c
@@ -89,10 +91,12 @@ func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {
 	return a
 }
 
-// mongocli atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName][--projectId projectId]
+// mongocli atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName]
+// [--regions region][--projectId projectId]
 // --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
 // --gcpProjectId gcpProjectId: GCP project ID of the owner of the network peer.
 // --network networkName: Name of the network peer to which Atlas connects.
+// --regions region: "List of Atlas regions where the container resides."
 // --projectId projectId: ID of the project
 // Create a network peering with GCP, this command will internally check if a container already exists for the provider and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it, there can only be one container per GCP provider
@@ -117,6 +121,7 @@ func GCPBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.gcpProjectID, flag.GCPProjectID, "", usage.GCPProjectID)
 	cmd.Flags().StringVar(&opts.network, flag.Network, "", usage.Network)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
+	cmd.Flags().StringSliceVar(&opts.regions, flag.Regions, []string{}, usage.ContainerRegions)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

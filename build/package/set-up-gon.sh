@@ -16,6 +16,8 @@
 
 set -o errexit
 
+# Generate gon notarization config, this should be per Apple binary we ship (x86_64 and ARM64)
+
 X86_64_OUTPUT_PATH="./dist/mongocli_macos_signed_x86_64.zip"
 
 # gon settings

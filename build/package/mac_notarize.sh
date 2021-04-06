@@ -16,6 +16,10 @@
 
 set -Eeou pipefail
 
+# Notarize generated binaries with Apple and replace the original binary with the notarized one
+# This depends on binaries being generated in a goreleaser manner and gon being set up.
+# goreleaser should already take care of calling this script as a hook.
+
 gon -log-level=error gon_x86_64.json
 
 unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip

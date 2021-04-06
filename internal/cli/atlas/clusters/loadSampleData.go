@@ -49,7 +49,7 @@ func (opts *LoadSampleDataOpts) Run() error {
 }
 
 // mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json
-func AddBuilder() *cobra.Command {
+func LoadSampleDataBuilder() *cobra.Command {
 	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{
 		Use:   "loadSampleData <clusterName>",
@@ -70,8 +70,6 @@ func AddBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

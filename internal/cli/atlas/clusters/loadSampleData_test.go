@@ -49,10 +49,10 @@ func TestAddOpts_Run(t *testing.T) {
 	}
 }
 
-func TestAddBuilder(t *testing.T) {
+func TestLoadSampleDataBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		AddBuilder(),
+		LoadSampleDataBuilder(),
 		0,
 		[]string{flag.Output, flag.ProjectID},
 	)

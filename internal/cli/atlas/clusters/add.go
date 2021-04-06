@@ -48,11 +48,11 @@ func (opts *AddOpts) Run() error {
 	return opts.Print(r)
 }
 
-// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion]
+// mongocli atlas cluster add <clusterName> --projectId projectId -o json
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{
-		Use:   "add [clusterName]",
+		Use:   "add <clusterName>",
 		Short: "Add sample data into a MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -24,22 +24,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type AddOpts struct {
+type LoadSampleDataOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	name  string
 	store store.SampleDataAdder
 }
 
-func (opts *AddOpts) initStore() error {
+func (opts *LoadSampleDataOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(config.Default())
 	return err
 }
 
-var addTmpl = "Loading sample dataset into {{.ClusterName}}.\n"
+var addTmpl = "Job {{.ID}} created.\n"
 
-func (opts *AddOpts) Run() error {
+func (opts *LoadSampleDataOpts) Run() error {
 	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
@@ -48,12 +48,12 @@ func (opts *AddOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster add <clusterName> --projectId projectId -o json
+// mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json
 func AddBuilder() *cobra.Command {
-	opts := &AddOpts{}
+	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{
-		Use:   "add <clusterName>",
-		Short: "Add sample data into a MongoDB cluster in Atlas.",
+		Use:   "loadSampleData <clusterName>",
+		Short: "Load sample data into a MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

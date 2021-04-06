@@ -33,7 +33,7 @@ func TestAddOpts_Run(t *testing.T) {
 
 	expected := &mongodbatlas.SampleDatasetJob{}
 
-	opts := &AddOpts{
+	opts := &LoadSampleDataOpts{
 		name:  "test",
 		store: mockStore,
 	}

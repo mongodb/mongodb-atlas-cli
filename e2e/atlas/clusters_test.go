@@ -76,11 +76,11 @@ func TestClustersFlags(t *testing.T) {
 		a.Contains(string(resp), "Cluster available")
 	})
 
-	t.Run("Add", func(t *testing.T) {
+	t.Run("LoadSampleData", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
-			"add",
+			"loadSampleData",
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()

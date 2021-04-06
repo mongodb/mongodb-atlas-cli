@@ -121,7 +121,7 @@ func GCPBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.gcpProjectID, flag.GCPProjectID, "", usage.GCPProjectID)
 	cmd.Flags().StringVar(&opts.network, flag.Network, "", usage.Network)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
-	cmd.Flags().StringSliceVar(&opts.regions, flag.Regions, []string{}, usage.ContainerRegions)
+	cmd.Flags().StringSliceVar(&opts.regions, flag.Region, []string{}, usage.ContainerRegions)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

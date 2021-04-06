@@ -88,6 +88,6 @@ func TestGCPBuilder(t *testing.T) {
 		t,
 		GCPBuilder(),
 		0,
-		[]string{flag.Output, flag.ProjectID, flag.GCPProjectID, flag.Network, flag.AtlasCIDRBlock, flag.Regions},
+		[]string{flag.Output, flag.ProjectID, flag.GCPProjectID, flag.Network, flag.AtlasCIDRBlock, flag.Region},
 	)
 }

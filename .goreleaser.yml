@@ -4,18 +4,22 @@ before:
 
 builds:
   - <<: &build_defaults
+      env:
+        - CGO_ENABLED=0
+      binary: bin/mongocli
       main: ./cmd/mongocli/mongocli.go
       ldflags:
         - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
     id: macos
     goos: [darwin]
-    goarch: [amd64]
+    goarch: [amd64,arm64]
     hooks:
-      post: gon -log-level=error gon.json
+      # This will notirize Apple binaries and replace goreleaser bins with the notarized ones
+      post: ./build/package/mac_notarize.sh
   - <<: *build_defaults
     id: linux
     goos: [linux]
-    goarch: [amd64]
+    goarch: [amd64,arm64]
   - <<: *build_defaults
     id: windows
     goos: [windows]
@@ -55,7 +59,7 @@ brews:
   homepage: https://github.com/mongodb/mongocli
   license: Apache-2.0
   install: |
-    bin.install "mongocli"
+    bin.install "bin/mongocli"
     (bash_completion/"mongocli.sh").write `#{bin}/mongocli completion bash`
     (zsh_completion/"_mongocli").write `#{bin}/mongocli completion zsh`
     (fish_completion/"mongocli.fish").write `#{bin}/mongocli completion fish`
@@ -88,5 +92,3 @@ release:
   draft: true # we only publish after the Windows MSI gets uploaded
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
-  extra_files:
-    - glob: ./dist/mongocli_macos_signed_x86_64.zip

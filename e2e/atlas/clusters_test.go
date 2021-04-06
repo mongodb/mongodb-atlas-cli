@@ -76,6 +76,25 @@ func TestClustersFlags(t *testing.T) {
 		a.Contains(string(resp), "Cluster available")
 	})
 
+	t.Run("LoadSampleData", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"loadSampleData",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var job *mongodbatlas.SampleDatasetJob
+		err = json.Unmarshal(resp, &job)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Equal(clusterName, job.ClusterName)
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

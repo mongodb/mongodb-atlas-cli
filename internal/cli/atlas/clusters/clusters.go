@@ -41,6 +41,7 @@ func Builder() *cobra.Command {
 		PauseBuilder(),
 		StartBuilder(),
 		DeleteBuilder(),
+		LoadSampleDataBuilder(),
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),

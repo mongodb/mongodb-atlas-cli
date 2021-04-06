@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -57,6 +57,10 @@ type ClusterStarter interface {
 	StartCluster(string, string) (*atlas.Cluster, error)
 }
 
+type SampleDataAdder interface {
+	AddSampleData(string, string) (*atlas.SampleDatasetJob, error)
+}
+
 type AtlasClusterGetterUpdater interface {
 	AtlasClusterDescriber
 	ClusterUpdater
@@ -70,6 +74,17 @@ type AtlasClusterQuickStarter interface {
 	ProjectIPAccessListCreator
 	AtlasClusterDescriber
 	ClusterCreator
+}
+
+// AddSampleData encapsulate the logic to manage different cloud providers
+func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(context.Background(), groupID, clusterName)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers

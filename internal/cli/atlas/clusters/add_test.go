@@ -19,14 +19,41 @@ package clusters
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestAddOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSampleDataAdder(ctrl)
+	defer ctrl.Finish()
+
+	expected := &mongodbatlas.SampleDatasetJob{}
+
+	opts := &AddOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		AddSampleData(opts.ProjectID, opts.name).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestAddBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		13,
-		[]string{},
+		AddBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID},
 	)
 }

@@ -37,7 +37,7 @@ func (opts *LoadSampleDataOpts) initStore() error {
 	return err
 }
 
-var addTmpl = "Job {{.ID}} created.\n"
+var addTmpl = "Loading sample dataset into {{.ClusterName}}.\n"
 
 func (opts *LoadSampleDataOpts) Run() error {
 	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)

@@ -23,6 +23,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/search"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -581,7 +583,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
 	defaultRegions := make([]string, 0, len(availableRegions))
-	popularRegionIndex := findPopularRegionIndex(availableRegions)
+	popularRegionIndex := search.FindPopularRegionIndex(availableRegions)
 
 	if popularRegionIndex != -1 {
 		// the most popular region must be the first in the list
@@ -610,15 +612,6 @@ func (opts *Opts) setupCloseHandler() {
 		fmt.Printf(quickstartTemplateCloseHandler, opts.DBUsername, opts.DBUserPassword)
 		os.Exit(0)
 	}()
-}
-
-func findPopularRegionIndex(regions []*atlas.AvailableRegion) int {
-	for i, v := range regions {
-		if v.Default {
-			return i
-		}
-	}
-	return -1
 }
 
 func (opts *Opts) providerAndRegionToConstant() {

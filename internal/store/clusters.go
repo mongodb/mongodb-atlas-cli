@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -61,12 +61,18 @@ type SampleDataAdder interface {
 	AddSampleData(string, string) (*atlas.SampleDatasetJob, error)
 }
 
+type SampleDataStatusDescriber interface {
+	SampleDataStatus(string, string) (*atlas.SampleDatasetJob, error)
+}
+
 type AtlasClusterGetterUpdater interface {
 	AtlasClusterDescriber
 	ClusterUpdater
 }
 
 type AtlasClusterQuickStarter interface {
+	SampleDataAdder
+	SampleDataStatusDescriber
 	CloudProviderRegionsLister
 	ClusterLister
 	DatabaseUserCreator
@@ -81,6 +87,17 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(context.Background(), groupID, clusterName)
+		return result, err
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+}
+
+// SampleData encapsulate the logic to manage different cloud providers
+func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(context.Background(), groupID, id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

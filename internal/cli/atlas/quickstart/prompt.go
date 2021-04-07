@@ -26,6 +26,7 @@ import (
 const (
 	mongoShellHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
 	mongoShellNotFoundHelp = "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it."
+	SampleDataHelp         = "Add the Airbnb Sample Dataset into the Atlas Cluster."
 )
 
 func newAccessListQuestion(publicIP, message string) *survey.Question {
@@ -81,6 +82,13 @@ func newClusterNameQuestion(clusterName, message string) *survey.Question {
 			Help:    usage.ClusterName,
 			Default: clusterName,
 		},
+	}
+}
+
+func newSampleDataQuestion(clusterName string) *survey.Confirm {
+	return &survey.Confirm{
+		Message: fmt.Sprintf("Do you want to load sample data into %s?", clusterName),
+		Help:    SampleDataHelp,
 	}
 }
 

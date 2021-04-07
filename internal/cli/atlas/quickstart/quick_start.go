@@ -67,6 +67,10 @@ const creatingClusterDetails = `
 Creating your cluster... [It's safe to 'Ctrl + C']
 `
 
+const loadingSampleData = `
+Loading sample data into your cluster... [It's safe to 'Ctrl + C']
+`
+
 const (
 	replicaSet        = "REPLICASET"
 	mdbVersion        = "4.4"
@@ -87,16 +91,17 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	ClusterName    string
-	Provider       string
-	Region         string
-	IPAddresses    []string
-	IPAddress      string
-	DBUsername     string
-	DBUserPassword string
-	SampleData     bool
-	SkipMongosh    bool
-	store          store.AtlasClusterQuickStarter
+	ClusterName     string
+	Provider        string
+	Region          string
+	IPAddresses     []string
+	IPAddress       string
+	DBUsername      string
+	DBUserPassword  string
+	SampleDataJobID string
+	SkipSampleData  bool
+	SkipMongosh     bool
+	store           store.AtlasClusterQuickStarter
 }
 
 func (opts *Opts) initStore() error {
@@ -106,44 +111,35 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
-
-	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+	if err := opts.createCluster(); err != nil {
 		return err
 	}
 
 	fmt.Println("We are deploying your cluster...")
 
-	if err := opts.askDBUserOptions(); err != nil {
+	if err := opts.createDatabaseUser(); err != nil {
 		return err
 	}
 
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
-
-	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
+	if err := opts.createAccessList(); err != nil {
 		return err
 	}
 
 	opts.setupCloseHandler()
 
-	// Add IP to project’s IP access list
-	entries := opts.newProjectIPAccessList()
-	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
-		return err
-	}
-
-	runMongoShell, err := opts.askMongoShellQuestion()
-	if err != nil {
-		return err
+	runMongoShell, er := opts.askMongoShellQuestion()
+	if er != nil {
+		return er
 	}
 
 	fmt.Print(creatingClusterDetails)
-	if er := opts.Watch(opts.watcher); er != nil {
+	// Watch cluster creation
+	if er := opts.Watch(opts.clusterCreationWatcher); er != nil {
 		return er
+	}
+
+	if err := opts.loadSampleData(); err != nil {
+		return nil
 	}
 
 	// Get cluster's connection string
@@ -163,7 +159,73 @@ func (opts *Opts) Run() error {
 	return nil
 }
 
-func (opts *Opts) watcher() (bool, error) {
+func (opts *Opts) createAccessList() error {
+	if err := opts.askAccessListOptions(); err != nil {
+		return err
+	}
+	// Add IP to project’s IP access list
+	entries := opts.newProjectIPAccessList()
+	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *Opts) createDatabaseUser() error {
+	if err := opts.askDBUserOptions(); err != nil {
+		return err
+	}
+
+	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *Opts) createCluster() error {
+	if err := opts.askClusterOptions(); err != nil {
+		return err
+	}
+
+	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *Opts) loadSampleData() error {
+	if opts.SkipSampleData {
+		return nil
+	}
+
+	fmt.Print(loadingSampleData)
+	sampleDataJob, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.ClusterName)
+
+	if err != nil {
+		return nil
+	}
+
+	opts.SampleDataJobID = sampleDataJob.ID
+
+	if er := opts.Watch(opts.sampleDataWatcher); er != nil {
+		return er
+	}
+
+	return nil
+}
+
+func (opts *Opts) sampleDataWatcher() (bool, error) {
+	result, err := opts.store.SampleDataStatus(opts.ConfigProjectID(), opts.SampleDataJobID)
+	if err != nil {
+		return false, err
+	}
+	return result.State == "COMPLETED", nil
+}
+
+func (opts *Opts) clusterCreationWatcher() (bool, error) {
 	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return false, err
@@ -261,7 +323,28 @@ func (opts *Opts) askClusterOptions() error {
 	}
 
 	// We need the provider to ask for the region
-	return opts.askClusterRegion()
+	if err := opts.askClusterRegion(); err != nil {
+		return err
+	}
+
+	// We need the cluster name to ask for adding sample data
+	return opts.askSampleDataQuestion()
+}
+
+func (opts *Opts) askSampleDataQuestion() error {
+	if opts.SkipSampleData {
+		return nil
+	}
+
+	q := newSampleDataQuestion(opts.ClusterName)
+	addSampleData := false
+	if err := survey.AskOne(q, &addSampleData); err != nil {
+		return err
+	}
+
+	opts.SkipSampleData = !addSampleData
+
+	return nil
 }
 
 func (opts *Opts) askClusterRegion() error {
@@ -577,7 +660,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
-	cmd.Flags().BoolVar(&opts.SampleData, flag.SampleData, false, usage.SampleData)
+	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

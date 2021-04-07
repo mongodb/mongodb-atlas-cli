@@ -67,7 +67,7 @@ const (
 	UsernameShort                   = "u"                               // UsernameShort flag
 	Password                        = "password"                        // Password flag
 	SkipMongosh                     = "skipMongosh"                     // SkipMongosh flag
-	SampleData                      = "sampleData"                      // SampleData flag
+	SkipSampleData                  = "skipSampleData"                  // SkipSampleData flag
 	Country                         = "country"                         // Country flag
 	X509Type                        = "x509Type"                        // X509Type flag
 	AWSIAMType                      = "awsIAMType"                      // AWSIAMType flag

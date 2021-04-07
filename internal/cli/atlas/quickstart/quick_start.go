@@ -23,14 +23,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/search"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mongosh"
+	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"

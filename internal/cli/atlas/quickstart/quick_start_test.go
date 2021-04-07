@@ -48,7 +48,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		DBUserPassword: "test",
 		Provider:       "AWS",
 		SkipMongosh:    true,
-		SkipSampleData:     true,
+		SkipSampleData: true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()

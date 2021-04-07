@@ -17,16 +17,15 @@ package quickstart
 import (
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/randgen"
 	"github.com/mongodb/mongocli/internal/store"
-
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/usage"
 )
 
 const (
-	mongoshHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
-	mongoshNotFoundHelp = "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it."
+	mongoShellHelp         = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments."
+	mongoShellNotFoundHelp = "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it."
 )
 
 func newAccessListQuestion(publicIP, message string) *survey.Question {
@@ -99,14 +98,14 @@ func newClusterProviderQuestion() *survey.Question {
 func newMongoShellQuestionAccessDeployment(clusterName string) *survey.Confirm {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
-		Help:    mongoshHelp,
+		Help:    mongoShellHelp,
 	}
 }
 
 func newMongoShellPathQuestion() *survey.Confirm {
 	return &survey.Confirm{
 		Message: "Do you want to provide the path to your MongoDB shell binary?",
-		Help:    mongoshNotFoundHelp,
+		Help:    mongoShellNotFoundHelp,
 	}
 }
 
@@ -122,7 +121,7 @@ func newMongoShellPathInput(defaultValue string, validation func(val interface{}
 		Name:     "mongoShellPath",
 		Prompt: &survey.Input{
 			Message: "Default MongoDB Shell Path:",
-			Help:    mongoshHelp,
+			Help:    mongoShellHelp,
 			Default: defaultValue,
 		},
 	}

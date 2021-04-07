@@ -403,7 +403,6 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 }
 
 func askOpenMongoShellDownloadPage() (bool, error) {
-
 	if openURL, err := askOpenBrowserQuestion(); !openURL || err != nil {
 		return openURL, err
 	}

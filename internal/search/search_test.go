@@ -124,7 +124,7 @@ func TestAtlasClusterExists(t *testing.T) {
 	}
 }
 
-func TestFindPopularRegionIndex(t *testing.T) {
+func TestDefaultRegion(t *testing.T) {
 	tests := []struct {
 		input []*atlas.AvailableRegion
 		want  int
@@ -188,9 +188,9 @@ func TestFindPopularRegionIndex(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		out := FindPopularRegionIndex(test.input)
+		out := DefaultRegion(test.input)
 		if out != test.want {
-			t.Errorf("FindPopularRegionIndex() got = %v, want %v", out, test.want)
+			t.Errorf("DefaultRegion() got = %v, want %v", out, test.want)
 		}
 	}
 }

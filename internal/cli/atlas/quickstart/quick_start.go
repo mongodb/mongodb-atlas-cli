@@ -582,7 +582,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
 
 	defaultRegions := make([]string, 0, len(availableRegions))
-	popularRegionIndex := search.FindPopularRegionIndex(availableRegions)
+	popularRegionIndex := search.DefaultRegion(availableRegions)
 
 	if popularRegionIndex != -1 {
 		// the most popular region must be the first in the list

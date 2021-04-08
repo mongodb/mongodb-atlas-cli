@@ -166,55 +166,12 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `config rename`                               |           |           |           |           |       |       |
 | `config set`                                  |           |           |           |           |       |       |
 | `event list`                                  | Y         | N         |Y          | Y         | Y     | Y     |
-
-
-
-
-
 | `iam globalAccessList create`                 |           | N         |           |           | N     |       |
 | `iam globalAccessList delete`                 |           | N         |           |           | N     |       |
 | `iam globalAccessList describe`               |           | N         |           |           | N     |       |
 | `iam globalAccessList list`                   |           | N         |           |           | N     |       |
-
 | `iam globalApiKey create`                     |           | N         |           |           | N     |       |
 | `iam globalApiKey delete`                     |           | N         |           |           | N     |       |
 | `iam globalApiKey describe`                   |           | N         |           |           | N     |       |
 | `iam globalApiKey list`                       |           | N         |           |           | N     |       |
 | `iam globalApiKey update`                     |           | N         |           |           | N     |       |
-
-
-
-
-
-| `cluster search index update`                 | N         |           |           | Y         |       |       |
-
-
-
-
-
-
-
-
-
-| `cluster search index list`                   | N         |           |           | Y         |       |       |
-| `cluster search index update`                 | N         |           |           | Y         |       |       |
-
-
-
-| `maintenanceWindow defer`                     | N         |           |           | Y         |       |       |
-| `maintenanceWindow describe`                  | Y         |           |           | Y         |       |       |
-| `maintenanceWindow update`                    | Y         |           |           | Y         |       |       |
-| `metric database describe`                    | Y         |           |           | Y         |       |       |
-| `metric database list`                        | N         |           |           | Y         |       |       |
-| `metric disk describe`                        | Y         |           |           | Y         |       |       |
-| `metric disk list`                            | N         |           |           | Y         |       |       |
-| `metric processes`                            | Y         |           |           | Y         |       |       |
-
-
-| `maintenanceWindow update`                    | Y         |           |           | Y         |       |       |
-
-| `integration delete`                          | Y         |           |           | Y         |       |       |
-| `integration delete`                          | Y         |           |           | Y         |       |       |
-| `integration delete`                          | Y         |           |           | Y         |       |       |
-| `integration delete`                          | Y         |           |           | Y         |       |       |
-| `integration delete`                          | Y         |           |           | Y         |       |       |

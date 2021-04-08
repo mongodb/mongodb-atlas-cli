@@ -248,6 +248,9 @@ const (
 	Network                         = "Unique identifier of the Network Peering connection in the Atlas project."
 	APIRegion                       = "Indicates which API URL to use, either US or EU. The integration service will use US by default."
 	SkipMongosh                     = "Don't access your deployment with MongoDB Shell."
+	SkipSampleData                  = "Don't load sample data into your Atlas Cluster."
+	ContainerRegion                 = "Atlas region where the container resides."
+	ContainerRegions                = "List of Atlas regions where the container resides."
 	FormatOut                       = `Output format.
 Valid values: json|go-template|go-template-file`
 	TargetClusterID = `Unique identifier of the target cluster.

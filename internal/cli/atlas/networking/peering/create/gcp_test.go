@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -79,4 +81,13 @@ func TestGCPOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestGCPBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		GCPBuilder(),
+		0,
+		[]string{flag.Output, flag.ProjectID, flag.GCPProjectID, flag.Network, flag.AtlasCIDRBlock, flag.Region},
+	)
 }

@@ -123,3 +123,74 @@ func TestAtlasClusterExists(t *testing.T) {
 		}
 	}
 }
+
+func TestDefaultRegion(t *testing.T) {
+	tests := []struct {
+		input []*atlas.AvailableRegion
+		want  int
+	}{
+		{
+			input: []*atlas.AvailableRegion{},
+			want:  -1,
+		},
+		{
+			input: []*atlas.AvailableRegion{
+				{
+					Name:    "test",
+					Default: false,
+				},
+			},
+			want: -1,
+		},
+		{
+			input: []*atlas.AvailableRegion{
+				{
+					Name:    "test",
+					Default: true,
+				},
+			},
+			want: 0,
+		},
+		{
+			input: []*atlas.AvailableRegion{
+				{
+					Name:    "test",
+					Default: false,
+				},
+				{
+					Name:    "test2",
+					Default: true,
+				},
+				{
+					Name:    "test1",
+					Default: false,
+				},
+			},
+			want: 1,
+		},
+		{
+			input: []*atlas.AvailableRegion{
+				{
+					Name:    "test",
+					Default: false,
+				},
+				{
+					Name:    "test2",
+					Default: false,
+				},
+				{
+					Name:    "test1",
+					Default: false,
+				},
+			},
+			want: -1,
+		},
+	}
+
+	for _, test := range tests {
+		out := DefaultRegion(test.input)
+		if out != test.want {
+			t.Errorf("DefaultRegion() got = %v, want %v", out, test.want)
+		}
+	}
+}

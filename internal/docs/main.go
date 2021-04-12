@@ -25,8 +25,7 @@ func main() {
 	var profile string
 	mongocli := root.Builder(&profile, []string{})
 
-	err := doc.GenReSTTree(mongocli, "./docs")
-	if err != nil {
+	if err := doc.GenReSTTree(mongocli, "./docs"); err != nil {
 		log.Fatal(err)
 	}
 }

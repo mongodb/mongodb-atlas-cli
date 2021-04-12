@@ -48,19 +48,22 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func newPlatform(version, arch, system, distro, format string) *Platform {
+func newPlatform(version, arch, system, distro string, formats []string) *Platform {
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
-	p.PackageFormat = format
+
+	links := make([]Link, len(formats))
+	for i, f := range formats {
+		links[i] = Link{
+			DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongocli_%s_%s_%s.%s", version, system, arch, f),
+			Name:         f,
+		}
+	}
+
 	p.Packages = Package{
 		Title: "MongoDB CLI",
-		Links: []Link{
-			{
-				DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongocli_%s_%s_%s.%s", version, system, arch, format),
-				Name:         format,
-			},
-		},
+		Links: links,
 	}
 	return p
 }
@@ -93,13 +96,12 @@ func generateFile(name, version string) error {
 		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
 		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
 		Platform: []Platform{
-			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04 + 20.04", "deb"),
-			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", "rpm"),
-			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", "zip"),
-			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", "msi"),
-			*newPlatform(version, "x86_64", "macos", "macOS", "zip"),
-			*newPlatform(version, "arm64", "macos", "macOS", "zip"),
-			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", "tar.gz"),
+			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
+			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04 + 20.04", []string{"deb"}),
+			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
+			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
+			*newPlatform(version, "x86_64", "macos", "macOS", []string{"zip"}),
+			*newPlatform(version, "arm64", "macos", "macOS", []string{"zip"}),
 		},
 	}
 	jsonEncoder := json.NewEncoder(feedFile)

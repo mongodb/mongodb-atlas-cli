@@ -1036,7 +1036,6 @@ tasks:
             - src/github.com/mongodb/mongocli/dist/*.rpm
             - src/github.com/mongodb/mongocli/dist/*.tgz
             - src/github.com/mongodb/mongocli/dist/*.json
-            - src/github.com/mongodb/mongocli/dist/*.msi
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read

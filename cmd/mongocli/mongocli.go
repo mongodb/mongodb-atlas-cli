@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli/root"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -42,10 +43,11 @@ func initConfig() {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
-	availableProfiles := config.List()
 	if profile != "" {
 		config.SetName(profile)
-	} else if len(availableProfiles) == 1 {
+	} else if profile = config.GetString(flag.Profile); profile != "" {
+		config.SetName(profile)
+	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
 	}
 }

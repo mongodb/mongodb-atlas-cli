@@ -17,6 +17,7 @@
 package validate
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -243,5 +244,21 @@ func TestOptionalURL(t *testing.T) {
 				t.Errorf("OptionalURL() error = %v, wantErr %v", err, wantErr)
 			}
 		})
+	}
+}
+
+func TestPath(t *testing.T) {
+	f, err := ioutil.TempFile("", "sample")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(f.Name())
+
+	if err := Path(f.Name()); err != nil {
+		t.Errorf("ValidatePath() error = %v", err)
+	}
+
+	if err := Path("invalid"); err == nil {
+		t.Error("ValidatePath() expected error but got none")
 	}
 }

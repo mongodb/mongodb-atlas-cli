@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,41 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package mongosh
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
-	"syscall"
+	"testing"
 )
 
-const (
-	mongoshBin = "mongosh"
-)
-
-func isWindows() bool {
-	return runtime.GOOS == "windows"
-}
-
-func Bin() string {
+func TestBin(t *testing.T) {
+	want := mongoshBin
 	if isWindows() {
-		return fmt.Sprintf("%s.exe", mongoshBin)
+		want = fmt.Sprintf("%s.exe", mongoshBin)
 	}
-	return mongoshBin
-}
-
-func Path() string {
-	if path, err := exec.LookPath(Bin()); err == nil {
-		return path
+	if got := Bin(); got != want {
+		t.Errorf("Bin() = %s, want %s", got, want)
 	}
-
-	return ""
-}
-
-func Run(binary, username, password, mongoURI string) error {
-	args := []string{"mongosh", "-u", username, "-p", password, mongoURI}
-	env := os.Environ()
-	return syscall.Exec(binary, args, env)
 }

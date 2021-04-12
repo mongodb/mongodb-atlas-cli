@@ -16,17 +16,19 @@ package root
 
 import (
 	"fmt"
+	"runtime"
 
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/cli/require"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -65,7 +67,17 @@ no additional shell configuration is necessary, see https://docs.brew.sh/Shell-C
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
 // this can be slow to timeout on environments with limited internet access (Ops Manager)
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
-	rootCmd = cli.Builder()
+	rootCmd := &cobra.Command{
+		Version: version.Version,
+		Use:     config.ToolName,
+		Short:   "CLI tool to manage your MongoDB Cloud",
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
+		Example: `
+  Display the help menu for the config command
+  $ mongocli config --help`,
+		SilenceUsage: true,
+	}
+	rootCmd.SetVersionTemplate(formattedVersion())
 	hasArgs := len(argsWithoutProg) != 0
 
 	if hasArgs && (argsWithoutProg[0] == "--version" || argsWithoutProg[0] == "-v") {
@@ -94,4 +106,23 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
 
 	return rootCmd
+}
+
+const verTemplate = `%s version: %s
+git version: %s
+Go version: %s
+   os: %s
+   arch: %s
+   compiler: %s
+`
+
+func formattedVersion() string {
+	return fmt.Sprintf(verTemplate,
+		config.ToolName,
+		version.Version,
+		version.GitCommit,
+		runtime.Version(),
+		runtime.GOOS,
+		runtime.GOARCH,
+		runtime.Compiler)
 }

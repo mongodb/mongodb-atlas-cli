@@ -48,7 +48,7 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func newPlatform(version, arch, system, distro, format string) *Platform { //nolint:unparam // Arch is x86_64 for now
+func newPlatform(version, arch, system, distro, format string) *Platform {
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
@@ -93,11 +93,12 @@ func generateFile(name, version string) error {
 		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
 		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
 		Platform: []Platform{
-			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04", "deb"),
+			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04 + 20.04", "deb"),
 			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", "rpm"),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", "zip"),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", "msi"),
 			*newPlatform(version, "x86_64", "macos", "macOS", "zip"),
+			*newPlatform(version, "arm64", "macos", "macOS", "zip"),
 			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", "tar.gz"),
 		},
 	}

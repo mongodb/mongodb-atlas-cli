@@ -210,7 +210,7 @@ func (opts *configOpts) askMongoShellPath() error {
 
 	path := config.MongoShellPath()
 	if path == "" {
-		path = mongosh.FindBinaryInPath()
+		path = mongosh.Path()
 	}
 	prompt := newMongoShellPathInput(path)
 

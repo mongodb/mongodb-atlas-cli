@@ -87,7 +87,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 	buf.WriteString("\n" + long + "\n\n")
 
 	if cmd.Runnable() {
-		buf.WriteString(fmt.Sprintf(".. code-block::\n\n   %s\n\n", cmd.UseLine()))
+		buf.WriteString(fmt.Sprintf(".. code-block::\n\n   %s\n\n", strings.ReplaceAll(cmd.UseLine(), "[flags]", "[options]")))
 	}
 
 	if err := printOptionsReST(buf, cmd); err != nil {

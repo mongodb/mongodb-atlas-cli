@@ -303,7 +303,6 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
-          export MSI_FILE_NAME=${msi_file_name}
 
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot}
           EOF_BUILD_SH
@@ -1011,9 +1010,7 @@ tasks:
       - command: subprocess.exec
         type: test
         params:
-          working_dir: src/github.com/mongodb/mongocli/dist
-          include_expansions_in_env:
-            - msi_file_name
+          working_dir: src/github.com/mongodb/mongocli
           command: bash.exe -c build/package/download-msi.sh
       - func: "package"
         vars:
@@ -1679,4 +1676,3 @@ buildvariants:
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable
-        

@@ -20,7 +20,8 @@ third_party_notices/
 
 # Evergreen generated files
 .gocache/
-gon.json
+gon_x86_64.json
+gon_arm64.json
 *.xml
 
 # We don't want to commit env variables

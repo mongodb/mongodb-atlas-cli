@@ -26,3 +26,6 @@ gon_arm64.json
 
 # We don't want to commit env variables
 *.env
+
+# asdf generated files
+.tool-versions

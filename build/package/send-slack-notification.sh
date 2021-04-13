@@ -20,15 +20,16 @@ VERSION=$(git describe | cut -d "v" -f 2)
 curl --header "Api-User:${evergreen_user:?}" \
      --header "Api-Key:${evergreen_api_key:?}" \
      --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-     --data "{
-       \"target\" : \"#mongocli_test_skunkwork\",
-       \"msg\" : \":mcli: MongoDB CLI v${VERSION} has been released! :tada:\",
-       \"attachments\" : [
+     --data '
+     {
+       "target" : "#mongocli_test_skunkwork",
+       "msg" : "[Skunkworks test] - :mcli: MongoDB CLI v'"${VERSION}"' has been released! :tada:",
+       "attachments" : [
        {
-       	\"title\" : ${VERSION},
-       	\"title_link\" : \"https://github.com/mongodb/mongocli/releases/tag/v${VERSION}\",
-       	\"author_name\" : \"MongoDB CLI\",
-       	\"fallback\" : \"new release\",
-	      \"author_icon\" : \"https://camo.githubusercontent.com/0e10b56a03b056a6e5fcf82a3cb3603188549a02c234b8e5426aaa11853e3069/68747470733a2f2f7261772e6769746875622e636f6d2f6d6f6e676f64622f6d6f6e676f636c692f6d61737465722f6d6f6e676f636c692e706e67\"
+       	"title": "'"${VERSION}"'",
+       	"title_link": "https://github.com/mongodb/mongocli/releases/tag/v'"${VERSION}"'",
+       	"author_name": "MongoDB CLI",
+       	"fallback": "new release",
+	      "author_icon": "https://camo.githubusercontent.com/0e10b56a03b056a6e5fcf82a3cb3603188549a02c234b8e5426aaa11853e3069/68747470733a2f2f7261772e6769746875622e636f6d2f6d6f6e676f64622f6d6f6e676f636c692f6d61737465722f6d6f6e676f636c692e706e67"
        }]
-     }"
+     }'

@@ -993,19 +993,6 @@ tasks:
       - func: "clone"
       - func: "generate docs"
       - func: "upload docs"
-
-  - name: test_andrea2
-    commands:
-      - func: "clone"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongocli
-          include_expansions_in_env:
-            - evergreen_user
-            - evergreen_api_key
-          command: bash.exe -c build/package/send-slack-notification.sh
-
   - name: release
     stepback: false
     git_tag_only: true
@@ -1054,6 +1041,14 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongocli
+          include_expansions_in_env:
+            - evergreen_user
+            - evergreen_api_key
+          command: bash -c build/package/send-slack-notification.sh
       - command: shell.exec
         type: test
         params:
@@ -1697,9 +1692,3 @@ buildvariants:
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable
-  - name: test_ANDREA
-    display_name: "test_ANDREA"
-    run_on:
-      - macos-1014-codesign
-    tasks:
-      - name: test_andrea2

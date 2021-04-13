@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/search"
-
 	"github.com/spf13/cobra"
 )
 
@@ -204,8 +203,8 @@ func printArgsReST(buf *bytes.Buffer, cmd *cobra.Command) {
 		for _, arg := range strings.Split(args, ",") {
 			required := search.StringInSlice(requiredSlice, arg)
 			description := cmd.Annotations[arg+"Desc"]
-			line := fmt.Sprintf("  * - %s\n    - %v\n    - %s", arg, required, description)
-			buf.WriteString(indentString(line, " "))
+			line := fmt.Sprintf("   * - %s\n     - %v\n     - %s", arg, required, description)
+			buf.WriteString(line)
 		}
 		buf.WriteString("\n\n")
 	}

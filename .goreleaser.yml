@@ -92,3 +92,5 @@ release:
   draft: true # we only publish after the Windows MSI gets uploaded
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
+  extra_files:
+    - glob: ./mongocli_{{.Version}}_windows_x86_64.msi

@@ -1009,9 +1009,12 @@ tasks:
       - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongocli/dist
+          command: bash -c build/package/download-msi.sh
       - func: "package"
-        vars:
-          goreleaser_cmd: goreleaser --rm-dist
       - func: "rename pkg"
       - command: archive.targz_pack
         params:
@@ -1043,6 +1046,16 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongocli
+          silent: true
+          include_expansions_in_env:
+            - evergreen_user
+            - evergreen_api_key
+            - release_slack_channel
+          command: bash -c build/package/send-slack-notification.sh
   - name: release_msi
     stepback: false
     git_tag_only: true

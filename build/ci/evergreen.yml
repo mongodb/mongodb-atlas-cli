@@ -1011,7 +1011,7 @@ tasks:
         type: test
         params:
           working_dir: src/github.com/mongodb/mongocli
-          command: bash.exe -c build/package/download-msi.sh
+          command: bash -c build/package/download-msi.sh
       - func: "package"
         vars:
           goreleaser_cmd: goreleaser --rm-dist

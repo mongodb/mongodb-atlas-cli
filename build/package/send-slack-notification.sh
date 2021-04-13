@@ -22,7 +22,7 @@ curl --header "Api-User:${evergreen_user:?}" \
      --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
      --data '
      {
-       "target" : "#mongocli_test_skunkwork",
+       "target" : "#mongocli",
        "msg" : ":mcli: MongoDB CLI v'"${VERSION}"' has been released! :tada:",
        "attachments" : [
        {

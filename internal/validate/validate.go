@@ -16,8 +16,10 @@ package validate
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -106,4 +108,19 @@ func FlagInSlice(value, flag string, validValues []string) error {
 	}
 
 	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
+}
+
+var ErrInvalidPath = errors.New("invalid path")
+
+func Path(val interface{}) error {
+	path, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("%w: %s", ErrInvalidPath, path)
+	}
+
+	if _, err := os.Stat(path); err != nil {
+		return fmt.Errorf("%w: %s", ErrInvalidPath, path)
+	}
+
+	return nil
 }

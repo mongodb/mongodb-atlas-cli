@@ -81,8 +81,9 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 	ref := strings.ReplaceAll(name, " ", "_")
 
 	buf.WriteString(".. _" + ref + ":\n\n")
+	buf.WriteString(strings.Repeat("=", len(name)) + "\n")
 	buf.WriteString(name + "\n")
-	buf.WriteString(strings.Repeat("-", len(name)) + "\n\n")
+	buf.WriteString(strings.Repeat("=", len(name)) + "\n\n")
 	buf.WriteString(short + "\n")
 	buf.WriteString("\n" + long + "\n\n")
 

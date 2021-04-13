@@ -150,7 +150,7 @@ func Options(opts ...Option) Option {
 	}
 }
 
-// Service configures a service.
+// Service configures the service.
 func Service(service string) Option {
 	return func(s *Store) error {
 		s.service = service
@@ -158,6 +158,8 @@ func Service(service string) Option {
 	}
 }
 
+// WithBaseURL configures the base URL for the underling client.
+// the url should not contain any path, to add the public API path use WithPublicPathBaseURL.
 func WithBaseURL(configURL string) Option {
 	return func(s *Store) error {
 		s.baseURL = configURL
@@ -165,6 +167,7 @@ func WithBaseURL(configURL string) Option {
 	}
 }
 
+// WithPublicPathBaseURL if you use WithBaseURL and need the Store to connect to the public API.
 func WithPublicPathBaseURL() Option {
 	return func(s *Store) error {
 		if s.service == config.CloudService {
@@ -176,6 +179,7 @@ func WithPublicPathBaseURL() Option {
 	}
 }
 
+// WithCACertificate when using a custom CA certificate.
 func WithCACertificate(caCertificate string) Option {
 	return func(s *Store) error {
 		s.caCertificate = caCertificate
@@ -183,6 +187,7 @@ func WithCACertificate(caCertificate string) Option {
 	}
 }
 
+// SkipVerify skips CA certificate verification, use at your own risk.
 func SkipVerify() Option {
 	return func(s *Store) error {
 		s.skipVerify = true
@@ -190,11 +195,13 @@ func SkipVerify() Option {
 	}
 }
 
+// CredentialsGetter how to get credentials when Store must be authenticated.
 type CredentialsGetter interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
 }
 
+// WithAuthentication sets the store credentials
 func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
@@ -234,11 +241,13 @@ func withOpsManagerClient(client *http.Client) Option {
 	}
 }
 
+// TransportConfigGetter ops manager special transport settings.
 type TransportConfigGetter interface {
 	OpsManagerCACertificate() string
 	OpsManagerSkipVerify() string
 }
 
+// NetworkPresets use when reading any special network settings.
 func NetworkPresets(c TransportConfigGetter) Option {
 	options := make([]Option, 0)
 	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
@@ -250,6 +259,7 @@ func NetworkPresets(c TransportConfigGetter) Option {
 	return Options(options...)
 }
 
+// Config all settings for a new Store
 type Config interface {
 	CredentialsGetter
 	TransportConfigGetter
@@ -257,6 +267,7 @@ type Config interface {
 	OpsManagerURL() string
 }
 
+// PublicAuthenticatedPreset default settings when connecting to the public API with authentication.
 func PublicAuthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -266,6 +277,7 @@ func PublicAuthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
+// PublicUnauthenticatedPreset default settings when connecting to the public API without authentication.
 func PublicUnauthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service())}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -275,6 +287,7 @@ func PublicUnauthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
+// PrivateAuthenticatedPreset default settings when connecting to the private API with authentication.
 func PrivateAuthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -284,6 +297,7 @@ func PrivateAuthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
+// PrivateUnauthenticatedPreset default settings when connecting to the private API without authentication.
 func PrivateUnauthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service())}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -293,7 +307,15 @@ func PrivateUnauthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
-// New
+// New return a new Store based on the given list of Option.
+//
+// Usage:
+//
+//	// get a new client for Atlas
+//	store := store.New(WithService("cloud"))
+//
+//	// get a new client based on the config
+//	store := store.New(PublicAuthenticatedPreset(config))
 func New(opts ...Option) (*Store, error) {
 	store := new(Store)
 

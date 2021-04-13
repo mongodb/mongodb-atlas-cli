@@ -146,7 +146,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 				continue
 			}
 			cname := name + " " + child.Name()
-			ref = strings.ReplaceAll(cname, " ", "_")
+			ref = strings.ReplaceAll(cname, " ", "-")
 			buf.WriteString(fmt.Sprintf("* %s \t - %s\n", linkHandler(cname, ref), child.Short))
 		}
 		buf.WriteString("\n")

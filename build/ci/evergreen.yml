@@ -400,19 +400,6 @@ functions:
 
           go mod download
           go run internal/docs/main.go
-        command:
-  "upload docs":
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongocli/docs/*.tgz
-        remote_file: ${project}/docs/${revision}_${created_at}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/x-gzip}
-        display_name: docs
 
   "push":
     - command: subprocess.exec
@@ -995,10 +982,19 @@ tasks:
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/docs/docs.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/docs
+          source_dir: src/github.com/mongodb/mongocli/docs
           include:
             - "*.txt"
-      - func: "upload docs"
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_file: src/github.com/mongodb/mongocli/docs/docs.tgz
+          remote_file: ${project}/docs/${revision}_${created_at}/docs.tgz
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: Docs
   - name: release
     stepback: false
     git_tag_only: true

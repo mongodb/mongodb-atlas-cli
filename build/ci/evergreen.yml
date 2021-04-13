@@ -407,7 +407,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-          - src/github.com/mongodb/mongocli/docs/*.txt
+          - src/github.com/mongodb/mongocli/docs/*.tgz
         remote_file: ${project}/docs/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -992,6 +992,12 @@ tasks:
     commands:
       - func: "clone"
       - func: "generate docs"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongocli/docs/docs.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/docs
+          include:
+            - "*.txt"
       - func: "upload docs"
   - name: release
     stepback: false

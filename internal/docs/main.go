@@ -18,14 +18,14 @@ import (
 	"log"
 
 	"github.com/mongodb/mongocli/internal/cli/root"
-	"github.com/spf13/cobra/doc"
+	"github.com/mongodb/mongocli/internal/docs/rest"
 )
 
 func main() {
 	var profile string
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := doc.GenReSTTree(mongocli, "./docs"); err != nil {
+	if err := rest.GenTree(mongocli, "./docs"); err != nil {
 		log.Fatal(err)
 	}
 }

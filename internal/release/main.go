@@ -34,7 +34,7 @@ type DownloadArchive struct {
 type Platform struct {
 	Arch          string  `json:"arch"`
 	OS            string  `json:"os"`
-	PackageFormat string  `json:"package_format"`
+	PackageFormat string  `json:"package_format,omitempty"`
 	Packages      Package `json:"packages"`
 }
 

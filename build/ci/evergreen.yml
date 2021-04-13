@@ -1049,19 +1049,6 @@ tasks:
             - evergreen_user
             - evergreen_api_key
           command: bash -c build/package/send-slack-notification.sh
-      - command: shell.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongocli/dist
-          script: |
-            set -Eeou pipefail
-
-            export GOROOT="${go_root}"
-            export PATH="./bin:${go_bin}:$PATH"
-
-            VERSION=$(git describe | cut -d "v" -f 2)
-
-            go run ../internal/release/main.go "$VERSION"
   - name: release_msi
     stepback: false
     git_tag_only: true

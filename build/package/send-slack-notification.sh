@@ -23,7 +23,7 @@ curl --header "Api-User:${evergreen_user:?}" \
      --data '
      {
        "target" : "#mongocli_test_skunkwork",
-       "msg" : "[Skunkworks test] - :mcli: MongoDB CLI v'"${VERSION}"' has been released! :tada:",
+       "msg" : ":mcli: MongoDB CLI v'"${VERSION}"' has been released! :tada:",
        "attachments" : [
        {
        	"title": "'"${VERSION}"'",

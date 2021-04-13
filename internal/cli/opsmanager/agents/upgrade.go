@@ -34,7 +34,7 @@ var upgradeTemplate = "Updating agent versions to the latest available.\n"
 
 func (opts *UpgradeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(config.Default())
+	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
 	return err
 }
 

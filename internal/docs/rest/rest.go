@@ -101,7 +101,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 	}
 
 	if hasSeeAlso(cmd) {
-		buf.WriteString("SEE ALSO\n")
+		buf.WriteString("See Also\n")
 		buf.WriteString("~~~~~~~~\n\n")
 		if cmd.HasParent() {
 			parent := cmd.Parent()

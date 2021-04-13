@@ -47,7 +47,7 @@ func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender func(string) st
 		}
 	}
 
-	basename := strings.ReplaceAll(cmd.CommandPath(), " ", "_") + ".txt"
+	basename := strings.ReplaceAll(cmd.CommandPath(), " ", "-") + ".txt"
 	filename := filepath.Join(dir, basename)
 	f, err := os.Create(filename)
 	if err != nil {

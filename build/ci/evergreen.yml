@@ -407,7 +407,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-          - src/github.com/mongodb/mongocli/docs/*.rst
+          - src/github.com/mongodb/mongocli/docs/*.txt
         remote_file: ${project}/docs/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read

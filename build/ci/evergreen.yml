@@ -1010,11 +1010,9 @@ tasks:
       - command: subprocess.exec
         type: test
         params:
-          working_dir: src/github.com/mongodb/mongocli
+          working_dir: src/github.com/mongodb/mongocli/dist
           command: bash -c build/package/download-msi.sh
       - func: "package"
-        vars:
-          goreleaser_cmd: goreleaser --rm-dist
       - func: "rename pkg"
       - command: archive.targz_pack
         params:

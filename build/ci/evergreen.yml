@@ -1052,7 +1052,7 @@ tasks:
           include_expansions_in_env:
             - evergreen_user
             - evergreen_api_key
-            - slack_channel
+            - release_slack_channel
           command: bash -c build/package/send-slack-notification.sh
   - name: release_msi
     stepback: false

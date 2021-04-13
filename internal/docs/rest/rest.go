@@ -26,6 +26,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/search"
+
 	"github.com/spf13/cobra"
 )
 
@@ -64,6 +66,28 @@ func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender func(string) st
 	return nil
 }
 
+const toc = `
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+`
+
+const syntaxHeader = `Syntax
+------
+
+.. code-block::
+`
+
+const examplesHeader = `Examples
+--------
+
+.. code-block::
+`
+
 // GenCustom creates custom reStructured Text output.
 // Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
 func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string) string) error {
@@ -83,27 +107,26 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 	buf.WriteString(".. _" + ref + ":\n\n")
 	buf.WriteString(strings.Repeat("=", len(name)) + "\n")
 	buf.WriteString(name + "\n")
-	buf.WriteString(strings.Repeat("=", len(name)) + "\n\n")
-	buf.WriteString(short + "\n")
+	buf.WriteString(strings.Repeat("=", len(name)) + "\n")
+	buf.WriteString(toc)
+	buf.WriteString("\n" + short + "\n")
 	buf.WriteString("\n" + long + "\n\n")
 
 	if cmd.Runnable() {
-		buf.WriteString(fmt.Sprintf(".. code-block::\n\n   %s\n\n", strings.ReplaceAll(cmd.UseLine(), "[flags]", "[options]")))
+		buf.WriteString(syntaxHeader)
+		buf.WriteString(fmt.Sprintf("\n   %s\n\n", strings.ReplaceAll(cmd.UseLine(), "[flags]", "[options]")))
 	}
-
-	if err := printOptionsReST(buf, cmd); err != nil {
-		return err
-	}
+	printArgsReST(buf, cmd)
+	printOptionsReST(buf, cmd)
 
 	if len(cmd.Example) > 0 {
-		buf.WriteString("Examples\n")
-		buf.WriteString("~~~~~~~~\n\n")
-		buf.WriteString(fmt.Sprintf(".. code-block::\n%s\n\n", indentString(cmd.Example, " ")))
+		buf.WriteString(examplesHeader)
+		buf.WriteString(fmt.Sprintf("\n%s\n\n", indentString(cmd.Example, " ")))
 	}
 
 	if hasSeeAlso(cmd) {
 		buf.WriteString("See Also\n")
-		buf.WriteString("~~~~~~~~\n\n")
+		buf.WriteString("--------\n\n")
 		if cmd.HasParent() {
 			parent := cmd.Parent()
 			pname := parent.CommandPath()
@@ -158,19 +181,42 @@ func (s byName) Len() int           { return len(s) }
 func (s byName) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s byName) Less(i, j int) bool { return s[i].Name() < s[j].Name() }
 
-func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) error {
-	flags := cmd.NonInheritedFlags()
-	if flags.HasAvailableFlags() {
-		buf.WriteString("Options\n")
-		buf.WriteString("~~~~~~~\n\n.. list-table::\n")
-		buf.WriteString(`   :header-rows: 1
-   :widths: 20 10 60 10
+const optionsHeader = `.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
 
    * - Option
      - Type
-     - Description
      - Required
-`)
+     - Description
+`
+
+func printArgsReST(buf *bytes.Buffer, cmd *cobra.Command) {
+	if args, ok := cmd.Annotations["args"]; ok {
+		buf.WriteString("Arguments\n")
+		buf.WriteString("---------\n\n")
+		buf.WriteString(optionsHeader)
+		var requiredSlice []string
+		if requiredArgs, hasRequired := cmd.Annotations["requiredArgs"]; hasRequired {
+			requiredSlice = strings.Split(requiredArgs, ",")
+		}
+
+		for _, arg := range strings.Split(args, ",") {
+			required := search.StringInSlice(requiredSlice, arg)
+			description := cmd.Annotations[arg+"Desc"]
+			line := fmt.Sprintf("  * - %s\n    - %v\n    - %s", arg, required, description)
+			buf.WriteString(indentString(line, " "))
+		}
+		buf.WriteString("\n\n")
+	}
+}
+
+func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) {
+	flags := cmd.NonInheritedFlags()
+	if flags.HasAvailableFlags() {
+		buf.WriteString("Options\n")
+		buf.WriteString("-------\n\n")
+		buf.WriteString(optionsHeader)
 		buf.WriteString(indentString(FlagUsages(flags), " "))
 		buf.WriteString("\n")
 	}
@@ -178,19 +224,11 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) error {
 	parentFlags := cmd.InheritedFlags()
 	if parentFlags.HasAvailableFlags() {
 		buf.WriteString("Inherited Options\n")
-		buf.WriteString("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n.. list-table::\n")
-		buf.WriteString(`   :header-rows: 1
-   :widths: 20 10 60 10
-
-   * - Option
-     - Type
-     - Description
-     - Required
-`)
+		buf.WriteString("-----------------\n\n")
+		buf.WriteString(optionsHeader)
 		buf.WriteString(indentString(FlagUsages(parentFlags), " "))
 		buf.WriteString("\n")
 	}
-	return nil
 }
 
 // linkHandler for default ReST hyperlink markup

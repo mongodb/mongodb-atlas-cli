@@ -44,10 +44,16 @@ func FlagUsages(f *pflag.FlagSet) string {
 		usage = strings.ReplaceAll(usage, "\n", "\n"+strings.Repeat(" ", 6))
 
 		if flag.Shorthand != "" && flag.ShorthandDeprecated == "" {
-			line = fmt.Sprintf("  * - -%s, --%s\n    - %s\n    - ", flag.Shorthand, flag.Name, varname)
+			line = fmt.Sprintf("  * - -%s, --%s\n    - %s", flag.Shorthand, flag.Name, varname)
 		} else {
-			line = fmt.Sprintf("  * - --%s\n    - %s\n    - ", flag.Name, varname)
+			line = fmt.Sprintf("  * - --%s\n    - %s", flag.Name, varname)
 		}
+
+		required := false
+		if len(flag.Annotations) != 0 {
+			_, required = flag.Annotations[cobra.BashCompOneRequiredFlag]
+		}
+		line += fmt.Sprintf("\n    - %v", required)
 
 		if flag.NoOptDefVal != "" {
 			switch flag.Value.Type() {
@@ -66,7 +72,7 @@ func FlagUsages(f *pflag.FlagSet) string {
 			}
 		}
 
-		line += usage
+		line += "\n    - " + usage
 		if !defaultIsZeroValue(flag) {
 			if flag.Value.Type() == stringType {
 				line += fmt.Sprintf(" (default %q)", flag.DefValue)
@@ -78,11 +84,6 @@ func FlagUsages(f *pflag.FlagSet) string {
 			line += fmt.Sprintf(" (DEPRECATED: %s)", flag.Deprecated)
 		}
 
-		required := false
-		if len(flag.Annotations) != 0 {
-			_, required = flag.Annotations[cobra.BashCompOneRequiredFlag]
-		}
-		line += fmt.Sprintf("\n    - %v", required)
 		_, _ = fmt.Fprintln(buf, line)
 	})
 

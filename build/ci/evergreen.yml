@@ -103,6 +103,7 @@ functions:
           - E2E_CLOUD_ROLE_ID
           - MCLI_OPS_MANAGER_URL
         working_dir: src/github.com/mongodb/mongocli
+        silent: true
         env:
           XDG_CONFIG_HOME: ${workdir}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
@@ -145,6 +146,7 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./install-agent-spawn-host.sh
+        silent: true
         env:
           LC_AGENT_KEY: ${automation_agent_mms_api_key}
           LC_GROUP_ID: ${automation_agent_mms_group_id}
@@ -433,6 +435,7 @@ functions:
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
+        silent: true
         env:
           <<: *go_options
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
@@ -1045,9 +1048,11 @@ tasks:
         type: test
         params:
           working_dir: src/github.com/mongodb/mongocli
+          silent: true
           include_expansions_in_env:
             - evergreen_user
             - evergreen_api_key
+            - slack_channel
           command: bash -c build/package/send-slack-notification.sh
   - name: release_msi
     stepback: false

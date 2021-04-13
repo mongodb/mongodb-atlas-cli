@@ -87,7 +87,6 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 		opts := tt.opts
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			ackReq := opts.newAcknowledgeRequest()
 			if wantErr {
 				mockStore.

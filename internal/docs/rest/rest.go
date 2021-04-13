@@ -163,7 +163,7 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) error {
 		buf.WriteString("Options\n")
 		buf.WriteString("~~~~~~~\n\n.. list-table::\n")
 		buf.WriteString(`   :header-rows: 1
-   :widths: 30 10 50 10
+   :widths: 20 10 60 10
 
    * - Option
      - Type
@@ -179,7 +179,7 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) error {
 		buf.WriteString("Inherited Options\n")
 		buf.WriteString("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n.. list-table::\n")
 		buf.WriteString(`   :header-rows: 1
-   :widths: 30 10 50 10
+   :widths: 20 10 60 10
 
    * - Option
      - Type

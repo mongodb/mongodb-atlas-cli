@@ -135,10 +135,14 @@ func (s *Store) transport() (*http.Transport, error) {
 	}
 }
 
-// Option configures a Store.
+// Option is any configuration for Store.
+// New will take a list of Option and process them sequentially.
+// The store package provides a list of common and preset set of Option you can use
+// but you can implement your own.
 type Option func(s *Store) error
 
-// Options turns a list of Option instances into an Option.
+// Options turns a list of Option instances into a single Option.
+// This is a helper when combining multiple Option.
 func Options(opts ...Option) Option {
 	return func(s *Store) error {
 		for _, opt := range opts {
@@ -150,7 +154,7 @@ func Options(opts ...Option) Option {
 	}
 }
 
-// Service configures the service.
+// Service configures the Store service, valid options are cloud, cloud-manager, and ops-manager.
 func Service(service string) Option {
 	return func(s *Store) error {
 		s.service = service
@@ -158,7 +162,7 @@ func Service(service string) Option {
 	}
 }
 
-// WithBaseURL configures the base URL for the underling client.
+// WithBaseURL sets the base URL for the underling HTTP client.
 // the url should not contain any path, to add the public API path use WithPublicPathBaseURL.
 func WithBaseURL(configURL string) Option {
 	return func(s *Store) error {
@@ -167,7 +171,9 @@ func WithBaseURL(configURL string) Option {
 	}
 }
 
-// WithPublicPathBaseURL if you use WithBaseURL and need the Store to connect to the public API.
+// WithPublicPathBaseURL adds the correct public path to the base url based on service.
+// if you use WithBaseURL and need the Store to connect to the public API
+// you need to also enable this option.
 func WithPublicPathBaseURL() Option {
 	return func(s *Store) error {
 		if s.service == config.CloudService {
@@ -179,7 +185,7 @@ func WithPublicPathBaseURL() Option {
 	}
 }
 
-// WithCACertificate when using a custom CA certificate.
+// WithCACertificate enables the Store to use a custom CA certificate.
 func WithCACertificate(caCertificate string) Option {
 	return func(s *Store) error {
 		s.caCertificate = caCertificate
@@ -195,7 +201,7 @@ func SkipVerify() Option {
 	}
 }
 
-// CredentialsGetter how to get credentials when Store must be authenticated.
+// CredentialsGetter interface for how to get credentials when Store must be authenticated.
 type CredentialsGetter interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
@@ -210,44 +216,42 @@ func WithAuthentication(c CredentialsGetter) Option {
 	}
 }
 
-func withAtlasClient(client *http.Client) Option {
-	return func(s *Store) error {
-		opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
-		if s.baseURL != "" {
-			opts = append(opts, atlas.SetBaseURL(s.baseURL))
-		}
-		c, err := atlas.New(client, opts...)
-		if err != nil {
-			return err
-		}
-		s.client = c
-		return nil
+// setAtlasClient sets the internal client to use an Atlas client and methods
+func (s *Store) setAtlasClient(client *http.Client) error {
+	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
+	if s.baseURL != "" {
+		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
+	c, err := atlas.New(client, opts...)
+	if err != nil {
+		return err
+	}
+	s.client = c
+	return nil
 }
 
-func withOpsManagerClient(client *http.Client) Option {
-	return func(s *Store) error {
-		opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(userAgent)}
-		if s.baseURL != "" {
-			opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
-		}
-		c, err := opsmngr.New(client, opts...)
-		if err != nil {
-			return err
-		}
-
-		s.client = c
-		return nil
+// setOpsManagerClient sets the internal client to use an Ops Manager client and methods
+func (s *Store) setOpsManagerClient(client *http.Client) error {
+	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(userAgent)}
+	if s.baseURL != "" {
+		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
+	c, err := opsmngr.New(client, opts...)
+	if err != nil {
+		return err
+	}
+
+	s.client = c
+	return nil
 }
 
-// TransportConfigGetter ops manager special transport settings.
+// TransportConfigGetter interface for Ops Manager custom network settings.
 type TransportConfigGetter interface {
 	OpsManagerCACertificate() string
 	OpsManagerSkipVerify() string
 }
 
-// NetworkPresets use when reading any special network settings.
+// NetworkPresets is the default Option to set custom network preference.
 func NetworkPresets(c TransportConfigGetter) Option {
 	options := make([]Option, 0)
 	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
@@ -259,7 +263,7 @@ func NetworkPresets(c TransportConfigGetter) Option {
 	return Options(options...)
 }
 
-// Config all settings for a new Store
+// Config an interface of the methods needed to set up a Store
 type Config interface {
 	CredentialsGetter
 	TransportConfigGetter
@@ -267,7 +271,7 @@ type Config interface {
 	OpsManagerURL() string
 }
 
-// PublicAuthenticatedPreset default settings when connecting to the public API with authentication.
+// PublicAuthenticatedPreset is the default Option when connecting to the public API with authentication.
 func PublicAuthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -277,7 +281,7 @@ func PublicAuthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
-// PublicUnauthenticatedPreset default settings when connecting to the public API without authentication.
+// PublicUnauthenticatedPreset is the default Option when connecting to the public API without authentication.
 func PublicUnauthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service())}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -287,7 +291,7 @@ func PublicUnauthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
-// PrivateAuthenticatedPreset default settings when connecting to the private API with authentication.
+// PrivateAuthenticatedPreset is the default Option when connecting to the private API with authentication.
 func PrivateAuthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -297,7 +301,7 @@ func PrivateAuthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
-// PrivateUnauthenticatedPreset default settings when connecting to the private API without authentication.
+// PrivateUnauthenticatedPreset is the default Option when connecting to the private API without authentication.
 func PrivateUnauthenticatedPreset(c Config) Option {
 	options := []Option{Service(c.Service())}
 	if configURL := c.OpsManagerURL(); configURL != "" {
@@ -307,15 +311,18 @@ func PrivateUnauthenticatedPreset(c Config) Option {
 	return Options(options...)
 }
 
-// New return a new Store based on the given list of Option.
+// New returns a new Store based on the given list of Option.
 //
 // Usage:
 //
-//	// get a new client for Atlas
-//	store := store.New(WithService("cloud"))
+//	// get a new Store for Atlas
+//	store := store.New(Service("cloud"))
 //
-//	// get a new client based on the config
+//	// get a new Store for the public API based on a Config interface
 //	store := store.New(PublicAuthenticatedPreset(config))
+//
+//	// get a new Store for the private API based on a Config interface
+//	store := store.New(PrivateAuthenticatedPreset(config))
 func New(opts ...Option) (*Store, error) {
 	store := new(Store)
 
@@ -337,9 +344,9 @@ func New(opts ...Option) (*Store, error) {
 
 	switch store.service {
 	case config.CloudService:
-		err = withAtlasClient(client)(store)
+		err = store.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
-		err = withOpsManagerClient(client)(store)
+		err = store.setOpsManagerClient(client)
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", store.service)
 	}
@@ -365,7 +372,7 @@ func NewVersionManifest(c ManifestGetter) (*Store, error) {
 	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
 		s.baseURL = baseURL
 	}
-	if err := withOpsManagerClient(http.DefaultClient)(s); err != nil {
+	if err := s.setOpsManagerClient(http.DefaultClient); err != nil {
 		return nil, err
 	}
 

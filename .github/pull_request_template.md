@@ -33,7 +33,7 @@ We're here to help! This is simply a reminder of what we are going to look for b
 - [ ] I have signed the [MongoDB CLA](https://www.mongodb.com/legal/contributor-agreement)
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] I have added any necessary documentation (if appropriate)
-- [ ] I have updated `e2e-test-audit.csv` (if a new command or e2e test has been added)
+- [ ] I have updated [e2e/E2E-TESTS.md](e2e/E2E-TESTS.md) (if a new command or e2e test has been added)
 - [ ] I have run `make fmt` and formatted my code
 
 ## Further comments

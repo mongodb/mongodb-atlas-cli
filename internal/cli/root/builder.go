@@ -32,10 +32,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	rootCmd *cobra.Command
-
-	completionCmd = &cobra.Command{
+func completionBuilder(root *cobra.Command) *cobra.Command {
+	completionCmd := &cobra.Command{
 		Use:   "completion <bash|zsh|fish|powershell>",
 		Args:  require.ExactValidArgs(1),
 		Short: "Generate shell completion scripts",
@@ -49,19 +47,20 @@ no additional shell configuration is necessary, see https://docs.brew.sh/Shell-C
 		RunE: func(cmd *cobra.Command, args []string) error {
 			switch args[0] {
 			case "bash":
-				return rootCmd.GenBashCompletion(cmd.OutOrStdout())
+				return root.GenBashCompletion(cmd.OutOrStdout())
 			case "zsh":
-				return rootCmd.GenZshCompletion(cmd.OutOrStdout())
+				return root.GenZshCompletion(cmd.OutOrStdout())
 			case "powershell":
-				return rootCmd.GenPowerShellCompletion(cmd.OutOrStdout())
+				return root.GenPowerShellCompletion(cmd.OutOrStdout())
 			case "fish":
-				return rootCmd.GenFishCompletion(cmd.OutOrStdout(), true)
+				return root.GenFishCompletion(cmd.OutOrStdout(), true)
 			default:
 				return fmt.Errorf("unsupported shell type %q", args[0])
 			}
 		},
 	}
-)
+	return completionCmd
+}
 
 // rootBuilder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
@@ -100,7 +99,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
-		completionCmd,
+		completionBuilder(rootCmd),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

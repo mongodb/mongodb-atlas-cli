@@ -36,13 +36,11 @@ func GenTree(cmd *cobra.Command, dir string) error {
 	return GenTreeCustom(cmd, dir, emptyStr, defaultLinkHandler)
 }
 
-type linkFunc func(string, string) string
-
 type prependerFunc func(string) string
 
 // GenTreeCustom is the the same as GenTree, but
 // with custom filePrepender and linkHandler.
-func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender prependerFunc, linkHandler prependerFunc) error {
+func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender, linkHandler prependerFunc) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
 			continue
@@ -229,7 +227,7 @@ func printArgsReST(buf *bytes.Buffer, cmd *cobra.Command) {
 		for _, arg := range strings.Split(args, ",") {
 			required := search.StringInSlice(requiredSlice, arg)
 			description := cmd.Annotations[arg+"Desc"]
-			line := fmt.Sprintf("   * - %s\n     - %v\n     - %s", arg, required, description)
+			line := fmt.Sprintf("   * - %s\n     - string\n     - %v\n     - %s", arg, required, description)
 			buf.WriteString(line)
 		}
 		buf.WriteString("\n\n")

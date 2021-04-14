@@ -30,6 +30,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	separator        = "-"
+	defaultExtension = ".txt"
+)
+
 // GenTree generates the docs for the full tree of commands
 func GenTree(cmd *cobra.Command, dir string) error {
 	for _, c := range cmd.Commands() {
@@ -41,7 +46,7 @@ func GenTree(cmd *cobra.Command, dir string) error {
 		}
 	}
 
-	basename := strings.ReplaceAll(cmd.CommandPath(), " ", "-") + ".txt"
+	basename := strings.ReplaceAll(cmd.CommandPath(), " ", separator) + defaultExtension
 	filename := filepath.Join(dir, basename)
 	f, err := os.Create(filename)
 	if err != nil {
@@ -127,7 +132,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 		if cmd.HasParent() {
 			parent := cmd.Parent()
 			pname := parent.CommandPath()
-			ref = strings.ReplaceAll(pname, " ", "-")
+			ref = strings.ReplaceAll(pname, " ", separator)
 			buf.WriteString(fmt.Sprintf("* :ref:`%s` - %s\n", ref, parent.Short))
 			cmd.VisitParents(func(c *cobra.Command) {
 				if c.DisableAutoGenTag {
@@ -144,7 +149,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 				continue
 			}
 			cname := name + " " + child.Name()
-			ref = strings.ReplaceAll(cname, " ", "-")
+			ref = strings.ReplaceAll(cname, " ", separator)
 			buf.WriteString(fmt.Sprintf("* :ref:`%s` - %s\n", ref, child.Short))
 		}
 		buf.WriteString("\n")
@@ -160,7 +165,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 				continue
 			}
 			cname := name + " " + child.Name()
-			ref = strings.ReplaceAll(cname, " ", "-")
+			ref = strings.ReplaceAll(cname, " ", separator)
 			buf.WriteString(fmt.Sprintf("   /reference/%s\n", ref))
 		}
 		buf.WriteString("\n")

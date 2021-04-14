@@ -1011,8 +1011,10 @@ tasks:
         type: test
         params:
           working_dir: src/github.com/mongodb/mongocli/dist
-          command: bash -c ../build/package/download-msi.sh
+          binary: build/package/download-msi.sh
       - func: "package"
+        vars:
+          goreleaser_cmd: goreleaser
       - func: "rename pkg"
       - command: archive.targz_pack
         params:

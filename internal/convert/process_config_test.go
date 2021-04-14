@@ -39,6 +39,7 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 			},
 			Replication: &opsmngr.Replication{
 				ReplSetName: "myReplicaSet",
+				OplogSizeMB: pointy.Int(10),
 			},
 			Storage: &opsmngr.Storage{
 				DBPath:         "/data/db",
@@ -96,6 +97,7 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		LogDestination:      "file",
 		LogPath:             "/data/log/mongodb.log",
 		Name:                "myReplicaSet_1",
+		OplogSizeMB:         pointy.Int(10),
 		Port:                27017,
 		Priority:            pointy.Float64(1),
 		ProcessType:         "mongod",

@@ -53,6 +53,7 @@ func TestFromAutomationConfig(t *testing.T) {
 							FCVersion:           "4.2",
 							Version:             "4.2.2",
 							Name:                name + "_0",
+							OplogSizeMB:         pointy.Int(10),
 							TLS: &TLS{
 								CAFile:                     "CAFile",
 								CertificateKeyFile:         "CertificateKeyFile",

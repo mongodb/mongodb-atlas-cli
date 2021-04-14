@@ -32,7 +32,7 @@ type DownloadArchive struct {
 }
 
 type Platform struct {
-	Arch          string  `json:"arch"`
+	Arch          string  `json:"arch,omitempty"`
 	OS            string  `json:"os"`
 	PackageFormat string  `json:"package_format,omitempty"`
 	Packages      Package `json:"packages"`
@@ -100,8 +100,8 @@ func generateFile(name, version string) error {
 			*newPlatform(version, "x86_64", "linux", "Debian 9 / Ubuntu 16.04 + 18.04 + 20.04", []string{"deb"}),
 			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
-			*newPlatform(version, "x86_64", "macos", "macOS", []string{"zip"}),
-			*newPlatform(version, "arm64", "macos", "macOS", []string{"zip"}),
+			*newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
+			*newPlatform(version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
 		},
 	}
 	jsonEncoder := json.NewEncoder(feedFile)

@@ -46,6 +46,9 @@ func Builder() *cobra.Command {
 			config.SetService(config.CloudManagerService)
 			return validate.Credentials()
 		},
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 
 	cmd.AddCommand(

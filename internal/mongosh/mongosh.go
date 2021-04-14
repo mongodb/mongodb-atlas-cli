@@ -22,18 +22,22 @@ import (
 )
 
 const (
-	mongoShLinux   = "mongosh"
-	mongoShWindows = "mongosh.exe"
-	windows        = "windows"
+	mongoshBin = "mongosh"
 )
 
-func FindBinaryInPath() string {
-	binary := mongoShLinux
-	if runtime.GOOS == windows {
-		binary = mongoShWindows
-	}
+func isWindows() bool {
+	return runtime.GOOS == "windows"
+}
 
-	if path, err := exec.LookPath(binary); err == nil {
+func Bin() string {
+	if isWindows() {
+		return fmt.Sprintf("%s.exe", mongoshBin)
+	}
+	return mongoshBin
+}
+
+func Path() string {
+	if path, err := exec.LookPath(Bin()); err == nil {
 		return path
 	}
 
@@ -43,24 +47,5 @@ func FindBinaryInPath() string {
 func Run(binary, username, password, mongoURI string) error {
 	args := []string{"mongosh", "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
-	err := syscall.Exec(binary, args, env)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func ValidateUniqueUsername(val interface{}) error {
-	path, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("the path %s is not valid", path)
-	}
-
-	if _, err := os.Stat(path); err != nil {
-		return fmt.Errorf("the path %s is not valid", path)
-	}
-
-	return nil
+	return syscall.Exec(binary, args, env)
 }

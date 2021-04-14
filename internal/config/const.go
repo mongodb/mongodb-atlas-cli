@@ -18,7 +18,7 @@ import "os"
 
 const (
 	ToolName                     = "mongocli"      // ToolName of the CLI
-	EnvPrefix                    = "mcli"          // Prefix for ENV variables
+	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
 	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API

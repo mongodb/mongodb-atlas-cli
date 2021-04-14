@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package mongosh
 
 import (
-	"log"
-
-	"github.com/mongodb/mongocli/internal/cli/root"
-	"github.com/spf13/cobra/doc"
+	"fmt"
+	"testing"
 )
 
-func main() {
-	var profile string
-	mongocli := root.Builder(&profile, []string{})
-
-	if err := doc.GenReSTTree(mongocli, "./docs"); err != nil {
-		log.Fatal(err)
+func TestBin(t *testing.T) {
+	want := mongoshBin
+	if isWindows() {
+		want = fmt.Sprintf("%s.exe", mongoshBin)
+	}
+	if got := Bin(); got != want {
+		t.Errorf("Bin() = %s, want %s", got, want)
 	}
 }

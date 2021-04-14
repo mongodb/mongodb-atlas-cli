@@ -54,9 +54,6 @@ func GenTree(cmd *cobra.Command, dir string) error {
 	}
 	defer f.Close()
 
-	if _, err := io.WriteString(f, filename); err != nil {
-		return err
-	}
 	if err := GenCustom(cmd, f); err != nil {
 		return err
 	}
@@ -104,7 +101,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 	if long == "" {
 		long = short
 	}
-	ref := strings.ReplaceAll(name, " ", "_")
+	ref := strings.ReplaceAll(name, " ", separator)
 
 	buf.WriteString(".. _" + ref + ":\n\n")
 	buf.WriteString(strings.Repeat("=", len(name)) + "\n")

@@ -33,7 +33,7 @@ type LoadSampleDataOpts struct {
 
 func (opts *LoadSampleDataOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(config.Default())
+	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
 	return err
 }
 

@@ -50,7 +50,9 @@ type Store struct {
 	service       string
 	baseURL       string
 	caCertificate string
-	skipVerify    string
+	skipVerify    bool
+	username      string
+	password      string
 	client        interface{}
 }
 
@@ -66,7 +68,22 @@ var defaultTransport = &http.Transport{
 	ExpectContinueTimeout: expectContinueTimeout,
 }
 
-func customCATransport(ca []byte) http.RoundTripper {
+var skipVerifyTransport = &http.Transport{
+	ResponseHeaderTimeout: responseHeaderTimeout,
+	TLSHandshakeTimeout:   tlsHandshakeTimeout,
+	DialContext: (&net.Dialer{
+		Timeout:   timeout,
+		KeepAlive: keepAlive,
+	}).DialContext,
+	MaxIdleConns:          maxIdleConns,
+	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+	Proxy:                 http.ProxyFromEnvironment,
+	IdleConnTimeout:       idleConnTimeout,
+	ExpectContinueTimeout: expectContinueTimeout,
+	TLSClientConfig:       &tls.Config{InsecureSkipVerify: true}, //nolint:gosec // this is optional for some users,
+}
+
+func customCATransport(ca []byte) *http.Transport {
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(ca)
 	tlsClientConfig := &tls.Config{ //nolint:gosec // we let users set custom certificates
@@ -89,206 +106,119 @@ func customCATransport(ca []byte) http.RoundTripper {
 	}
 }
 
-func skipVerifyTransport() http.RoundTripper {
-	tlsClientConfig := &tls.Config{InsecureSkipVerify: true} //nolint:gosec // this is optional for some users
-	return &http.Transport{
-		ResponseHeaderTimeout: responseHeaderTimeout,
-		TLSHandshakeTimeout:   tlsHandshakeTimeout,
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: keepAlive,
-		}).DialContext,
-		MaxIdleConns:          maxIdleConns,
-		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-		Proxy:                 http.ProxyFromEnvironment,
-		IdleConnTimeout:       idleConnTimeout,
-		ExpectContinueTimeout: expectContinueTimeout,
-		TLSClientConfig:       tlsClientConfig,
+func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
+	if s.username == "" || s.password == "" {
+		client := http.DefaultClient
+		client.Transport = httpTransport
+		return client, nil
 	}
-}
-
-type Config interface {
-	Service() string
-	PublicAPIKey() string
-	PrivateAPIKey() string
-	OpsManagerURL() string
-	OpsManagerCACertificate() string
-	OpsManagerSkipVerify() string
-	OpsManagerVersionManifestURL() string
-}
-
-func authenticatedClient(c Config) (*http.Client, error) {
 	t := &digest.Transport{
-		Username: c.PublicAPIKey(),
-		Password: c.PrivateAPIKey(),
+		Username: s.username,
+		Password: s.password,
 	}
-	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
-		dat, err := ioutil.ReadFile(caCertificate)
-		if err != nil {
-			return nil, err
-		}
-		t.Transport = customCATransport(dat)
-	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
-		t.Transport = skipVerifyTransport()
-	} else {
-		t.Transport = http.DefaultTransport
-	}
-
+	t.Transport = httpTransport
 	return t.Client()
 }
 
-func defaultClient(c Config) (*http.Client, error) {
-	client := http.DefaultClient
-	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
-		dat, err := ioutil.ReadFile(caCertificate)
+func (s *Store) transport() (*http.Transport, error) {
+	switch {
+	case s.caCertificate != "":
+		dat, err := ioutil.ReadFile(s.caCertificate)
 		if err != nil {
 			return nil, err
 		}
-		client.Transport = customCATransport(dat)
-	} else if skipVerify := c.OpsManagerSkipVerify(); skipVerify == yes {
-		client.Transport = skipVerifyTransport()
-	} else {
-		client.Transport = defaultTransport
-	}
-
-	return client, nil
-}
-
-// New get the appropriate client for the profile/service selected
-func New(c Config) (*Store, error) {
-	s := new(Store)
-	s.service = c.Service()
-
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		s.baseURL = s.apiPath(configURL)
-	}
-	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
-		s.caCertificate = caCertificate
-	}
-	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
-		s.skipVerify = skipVerify
-	}
-	client, err := authenticatedClient(c)
-	if err != nil {
-		return nil, err
-	}
-
-	switch s.service {
-	case config.CloudService:
-		err = s.setAtlasClient(client)
-	case config.CloudManagerService, config.OpsManagerService:
-		err = s.setOpsManagerClient(client)
+		return customCATransport(dat), nil
+	case s.skipVerify:
+		return skipVerifyTransport, nil
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return defaultTransport, nil
 	}
-
-	return s, err
 }
 
-// NewUnauthenticated a client to interact with the Ops Manager APIs that don't require authentication
-func NewUnauthenticated(c Config) (*Store, error) {
-	s := new(Store)
-	s.service = c.Service()
+// Option is any configuration for Store.
+// New will take a list of Option and process them sequentially.
+// The store package provides a list of common and preset set of Option you can use
+// but you can implement your own.
+type Option func(s *Store) error
 
-	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+// Options turns a list of Option instances into a single Option.
+// This is a helper when combining multiple Option.
+func Options(opts ...Option) Option {
+	return func(s *Store) error {
+		for _, opt := range opts {
+			if err := opt(s); err != nil {
+				return err
+			}
+		}
+		return nil
 	}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		s.baseURL = s.apiPath(configURL)
+}
+
+// Service configures the Store service, valid options are cloud, cloud-manager, and ops-manager.
+func Service(service string) Option {
+	return func(s *Store) error {
+		s.service = service
+		return nil
 	}
-	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+}
+
+// WithBaseURL sets the base URL for the underling HTTP client.
+// the url should not contain any path, to add the public API path use WithPublicPathBaseURL.
+func WithBaseURL(configURL string) Option {
+	return func(s *Store) error {
+		s.baseURL = configURL
+		return nil
+	}
+}
+
+// WithPublicPathBaseURL adds the correct public path to the base url based on service.
+// if you use WithBaseURL and need the Store to connect to the public API
+// you need to also enable this option.
+func WithPublicPathBaseURL() Option {
+	return func(s *Store) error {
+		if s.service == config.CloudService {
+			s.baseURL += atlas.APIPublicV1Path
+			return nil
+		}
+		s.baseURL += opsmngr.APIPublicV1Path
+		return nil
+	}
+}
+
+// WithCACertificate enables the Store to use a custom CA certificate.
+func WithCACertificate(caCertificate string) Option {
+	return func(s *Store) error {
 		s.caCertificate = caCertificate
+		return nil
 	}
-	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
-		s.skipVerify = skipVerify
-	}
-	client, err := defaultClient(c)
-	if err != nil {
-		return nil, err
-	}
-	if err := s.setOpsManagerClient(client); err != nil {
-		return nil, err
-	}
-	return s, nil
 }
 
-// NewVersionManifest ets the appropriate client for the manifest version page
-func NewVersionManifest(c Config) (*Store, error) {
-	s := new(Store)
-	s.service = c.Service()
-	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+// SkipVerify skips CA certificate verification, use at your own risk.
+func SkipVerify() Option {
+	return func(s *Store) error {
+		s.skipVerify = true
+		return nil
 	}
-	s.baseURL = versionManifestStaticPath
-
-	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
-		s.baseURL = baseURL
-	}
-
-	client, err := defaultClient(c)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := s.setOpsManagerClient(client); err != nil {
-		return nil, err
-	}
-
-	return s, nil
 }
 
-// NewPrivateUnauth gets the appropriate client for the atlas private api
-func NewPrivateUnauth(c Config) (*Store, error) {
-	s := new(Store)
-	s.service = c.Service()
-	if s.service != config.CloudService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
-	}
-	s.baseURL = atlas.CloudURL
-
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		s.baseURL = configURL
-	}
-
-	client, err := defaultClient(c)
-	if err != nil {
-		return nil, err
-	}
-
-	if err2 := s.setAtlasClient(client); err2 != nil {
-		return nil, err2
-	}
-
-	return s, err
+// CredentialsGetter interface for how to get credentials when Store must be authenticated.
+type CredentialsGetter interface {
+	PublicAPIKey() string
+	PrivateAPIKey() string
 }
 
-// NewPrivate gets the appropriate client for the atlas private api with authentication
-func NewPrivate(c Config) (*Store, error) {
-	s := new(Store)
-	s.service = c.Service()
-	if s.service != config.CloudService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+// WithAuthentication sets the store credentials
+func WithAuthentication(c CredentialsGetter) Option {
+	return func(s *Store) error {
+		s.username = c.PublicAPIKey()
+		s.password = c.PrivateAPIKey()
+		return nil
 	}
-	s.baseURL = atlas.CloudURL
-
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		s.baseURL = configURL
-	}
-
-	client, err := authenticatedClient(c)
-	if err != nil {
-		return nil, err
-	}
-
-	if err2 := s.setAtlasClient(client); err2 != nil {
-		return nil, err2
-	}
-
-	return s, err
 }
 
+// setAtlasClient sets the internal client to use an Atlas client and methods
 func (s *Store) setAtlasClient(client *http.Client) error {
-	opts := make([]atlas.ClientOpt, 0)
+	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
@@ -296,13 +226,13 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	if err != nil {
 		return err
 	}
-	c.UserAgent = userAgent
 	s.client = c
 	return nil
 }
 
+// setOpsManagerClient sets the internal client to use an Ops Manager client and methods
 func (s *Store) setOpsManagerClient(client *http.Client) error {
-	opts := make([]opsmngr.ClientOpt, 0)
+	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(userAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
@@ -310,14 +240,141 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 	if err != nil {
 		return err
 	}
-	c.UserAgent = userAgent
+
 	s.client = c
 	return nil
 }
 
-func (s *Store) apiPath(baseURL string) string {
-	if s.service == config.CloudService {
-		return baseURL + atlas.APIPublicV1Path
+// TransportConfigGetter interface for Ops Manager custom network settings.
+type TransportConfigGetter interface {
+	OpsManagerCACertificate() string
+	OpsManagerSkipVerify() string
+}
+
+// NetworkPresets is the default Option to set custom network preference.
+func NetworkPresets(c TransportConfigGetter) Option {
+	options := make([]Option, 0)
+	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
+		options = append(options, WithCACertificate(caCertificate))
 	}
-	return baseURL + opsmngr.APIPublicV1Path
+	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
+		options = append(options, SkipVerify())
+	}
+	return Options(options...)
+}
+
+// Config an interface of the methods needed to set up a Store
+type Config interface {
+	CredentialsGetter
+	TransportConfigGetter
+	Service() string
+	OpsManagerURL() string
+}
+
+// PublicAuthenticatedPreset is the default Option when connecting to the public API with authentication.
+func PublicAuthenticatedPreset(c Config) Option {
+	options := []Option{Service(c.Service()), WithAuthentication(c)}
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
+	}
+	options = append(options, NetworkPresets(c))
+	return Options(options...)
+}
+
+// PublicUnauthenticatedPreset is the default Option when connecting to the public API without authentication.
+func PublicUnauthenticatedPreset(c Config) Option {
+	options := []Option{Service(c.Service())}
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
+	}
+	options = append(options, NetworkPresets(c))
+	return Options(options...)
+}
+
+// PrivateAuthenticatedPreset is the default Option when connecting to the private API with authentication.
+func PrivateAuthenticatedPreset(c Config) Option {
+	options := []Option{Service(c.Service()), WithAuthentication(c)}
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		options = append(options, WithBaseURL(configURL))
+	}
+	options = append(options, NetworkPresets(c))
+	return Options(options...)
+}
+
+// PrivateUnauthenticatedPreset is the default Option when connecting to the private API without authentication.
+func PrivateUnauthenticatedPreset(c Config) Option {
+	options := []Option{Service(c.Service())}
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		options = append(options, WithBaseURL(configURL))
+	}
+	options = append(options, NetworkPresets(c))
+	return Options(options...)
+}
+
+// New returns a new Store based on the given list of Option.
+//
+// Usage:
+//
+//	// get a new Store for Atlas
+//	store := store.New(Service("cloud"))
+//
+//	// get a new Store for the public API based on a Config interface
+//	store := store.New(PublicAuthenticatedPreset(config))
+//
+//	// get a new Store for the private API based on a Config interface
+//	store := store.New(PrivateAuthenticatedPreset(config))
+func New(opts ...Option) (*Store, error) {
+	store := new(Store)
+
+	// apply the list of options to Server
+	for _, opt := range opts {
+		if err := opt(store); err != nil {
+			return nil, err
+		}
+	}
+
+	httpTransport, err := store.transport()
+	if err != nil {
+		return nil, err
+	}
+	client, err := store.httpClient(httpTransport)
+	if err != nil {
+		return nil, err
+	}
+
+	switch store.service {
+	case config.CloudService:
+		err = store.setAtlasClient(client)
+	case config.CloudManagerService, config.OpsManagerService:
+		err = store.setOpsManagerClient(client)
+	default:
+		return nil, fmt.Errorf("unsupported service: %s", store.service)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return store, nil
+}
+
+type ManifestGetter interface {
+	Service() string
+	OpsManagerVersionManifestURL() string
+}
+
+// NewVersionManifest ets the appropriate client for the manifest version page
+func NewVersionManifest(c ManifestGetter) (*Store, error) {
+	s := new(Store)
+	s.service = c.Service()
+	if s.service != config.OpsManagerService {
+		return nil, fmt.Errorf("unsupported service: %s", s.service)
+	}
+	s.baseURL = versionManifestStaticPath
+	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
+		s.baseURL = baseURL
+	}
+	if err := s.setOpsManagerClient(http.DefaultClient); err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }

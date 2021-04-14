@@ -41,7 +41,7 @@ type AzureOpts struct {
 
 func (opts *AzureOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(config.Default())
+	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
 	return err
 }
 

@@ -354,6 +354,17 @@ functions:
         env:
           <<: *go_options
         binary: build/package/rename-pkg.sh
+  "send slack notification":
+    - command: subprocess.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        silent: true
+        include_expansions_in_env:
+          - evergreen_user
+          - evergreen_api_key
+          - release_slack_channel
+        binary: build/package/send-slack-notification.sh
   "generate download archive json":
     - command: shell.exec
       type: test
@@ -1010,7 +1021,7 @@ tasks:
       - command: subprocess.exec
         type: test
         params:
-          working_dir: src/github.com/mongodb/mongocli/dist
+          working_dir: src/github.com/mongodb/mongocli
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
@@ -1046,16 +1057,7 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongocli
-          silent: true
-          include_expansions_in_env:
-            - evergreen_user
-            - evergreen_api_key
-            - release_slack_channel
-          command: bash -c build/package/send-slack-notification.sh
+      - func: "send slack notification"
   - name: release_msi
     stepback: false
     git_tag_only: true

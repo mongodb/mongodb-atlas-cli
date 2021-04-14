@@ -42,7 +42,7 @@ type prependerFunc func(string) string
 
 // GenTreeCustom is the the same as GenTree, but
 // with custom filePrepender and linkHandler.
-func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender prependerFunc, linkHandler linkFunc) error {
+func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender prependerFunc, linkHandler prependerFunc) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
 			continue
@@ -98,7 +98,7 @@ const tocHeader = `
 
 // GenCustom creates custom reStructured Text output.
 // Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
-func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler linkFunc) error {
+func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler prependerFunc) error {
 	cmd.InitDefaultHelpCmd()
 	cmd.InitDefaultHelpFlag()
 
@@ -139,7 +139,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler linkFunc) error {
 			parent := cmd.Parent()
 			pname := parent.CommandPath()
 			ref = strings.ReplaceAll(pname, " ", "_")
-			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler("/reference", ref), parent.Short))
+			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler(ref), parent.Short))
 			cmd.VisitParents(func(c *cobra.Command) {
 				if c.DisableAutoGenTag {
 					cmd.DisableAutoGenTag = c.DisableAutoGenTag
@@ -156,7 +156,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler linkFunc) error {
 			}
 			cname := name + " " + child.Name()
 			ref = strings.ReplaceAll(cname, " ", "-")
-			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler("/reference", ref), child.Short))
+			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler(ref), child.Short))
 		}
 		buf.WriteString("\n")
 	}
@@ -257,8 +257,8 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) {
 }
 
 // linkHandler for default ReST hyperlink markup
-func defaultLinkHandler(ref, name string) string {
-	return fmt.Sprintf(":ref:`%s/%s`", ref, name)
+func defaultLinkHandler(name string) string {
+	return fmt.Sprintf(":ref:`%s`", name)
 }
 
 // adapted from: https://github.com/kr/text/blob/main/indent.go

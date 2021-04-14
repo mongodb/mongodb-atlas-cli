@@ -208,7 +208,7 @@ const optionsHeader = `.. list-table::
    :header-rows: 1
    :widths: 20 10 10 60
 
-   * - Option
+   * - Name
      - Type
      - Required
      - Description

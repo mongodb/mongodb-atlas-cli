@@ -29,47 +29,50 @@ const (
 
 // ProcessConfig that belongs to a cluster
 type ProcessConfig struct {
-	AuditLogPath           string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
-	AuditLogDestination    string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
-	AuditLogFormat         string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
-	AuditLogFilter         string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
-	BuildIndexes           *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath                 string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
-	BindIP                 *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
-	BindIPAll              *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
-	DirectoryPerDB         *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
-	Engine                 string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
-	FCVersion              string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Hostname               string                  `yaml:"hostname" json:"hostname"`
-	InMemory               *map[string]interface{} `yaml:"inMemory,omitempty" json:"inMemory,omitempty"`
-	IndexBuildRetry        *bool                   `yaml:"indexBuildRetry,omitempty" json:"indexBuildRetry,omitempty"`
-	IPV6                   *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
-	Journal                *map[string]interface{} `yaml:"journal,omitempty" json:"journal,omitempty"`
-	LogAppend              bool                    `yaml:"logAppend,omitempty" json:"logAppend,omitempty"`
-	LogDestination         string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
-	LogPath                string                  `yaml:"logPath" json:"logPath"`
-	LogRotate              string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
-	LogVerbosity           int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
-	LogQuiet               bool                    `yaml:"logQuiet,omitempty" json:"logQuiet,omitempty"`
-	SyslogFacility         string                  `yaml:"syslogFacility,omitempty" json:"syslogFacility,omitempty"`
-	LogTimeStampFormat     string                  `yaml:"logTimeStampFormat,omitempty" json:"logTimeStampFormat,omitempty"`
-	Name                   string                  `yaml:"name,omitempty" json:"name,omitempty"`
-	OplogMinRetentionHours *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
-	Port                   int                     `yaml:"port" json:"port"`
-	Priority               *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
-	ProcessType            string                  `yaml:"processType" json:"processType"`
-	SmallFiles             *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
-	SlaveDelay             *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
-	SyncPeriodSecs         *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
-	Votes                  *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
-	ArbiterOnly            *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
-	Disabled               bool                    `yaml:"disabled" json:"disabled"`
-	Hidden                 *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	Security               *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
-	SetParameter           *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
-	TLS                    *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
-	Version                string                  `yaml:"version,omitempty" json:"version,omitempty"`
-	WiredTiger             *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
+	ArbiterOnly               *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
+	AuditLogPath              string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
+	AuditLogDestination       string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
+	AuditLogFormat            string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	AuditLogFilter            string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
+	BuildIndexes              *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
+	DBPath                    string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
+	BindIP                    *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
+	BindIPAll                 *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	DirectoryPerDB            *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
+	Disabled                  bool                    `yaml:"disabled" json:"disabled"`
+	Engine                    string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
+	EnableMajorityReadConcern *bool                   `yaml:"enableMajorityReadConcern,omitempty" json:"enableMajorityReadConcern,omitempty"`
+	FCVersion                 string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Hidden                    *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	Hostname                  string                  `yaml:"hostname" json:"hostname"`
+	InMemory                  *map[string]interface{} `yaml:"inMemory,omitempty" json:"inMemory,omitempty"`
+	IndexBuildRetry           *bool                   `yaml:"indexBuildRetry,omitempty" json:"indexBuildRetry,omitempty"`
+	IPV6                      *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
+	Journal                   *map[string]interface{} `yaml:"journal,omitempty" json:"journal,omitempty"`
+	LogAppend                 bool                    `yaml:"logAppend,omitempty" json:"logAppend,omitempty"`
+	LogDestination            string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
+	LogPath                   string                  `yaml:"logPath" json:"logPath"`
+	LogRotate                 string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
+	LogVerbosity              int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
+	LogQuiet                  bool                    `yaml:"logQuiet,omitempty" json:"logQuiet,omitempty"`
+	SyslogFacility            string                  `yaml:"syslogFacility,omitempty" json:"syslogFacility,omitempty"`
+	LogTimeStampFormat        string                  `yaml:"logTimeStampFormat,omitempty" json:"logTimeStampFormat,omitempty"`
+	Name                      string                  `yaml:"name,omitempty" json:"name,omitempty"`
+	OperationProfiling        *map[string]interface{} `yaml:"operationProfiling,omitempty" json:"operationProfiling,omitempty"`
+	OplogMinRetentionHours    *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
+	OplogSizeMB               *int                    `yaml:"oplogSizeMB,omitempty" json:"oplogSizeMB,omitempty"`
+	Port                      int                     `yaml:"port" json:"port"`
+	Priority                  *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
+	ProcessType               string                  `yaml:"processType" json:"processType"`
+	SmallFiles                *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
+	SlaveDelay                *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
+	SyncPeriodSecs            *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
+	Votes                     *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
+	Security                  *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
+	SetParameter              *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
+	TLS                       *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Version                   string                  `yaml:"version,omitempty" json:"version,omitempty"`
+	WiredTiger                *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
 }
 
 // TLS defines TLS parameters for Net
@@ -174,6 +177,11 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 		pc.SmallFiles = p.Args26.Storage.SmallFiles
 	}
 
+	if p.Args26.Replication != nil {
+		pc.OplogSizeMB = p.Args26.Replication.OplogSizeMB
+		pc.EnableMajorityReadConcern = p.Args26.Replication.EnableMajorityReadConcern
+	}
+
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
@@ -273,10 +281,27 @@ func (p *ProcessConfig) args26() opsmngr.Args26 {
 	}
 }
 
-func (p *ProcessConfig) args26RS(rsSetName string) opsmngr.Args26 {
+func (p *ProcessConfig) replicaSetArgs26(rsSetName string) opsmngr.Args26 {
 	args26 := p.args26()
-	args26.Replication = &opsmngr.Replication{ReplSetName: rsSetName}
+	args26.Replication = &opsmngr.Replication{
+		ReplSetName:               rsSetName,
+		OplogSizeMB:               p.OplogSizeMB,
+		EnableMajorityReadConcern: p.EnableMajorityReadConcern,
+	}
 	args26.Storage = p.storage()
+	if p.Security != nil {
+		args26.Security = p.Security
+	}
+	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
+		args26.AuditLog = p.auditLog()
+	}
+	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
+		args26.AuditLog = p.auditLog()
+	}
+	if p.OperationProfiling != nil {
+		args26.OperationProfiling = p.OperationProfiling
+	}
+
 	return args26
 }
 
@@ -284,15 +309,9 @@ func (p *ProcessConfig) args26RS(rsSetName string) opsmngr.Args26 {
 func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = p.args26RS(replSetName)
-
-	if p.Security != nil {
-		process.Args26.Security = p.Security
-	}
+	process.Args26 = p.replicaSetArgs26(replSetName)
 	process.LogRotate = newLogRotate()
-	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
-		process.Args26.AuditLog = p.auditLog()
-	}
+
 	return process
 }
 
@@ -300,15 +319,9 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	process := p.process()
 
-	process.Args26 = p.args26RS(rsSetName)
+	process.Args26 = p.replicaSetArgs26(rsSetName)
 	process.Args26.Sharding = &opsmngr.Sharding{ClusterRole: "configsvr"}
-	if p.Security != nil {
-		process.Args26.Security = p.Security
-	}
 	process.LogRotate = newLogRotate()
-	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
-		process.Args26.AuditLog = p.auditLog()
-	}
 
 	return process
 }

@@ -15,6 +15,7 @@
 package fixture
 
 import (
+	"github.com/openlyinc/pointy"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -209,6 +210,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					},
 					Replication: &opsmngr.Replication{
 						ReplSetName: name,
+						OplogSizeMB: pointy.Int(10),
 					},
 					Sharding: nil,
 					Storage: &opsmngr.Storage{

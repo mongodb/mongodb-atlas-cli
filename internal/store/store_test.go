@@ -17,30 +17,86 @@
 package store
 
 import (
-	"strings"
 	"testing"
 
 	"go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestStore_apiPath(t *testing.T) {
-	t.Run("ops manager", func(t *testing.T) {
-		s := &Store{
-			service: "ops-manager",
-		}
-		result := s.apiPath("localhost")
-		if !strings.Contains(result, opsmngr.APIPublicV1Path) {
-			t.Errorf("apiPath() = %s; want '%s'", result, opsmngr.APIPublicV1Path)
-		}
-	})
-	t.Run("atlas", func(t *testing.T) {
-		s := &Store{
-			service: "cloud",
-		}
-		result := s.apiPath("localhost")
-		if !strings.Contains(result, mongodbatlas.APIPublicV1Path) {
-			t.Errorf("apiPath() = %s; want '%s'", result, mongodbatlas.APIPublicV1Path)
-		}
-	})
+type auth struct {
+	username string
+	password string
+}
+
+func (a auth) PublicAPIKey() string {
+	return a.username
+}
+
+func (a auth) PrivateAPIKey() string {
+	return a.password
+}
+
+var _ CredentialsGetter = &auth{}
+
+func TestService(t *testing.T) {
+	c, err := New(Service("cloud"))
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if c.service != "cloud" {
+		t.Errorf("New() service = %s; expected %s", c.service, "cloud")
+	}
+}
+
+func TestWithBaseURL(t *testing.T) {
+	c, err := New(Service("cloud"), WithBaseURL("http://test"))
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if c.baseURL != "http://test" {
+		t.Errorf("New() baseURL = %s; expected %s", c.baseURL, "http://test")
+	}
+}
+
+func TestSkipVerify(t *testing.T) {
+	c, err := New(Service("cloud"), SkipVerify())
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if !c.skipVerify {
+		t.Error("New() skipVerify not set")
+	}
+}
+
+func TestWithPublicPathBaseURL(t *testing.T) {
+	c, err := New(Service("cloud"), WithBaseURL("http://test"), WithPublicPathBaseURL())
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	expected := "http://test" + mongodbatlas.APIPublicV1Path
+	if c.baseURL != expected {
+		t.Errorf("New() baseURL = %s; expected %s", c.baseURL, expected)
+	}
+}
+
+func TestWithAuthentication(t *testing.T) {
+	a := auth{
+		username: "username",
+		password: "password",
+	}
+	c, err := New(Service("cloud"), WithAuthentication(a))
+
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if c.username != a.username {
+		t.Errorf("New() username = %s; expected %s", c.username, a.username)
+	}
+	if c.password != a.password {
+		t.Errorf("New() password = %s; expected %s", c.password, a.password)
+	}
 }

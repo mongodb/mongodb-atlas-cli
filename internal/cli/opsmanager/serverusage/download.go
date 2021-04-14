@@ -39,7 +39,7 @@ var downloadMessage = "Download of %s completed.\n"
 
 func (opts *DownloadOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(config.Default())
+	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
 	return err
 }
 

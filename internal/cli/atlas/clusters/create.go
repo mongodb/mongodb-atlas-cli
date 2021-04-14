@@ -60,7 +60,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(config.Default())
+	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -266,7 +266,7 @@ func DefaultMongoDBMajorVersion() (string, error) {
 	if defaultMongoDBMajorVersion != "" {
 		return defaultMongoDBMajorVersion, nil
 	}
-	s, err := store.NewPrivateUnauth(config.Default())
+	s, err := store.New(store.PrivateUnauthenticatedPreset(config.Default()))
 	if err != nil {
 		return "", err
 	}

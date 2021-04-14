@@ -169,6 +169,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 							},
 							Replication: &opsmngr.Replication{
 								ReplSetName: "replica_set_1",
+								OplogSizeMB: pointy.Int(10),
 							},
 							Storage: &opsmngr.Storage{
 								DBPath: "/data/db/",

@@ -25,16 +25,16 @@ import (
 	"github.com/mongodb/mongocli/e2e"
 )
 
+const (
+	configEntity    = "config"
+	existingProfile = "e2e"
+)
+
 func TestConfig(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	const (
-		configEntity    = "config"
-		existingProfile = "e2e"
-	)
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls")

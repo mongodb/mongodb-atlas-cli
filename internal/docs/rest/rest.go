@@ -258,7 +258,7 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) {
 
 // linkHandler for default ReST hyperlink markup
 func defaultLinkHandler(ref, name string) string {
-		return fmt.Sprintf(":ref:`%s/%s`", ref, name)
+	return fmt.Sprintf(":ref:`%s/%s`", ref, name)
 }
 
 // adapted from: https://github.com/kr/text/blob/main/indent.go

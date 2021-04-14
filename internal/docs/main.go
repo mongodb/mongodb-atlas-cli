@@ -16,6 +16,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/mongodb/mongocli/internal/cli/root"
 	"github.com/mongodb/mongocli/internal/docs/rest"
@@ -23,9 +24,13 @@ import (
 
 func main() {
 	var profile string
+	if err := os.MkdirAll("./docs/reference", 0766); err != nil {
+		log.Fatal(err)
+	}
+
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := rest.GenTree(mongocli, "./docs"); err != nil {
+	if err := rest.GenTree(mongocli, "./docs/reference"); err != nil {
 		log.Fatal(err)
 	}
 }

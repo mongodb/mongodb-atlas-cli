@@ -36,9 +36,13 @@ func GenTree(cmd *cobra.Command, dir string) error {
 	return GenTreeCustom(cmd, dir, emptyStr, defaultLinkHandler)
 }
 
+type linkFunc func(string, string) string
+
+type prependerFunc func(string) string
+
 // GenTreeCustom is the the same as GenTree, but
 // with custom filePrepender and linkHandler.
-func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender func(string) string, linkHandler func(string, string) string) error {
+func GenTreeCustom(cmd *cobra.Command, dir string, filePrepender prependerFunc, linkHandler linkFunc) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
 			continue
@@ -94,7 +98,7 @@ const tocHeader = `
 
 // GenCustom creates custom reStructured Text output.
 // Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
-func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string) string) error {
+func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler linkFunc) error {
 	cmd.InitDefaultHelpCmd()
 	cmd.InitDefaultHelpFlag()
 
@@ -135,7 +139,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 			parent := cmd.Parent()
 			pname := parent.CommandPath()
 			ref = strings.ReplaceAll(pname, " ", "_")
-			buf.WriteString(fmt.Sprintf("* %s \t - %s\n", linkHandler(pname, ref), parent.Short))
+			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler("/reference", ref), parent.Short))
 			cmd.VisitParents(func(c *cobra.Command) {
 				if c.DisableAutoGenTag {
 					cmd.DisableAutoGenTag = c.DisableAutoGenTag
@@ -152,7 +156,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 			}
 			cname := name + " " + child.Name()
 			ref = strings.ReplaceAll(cname, " ", "-")
-			buf.WriteString(fmt.Sprintf("* %s \t - %s\n", linkHandler(cname, ref), child.Short))
+			buf.WriteString(fmt.Sprintf("* %s - %s\n", linkHandler("/reference", ref), child.Short))
 		}
 		buf.WriteString("\n")
 	}
@@ -168,7 +172,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer, linkHandler func(string, string)
 			}
 			cname := name + " " + child.Name()
 			ref = strings.ReplaceAll(cname, " ", "-")
-			buf.WriteString(fmt.Sprintf("   %s\n", ref))
+			buf.WriteString(fmt.Sprintf("   /reference/%s\n", ref))
 		}
 		buf.WriteString("\n")
 	}
@@ -253,8 +257,8 @@ func printOptionsReST(buf *bytes.Buffer, cmd *cobra.Command) {
 }
 
 // linkHandler for default ReST hyperlink markup
-func defaultLinkHandler(name, ref string) string {
-	return fmt.Sprintf("`%s <%s.txt>`_", name, ref)
+func defaultLinkHandler(ref, name string) string {
+		return fmt.Sprintf(":ref:`%s/%s`", ref, name)
 }
 
 // adapted from: https://github.com/kr/text/blob/main/indent.go

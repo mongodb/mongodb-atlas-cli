@@ -96,9 +96,6 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 	buf := new(bytes.Buffer)
 	name := cmd.CommandPath()
 
-	short := cmd.Short
-	long := cmd.Long
-
 	ref := strings.ReplaceAll(name, " ", separator)
 
 	buf.WriteString(".. _" + ref + ":\n\n")
@@ -106,9 +103,9 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 	buf.WriteString(name + "\n")
 	buf.WriteString(strings.Repeat("=", len(name)) + "\n")
 	buf.WriteString(toc)
-	buf.WriteString("\n" + short + "\n")
-	if long != "" {
-		buf.WriteString("\n" + long + "\n\n")
+	buf.WriteString("\n" + cmd.Short + "\n")
+	if cmd.Long != "" {
+		buf.WriteString("\n" + cmd.Long + "\n\n")
 	}
 
 	if cmd.Runnable() {

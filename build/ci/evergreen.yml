@@ -1027,7 +1027,7 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser
+          goreleaser_cmd: goreleaser --rm-dist
       - func: "rename pkg"
       - command: archive.targz_pack
         params:

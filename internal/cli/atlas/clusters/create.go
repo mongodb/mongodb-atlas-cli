@@ -104,27 +104,13 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 		cluster.Name = opts.name
 	}
 
-	updateLabels(cluster)
+	AddLabel(cluster, atlas.Label{
+		Key:   labelKey,
+		Value: labelValue,
+	})
 
 	cluster.GroupID = opts.ConfigProjectID()
 	return cluster, nil
-}
-
-func updateLabels(out *atlas.Cluster) {
-	found := false
-	for _, v := range out.Labels {
-		if v.Key == labelKey && v.Value == labelValue {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		out.Labels = append(out.Labels, atlas.Label{
-			Key:   labelKey,
-			Value: labelValue,
-		})
-	}
 }
 
 func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {

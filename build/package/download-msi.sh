@@ -17,6 +17,6 @@ set -Eeou pipefail
 
 VERSION=$(git describe | cut -d "v" -f 2)
 
-pushd dist
+pushd bin
 
 curl https://fastdl.mongodb.org/mongocli/mongocli_"${VERSION}"_windows_x86_64.msi --output mongocli_"${VERSION}"_windows_x86_64.msi

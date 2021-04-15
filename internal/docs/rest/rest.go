@@ -124,19 +124,8 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 	}
 
 	if hasSeeAlso(cmd) {
-		buf.WriteString("See Also\n")
+		buf.WriteString("Related Commands\n")
 		buf.WriteString("--------\n\n")
-		if cmd.HasParent() {
-			parent := cmd.Parent()
-			pname := parent.CommandPath()
-			ref = strings.ReplaceAll(pname, " ", separator)
-			buf.WriteString(fmt.Sprintf("* :ref:`%s` - %s\n", ref, parent.Short))
-			cmd.VisitParents(func(c *cobra.Command) {
-				if c.DisableAutoGenTag {
-					cmd.DisableAutoGenTag = c.DisableAutoGenTag
-				}
-			})
-		}
 
 		children := cmd.Commands()
 		sort.Sort(byName(children))
@@ -151,7 +140,7 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 		}
 		buf.WriteString("\n")
 	}
-	if _, ok := cmd.Annotations["toc"]; ok {
+	if _, ok := cmd.Annotations["toc"]; ok || !cmd.Runnable() {
 		buf.WriteString(tocHeader)
 		buf.WriteString("\n")
 		children := cmd.Commands()

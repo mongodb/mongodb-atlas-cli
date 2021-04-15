@@ -89,7 +89,6 @@ changelog:
     - '^test:'
     - '^build(deps):'
 release:
-  draft: false
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:

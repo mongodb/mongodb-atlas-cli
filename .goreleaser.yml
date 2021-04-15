@@ -93,4 +93,4 @@ release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:
-    - glob: ./bin/mongocli_{{.Version}}_windows_x86_64.msi
+    - glob: ./bin/*.msi

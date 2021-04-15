@@ -26,7 +26,7 @@ curl --header "Api-User:${evergreen_user:?}" \
        "msg" : ":mcli: MongoDB CLI v'"${VERSION}"' has been released! :tada:",
        "attachments" : [
        {
-       	"title": "'"${VERSION}"'",
+       	"title": "v'"${VERSION}"'",
        	"title_link": "https://github.com/mongodb/mongocli/releases/tag/v'"${VERSION}"'",
        	"author_name": "MongoDB CLI",
        	"fallback": "new release",

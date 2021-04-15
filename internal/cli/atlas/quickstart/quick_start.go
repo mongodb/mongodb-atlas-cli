@@ -260,7 +260,7 @@ func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 
 func (opts *Opts) newCluster() *atlas.Cluster {
 	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][tier]
-	return &atlas.Cluster{
+	cluster := &atlas.Cluster{
 		GroupID:             opts.ConfigProjectID(),
 		ClusterType:         replicaSet,
 		ReplicationSpecs:    []atlas.ReplicationSpec{opts.newReplicationSpec()},
@@ -268,7 +268,15 @@ func (opts *Opts) newCluster() *atlas.Cluster {
 		MongoDBMajorVersion: mdbVersion,
 		DiskSizeGB:          &diskSizeGB,
 		Name:                opts.ClusterName,
+		Labels: []atlas.Label{
+			{
+				Key:   "Infrastructure Tool",
+				Value: "MongoDB CLI Quickstart",
+			},
+		},
 	}
+
+	return cluster
 }
 
 func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {

@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestBuilder(t *testing.T) {
@@ -29,4 +30,98 @@ func TestBuilder(t *testing.T) {
 		13,
 		[]string{},
 	)
+}
+
+func TestAddLabel(t *testing.T) {
+	type args struct {
+		out   *mongodbatlas.Cluster
+		label mongodbatlas.Label
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantsAdd bool
+	}{
+		{
+			name: "adds",
+			args: args{
+				out: &mongodbatlas.Cluster{
+					Labels: []mongodbatlas.Label{},
+				},
+				label: mongodbatlas.Label{Key: "test", Value: "test"},
+			},
+			wantsAdd: true,
+		},
+		{
+			name: "doesn't adds",
+			args: args{
+				out: &mongodbatlas.Cluster{
+					Labels: []mongodbatlas.Label{{Key: "test", Value: "test"}},
+				},
+				label: mongodbatlas.Label{Key: "test", Value: "test"},
+			},
+			wantsAdd: true,
+		},
+	}
+	for _, tt := range tests {
+		name := tt.name
+		args := tt.args
+		wantsAdd := tt.wantsAdd
+		t.Run(name, func(t *testing.T) {
+			AddLabel(args.out, args.label)
+			if exists := LabelExists(args.out.Labels, args.label); exists != wantsAdd {
+				t.Errorf("wants to add %v, got %v\n", wantsAdd, exists)
+			}
+		})
+	}
+}
+
+func TestLabelExists(t *testing.T) {
+	type args struct {
+		labels []mongodbatlas.Label
+		l      mongodbatlas.Label
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "label doesn't exist",
+			args: args{
+				labels: []mongodbatlas.Label{},
+				l: mongodbatlas.Label{
+					Key:   "test",
+					Value: "test",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "label exist",
+			args: args{
+				labels: []mongodbatlas.Label{
+					{
+						Key:   "test",
+						Value: "test",
+					},
+				},
+				l: mongodbatlas.Label{
+					Key:   "test",
+					Value: "test",
+				},
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		name := tt.name
+		args := tt.args
+		want := tt.want
+		t.Run(name, func(t *testing.T) {
+			if got := LabelExists(args.labels, args.l); got != want {
+				t.Errorf("LabelExists() = %v, want %v", got, want)
+			}
+		})
+	}
 }

@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func Builder() *cobra.Command {
@@ -48,4 +49,21 @@ func Builder() *cobra.Command {
 		connectionstring.Builder())
 
 	return cmd
+}
+
+func AddLabel(out *atlas.Cluster, l atlas.Label) {
+	if LabelExists(out.Labels, l) {
+		return
+	}
+
+	out.Labels = append(out.Labels, l)
+}
+
+func LabelExists(labels []atlas.Label, l atlas.Label) bool {
+	for _, v := range labels {
+		if v.Key == l.Key && v.Value == l.Value {
+			return true
+		}
+	}
+	return false
 }

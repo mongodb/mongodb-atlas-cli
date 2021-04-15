@@ -105,8 +105,9 @@ func GenCustom(cmd *cobra.Command, w io.Writer) error {
 	buf.WriteString(toc)
 	buf.WriteString("\n" + cmd.Short + "\n")
 	if cmd.Long != "" {
-		buf.WriteString("\n" + cmd.Long + "\n\n")
+		buf.WriteString("\n" + cmd.Long + "\n")
 	}
+	buf.WriteString("\n")
 
 	if cmd.Runnable() {
 		buf.WriteString(syntaxHeader)

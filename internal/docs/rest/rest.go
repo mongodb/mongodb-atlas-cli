@@ -35,13 +35,13 @@ const (
 	defaultExtension = ".txt"
 )
 
-// GenTree generates the docs for the full tree of commands
-func GenTree(cmd *cobra.Command, dir string) error {
+// GenReSTTree generates the docs for the full tree of commands
+func GenReSTTree(cmd *cobra.Command, dir string) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
 			continue
 		}
-		if err := GenTree(c, dir); err != nil {
+		if err := GenReSTTree(c, dir); err != nil {
 			return err
 		}
 	}
@@ -54,7 +54,7 @@ func GenTree(cmd *cobra.Command, dir string) error {
 	}
 	defer f.Close()
 
-	if err := GenCustom(cmd, f); err != nil {
+	if err := GenReSTCustom(cmd, f); err != nil {
 		return err
 	}
 	return nil
@@ -87,9 +87,9 @@ const tocHeader = `
    :titlesonly:
 `
 
-// GenCustom creates custom reStructured Text output.
+// GenReSTCustom creates custom reStructured Text output.
 // Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
-func GenCustom(cmd *cobra.Command, w io.Writer) error {
+func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 	cmd.InitDefaultHelpCmd()
 	cmd.InitDefaultHelpFlag()
 

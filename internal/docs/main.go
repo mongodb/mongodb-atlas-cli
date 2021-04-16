@@ -30,7 +30,7 @@ func main() {
 
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := rest.GenTree(mongocli, "./docs/reference"); err != nil {
+	if err := rest.GenReSTTree(mongocli, "./docs/reference"); err != nil {
 		log.Fatal(err)
 	}
 }

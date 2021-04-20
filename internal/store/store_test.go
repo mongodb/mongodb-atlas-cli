@@ -19,6 +19,7 @@ package store
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -38,18 +39,18 @@ func (a auth) PrivateAPIKey() string {
 var _ CredentialsGetter = &auth{}
 
 func TestService(t *testing.T) {
-	c, err := New(Service("cloud"))
+	c, err := New(Service(config.CloudService))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	if c.service != "cloud" {
+	if c.service != config.CloudService {
 		t.Errorf("New() service = %s; expected %s", c.service, "cloud")
 	}
 }
 
 func TestWithBaseURL(t *testing.T) {
-	c, err := New(Service("cloud"), WithBaseURL("http://test"))
+	c, err := New(Service(config.CloudService), WithBaseURL("http://test"))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -60,7 +61,7 @@ func TestWithBaseURL(t *testing.T) {
 }
 
 func TestSkipVerify(t *testing.T) {
-	c, err := New(Service("cloud"), SkipVerify())
+	c, err := New(Service(config.CloudService), SkipVerify())
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -71,7 +72,7 @@ func TestSkipVerify(t *testing.T) {
 }
 
 func TestWithPublicPathBaseURL(t *testing.T) {
-	c, err := New(Service("cloud"), WithBaseURL("http://test"), WithPublicPathBaseURL())
+	c, err := New(Service(config.CloudService), WithBaseURL("http://test"), WithPublicPathBaseURL())
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -80,6 +81,77 @@ func TestWithPublicPathBaseURL(t *testing.T) {
 	if c.baseURL != expected {
 		t.Errorf("New() baseURL = %s; expected %s", c.baseURL, expected)
 	}
+}
+
+type testConfig struct {
+	url string
+	auth
+}
+
+func (c testConfig) OpsManagerCACertificate() string {
+	return ""
+}
+
+func (c testConfig) OpsManagerSkipVerify() string {
+	return "false"
+}
+
+func (c testConfig) Service() string {
+	return config.CloudService
+}
+
+func (c testConfig) OpsManagerURL() string {
+	return c.url
+}
+
+var _ AuthenticatedConfig = &testConfig{}
+
+func TestPrivateAuthenticatedPreset(t *testing.T) {
+	t.Run("default", func(t *testing.T) {
+		c, err := New(PrivateAuthenticatedPreset(testConfig{}))
+		if err != nil {
+			t.Fatalf("New() unexpected error: %v", err)
+		}
+
+		if c.baseURL != mongodbatlas.CloudURL {
+			t.Errorf("New() baseURL = %s; expected %s", c.baseURL, mongodbatlas.CloudURL)
+		}
+	})
+	t.Run("with a base url", func(t *testing.T) {
+		const url = "http://test"
+		c, err := New(PrivateAuthenticatedPreset(testConfig{url: url}))
+		if err != nil {
+			t.Fatalf("New() unexpected error: %v", err)
+		}
+
+		if c.baseURL != url {
+			t.Errorf("New() baseURL = %s; expected %s", c.baseURL, url)
+		}
+	})
+}
+
+func TestPrivateUnauthenticatedPreset(t *testing.T) {
+	t.Run("default", func(t *testing.T) {
+		c, err := New(PrivateUnauthenticatedPreset(testConfig{}))
+		if err != nil {
+			t.Fatalf("New() unexpected error: %v", err)
+		}
+
+		if c.baseURL != mongodbatlas.CloudURL {
+			t.Errorf("New() baseURL = %s; expected %s", c.baseURL, mongodbatlas.CloudURL)
+		}
+	})
+	t.Run("with a base url", func(t *testing.T) {
+		const url = "http://test"
+		c, err := New(PrivateUnauthenticatedPreset(testConfig{url: url}))
+		if err != nil {
+			t.Fatalf("New() unexpected error: %v", err)
+		}
+
+		if c.baseURL != url {
+			t.Errorf("New() baseURL = %s; expected %s", c.baseURL, url)
+		}
+	})
 }
 
 func TestWithAuthentication(t *testing.T) {

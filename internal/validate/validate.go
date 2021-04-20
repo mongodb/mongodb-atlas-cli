@@ -91,11 +91,14 @@ func ObjectID(s string) error {
 	return nil
 }
 
+var ErrMissingCredentials = errors.New("missing credentials")
+
 // Credentials validates public and private API keys have been set
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
 		return fmt.Errorf(
-			"missing credentials\n\nTo set credentials, run: %s %s",
+			"%w\n\nTo set credentials, run: %s %s",
+			ErrMissingCredentials,
 			config.ToolName,
 			"config",
 		)
@@ -141,7 +144,7 @@ func ClusterName(val interface{}) error {
 	return fmt.Errorf("%w: %s", ErrInvalidClusterName, name)
 }
 
-var ErrInvalidDBUsername = errors.New("invalid cluster name")
+var ErrInvalidDBUsername = errors.New("invalid db username")
 
 func DBUsername(val interface{}) error {
 	name, ok := val.(string)

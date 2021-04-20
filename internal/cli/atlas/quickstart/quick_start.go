@@ -515,7 +515,7 @@ func askOpenBrowserQuestion() (bool, error) {
 
 func askMongoShellAndSetConfig() error {
 	var mongoShellPath string
-	q := newMongoShellPathInput(mongosh.Path(), validate.Path)
+	q := newMongoShellPathInput(mongosh.Path())
 	if err := survey.Ask([]*survey.Question{q}, &mongoShellPath); err != nil {
 		return err
 	}

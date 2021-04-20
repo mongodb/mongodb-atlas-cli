@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -115,7 +116,7 @@ var ErrInvalidPath = errors.New("invalid path")
 func Path(val interface{}) error {
 	path, ok := val.(string)
 	if !ok {
-		return fmt.Errorf("%w: %s", ErrInvalidPath, path)
+		return fmt.Errorf("%w: %v", ErrInvalidPath, val)
 	}
 
 	if _, err := os.Stat(path); err != nil {
@@ -123,4 +124,34 @@ func Path(val interface{}) error {
 	}
 
 	return nil
+}
+
+var ErrInvalidClusterName = errors.New("invalid cluster name")
+
+func ClusterName(val interface{}) error {
+	name, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("%w: %v", ErrInvalidClusterName, val)
+	}
+	match, _ := regexp.MatchString("^[a-zA-Z0-9][a-zA-Z0-9-]*$", name)
+	if match {
+		return nil
+	}
+
+	return fmt.Errorf("%w: %s", ErrInvalidClusterName, name)
+}
+
+var ErrInvalidDBUsername = errors.New("invalid cluster name")
+
+func DBUsername(val interface{}) error {
+	name, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("%w: %v", ErrInvalidDBUsername, val)
+	}
+	match, _ := regexp.MatchString("^[a-zA-Z0-9]+[a-zA-Z0-9-_]*$", name)
+	if match {
+		return nil
+	}
+
+	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
 }

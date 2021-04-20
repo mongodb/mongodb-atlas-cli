@@ -82,7 +82,7 @@ const (
 	accessListComment = "IP added with mongocli atlas quickstart"
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
-	clusterNameRegex = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	clusterNameRegex  = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	mongoshURL        = "https://www.mongodb.com/try/download/shell"
 	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
 	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
@@ -505,7 +505,6 @@ func validateClusterName(val interface{}) error {
 	}
 
 	return nil
-
 }
 
 func askOpenMongoShellDownloadPage() (bool, error) {

@@ -79,7 +79,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 
 func newClusterNameQuestion(clusterName, message string, validation func(val interface{}) error) *survey.Question {
 	return &survey.Question{
-		Name: "clusterName",
+		Name:     "clusterName",
 		Validate: validation,
 		Prompt: &survey.Input{
 			Message: fmt.Sprintf("Cluster Name%s:", message),

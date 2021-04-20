@@ -1273,7 +1273,7 @@ tasks:
       - func: "install curator"
       - func: "push"
         vars:
-          edition: org
+          edition: enterprise
           distro: rhel70
           ext: rpm
   - name: push_rhel62_org_stable
@@ -1293,7 +1293,7 @@ tasks:
       - func: "install curator"
       - func: "push"
         vars:
-          edition: org
+          edition: enterprise
           distro: rhel70
           ext: rpm
   - name: push_rhel70_org_stable

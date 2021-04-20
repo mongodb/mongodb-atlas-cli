@@ -497,11 +497,11 @@ func validateClusterName(val interface{}) error {
 	name, ok := val.(string)
 
 	if !ok {
-		return fmt.Errorf("the Cluster Name %s is not valid", name)
+		return fmt.Errorf("the Cluster Name %s is not valid. The name can only contain ASCII letters, numbers, and hyphens", name)
 	}
 
 	if matched, err := regexp.MatchString(clusterNameRegex, name); err != nil || !matched {
-		return fmt.Errorf("the Cluster Name %s is not valid. The name can only contain ASCII letters, numbers, and hyphens. ", name)
+		return fmt.Errorf("the Cluster Name %s is not valid. The name can only contain ASCII letters, numbers, and hyphens", name)
 	}
 
 	return nil

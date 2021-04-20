@@ -97,7 +97,7 @@ func generateFile(name, version string) error {
 		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
 		Platform: []Platform{
 			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
-			*newPlatform(version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
+			*newPlatform(version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 16.04, 18.04, 20.04", []string{"deb"}),
 			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
 			*newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),

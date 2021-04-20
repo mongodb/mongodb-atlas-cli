@@ -1175,6 +1175,26 @@ tasks:
           distro: amazon2
           ext: rpm
   # DEB Distros
+  - name: push_ubuntu1604_enterprise
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+  - name: push_ubuntu1604_org
+    <<: *default_push_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
   - name: push_ubuntu1804_enterprise
     <<: *default_push_def
     commands:
@@ -1347,6 +1367,26 @@ tasks:
           distro: amazon2
           ext: rpm
   # DEB Distros
+  - name: push_ubuntu1604_enterprise_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1604
+          ext: deb
+  - name: push_ubuntu1604_org_stable
+    <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1604
+          ext: deb
   - name: push_ubuntu1804_enterprise_stable
     <<: *default_push_stable_def
     commands:

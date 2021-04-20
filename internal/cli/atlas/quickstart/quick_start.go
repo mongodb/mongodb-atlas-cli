@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"regexp"
 	"strings"
 	"syscall"
 
@@ -81,6 +82,7 @@ const (
 	accessListComment = "IP added with mongocli atlas quickstart"
 	atlasAdmin        = "atlasAdmin"
 	none              = "NONE"
+	clusterNameRegex = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	mongoshURL        = "https://www.mongodb.com/try/download/shell"
 	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
 	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
@@ -312,7 +314,7 @@ func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
 func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
-	if q := clusterNameQuestion(opts.ClusterName); q != nil {
+	if q := clusterNameQuestion(opts.ClusterName, validateClusterName); q != nil {
 		qs = append(qs, q)
 	}
 
@@ -489,6 +491,21 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("a user with this username %s already exists", username)
+}
+
+func validateClusterName(val interface{}) error {
+	name, ok := val.(string)
+
+	if !ok {
+		return fmt.Errorf("the Cluster Name %s is not valid", name)
+	}
+
+	if matched, err := regexp.MatchString(clusterNameRegex, name); err != nil || !matched {
+		return fmt.Errorf("the Cluster Name %s is not valid. The name can only contain ASCII letters, numbers, and hyphens. ", name)
+	}
+
+	return nil
+
 }
 
 func askOpenMongoShellDownloadPage() (bool, error) {

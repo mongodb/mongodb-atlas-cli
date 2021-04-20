@@ -77,9 +77,10 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 	}
 }
 
-func newClusterNameQuestion(clusterName, message string) *survey.Question {
+func newClusterNameQuestion(clusterName, message string, validation func(val interface{}) error) *survey.Question {
 	return &survey.Question{
 		Name: "clusterName",
+		Validate: validation,
 		Prompt: &survey.Input{
 			Message: fmt.Sprintf("Cluster Name%s:", message),
 			Help:    usage.ClusterName,
@@ -164,7 +165,7 @@ func providerQuestion(provider string) *survey.Question {
 	return nil
 }
 
-func clusterNameQuestion(clusterName string) *survey.Question {
+func clusterNameQuestion(clusterName string, validation func(val interface{}) error) *survey.Question {
 	if clusterName != "" {
 		return nil
 	}
@@ -175,7 +176,7 @@ func clusterNameQuestion(clusterName string) *survey.Question {
 		message = fmt.Sprintf(" [Press Enter to use the auto-generated name '%s']", newClusterName)
 	}
 
-	return newClusterNameQuestion(newClusterName, message)
+	return newClusterNameQuestion(newClusterName, message, validation)
 }
 
 func dbUserPasswordQuestion(password string) (string, *survey.Question) {

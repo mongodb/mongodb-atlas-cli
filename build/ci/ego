@@ -17,8 +17,10 @@
 set -o nounset
 set -o errexit
 
-readonly DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-readonly SCRIPT=$(basename "${BASH_SOURCE[0]}")
+readonly DIR=
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly SCRIPT=
+SCRIPT=$(basename "${BASH_SOURCE[0]}")
 
 declare -a ssh_opts
 ssh_opts[0]="-o"

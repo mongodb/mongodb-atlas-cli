@@ -262,3 +262,89 @@ func TestPath(t *testing.T) {
 		t.Error("ValidatePath() expected error but got none")
 	}
 }
+
+func TestClusterName(t *testing.T) {
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid (single word)",
+			val:     "Cluster0",
+			wantErr: false,
+		},
+		{
+			name:    "valid (dashed)",
+			val:     "Cluster-0",
+			wantErr: false,
+		},
+		{
+			name:    "invalid (space)",
+			val:     "Cluster 0",
+			wantErr: true,
+		},
+		{
+			name:    "invalid (underscore)",
+			val:     "Cluster_0",
+			wantErr: true,
+		},
+		{
+			name:    "invalid (spacial char)",
+			val:     "Cluster-ñ",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err := ClusterName(val); (err != nil) != wantErr {
+				t.Errorf("ClusterName() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}
+
+func TestDBUsername(t *testing.T) {
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid (single word)",
+			val:     "admin",
+			wantErr: false,
+		},
+		{
+			name:    "valid (dashed)",
+			val:     "admin-test",
+			wantErr: false,
+		},
+		{
+			name:    "valid (underscore)",
+			val:     "admin_test",
+			wantErr: false,
+		},
+		{
+			name:    "invalid (space)",
+			val:     "admin test",
+			wantErr: true,
+		},
+		{
+			name:    "invalid (spacial char)",
+			val:     "admin-ñ",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err := DBUsername(val); (err != nil) != wantErr {
+				t.Errorf("DBUsername() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}

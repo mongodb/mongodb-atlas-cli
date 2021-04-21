@@ -263,16 +263,26 @@ func NetworkPresets(c TransportConfigGetter) Option {
 	return Options(options...)
 }
 
-// Config an interface of the methods needed to set up a Store
-type Config interface {
-	CredentialsGetter
-	TransportConfigGetter
+// ServiceGetter is a basic interface for service and base url settings
+type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
 }
 
+// Config an interface of the methods needed to set up a Store
+type AuthenticatedConfig interface {
+	CredentialsGetter
+	TransportConfigGetter
+	ServiceGetter
+}
+
+type BasicConfig interface {
+	TransportConfigGetter
+	ServiceGetter
+}
+
 // PublicAuthenticatedPreset is the default Option when connecting to the public API with authentication.
-func PublicAuthenticatedPreset(c Config) Option {
+func PublicAuthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
@@ -282,7 +292,7 @@ func PublicAuthenticatedPreset(c Config) Option {
 }
 
 // PublicUnauthenticatedPreset is the default Option when connecting to the public API without authentication.
-func PublicUnauthenticatedPreset(c Config) Option {
+func PublicUnauthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service())}
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
@@ -292,8 +302,9 @@ func PublicUnauthenticatedPreset(c Config) Option {
 }
 
 // PrivateAuthenticatedPreset is the default Option when connecting to the private API with authentication.
-func PrivateAuthenticatedPreset(c Config) Option {
-	options := []Option{Service(c.Service()), WithAuthentication(c)}
+func PrivateAuthenticatedPreset(c AuthenticatedConfig) Option {
+	// Default to cloud
+	options := []Option{Service(c.Service()), WithBaseURL(atlas.CloudURL), WithAuthentication(c)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		options = append(options, WithBaseURL(configURL))
 	}
@@ -302,8 +313,9 @@ func PrivateAuthenticatedPreset(c Config) Option {
 }
 
 // PrivateUnauthenticatedPreset is the default Option when connecting to the private API without authentication.
-func PrivateUnauthenticatedPreset(c Config) Option {
-	options := []Option{Service(c.Service())}
+func PrivateUnauthenticatedPreset(c BasicConfig) Option {
+	// Default to cloud
+	options := []Option{Service(c.Service()), WithBaseURL(atlas.CloudURL)}
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		options = append(options, WithBaseURL(configURL))
 	}

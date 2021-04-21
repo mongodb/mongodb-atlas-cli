@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/randgen"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 )
 
 const (
@@ -32,14 +33,27 @@ const (
 	passwordLength         = 12
 )
 
-func newAccessListQuestion(publicIP, message string) *survey.Question {
+func newClusterNameQuestion(clusterName, message string) *survey.Question {
 	return &survey.Question{
-		Name: "ipAddress",
+		Name: "clusterName",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Access List Entry%s:", message),
-			Help:    usage.NetworkAccessListIPEntry,
-			Default: publicIP,
+			Message: fmt.Sprintf("Cluster Name%s:", message),
+			Help:    usage.ClusterName,
+			Default: clusterName,
 		},
+		Validate: survey.ComposeValidators(survey.Required, validate.ClusterName),
+	}
+}
+
+func newClusterProviderQuestion() *survey.Question {
+	return &survey.Question{
+		Name: "provider",
+		Prompt: &survey.Select{
+			Message: "Cloud Provider:",
+			Help:    usage.Provider,
+			Options: []string{"AWS", "GCP", "AZURE"},
+		},
+		Validate: survey.Required,
 	}
 }
 
@@ -51,17 +65,31 @@ func newRegionQuestions(defaultRegions []string) *survey.Question {
 			Help:    usage.Region,
 			Options: defaultRegions,
 		},
+		Validate: survey.Required,
 	}
 }
-func newDBUsernameQuestion(dbUser, message string, validation func(val interface{}) error) *survey.Question {
+
+func newAccessListQuestion(publicIP, message string) *survey.Question {
+	return &survey.Question{
+		Name: "ipAddress",
+		Prompt: &survey.Input{
+			Message: fmt.Sprintf("Access List Entry%s:", message),
+			Help:    usage.NetworkAccessListIPEntry,
+			Default: publicIP,
+		},
+		Validate: survey.Required,
+	}
+}
+
+func newDBUsernameQuestion(dbUser, message string, validation survey.Validator) *survey.Question {
 	q := &survey.Question{
-		Validate: validation,
-		Name:     "dbUsername",
+		Name: "dbUsername",
 		Prompt: &survey.Input{
 			Message: fmt.Sprintf("Database User Username%s:", message),
 			Help:    usage.DBUsername,
 			Default: dbUser,
 		},
+		Validate: survey.ComposeValidators(survey.Required, validate.DBUsername, validation),
 	}
 	return q
 }
@@ -74,17 +102,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 			Help:    usage.Password,
 			Default: password,
 		},
-	}
-}
-
-func newClusterNameQuestion(clusterName, message string) *survey.Question {
-	return &survey.Question{
-		Name: "clusterName",
-		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Cluster Name%s:", message),
-			Help:    usage.ClusterName,
-			Default: clusterName,
-		},
+		Validate: survey.Required,
 	}
 }
 
@@ -92,17 +110,6 @@ func newSampleDataQuestion(clusterName string) *survey.Confirm {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to load sample data into %s?", clusterName),
 		Help:    SampleDataHelp,
-	}
-}
-
-func newClusterProviderQuestion() *survey.Question {
-	return &survey.Question{
-		Name: "provider",
-		Prompt: &survey.Select{
-			Message: "Cloud Provider:",
-			Help:    usage.Provider,
-			Options: []string{"AWS", "GCP", "AZURE"},
-		},
 	}
 }
 
@@ -126,15 +133,15 @@ func newIsMongoShellInstalledQuestion() *survey.Confirm {
 	}
 }
 
-func newMongoShellPathInput(defaultValue string, validation func(val interface{}) error) *survey.Question {
+func newMongoShellPathInput(defaultValue string) *survey.Question {
 	return &survey.Question{
-		Validate: validation,
-		Name:     "mongoShellPath",
+		Name: "mongoShellPath",
 		Prompt: &survey.Input{
 			Message: "Default MongoDB Shell Path:",
 			Help:    mongoShellHelp,
 			Default: defaultValue,
 		},
+		Validate: validate.Path,
 	}
 }
 
@@ -192,7 +199,7 @@ func dbUserPasswordQuestion(password string) (string, *survey.Question) {
 	return pwd, newDBUserPasswordQuestion(pwd, message)
 }
 
-func dbUsernameQuestion(dbUser string, validation func(val interface{}) error) *survey.Question {
+func dbUsernameQuestion(dbUser string, validation survey.Validator) *survey.Question {
 	if dbUser != "" {
 		return nil
 	}

@@ -1237,46 +1237,6 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
-  - name: push_debian71_enterprise
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian71
-          ext: deb
-  - name: push_debian71_org
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian71
-          ext: deb
-  - name: push_debian81_enterprise
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian81
-          ext: deb
-  - name: push_debian81_org
-    <<: *default_push_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian81
-          ext: deb
   - name: push_debian92_enterprise
     <<: *default_push_def
     commands:
@@ -1335,7 +1295,7 @@ tasks:
       - func: "install curator"
       - func: "push"
         vars:
-          edition: org
+          edition: enterprise
           distro: rhel70
           ext: rpm
   - name: push_rhel62_org_stable
@@ -1355,7 +1315,7 @@ tasks:
       - func: "install curator"
       - func: "push"
         vars:
-          edition: org
+          edition: enterprise
           distro: rhel70
           ext: rpm
   - name: push_rhel70_org_stable
@@ -1468,36 +1428,6 @@ tasks:
         vars:
           edition: org
           distro: ubuntu2004
-          ext: deb
-  - name: push_debian71_enterprise_stable
-    <<: *default_push_stable_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian71
-          ext: deb
-  - name: push_debian71_org_stable
-    <<: *default_push_stable_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: org
-          distro: debian71
-          ext: deb
-  - name: push_debian81_enterprise_stable
-    <<: *default_push_stable_def
-    commands:
-      - func: "clone"
-      - func: "install curator"
-      - func: "push"
-        vars:
-          edition: enterprise
-          distro: debian81
           ext: deb
   - name: push_debian81_org_stable
     <<: *default_push_stable_def

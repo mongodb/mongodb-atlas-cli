@@ -58,6 +58,9 @@ func Builder() *cobra.Command {
 
 			return validate.Credentials()
 		},
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 	cmd.AddCommand(
 		quickstart.Builder(),

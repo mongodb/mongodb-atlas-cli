@@ -92,6 +92,9 @@ You can use a combination of the next env variables to override your profile set
 - `MCLI_PROJECT_ID`
 - `MCLI_ORG_ID`
 - `MCLI_OPS_MANAGER_URL`
+- `MCLI_PROFILE`
+- `MCLI_OUTPUT`
+- `MCLI_MONGOSH_PATH`
 
 ### Shell Completions
 

@@ -33,6 +33,9 @@ func Builder() *cobra.Command {
 		},
 		Short: "Organization and projects operations.",
 		Long:  "Identity and Access Management.",
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 	cmd.AddCommand(
 		projects.Builder(),

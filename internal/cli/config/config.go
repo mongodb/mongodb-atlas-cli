@@ -265,6 +265,9 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
 	cmd.AddCommand(

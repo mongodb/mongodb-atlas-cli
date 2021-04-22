@@ -59,6 +59,9 @@ func Builder() *cobra.Command {
 			}
 			return nil
 		},
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 
 	cmd.AddCommand(

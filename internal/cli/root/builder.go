@@ -75,6 +75,9 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
   Display the help menu for the config command
   $ mongocli config --help`,
 		SilenceUsage: true,
+		Annotations: map[string]string{
+			"toc": "true",
+		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
 	hasArgs := len(argsWithoutProg) != 0

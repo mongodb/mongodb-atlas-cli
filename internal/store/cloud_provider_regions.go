@@ -36,7 +36,7 @@ func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*str
 	}
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderRegions.List(context.Background(), projectID, options)
+		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(context.Background(), projectID, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("unsupported service: %s", s.service)

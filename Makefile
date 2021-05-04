@@ -3,14 +3,14 @@
 SOURCE_FILES?=./cmd/mongocli
 BINARY_NAME=mongocli
 
-DESTINATION=./bin/${BINARY_NAME}
-INSTALL_PATH="${GOPATH}/bin/${BINARY_NAME}"
+DESTINATION=./bin/$(BINARY_NAME)
+INSTALL_PATH="${GOPATH}/bin/$(BINARY_NAME)"
 
 GOLANGCI_VERSION=v1.39.0
 COVERAGE=coverage.out
-VERSION=$(shell git describe --always --tags)
-GIT_SHA=$(shell git rev-parse HEAD)
-LINKER_FLAGS=-X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${GIT_SHA}
+MCLI_VERSION?=$(shell git describe --always --tags)
+MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
@@ -47,7 +47,7 @@ link-git-hooks: ## Install git hooks
 	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
 
 .PHONY: fmt
-fmt: ## Format code
+fmt: ## Format changed go
 	@scripts/fmt.sh
 
 .PHONY: test
@@ -77,34 +77,34 @@ gen-mocks: ## Generate mocks
 
 .PHONY: build
 build: ## Generate a binary in ./bin
-	@echo "==> Building binary"
-	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ${SOURCE_FILES}
+	@echo "==> Building $(BINARY_NAME) binary"
+	go build -ldflags "$(LINKER_FLAGS)" -o $(DESTINATION) $(SOURCE_FILES)
 
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging
-	@echo "==> Building binary for debugging"
-	go build -gcflags="${DEBUG_FLAGS}" -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ${SOURCE_FILES}
+	@echo "==> Building $(BINARY_NAME) binary for debugging"
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" -o $(DESTINATION) $(SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
-	${TEST_CMD} -v -p 1 -parallel 1 -timeout ${E2E_TIMEOUT} -tags="${E2E_TAGS}" ./e2e...
+	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	${TEST_CMD} --tags="${INTEGRATION_TAGS}" -count=1 ./internal...
+	$(TEST_CMD) --tags="$(INTEGRATION_TAGS)" -count=1 ./internal...
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	${TEST_CMD} --tags="${UNIT_TAGS}" -race -cover -count=1 -coverprofile ${COVERAGE} ./internal...
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./internal...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
-	@echo "==> Installing to $(INSTALL_PATH)"
-	go install -ldflags "${LINKER_FLAGS}" ${SOURCE_FILES}
+	@echo "==> Installing $(BINARY_NAME) to $(INSTALL_PATH)"
+	go install -ldflags "$(LINKER_FLAGS)" $(SOURCE_FILES)
 	@echo "==> Done..."
 
 .PHONY: list

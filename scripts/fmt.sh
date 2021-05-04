@@ -14,21 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+STAGED_GO_FILES=$(git diff --name-only | grep ".go$" | grep -v "mock")
 
-set -euo pipefail
-
-find_files() {
-  find . -not \( \
-    \( \
-      -wholename '*mock*' \
-      -o -wholename '*third_party*' \
-    \) -prune \
-  \) \
-  \( -name '*.go' \)
-}
-
-echo "==> Formatting all files..."
-for FILE in $(find_files); do
+echo "==> Formatting changed go files..."
+for FILE in ${STAGED_GO_FILES}; do
     gofmt -w -s "${FILE}"
     goimports -w "${FILE}"
 done

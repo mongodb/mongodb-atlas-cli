@@ -55,7 +55,7 @@ brews:
     name: homebrew-brew
   folder: Formula
   skip_upload: auto
-  description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+  description: MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   homepage: https://github.com/mongodb/mongocli
   license: Apache-2.0
   install: |
@@ -70,7 +70,7 @@ nfpms:
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
-  description: The MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
+  description: MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   license: Apache 2.0
   bindir: /usr
   builds: [linux]
@@ -87,6 +87,7 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+    - '^task:'
     - '^build(deps):'
 release:
   prerelease: auto

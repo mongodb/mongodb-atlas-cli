@@ -315,6 +315,14 @@ functions:
           set -Eeou pipefail
           # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
           ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
+  "set up notary":
+    - command: shell.exec
+      type: system
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        silent: true
+        script: |
+          echo "${signing_auth_token_44}" > ./signing_auth_token
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -394,6 +402,7 @@ functions:
           - src/github.com/mongodb/mongocli/dist/*.json
           - src/github.com/mongodb/mongocli/dist/*.rb
           - src/github.com/mongodb/mongocli/dist/*.msi
+          - src/github.com/mongodb/mongocli/dist/*.sig
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -962,6 +971,7 @@ tasks:
       - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
+      - func: "set up notary"
       - func: "package"
       - func: "rename pkg"
         vars:
@@ -1021,6 +1031,7 @@ tasks:
       - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
+      - func: "set up notary"
       - command: subprocess.exec
         type: test
         params:
@@ -1055,6 +1066,7 @@ tasks:
             - src/github.com/mongodb/mongocli/dist/*.rpm
             - src/github.com/mongodb/mongocli/dist/*.tgz
             - src/github.com/mongodb/mongocli/dist/*.json
+            - src/github.com/mongodb/mongocli/dist/*.sig
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read

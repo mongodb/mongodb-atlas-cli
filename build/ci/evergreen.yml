@@ -973,6 +973,27 @@ tasks:
       - func: "set up gon"
       - func: "set up notary"
       - func: "package"
+      - command: shell.exec
+        type: system
+        params:
+          working_dir: src/github.com/mongodb/mongocli
+          silent: false
+          script: |
+            set -Eeou pipefail
+
+            ls -al
+
+            /usr/local/bin/notary-client.py \
+              --key-name "server-4.4" \
+              --auth-token-file ./signing_auth_token \
+              --comment "Evergreen Automatic Signing (mongocli)" \
+              --notary-url http://notary-service.build.10gen.cc:5000 \
+              --skip-missing \
+              --package-file-suffix "" \
+              --outputs "sig" \
+              ./dist/mongocli_next_linux_arm64.tar.gz
+
+            ls -al
       - func: "rename pkg"
         vars:
           unstable: -unstable

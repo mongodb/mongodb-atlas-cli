@@ -90,32 +90,46 @@ changelog:
     - '^task:'
     - '^build(deps):'
 
-signs:
-  - id: targz
-    signature: "${artifact}.sig"
-    cmd: /usr/local/bin/notary-client.py
-    # command line templateable arguments for the command
-    #
-    # to sign with a specific key use
-    # args: ["-u", "<key id, fingerprint, email, ...>", "--output", "${signature}", "--detach-sign", "${artifact}"]
-    #
-    # defaults to `["--output", "${signature}", "--detach-sign", "${artifact}"]`
-    args: ["--key-name", "server-4.4", "--auth-token-file", "./signing_auth_token", "--comment", "Evergreen Automatic Signing (mongocli)", "--notary-url", "http://notary-service.build.10gen.cc:5000", "--skip-missing", "--package-file-suffix", "", "--outputs", "sig", "${artifact}"]
-    # which artifacts to sign
-    #
-    #   checksum: only checksum file(s)
-    #   all:      all artifacts
-    #   none:     no signing
-    #   source:   source archive
-    #
-    # defaults to `none`
-    artifacts: all
-
-    # IDs of the artifacts to sign.
-    # Defaults to all.
-    # If `artifacts` is checksum or source, this fields has no effect.
-    ids:
-      - linux
+#signs:
+#  - id: targz
+#    signature: "${artifact}.sig"
+#    cmd: /usr/local/bin/notary-client.py
+#    # command line templateable arguments for the command
+#    #
+#    # to sign with a specific key use
+#    # args: ["-u", "<key id, fingerprint, email, ...>", "--output", "${signature}", "--detach-sign", "${artifact}"]
+#    #
+#    # defaults to `["--output", "${signature}", "--detach-sign", "${artifact}"]`
+#    args:
+#      - "--key-name"
+#      - '"server-4.4"'
+#      - "--auth-token-file"
+#      - "./signing_auth_token"
+#      - "--comment"
+#      - '"Evergreen Automatic Signing (mongocli)"'
+#      - "--notary-url"
+#      - "http://notary-service.build.10gen.cc:5000"
+#      - "--skip-missing"
+#      - "--package-file-suffix"
+#      - '""'
+#      - "--outputs"
+#      - '"sig"'
+#      - "${artifact}"
+#    # which artifacts to sign
+#    #
+#    #   checksum: only checksum file(s)
+#    #   all:      all artifacts
+#    #   none:     no signing
+#    #   source:   source archive
+#    #
+#    # defaults to `none`
+#    artifacts: all
+#
+#    # IDs of the artifacts to sign.
+#    # Defaults to all.
+#    # If `artifacts` is checksum or source, this fields has no effect.
+#    ids:
+#      - linux
 release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"

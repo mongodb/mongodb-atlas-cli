@@ -95,7 +95,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := convert.AdminDB
 
-	if opts.isExternal() {
+	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 

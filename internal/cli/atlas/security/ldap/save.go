@@ -33,6 +33,9 @@ type SaveOpts struct {
 	bindPassword          string
 	caCertificate         string
 	authzQueryTemplate    string
+	mappingMatch          string
+	mappingLdapQuery      string
+	mappingSubstitution   string
 	authenticationEnabled bool
 	authorizationEnabled  bool
 	store                 store.LDAPConfigurationSaver
@@ -64,6 +67,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
 			AuthorizationEnabled:  opts.authorizationEnabled,
 			Hostname:              opts.hostname,
 			Port:                  opts.port,
+			UserToDNMapping:       []*atlas.UserToDNMapping{{Match: opts.mappingMatch, LDAPQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution}},
 			BindUsername:          opts.bindUsername,
 			BindPassword:          opts.bindPassword,
 			CaCertificate:         opts.caCertificate,
@@ -96,6 +100,9 @@ func SaveBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
 	cmd.Flags().StringVar(&opts.authzQueryTemplate, flag.AuthzQueryTemplate, "", usage.AuthzQueryTemplate)
+	cmd.Flags().StringVar(&opts.mappingMatch, flag.MappingMatch, "", usage.MappingMatch)
+	cmd.Flags().StringVar(&opts.mappingLdapQuery, flag.MappingLdapQuery, "", usage.MappingLdapQuery)
+	cmd.Flags().StringVar(&opts.mappingSubstitution, flag.MappingSubstitution, "", usage.MappingSubstitution)
 	cmd.Flags().BoolVar(&opts.authenticationEnabled, flag.AuthenticationEnabled, false, usage.AuthenticationEnabled)
 	cmd.Flags().BoolVar(&opts.authorizationEnabled, flag.AuthorizationEnabled, false, usage.AuthorizationEnabled)
 

@@ -27,6 +27,8 @@ const (
 )
 
 func AutomationConfig() *opsmngr.AutomationConfig {
+	var slaveDelay float64 = 0
+
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
@@ -134,7 +136,7 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:       false,
 						Host:         "myReplicaSet_1",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 					{
@@ -144,7 +146,7 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:       false,
 						Host:         "myReplicaSet_2",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 					{
@@ -154,7 +156,7 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 						Hidden:       false,
 						Host:         "myReplicaSet_3",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 				},
@@ -187,6 +189,7 @@ func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
 }
 
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
+	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{
 			{
@@ -252,7 +255,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 						Hidden:       false,
 						Host:         name + "_0",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 				},
@@ -262,6 +265,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 }
 
 func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.AutomationConfig {
+	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			DeploymentAuthMechanisms: []string{},
@@ -357,7 +361,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						Hidden:       false,
 						Host:         name + "_myShard_0_0",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 				},
@@ -373,7 +377,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						Hidden:       false,
 						Host:         name + "_configRS_1",
 						Priority:     1,
-						SlaveDelay:   0,
+						SlaveDelay:   &slaveDelay,
 						Votes:        1,
 					},
 				},

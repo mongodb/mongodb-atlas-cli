@@ -25,6 +25,7 @@ import (
 )
 
 func Test_newReplicaSetProcessConfig(t *testing.T) {
+	var slaveDelay float64 = 0
 	omp := &opsmngr.Process{
 		Args26: opsmngr.Args26{
 			AuditLog: &opsmngr.AuditLog{
@@ -80,7 +81,7 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		Hidden:       false,
 		Host:         "myReplicaSet_1",
 		Priority:     1,
-		SlaveDelay:   0,
+		SlaveDelay:   &slaveDelay,
 		Votes:        1,
 	}
 

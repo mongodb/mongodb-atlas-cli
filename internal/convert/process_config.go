@@ -136,7 +136,7 @@ func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	return &ProcessConfig{
 		BuildIndexes:       &rs.BuildIndexes,
 		Priority:           &rs.Priority,
-		SlaveDelay:         &rs.SlaveDelay,
+		SlaveDelay:         rs.SlaveDelay,
 		Votes:              &rs.Votes,
 		ArbiterOnly:        &rs.ArbiterOnly,
 		Hidden:             &rs.Hidden,
@@ -427,6 +427,7 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 
 // member maps convert.ProcessConfig -> opsmngr.Member
 func (p *ProcessConfig) member(i int) opsmngr.Member {
+	var slaveDelay float64 = 0
 	m := opsmngr.Member{
 		ID:           i,
 		ArbiterOnly:  false,
@@ -434,7 +435,7 @@ func (p *ProcessConfig) member(i int) opsmngr.Member {
 		Hidden:       false,
 		Host:         p.Name,
 		Priority:     1,
-		SlaveDelay:   0,
+		SlaveDelay:   &slaveDelay,
 		Votes:        1,
 	}
 	if p.ArbiterOnly != nil {
@@ -450,7 +451,7 @@ func (p *ProcessConfig) member(i int) opsmngr.Member {
 		m.Priority = *p.Priority
 	}
 	if p.SlaveDelay != nil {
-		m.SlaveDelay = *p.SlaveDelay
+		m.SlaveDelay = p.SlaveDelay
 	}
 	if p.Votes != nil {
 		m.Votes = *p.Votes

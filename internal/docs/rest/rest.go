@@ -123,7 +123,7 @@ func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 
 	if hasRelatedCommands(cmd) {
 		buf.WriteString("Related Commands\n")
-		buf.WriteString("--------\n\n")
+		buf.WriteString("----------------\n\n")
 
 		children := cmd.Commands()
 		sort.Sort(byName(children))

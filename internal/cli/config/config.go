@@ -248,7 +248,7 @@ func Builder() *cobra.Command {
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
 		Long: `Configure settings in a user profile.
 All settings are optional. You can specify settings individually by running: 
-  $ mongocli config set --help 
+$ mongocli config set --help 
 
 You can also use environment variables (MCLI_*) when running the tool.
 To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,

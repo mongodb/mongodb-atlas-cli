@@ -605,7 +605,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword
 func (opts *Opts) setupCloseHandler() {
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c

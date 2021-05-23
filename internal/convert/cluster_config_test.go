@@ -26,7 +26,7 @@ import (
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
-	var slaveDelay float64 = 0
+	var slaveDelay float64
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig

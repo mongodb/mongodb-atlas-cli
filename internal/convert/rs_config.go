@@ -46,8 +46,7 @@ func (c *RSConfig) patch(out *opsmngr.AutomationConfig, f patcher, names ...stri
 	for i, pc := range c.ProcessConfigs {
 		id := strconv.Itoa(len(out.Processes) + i)
 		pc.setDefaults(c)
-		pn := append(names, c.Name, id)
-		pc.setProcessName(out.Processes, pn...)
+		pc.setProcessName(out.Processes, append(names, c.Name, id)...)
 		newProcesses[i] = f(pc, c.Name)
 		rs.Members[i] = pc.member(i)
 	}

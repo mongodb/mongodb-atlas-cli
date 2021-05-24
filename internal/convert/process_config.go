@@ -65,6 +65,7 @@ type ProcessConfig struct {
 	Priority                  *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
 	ProcessType               string                  `yaml:"processType" json:"processType"`
 	SmallFiles                *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
+	SecondaryDelaySecs        *float64                `yaml:"secondaryDelaySecs,omitempty" json:"secondaryDelaySecs,omitempty"`
 	SlaveDelay                *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
 	SyncPeriodSecs            *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
 	Votes                     *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
@@ -137,6 +138,7 @@ func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 		BuildIndexes:       &rs.BuildIndexes,
 		Priority:           &rs.Priority,
 		SlaveDelay:         rs.SlaveDelay,
+		SecondaryDelaySecs: rs.SecondaryDelaySecs,
 		Votes:              &rs.Votes,
 		ArbiterOnly:        &rs.ArbiterOnly,
 		Hidden:             &rs.Hidden,
@@ -427,7 +429,6 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 
 // member maps convert.ProcessConfig -> opsmngr.Member.
 func (p *ProcessConfig) member(i int) opsmngr.Member {
-	var slaveDelay float64
 	m := opsmngr.Member{
 		ID:           i,
 		ArbiterOnly:  false,
@@ -435,7 +436,6 @@ func (p *ProcessConfig) member(i int) opsmngr.Member {
 		Hidden:       false,
 		Host:         p.Name,
 		Priority:     1,
-		SlaveDelay:   &slaveDelay,
 		Votes:        1,
 	}
 	if p.ArbiterOnly != nil {
@@ -452,6 +452,9 @@ func (p *ProcessConfig) member(i int) opsmngr.Member {
 	}
 	if p.SlaveDelay != nil {
 		m.SlaveDelay = p.SlaveDelay
+	}
+	if p.SecondaryDelaySecs != nil {
+		m.SecondaryDelaySecs = p.SecondaryDelaySecs
 	}
 	if p.Votes != nil {
 		m.Votes = *p.Votes

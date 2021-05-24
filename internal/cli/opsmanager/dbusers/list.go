@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(r.Auth.Users)
+	return opts.Print(r.Auth.UsersWanted)
 }
 
 // mongocli om|cm dbuser(s) list [--projectId projectId].

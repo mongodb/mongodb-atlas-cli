@@ -75,14 +75,15 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		Version:     "4.4.1-ent",
 	}
 	omm := opsmngr.Member{
-		ID:           0,
-		ArbiterOnly:  false,
-		BuildIndexes: true,
-		Hidden:       false,
-		Host:         "myReplicaSet_1",
-		Priority:     1,
-		SlaveDelay:   &slaveDelay,
-		Votes:        1,
+		ID:                 0,
+		ArbiterOnly:        false,
+		BuildIndexes:       true,
+		Hidden:             false,
+		Host:               "myReplicaSet_1",
+		Priority:           1,
+		SlaveDelay:         &slaveDelay,
+		SecondaryDelaySecs: &slaveDelay,
+		Votes:              1,
 	}
 
 	expected := &ProcessConfig{
@@ -103,6 +104,7 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		Priority:            pointy.Float64(1),
 		ProcessType:         "mongod",
 		SlaveDelay:          pointy.Float64(0),
+		SecondaryDelaySecs:  pointy.Float64(0),
 		Version:             "4.4.1-ent",
 		Votes:               pointy.Float64(1),
 		ArbiterOnly:         pointy.Bool(false),
@@ -143,6 +145,7 @@ func Test_newConfigRSProcess(t *testing.T) {
 		Priority:            pointy.Float64(1),
 		ProcessType:         "mongod",
 		SlaveDelay:          pointy.Float64(0),
+		SecondaryDelaySecs:  pointy.Float64(0),
 		Version:             "4.4.1-ent",
 		Votes:               pointy.Float64(1),
 		ArbiterOnly:         pointy.Bool(false),

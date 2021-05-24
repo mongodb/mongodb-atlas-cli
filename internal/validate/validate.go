@@ -158,3 +158,18 @@ func DBUsername(val interface{}) error {
 
 	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
 }
+
+var ErrWeakPassoword = errors.New("the password provided is too weak, as it can be found in most commonly used password lists")
+
+func WeakPassword(val interface{}) error {
+	password, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("%w: %v", ErrWeakPassoword, val)
+	}
+
+	if commonPasswords[password] {
+		return fmt.Errorf("%w: %v", ErrWeakPassoword, val)
+	}
+
+	return nil
+}

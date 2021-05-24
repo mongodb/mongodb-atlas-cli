@@ -252,7 +252,7 @@ const (
 	ContainerRegion                 = "Atlas region where the container resides."
 	ContainerRegions                = "List of Atlas regions where the container resides."
 	FormatOut                       = `Output format.
-Valid values: json|go-template|go-template-file`
+Valid values: json|json-path|go-template|go-template-file`
 	TargetClusterID = `Unique identifier of the target cluster.
 For use only with automated restore jobs.`
 	TargetClusterName = `Name of the target cluster.

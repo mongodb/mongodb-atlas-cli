@@ -36,7 +36,7 @@ type PerformanceAdvisorIndexesLister interface {
 	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
 }
 
-// PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService:
@@ -46,11 +46,11 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
 	switch s.service {
 	case config.CloudService:
@@ -60,11 +60,11 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	switch s.service {
 	case config.CloudService:
@@ -74,6 +74,6 @@ func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *a
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

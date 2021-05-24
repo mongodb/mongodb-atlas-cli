@@ -62,7 +62,7 @@ func (opts *UpdateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreCon
 
 // mongocli ops-manager admin backup fileSystem(s) update <name> [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--id ID][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
-// [--wtCompressionSetting wtCompressionSetting]
+// [--wtCompressionSetting wtCompressionSetting].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate

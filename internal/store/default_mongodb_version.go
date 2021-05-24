@@ -28,13 +28,13 @@ type DefaultVersionGetter interface {
 	DefaultMongoDBVersion() (string, error)
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) DefaultMongoDBVersion() (string, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DefaultMongoDBMajorVersion.Get(context.Background())
 		return result, err
 	default:
-		return "", fmt.Errorf("unsupported service: %s", s.service)
+		return "", fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

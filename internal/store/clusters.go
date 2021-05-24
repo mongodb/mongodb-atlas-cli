@@ -82,51 +82,51 @@ type AtlasClusterQuickStarter interface {
 	ClusterCreator
 }
 
-// AddSampleData encapsulate the logic to manage different cloud providers
+// AddSampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(context.Background(), groupID, clusterName)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// SampleData encapsulate the logic to manage different cloud providers
+// SampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(context.Background(), groupID, id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateCluster encapsulate the logic to manage different cloud providers
+// CreateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Create(context.Background(), cluster.GroupID, cluster)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateCluster encapsulate the logic to manage different cloud providers
+// UpdateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Update(context.Background(), projectID, name, cluster)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// PauseCluster encapsulate the logic to manage different cloud providers
+// PauseCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) PauseCluster(projectID, name string) (*atlas.Cluster, error) {
 	paused := true
 	cluster := &atlas.Cluster{
@@ -135,7 +135,7 @@ func (s *Store) PauseCluster(projectID, name string) (*atlas.Cluster, error) {
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
-// StartCluster encapsulate the logic to manage different cloud providers
+// StartCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 	paused := false
 	cluster := &atlas.Cluster{
@@ -144,18 +144,18 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
-// DeleteCluster encapsulate the logic to manage different cloud providers
+// DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProjectClusters encapsulate the logic to manage different cloud providers
+// ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -165,39 +165,39 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// AtlasCluster encapsulates the logic to manage different cloud providers
+// AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// OpsManagerCluster encapsulates the logic to manage different cloud providers
+// OpsManagerCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ListAllProjectClusters encapsulate the logic to manage different cloud providers
+// ListAllProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(context.Background())
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

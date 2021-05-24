@@ -45,7 +45,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager automation describe [--projectId projectId]
+// mongocli ops-manager automation describe [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

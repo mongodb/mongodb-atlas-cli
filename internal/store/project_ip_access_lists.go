@@ -39,46 +39,46 @@ type ProjectIPAccessListDeleter interface {
 	DeleteProjectIPAccessList(string, string) error
 }
 
-// CreateProjectIPAccessList encapsulate the logic to manage different cloud providers
+// CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers
+// DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(context.Background(), projectID, entry)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProjectIPAccessLists encapsulate the logic to manage different cloud providers
+// ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// IPAccessList encapsulate the logic to manage different cloud providers
+// IPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

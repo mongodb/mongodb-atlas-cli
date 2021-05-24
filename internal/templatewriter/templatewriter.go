@@ -27,7 +27,7 @@ const (
 	tabwriterPadChar  = ' '
 )
 
-// newTabWriter returns a tabwriter that handles tabs(`\t) to space columns evenly
+// newTabWriter returns a tabwriter that handles tabs(`\t) to space columns evenly.
 func newTabWriter(output io.Writer) *tabwriter.Writer {
 	return tabwriter.NewWriter(output, tabwriterMinWidth, tabwriterWidth, tabwriterPadding, tabwriterPadChar, 0)
 }

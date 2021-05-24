@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteGlobalAPIKeyWhitelist)
 }
 
-// mongocli iam globalAccessList(s) delete <ID> [--force]
+// mongocli iam globalAccessList(s) delete <ID> [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Global access list entry '%s' deleted\n", "Global access list entry not deleted"),

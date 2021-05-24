@@ -27,8 +27,6 @@ const (
 )
 
 func AutomationConfig() *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
-
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
@@ -130,34 +128,37 @@ func AutomationConfig() *opsmngr.AutomationConfig {
 				ProtocolVersion: "1",
 				Members: []opsmngr.Member{
 					{
-						ID:           0,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         "myReplicaSet_1",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ID:                 0,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               "myReplicaSet_1",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 					{
-						ID:           1,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         "myReplicaSet_2",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ID:                 1,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               "myReplicaSet_2",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 					{
-						ID:           2,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         "myReplicaSet_3",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ID:                 2,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               "myReplicaSet_3",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 				},
 			},
@@ -189,7 +190,6 @@ func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
 }
 
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{
 			{
@@ -250,13 +250,14 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 				ProtocolVersion: "1",
 				Members: []opsmngr.Member{
 					{
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         name + "_0",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               name + "_0",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 				},
 			},
@@ -265,7 +266,6 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 }
 
 func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			DeploymentAuthMechanisms: []string{},
@@ -355,14 +355,15 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 				ProtocolVersion: "1",
 				Members: []opsmngr.Member{
 					{
-						ID:           0,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         name + "_myShard_0_0",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ID:                 0,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               name + "_myShard_0_0",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 				},
 			},
@@ -371,14 +372,15 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 				ProtocolVersion: "1",
 				Members: []opsmngr.Member{
 					{
-						ID:           0,
-						ArbiterOnly:  false,
-						BuildIndexes: true,
-						Hidden:       false,
-						Host:         name + "_configRS_1",
-						Priority:     1,
-						SlaveDelay:   &slaveDelay,
-						Votes:        1,
+						ID:                 0,
+						ArbiterOnly:        false,
+						BuildIndexes:       true,
+						Hidden:             false,
+						Host:               name + "_configRS_1",
+						Priority:           1,
+						SlaveDelay:         pointy.Float64(1),
+						SecondaryDelaySecs: pointy.Float64(1),
+						Votes:              1,
 					},
 				},
 			},
@@ -418,7 +420,7 @@ func AutomationConfigWithMongoDBUsers() *opsmngr.AutomationConfig {
 			AutoAuthMechanism: "MONGODB-CR",
 			Disabled:          true,
 			AuthoritativeSet:  false,
-			Users: []*opsmngr.MongoDBUser{
+			UsersWanted: []*opsmngr.MongoDBUser{
 				MongoDBUsers(),
 			},
 		},

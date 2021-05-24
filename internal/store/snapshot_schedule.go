@@ -32,24 +32,24 @@ type SnapshotScheduleUpdater interface {
 	UpdateSnapshotSchedule(string, string, *opsmngr.SnapshotSchedule) (*opsmngr.SnapshotSchedule, error)
 }
 
-// GetSnapshotSchedule encapsulates the logic to manage different cloud providers
+// GetSnapshotSchedule encapsulates the logic to manage different cloud providers.
 func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateSnapshotSchedule encapsulates the logic to manage different cloud providers
+// UpdateSnapshotSchedule encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateSnapshotSchedule(projectID, clusterID string, snapshotSchedule *opsmngr.SnapshotSchedule) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Update(context.Background(), projectID, clusterID, snapshotSchedule)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

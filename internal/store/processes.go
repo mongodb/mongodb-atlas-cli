@@ -28,13 +28,13 @@ type ProcessLister interface {
 	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)
 }
 
-// Processes encapsulate the logic to manage different cloud providers
+// Processes encapsulate the logic to manage different cloud providers.
 func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) ([]*atlas.Process, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Processes.List(context.Background(), groupID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

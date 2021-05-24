@@ -60,7 +60,7 @@ func (opts *ListOpts) newHostListOptions() *opsmngr.HostListOptions {
 	}
 }
 
-// mongocli om process(es) list --projectId projectId [--page N] [--limit N]
+// mongocli om process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

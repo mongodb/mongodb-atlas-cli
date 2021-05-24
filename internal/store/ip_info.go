@@ -25,18 +25,18 @@ type IPInfoDescriber interface {
 	IPInfo() (*atlas.IPInfo, error)
 }
 
-// IPInfo encapsulates the logic to manage different cloud providers
+// IPInfo encapsulates the logic to manage different cloud providers.
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(context.Background())
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// IPAddress gets the client's public ip by calling the atlas private endpoint
+// IPAddress gets the client's public ip by calling the atlas private endpoint.
 func IPAddress() string {
 	s, err := New(PrivateAuthenticatedPreset(config.Default()))
 	if err != nil {

@@ -37,35 +37,35 @@ type HostDatabaseMeasurementsLister interface {
 	HostDatabaseMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
 }
 
-// HostMeasurements encapsulate the logic to manage different cloud providers
+// HostMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Host(context.Background(), groupID, host, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// HostDiskMeasurements encapsulates the logic to manage different cloud providers
+// HostDiskMeasurements encapsulates the logic to manage different cloud providers.
 func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Disk(context.Background(), groupID, hostID, partitionName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// HostDatabaseMeasurements encapsulate the logic to manage different cloud providers
+// HostDatabaseMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Database(context.Background(), groupID, hostID, databaseName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

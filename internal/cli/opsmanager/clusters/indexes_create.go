@@ -124,7 +124,7 @@ func (opts *IndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
 
 const keyParts = 2
 
-// indexKeys takes a slice of values formatted as key:value and returns an array of slice [[key, value][key, value]]
+// indexKeys takes a slice of values formatted as key:value and returns an array of slice [[key, value][key, value]].
 func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 	propertiesList := make([][]string, len(opts.keys))
 	for i, key := range opts.keys {
@@ -141,7 +141,7 @@ func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 
 // mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --dbName dbName [--key field:type] --projectId projectId
 // --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering
-// --normalization normalization --backwards backwards --unique unique --sparse sparse --background background
+// --normalization normalization --backwards backwards --unique unique --sparse sparse --background background.
 func IndexesCreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{

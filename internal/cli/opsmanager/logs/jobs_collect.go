@@ -65,7 +65,7 @@ func (opts *JobsCollectOpts) newLog() *opsmngr.LogCollectionJob {
 	}
 }
 
-// mongocli om logs jobs collect <resourceType> <resourceName> --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId]
+// mongocli om logs jobs collect <resourceType> <resourceName> --sizeRequestedPerFileBytes size --type type --redacted redacted [--projectId projectId].
 func JobsCollectOptsBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &JobsCollectOpts{}

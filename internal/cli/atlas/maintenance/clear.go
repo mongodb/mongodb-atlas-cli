@@ -49,7 +49,7 @@ func (opts *ClearOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// Prompt confirms that the resource should be deleted
+// Prompt confirms that the resource should be deleted.
 func (opts *ClearOpts) Prompt() error {
 	if opts.Confirm {
 		return nil
@@ -59,7 +59,7 @@ func (opts *ClearOpts) Prompt() error {
 	return survey.AskOne(p, &opts.Confirm)
 }
 
-// mongocli atlas maintenanceWindow(s) clear [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) clear [--projectId projectId].
 func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{

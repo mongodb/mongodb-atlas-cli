@@ -56,7 +56,7 @@ func (opts *UpdateOpts) newTeamUpdateRoles() *atlas.TeamUpdateRoles {
 	}
 }
 
-// mongocli iam team(s) user(s) updates teamId --projectId projectId --role role
+// mongocli iam team(s) user(s) updates teamId --projectId projectId --role role.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

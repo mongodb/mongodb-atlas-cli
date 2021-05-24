@@ -58,7 +58,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalAccessList(s) create [--cidr cidr][--desc description]
+// mongocli iam globalAccessList(s) create [--cidr cidr][--desc description].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate

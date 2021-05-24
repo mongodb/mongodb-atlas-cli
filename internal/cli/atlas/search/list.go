@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas clusters search(s) list [--projectId projectId] [--clusterName name][--db database][--collection collName]
+// mongocli atlas clusters search(s) list [--projectId projectId] [--clusterName name][--db database][--collection collName].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

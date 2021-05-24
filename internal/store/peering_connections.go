@@ -56,46 +56,46 @@ type PeeringConnectionDeleter interface {
 	DeletePeeringConnection(string, string) error
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers
+// PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Peers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers
+// PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Peers.Get(context.Background(), projectID, peerID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
+// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Peers.Delete(context.Background(), projectID, peerID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreatePeeringConnection encapsulates the logic to manage different cloud providers
+// CreatePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Peers.Create(context.Background(), projectID, peer)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

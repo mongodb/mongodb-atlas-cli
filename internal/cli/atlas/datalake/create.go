@@ -65,7 +65,7 @@ func (opts *CreateOpts) newDataLakeRequest() *mongodbatlas.DataLakeCreateRequest
 	}
 }
 
-// mongocli atlas datalake(s) create name --projectId projectId
+// mongocli atlas datalake(s) create name --projectId projectId.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

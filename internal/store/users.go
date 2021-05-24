@@ -51,7 +51,7 @@ type UserRequest struct {
 	AtlasRoles []atlas.AtlasRole
 }
 
-// CreateUser encapsulates the logic to manage different cloud providers
+// CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -71,11 +71,11 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Users.Create(context.Background(), user.User)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UserByID encapsulates the logic to manage different cloud providers
+// UserByID encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByID(userID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -85,11 +85,11 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Users.Get(context.Background(), userID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UserByName encapsulates the logic to manage different cloud providers
+// UserByName encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -99,22 +99,22 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(context.Background(), username)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteUser encapsulates the logic to manage different cloud providers
+// DeleteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUser(userID string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Users.Delete(context.Background(), userID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// OrganizationUsers encapsulates the logic to manage different cloud providers
+// OrganizationUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -124,11 +124,11 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 		result, _, err := s.client.(*opsmngr.Client).Organizations.ListUsers(context.Background(), organizationID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// TeamUsers encapsulates the logic to manage different cloud providers
+// TeamUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -138,6 +138,6 @@ func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Teams.GetTeamUsersAssigned(context.Background(), orgID, teamID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -60,7 +60,7 @@ func (opts *ListOpts) newServerTypeOptions() *opsmngr.ServerTypeOptions {
 	}
 }
 
-// mongocli om serverUsage project(s) hosts list [--projectId projectId]
+// mongocli om serverUsage project(s) hosts list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

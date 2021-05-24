@@ -51,79 +51,79 @@ type AgentAPIKeyDeleter interface {
 	DeleteAgentAPIKey(string, string) error
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(context.Background(), projectID, agentType)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpgradeAgent encapsulates the logic to manage different cloud providers
+// UpgradeAgent encapsulates the logic to manage different cloud providers.
 func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// AgentAPIKeys encapsulates the logic to manage different cloud providers
+// AgentAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentAPIKeys(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateAgentAPIKey encapsulates the logic to manage different cloud providers
+// CreateAgentAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.CreateAgentAPIKey(context.Background(), projectID, r)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteAgentAPIKey encapsulates the logic to manage different cloud providers
+// DeleteAgentAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).Agents.DeleteAgentAPIKey(context.Background(), projectID, keyID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.GlobalVersions(context.Background())
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

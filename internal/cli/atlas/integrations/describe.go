@@ -91,7 +91,7 @@ func (opts *DescribeOpts) template() string {
 	}
 }
 
-// mongocli atlas integration(s) describe <TYPE> [--projectId projectId]
+// mongocli atlas integration(s) describe <TYPE> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

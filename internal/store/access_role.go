@@ -36,12 +36,12 @@ type CloudProviderAccessRoleDeauthorizer interface {
 	DeauthorizeCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
 	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error)
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,39 +51,39 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.CreateRole(context.Background(), groupID, req)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.ListRoles(context.Background(), groupID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+// DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(context.Background(), req)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, roleID, req)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

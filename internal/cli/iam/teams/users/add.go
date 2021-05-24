@@ -49,7 +49,7 @@ func (opts *AddOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam team(s) user(s) add <userId> [userId]... --teamId teamId --orgId orgId
+// mongocli iam team(s) user(s) add <userId> [userId]... --teamId teamId --orgId orgId.
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{

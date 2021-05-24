@@ -37,35 +37,35 @@ type BackupConfigUpdater interface {
 	UpdateBackupConfig(*opsmngr.BackupConfig) (*opsmngr.BackupConfig, error)
 }
 
-// GetBackupConfig encapsulates the logic to manage different cloud providers
+// GetBackupConfig encapsulates the logic to manage different cloud providers.
 func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ListBackupConfigs encapsulates the logic to manage different cloud providers
+// ListBackupConfigs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(context.Background(), projectID, options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateBackupConfig encapsulates the logic to manage different cloud providers
+// UpdateBackupConfig encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateBackupConfig(backupConfig *opsmngr.BackupConfig) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Update(context.Background(), backupConfig.GroupID, backupConfig.ClusterID, backupConfig)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

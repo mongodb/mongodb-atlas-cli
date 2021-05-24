@@ -45,57 +45,57 @@ type DatabaseRoleDescriber interface {
 	DatabaseRole(string, string) (*atlas.CustomDBRole, error)
 }
 
-// CreateDatabaseRole encapsulate the logic to manage different cloud providers
+// CreateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Create(context.Background(), groupID, role)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteDatabaseRole encapsulate the logic to manage different cloud providers
+// DeleteDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).CustomDBRoles.Delete(context.Background(), groupID, roleName)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DatabaseRoles encapsulate the logic to manage different cloud providers
+// DatabaseRoles encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateDatabaseRole encapsulate the logic to manage different cloud providers
+// UpdateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(context.Background(), groupID, roleName, role)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DatabaseRole encapsulate the logic to manage different cloud providers
+// DatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRole(groupID, roleName string) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Get(context.Background(), groupID, roleName)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

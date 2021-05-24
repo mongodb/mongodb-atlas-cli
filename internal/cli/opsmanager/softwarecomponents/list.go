@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om softwareComponent(s) list
+// mongocli om softwareComponent(s) list.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	opts.Template = listTemplate

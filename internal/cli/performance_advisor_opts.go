@@ -28,7 +28,7 @@ type PerformanceAdvisorOpts struct {
 	HostID      string
 }
 
-// validateProcessName checks that the processName respects the format processName:port
+// validateProcessName checks that the processName respects the format processName:port.
 func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 	const length = 2
 	process := strings.Split(opts.ProcessName, ":")
@@ -42,7 +42,7 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 //
 // Atlas: processName is required
 //
-// OM/CM: hostId is required
+// OM/CM: hostId is required.
 func (opts *PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
 	return func() error {
 		if config.Service() == config.CloudService {
@@ -52,7 +52,7 @@ func (opts *PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Comman
 	}
 }
 
-// Host returns the correct processName or the hostId in accordance with the service
+// Host returns the correct processName or the hostId in accordance with the service.
 func (opts *PerformanceAdvisorOpts) Host() (string, error) {
 	if opts.ProcessName == "" {
 		return opts.HostID, nil

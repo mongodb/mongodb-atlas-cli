@@ -66,7 +66,7 @@ type ProjectTeamDeleter interface {
 	DeleteTeamFromProject(string, string) error
 }
 
-// Projects encapsulates the logic to manage different cloud providers
+// Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -76,22 +76,22 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetOrgProjects encapsulates the logic to manage different cloud providers
+// GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Project encapsulates the logic to manage different cloud providers
+// Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -101,11 +101,11 @@ func (s *Store) Project(id string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(context.Background(), id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateProject encapsulates the logic to manage different cloud providers
+// CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -117,11 +117,11 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.Create(context.Background(), project)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers
+// DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -131,11 +131,11 @@ func (s *Store) DeleteProject(projectID string) error {
 		_, err := s.client.(*opsmngr.Client).Projects.Delete(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProjectUsers lists all IAM users in a project
+// ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -145,11 +145,11 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers
+// DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -159,11 +159,11 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(context.Background(), projectID, userID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProjectTeams encapsulates the logic to manage different cloud providers
+// ProjectTeams encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -173,11 +173,11 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(context.Background(), projectID, nil)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// AddTeamsToProject encapsulates the logic to manage different cloud providers
+// AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudService:
@@ -187,11 +187,11 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteTeamFromProject encapsulates the logic to manage different cloud providers
+// DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -201,6 +201,6 @@ func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

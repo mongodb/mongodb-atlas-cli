@@ -73,7 +73,7 @@ func (opts *DownloadOpts) initDefaultOut() {
 	}
 }
 
-// mongocli om serverUsage download [--startDate startDate] [--endDate endDate] [--format format] [--force] [--output destination] [--projectId projectId]
+// mongocli om serverUsage download [--startDate startDate] [--endDate endDate] [--format format] [--force] [--output destination] [--projectId projectId].
 func DownloadBuilder() *cobra.Command {
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()

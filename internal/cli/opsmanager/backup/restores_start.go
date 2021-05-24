@@ -161,7 +161,7 @@ func markRequiredAutomatedRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.TargetClusterID)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) start
+// mongocli atlas backup(s) restore(s) job(s) start.
 func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{

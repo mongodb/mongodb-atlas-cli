@@ -40,7 +40,7 @@ func (opts *CaptureOpts) Run() error {
 	return nil
 }
 
-// mongocli om serverUsage capture
+// mongocli om serverUsage capture.
 func CaptureBuilder() *cobra.Command {
 	opts := &CaptureOpts{}
 	cmd := &cobra.Command{

@@ -48,7 +48,7 @@ type SnapshotsDeleter interface {
 	DeleteSnapshot(string, string, string) error
 }
 
-// SnapshotRestoreJobs encapsulates the logic to manage different cloud providers
+// SnapshotRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshotRestoreJobs, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -59,11 +59,11 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(context.Background(), o, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateSnapshotRestoreJobs encapsulates the logic to manage different cloud providers
+// CreateSnapshotRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.CloudProviderSnapshotRestoreJob) (*atlas.CloudProviderSnapshotRestoreJob, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -74,11 +74,11 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(context.Background(), o, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateSnapshot encapsulates the logic to manage different cloud providers
+// CreateSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.CloudProviderSnapshot) (*atlas.CloudProviderSnapshot, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -89,11 +89,11 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(context.Background(), o, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Snapshots encapsulates the logic to manage different cloud providers
+// Snapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlas.CloudProviderSnapshots, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -104,11 +104,11 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Snapshot encapsulates the logic to manage different cloud providers
+// Snapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.CloudProviderSnapshot, error) {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -120,11 +120,11 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteSnapshot encapsulates the logic to manage different cloud providers
+// DeleteSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
 	o := &atlas.SnapshotReqPathParameters{
 		GroupID:     projectID,
@@ -136,6 +136,6 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(context.Background(), o)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

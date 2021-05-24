@@ -56,7 +56,7 @@ func (opts *CreateOpts) newTeam() *atlas.Team {
 	}
 }
 
-// mongocli iam team(s) create <name> [--orgId orgId]
+// mongocli iam team(s) create <name> [--orgId orgId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

@@ -52,7 +52,7 @@ func (opts *JobsDownloadOpts) Run() error {
 	return out.Close()
 }
 
-// mongocli om logs jobs download <ID> [--out out] [--projectId projectId]
+// mongocli om logs jobs download <ID> [--out out] [--projectId projectId].
 func JobsDownloadOptsBuilder() *cobra.Command {
 	opts := &JobsDownloadOpts{}
 	opts.Fs = afero.NewOsFs()

@@ -59,7 +59,7 @@ func (opts *CreateOpts) newMaintenanceWindow() *opsmngr.MaintenanceWindow {
 	}
 }
 
-// mongocli ops-manager maintenanceWindows create --startDate startDate --endDate endDate --alertType alertType --desc desc [--projectId projectId]
+// mongocli ops-manager maintenanceWindows create --startDate startDate --endDate endDate --alertType alertType --desc desc [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{

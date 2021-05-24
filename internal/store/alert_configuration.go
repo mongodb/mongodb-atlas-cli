@@ -45,7 +45,7 @@ type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
 }
 
-// AlertConfigurations encapsulate the logic to manage different cloud providers
+// AlertConfigurations encapsulate the logic to manage different cloud providers.
 func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,11 +55,11 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateAlertConfiguration encapsulate the logic to manage different cloud providers
+// CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -69,11 +69,11 @@ func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Create(context.Background(), alertConfig.GroupID, alertConfig)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteAlertConfiguration encapsulate the logic to manage different cloud providers
+// DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 	switch s.service {
 	case config.CloudService:
@@ -83,11 +83,11 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 		_, err := s.client.(*opsmngr.Client).AlertConfigurations.Delete(context.Background(), projectID, id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// MatcherFields encapsulate the logic to manage different cloud providers
+// MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
 	switch s.service {
 	case config.CloudService:
@@ -97,7 +97,7 @@ func (s *Store) MatcherFields() ([]string, error) {
 		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -110,6 +110,6 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -60,101 +60,101 @@ type RegionalizedPrivateEndpointSettingDescriber interface {
 	RegionalizedPrivateEndpointSetting(string) (*atlas.RegionalizedPrivateEndpointSetting, error)
 }
 
-// PrivateEndpoints encapsulates the logic to manage different cloud providers
+// PrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.List(context.Background(), projectID, provider, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// PrivateEndpoint encapsulates the logic to manage different cloud providers
+// PrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(context.Background(), projectID, provider, privateLinkID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreatePrivateEndpoint encapsulates the logic to manage different cloud providers
+// CreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpointConnection) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(context.Background(), projectID, r)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
+// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(context.Background(), projectID, provider, privateLinkID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers
+// CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlas.InterfaceEndpointConnection) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.AddOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, createRequest)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// InterfaceEndpoint encapsulates the logic to manage different cloud providers
+// InterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, privateEndpointID string) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetOnePrivateEndpoint(context.Background(), projectID, cloudProvider, endpointServiceID, privateEndpointID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
+// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, privateEndpointID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers
+// UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.UpdateRegionalizedPrivateEndpointSetting(context.Background(), projectID, enabled)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers
+// RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetRegionalizedPrivateEndpointSetting(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

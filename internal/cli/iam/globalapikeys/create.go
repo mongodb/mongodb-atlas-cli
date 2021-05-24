@@ -59,7 +59,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalApiKey(s) create [--role role][--desc description]
+// mongocli iam globalApiKey(s) create [--role role][--desc description].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate

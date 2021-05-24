@@ -26,7 +26,6 @@ import (
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
-	var slaveDelay float64 = 0
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -101,7 +100,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_0",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
+								SlaveDelay:   nil,
 								Votes:        1,
 							},
 						},
@@ -252,13 +251,14 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 						ProtocolVersion: "1",
 						Members: []opsmngr.Member{
 							{
-								ArbiterOnly:  false,
-								BuildIndexes: true,
-								Hidden:       false,
-								Host:         "replica_set_1_0",
-								Priority:     1,
-								SlaveDelay:   &slaveDelay,
-								Votes:        1,
+								ArbiterOnly:        false,
+								BuildIndexes:       true,
+								Hidden:             false,
+								Host:               "replica_set_1_0",
+								Priority:           1,
+								Votes:              1,
+								SlaveDelay:         pointy.Float64(1),
+								SecondaryDelaySecs: pointy.Float64(1),
 							},
 						},
 					},
@@ -273,7 +273,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_1",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -395,7 +394,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "replica_set_1_0",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 							{
@@ -405,7 +403,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "replica_set_1_2",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -528,7 +525,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "replica_set_1_1",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -675,7 +671,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_myShard_0_0",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -691,7 +686,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_configRS_1",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -898,7 +892,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_myShard_0_0",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -914,7 +907,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_configRS_1",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},
@@ -931,7 +923,6 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								Hidden:       false,
 								Host:         "test_config_myShard_1_3",
 								Priority:     1,
-								SlaveDelay:   &slaveDelay,
 								Votes:        1,
 							},
 						},

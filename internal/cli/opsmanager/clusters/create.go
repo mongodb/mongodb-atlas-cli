@@ -71,7 +71,7 @@ func (opts *CreateOpts) Run() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) create --projectId projectId --file myfile.yaml
+// mongocli cloud-manager cluster(s) create --projectId projectId --file myfile.yaml.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		fs: afero.NewOsFs(),

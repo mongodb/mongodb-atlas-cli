@@ -52,57 +52,57 @@ type DataLakeStore interface {
 	DataLakeUpdater
 }
 
-// CreateDataLake encapsulate the logic to manage different cloud providers
+// CreateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Create(context.Background(), projectID, dataLake)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateDataLake encapsulate the logic to manage different cloud providers
+// UpdateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Update(context.Background(), projectID, name, dataLake)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteDataLake encapsulate the logic to manage different cloud providers
+// DeleteDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDataLake(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).DataLakes.Delete(context.Background(), projectID, name)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DataLakes encapsulate the logic to manage different cloud providers
+// DataLakes encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.List(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DataLake encapsulate the logic to manage different cloud providers
+// DataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

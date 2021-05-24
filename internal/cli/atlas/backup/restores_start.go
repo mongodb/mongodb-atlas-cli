@@ -143,7 +143,7 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.ClusterName)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>
+// mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
 func RestoresStartBuilder() *cobra.Command {
 	opts := new(RestoresStartOpts)
 	cmd := &cobra.Command{

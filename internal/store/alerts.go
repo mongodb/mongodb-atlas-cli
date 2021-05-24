@@ -37,7 +37,7 @@ type AlertAcknowledger interface {
 	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
-// Alert encapsulate the logic to manage different cloud providers
+// Alert encapsulate the logic to manage different cloud providers.
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
@@ -47,11 +47,11 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(context.Background(), projectID, alertID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Alerts encapsulate the logic to manage different cloud providers
+// Alerts encapsulate the logic to manage different cloud providers.
 func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
 	switch s.service {
 	case config.CloudService:
@@ -61,11 +61,11 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 		result, _, err := s.client.(*opsmngr.Client).Alerts.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Acknowledge encapsulate the logic to manage different cloud providers
+// Acknowledge encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
@@ -75,6 +75,6 @@ func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.Acknowle
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

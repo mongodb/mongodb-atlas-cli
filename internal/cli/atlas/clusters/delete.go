@@ -40,7 +40,9 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
 }
 
-// mongocli atlas cluster(s) delete <name> --projectId projectId [--confirm]
+// DeleteBuilder
+//
+// mongocli atlas cluster(s) delete <name> --projectId projectId [--confirm].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Cluster '%s' deleted\n", "Cluster not deleted"),

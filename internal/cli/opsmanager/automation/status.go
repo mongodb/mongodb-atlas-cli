@@ -45,7 +45,7 @@ func (opts *StatusOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager automation status [--projectId projectId]
+// mongocli ops-manager automation status [--projectId projectId].
 func StatusBuilder() *cobra.Command {
 	opts := &StatusOpts{}
 	cmd := &cobra.Command{

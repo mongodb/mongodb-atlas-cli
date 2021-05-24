@@ -44,57 +44,57 @@ type SearchIndexDeleter interface {
 	DeleteSearchIndex(string, string, string) error
 }
 
-// SearchIndexes encapsulate the logic to manage different cloud providers
+// SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Search.ListIndexes(context.Background(), projectID, clusterName, dbName, collName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateSearchIndexes encapsulate the logic to manage different cloud providers
+// CreateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Search.CreateIndex(context.Background(), projectID, clusterName, index)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// SearchIndex encapsulate the logic to manage different cloud providers
+// SearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
 		index, _, err := s.client.(*atlas.Client).Search.GetIndex(context.Background(), projectID, clusterName, indexID)
 		return index, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateSearchIndexes encapsulate the logic to manage different cloud providers
+// UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, indexID, index)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteSearchIndex encapsulate the logic to manage different cloud providers
+// DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Search.DeleteIndex(context.Background(), projectID, clusterName, indexID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

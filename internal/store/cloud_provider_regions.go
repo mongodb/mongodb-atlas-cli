@@ -28,7 +28,7 @@ type CloudProviderRegionsLister interface {
 	CloudProviderRegions(string, string, []*string) (*atlas.CloudProviders, error)
 }
 
-// CloudProviderRegions encapsulates the logic to manage different cloud providers
+// CloudProviderRegions encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*string) (*atlas.CloudProviders, error) {
 	options := &atlas.CloudProviderRegionsOptions{
 		Providers: providerName,
@@ -39,6 +39,6 @@ func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*str
 		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(context.Background(), projectID, options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

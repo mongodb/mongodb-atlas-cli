@@ -92,7 +92,7 @@ func (opts *UpdateOpts) newBackupConfig() *opsmngr.BackupConfig {
 
 // mongocli ops-manager backup config update clusterID --status status --storageEngine storageEngine --authMechanism authMechanism
 // --username username --password password --provisioned provisioned --encryption encryption
-// --ssl ssl --syncSource syncSource --excludedNamespace excludedNamespace --includedNamespace includedNamespace[--projectId projectId]
+// --ssl ssl --syncSource syncSource --excludedNamespace excludedNamespace --includedNamespace includedNamespace[--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate

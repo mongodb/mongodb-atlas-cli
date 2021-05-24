@@ -46,7 +46,7 @@ func (opts *UpgradeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager agents upgrade [--projectId projectId]
+// mongocli ops-manager agents upgrade [--projectId projectId].
 func UpgradeBuilder() *cobra.Command {
 	opts := &UpgradeOpts{}
 	cmd := &cobra.Command{

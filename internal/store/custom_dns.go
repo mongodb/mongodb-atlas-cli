@@ -36,7 +36,7 @@ type CustomDNSDescriber interface {
 	DescribeCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
 }
 
-// EnableCustomDNS encapsulates the logic to manage different cloud providers
+// EnableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
@@ -46,11 +46,11 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DisableCustomDNS encapsulates the logic to manage different cloud providers
+// DisableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
@@ -60,17 +60,17 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DescribeCustomDNS encapsulates the logic to manage different cloud providers
+// DescribeCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -40,7 +40,7 @@ func (opts *JobsDeleteOpts) Run() error {
 	return opts.store.DeleteCollectionJob(opts.ConfigProjectID(), opts.Entry)
 }
 
-// mongocli om logs jobs delete <ID> [--projectId projectId] [--force]
+// mongocli om logs jobs delete <ID> [--projectId projectId] [--force].
 func JobsDeleteOptsBuilder() *cobra.Command {
 	opts := &JobsDeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Log collection Entry '%s' deleted\n", "Log collection Entry not deleted"),

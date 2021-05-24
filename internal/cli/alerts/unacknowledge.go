@@ -58,7 +58,7 @@ func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest
 	}
 }
 
-// mongocli atlas alerts unacknowledge <ID> --projectId projectId --comment comment
+// mongocli atlas alerts unacknowledge <ID> --projectId projectId --comment comment.
 func UnacknowledgeBuilder() *cobra.Command {
 	opts := new(UnacknowledgeOpts)
 	cmd := &cobra.Command{

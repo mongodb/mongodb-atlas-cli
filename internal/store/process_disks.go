@@ -28,13 +28,13 @@ type ProcessDisksLister interface {
 	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
 }
 
-// ProcessDisks encapsulates the logic to manage different cloud providers
+// ProcessDisks encapsulates the logic to manage different cloud providers.
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

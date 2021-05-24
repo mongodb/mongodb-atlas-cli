@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteS3Blockstore)
 }
 
-// mongocli ops-manager admin backup s3 delete <ID> [--force]
+// mongocli ops-manager admin backup s3 delete <ID> [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("S3 blockstore configuration '%s' deleted\n", "S3 blockstore configuration not deleted"),

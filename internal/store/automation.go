@@ -69,28 +69,28 @@ func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus
 		result, _, err := s.client.(*opsmngr.Client).Automation.GetStatus(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetAutomationConfig encapsulate the logic to manage different cloud providers
+// GetAutomationConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Automation.GetConfig(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateAutomationConfig encapsulate the logic to manage different cloud providers
+// UpdateAutomationConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *opsmngr.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Automation.UpdateConfig(context.Background(), projectID, automationConfig)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

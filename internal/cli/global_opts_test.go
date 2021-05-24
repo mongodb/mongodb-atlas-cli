@@ -62,7 +62,7 @@ func TestGlobalOpts_ValidateProjectID(t *testing.T) {
 func TestGlobalOpts_ValidateOrgID(t *testing.T) {
 	t.Run("empty org ID", func(t *testing.T) {
 		o := &GlobalOpts{}
-		if err := o.ValidateOrgID(); err != ErrMissingOrgID {
+		if err := o.ValidateOrgID(); !errors.Is(err, ErrMissingOrgID) {
 			t.Errorf("Expected err: %#v, got: %#v\n", ErrMissingOrgID, err)
 		}
 	})

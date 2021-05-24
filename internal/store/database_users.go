@@ -60,7 +60,7 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Create(context.Background(), user.GroupID, user)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -70,7 +70,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), authDB, groupID, username)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -80,7 +80,7 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atla
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -90,7 +90,7 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(context.Background(), user.GroupID, user.Username, user)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -101,7 +101,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, escapedUsername)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -112,7 +112,7 @@ func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCert
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -123,6 +123,6 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiration)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

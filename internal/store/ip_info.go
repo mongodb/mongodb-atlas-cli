@@ -32,7 +32,7 @@ func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(context.Background())
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

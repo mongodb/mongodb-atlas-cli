@@ -40,7 +40,7 @@ func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions
 		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -51,6 +51,6 @@ func (s *Store) UpdateFeatureControlPolicy(projectID string, policy *opsmngr.Fea
 		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.Update(context.Background(), projectID, policy)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

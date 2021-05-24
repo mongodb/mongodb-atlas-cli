@@ -17,6 +17,7 @@ package store
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net"
@@ -45,6 +46,8 @@ const (
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
 )
+
+var errUnsupportedService = errors.New("unsupported service")
 
 type Store struct {
 	service       string
@@ -378,7 +381,7 @@ func NewVersionManifest(c ManifestGetter) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 	s.baseURL = versionManifestStaticPath
 	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {

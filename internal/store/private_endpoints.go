@@ -67,7 +67,7 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.List(context.Background(), projectID, provider, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -78,7 +78,7 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atl
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(context.Background(), projectID, provider, privateLinkID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -89,7 +89,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(context.Background(), projectID, r)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -100,7 +100,7 @@ func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string)
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(context.Background(), projectID, provider, privateLinkID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -111,7 +111,7 @@ func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID s
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.AddOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, createRequest)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -122,7 +122,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetOnePrivateEndpoint(context.Background(), projectID, cloudProvider, endpointServiceID, privateEndpointID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -133,7 +133,7 @@ func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, 
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(context.Background(), projectID, provider, endpointServiceID, privateEndpointID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -144,7 +144,7 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.UpdateRegionalizedPrivateEndpointSetting(context.Background(), projectID, enabled)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -155,6 +155,6 @@ func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlas.Reg
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetRegionalizedPrivateEndpointSetting(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

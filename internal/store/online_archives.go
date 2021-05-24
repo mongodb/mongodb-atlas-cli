@@ -51,7 +51,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(context.Background(), projectID, clusterName, lstOpt)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,7 +62,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(context.Background(), projectID, clusterName, archiveID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(context.Background(), projectID, clusterName, archive)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -84,7 +84,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Update(context.Background(), projectID, clusterName, archive.ID, archive)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -95,6 +95,6 @@ func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) er
 		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(context.Background(), projectID, clusterName, archiveID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

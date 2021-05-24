@@ -51,7 +51,7 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -65,7 +65,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -79,7 +79,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -93,6 +93,6 @@ func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.Lis
 		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

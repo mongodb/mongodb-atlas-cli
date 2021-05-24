@@ -64,7 +64,7 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 		result, _, err := s.client.(*opsmngr.Client).Teams.Get(context.Background(), orgID, teamID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -78,7 +78,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(context.Background(), orgID, teamName)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -92,7 +92,7 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 		result, _, err := s.client.(*opsmngr.Client).Teams.List(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -106,7 +106,7 @@ func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) 
 		result, _, err := s.client.(*opsmngr.Client).Teams.Create(context.Background(), orgID, team)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -120,7 +120,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(context.Background(), orgID, teamID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -134,7 +134,7 @@ func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{
 		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(context.Background(), orgID, teamID, users)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -148,7 +148,7 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(context.Background(), orgID, teamID, userID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -162,6 +162,6 @@ func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.Tea
 		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(context.Background(), projectID, teamID, team)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

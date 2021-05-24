@@ -64,7 +64,7 @@ func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error)
 		result, _, err := s.client.(*opsmngr.Client).ServerUsage.GetServerTypeProject(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -75,7 +75,7 @@ func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.Se
 		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateProjectServerType(context.Background(), projectID, serverType)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -86,7 +86,7 @@ func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error
 		result, _, err := s.client.(*opsmngr.Client).ServerUsage.GetServerTypeOrganization(context.Background(), orgID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -97,7 +97,7 @@ func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.S
 		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateOrganizationServerType(context.Background(), orgID, serverType)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -108,7 +108,7 @@ func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTyp
 		result, _, err := s.client.(*opsmngr.Client).ServerUsage.ProjectHostAssignments(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -119,7 +119,7 @@ func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTy
 		result, _, err := s.client.(*opsmngr.Client).ServerUsage.OrganizationHostAssignments(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -130,7 +130,7 @@ func (s *Store) GenerateSnapshot() error {
 		_, err := s.client.(*opsmngr.Client).ServerUsage.GenerateDailyUsageSnapshot(context.Background())
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -141,6 +141,6 @@ func (s *Store) DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out i
 		_, err := s.client.(*opsmngr.Client).ServerUsageReport.Download(context.Background(), opts, out)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

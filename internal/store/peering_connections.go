@@ -63,7 +63,7 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 		result, _, err := s.client.(*atlas.Client).Peers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error)
 		result, _, err := s.client.(*atlas.Client).Peers.Get(context.Background(), projectID, peerID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 		_, err := s.client.(*atlas.Client).Peers.Delete(context.Background(), projectID, peerID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*at
 		result, _, err := s.client.(*atlas.Client).Peers.Create(context.Background(), projectID, peer)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

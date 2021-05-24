@@ -51,7 +51,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, o
 		result, _, err := s.client.(*atlas.Client).Search.ListIndexes(context.Background(), projectID, clusterName, dbName, collName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,7 +62,7 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 		result, _, err := s.client.(*atlas.Client).Search.CreateIndex(context.Background(), projectID, clusterName, index)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 		index, _, err := s.client.(*atlas.Client).Search.GetIndex(context.Background(), projectID, clusterName, indexID)
 		return index, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -84,7 +84,7 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, indexID, index)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -95,6 +95,6 @@ func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error 
 		_, err := s.client.(*atlas.Client).Search.DeleteIndex(context.Background(), projectID, clusterName, indexID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -51,7 +51,7 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,7 +62,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(context.Background(), projectID, requestID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfigur
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(context.Background(), projectID, ldap)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -84,7 +84,7 @@ func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -95,6 +95,6 @@ func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(context.Background(), projectID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

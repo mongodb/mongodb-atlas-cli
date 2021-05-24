@@ -35,6 +35,6 @@ func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOpt
 		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

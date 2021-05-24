@@ -44,7 +44,7 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -55,7 +55,7 @@ func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) 
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(context.Background(), projectID, options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -66,6 +66,6 @@ func (s *Store) UpdateBackupConfig(backupConfig *opsmngr.BackupConfig) (*opsmngr
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Update(context.Background(), backupConfig.GroupID, backupConfig.ClusterID, backupConfig)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

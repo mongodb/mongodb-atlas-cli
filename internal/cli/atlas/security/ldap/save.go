@@ -75,19 +75,23 @@ func (opts *SaveOpts) validate() error {
 }
 
 func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
-	return &atlas.LDAPConfiguration{
+	ldapConfig := &atlas.LDAPConfiguration{
 		LDAP: &atlas.LDAP{
 			AuthenticationEnabled: opts.authenticationEnabled,
 			AuthorizationEnabled:  opts.authorizationEnabled,
 			Hostname:              opts.hostname,
 			Port:                  opts.port,
-			UserToDNMapping:       []*atlas.UserToDNMapping{{Match: opts.mappingMatch, LDAPQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution}},
+			UserToDNMapping:       []*atlas.UserToDNMapping{},
 			BindUsername:          opts.bindUsername,
 			BindPassword:          opts.bindPassword,
 			CaCertificate:         opts.caCertificate,
 			AuthzQueryTemplate:    opts.authzQueryTemplate,
 		},
 	}
+	if opts.mappingMatch != "" {
+		ldapConfig.LDAP.UserToDNMapping = append(ldapConfig.LDAP.UserToDNMapping, &atlas.UserToDNMapping{Match: opts.mappingMatch, LDAPQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution})
+	}
+	return ldapConfig
 }
 
 // mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate

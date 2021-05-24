@@ -76,7 +76,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -87,7 +87,7 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -101,7 +101,7 @@ func (s *Store) Project(id string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(context.Background(), id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -117,7 +117,7 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.Create(context.Background(), project)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -131,7 +131,7 @@ func (s *Store) DeleteProject(projectID string) error {
 		_, err := s.client.(*opsmngr.Client).Projects.Delete(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -145,7 +145,7 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -159,7 +159,7 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(context.Background(), projectID, userID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -173,7 +173,7 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(context.Background(), projectID, nil)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -187,7 +187,7 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(context.Background(), projectID, teams)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -201,6 +201,6 @@ func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(context.Background(), projectID, teamID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

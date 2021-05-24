@@ -48,7 +48,7 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,6 +62,6 @@ func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (
 		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

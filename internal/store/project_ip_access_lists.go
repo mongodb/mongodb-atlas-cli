@@ -46,7 +46,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -57,7 +57,7 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(context.Background(), projectID, entry)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -68,7 +68,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -79,6 +79,6 @@ func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

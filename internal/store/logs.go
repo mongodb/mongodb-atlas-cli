@@ -53,7 +53,7 @@ func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) 
 		log, _, err := s.client.(*opsmngr.Client).LogCollections.List(context.Background(), groupID, opts)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -64,7 +64,7 @@ func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 		_, err := s.client.(*opsmngr.Client).LogCollections.Delete(context.Background(), groupID, logID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -75,7 +75,7 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(context.Background(), groupID, newLog)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -86,7 +86,7 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 		_, err := s.client.(*atlas.Client).Logs.Get(context.Background(), groupID, host, name, out, opts)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -97,6 +97,6 @@ func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
 		_, err := s.client.(*opsmngr.Client).Logs.Download(context.Background(), groupID, jobID, out)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

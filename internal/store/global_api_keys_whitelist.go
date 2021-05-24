@@ -48,7 +48,7 @@ func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.Global
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -59,7 +59,7 @@ func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Get(context.Background(), id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -70,7 +70,7 @@ func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Create(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -81,6 +81,6 @@ func (s *Store) DeleteGlobalAPIKeyWhitelist(id string) error {
 		_, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Delete(context.Background(), id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

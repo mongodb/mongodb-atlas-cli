@@ -47,7 +47,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(context.Background(), projectID, integrationType, integration)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -58,7 +58,7 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 		resp, _, err := s.client.(*atlas.Client).Integrations.List(context.Background(), projectID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -69,7 +69,7 @@ func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -80,6 +80,6 @@ func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPart
 		resp, _, err := s.client.(*atlas.Client).Integrations.Get(context.Background(), projectID, integrationType)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

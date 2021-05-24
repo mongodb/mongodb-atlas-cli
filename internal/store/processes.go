@@ -35,6 +35,6 @@ func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) ([]*
 		result, _, err := s.client.(*atlas.Client).Processes.List(context.Background(), groupID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

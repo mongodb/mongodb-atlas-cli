@@ -89,7 +89,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(context.Background(), groupID, clusterName)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -100,7 +100,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, e
 		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(context.Background(), groupID, id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -111,7 +111,7 @@ func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 		result, _, err := s.client.(*atlas.Client).Clusters.Create(context.Background(), cluster.GroupID, cluster)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -122,7 +122,7 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*
 		result, _, err := s.client.(*atlas.Client).Clusters.Update(context.Background(), projectID, name, cluster)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -151,7 +151,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -165,7 +165,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -176,7 +176,7 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -187,7 +187,7 @@ func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, err
 		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -198,6 +198,6 @@ func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(context.Background())
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

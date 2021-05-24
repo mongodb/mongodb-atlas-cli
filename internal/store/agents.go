@@ -58,7 +58,7 @@ func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(context.Background(), projectID, agentType)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -69,7 +69,7 @@ func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, 
 		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -80,7 +80,7 @@ func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentAPIKeys(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -91,7 +91,7 @@ func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysReque
 		result, _, err := s.client.(*opsmngr.Client).Agents.CreateAgentAPIKey(context.Background(), projectID, r)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -102,7 +102,7 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 		_, err := s.client.(*opsmngr.Client).Agents.DeleteAgentAPIKey(context.Background(), projectID, keyID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -113,7 +113,7 @@ func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 		result, _, err := s.client.(*opsmngr.Client).Agents.GlobalVersions(context.Background())
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -124,6 +124,6 @@ func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, 
 		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

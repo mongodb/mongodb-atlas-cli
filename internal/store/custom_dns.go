@@ -46,7 +46,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -60,7 +60,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -71,6 +71,6 @@ func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting,
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

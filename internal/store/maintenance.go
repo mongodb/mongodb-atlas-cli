@@ -68,7 +68,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -79,7 +79,7 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Reset(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -90,7 +90,7 @@ func (s *Store) DeferMaintenanceWindow(projectID string) error {
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Defer(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -101,7 +101,7 @@ func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, e
 		resp, _, err := s.client.(*atlas.Client).MaintenanceWindows.Get(context.Background(), projectID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -112,7 +112,7 @@ func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceW
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(context.Background(), projectID, maintenanceWindow)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -123,7 +123,7 @@ func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.Mainten
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(context.Background(), projectID)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -134,7 +134,7 @@ func (s *Store) DeleteOpsManagerMaintenanceWindow(projectID, maintenanceWindowID
 		_, err := s.client.(*opsmngr.Client).MaintenanceWindows.Delete(context.Background(), projectID, maintenanceWindowID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -145,7 +145,7 @@ func (s *Store) OpsManagerMaintenanceWindow(projectID, maintenanceWindowID strin
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Get(context.Background(), projectID, maintenanceWindowID)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -156,6 +156,6 @@ func (s *Store) UpdateOpsManagerMaintenanceWindow(projectID string, maintenanceW
 		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow.ID, maintenanceWindow)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

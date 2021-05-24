@@ -51,7 +51,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.CreateRole(context.Background(), groupID, req)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,7 +62,7 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.ListRoles(context.Background(), groupID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(context.Background(), req)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -84,6 +84,6 @@ func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *at
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, roleID, req)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

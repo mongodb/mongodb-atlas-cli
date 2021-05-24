@@ -39,6 +39,6 @@ func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*str
 		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(context.Background(), projectID, options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

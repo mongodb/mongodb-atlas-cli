@@ -52,7 +52,7 @@ func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystem
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -63,7 +63,7 @@ func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStor
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(context.Background(), fileSystemID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) DeleteFileSystem(fileSystemID string) error {
 		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(context.Background(), fileSystemID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfigurati
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(context.Background(), fileSystem)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfigurati
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(context.Background(), fileSystem.ID, fileSystem)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

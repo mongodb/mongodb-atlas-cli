@@ -35,6 +35,6 @@ func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.Lis
 		result, _, err := s.client.(*atlas.Client).ProcessDatabases.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

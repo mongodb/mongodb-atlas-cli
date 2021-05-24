@@ -15,6 +15,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -114,7 +115,10 @@ func (opts *OutputOpts) Print(o interface{}) error {
 }
 
 // outputTypeAndValue returns the output type and the associated value
-// Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path".
+// Current available output types are:
+// "go-template=Template string",
+// "go-template-file=path/to/template",
+// and "json-path=path".
 func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 	v = opts.Template
 	for _, format := range templateFormats {
@@ -129,12 +133,14 @@ func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 	return
 }
 
+var errTemplate = errors.New("error loading template")
+
 // template returns the correct template from the output type.
 func (opts *OutputOpts) template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {
-			return "", fmt.Errorf("error loading template: %s, %w", value, err)
+			return "", fmt.Errorf("%w: %s, %v", errTemplate, value, err)
 		}
 
 		value = string(data)

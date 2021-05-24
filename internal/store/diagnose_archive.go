@@ -36,6 +36,6 @@ func (s *Store) DownloadArchive(groupID string, opts *opsmngr.DiagnosticsListOpt
 		_, err := s.client.(*opsmngr.Client).Diagnostics.Get(context.Background(), groupID, opts, out)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

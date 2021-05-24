@@ -40,6 +40,6 @@ func (s *Store) CreateOwner(u *opsmngr.User, ips []string) (*opsmngr.CreateUserR
 		result, _, err := s.client.(*opsmngr.Client).UnauthUsers.CreateFirstUser(context.Background(), u, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

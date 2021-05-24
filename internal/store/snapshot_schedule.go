@@ -39,7 +39,7 @@ func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.Snaps
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Get(context.Background(), projectID, clusterID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -50,6 +50,6 @@ func (s *Store) UpdateSnapshotSchedule(projectID, clusterID string, snapshotSche
 		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Update(context.Background(), projectID, clusterID, snapshotSchedule)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

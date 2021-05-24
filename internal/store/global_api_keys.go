@@ -52,7 +52,7 @@ func (s *Store) GlobalAPIKeys(opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -63,7 +63,7 @@ func (s *Store) GlobalAPIKey(apiKeyID string) (*atlas.APIKey, error) {
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Get(context.Background(), apiKeyID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Update(context.Background(), apiKeyID, input)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) CreateGlobalAPIKey(input *atlas.APIKeyInput) (*atlas.APIKey, err
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Create(context.Background(), input)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) DeleteGlobalAPIKey(id string) error {
 		_, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Delete(context.Background(), id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

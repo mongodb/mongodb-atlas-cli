@@ -52,7 +52,7 @@ func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, er
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -63,7 +63,7 @@ func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Get(context.Background(), syncID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, err
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Create(context.Background(), sync)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.B
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Update(context.Background(), syncID, sync)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) DeleteSync(syncID string) error {
 		_, err := s.client.(*opsmngr.Client).SyncStoreConfig.Delete(context.Background(), syncID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

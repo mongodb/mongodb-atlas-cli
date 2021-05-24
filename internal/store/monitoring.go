@@ -39,7 +39,7 @@ func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Ho
 		result, _, err := s.client.(*opsmngr.Client).Deployments.StartMonitoring(context.Background(), groupID, host)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -50,6 +50,6 @@ func (s *Store) StopMonitoring(groupID, hostID string) error {
 		_, err := s.client.(*opsmngr.Client).Deployments.StopMonitoring(context.Background(), groupID, hostID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

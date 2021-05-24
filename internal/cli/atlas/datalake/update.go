@@ -15,7 +15,7 @@
 package datalake
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -91,7 +91,7 @@ func UpdateBuilder() *cobra.Command {
 			opts.name = args[0]
 
 			if opts.region == "" && opts.role == "" && opts.testBucket == "" {
-				return fmt.Errorf("nothing to update")
+				return errors.New("nothing to update")
 			}
 
 			return opts.PreRunE(

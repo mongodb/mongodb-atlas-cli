@@ -44,7 +44,7 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Host(context.Background(), groupID, host, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -55,7 +55,7 @@ func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Disk(context.Background(), groupID, hostID, partitionName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -66,6 +66,6 @@ func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, o
 		result, _, err := s.client.(*opsmngr.Client).Measurements.Database(context.Background(), groupID, hostID, databaseName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

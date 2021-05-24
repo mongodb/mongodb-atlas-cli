@@ -52,7 +52,7 @@ func (s *Store) ListS3Blockstores(options *atlas.ListOptions) (*opsmngr.S3Blocks
 		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -63,7 +63,7 @@ func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 		_, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Delete(context.Background(), blockstoreID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.
 		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Create(context.Background(), blockstore)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3B
 		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Update(context.Background(), blockstoreID, blockstore)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) GetS3Blockstore(blockstoreID string) (*opsmngr.S3Blockstore, err
 		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Get(context.Background(), blockstoreID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

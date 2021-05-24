@@ -51,7 +51,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -65,7 +65,7 @@ func (s *Store) Organization(id string) (*atlas.Organization, error) {
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(context.Background(), id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -77,7 +77,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(context.Background(), org)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -91,6 +91,6 @@ func (s *Store) DeleteOrganization(id string) error {
 		_, err := s.client.(*opsmngr.Client).Organizations.Delete(context.Background(), id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

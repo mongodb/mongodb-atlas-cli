@@ -427,7 +427,7 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 
 // member maps convert.ProcessConfig -> opsmngr.Member.
 func (p *ProcessConfig) member(i int) opsmngr.Member {
-	var slaveDelay float64 = 0
+	var slaveDelay float64
 	m := opsmngr.Member{
 		ID:           i,
 		ArbiterOnly:  false,

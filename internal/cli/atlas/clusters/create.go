@@ -154,7 +154,7 @@ func (opts *CreateOpts) providerName() string {
 
 func (opts *CreateOpts) newReplicationSpec() atlas.ReplicationSpec {
 	var (
-		readOnlyNodes int64 = 0
+		readOnlyNodes int64
 		Priority      int64 = 7
 	)
 	replicationSpec := atlas.ReplicationSpec{

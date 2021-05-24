@@ -26,9 +26,9 @@ const (
 	defaultSizeThresholdMB   = 1000
 )
 
-func AutomationConfig() *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
+var slaveDelay float64
 
+func AutomationConfig() *opsmngr.AutomationConfig {
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			AutoAuthMechanism: "MONGODB-CR",
@@ -189,7 +189,6 @@ func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
 }
 
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{
 			{
@@ -265,7 +264,6 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 }
 
 func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.AutomationConfig {
-	var slaveDelay float64 = 0
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			DeploymentAuthMechanisms: []string{},

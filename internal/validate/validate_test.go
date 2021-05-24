@@ -348,3 +348,36 @@ func TestDBUsername(t *testing.T) {
 		})
 	}
 }
+
+func TestWeakPassword(t *testing.T) {
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid password",
+			val:     "password!@3!",
+			wantErr: false,
+		},
+		{
+			name:    "weak password",
+			val:     "password",
+			wantErr: true,
+		},
+		{
+			name:    "weak password",
+			val:     "password1",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err := WeakPassword(val); (err != nil) != wantErr {
+				t.Errorf("WeakPassword() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}

@@ -131,6 +131,10 @@ func TestLDAP(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
 			"admin",
+			"--mappingMatch",
+			"(.+)@ENGINEERING.EXAMPLE.COM",
+			"--mappingSubstitution",
+			"cn={0},ou=engineering,dc=example,dc=com",
 			"-o",
 			"json")
 		cmd.Env = os.Environ()

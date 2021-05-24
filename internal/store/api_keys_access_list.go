@@ -40,7 +40,7 @@ type OrganizationAPIKeyAccessListCreator interface {
 	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
 }
 
-// CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers
+// CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
@@ -63,7 +63,7 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 	}
 }
 
-// DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers
+// DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
 	case config.CloudService:
@@ -85,7 +85,7 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 	}
 }
 
-// OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers
+// OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudService:
@@ -108,7 +108,7 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 }
 
 // fromWhitelistAPIKeysToAccessListAPIKeys convert from atlas.WhitelistAPIKeys format to atlas.AccessListAPIKeys
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
 func fromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
 	if in == nil {
 		return nil
@@ -129,7 +129,7 @@ func fromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.
 }
 
 // fromWhitelistAPIKeyToAccessListAPIKey convert from atlas.WhitelistAPIKey format to atlas.AccessListAPIKey
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
 func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.AccessListAPIKey {
 	return &atlas.AccessListAPIKey{
 		CidrBlock:       in.CidrBlock,
@@ -143,7 +143,7 @@ func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.Acc
 }
 
 // fromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
 func fromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
 	if in == nil {
 		return nil

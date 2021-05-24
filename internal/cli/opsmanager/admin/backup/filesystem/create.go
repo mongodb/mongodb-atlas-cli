@@ -61,7 +61,7 @@ func (opts *CreateOpts) newFileSystemConfiguration() *opsmngr.FileSystemStoreCon
 
 // mongocli ops-manager admin backup fileSystem(s) create [--assignment][--encryptedCredentials]
 // [--label label][--loadFactor loadFactor][--name name][--storePath storePath][--mmapv1CompressionSetting mmapv1CompressionSetting]
-// [--wtCompressionSetting wtCompressionSetting]
+// [--wtCompressionSetting wtCompressionSetting].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate

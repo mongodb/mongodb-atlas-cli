@@ -47,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas maintenanceWindow(s) describe|get [--projectId projectId]
+// mongocli atlas maintenanceWindow(s) describe|get [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

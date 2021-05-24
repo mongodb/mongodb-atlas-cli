@@ -51,7 +51,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager backup config list [--projectId projectId]
+// mongocli ops-manager backup config list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

@@ -44,7 +44,7 @@ type HostDisksLister interface {
 	HostDisks(string, string, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
 }
 
-// HostDatabases encapsulate the logic to manage different cloud providers
+// HostDatabases encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -55,7 +55,7 @@ func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (
 	}
 }
 
-// HostDisks encapsulate the logic to manage different cloud providers
+// HostDisks encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -66,7 +66,7 @@ func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atl
 	}
 }
 
-// Hosts encapsulate the logic to manage different cloud providers
+// Hosts encapsulate the logic to manage different cloud providers.
 func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.Hosts, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -77,7 +77,7 @@ func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.H
 	}
 }
 
-// Host encapsulate the logic to manage different cloud providers
+// Host encapsulate the logic to manage different cloud providers.
 func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -88,7 +88,7 @@ func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	}
 }
 
-// HostByHostname encapsulate the logic to manage different cloud providers
+// HostByHostname encapsulate the logic to manage different cloud providers.
 func (s *Store) HostByHostname(groupID, hostname string, port int) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

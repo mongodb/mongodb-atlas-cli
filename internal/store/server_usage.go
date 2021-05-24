@@ -57,7 +57,7 @@ type ServerUsageReportDownloader interface {
 	DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error
 }
 
-// ProjectServerType encapsulates the logic to manage different cloud providers
+// ProjectServerType encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -68,7 +68,7 @@ func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error)
 	}
 }
 
-// UpdateProjectServerType encapsulates the logic to manage different cloud providers
+// UpdateProjectServerType encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -79,7 +79,7 @@ func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.Se
 	}
 }
 
-// OrganizationServerType encapsulates the logic to manage different cloud providers
+// OrganizationServerType encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -90,7 +90,7 @@ func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error
 	}
 }
 
-// UpdateOrganizationServerType encapsulates the logic to manage different cloud providers
+// UpdateOrganizationServerType encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -101,7 +101,7 @@ func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.S
 	}
 }
 
-// ProjectHostAssignments encapsulates the logic to manage different cloud providers
+// ProjectHostAssignments encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -112,7 +112,7 @@ func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTyp
 	}
 }
 
-// OrganizationHostAssignments encapsulates the logic to manage different cloud providers
+// OrganizationHostAssignments encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -123,7 +123,7 @@ func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTy
 	}
 }
 
-// GenerateSnapshot encapsulates the logic to manage different cloud providers
+// GenerateSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) GenerateSnapshot() error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -134,7 +134,7 @@ func (s *Store) GenerateSnapshot() error {
 	}
 }
 
-// DownloadServerUsageReport encapsulate the logic to manage different cloud providers
+// DownloadServerUsageReport encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService:

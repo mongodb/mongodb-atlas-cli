@@ -51,7 +51,7 @@ func (opts *GlobalOpts) ConfigOrgID() string {
 type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,
-// this will call any additional function pass as a callback
+// this will call any additional function pass as a callback.
 func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	for _, f := range cbs {
 		if err := f(); err != nil {
@@ -62,7 +62,7 @@ func (opts *GlobalOpts) PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
-// ValidateProjectID validates projectID
+// ValidateProjectID validates projectID.
 func (opts *GlobalOpts) ValidateProjectID() error {
 	if opts.ConfigProjectID() == "" {
 		return errMissingProjectID
@@ -73,7 +73,7 @@ func (opts *GlobalOpts) ValidateProjectID() error {
 	return nil
 }
 
-// ValidateOrgID validates orgID
+// ValidateOrgID validates orgID.
 func (opts *GlobalOpts) ValidateOrgID() error {
 	if opts.ConfigOrgID() == "" {
 		return ErrMissingOrgID

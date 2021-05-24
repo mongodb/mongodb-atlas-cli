@@ -57,7 +57,7 @@ func (opts *SaveOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem
+// mongocli atlas security customercerts create --projectId projectId --casFile /path/to/certificates.pem.
 func CreateBuilder() *cobra.Command {
 	opts := &SaveOpts{
 		fs: afero.NewOsFs(),

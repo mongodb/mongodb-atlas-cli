@@ -44,7 +44,7 @@ type OnlineArchiveDeleter interface {
 	DeleteOnlineArchive(string, string, string) error
 }
 
-// OnlineArchives encapsulate the logic to manage different cloud providers
+// OnlineArchives encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlas.OnlineArchives, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 	}
 }
 
-// OnlineArchive encapsulate the logic to manage different cloud providers
+// OnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
@@ -66,7 +66,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 	}
 }
 
-// CreateOnlineArchive encapsulate the logic to manage different cloud providers
+// CreateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
@@ -77,7 +77,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 	}
 }
 
-// UpdateOnlineArchive encapsulate the logic to manage different cloud providers
+// UpdateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
@@ -88,7 +88,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 	}
 }
 
-// DeleteOnlineArchive encapsulate the logic to manage different cloud providers
+// DeleteOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
 	switch s.service {
 	case config.CloudService:

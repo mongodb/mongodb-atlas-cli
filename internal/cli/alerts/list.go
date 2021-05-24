@@ -63,7 +63,7 @@ func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
 	return o
 }
 
-// mongocli atlas alerts list [--status status] [--projectId projectId] [--page N] [--limit N]
+// mongocli atlas alerts list [--status status] [--projectId projectId] [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

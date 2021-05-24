@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOpsManagerMaintenanceWindow, opts.ConfigProjectID())
 }
 
-// mongocli ops-manager maintenanceWindows delete <ID> --force
+// mongocli ops-manager maintenanceWindows delete <ID> --force.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Maintenance window '%s' deleted\n", "Maintenance window not deleted"),

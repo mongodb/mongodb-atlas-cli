@@ -28,7 +28,7 @@ type IndexCreator interface {
 	CreateIndex(string, string, *atlas.IndexConfiguration) error
 }
 
-// CreateIndex encapsulate the logic to manage different cloud providers
+// CreateIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlas.IndexConfiguration) error {
 	switch s.service {
 	case config.CloudService:

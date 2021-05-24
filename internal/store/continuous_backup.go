@@ -41,7 +41,7 @@ type ContinuousSnapshotsLister interface {
 	ContinuousSnapshots(string, string, *atlas.ListOptions) (*atlas.ContinuousSnapshots, error)
 }
 
-// Checkpoints encapsulate the logic to manage different cloud providers
+// Checkpoints encapsulate the logic to manage different cloud providers.
 func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 	}
 }
 
-// ContinuousRestoreJobs encapsulate the logic to manage different cloud providers
+// ContinuousRestoreJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
@@ -69,7 +69,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 	}
 }
 
-// CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers
+// CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
@@ -83,7 +83,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 	}
 }
 
-// ContinuousSnapshots encapsulate the logic to manage different cloud providers
+// ContinuousSnapshots encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
 	switch s.service {
 	case config.CloudService:

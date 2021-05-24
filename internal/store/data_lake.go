@@ -52,7 +52,7 @@ type DataLakeStore interface {
 	DataLakeUpdater
 }
 
-// CreateDataLake encapsulate the logic to manage different cloud providers
+// CreateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
@@ -63,7 +63,7 @@ func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateR
 	}
 }
 
-// UpdateDataLake encapsulate the logic to manage different cloud providers
+// UpdateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
@@ -74,7 +74,7 @@ func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeU
 	}
 }
 
-// DeleteDataLake encapsulate the logic to manage different cloud providers
+// DeleteDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDataLake(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
@@ -85,7 +85,7 @@ func (s *Store) DeleteDataLake(projectID, name string) error {
 	}
 }
 
-// DataLakes encapsulate the logic to manage different cloud providers
+// DataLakes encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
@@ -96,7 +96,7 @@ func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 	}
 }
 
-// DataLake encapsulate the logic to manage different cloud providers
+// DataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:

@@ -53,7 +53,7 @@ func (opts *JobsListOpts) newLogListOptions() *opsmngr.LogListOptions {
 	return &opsmngr.LogListOptions{Verbose: opts.verbose}
 }
 
-// mongocli om logs jobs list --verbose verbose [--projectId projectId]
+// mongocli om logs jobs list --verbose verbose [--projectId projectId].
 func JobsListOptsBuilder() *cobra.Command {
 	opts := &JobsListOpts{}
 	cmd := &cobra.Command{

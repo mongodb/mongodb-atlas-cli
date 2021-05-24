@@ -51,7 +51,7 @@ type AgentAPIKeyDeleter interface {
 	DeleteAgentAPIKey(string, string) error
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -62,7 +62,7 @@ func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	}
 }
 
-// UpgradeAgent encapsulates the logic to manage different cloud providers
+// UpgradeAgent encapsulates the logic to manage different cloud providers.
 func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -73,7 +73,7 @@ func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, 
 	}
 }
 
-// AgentAPIKeys encapsulates the logic to manage different cloud providers
+// AgentAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -84,7 +84,7 @@ func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 	}
 }
 
-// CreateAgentAPIKey encapsulates the logic to manage different cloud providers
+// CreateAgentAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -95,7 +95,7 @@ func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysReque
 	}
 }
 
-// DeleteAgentAPIKey encapsulates the logic to manage different cloud providers
+// DeleteAgentAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -106,7 +106,7 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -117,7 +117,7 @@ func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers
+// Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:

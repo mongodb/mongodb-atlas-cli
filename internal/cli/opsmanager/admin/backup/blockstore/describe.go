@@ -49,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup blockstore(s) describe <name>
+// mongocli ops-manager admin backup blockstore(s) describe <name>.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	opts.Template = describeTemplate

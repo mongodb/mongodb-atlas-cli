@@ -45,7 +45,7 @@ type SyncsDeleter interface {
 	DeleteSync(string) error
 }
 
-// ListSyncs encapsulates the logic to manage different cloud providers
+// ListSyncs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, er
 	}
 }
 
-// GetSync encapsulates the logic to manage different cloud providers
+// GetSync encapsulates the logic to manage different cloud providers.
 func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 	}
 }
 
-// CreateSync encapsulates the logic to manage different cloud providers
+// CreateSync encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, err
 	}
 }
 
-// UpdateSync encapsulates the logic to manage different cloud providers
+// UpdateSync encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.B
 	}
 }
 
-// DeleteSync encapsulates the logic to manage different cloud providers
+// DeleteSync encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSync(syncID string) error {
 	switch s.service {
 	case config.OpsManagerService:

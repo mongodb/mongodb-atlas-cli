@@ -51,7 +51,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name]
+// mongocli atlas onlineArchive(s) list [--projectId projectId] [--clusterName name].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

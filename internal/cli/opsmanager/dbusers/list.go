@@ -50,7 +50,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r.Auth.Users)
 }
 
-// mongocli om|cm dbuser(s) list [--projectId projectId]
+// mongocli om|cm dbuser(s) list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

@@ -58,7 +58,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam project apiKey create --roles roles --description description
+// mongocli iam project apiKey create --roles roles --description description.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

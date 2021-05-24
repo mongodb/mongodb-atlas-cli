@@ -35,7 +35,7 @@ const (
 	defaultExtension = ".txt"
 )
 
-// GenReSTTree generates the docs for the full tree of commands
+// GenReSTTree generates the docs for the full tree of commands.
 func GenReSTTree(cmd *cobra.Command, dir string) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
@@ -88,7 +88,7 @@ const tocHeader = `
 `
 
 // GenReSTCustom creates custom reStructured Text output.
-// Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
+// Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style.
 func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 	cmd.InitDefaultHelpCmd()
 	cmd.InitDefaultHelpFlag()

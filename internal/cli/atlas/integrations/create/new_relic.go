@@ -63,7 +63,7 @@ func (opts *NewRelicOpts) newNewRelicIntegration() *atlas.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId]
+// mongocli atlas integration(s) create NEW_RELIC --licenceKey licenceKey --accountId accountId --writeToken writeToken --readToken readToken [--projectId projectId].
 func NewRelicBuilder() *cobra.Command {
 	opts := &NewRelicOpts{}
 	cmd := &cobra.Command{

@@ -19,7 +19,7 @@ import (
 )
 
 // FromAutomationConfig convert from opsmngr.AutomationConfig format to []*ClusterConfig
-// the given opsmngr.AutomationConfig will be modified
+// the given opsmngr.AutomationConfig will be modified.
 func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 	out := make([]*ClusterConfig, 0, len(c.ReplicaSets))
 

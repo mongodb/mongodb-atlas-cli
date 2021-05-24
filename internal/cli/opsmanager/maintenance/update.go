@@ -62,7 +62,7 @@ func (opts *UpdateOpts) newMaintenanceWindow() *opsmngr.MaintenanceWindow {
 	}
 }
 
-// mongocli ops-manager maintenanceWindows update --startDate startDate --endDate endDate --alertType alertType --desc desc [--projectId projectId]
+// mongocli ops-manager maintenanceWindows update --startDate startDate --endDate endDate --alertType alertType --desc desc [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{

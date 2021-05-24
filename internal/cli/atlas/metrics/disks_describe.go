@@ -55,7 +55,7 @@ var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurement
 {{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `
 
-// mcli atlas metric(s) disk(s) describe <host:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+// mcli atlas metric(s) disk(s) describe <host:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
 func DisksDescribeBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DisksDescribeOpts{}

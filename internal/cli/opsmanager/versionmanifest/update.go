@@ -66,7 +66,7 @@ func (opts *UpdateOpts) version() string {
 	return opts.versionManifest + ".json"
 }
 
-// mongocli om versionManifest(s) update <version>
+// mongocli om versionManifest(s) update <version>.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate

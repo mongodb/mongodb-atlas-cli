@@ -50,7 +50,7 @@ func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 	return i, nil
 }
 
-// indexFieldParts index field should be fieldName:analyzer:fieldType
+// indexFieldParts index field should be fieldName:analyzer:fieldType.
 const indexFieldParts = 2
 
 func (opts *IndexOpts) indexFields() (map[string]atlas.IndexField, error) {

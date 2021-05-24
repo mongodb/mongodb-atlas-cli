@@ -73,7 +73,7 @@ func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus
 	}
 }
 
-// GetAutomationConfig encapsulate the logic to manage different cloud providers
+// GetAutomationConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -84,7 +84,7 @@ func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig
 	}
 }
 
-// UpdateAutomationConfig encapsulate the logic to manage different cloud providers
+// UpdateAutomationConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *opsmngr.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:

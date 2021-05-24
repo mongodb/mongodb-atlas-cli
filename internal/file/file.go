@@ -27,7 +27,7 @@ import (
 var supportedExts = []string{"json", "yaml", "yml"}
 
 // Load loads a given filename into the out interface.
-// The file should be a valid json or yaml format
+// The file should be a valid json or yaml format.
 func Load(fs afero.Fs, filename string, out interface{}) error {
 	if exists, err := afero.Exists(fs, filename); !exists || err != nil {
 		return fmt.Errorf("file not found: %s", filename)

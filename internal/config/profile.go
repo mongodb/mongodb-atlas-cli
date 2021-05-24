@@ -70,7 +70,7 @@ func Default() *Profile {
 	return p
 }
 
-// List returns the names of available profiles
+// List returns the names of available profiles.
 func List() []string {
 	m := viper.AllSettings()
 
@@ -134,7 +134,7 @@ func (p *Profile) GetString(name string) string {
 	return settings[name]
 }
 
-// Service get configured service
+// Service get configured service.
 func Service() string { return p.Service() }
 func (p *Profile) Service() string {
 	if viper.IsSet(service) {
@@ -147,109 +147,109 @@ func (p *Profile) Service() string {
 	return CloudService
 }
 
-// SetService set configured service
+// SetService set configured service.
 func SetService(v string) { p.SetService(v) }
 func (p *Profile) SetService(v string) {
 	p.Set(service, v)
 }
 
-// PublicAPIKey get configured public api key
+// PublicAPIKey get configured public api key.
 func PublicAPIKey() string { return p.PublicAPIKey() }
 func (p *Profile) PublicAPIKey() string {
 	return p.GetString(publicAPIKey)
 }
 
-// SetPublicAPIKey set configured publicAPIKey
+// SetPublicAPIKey set configured publicAPIKey.
 func SetPublicAPIKey(v string) { p.SetPublicAPIKey(v) }
 func (p *Profile) SetPublicAPIKey(v string) {
 	p.Set(publicAPIKey, v)
 }
 
-// PrivateAPIKey get configured private api key
+// PrivateAPIKey get configured private api key.
 func PrivateAPIKey() string { return p.PrivateAPIKey() }
 func (p *Profile) PrivateAPIKey() string {
 	return p.GetString(privateAPIKey)
 }
 
-// SetPrivateAPIKey set configured private api key
+// SetPrivateAPIKey set configured private api key.
 func SetPrivateAPIKey(v string) { p.SetPrivateAPIKey(v) }
 func (p *Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
 }
 
-// OpsManagerURL get configured ops manager base url
+// OpsManagerURL get configured ops manager base url.
 func OpsManagerURL() string { return p.OpsManagerURL() }
 func (p *Profile) OpsManagerURL() string {
 	return p.GetString(opsManagerURL)
 }
 
-// SetOpsManagerURL set configured ops manager base url
+// SetOpsManagerURL set configured ops manager base url.
 func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
 func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
 }
 
-// OpsManagerCACertificate get configured ops manager CA certificate location
+// OpsManagerCACertificate get configured ops manager CA certificate location.
 func OpsManagerCACertificate() string { return p.OpsManagerCACertificate() }
 func (p *Profile) OpsManagerCACertificate() string {
 	return p.GetString(opsManagerCACertificate)
 }
 
-// SkipVerify get configured ops manager CA certificate location
+// SkipVerify get configured ops manager CA certificate location.
 func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
 func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
 }
 
-// OpsManagerVersionManifestURL get configured ops manager version manifest base url
+// OpsManagerVersionManifestURL get configured ops manager version manifest base url.
 func OpsManagerVersionManifestURL() string { return p.OpsManagerVersionManifestURL() }
 func (p *Profile) OpsManagerVersionManifestURL() string {
 	return p.GetString(opsManagerVersionManifestURL)
 }
 
-// ProjectID get configured project ID
+// ProjectID get configured project ID.
 func ProjectID() string { return p.ProjectID() }
 func (p *Profile) ProjectID() string {
 	return p.GetString(projectID)
 }
 
-// SetProjectID sets the global project ID
+// SetProjectID sets the global project ID.
 func SetProjectID(v string) { p.SetProjectID(v) }
 func (p *Profile) SetProjectID(v string) {
 	p.Set(projectID, v)
 }
 
-// OrgID get configured organization ID
+// OrgID get configured organization ID.
 func OrgID() string { return p.OrgID() }
 func (p *Profile) OrgID() string {
 	return p.GetString(orgID)
 }
 
-// SetOrgID sets the global organization ID
+// SetOrgID sets the global organization ID.
 func SetOrgID(v string) { p.SetOrgID(v) }
 func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
-// MongoShellPath get the configured MongoDB Shell path
+// MongoShellPath get the configured MongoDB Shell path.
 func MongoShellPath() string { return p.MongoShellPath() }
 func (p *Profile) MongoShellPath() string {
 	return p.GetString(mongoShellPath)
 }
 
-// SetMongoShellPath sets the global MongoDB Shell path
+// SetMongoShellPath sets the global MongoDB Shell path.
 func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
 	p.SetGlobal(mongoShellPath, v)
 }
 
-// Output get configured output format
+// Output get configured output format.
 func Output() string { return p.Output() }
 func (p *Profile) Output() string {
 	return p.GetString(output)
 }
 
-// SetOutput sets the global output format
+// SetOutput sets the global output format.
 func SetOutput(v string) { p.SetOutput(v) }
 func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
@@ -368,7 +368,7 @@ func (p *Profile) Rename(newProfileName string) error {
 	return nil
 }
 
-// Load loads the configuration from disk
+// Load loads the configuration from disk.
 func Load() error { return p.Load(true) }
 func (p *Profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
@@ -397,7 +397,7 @@ func (p *Profile) Load(readEnvironmentVars bool) error {
 	return nil
 }
 
-// Save the configuration to disk
+// Save the configuration to disk.
 func Save() error { return p.Save() }
 func (p *Profile) Save() error {
 	exists, err := afero.DirExists(p.fs, p.configDir)

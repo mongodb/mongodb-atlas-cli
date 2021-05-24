@@ -48,7 +48,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organization(s) create <name>
+// mongocli iam organization(s) create <name>.
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate

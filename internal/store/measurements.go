@@ -37,7 +37,7 @@ type HostDatabaseMeasurementsLister interface {
 	HostDatabaseMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
 }
 
-// HostMeasurements encapsulate the logic to manage different cloud providers
+// HostMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -48,7 +48,7 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 	}
 }
 
-// HostDiskMeasurements encapsulates the logic to manage different cloud providers
+// HostDiskMeasurements encapsulates the logic to manage different cloud providers.
 func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -59,7 +59,7 @@ func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts
 	}
 }
 
-// HostDatabaseMeasurements encapsulate the logic to manage different cloud providers
+// HostDatabaseMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

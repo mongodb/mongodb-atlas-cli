@@ -40,7 +40,7 @@ func (opts *StopOpts) Run() error {
 	return opts.Delete(opts.store.StopMonitoring, opts.ConfigProjectID())
 }
 
-// mongocli ops-manager monitoring stop <ID> --force
+// mongocli ops-manager monitoring stop <ID> --force.
 func StopBuilder() *cobra.Command {
 	opts := &StopOpts{
 		DeleteOpts: cli.NewDeleteOpts("Stopped monitoring '%s'\n", "Monitoring did not stop"),

@@ -115,7 +115,7 @@ func objectIDArgs(args []string) error {
 
 // ExactValidArgs returns an error if
 // there are not exactly N positional args OR
-// there are any positional args that are not in the `ValidArgs` field of `Command`
+// there are any positional args that are not in the `ValidArgs` field of `Command`.
 func ExactValidArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if err := ExactArgs(n)(cmd, args); err != nil {

@@ -32,7 +32,7 @@ type VersionManifestGetter interface {
 	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
 }
 
-// UpdateVersionManifest encapsulates the logic to manage different cloud providers
+// UpdateVersionManifest encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -43,7 +43,7 @@ func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) 
 	}
 }
 
-// GetVersionManifest encapsulates the logic to manage different cloud providers
+// GetVersionManifest encapsulates the logic to manage different cloud providers.
 func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:

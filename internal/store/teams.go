@@ -54,7 +54,7 @@ type TeamRolesUpdater interface {
 	UpdateProjectTeamRoles(string, string, *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error)
 }
 
-// TeamByID encapsulates the logic to manage different cloud providers
+// TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService:
@@ -68,7 +68,7 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	}
 }
 
-// TeamByName encapsulates the logic to manage different cloud providers
+// TeamByName encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService:
@@ -82,7 +82,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 	}
 }
 
-// Teams encapsulates the logic to manage different cloud providers
+// Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
 	switch s.service {
 	case config.CloudService:
@@ -96,7 +96,7 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 	}
 }
 
-// CreateTeam encapsulates the logic to manage different cloud providers
+// CreateTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService:
@@ -110,7 +110,7 @@ func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) 
 	}
 }
 
-// DeleteTeam encapsulates the logic to manage different cloud providers
+// DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -124,7 +124,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 	}
 }
 
-// AddUsersToTeam encapsulates the logic to manage different cloud providers
+// AddUsersToTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -138,7 +138,7 @@ func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{
 	}
 }
 
-// RemoveUserFromTeam encapsulates the logic to manage different cloud providers
+// RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -152,7 +152,7 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	}
 }
 
-// UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers
+// UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
 	switch s.service {
 	case config.CloudService:

@@ -52,7 +52,7 @@ func (opts *CreateOpts) Run() error {
 // mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
-// [--projectId projectId]
+// [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate

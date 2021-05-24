@@ -61,7 +61,7 @@ type OpsManagerMaintenanceWindowUpdater interface {
 	UpdateOpsManagerMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
 }
 
-// UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers
+// UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlas.MaintenanceWindow) error {
 	switch s.service {
 	case config.CloudService:
@@ -72,7 +72,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 	}
 }
 
-// ClearMaintenanceWindow encapsulates the logic to manage different cloud providers
+// ClearMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -83,7 +83,7 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	}
 }
 
-// DeferMaintenanceWindow encapsulates the logic to manage different cloud providers
+// DeferMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) DeferMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -94,7 +94,7 @@ func (s *Store) DeferMaintenanceWindow(projectID string) error {
 	}
 }
 
-// MaintenanceWindow encapsulates the logic to manage different cloud providers
+// MaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, error) {
 	switch s.service {
 	case config.CloudService:
@@ -105,7 +105,7 @@ func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, e
 	}
 }
 
-// CreateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+// CreateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -116,7 +116,7 @@ func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceW
 	}
 }
 
-// OpsManagerMaintenanceWindows encapsulates the logic to manage different cloud providers
+// OpsManagerMaintenanceWindows encapsulates the logic to manage different cloud providers.
 func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.MaintenanceWindows, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -127,7 +127,7 @@ func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.Mainten
 	}
 }
 
-// DeleteOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+// DeleteOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOpsManagerMaintenanceWindow(projectID, maintenanceWindowID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -138,7 +138,7 @@ func (s *Store) DeleteOpsManagerMaintenanceWindow(projectID, maintenanceWindowID
 	}
 }
 
-// OpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+// OpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) OpsManagerMaintenanceWindow(projectID, maintenanceWindowID string) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -149,7 +149,7 @@ func (s *Store) OpsManagerMaintenanceWindow(projectID, maintenanceWindowID strin
 	}
 }
 
-// UpdateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers
+// UpdateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

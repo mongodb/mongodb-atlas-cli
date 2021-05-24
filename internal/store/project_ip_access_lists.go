@@ -39,7 +39,7 @@ type ProjectIPAccessListDeleter interface {
 	DeleteProjectIPAccessList(string, string) error
 }
 
-// CreateProjectIPAccessList encapsulate the logic to manage different cloud providers
+// CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
@@ -50,7 +50,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 	}
 }
 
-// DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers
+// DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService:
@@ -61,7 +61,7 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	}
 }
 
-// ProjectIPAccessLists encapsulate the logic to manage different cloud providers
+// ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService:
@@ -72,7 +72,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 	}
 }
 
-// IPAccessList encapsulate the logic to manage different cloud providers
+// IPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
 	switch s.service {
 	case config.CloudService:

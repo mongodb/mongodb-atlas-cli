@@ -90,7 +90,7 @@ func (opts *CreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId]
+// mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

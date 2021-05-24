@@ -41,7 +41,7 @@ type OrganizationDeleter interface {
 	DeleteOrganization(string) error
 }
 
-// Organizations encapsulate the logic to manage different cloud providers
+// Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 	}
 }
 
-// Organization encapsulate the logic to manage different cloud providers
+// Organization encapsulate the logic to manage different cloud providers.
 func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudService:
@@ -69,7 +69,7 @@ func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	}
 }
 
-// CreateOrganization encapsulate the logic to manage different cloud providers
+// CreateOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -81,7 +81,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	}
 }
 
-// DeleteOrganization encapsulate the logic to manage different cloud providers
+// DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService:

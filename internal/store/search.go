@@ -44,7 +44,7 @@ type SearchIndexDeleter interface {
 	DeleteSearchIndex(string, string, string) error
 }
 
-// SearchIndexes encapsulate the logic to manage different cloud providers
+// SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, o
 	}
 }
 
-// CreateSearchIndexes encapsulate the logic to manage different cloud providers
+// CreateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
@@ -66,7 +66,7 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 	}
 }
 
-// SearchIndex encapsulate the logic to manage different cloud providers
+// SearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
@@ -77,7 +77,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 	}
 }
 
-// UpdateSearchIndexes encapsulate the logic to manage different cloud providers
+// UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService:
@@ -88,7 +88,7 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 	}
 }
 
-// DeleteSearchIndex encapsulate the logic to manage different cloud providers
+// DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
 	case config.CloudService:

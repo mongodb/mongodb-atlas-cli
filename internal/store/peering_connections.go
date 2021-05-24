@@ -56,7 +56,7 @@ type PeeringConnectionDeleter interface {
 	DeletePeeringConnection(string, string) error
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers
+// PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:
@@ -67,7 +67,7 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 	}
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers
+// PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:
@@ -78,7 +78,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error)
 	}
 }
 
-// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
+// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -89,7 +89,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	}
 }
 
-// CreatePeeringConnection encapsulates the logic to manage different cloud providers
+// CreatePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService:

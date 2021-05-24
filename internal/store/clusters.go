@@ -82,7 +82,7 @@ type AtlasClusterQuickStarter interface {
 	ClusterCreator
 }
 
-// AddSampleData encapsulate the logic to manage different cloud providers
+// AddSampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService:
@@ -93,7 +93,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 	}
 }
 
-// SampleData encapsulate the logic to manage different cloud providers
+// SampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService:
@@ -104,7 +104,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, e
 	}
 }
 
-// CreateCluster encapsulate the logic to manage different cloud providers
+// CreateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
@@ -115,7 +115,7 @@ func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	}
 }
 
-// UpdateCluster encapsulate the logic to manage different cloud providers
+// UpdateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
@@ -126,7 +126,7 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*
 	}
 }
 
-// PauseCluster encapsulate the logic to manage different cloud providers
+// PauseCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) PauseCluster(projectID, name string) (*atlas.Cluster, error) {
 	paused := true
 	cluster := &atlas.Cluster{
@@ -135,7 +135,7 @@ func (s *Store) PauseCluster(projectID, name string) (*atlas.Cluster, error) {
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
-// StartCluster encapsulate the logic to manage different cloud providers
+// StartCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 	paused := false
 	cluster := &atlas.Cluster{
@@ -144,7 +144,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
-// DeleteCluster encapsulate the logic to manage different cloud providers
+// DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
@@ -155,7 +155,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 	}
 }
 
-// ProjectClusters encapsulate the logic to manage different cloud providers
+// ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -169,7 +169,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 	}
 }
 
-// AtlasCluster encapsulates the logic to manage different cloud providers
+// AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
@@ -180,7 +180,7 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	}
 }
 
-// OpsManagerCluster encapsulates the logic to manage different cloud providers
+// OpsManagerCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -191,7 +191,7 @@ func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, err
 	}
 }
 
-// ListAllProjectClusters encapsulate the logic to manage different cloud providers
+// ListAllProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

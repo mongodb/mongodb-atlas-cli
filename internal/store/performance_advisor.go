@@ -36,7 +36,7 @@ type PerformanceAdvisorIndexesLister interface {
 	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
 }
 
-// PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService:
@@ -50,7 +50,7 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 	}
 }
 
-// PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
 	switch s.service {
 	case config.CloudService:
@@ -64,7 +64,7 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 	}
 }
 
-// PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers
+// PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	switch s.service {
 	case config.CloudService:

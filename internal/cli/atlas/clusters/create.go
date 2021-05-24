@@ -172,7 +172,7 @@ func (opts *CreateOpts) newReplicationSpec() atlas.ReplicationSpec {
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
-// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion]
+// create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		fs: afero.NewOsFs(),

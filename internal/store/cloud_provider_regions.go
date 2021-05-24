@@ -28,7 +28,7 @@ type CloudProviderRegionsLister interface {
 	CloudProviderRegions(string, string, []*string) (*atlas.CloudProviders, error)
 }
 
-// CloudProviderRegions encapsulates the logic to manage different cloud providers
+// CloudProviderRegions encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*string) (*atlas.CloudProviders, error) {
 	options := &atlas.CloudProviderRegionsOptions{
 		Providers: providerName,

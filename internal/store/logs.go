@@ -46,7 +46,7 @@ type LogJobDeleter interface {
 	DeleteCollectionJob(string, string) error
 }
 
-// LogCollectionJobs encapsulate the logic to manage different cloud providers
+// LogCollectionJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -57,7 +57,7 @@ func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) 
 	}
 }
 
-// DeleteCollectionJob encapsulate the logic to manage different cloud providers
+// DeleteCollectionJob encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -68,7 +68,7 @@ func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 	}
 }
 
-// Collect encapsulate the logic to manage different cloud providers
+// Collect encapsulate the logic to manage different cloud providers.
 func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -79,7 +79,7 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 	}
 }
 
-// ProcessDisks encapsulate the logic to manage different cloud providers
+// ProcessDisks encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atlas.DateRangetOptions) error {
 	switch s.service {
 	case config.CloudService:
@@ -90,7 +90,7 @@ func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atl
 	}
 }
 
-// DownloadLogJob encapsulate the logic to manage different cloud providers
+// DownloadLogJob encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

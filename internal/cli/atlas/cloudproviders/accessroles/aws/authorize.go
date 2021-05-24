@@ -57,7 +57,7 @@ func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudPr
 	}
 }
 
-// mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId]
+// mongocli atlas cloudProvider aws accessRoles authorize <roleId> --iamAssumedRoleArn iamAssumedRoleArn [--projectId projectId].
 func AuthorizeBuilder() *cobra.Command {
 	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{

@@ -33,7 +33,7 @@ type ContainersDeleter interface {
 	DeleteContainer(string, string) error
 }
 
-// ContainersByProvider encapsulates the logic to manage different cloud providers
+// ContainersByProvider encapsulates the logic to manage different cloud providers.
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -46,7 +46,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 
 const maxPerPage = 100
 
-// AzureContainers encapsulates the logic to manage different cloud providers
+// AzureContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -64,7 +64,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 	}
 }
 
-// AWSContainers encapsulates the logic to manage different cloud providers
+// AWSContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -82,7 +82,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
 	}
 }
 
-// GCPContainers encapsulates the logic to manage different cloud providers
+// GCPContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -100,7 +100,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 	}
 }
 
-// AllContainers encapsulates the logic to manage different cloud providers
+// AllContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -111,7 +111,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 	}
 }
 
-// DeleteContainer encapsulates the logic to manage different cloud providers
+// DeleteContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteContainer(projectID, containerID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -122,7 +122,7 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 	}
 }
 
-// Container encapsulates the logic to manage different cloud providers
+// Container encapsulates the logic to manage different cloud providers.
 func (s *Store) Container(projectID, containerID string) (*atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:
@@ -133,7 +133,7 @@ func (s *Store) Container(projectID, containerID string) (*atlas.Container, erro
 	}
 }
 
-// CreateContainer encapsulates the logic to manage different cloud providers
+// CreateContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*atlas.Container, error) {
 	switch s.service {
 	case config.CloudService:

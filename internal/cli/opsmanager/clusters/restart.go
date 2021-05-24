@@ -77,7 +77,7 @@ func (opts *RestartOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) restart <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) restart <name> --projectId projectId [--force].
 func RestartOptsBuilder() *cobra.Command {
 	opts := &RestartOpts{}
 	cmd := &cobra.Command{

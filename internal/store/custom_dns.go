@@ -36,7 +36,7 @@ type CustomDNSDescriber interface {
 	DescribeCustomDNS(string) (*atlas.AWSCustomDNSSetting, error)
 }
 
-// EnableCustomDNS encapsulates the logic to manage different cloud providers
+// EnableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
@@ -50,7 +50,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 	}
 }
 
-// DisableCustomDNS encapsulates the logic to manage different cloud providers
+// DisableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:
@@ -64,7 +64,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 	}
 }
 
-// DescribeCustomDNS encapsulates the logic to manage different cloud providers
+// DescribeCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService:

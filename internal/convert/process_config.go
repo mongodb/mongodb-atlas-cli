@@ -27,7 +27,7 @@ const (
 	defaultTimeThresholdHrs = 24
 )
 
-// ProcessConfig that belongs to a cluster
+// ProcessConfig that belongs to a cluster.
 type ProcessConfig struct {
 	ArbiterOnly               *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
 	AuditLogPath              string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
@@ -75,7 +75,7 @@ type ProcessConfig struct {
 	WiredTiger                *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
 }
 
-// TLS defines TLS parameters for Net
+// TLS defines TLS parameters for Net.
 type TLS struct {
 	CAFile                     string `yaml:"CAFile,omitempty" json:"CAFile,omitempty"`
 	CertificateKeyFile         string `yaml:"certificateKeyFile,omitempty" json:"certificateKeyFile,omitempty"`
@@ -91,7 +91,7 @@ type TLS struct {
 	PEMKeyFile                 string `yaml:"PEMKeyFile,omitempty" json:"PEMKeyFile,omitempty"`
 }
 
-// setDefaults set default values based on the parent config
+// setDefaults set default values based on the parent config.
 func (p *ProcessConfig) setDefaults(c *RSConfig) {
 	if p.ProcessType == "" {
 		p.ProcessType = mongod
@@ -109,7 +109,7 @@ func (p *ProcessConfig) setDefaults(c *RSConfig) {
 }
 
 // setProcessName reuse Name from an existing process
-// this is based on hostname:port matching
+// this is based on hostname:port matching.
 func (p *ProcessConfig) setProcessName(processes []*opsmngr.Process, nameOpts ...string) {
 	if p.Name != "" {
 		return
@@ -124,7 +124,7 @@ func (p *ProcessConfig) setProcessName(processes []*opsmngr.Process, nameOpts ..
 	p.Name = strings.Join(nameOpts, "_")
 }
 
-// newLogRotate default log rotation in LogRotate
+// newLogRotate default log rotation in LogRotate.
 func newLogRotate() *opsmngr.LogRotate {
 	return &opsmngr.LogRotate{
 		SizeThresholdMB:  defaultSizeThresholdMB,
@@ -161,7 +161,7 @@ func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	}
 }
 
-// newReplicaSetProcessConfig maps opsmngr.member -> convert.ProcessConfig
+// newReplicaSetProcessConfig maps opsmngr.member -> convert.ProcessConfig.
 func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	pc := newProcessConfig(rs, p)
 
@@ -211,7 +211,7 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 	return pc
 }
 
-// newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig
+// newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig.
 func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	pc := &ProcessConfig{
 		LogPath:        p.Args26.SystemLog.Path,
@@ -258,7 +258,7 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	return pc
 }
 
-// newMongosProcess generates a mongo process for a mongos
+// newMongosProcess generates a mongo process for a mongos.
 func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	process := p.process()
 	process.Cluster = cluster
@@ -305,7 +305,7 @@ func (p *ProcessConfig) replicaSetArgs26(rsSetName string) opsmngr.Args26 {
 	return args26
 }
 
-// newReplicaSetProcess generates a mongo process for a replica set mongod
+// newReplicaSetProcess generates a mongo process for a replica set mongod.
 func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process {
 	process := p.process()
 
@@ -315,7 +315,7 @@ func newReplicaSetProcess(p *ProcessConfig, replSetName string) *opsmngr.Process
 	return process
 }
 
-// newConfigRSProcess generates a mongo process for a replica set config server
+// newConfigRSProcess generates a mongo process for a replica set config server.
 func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	process := p.process()
 
@@ -326,7 +326,7 @@ func newConfigRSProcess(p *ProcessConfig, rsSetName string) *opsmngr.Process {
 	return process
 }
 
-// net maps convert.ProcessConfig -> opsmngr.Net
+// net maps convert.ProcessConfig -> opsmngr.Net.
 func (p *ProcessConfig) net() opsmngr.Net {
 	net := opsmngr.Net{
 		Port:      p.Port,
@@ -353,7 +353,7 @@ func (p *ProcessConfig) net() opsmngr.Net {
 	return net
 }
 
-// storage maps convert.ProcessConfig -> opsmngr.Storage
+// storage maps convert.ProcessConfig -> opsmngr.Storage.
 func (p *ProcessConfig) storage() *opsmngr.Storage {
 	return &opsmngr.Storage{
 		DBPath:                 p.DBPath,
@@ -369,7 +369,7 @@ func (p *ProcessConfig) storage() *opsmngr.Storage {
 	}
 }
 
-// systemLog maps convert.ProcessConfig -> opsmngr.SystemLog
+// systemLog maps convert.ProcessConfig -> opsmngr.SystemLog.
 func (p *ProcessConfig) systemLog() opsmngr.SystemLog {
 	return opsmngr.SystemLog{
 		Destination:     p.systemLogDestination(),
@@ -390,7 +390,7 @@ func (p *ProcessConfig) systemLogDestination() string {
 	return file
 }
 
-// auditLog maps convert.ProcessConfig -> opsmngr.AuditLog
+// auditLog maps convert.ProcessConfig -> opsmngr.AuditLog.
 func (p *ProcessConfig) auditLog() *opsmngr.AuditLog {
 	return &opsmngr.AuditLog{
 		Destination: p.auditLogDestination(),
@@ -407,7 +407,7 @@ func (p *ProcessConfig) auditLogDestination() string {
 	return file
 }
 
-// process maps convert.ProcessConfig -> opsmngr.Process
+// process maps convert.ProcessConfig -> opsmngr.Process.
 func (p *ProcessConfig) process() *opsmngr.Process {
 	process := &opsmngr.Process{
 		AuthSchemaVersion:           authSchemaVersion,
@@ -425,7 +425,7 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 	return process
 }
 
-// member maps convert.ProcessConfig -> opsmngr.Member
+// member maps convert.ProcessConfig -> opsmngr.Member.
 func (p *ProcessConfig) member(i int) opsmngr.Member {
 	var slaveDelay float64 = 0
 	m := opsmngr.Member{

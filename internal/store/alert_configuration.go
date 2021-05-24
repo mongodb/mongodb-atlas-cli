@@ -45,7 +45,7 @@ type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
 }
 
-// AlertConfigurations encapsulate the logic to manage different cloud providers
+// AlertConfigurations encapsulate the logic to manage different cloud providers.
 func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -59,7 +59,7 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 	}
 }
 
-// CreateAlertConfiguration encapsulate the logic to manage different cloud providers
+// CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -73,7 +73,7 @@ func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 	}
 }
 
-// DeleteAlertConfiguration encapsulate the logic to manage different cloud providers
+// DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 	switch s.service {
 	case config.CloudService:
@@ -87,7 +87,7 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 	}
 }
 
-// MatcherFields encapsulate the logic to manage different cloud providers
+// MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
 	switch s.service {
 	case config.CloudService:

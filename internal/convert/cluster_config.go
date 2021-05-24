@@ -32,7 +32,7 @@ const (
 )
 
 // ClusterConfig configuration for a cluster
-// This cluster can be used to patch an automation config
+// This cluster can be used to patch an automation config.
 type ClusterConfig struct {
 	RSConfig `yaml:",inline"`
 	MongoURI string           `yaml:"mongoURI,omitempty" json:"mongoURI,omitempty"`
@@ -41,7 +41,7 @@ type ClusterConfig struct {
 	Mongos   []*ProcessConfig `yaml:"mongos,omitempty" json:"mongos,omitempty"`
 }
 
-// newReplicaSetCluster when config is a replicaset
+// newReplicaSetCluster when config is a replicaset.
 func newReplicaSetCluster(name string, s int) *ClusterConfig {
 	rs := &ClusterConfig{}
 	rs.Name = name
@@ -50,7 +50,7 @@ func newReplicaSetCluster(name string, s int) *ClusterConfig {
 	return rs
 }
 
-// newShardedCluster when config is a sharded cluster
+// newShardedCluster when config is a sharded cluster.
 func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
 	rs := &ClusterConfig{}
 	rs.Name = s.Name
@@ -62,7 +62,7 @@ func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
 }
 
 // PatchAutomationConfig adds the ClusterConfig to a opsmngr.AutomationConfig
-// this method will modify the given AutomationConfig to add the new replica set or sharded cluster information
+// this method will modify the given AutomationConfig to add the new replica set or sharded cluster information.
 func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
 	// A replica set should be just a list of processes
 	if c.ProcessConfigs != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
@@ -149,7 +149,7 @@ func newShardingConfig(c *ClusterConfig) *opsmngr.ShardingConfig {
 
 // patchProcesses replace replica set processes with new configuration
 // this will disable all existing processes for the given replica set and remove the association
-// Then try to patch then with the new config if one config exists for the same host:port
+// Then try to patch then with the new config if one config exists for the same host:port.
 func patchProcesses(out *opsmngr.AutomationConfig, newReplicaSetID string, newProcesses []*opsmngr.Process) {
 	for i, oldProcess := range out.Processes {
 		if oldProcess.Args26.Replication != nil && oldProcess.Args26.Replication.ReplSetName == newReplicaSetID {
@@ -171,7 +171,7 @@ func patchProcesses(out *opsmngr.AutomationConfig, newReplicaSetID string, newPr
 	}
 }
 
-// keepSettings if the process exists keep settings we don't expose via the CLI config file
+// keepSettings if the process exists keep settings we don't expose via the CLI config file.
 func keepSettings(oldProcess *opsmngr.Process, newProcesses []*opsmngr.Process, pos int) {
 	if oldProcess.Args26.BasisTech != nil {
 		newProcesses[pos].Args26.BasisTech = oldProcess.Args26.BasisTech
@@ -187,7 +187,7 @@ func keepSettings(oldProcess *opsmngr.Process, newProcesses []*opsmngr.Process, 
 	}
 }
 
-// patchReplicaSet patches the replica set if it exists, else adds it as a new replica set
+// patchReplicaSet patches the replica set if it exists, else adds it as a new replica set.
 func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.ReplicaSet) {
 	pos, found := search.ReplicaSets(out.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == newReplicaSet.ID
@@ -216,7 +216,7 @@ func patchReplicaSet(out *opsmngr.AutomationConfig, newReplicaSet *opsmngr.Repli
 	out.ReplicaSets[pos] = newReplicaSet
 }
 
-// patchSharding patches the shard if it exists, else adds it as a new shard
+// patchSharding patches the shard if it exists, else adds it as a new shard.
 func patchSharding(out *opsmngr.AutomationConfig, s *opsmngr.ShardingConfig) {
 	pos, found := search.ShardingConfig(out.Sharding, func(r *opsmngr.ShardingConfig) bool {
 		return r.Name == s.Name

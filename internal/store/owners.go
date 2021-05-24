@@ -28,7 +28,7 @@ type OwnerCreator interface {
 	CreateOwner(*opsmngr.User, []string) (*opsmngr.CreateUserResponse, error)
 }
 
-// CreateOwner encapsulate the logic to manage different cloud providers
+// CreateOwner encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOwner(u *opsmngr.User, ips []string) (*opsmngr.CreateUserResponse, error) {
 	switch s.service {
 	case config.OpsManagerService:

@@ -60,7 +60,7 @@ type RegionalizedPrivateEndpointSettingDescriber interface {
 	RegionalizedPrivateEndpointSetting(string) (*atlas.RegionalizedPrivateEndpointSetting, error)
 }
 
-// PrivateEndpoints encapsulates the logic to manage different cloud providers
+// PrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
@@ -71,7 +71,7 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 	}
 }
 
-// PrivateEndpoint encapsulates the logic to manage different cloud providers
+// PrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
@@ -82,7 +82,7 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atl
 	}
 }
 
-// CreatePrivateEndpoint encapsulates the logic to manage different cloud providers
+// CreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpointConnection) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
@@ -93,7 +93,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 	}
 }
 
-// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers
+// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -104,7 +104,7 @@ func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string)
 	}
 }
 
-// CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers
+// CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlas.InterfaceEndpointConnection) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
@@ -115,7 +115,7 @@ func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID s
 	}
 }
 
-// InterfaceEndpoint encapsulates the logic to manage different cloud providers
+// InterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, privateEndpointID string) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
@@ -126,7 +126,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 	}
 }
 
-// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers
+// DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -137,7 +137,7 @@ func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, 
 	}
 }
 
-// UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers
+// UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:
@@ -148,7 +148,7 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 	}
 }
 
-// RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers
+// RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:

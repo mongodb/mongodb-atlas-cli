@@ -28,7 +28,7 @@ type ProcessLister interface {
 	Processes(string, *atlas.ProcessesListOptions) ([]*atlas.Process, error)
 }
 
-// Processes encapsulate the logic to manage different cloud providers
+// Processes encapsulate the logic to manage different cloud providers.
 func (s *Store) Processes(groupID string, opts *atlas.ProcessesListOptions) ([]*atlas.Process, error) {
 	switch s.service {
 	case config.CloudService:

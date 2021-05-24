@@ -20,7 +20,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted
+// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted.
 func NewDeleteConfirm(entry string) survey.Prompt {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("Are you sure you want to delete: %s", entry),
@@ -28,7 +28,7 @@ func NewDeleteConfirm(entry string) survey.Prompt {
 	return prompt
 }
 
-// NewConfirm creates a prompt to confirm if the entry should be deleted
+// NewConfirm creates a prompt to confirm if the entry should be deleted.
 func NewConfirm(message string) survey.Prompt {
 	prompt := &survey.Confirm{
 		Message: message,
@@ -36,7 +36,7 @@ func NewConfirm(message string) survey.Prompt {
 	return prompt
 }
 
-// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced
+// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced.
 func NewProfileReplaceConfirm(entry string) survey.Prompt {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("There is already a profile called %s.\nDo you want to replace it?", entry),

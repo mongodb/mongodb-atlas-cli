@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/search"
 )
 
-// RSConfig shared properties of replica sets, config servers, and sharded clusters
+// RSConfig shared properties of replica sets, config servers, and sharded clusters.
 type RSConfig struct {
 	Name           string           `yaml:"name,omitempty" json:"name,omitempty"`
 	FCVersion      string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
@@ -35,7 +35,7 @@ type RSConfig struct {
 type patcher func(*ProcessConfig, string) *opsmngr.Process
 
 // patch is a generic replica set patcher, you'll need to provide a function of the type patcher
-// which will define how a process is patched
+// which will define how a process is patched.
 func (c *RSConfig) patch(out *opsmngr.AutomationConfig, f patcher, names ...string) error {
 	newProcesses := make([]*opsmngr.Process, len(c.ProcessConfigs))
 	rs, err := newReplicaSet(c)
@@ -59,23 +59,23 @@ func (c *RSConfig) patch(out *opsmngr.AutomationConfig, f patcher, names ...stri
 	return nil
 }
 
-// patchReplicaSet patches a opsmngr.AutomationConfig using a replica set approach
+// patchReplicaSet patches a opsmngr.AutomationConfig using a replica set approach.
 func (c *RSConfig) patchReplicaSet(out *opsmngr.AutomationConfig) error {
 	return c.patch(out, newReplicaSetProcess)
 }
 
-// patchShard patches a opsmngr.AutomationConfig using a sharded cluster approach
+// patchShard patches a opsmngr.AutomationConfig using a sharded cluster approach.
 func (c *RSConfig) patchShard(out *opsmngr.AutomationConfig, name string) error {
 	return c.patch(out, newReplicaSetProcess, name)
 }
 
-// patchConfigServer patches a opsmngr.AutomationConfig using a config server/replica set approach
+// patchConfigServer patches a opsmngr.AutomationConfig using a config server/replica set approach.
 func (c *RSConfig) patchConfigServer(out *opsmngr.AutomationConfig, name string) error {
 	return c.patch(out, newConfigRSProcess, name)
 }
 
 // protocolVer determines the appropriate protocol based on FCV
-// returns "0" for versions <4.0 or "1" otherwise
+// returns "0" for versions <4.0 or "1" otherwise.
 func (c *RSConfig) protocolVer() (string, error) {
 	fcVersion := c.FCVersion
 	if fcVersion == "" {
@@ -103,7 +103,7 @@ func (c *RSConfig) protocolVer() (string, error) {
 	return one, nil
 }
 
-// newReplicaSet convert from cli config to opsmngr.ReplicaSet
+// newReplicaSet convert from cli config to opsmngr.ReplicaSet.
 func newReplicaSet(c *RSConfig) (*opsmngr.ReplicaSet, error) {
 	pv, err := c.protocolVer()
 	if err != nil {
@@ -119,7 +119,7 @@ func newReplicaSet(c *RSConfig) (*opsmngr.ReplicaSet, error) {
 	return rs, nil
 }
 
-// newRSConfig
+// newRSConfig.
 func newRSConfig(in *opsmngr.AutomationConfig, id string) *RSConfig {
 	rsi, found := search.ReplicaSets(in.ReplicaSets, func(rs *opsmngr.ReplicaSet) bool {
 		return rs.ID == id

@@ -77,7 +77,7 @@ func (opts *ShutdownOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) shutdown <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) shutdown <name> --projectId projectId [--force].
 func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
 	cmd := &cobra.Command{

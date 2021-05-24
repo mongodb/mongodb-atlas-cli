@@ -43,7 +43,7 @@ type OutputOpts struct {
 	Output    string
 }
 
-// InitOutput allow to init the OutputOpts in a functional way
+// InitOutput allow to init the OutputOpts in a functional way.
 func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 	return func() error {
 		opts.Template = t
@@ -72,7 +72,7 @@ func (opts *OutputOpts) ConfigWriter() io.Writer {
 	return opts.OutWriter
 }
 
-// IsTerminal returns true is the current file descriptor is TTY kind of terminal
+// IsTerminal returns true is the current file descriptor is TTY kind of terminal.
 func (opts *OutputOpts) IsTerminal() bool {
 	if f, isFile := opts.OutWriter.(*os.File); isFile {
 		return isatty.IsTerminal(f.Fd()) || opts.IsCygwinTerminal()
@@ -81,7 +81,7 @@ func (opts *OutputOpts) IsTerminal() bool {
 	return false
 }
 
-// IsCygwinTerminal returns true is the current file descriptor is cygwin
+// IsCygwinTerminal returns true is the current file descriptor is cygwin.
 func (opts *OutputOpts) IsCygwinTerminal() bool {
 	if f, isFile := opts.OutWriter.(*os.File); isFile {
 		return isatty.IsCygwinTerminal(f.Fd())
@@ -90,7 +90,7 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 	return false
 }
 
-// Print will evaluate the defined format and try to parse it accordingly outputting to the set writer
+// Print will evaluate the defined format and try to parse it accordingly outputting to the set writer.
 func (opts *OutputOpts) Print(o interface{}) error {
 	if opts.ConfigOutput() == jsonFormat {
 		return jsonwriter.Print(opts.ConfigWriter(), o)
@@ -114,7 +114,7 @@ func (opts *OutputOpts) Print(o interface{}) error {
 }
 
 // outputTypeAndValue returns the output type and the associated value
-// Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path"
+// Current available output types are  "go-template=Template string", "go-template-file=path/to/template" and "json-path=path".
 func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 	v = opts.Template
 	for _, format := range templateFormats {
@@ -129,7 +129,7 @@ func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 	return
 }
 
-// template returns the correct template from the output type
+// template returns the correct template from the output type.
 func (opts *OutputOpts) template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)

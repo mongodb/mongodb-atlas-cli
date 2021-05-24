@@ -59,7 +59,7 @@ func (opts *WebhookOpts) newWebhookIntegration() *atlas.ThirdPartyIntegration {
 	}
 }
 
-// mongocli atlas integration(s) create WEBHOOK --url url --secret secret [--projectId projectId]
+// mongocli atlas integration(s) create WEBHOOK --url url --secret secret [--projectId projectId].
 func WebhookBuilder() *cobra.Command {
 	opts := &WebhookOpts{}
 	cmd := &cobra.Command{

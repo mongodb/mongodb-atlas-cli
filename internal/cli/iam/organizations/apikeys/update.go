@@ -57,7 +57,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikey(s) update <ID> [--role role][--desc description][--orgId orgId].
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{

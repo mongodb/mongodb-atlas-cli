@@ -61,7 +61,7 @@ func (opts *FlowdockOpts) newFlowdockIntegration() *atlas.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create FLOWDOCK --apiToken apiToken --orgName orgName --flowName --flowName [--projectId projectId]
+// mongocli atlas integration(s) create FLOWDOCK --apiToken apiToken --orgName orgName --flowName --flowName [--projectId projectId].
 func FlowdockBuilder() *cobra.Command {
 	opts := &FlowdockOpts{}
 	cmd := &cobra.Command{

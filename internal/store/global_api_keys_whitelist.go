@@ -41,7 +41,7 @@ type GlobalAPIKeyWhitelistDeleter interface {
 	DeleteGlobalAPIKeyWhitelist(string) error
 }
 
-// GlobalAPIKeyWhitelists encapsulates the logic to manage different cloud providers
+// GlobalAPIKeyWhitelists encapsulates the logic to manage different cloud providers.
 func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -52,7 +52,7 @@ func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.Global
 	}
 }
 
-// GlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
+// GlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
 func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -63,7 +63,7 @@ func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey
 	}
 }
 
-// CreateGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
+// CreateGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -74,7 +74,7 @@ func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (
 	}
 }
 
-// DeleteGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers
+// DeleteGlobalAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteGlobalAPIKeyWhitelist(id string) error {
 	switch s.service {
 	case config.OpsManagerService:

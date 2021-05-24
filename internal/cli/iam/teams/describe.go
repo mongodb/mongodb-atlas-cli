@@ -75,7 +75,7 @@ func (opts *DescribeOpts) validate() error {
 	return nil
 }
 
-// mongocli iam team(s) describe --id id --name name --orgId orgId
+// mongocli iam team(s) describe --id id --name name --orgId orgId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

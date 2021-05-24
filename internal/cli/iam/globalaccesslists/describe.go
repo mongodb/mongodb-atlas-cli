@@ -48,7 +48,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalAccessList(s) describe <ID>
+// mongocli iam globalAccessList(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate

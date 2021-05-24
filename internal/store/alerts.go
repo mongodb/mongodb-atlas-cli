@@ -37,7 +37,7 @@ type AlertAcknowledger interface {
 	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
-// Alert encapsulate the logic to manage different cloud providers
+// Alert encapsulate the logic to manage different cloud providers.
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,7 +51,7 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	}
 }
 
-// Alerts encapsulate the logic to manage different cloud providers
+// Alerts encapsulate the logic to manage different cloud providers.
 func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
 	switch s.service {
 	case config.CloudService:
@@ -65,7 +65,7 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 	}
 }
 
-// Acknowledge encapsulate the logic to manage different cloud providers
+// Acknowledge encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService:

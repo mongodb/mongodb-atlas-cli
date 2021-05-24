@@ -54,7 +54,7 @@ func (opts *CheckpointsListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backup(s) checkpoint(s) list <clusterId> [--projectId projectId]
+// mongocli atlas backup(s) checkpoint(s) list <clusterId> [--projectId projectId].
 func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 	opts := new(CheckpointsListOpts)
 	cmd := &cobra.Command{

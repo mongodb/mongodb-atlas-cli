@@ -150,7 +150,7 @@ Enter [?] on any option to get help.
 }
 
 // askProject will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fallback to ask for project by ID
+// If it fails or there are no projects to show we fallback to ask for project by ID.
 func (opts *configOpts) askProject() error {
 	pMap, pSlice, err := opts.projects()
 	var projectID string
@@ -170,7 +170,7 @@ func (opts *configOpts) askProject() error {
 // projects fetches projects and returns then as a slice of the format `nameIDFormat`,
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config
+// and we want them to get the ID mapping to store on the config.
 func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err error) {
 	projects, err := opts.store.Projects(nil)
 	if err != nil {
@@ -186,7 +186,7 @@ func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err
 }
 
 // askOrg will try to construct a select based on fetched organizations.
-// If it fails or there are no organizations to show we fallback to ask for org by ID
+// If it fails or there are no organizations to show we fallback to ask for org by ID.
 func (opts *configOpts) askOrg() error {
 	oMap, oSlice, err := opts.orgs()
 	var orgID string
@@ -204,7 +204,7 @@ func (opts *configOpts) askOrg() error {
 }
 
 // askMongoShellPath will try to search MongoDB Shell binary in your $PATH to use as default value.
-// If it fails, there would not be a default value
+// If it fails, there would not be a default value.
 func (opts *configOpts) askMongoShellPath() error {
 	var mongoShellPath string
 
@@ -224,7 +224,7 @@ func (opts *configOpts) askMongoShellPath() error {
 // orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config
+// and we want them to get the ID mapping to store on the config.
 func (opts *configOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
 	orgs, err := opts.store.Organizations(nil)
 	if err != nil {
@@ -281,7 +281,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 	return cmd
 }
 
-// atlasProjects transform []*atlas.Project to a map[string]string and []string
+// atlasProjects transform []*atlas.Project to a map[string]string and []string.
 func atlasProjects(projects []*atlas.Project) (pMap map[string]string, pSlice []string) {
 	pMap = make(map[string]string, len(projects))
 	pSlice = make([]string, len(projects))
@@ -293,7 +293,7 @@ func atlasProjects(projects []*atlas.Project) (pMap map[string]string, pSlice []
 	return pMap, pSlice
 }
 
-// omProjects transform []*opsmngr.Project to a map[string]string and []string
+// omProjects transform []*opsmngr.Project to a map[string]string and []string.
 func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []string) {
 	pMap = make(map[string]string, len(projects))
 	pSlice = make([]string, len(projects))

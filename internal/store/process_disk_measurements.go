@@ -32,7 +32,7 @@ type ProcessDatabaseMeasurementsLister interface {
 	ProcessDatabaseMeasurements(string, string, int, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
 }
 
-// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers
+// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.CloudService:
@@ -43,7 +43,7 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 	}
 }
 
-// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers
+// ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.CloudService:

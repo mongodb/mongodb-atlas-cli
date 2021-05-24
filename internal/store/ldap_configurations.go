@@ -44,7 +44,7 @@ type LDAPConfigurationGetter interface {
 	GetLDAPConfiguration(string) (*atlas.LDAPConfiguration, error)
 }
 
-// VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers
+// VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 	}
 }
 
-// GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers
+// GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -66,7 +66,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 	}
 }
 
-// SaveLDAPConfiguration encapsulates the logic to manage different cloud providers
+// SaveLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
@@ -77,7 +77,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfigur
 	}
 }
 
-// DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers
+// DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -88,7 +88,7 @@ func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	}
 }
 
-// GetLDAPConfiguration encapsulates the logic to manage different cloud providers
+// GetLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:

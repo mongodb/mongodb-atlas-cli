@@ -56,7 +56,7 @@ func (opts *SetOpts) newServerTypeRequest() *opsmngr.ServerTypeRequest {
 	}
 }
 
-// mongocli ops-manager serverUsage projects(s) serverType set <type> [--projectId projectId]
+// mongocli ops-manager serverUsage projects(s) serverType set <type> [--projectId projectId].
 func SetBuilder() *cobra.Command {
 	opts := &SetOpts{}
 	cmd := &cobra.Command{

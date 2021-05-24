@@ -49,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager backup snapshots schedule describe --clusterId clusterId --projectId projectId
+// mongocli ops-manager backup snapshots schedule describe --clusterId clusterId --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

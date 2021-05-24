@@ -45,7 +45,7 @@ type GlobalAPIKeyDeleter interface {
 	DeleteGlobalAPIKey(string) error
 }
 
-// GlobalAPIKeys encapsulates the logic to manage different cloud providers
+// GlobalAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) GlobalAPIKeys(opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) GlobalAPIKeys(opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	}
 }
 
-// GlobalAPIKey encapsulates the logic to manage different cloud providers
+// GlobalAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) GlobalAPIKey(apiKeyID string) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) GlobalAPIKey(apiKeyID string) (*atlas.APIKey, error) {
 	}
 }
 
-// UpdateGlobalAPIKey encapsulates the logic to manage different cloud providers
+// UpdateGlobalAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*
 	}
 }
 
-// CreateGlobalAPIKey encapsulates the logic to manage different cloud providers
+// CreateGlobalAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateGlobalAPIKey(input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) CreateGlobalAPIKey(input *atlas.APIKeyInput) (*atlas.APIKey, err
 	}
 }
 
-// DeleteGlobalAPIKey encapsulates the logic to manage different cloud providers
+// DeleteGlobalAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteGlobalAPIKey(id string) error {
 	switch s.service {
 	case config.OpsManagerService:

@@ -40,7 +40,7 @@ type IntegrationDescriber interface {
 	Integration(string, string) (*atlas.ThirdPartyIntegration, error)
 }
 
-// CreateIntegration encapsulates the logic to manage different cloud providers
+// CreateIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,7 +51,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 	}
 }
 
-// Integrations encapsulates the logic to manage different cloud providers
+// Integrations encapsulates the logic to manage different cloud providers.
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -62,7 +62,7 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 	}
 }
 
-// DeleteIntegration encapsulates the logic to manage different cloud providers
+// DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 	switch s.service {
 	case config.CloudService:
@@ -73,7 +73,7 @@ func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 	}
 }
 
-// Integration encapsulates the logic to manage different cloud providers
+// Integration encapsulates the logic to manage different cloud providers.
 func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPartyIntegration, error) {
 	switch s.service {
 	case config.CloudService:

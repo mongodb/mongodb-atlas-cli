@@ -36,12 +36,12 @@ type CloudProviderAccessRoleDeauthorizer interface {
 	DeauthorizeCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
 	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error)
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:
@@ -55,7 +55,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 	}
 }
 
-// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+// CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService:
@@ -66,7 +66,7 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 	}
 }
 
-// DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers
+// DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
 	switch s.service {
 	case config.CloudService:
@@ -77,7 +77,7 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 	}
 }
 
-// AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers
+// AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService:

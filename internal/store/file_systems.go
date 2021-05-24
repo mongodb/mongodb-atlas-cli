@@ -45,7 +45,7 @@ type FileSystemsUpdater interface {
 	UpdateFileSystems(*opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error)
 }
 
-// ListFileSystems encapsulates the logic to manage different cloud providers
+// ListFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystem
 	}
 }
 
-// DescribeFileSystem encapsulates the logic to manage different cloud providers
+// DescribeFileSystem encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStor
 	}
 }
 
-// DeleteFileSystem encapsulates the logic to manage different cloud providers
+// DeleteFileSystem encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteFileSystem(fileSystemID string) error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) DeleteFileSystem(fileSystemID string) error {
 	}
 }
 
-// CreateFileSystems encapsulates the logic to manage different cloud providers
+// CreateFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfigurati
 	}
 }
 
-// UpdateFileSystems encapsulates the logic to manage different cloud providers
+// UpdateFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:

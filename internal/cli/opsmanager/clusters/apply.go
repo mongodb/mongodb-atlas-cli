@@ -66,7 +66,7 @@ func (opts *ApplyOpts) Run() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml
+// mongocli cloud-manager cluster(s) apply --projectId projectId --file myfile.yaml.
 func ApplyBuilder() *cobra.Command {
 	opts := &ApplyOpts{
 		fs: afero.NewOsFs(),

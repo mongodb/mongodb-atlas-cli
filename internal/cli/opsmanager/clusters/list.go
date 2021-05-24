@@ -37,12 +37,12 @@ func (opts *ListOpts) init() error {
 	return err
 }
 
-// listTemplate used when project ID is given
+// listTemplate used when project ID is given.
 var listTemplate = `ID	NAME	TYPE	REPLICASET NAME{{range .Results}}
 {{.ID}}	{{.ClusterName}}	{{.TypeName}}	{{.ReplicaSetName}}{{end}}
 `
 
-// listAllTemplate used fetching all clusters for all projects
+// listAllTemplate used fetching all clusters for all projects.
 var listAllTemplate = `ID	NAME	TYPE{{range .Results}}{{range .Clusters}}
 {{.ClusterID}}	{{.Name}}	{{.Type}}{{end}}{{end}}
 `
@@ -79,7 +79,7 @@ func (opts *ListOpts) clusters() (interface{}, error) {
 	return r, nil
 }
 
-// mongocli cloud-manager cluster(s) list --projectId projectId
+// mongocli cloud-manager cluster(s) list --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

@@ -29,7 +29,7 @@ type GlobalAlertLister interface {
 	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
 }
 
-// GlobalAlerts encapsulate the logic to manage different cloud providers
+// GlobalAlerts encapsulate the logic to manage different cloud providers.
 func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:

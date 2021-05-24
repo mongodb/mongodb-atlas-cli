@@ -45,7 +45,7 @@ type OplogsDeleter interface {
 	DeleteOplog(string) error
 }
 
-// ListOplogs encapsulates the logic to manage different cloud providers
+// ListOplogs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListOplogs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) ListOplogs(options *atlas.ListOptions) (*opsmngr.BackupStores, e
 	}
 }
 
-// GetOplog encapsulates the logic to manage different cloud providers
+// GetOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 	}
 }
 
-// CreateOplog encapsulates the logic to manage different cloud providers
+// CreateOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, e
 	}
 }
 
-// UpdateOplog encapsulates the logic to manage different cloud providers
+// UpdateOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmng
 	}
 }
 
-// DeleteOplog encapsulates the logic to manage different cloud providers
+// DeleteOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOplog(oplogID string) error {
 	switch s.service {
 	case config.OpsManagerService:

@@ -77,7 +77,7 @@ func (opts *StartupOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force].
 func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
 	cmd := &cobra.Command{

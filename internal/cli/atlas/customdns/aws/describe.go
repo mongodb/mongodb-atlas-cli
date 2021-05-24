@@ -47,7 +47,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas customDns aws describe [--projectId projectId]
+// mongocli atlas customDns aws describe [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

@@ -45,7 +45,7 @@ type S3BlockstoresDescriber interface {
 	GetS3Blockstore(string) (*opsmngr.S3Blockstore, error)
 }
 
-// ListS3Blockstores encapsulates the logic to manage different cloud providers
+// ListS3Blockstores encapsulates the logic to manage different cloud providers.
 func (s *Store) ListS3Blockstores(options *atlas.ListOptions) (*opsmngr.S3Blockstores, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) ListS3Blockstores(options *atlas.ListOptions) (*opsmngr.S3Blocks
 	}
 }
 
-// DeleteS3Blockstores encapsulates the logic to manage different cloud providers
+// DeleteS3Blockstores encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 	}
 }
 
-// CreateS3Blockstores encapsulates the logic to manage different cloud providers
+// CreateS3Blockstores encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.
 	}
 }
 
-// UpdateS3Blockstores encapsulates the logic to manage different cloud providers
+// UpdateS3Blockstores encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3B
 	}
 }
 
-// ListS3Blockstores encapsulates the logic to manage different cloud providers
+// ListS3Blockstores encapsulates the logic to manage different cloud providers.
 func (s *Store) GetS3Blockstore(blockstoreID string) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:

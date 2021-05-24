@@ -47,7 +47,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om agent(s) version(s) list [--projectId projectId]
+// mongocli om agent(s) version(s) list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

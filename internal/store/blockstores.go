@@ -45,7 +45,7 @@ type BlockstoresDeleter interface {
 	DeleteBlockstore(string) error
 }
 
-// ListBlockstore encapsulates the logic to manage different cloud providers
+// ListBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -56,7 +56,7 @@ func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStor
 	}
 }
 
-// DescribeBlockstore encapsulates the logic to manage different cloud providers
+// DescribeBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, e
 	}
 }
 
-// CreateBlockstore encapsulates the logic to manage different cloud providers
+// CreateBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -78,7 +78,7 @@ func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.Back
 	}
 }
 
-// UpdateBlockstore encapsulates the logic to manage different cloud providers
+// UpdateBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.Back
 	}
 }
 
-// DeleteBlockstore encapsulates the logic to manage different cloud providers
+// DeleteBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteBlockstore(blockstoreID string) error {
 	switch s.service {
 	case config.OpsManagerService:

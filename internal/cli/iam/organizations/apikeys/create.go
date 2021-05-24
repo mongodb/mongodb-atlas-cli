@@ -61,7 +61,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations|orgs apiKey(s)|apikeys create [--role role][--desc description][--orgId orgId]
+// mongocli iam organizations|orgs apiKey(s)|apikeys create [--role role][--desc description][--orgId orgId].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{

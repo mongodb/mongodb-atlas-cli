@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOplog)
 }
 
-// // mongocli ops-manager admin backup oplog(s) delete <name> [--force]
+// // mongocli ops-manager admin backup oplog(s) delete <name> [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Oplog configuration '%s' deleted\n", "Oplog configuration not deleted"),

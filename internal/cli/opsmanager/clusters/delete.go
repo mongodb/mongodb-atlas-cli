@@ -188,7 +188,7 @@ func (opts *DeleteOpts) watcher() (bool, error) {
 	return true, nil
 }
 
-// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),

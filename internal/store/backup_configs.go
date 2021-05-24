@@ -37,7 +37,7 @@ type BackupConfigUpdater interface {
 	UpdateBackupConfig(*opsmngr.BackupConfig) (*opsmngr.BackupConfig, error)
 }
 
-// GetBackupConfig encapsulates the logic to manage different cloud providers
+// GetBackupConfig encapsulates the logic to manage different cloud providers.
 func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -48,7 +48,7 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 	}
 }
 
-// ListBackupConfigs encapsulates the logic to manage different cloud providers
+// ListBackupConfigs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -59,7 +59,7 @@ func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) 
 	}
 }
 
-// UpdateBackupConfig encapsulates the logic to manage different cloud providers
+// UpdateBackupConfig encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateBackupConfig(backupConfig *opsmngr.BackupConfig) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:

@@ -29,7 +29,7 @@ type ArchivesDownloader interface {
 	DownloadArchive(string, *opsmngr.DiagnosticsListOpts, io.Writer) error
 }
 
-// DownloadArchive encapsulate the logic to manage different cloud providers
+// DownloadArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadArchive(groupID string, opts *opsmngr.DiagnosticsListOpts, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

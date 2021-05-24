@@ -53,7 +53,7 @@ var listTemplate = `{{range .Results}}
 {{.PartitionName}}{{end}}
 `
 
-// mongocli atlas metric(s) process(es) disks lists <hostname:port>
+// mongocli atlas metric(s) process(es) disks lists <hostname:port>.
 func DisksListBuilder() *cobra.Command {
 	opts := &DisksListsOpts{}
 	cmd := &cobra.Command{

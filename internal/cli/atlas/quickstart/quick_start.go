@@ -603,7 +603,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
-// the dbUsername and dbPassword
+// the dbUsername and dbPassword.
 func (opts *Opts) setupCloseHandler() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
@@ -619,7 +619,7 @@ func (opts *Opts) providerAndRegionToConstant() {
 	opts.Region = strings.ReplaceAll(strings.ToUpper(opts.Region), "-", "_")
 }
 
-// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password] [--skipMongosh skipMongosh]
+// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password] [--skipMongosh skipMongosh].
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{

@@ -46,7 +46,7 @@ func (opts *FieldsTypeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas alerts config(s) fields type
+// mongocli atlas alerts config(s) fields type.
 func FieldsTypeBuilder() *cobra.Command {
 	opts := &FieldsTypeOpts{}
 	opts.Template = matcherFieldsTemplate

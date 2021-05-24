@@ -52,7 +52,7 @@ type InterfaceEndpointDeleterDeprecated interface {
 	DeleteInterfaceEndpointDeprecated(string, string, string) error
 }
 
-// PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers
+// PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService:
@@ -63,7 +63,7 @@ func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOpt
 	}
 }
 
-// PrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
+// PrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService:
@@ -74,7 +74,7 @@ func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atl
 	}
 }
 
-// DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
+// DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -85,7 +85,7 @@ func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string)
 	}
 }
 
-// CreateInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
+// CreateInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService:
@@ -96,7 +96,7 @@ func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, inte
 	}
 }
 
-// CreatePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers
+// CreatePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService:
@@ -107,7 +107,7 @@ func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.Priva
 	}
 }
 
-// InterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
+// InterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService:
@@ -118,7 +118,7 @@ func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceE
 	}
 }
 
-// DeleteInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers
+// DeleteInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) error {
 	switch s.service {
 	case config.CloudService:

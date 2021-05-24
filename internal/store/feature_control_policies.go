@@ -33,7 +33,7 @@ type FeatureControlPoliciesUpdater interface {
 	UpdateFeatureControlPolicy(string, *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error)
 }
 
-// FeatureControlPolicies encapsulate the logic to manage different cloud providers
+// FeatureControlPolicies encapsulate the logic to manage different cloud providers.
 func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
@@ -44,7 +44,7 @@ func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions
 	}
 }
 
-// UpdateFeatureControlPolicy encapsulate the logic to manage different cloud providers
+// UpdateFeatureControlPolicy encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateFeatureControlPolicy(projectID string, policy *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

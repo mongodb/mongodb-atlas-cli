@@ -56,7 +56,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam globalApiKey(s) update <ID> [--role role][--desc description]
+// mongocli iam globalApiKey(s) update <ID> [--role role][--desc description].
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	opts.Template = updateTemplate

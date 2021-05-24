@@ -54,7 +54,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas snapshot(s) watch <snapshotId> --clusterName clusterName [--projectId projectId]
+// mongocli atlas snapshot(s) watch <snapshotId> --clusterName clusterName [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

@@ -58,7 +58,7 @@ func (opts *EnableOpts) Run() error {
 	return nil
 }
 
-// mongocli ops-manager monitoring enable <hostname> [--projectId projectId]
+// mongocli ops-manager monitoring enable <hostname> [--projectId projectId].
 func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{

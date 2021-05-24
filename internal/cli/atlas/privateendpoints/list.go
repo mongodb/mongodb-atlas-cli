@@ -51,7 +51,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) list|ls [--projectId projectId]
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) list|ls [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

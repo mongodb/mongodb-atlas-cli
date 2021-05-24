@@ -40,7 +40,7 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-// getHostnameAndPort return the hostname and the port starting from the string hostname:port
+// getHostnameAndPort return the hostname and the port starting from the string hostname:port.
 func getHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
 	const hostnameParts = 2
 	host := strings.Split(hostInfo, ":")

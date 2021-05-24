@@ -55,7 +55,7 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId]
+// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId].
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{

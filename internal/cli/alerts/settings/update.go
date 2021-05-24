@@ -54,7 +54,7 @@ func (opts *UpdateOpts) Run() error {
 // mongocli atlas alerts config(s) update <ID> [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
 // [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
 // [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
-// [--projectId projectId]
+// [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{

@@ -99,7 +99,7 @@ func (opts *GCPOpts) newPeer(containerID string) *atlas.Peer {
 // --regions region: "List of Atlas regions where the container resides."
 // --projectId projectId: ID of the project
 // Create a network peering with GCP, this command will internally check if a container already exists for the provider and if it does then we’ll use that,
-// if it does not exists we’ll try to create one and use it, there can only be one container per GCP provider
+// if it does not exists we’ll try to create one and use it, there can only be one container per GCP provider.
 func GCPBuilder() *cobra.Command {
 	opts := &GCPOpts{}
 	cmd := &cobra.Command{

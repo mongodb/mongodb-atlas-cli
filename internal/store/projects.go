@@ -66,7 +66,7 @@ type ProjectTeamDeleter interface {
 	DeleteTeamFromProject(string, string) error
 }
 
-// Projects encapsulates the logic to manage different cloud providers
+// Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -80,7 +80,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	}
 }
 
-// GetOrgProjects encapsulates the logic to manage different cloud providers
+// GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -91,7 +91,7 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface
 	}
 }
 
-// Project encapsulates the logic to manage different cloud providers
+// Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -105,7 +105,7 @@ func (s *Store) Project(id string) (interface{}, error) {
 	}
 }
 
-// CreateProject encapsulates the logic to manage different cloud providers
+// CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -121,7 +121,7 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	}
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers
+// DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -135,7 +135,7 @@ func (s *Store) DeleteProject(projectID string) error {
 	}
 }
 
-// ProjectUsers lists all IAM users in a project
+// ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -149,7 +149,7 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 	}
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers
+// DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
 	case config.CloudService:
@@ -163,7 +163,7 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	}
 }
 
-// ProjectTeams encapsulates the logic to manage different cloud providers
+// ProjectTeams encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
@@ -177,7 +177,7 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 	}
 }
 
-// AddTeamsToProject encapsulates the logic to manage different cloud providers
+// AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudService:
@@ -191,7 +191,7 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 	}
 }
 
-// DeleteTeamFromProject encapsulates the logic to manage different cloud providers
+// DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	switch s.service {
 	case config.CloudService:

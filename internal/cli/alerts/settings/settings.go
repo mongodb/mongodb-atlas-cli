@@ -35,7 +35,7 @@ const (
 	org      = "ORG"
 )
 
-// ConfigOpts contains all the information and functions to manage an alert configuration
+// ConfigOpts contains all the information and functions to manage an alert configuration.
 type ConfigOpts struct {
 	event                           string
 	matcherFieldName                string

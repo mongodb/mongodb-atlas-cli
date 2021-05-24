@@ -29,7 +29,7 @@ func StringInSlice(a []string, x string) bool {
 	return false
 }
 
-// ClusterExists returns true if a cluster exists in the automation config for the given name
+// ClusterExists returns true if a cluster exists in the automation config for the given name.
 func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
 	_, rsFound := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
 		return r.ID == name
@@ -42,7 +42,7 @@ func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
 	return rsFound || shardedFound
 }
 
-// AtlasClusterExists returns true if a cluster exists for the given name
+// AtlasClusterExists returns true if a cluster exists for the given name.
 func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
 	for i := range clusters {
 		if clusters[i].Name == name {
@@ -53,7 +53,7 @@ func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
 	return false
 }
 
-// DefaultRegion returns the index of the default region
+// DefaultRegion returns the index of the default region.
 func DefaultRegion(regions []*atlas.AvailableRegion) int {
 	for i, v := range regions {
 		if v.Default {

@@ -59,7 +59,7 @@ func (opts *OpsGenieOpts) newOpsGenieIntegration() *atlas.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create OPS_GENIE --apiKey apiKey --region region [--projectId projectId]
+// mongocli atlas integration(s) create OPS_GENIE --apiKey apiKey --region region [--projectId projectId].
 func OpsGenieBuilder() *cobra.Command {
 	opts := &OpsGenieOpts{}
 	cmd := &cobra.Command{

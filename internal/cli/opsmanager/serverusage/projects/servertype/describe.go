@@ -48,7 +48,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager serverUsage project(s) serverType get [--orgId orgId]
+// mongocli ops-manager serverUsage project(s) serverType get [--orgId orgId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

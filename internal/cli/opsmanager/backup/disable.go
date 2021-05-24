@@ -58,7 +58,7 @@ func (opts *DisableOpts) Run() error {
 	return nil
 }
 
-// mongocli ops-manager backup disable <hostname> [--projectId projectId]
+// mongocli ops-manager backup disable <hostname> [--projectId projectId].
 func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{

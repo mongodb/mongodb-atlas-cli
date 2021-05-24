@@ -29,6 +29,7 @@ linters:
     - depguard
     - dogsled
     - errcheck
+    - errorlint # errorlint is a linter that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13. [fast: false, auto-fix: false]
     - exhaustive
     - exportloopref
     - gochecknoinits

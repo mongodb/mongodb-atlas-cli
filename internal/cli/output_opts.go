@@ -134,7 +134,7 @@ func (opts *OutputOpts) template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {
-			return "", fmt.Errorf("error loading template: %s, %v", value, err)
+			return "", fmt.Errorf("error loading template: %s, %w", value, err)
 		}
 
 		value = string(data)

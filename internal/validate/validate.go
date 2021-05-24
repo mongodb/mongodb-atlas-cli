@@ -162,7 +162,7 @@ func DBUsername(val interface{}) error {
 }
 
 var ErrWeakPassword = errors.New("the password provided is too common")
-var ErrShortPassword = errors.New("the password provided is too short [Minimum 10 characters]")
+var ErrShortPassword = errors.New("the password provided is too short")
 
 func WeakPassword(val interface{}) error {
 	password, ok := val.(string)
@@ -170,12 +170,12 @@ func WeakPassword(val interface{}) error {
 		return ErrWeakPassword
 	}
 
-	if commonPasswords[password] {
-		return ErrWeakPassword
+	if len(password) < minPasswordLength {
+		return fmt.Errorf("%w min: %d", ErrShortPassword, minPasswordLength)
 	}
 
-	if len(password) < minPasswordLength {
-		return ErrShortPassword
+	if commonPasswords[strings.ToLower(password)] {
+		return ErrWeakPassword
 	}
 
 	return nil

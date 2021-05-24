@@ -55,7 +55,7 @@ func (opts *GlobalListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
 	}
 }
 
-// mongocli om|cm alert(s) global list [--status status]
+// mongocli om|cm alert(s) global list [--status status].
 func GlobalListBuilder() *cobra.Command {
 	opts := &GlobalListOpts{}
 	opts.Template = listTemplate

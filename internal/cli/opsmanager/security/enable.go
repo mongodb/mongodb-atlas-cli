@@ -63,11 +63,11 @@ func (opts *EnableOpts) Run() error {
 	return nil
 }
 
-// mongocli ops-manager security enable[MONGODB-CR|SCRAM-SHA-256]  [--projectId projectId]
+// mongocli ops-manager security enable <MONGODB-CR|SCRAM-SHA-256>  [--projectId projectId].
 func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{
-		Use:       fmt.Sprintf("enable [%s|%s]", cr, sha256),
+		Use:       fmt.Sprintf("enable <%s|%s>", cr, sha256),
 		Short:     "Enable authentication mechanisms for your project.",
 		Args:      cobra.OnlyValidArgs,
 		ValidArgs: []string{cr, sha1, sha256},

@@ -93,7 +93,7 @@ func (opts *CreateOpts) indexKeys() ([]map[string]string, error) {
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
-// mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type]
+// mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

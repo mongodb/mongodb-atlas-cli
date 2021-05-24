@@ -114,7 +114,7 @@ func (opts *AWSOpts) newPeer(containerID string) *atlas.Peer {
 // --projectId projectId: ID of the project
 // Create a network peering with AWS, this command will internally check if a container already exists for the provider and region and if it does then we’ll use that,
 // if it does not exists we’ll try to create one and use it,
-// there can only be one container per provider and region
+// there can only be one container per provider and region.
 func AwsBuilder() *cobra.Command {
 	opts := &AWSOpts{}
 	cmd := &cobra.Command{

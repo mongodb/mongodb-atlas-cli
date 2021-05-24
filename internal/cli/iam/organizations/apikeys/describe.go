@@ -49,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) apiKey(s)|apikey(s) describe <ID> --orgID
+// mongocli iam organizations(s) apiKey(s)|apikey(s) describe <ID> --orgID.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

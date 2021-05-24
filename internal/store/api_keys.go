@@ -61,7 +61,7 @@ type OrganizationAPIKeyDeleter interface {
 	DeleteOrganizationAPIKey(string, string) error
 }
 
-// OrganizationAPIKeys encapsulates the logic to manage different cloud providers
+// OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -71,11 +71,11 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]at
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// OrganizationAPIKey encapsulates the logic to manage different cloud providers
+// OrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -85,11 +85,11 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Get(context.Background(), orgID, apiKeyID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers
+// UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -99,11 +99,11 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Update(context.Background(), orgID, apiKeyID, input)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers
+// CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -113,11 +113,11 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Create(context.Background(), orgID, input)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers
+// DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	switch s.service {
 	case config.CloudService:
@@ -127,11 +127,11 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(context.Background(), orgID, id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProjectAPIKeys returns the API Keys for a specific project
+// ProjectAPIKeys returns the API Keys for a specific project.
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -141,11 +141,11 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atl
 		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateProjectAPIKey creates an API Keys for a project
+// CreateProjectAPIKey creates an API Keys for a project.
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService:
@@ -155,11 +155,11 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyI
 		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// AssignProjectAPIKey encapsulates the logic to manage different cloud providers
+// AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
 	switch s.service {
 	case config.CloudService:
@@ -169,11 +169,11 @@ func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.Ass
 		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteProjectAPIKey encapsulates the logic to manage different cloud providers
+// DeleteProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
 	switch s.service {
 	case config.CloudService:
@@ -183,6 +183,6 @@ func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
 		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Unassign(context.Background(), projectID, id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

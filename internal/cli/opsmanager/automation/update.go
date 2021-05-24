@@ -57,7 +57,7 @@ func (opts *UpdateOpts) Run() error {
 	return nil
 }
 
-// mongocli om automation update --projectId projectId --file myfile.json
+// mongocli om automation update --projectId projectId --file myfile.json.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),

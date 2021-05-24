@@ -50,7 +50,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli ops-manager admin backup s3 lists
+// mongocli ops-manager admin backup s3 lists.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	opts.Template = listTemplate

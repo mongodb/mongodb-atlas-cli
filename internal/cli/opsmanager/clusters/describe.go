@@ -70,7 +70,7 @@ func (opts *DescribeOpts) cluster() (interface{}, error) {
 	return nil, fmt.Errorf("replica set %s not found", opts.name)
 }
 
-// mongocli cloud-manager cluster(s) describe <name> --projectId projectId
+// mongocli cloud-manager cluster(s) describe <name> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

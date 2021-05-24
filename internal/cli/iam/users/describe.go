@@ -77,7 +77,7 @@ func (opts *DescribeOpts) validate() error {
 type cmdOpt func() error
 
 // PreRunE is a function to call before running the command,
-// It calls any additional function pass as a callback
+// It calls any additional function pass as a callback.
 func PreRunE(cbs ...cmdOpt) error {
 	for _, f := range cbs {
 		if err := f(); err != nil {
@@ -87,7 +87,7 @@ func PreRunE(cbs ...cmdOpt) error {
 	return nil
 }
 
-// mongocli iam user(s) describe --id id --username USERNAME
+// mongocli iam user(s) describe --id id --username USERNAME.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

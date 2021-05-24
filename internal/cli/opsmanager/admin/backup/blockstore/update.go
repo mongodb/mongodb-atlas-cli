@@ -48,7 +48,7 @@ func (opts *UpdateOpts) Run() error {
 }
 
 // mongocli ops-manager admin backup blockstore(s) update <name> [--assignment][--encryptedCredentials]
-// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
+// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	opts.Template = updateTemplate

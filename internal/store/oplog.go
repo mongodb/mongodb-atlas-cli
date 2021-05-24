@@ -45,57 +45,57 @@ type OplogsDeleter interface {
 	DeleteOplog(string) error
 }
 
-// ListOplogs encapsulates the logic to manage different cloud providers
+// ListOplogs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListOplogs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetOplog encapsulates the logic to manage different cloud providers
+// GetOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Get(context.Background(), oplogID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateOplog encapsulates the logic to manage different cloud providers
+// CreateOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Create(context.Background(), oplog)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateOplog encapsulates the logic to manage different cloud providers
+// UpdateOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Update(context.Background(), oplogID, oplog)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteOplog encapsulates the logic to manage different cloud providers
+// DeleteOplog encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOplog(oplogID string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).OplogStoreConfig.Delete(context.Background(), oplogID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

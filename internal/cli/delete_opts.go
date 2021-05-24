@@ -29,7 +29,7 @@ const (
 
 // DeleteOpts options required when deleting a resource.
 // A command can compose this struct and then safely rely on the methods Prompt, or Delete
-// to manage the interactions with the user
+// to manage the interactions with the user.
 type DeleteOpts struct {
 	Entry      string
 	Confirm    bool
@@ -75,7 +75,7 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 	return nil
 }
 
-// Prompt confirms that the resource should be deleted
+// Prompt confirms that the resource should be deleted.
 func (opts *DeleteOpts) Prompt() error {
 	if opts.Confirm {
 		return nil
@@ -85,7 +85,7 @@ func (opts *DeleteOpts) Prompt() error {
 	return survey.AskOne(p, &opts.Confirm)
 }
 
-// PromptWithMessage confirms that the resource should be deleted
+// PromptWithMessage confirms that the resource should be deleted.
 func (opts *DeleteOpts) PromptWithMessage(message string) error {
 	if opts.Confirm {
 		return nil
@@ -95,7 +95,7 @@ func (opts *DeleteOpts) PromptWithMessage(message string) error {
 	return survey.AskOne(p, &opts.Confirm)
 }
 
-// SuccessMessage gets the set success message or the default value
+// SuccessMessage gets the set success message or the default value.
 func (opts *DeleteOpts) SuccessMessage() string {
 	if opts.successMsg != "" {
 		return opts.successMsg
@@ -103,7 +103,7 @@ func (opts *DeleteOpts) SuccessMessage() string {
 	return fallbackSuccessMessage
 }
 
-// FailMessage gets the set fail message or the default value
+// FailMessage gets the set fail message or the default value.
 func (opts *DeleteOpts) FailMessage() string {
 	if opts.failMsg != "" {
 		return opts.failMsg

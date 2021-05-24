@@ -60,7 +60,7 @@ func (opts *ListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
 	}
 }
 
-// mongocli atlas process(es) list --projectId projectId [--page N] [--limit N]
+// mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

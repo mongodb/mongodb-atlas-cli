@@ -32,24 +32,24 @@ type VersionManifestGetter interface {
 	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
 }
 
-// UpdateVersionManifest encapsulates the logic to manage different cloud providers
+// UpdateVersionManifest encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetVersionManifest encapsulates the logic to manage different cloud providers
+// GetVersionManifest encapsulates the logic to manage different cloud providers.
 func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -45,57 +45,57 @@ type FileSystemsUpdater interface {
 	UpdateFileSystems(*opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error)
 }
 
-// ListFileSystems encapsulates the logic to manage different cloud providers
+// ListFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DescribeFileSystem encapsulates the logic to manage different cloud providers
+// DescribeFileSystem encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(context.Background(), fileSystemID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteFileSystem encapsulates the logic to manage different cloud providers
+// DeleteFileSystem encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteFileSystem(fileSystemID string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(context.Background(), fileSystemID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateFileSystems encapsulates the logic to manage different cloud providers
+// CreateFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(context.Background(), fileSystem)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateFileSystems encapsulates the logic to manage different cloud providers
+// UpdateFileSystems encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(context.Background(), fileSystem.ID, fileSystem)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

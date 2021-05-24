@@ -23,14 +23,14 @@ import (
 
 // DownloaderOpts options required when deleting a resource.
 // A command can compose this struct and then safely rely on the methods Prompt, or Delete
-// to manage the interactions with the user
+// to manage the interactions with the user.
 type DownloaderOpts struct {
 	Out   string
 	Force bool
 	Fs    afero.Fs
 }
 
-// NewWriteCloser creates a new file, if Force is false then don't allow to overwrite the file
+// NewWriteCloser creates a new file, if Force is false then don't allow to overwrite the file.
 func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	if !opts.Force {

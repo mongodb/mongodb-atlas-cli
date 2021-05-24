@@ -76,7 +76,7 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	return []*atlas.ProjectIPAccessList{entry}
 }
 
-// mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId]
+// mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

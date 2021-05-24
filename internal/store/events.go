@@ -38,7 +38,7 @@ type EventLister interface {
 	ProjectEventLister
 }
 
-// ProjectEvents encapsulate the logic to manage different cloud providers
+// ProjectEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService:
@@ -48,11 +48,11 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// OrganizationEvents encapsulate the logic to manage different cloud providers
+// OrganizationEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService:
@@ -62,6 +62,6 @@ func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (
 		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

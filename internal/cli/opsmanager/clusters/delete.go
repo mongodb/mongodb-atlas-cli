@@ -145,10 +145,7 @@ func (opts *DeleteOpts) removeClusterFromAutomation() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.Watch(opts.watcher); err != nil {
-		return err
-	}
-	return nil
+	return opts.Watch(opts.watcher)
 }
 
 func (opts *DeleteOpts) shutdownCluster() error {
@@ -167,11 +164,7 @@ func (opts *DeleteOpts) shutdownCluster() error {
 	}
 
 	// Wait for changes being deployed on automation
-	if err := opts.Watch(opts.watcher); err != nil {
-		return err
-	}
-
-	return nil
+	return opts.Watch(opts.watcher)
 }
 
 func (opts *DeleteOpts) watcher() (bool, error) {
@@ -188,7 +181,7 @@ func (opts *DeleteOpts) watcher() (bool, error) {
 	return true, nil
 }
 
-// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),

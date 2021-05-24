@@ -32,24 +32,24 @@ type MonitoringStopper interface {
 	StopMonitoring(string, string) error
 }
 
-// StartMonitoring encapsulates the logic to manage different cloud providers
+// StartMonitoring encapsulates the logic to manage different cloud providers.
 func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.StartMonitoring(context.Background(), groupID, host)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// StopMonitoring encapsulates the logic to manage different cloud providers
+// StopMonitoring encapsulates the logic to manage different cloud providers.
 func (s *Store) StopMonitoring(groupID, hostID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).Deployments.StopMonitoring(context.Background(), groupID, hostID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

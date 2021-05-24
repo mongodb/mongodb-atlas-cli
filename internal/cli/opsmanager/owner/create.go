@@ -84,7 +84,7 @@ func (opts *CreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --accessListIp <IP>
+// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --accessListIp <IP>.
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{

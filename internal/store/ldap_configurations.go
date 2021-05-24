@@ -44,57 +44,57 @@ type LDAPConfigurationGetter interface {
 	GetLDAPConfiguration(string) (*atlas.LDAPConfiguration, error)
 }
 
-// VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers
+// VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers
+// GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(context.Background(), projectID, requestID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// SaveLDAPConfiguration encapsulates the logic to manage different cloud providers
+// SaveLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(context.Background(), projectID, ldap)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers
+// DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetLDAPConfiguration encapsulates the logic to manage different cloud providers
+// GetLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(context.Background(), projectID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

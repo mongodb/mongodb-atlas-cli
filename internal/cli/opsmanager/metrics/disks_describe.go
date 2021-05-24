@@ -54,7 +54,7 @@ func (opts *DisksDescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId]
+// mcli om metric(s) disk(s) describe <hostId:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
 func DisksDescribeBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DisksDescribeOpts{}

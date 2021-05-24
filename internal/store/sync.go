@@ -45,57 +45,57 @@ type SyncsDeleter interface {
 	DeleteSync(string) error
 }
 
-// ListSyncs encapsulates the logic to manage different cloud providers
+// ListSyncs encapsulates the logic to manage different cloud providers.
 func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// GetSync encapsulates the logic to manage different cloud providers
+// GetSync encapsulates the logic to manage different cloud providers.
 func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Get(context.Background(), syncID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateSync encapsulates the logic to manage different cloud providers
+// CreateSync encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Create(context.Background(), sync)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateSync encapsulates the logic to manage different cloud providers
+// UpdateSync encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Update(context.Background(), syncID, sync)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteSync encapsulates the logic to manage different cloud providers
+// DeleteSync encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSync(syncID string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).SyncStoreConfig.Delete(context.Background(), syncID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -56,7 +56,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam project(s) list [--orgId orgId]
+// mongocli iam project(s) list [--orgId orgId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	opts.Template = listTemplate

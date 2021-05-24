@@ -44,57 +44,57 @@ type HostDisksLister interface {
 	HostDisks(string, string, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
 }
 
-// HostDatabases encapsulate the logic to manage different cloud providers
+// HostDatabases encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListDatabases(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// HostDisks encapsulate the logic to manage different cloud providers
+// HostDisks encapsulate the logic to manage different cloud providers.
 func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListPartitions(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Hosts encapsulate the logic to manage different cloud providers
+// Hosts encapsulate the logic to manage different cloud providers.
 func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.Hosts, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListHosts(context.Background(), groupID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Host encapsulate the logic to manage different cloud providers
+// Host encapsulate the logic to manage different cloud providers.
 func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHost(context.Background(), groupID, hostID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// HostByHostname encapsulate the logic to manage different cloud providers
+// HostByHostname encapsulate the logic to manage different cloud providers.
 func (s *Store) HostByHostname(groupID, hostname string, port int) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHostByHostname(context.Background(), groupID, hostname, port)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

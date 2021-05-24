@@ -65,7 +65,7 @@ func (opts *UnmanageOpts) Run() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) unmanage <name> --projectId projectId [--force]
+// mongocli cloud-manager cluster(s) unmanage <name> --projectId projectId [--force].
 func UnmanageBuilder() *cobra.Command {
 	opts := &UnmanageOpts{
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),

@@ -47,7 +47,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 // mongocli ops-manager admin backup blockstore(s) create [--assignment][--encryptedCredentials][--name name]
-// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern]
+// [--label label][--loadFactor loadFactor][--maxCapacityGB maxCapacityGB][--uri uri][--ssl][--writeConcern writeConcern].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = createTemplate

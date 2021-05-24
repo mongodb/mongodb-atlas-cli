@@ -60,7 +60,7 @@ func (opts *DownloadOpts) newDiagnosticsListOpts() *opsmngr.DiagnosticsListOpts 
 	}
 }
 
-// mongocli om diagnose-archive download [--out out] [--projectId projectId]
+// mongocli om diagnose-archive download [--out out] [--projectId projectId].
 func DownloadBuilder() *cobra.Command {
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()

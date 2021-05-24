@@ -27,7 +27,9 @@ import (
 	"github.com/mongodb/mongocli/internal/search"
 )
 
-// toString tries to cast an interface to string
+const minPasswordLength = 10
+
+// toString tries to cast an interface to string.
 func toString(val interface{}) (string, error) {
 	var u string
 	var ok bool
@@ -37,7 +39,7 @@ func toString(val interface{}) (string, error) {
 	return u, nil
 }
 
-// URL validates a value is a valid URL for the cli store
+// URL validates a value is a valid URL for the cli store.
 func URL(val interface{}) error {
 	s, err := toString(val)
 	if err != nil {
@@ -54,7 +56,7 @@ func URL(val interface{}) error {
 	return nil
 }
 
-// OptionalURL validates a value is a valid URL for the cli store
+// OptionalURL validates a value is a valid URL for the cli store.
 func OptionalURL(val interface{}) error {
 	if val == nil {
 		return nil
@@ -70,7 +72,7 @@ func OptionalURL(val interface{}) error {
 	return URL(val)
 }
 
-// OptionalObjectID validates a value is a valid ObjectID
+// OptionalObjectID validates a value is a valid ObjectID.
 func OptionalObjectID(val interface{}) error {
 	if val == nil {
 		return nil
@@ -82,7 +84,7 @@ func OptionalObjectID(val interface{}) error {
 	return ObjectID(s)
 }
 
-// ObjectID validates a value is a valid ObjectID
+// ObjectID validates a value is a valid ObjectID.
 func ObjectID(s string) error {
 	b, err := hex.DecodeString(s)
 	if err != nil || len(b) != 12 {
@@ -93,7 +95,7 @@ func ObjectID(s string) error {
 
 var ErrMissingCredentials = errors.New("missing credentials")
 
-// Credentials validates public and private API keys have been set
+// Credentials validates public and private API keys have been set.
 func Credentials() error {
 	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
 		return fmt.Errorf(
@@ -157,4 +159,24 @@ func DBUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
+}
+
+var ErrWeakPassword = errors.New("the password provided is too common")
+var ErrShortPassword = errors.New("the password provided is too short")
+
+func WeakPassword(val interface{}) error {
+	password, ok := val.(string)
+	if !ok {
+		return ErrWeakPassword
+	}
+
+	if len(password) < minPasswordLength {
+		return fmt.Errorf("%w min: %d", ErrShortPassword, minPasswordLength)
+	}
+
+	if commonPasswords[strings.ToLower(password)] {
+		return ErrWeakPassword
+	}
+
+	return nil
 }

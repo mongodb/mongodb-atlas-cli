@@ -28,13 +28,13 @@ type ProcessDatabaseLister interface {
 	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)
 }
 
-// ProcessDatabases encapsulate the logic to manage different cloud providers
+// ProcessDatabases encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProcessDatabases.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

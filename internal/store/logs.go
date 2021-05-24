@@ -46,57 +46,57 @@ type LogJobDeleter interface {
 	DeleteCollectionJob(string, string) error
 }
 
-// LogCollectionJobs encapsulate the logic to manage different cloud providers
+// LogCollectionJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).LogCollections.List(context.Background(), groupID, opts)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteCollectionJob encapsulate the logic to manage different cloud providers
+// DeleteCollectionJob encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).LogCollections.Delete(context.Background(), groupID, logID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Collect encapsulate the logic to manage different cloud providers
+// Collect encapsulate the logic to manage different cloud providers.
 func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(context.Background(), groupID, newLog)
 		return log, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ProcessDisks encapsulate the logic to manage different cloud providers
+// ProcessDisks encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atlas.DateRangetOptions) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Logs.Get(context.Background(), groupID, host, name, out, opts)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DownloadLogJob encapsulate the logic to manage different cloud providers
+// DownloadLogJob encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).Logs.Download(context.Background(), groupID, jobID, out)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -85,7 +85,7 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// mongocli atlas dbrole(s) update create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db --append
+// mongocli atlas dbrole(s) update create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db --append.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

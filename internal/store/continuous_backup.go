@@ -41,7 +41,7 @@ type ContinuousSnapshotsLister interface {
 	ContinuousSnapshots(string, string, *atlas.ListOptions) (*atlas.ContinuousSnapshots, error)
 }
 
-// Checkpoints encapsulate the logic to manage different cloud providers
+// Checkpoints encapsulate the logic to manage different cloud providers.
 func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,11 +51,11 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ContinuousRestoreJobs encapsulate the logic to manage different cloud providers
+// ContinuousRestoreJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
@@ -65,11 +65,11 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers
+// CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService:
@@ -79,11 +79,11 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// ContinuousSnapshots encapsulate the logic to manage different cloud providers
+// ContinuousSnapshots encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
 	switch s.service {
 	case config.CloudService:
@@ -93,6 +93,6 @@ func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.Lis
 		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

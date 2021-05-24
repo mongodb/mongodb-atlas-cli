@@ -17,6 +17,7 @@ package store
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net"
@@ -45,6 +46,8 @@ const (
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
 )
+
+var errUnsupportedService = errors.New("unsupported service")
 
 type Store struct {
 	service       string
@@ -207,7 +210,7 @@ type CredentialsGetter interface {
 	PrivateAPIKey() string
 }
 
-// WithAuthentication sets the store credentials
+// WithAuthentication sets the store credentials.
 func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
@@ -216,7 +219,7 @@ func WithAuthentication(c CredentialsGetter) Option {
 	}
 }
 
-// setAtlasClient sets the internal client to use an Atlas client and methods
+// setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
 	if s.baseURL != "" {
@@ -230,7 +233,7 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 	return nil
 }
 
-// setOpsManagerClient sets the internal client to use an Ops Manager client and methods
+// setOpsManagerClient sets the internal client to use an Ops Manager client and methods.
 func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(userAgent)}
 	if s.baseURL != "" {
@@ -263,13 +266,13 @@ func NetworkPresets(c TransportConfigGetter) Option {
 	return Options(options...)
 }
 
-// ServiceGetter is a basic interface for service and base url settings
+// ServiceGetter is a basic interface for service and base url settings.
 type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
 }
 
-// Config an interface of the methods needed to set up a Store
+// Config an interface of the methods needed to set up a Store.
 type AuthenticatedConfig interface {
 	CredentialsGetter
 	TransportConfigGetter
@@ -373,12 +376,12 @@ type ManifestGetter interface {
 	OpsManagerVersionManifestURL() string
 }
 
-// NewVersionManifest ets the appropriate client for the manifest version page
+// NewVersionManifest ets the appropriate client for the manifest version page.
 func NewVersionManifest(c ManifestGetter) (*Store, error) {
 	s := new(Store)
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 	s.baseURL = versionManifestStaticPath
 	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {

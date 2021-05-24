@@ -40,46 +40,46 @@ type IntegrationDescriber interface {
 	Integration(string, string) (*atlas.ThirdPartyIntegration, error)
 }
 
-// CreateIntegration encapsulates the logic to manage different cloud providers
+// CreateIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(context.Background(), projectID, integrationType, integration)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Integrations encapsulates the logic to manage different cloud providers
+// Integrations encapsulates the logic to manage different cloud providers.
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.List(context.Background(), projectID)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteIntegration encapsulates the logic to manage different cloud providers
+// DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Integration encapsulates the logic to manage different cloud providers
+// Integration encapsulates the logic to manage different cloud providers.
 func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPartyIntegration, error) {
 	switch s.service {
 	case config.CloudService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.Get(context.Background(), projectID, integrationType)
 		return resp, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

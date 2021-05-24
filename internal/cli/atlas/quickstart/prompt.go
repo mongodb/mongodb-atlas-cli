@@ -102,7 +102,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 			Help:    usage.Password,
 			Default: password,
 		},
-		Validate: survey.Required,
+		Validate: survey.ComposeValidators(survey.Required, validate.WeakPassword),
 	}
 }
 

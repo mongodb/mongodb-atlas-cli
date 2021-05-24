@@ -45,57 +45,57 @@ type BlockstoresDeleter interface {
 	DeleteBlockstore(string) error
 }
 
-// ListBlockstore encapsulates the logic to manage different cloud providers
+// ListBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.List(context.Background(), options)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DescribeBlockstore encapsulates the logic to manage different cloud providers
+// DescribeBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Get(context.Background(), blockstoreID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateBlockstore encapsulates the logic to manage different cloud providers
+// CreateBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(context.Background(), blockstore)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateBlockstore encapsulates the logic to manage different cloud providers
+// UpdateBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Update(context.Background(), blockstore.ID, blockstore)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteBlockstore encapsulates the logic to manage different cloud providers
+// DeleteBlockstore encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteBlockstore(blockstoreID string) error {
 	switch s.service {
 	case config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).BlockstoreConfig.Delete(context.Background(), blockstoreID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

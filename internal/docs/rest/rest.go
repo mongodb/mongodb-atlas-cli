@@ -35,7 +35,7 @@ const (
 	defaultExtension = ".txt"
 )
 
-// GenReSTTree generates the docs for the full tree of commands
+// GenReSTTree generates the docs for the full tree of commands.
 func GenReSTTree(cmd *cobra.Command, dir string) error {
 	for _, c := range cmd.Commands() {
 		if !c.IsAvailableCommand() || c.IsAdditionalHelpTopicCommand() {
@@ -54,10 +54,7 @@ func GenReSTTree(cmd *cobra.Command, dir string) error {
 	}
 	defer f.Close()
 
-	if err := GenReSTCustom(cmd, f); err != nil {
-		return err
-	}
-	return nil
+	return GenReSTCustom(cmd, f)
 }
 
 const toc = `
@@ -88,7 +85,7 @@ const tocHeader = `
 `
 
 // GenReSTCustom creates custom reStructured Text output.
-// Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style
+// Adapted from github.com/spf13/cobra/doc to match MongoDB tooling and style.
 func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 	cmd.InitDefaultHelpCmd()
 	cmd.InitDefaultHelpFlag()
@@ -123,7 +120,7 @@ func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 
 	if hasRelatedCommands(cmd) {
 		buf.WriteString("Related Commands\n")
-		buf.WriteString("--------\n\n")
+		buf.WriteString("----------------\n\n")
 
 		children := cmd.Commands()
 		sort.Sort(byName(children))

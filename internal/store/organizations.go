@@ -41,7 +41,7 @@ type OrganizationDeleter interface {
 	DeleteOrganization(string) error
 }
 
-// Organizations encapsulate the logic to manage different cloud providers
+// Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService:
@@ -51,11 +51,11 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Organization encapsulate the logic to manage different cloud providers
+// Organization encapsulate the logic to manage different cloud providers.
 func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudService:
@@ -65,11 +65,11 @@ func (s *Store) Organization(id string) (*atlas.Organization, error) {
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(context.Background(), id)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// CreateOrganization encapsulate the logic to manage different cloud providers
+// CreateOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
@@ -77,11 +77,11 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(context.Background(), org)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteOrganization encapsulate the logic to manage different cloud providers
+// DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService:
@@ -91,6 +91,6 @@ func (s *Store) DeleteOrganization(id string) error {
 		_, err := s.client.(*opsmngr.Client).Organizations.Delete(context.Background(), id)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -54,7 +54,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas security ldap status watch <ID> [--projectId projectId]
+// mongocli atlas security ldap status watch <ID> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

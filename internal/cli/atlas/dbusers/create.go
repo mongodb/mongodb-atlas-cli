@@ -95,7 +95,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newDatabaseUser() *atlas.DatabaseUser {
 	authDB := convert.AdminDB
 
-	if opts.isExternal() {
+	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 
@@ -143,11 +143,7 @@ func (opts *CreateOpts) validate() error {
 	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
 		return err
 	}
-	if err := validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags); err != nil {
-		return err
-	}
-
-	return nil
+	return validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags)
 }
 
 // mongocli atlas dbuser(s) create

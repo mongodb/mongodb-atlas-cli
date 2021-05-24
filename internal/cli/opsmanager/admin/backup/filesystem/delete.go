@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteFileSystem)
 }
 
-// // mongocli ops-manager admin backup fileSystem(s) delete <ID> [--force]
+// // mongocli ops-manager admin backup fileSystem(s) delete <ID> [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("File system configuration '%s' deleted\n", "File system configuration not deleted"),

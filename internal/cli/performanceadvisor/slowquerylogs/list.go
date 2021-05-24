@@ -69,7 +69,7 @@ func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
 	}
 }
 
-// mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId
+// mongocli atlas performanceAdvisor slowQueryLogs list  --processName processName --since since --duration duration  --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate

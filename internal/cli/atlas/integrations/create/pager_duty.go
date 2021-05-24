@@ -57,7 +57,7 @@ func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlas.ThirdPartyIntegratio
 	}
 }
 
-// mongocli atlas integration(s) create PAGER_DUTY --serviceKey serviceKey [--projectId projectId]
+// mongocli atlas integration(s) create PAGER_DUTY --serviceKey serviceKey [--projectId projectId].
 func PagerDutyBuilder() *cobra.Command {
 	opts := &PagerDutyOpts{}
 	cmd := &cobra.Command{

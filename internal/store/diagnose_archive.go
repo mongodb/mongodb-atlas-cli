@@ -29,13 +29,13 @@ type ArchivesDownloader interface {
 	DownloadArchive(string, *opsmngr.DiagnosticsListOpts, io.Writer) error
 }
 
-// DownloadArchive encapsulate the logic to manage different cloud providers
+// DownloadArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadArchive(groupID string, opts *opsmngr.DiagnosticsListOpts, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).Diagnostics.Get(context.Background(), groupID, opts, out)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

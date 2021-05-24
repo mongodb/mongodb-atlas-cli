@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) users list --orgId orgId
+// mongocli iam organizations(s) users list --orgId orgId.
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 

@@ -15,7 +15,7 @@
 package datalake
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -80,7 +80,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region]
+// mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -91,7 +91,7 @@ func UpdateBuilder() *cobra.Command {
 			opts.name = args[0]
 
 			if opts.region == "" && opts.role == "" && opts.testBucket == "" {
-				return fmt.Errorf("nothing to update")
+				return errors.New("nothing to update")
 			}
 
 			return opts.PreRunE(

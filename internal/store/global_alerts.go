@@ -29,13 +29,13 @@ type GlobalAlertLister interface {
 	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
 }
 
-// GlobalAlerts encapsulate the logic to manage different cloud providers
+// GlobalAlerts encapsulate the logic to manage different cloud providers.
 func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAlerts.List(context.Background(), opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

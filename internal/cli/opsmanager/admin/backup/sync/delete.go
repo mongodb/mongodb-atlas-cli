@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteSync)
 }
 
-// mongocli ops-manager admin backup sync delete <ID> [--force]
+// mongocli ops-manager admin backup sync delete <ID> [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Sync configuration '%s' deleted\n", "Sync configuration not deleted"),

@@ -33,24 +33,24 @@ type FeatureControlPoliciesUpdater interface {
 	UpdateFeatureControlPolicy(string, *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error)
 }
 
-// FeatureControlPolicies encapsulate the logic to manage different cloud providers
+// FeatureControlPolicies encapsulate the logic to manage different cloud providers.
 func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// UpdateFeatureControlPolicy encapsulate the logic to manage different cloud providers
+// UpdateFeatureControlPolicy encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateFeatureControlPolicy(projectID string, policy *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.Update(context.Background(), projectID, policy)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -59,7 +59,7 @@ func (opts *AddOpts) newProjectTeam() []*atlas.ProjectTeam {
 	}
 }
 
-// mongocli iam project(s) team(s) add teamId --projectId projectId --role role
+// mongocli iam project(s) team(s) add teamId --projectId projectId --role role.
 func AddBuilder() *cobra.Command {
 	opts := &AddOpts{}
 	cmd := &cobra.Command{

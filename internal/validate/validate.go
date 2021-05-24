@@ -27,6 +27,8 @@ import (
 	"github.com/mongodb/mongocli/internal/search"
 )
 
+const minPasswordLength = 10
+
 // toString tries to cast an interface to string.
 func toString(val interface{}) (string, error) {
 	var u string
@@ -157,4 +159,24 @@ func DBUsername(val interface{}) error {
 	}
 
 	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
+}
+
+var ErrWeakPassword = errors.New("the password provided is too common")
+var ErrShortPassword = errors.New("the password provided is too short")
+
+func WeakPassword(val interface{}) error {
+	password, ok := val.(string)
+	if !ok {
+		return ErrWeakPassword
+	}
+
+	if len(password) < minPasswordLength {
+		return fmt.Errorf("%w min: %d", ErrShortPassword, minPasswordLength)
+	}
+
+	if commonPasswords[strings.ToLower(password)] {
+		return ErrWeakPassword
+	}
+
+	return nil
 }

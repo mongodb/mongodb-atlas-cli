@@ -54,10 +54,7 @@ func GenReSTTree(cmd *cobra.Command, dir string) error {
 	}
 	defer f.Close()
 
-	if err := GenReSTCustom(cmd, f); err != nil {
-		return err
-	}
-	return nil
+	return GenReSTCustom(cmd, f)
 }
 
 const toc = `

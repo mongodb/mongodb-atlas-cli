@@ -25,7 +25,7 @@ import (
 )
 
 func Test_newReplicaSetProcessConfig(t *testing.T) {
-	var slaveDelay float64 = 0
+	var slaveDelay float64
 	omp := &opsmngr.Process{
 		Args26: opsmngr.Args26{
 			AuditLog: &opsmngr.AuditLog{

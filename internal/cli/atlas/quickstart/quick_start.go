@@ -149,9 +149,7 @@ func (opts *Opts) Run() error {
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
 
 	if runMongoShell {
-		if err := mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress); err != nil {
-			return err
-		}
+		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
 	}
 
 	return nil
@@ -208,11 +206,7 @@ func (opts *Opts) loadSampleData() error {
 
 	opts.SampleDataJobID = sampleDataJob.ID
 
-	if er := opts.Watch(opts.sampleDataWatcher); er != nil {
-		return er
-	}
-
-	return nil
+	return opts.Watch(opts.sampleDataWatcher)
 }
 
 func (opts *Opts) sampleDataWatcher() (bool, error) {
@@ -281,7 +275,7 @@ func (opts *Opts) newCluster() *atlas.Cluster {
 
 func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
 	var (
-		readOnlyNodes int64 = 0
+		readOnlyNodes int64
 		priority      int64 = 7
 		shards        int64 = shards
 		members       int64 = members
@@ -521,10 +515,7 @@ func askMongoShellAndSetConfig() error {
 	}
 
 	config.SetMongoShellPath(mongoShellPath)
-	if err := config.Save(); err != nil {
-		return err
-	}
-	return nil
+	return config.Save()
 }
 
 func askAtlasAccountAndProfile() error {
@@ -548,25 +539,17 @@ func openBrowserProfile() error {
 		return err
 	}
 
-	if err := browser.OpenURL(profileDocURL); err != nil {
-		return err
-	}
-
-	return nil
+	return browser.OpenURL(profileDocURL)
 }
 
 func openBrowserAtlasAccount() error {
-	openBrowserAtlasAccount := false
 	q := newAtlasAccountQuestionOpenBrowser()
+	var openBrowserAtlasAccount bool
 	if err := survey.AskOne(q, &openBrowserAtlasAccount); !openBrowserAtlasAccount || err != nil {
 		return err
 	}
 
-	if err := browser.OpenURL(atlasAccountURL); err != nil {
-		return err
-	}
-
-	return nil
+	return browser.OpenURL(atlasAccountURL)
 }
 
 func (opts *Opts) defaultRegions() ([]string, error) {

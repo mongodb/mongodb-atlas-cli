@@ -410,4 +410,5 @@ var commonPasswords = map[string]bool{
 	"yellow":      true,
 	"zxcvbn":      true,
 	"zxcvbnm":     true,
-	"zzzzzz":      true}
+	"zzzzzz":      true,
+}

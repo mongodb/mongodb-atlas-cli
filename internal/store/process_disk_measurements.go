@@ -39,7 +39,7 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(context.Background(), groupID, host, port, partitionName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -50,6 +50,6 @@ func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbNa
 		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(context.Background(), groupID, host, port, dbName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

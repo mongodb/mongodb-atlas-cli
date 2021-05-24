@@ -49,7 +49,7 @@ func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error)
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetCurrentX509Conf(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -61,7 +61,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(context.Background(), projectID, userCertificate)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -72,6 +72,6 @@ func (s *Store) DisableX509Configuration(projectID string) error {
 		_, err := s.client.(*atlas.Client).X509AuthDBUsers.DisableCustomerX509(context.Background(), projectID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

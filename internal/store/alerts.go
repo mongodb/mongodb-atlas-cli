@@ -47,7 +47,7 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(context.Background(), projectID, alertID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -61,7 +61,7 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 		result, _, err := s.client.(*opsmngr.Client).Alerts.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -75,6 +75,6 @@ func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.Acknowle
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

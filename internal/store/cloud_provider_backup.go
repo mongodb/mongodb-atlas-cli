@@ -59,7 +59,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(context.Background(), o, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(context.Background(), o, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -89,7 +89,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(context.Background(), o, request)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -104,7 +104,7 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -120,7 +120,7 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -136,6 +136,6 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(context.Background(), o)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

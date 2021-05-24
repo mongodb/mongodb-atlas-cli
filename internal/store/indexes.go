@@ -35,6 +35,6 @@ func (s *Store) CreateIndex(projectID, clusterName string, index *atlas.IndexCon
 		_, err := s.client.(*atlas.Client).Indexes.Create(context.Background(), projectID, clusterName, index)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

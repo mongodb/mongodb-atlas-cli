@@ -46,7 +46,7 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -60,7 +60,7 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,6 +74,6 @@ func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *a
 		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -40,7 +40,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -60,7 +60,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -78,7 +78,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,7 +96,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -107,7 +107,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 		result, _, err := s.client.(*atlas.Client).Containers.ListAll(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -118,7 +118,7 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 		_, err := s.client.(*atlas.Client).Containers.Delete(context.Background(), projectID, containerID)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -129,7 +129,7 @@ func (s *Store) Container(projectID, containerID string) (*atlas.Container, erro
 		result, _, err := s.client.(*atlas.Client).Containers.Get(context.Background(), projectID, containerID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -140,6 +140,6 @@ func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*
 		result, _, err := s.client.(*atlas.Client).Containers.Create(context.Background(), projectID, container)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

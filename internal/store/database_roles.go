@@ -52,7 +52,7 @@ func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*a
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Create(context.Background(), groupID, role)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -63,7 +63,7 @@ func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 		_, err := s.client.(*atlas.Client).CustomDBRoles.Delete(context.Background(), groupID, roleName)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -74,7 +74,7 @@ func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atl
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.List(context.Background(), projectID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomD
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(context.Background(), groupID, roleName, role)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -96,6 +96,6 @@ func (s *Store) DatabaseRole(groupID, roleName string) (*atlas.CustomDBRole, err
 		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Get(context.Background(), groupID, roleName)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

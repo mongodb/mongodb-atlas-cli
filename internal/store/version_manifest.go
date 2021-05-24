@@ -39,7 +39,7 @@ func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) 
 		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -50,6 +50,6 @@ func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, er
 		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

@@ -69,7 +69,7 @@ func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus
 		result, _, err := s.client.(*opsmngr.Client).Automation.GetStatus(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -80,7 +80,7 @@ func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig
 		result, _, err := s.client.(*opsmngr.Client).Automation.GetConfig(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -91,6 +91,6 @@ func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *opsmn
 		_, err := s.client.(*opsmngr.Client).Automation.UpdateConfig(context.Background(), projectID, automationConfig)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

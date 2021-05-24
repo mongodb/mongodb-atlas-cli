@@ -59,7 +59,7 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -81,7 +81,7 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 		}
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -103,7 +103,7 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 		}
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

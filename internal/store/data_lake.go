@@ -59,7 +59,7 @@ func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateR
 		result, _, err := s.client.(*atlas.Client).DataLakes.Create(context.Background(), projectID, dataLake)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -70,7 +70,7 @@ func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeU
 		result, _, err := s.client.(*atlas.Client).DataLakes.Update(context.Background(), projectID, name, dataLake)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -81,7 +81,7 @@ func (s *Store) DeleteDataLake(projectID, name string) error {
 		_, err := s.client.(*atlas.Client).DataLakes.Delete(context.Background(), projectID, name)
 		return err
 	default:
-		return fmt.Errorf("unsupported service: %s", s.service)
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -92,7 +92,7 @@ func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 		result, _, err := s.client.(*atlas.Client).DataLakes.List(context.Background(), projectID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -103,6 +103,6 @@ func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
 		result, _, err := s.client.(*atlas.Client).DataLakes.Get(context.Background(), projectID, name)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

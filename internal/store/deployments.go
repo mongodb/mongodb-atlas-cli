@@ -51,7 +51,7 @@ func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListDatabases(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -62,7 +62,7 @@ func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atl
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListPartitions(context.Background(), groupID, hostID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.H
 		result, _, err := s.client.(*opsmngr.Client).Deployments.ListHosts(context.Background(), groupID, opts)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -84,7 +84,7 @@ func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHost(context.Background(), groupID, hostID)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
@@ -95,6 +95,6 @@ func (s *Store) HostByHostname(groupID, hostname string, port int) (*opsmngr.Hos
 		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHostByHostname(context.Background(), groupID, hostname, port)
 		return result, err
 	default:
-		return nil, fmt.Errorf("unsupported service: %s", s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

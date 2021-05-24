@@ -15,6 +15,8 @@
 package ldap
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -60,6 +62,18 @@ func (opts *SaveOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *SaveOpts) validate() error {
+	if opts.mappingMatch != "" {
+		if opts.mappingLdapQuery == "" && opts.mappingSubstitution == "" {
+			return errors.New("must supply either a query or a substitution for userToDNMapping")
+		}
+		if opts.mappingLdapQuery != "" && opts.mappingSubstitution != "" {
+			return errors.New("can't supply both a query and a substitution for userToDNMapping")
+		}
+	}
+	return nil
+}
+
 func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
 	return &atlas.LDAPConfiguration{
 		LDAP: &atlas.LDAP{
@@ -87,6 +101,7 @@ func SaveBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
+				opts.validate,
 				opts.InitOutput(cmd.OutOrStdout(), saveTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

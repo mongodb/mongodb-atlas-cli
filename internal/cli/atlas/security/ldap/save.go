@@ -15,6 +15,8 @@
 package ldap
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -33,6 +35,9 @@ type SaveOpts struct {
 	bindPassword          string
 	caCertificate         string
 	authzQueryTemplate    string
+	mappingMatch          string
+	mappingLdapQuery      string
+	mappingSubstitution   string
 	authenticationEnabled bool
 	authorizationEnabled  bool
 	store                 store.LDAPConfigurationSaver
@@ -57,23 +62,41 @@ func (opts *SaveOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *SaveOpts) validate() error {
+	if opts.mappingMatch != "" {
+		if opts.mappingLdapQuery == "" && opts.mappingSubstitution == "" {
+			return errors.New("must supply either a query or a substitution for userToDNMapping")
+		}
+		if opts.mappingLdapQuery != "" && opts.mappingSubstitution != "" {
+			return errors.New("can't supply both a query and a substitution for userToDNMapping")
+		}
+	}
+	return nil
+}
+
 func (opts *SaveOpts) newLDAPConfiguration() *atlas.LDAPConfiguration {
-	return &atlas.LDAPConfiguration{
+	ldapConfig := &atlas.LDAPConfiguration{
 		LDAP: &atlas.LDAP{
 			AuthenticationEnabled: opts.authenticationEnabled,
 			AuthorizationEnabled:  opts.authorizationEnabled,
 			Hostname:              opts.hostname,
 			Port:                  opts.port,
+			UserToDNMapping:       []*atlas.UserToDNMapping{},
 			BindUsername:          opts.bindUsername,
 			BindPassword:          opts.bindPassword,
 			CaCertificate:         opts.caCertificate,
 			AuthzQueryTemplate:    opts.authzQueryTemplate,
 		},
 	}
+	if opts.mappingMatch != "" {
+		ldapConfig.LDAP.UserToDNMapping = append(ldapConfig.LDAP.UserToDNMapping, &atlas.UserToDNMapping{Match: opts.mappingMatch, LDAPQuery: opts.mappingLdapQuery, Substitution: opts.mappingSubstitution})
+	}
+	return ldapConfig
 }
 
 // mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
-// --authzQueryTemplate authzQueryTemplate --authenticationEnabled authenticationEnabled --authorizationEnabled authorizationEnabled [--projectId projectId].
+// --authzQueryTemplate authzQueryTemplate [--mappingMatch mappingMatch (--mappingLdapQuery mappingLdapQuery | --mappingSubstitution mappingSubstitution)]
+// --authenticationEnabled authenticationEnabled --authorizationEnabled authorizationEnabled [--projectId projectId].
 func SaveBuilder() *cobra.Command {
 	opts := &SaveOpts{}
 	cmd := &cobra.Command{
@@ -83,6 +106,7 @@ func SaveBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
+				opts.validate,
 				opts.InitOutput(cmd.OutOrStdout(), saveTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -96,6 +120,9 @@ func SaveBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)
 	cmd.Flags().StringVar(&opts.authzQueryTemplate, flag.AuthzQueryTemplate, "", usage.AuthzQueryTemplate)
+	cmd.Flags().StringVar(&opts.mappingMatch, flag.MappingMatch, "", usage.MappingMatch)
+	cmd.Flags().StringVar(&opts.mappingLdapQuery, flag.MappingLdapQuery, "", usage.MappingLdapQuery)
+	cmd.Flags().StringVar(&opts.mappingSubstitution, flag.MappingSubstitution, "", usage.MappingSubstitution)
 	cmd.Flags().BoolVar(&opts.authenticationEnabled, flag.AuthenticationEnabled, false, usage.AuthenticationEnabled)
 	cmd.Flags().BoolVar(&opts.authorizationEnabled, flag.AuthorizationEnabled, false, usage.AuthorizationEnabled)
 

@@ -38,6 +38,9 @@ const (
 	BindPassword                    = "bindPassword"                    // BindPassword flag
 	CaCertificate                   = "caCertificate"                   // CaCertificate flag
 	AuthzQueryTemplate              = "authzQueryTemplate"              // AuthzQueryTemplate flag
+	MappingMatch                    = "mappingMatch"                    // MappingMatch flag
+	MappingLdapQuery                = "mappingLdapQuery"                // MappingLdapQuery flag
+	MappingSubstitution             = "mappingSubstitution"             // MappingSubstitution flag
 	AuthenticationEnabled           = "authenticationEnabled"           // AuthenticationEnabled flag
 	AuthorizationEnabled            = "authorizationEnabled"            // AuthorizationEnabled flag
 	Provider                        = "provider"                        // Provider flag to set the cloud provider

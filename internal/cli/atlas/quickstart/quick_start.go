@@ -72,9 +72,9 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 
 const (
 	replicaSet        = "REPLICASET"
-	mdbVersion        = "4.4"
 	shards            = 1
-	tier              = "M2"
+	atlasM2           = "M2"
+	atlasM5           = "M5"
 	tenant            = "TENANT"
 	members           = 3
 	zoneName          = "Zone 1"
@@ -90,6 +90,7 @@ type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	ClusterName     string
+	tier            string
 	Provider        string
 	Region          string
 	IPAddresses     []string
@@ -253,7 +254,8 @@ func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 }
 
 func (opts *Opts) newCluster() *atlas.Cluster {
-	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][tier]
+	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][opts.tier]
+	mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 	cluster := &atlas.Cluster{
 		GroupID:             opts.ConfigProjectID(),
 		ClusterType:         replicaSet,
@@ -295,12 +297,26 @@ func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
 }
 
 func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
-	return &atlas.ProviderSettings{
-		InstanceSizeName:    tier,
-		ProviderName:        tenant,
-		RegionName:          opts.Region,
-		BackingProviderName: opts.Provider,
+	providerName := opts.providerName()
+
+	var backingProviderName string
+	if providerName == tenant {
+		backingProviderName = opts.Provider
 	}
+
+	return &atlas.ProviderSettings{
+		InstanceSizeName:    opts.tier,
+		ProviderName:        providerName,
+		RegionName:          opts.Region,
+		BackingProviderName: backingProviderName,
+	}
+}
+
+func (opts *Opts) providerName() string {
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+		return tenant
+	}
+	return opts.Provider
 }
 
 func (opts *Opts) askClusterOptions() error {
@@ -553,7 +569,7 @@ func openBrowserAtlasAccount() error {
 }
 
 func (opts *Opts) defaultRegions() ([]string, error) {
-	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), tier, []*string{&opts.Provider})
+	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, []*string{&opts.Provider})
 
 	if err != nil {
 		return nil, err
@@ -608,10 +624,10 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "quickstart",
 		Example: `Skip setting cluster name, provider or database username by using the command options
-  $ mongocli atlas quickstart --clusterName Test --provider GPC --username dbuserTest
+  $ mongocli atlas quickstart --clusterName Test --provider GCP --username dbuserTest
 `,
 		Short: "Create and access an Atlas Cluster.",
-		Long:  "This command creates a cluster, adds your public IP to the atlas access list and creates a db user to access your MongoDB instance.",
+		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.PublicAPIKey() == "" || config.PrivateAPIKey() == "" {
 				// no profile set
@@ -631,6 +647,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)

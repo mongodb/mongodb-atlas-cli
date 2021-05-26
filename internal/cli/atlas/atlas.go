@@ -41,14 +41,13 @@ import (
 )
 
 const (
-	Use        = "atlas"
-	atlasShort = "Atlas operations."
+	Use = "atlas"
 )
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   Use,
-		Short: atlasShort,
+		Short: "Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.CloudService)
 

@@ -42,11 +42,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	use = "ops-manager"
-)
-
 func Builder() *cobra.Command {
+	const use = "ops-manager"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{"om"},

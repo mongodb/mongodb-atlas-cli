@@ -21,5 +21,5 @@ To generate a new stable release you can run:
 This will do the following things:
 1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
 2. Publish the new tag, ie `git push origin v1.0.0`
-3. The evergreen releasing tasks will run as part of the tag process.
-4. The release will be set as draft in the [releases page](https://github.com/mongodb/mongocli/releases), review the release and if it looks ok, publish it.
+3. The [evergreen](build/ci/evergreen.yml) release task will run after a tag event from master.
+4. If everything goes smoothly the release will be published in the [releases page](https://github.com/mongodb/mongocli/releases), and [download center](https://www.mongodb.com/try/download/mongocli).

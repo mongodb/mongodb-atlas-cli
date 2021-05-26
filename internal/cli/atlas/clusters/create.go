@@ -224,7 +224,7 @@ Some of the cluster configuration options are available via flags but for full c
 		},
 	}
 
-	currentMDBVersion, _ := DefaultMongoDBMajorVersion()
+	currentMDBVersion, _ := cli.DefaultMongoDBMajorVersion()
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
@@ -244,19 +244,4 @@ Some of the cluster configuration options are available via flags but for full c
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
-}
-
-var defaultMongoDBMajorVersion string
-
-func DefaultMongoDBMajorVersion() (string, error) {
-	if defaultMongoDBMajorVersion != "" {
-		return defaultMongoDBMajorVersion, nil
-	}
-	s, err := store.New(store.PrivateUnauthenticatedPreset(config.Default()))
-	if err != nil {
-		return "", err
-	}
-	defaultMongoDBMajorVersion, _ = s.DefaultMongoDBVersion()
-
-	return defaultMongoDBMajorVersion, nil
 }

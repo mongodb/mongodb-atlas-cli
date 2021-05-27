@@ -304,7 +304,7 @@ functions:
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
 
-          ${goreleaser_cmd|goreleaser --rm-dist --snapshot}
+          ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
           EOF_BUILD_SH
     - command: shell.exec
       type: test
@@ -1027,7 +1027,7 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --rm-dist --release-notes CHANGELOG.md
+          goreleaser_cmd: goreleaser --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
       - command: archive.targz_pack
         params:

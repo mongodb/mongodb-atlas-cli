@@ -20,14 +20,18 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
-echo "notarizing x86_64"
-gon -log-level=error gon_x86_64.json
+if [[ -f "./dist/macos_darwin_amd64/bin/mongocli"&& ! -f "./dist/mongocli_macos_signed_x86_64.zip" ]]; then
+  echo "notarizing x86_64"
+  gon -log-level=error gon_x86_64.json
 
-echo "replacing original file"
-unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
+  echo "replacing original file"
+  unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
+fi
 
-echo "notarizing arm64"
-gon -log-level=error gon_arm64.json
+if [[ -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_arm64.zip" ]]; then
+  echo "notarizing arm64"
+  gon -log-level=error gon_arm64.json
 
-echo "replacing original file"
-unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
+  echo "replacing original file"
+  unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
+fi

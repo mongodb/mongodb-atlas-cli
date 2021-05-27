@@ -25,6 +25,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -85,10 +86,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		newResp := strings.ReplaceAll(string(resp), `Command "create" is deprecated, Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]`, "")
 		a := assert.New(t)
-		if a.NoError(err, resp) {
+		if a.NoError(err, string(resp)) {
+			newResp := strings.ReplaceAll(string(resp), `Command "create" is deprecated, Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]`, "")
 			var r atlas.PrivateEndpointConnectionDeprecated
 			if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
 				id = r.ID
@@ -126,7 +126,7 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		newResp := strings.ReplaceAll(string(resp), `Command "describe" is deprecated, Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]`, "")
 		var r atlas.PrivateEndpointConnectionDeprecated
 		if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
@@ -144,9 +144,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 		var r []atlas.PrivateEndpointConnectionDeprecated
 		newResp := strings.ReplaceAll(string(resp), `Command "list" is deprecated, Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]`, "")
 		if err = json.Unmarshal([]byte(newResp), &r); a.NoError(err) {
@@ -166,8 +166,9 @@ func TestPrivateEndpointsDeprecated(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		a.Contains(string(resp), expected)
 	})

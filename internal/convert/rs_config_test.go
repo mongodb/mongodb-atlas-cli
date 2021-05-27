@@ -30,20 +30,20 @@ func TestRSConfig_protocolVer(t *testing.T) {
 			wantErr:               true,
 		},
 		"post 4.0": {
-			config:                &RSConfig{FCVersion: "4.0"},
+			config:                &RSConfig{FeatureCompatibilityVersion: "4.0"},
 			wantedProtocolVersion: "1",
 			wantErr:               false,
 		},
 		"pre 4.0": {
-			config:                &RSConfig{FCVersion: "3.6"},
+			config:                &RSConfig{FeatureCompatibilityVersion: "3.6"},
 			wantedProtocolVersion: "0",
 			wantErr:               false,
 		},
 		"empty at parent but with FC in process": {
 			config: &RSConfig{
-				ProcessConfigs: []*ProcessConfig{
+				Processes: []*ProcessConfig{
 					{
-						FCVersion: "4.0",
+						FeatureCompatibilityVersion: "4.0",
 					},
 				},
 			},

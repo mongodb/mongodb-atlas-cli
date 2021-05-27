@@ -35,10 +35,10 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.EmptyAutomationConfig(),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "test_config",
-					Version:   "4.2.2",
-					ProcessConfigs: []*ProcessConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "test_config",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
 						{
 							DBPath:       "/data",
 							Hostname:     "example",
@@ -113,10 +113,10 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "test_config",
-					Version:   "4.2.2",
-					ProcessConfigs: []*ProcessConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "test_config",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
 						{
 							DBPath:   "/data",
 							Hostname: "example",
@@ -284,10 +284,10 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "replica_set_1",
-					Version:   "4.2.2",
-					ProcessConfigs: []*ProcessConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "replica_set_1",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
 						{
 							DBPath:   "/data/db/",
 							Hostname: "host0",
@@ -414,10 +414,10 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.AutomationConfigWithOneReplicaSet("replica_set_1", false),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "replica_set_1",
-					Version:   "4.2.2",
-					ProcessConfigs: []*ProcessConfig{
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "replica_set_1",
+					Version:                     "4.2.2",
+					Processes: []*ProcessConfig{
 						{
 							DBPath:   "/data/db/",
 							Hostname: "host1",
@@ -536,14 +536,14 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.EmptyAutomationConfig(),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "test_config",
-					Version:   "4.2.2",
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "test_config",
+					Version:                     "4.2.2",
 				},
 				Shards: []*RSConfig{
 					{
 						Name: "myShard_0",
-						ProcessConfigs: []*ProcessConfig{
+						Processes: []*ProcessConfig{
 							{
 								DBPath:   "/data/myShard_0",
 								Hostname: "example",
@@ -557,7 +557,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				},
 				Config: &RSConfig{
 					Name: "configRS",
-					ProcessConfigs: []*ProcessConfig{
+					Processes: []*ProcessConfig{
 						{
 							DBPath:   "/data/configRS",
 							Hostname: "example",
@@ -713,15 +713,15 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 			current: fixture.AutomationConfigWithOneShardedCluster("test_config", false),
 			changes: &ClusterConfig{
 				RSConfig: RSConfig{
-					FCVersion: "4.2",
-					Name:      "test_config",
-					Version:   "4.2.2",
+					FeatureCompatibilityVersion: "4.2",
+					Name:                        "test_config",
+					Version:                     "4.2.2",
 				},
 				Shards: []*RSConfig{
 					// Old
 					{
 						Name: "myShard_0",
-						ProcessConfigs: []*ProcessConfig{
+						Processes: []*ProcessConfig{
 							{
 								DBPath:   "/data/myShard_0",
 								Hostname: "example",
@@ -735,7 +735,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 					// New
 					{
 						Name: "myShard_1",
-						ProcessConfigs: []*ProcessConfig{
+						Processes: []*ProcessConfig{
 							{
 								DBPath:   "/data/myShard_1",
 								Hostname: "example",
@@ -749,7 +749,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 				},
 				Config: &RSConfig{
 					Name: "configRS",
-					ProcessConfigs: []*ProcessConfig{
+					Processes: []*ProcessConfig{
 						{
 							DBPath:   "/data/configRS",
 							Hostname: "example",

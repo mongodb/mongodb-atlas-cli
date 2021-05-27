@@ -25,11 +25,11 @@ import (
 
 // RSConfig shared properties of replica sets, config servers, and sharded clusters.
 type RSConfig struct {
-	Name           string           `yaml:"name,omitempty" json:"name,omitempty"`
-	FCVersion      string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	ProcessConfigs []*ProcessConfig `yaml:"processes,omitempty" json:"processes,omitempty"`
-	Tags           []string         `yaml:"tags,omitempty" json:"tags,omitempty"`
-	Version        string           `yaml:"version,omitempty" json:"version,omitempty"`
+	Name                        string           `yaml:"name,omitempty" json:"name,omitempty"`
+	FeatureCompatibilityVersion string           `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Processes                   []*ProcessConfig `yaml:"processes,omitempty" json:"processes,omitempty"`
+	Tags                        []string         `yaml:"tags,omitempty" json:"tags,omitempty"`
+	Version                     string           `yaml:"version,omitempty" json:"version,omitempty"`
 }
 
 type patcher func(*ProcessConfig, string) *opsmngr.Process
@@ -37,13 +37,13 @@ type patcher func(*ProcessConfig, string) *opsmngr.Process
 // patch is a generic replica set patcher, you'll need to provide a function of the type patcher
 // which will define how a process is patched.
 func (c *RSConfig) patch(out *opsmngr.AutomationConfig, f patcher, names ...string) error {
-	newProcesses := make([]*opsmngr.Process, len(c.ProcessConfigs))
+	newProcesses := make([]*opsmngr.Process, len(c.Processes))
 	rs, err := newReplicaSet(c)
 	if err != nil {
 		return err
 	}
 	// transform cli config to automation config
-	for i, pc := range c.ProcessConfigs {
+	for i, pc := range c.Processes {
 		id := strconv.Itoa(len(out.Processes) + i)
 		pc.setDefaults(c)
 		pc.setProcessName(out.Processes, append(names, c.Name, id)...)
@@ -77,13 +77,13 @@ func (c *RSConfig) patchConfigServer(out *opsmngr.AutomationConfig, name string)
 // protocolVer determines the appropriate protocol based on FCV
 // returns "0" for versions <4.0 or "1" otherwise.
 func (c *RSConfig) protocolVer() (string, error) {
-	fcVersion := c.FCVersion
+	fcVersion := c.FeatureCompatibilityVersion
 	if fcVersion == "" {
 		// search per process, this may be the case when users get a cluster description,
 		// manually update it and then try to apply that updated config
-		for _, p := range c.ProcessConfigs {
-			if p.FCVersion != "" {
-				fcVersion = p.FCVersion
+		for _, p := range c.Processes {
+			if p.FeatureCompatibilityVersion != "" {
+				fcVersion = p.FeatureCompatibilityVersion
 				break
 			}
 		}
@@ -112,7 +112,7 @@ func newReplicaSet(c *RSConfig) (*opsmngr.ReplicaSet, error) {
 
 	rs := &opsmngr.ReplicaSet{
 		ID:              c.Name,
-		Members:         make([]opsmngr.Member, len(c.ProcessConfigs)),
+		Members:         make([]opsmngr.Member, len(c.Processes)),
 		ProtocolVersion: pv,
 	}
 
@@ -129,14 +129,14 @@ func newRSConfig(in *opsmngr.AutomationConfig, id string) *RSConfig {
 	}
 	rs := in.ReplicaSets[rsi]
 	out := &RSConfig{
-		Name:           rs.ID,
-		ProcessConfigs: make([]*ProcessConfig, len(rs.Members)),
+		Name:      rs.ID,
+		Processes: make([]*ProcessConfig, len(rs.Members)),
 	}
 
 	for i, m := range rs.Members {
 		for l, p := range in.Processes {
 			if p.Name == m.Host {
-				out.ProcessConfigs[i] = newReplicaSetProcessConfig(m, p)
+				out.Processes[i] = newReplicaSetProcessConfig(m, p)
 				in.Processes = append(in.Processes[:l], in.Processes[l+1:]...)
 				break
 			}

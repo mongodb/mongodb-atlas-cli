@@ -29,51 +29,51 @@ const (
 
 // ProcessConfig that belongs to a cluster.
 type ProcessConfig struct {
-	ArbiterOnly               *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
-	AuditLogPath              string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
-	AuditLogDestination       string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
-	AuditLogFormat            string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
-	AuditLogFilter            string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
-	BuildIndexes              *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
-	DBPath                    string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
-	BindIP                    *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
-	BindIPAll                 *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
-	DirectoryPerDB            *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
-	Disabled                  bool                    `yaml:"disabled" json:"disabled"`
-	Engine                    string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
-	EnableMajorityReadConcern *bool                   `yaml:"enableMajorityReadConcern,omitempty" json:"enableMajorityReadConcern,omitempty"`
-	FCVersion                 string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
-	Hidden                    *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
-	Hostname                  string                  `yaml:"hostname" json:"hostname"`
-	InMemory                  *map[string]interface{} `yaml:"inMemory,omitempty" json:"inMemory,omitempty"`
-	IndexBuildRetry           *bool                   `yaml:"indexBuildRetry,omitempty" json:"indexBuildRetry,omitempty"`
-	IPV6                      *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
-	Journal                   *map[string]interface{} `yaml:"journal,omitempty" json:"journal,omitempty"`
-	LogAppend                 bool                    `yaml:"logAppend,omitempty" json:"logAppend,omitempty"`
-	LogDestination            string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
-	LogPath                   string                  `yaml:"logPath" json:"logPath"`
-	LogRotate                 string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
-	LogVerbosity              int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
-	LogQuiet                  bool                    `yaml:"logQuiet,omitempty" json:"logQuiet,omitempty"`
-	SyslogFacility            string                  `yaml:"syslogFacility,omitempty" json:"syslogFacility,omitempty"`
-	LogTimeStampFormat        string                  `yaml:"logTimeStampFormat,omitempty" json:"logTimeStampFormat,omitempty"`
-	Name                      string                  `yaml:"name,omitempty" json:"name,omitempty"`
-	OperationProfiling        *map[string]interface{} `yaml:"operationProfiling,omitempty" json:"operationProfiling,omitempty"`
-	OplogMinRetentionHours    *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
-	OplogSizeMB               *int                    `yaml:"oplogSizeMB,omitempty" json:"oplogSizeMB,omitempty"`
-	Port                      int                     `yaml:"port" json:"port"`
-	Priority                  *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
-	ProcessType               string                  `yaml:"processType" json:"processType"`
-	SmallFiles                *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
-	SecondaryDelaySecs        *float64                `yaml:"secondaryDelaySecs,omitempty" json:"secondaryDelaySecs,omitempty"`
-	SlaveDelay                *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
-	SyncPeriodSecs            *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
-	Votes                     *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
-	Security                  *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
-	SetParameter              *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
-	TLS                       *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
-	Version                   string                  `yaml:"version,omitempty" json:"version,omitempty"`
-	WiredTiger                *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
+	ArbiterOnly                 *bool                   `yaml:"arbiterOnly,omitempty" json:"arbiterOnly,omitempty"`
+	AuditLogPath                string                  `yaml:"auditLogPath,omitempty" json:"auditLogPath,omitempty"`
+	AuditLogDestination         string                  `yaml:"auditLogDestination,omitempty" json:"auditLogDestination,omitempty"`
+	AuditLogFormat              string                  `yaml:"auditLogFormat,omitempty" json:"auditLogFormat,omitempty"`
+	AuditLogFilter              string                  `yaml:"auditLogFilter,omitempty" json:"auditLogFilter,omitempty"`
+	BuildIndexes                *bool                   `yaml:"buildIndexes,omitempty" json:"buildIndexes,omitempty"`
+	DBPath                      string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
+	BindIP                      *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
+	BindIPAll                   *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	DirectoryPerDB              *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
+	Disabled                    bool                    `yaml:"disabled" json:"disabled"`
+	Engine                      string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
+	EnableMajorityReadConcern   *bool                   `yaml:"enableMajorityReadConcern,omitempty" json:"enableMajorityReadConcern,omitempty"`
+	FeatureCompatibilityVersion string                  `yaml:"featureCompatibilityVersion,omitempty" json:"featureCompatibilityVersion,omitempty"`
+	Hidden                      *bool                   `yaml:"hidden,omitempty" json:"hidden,omitempty"`
+	Hostname                    string                  `yaml:"hostname" json:"hostname"`
+	InMemory                    *map[string]interface{} `yaml:"inMemory,omitempty" json:"inMemory,omitempty"`
+	IndexBuildRetry             *bool                   `yaml:"indexBuildRetry,omitempty" json:"indexBuildRetry,omitempty"`
+	IPV6                        *bool                   `yaml:"ipv6,omitempty" json:"ipv6,omitempty"`
+	Journal                     *map[string]interface{} `yaml:"journal,omitempty" json:"journal,omitempty"`
+	LogAppend                   bool                    `yaml:"logAppend,omitempty" json:"logAppend,omitempty"`
+	LogDestination              string                  `yaml:"logDestination,omitempty" json:"logDestination,omitempty"`
+	LogPath                     string                  `yaml:"logPath" json:"logPath"`
+	LogRotate                   string                  `yaml:"logRotate,omitempty" json:"logRotate,omitempty"`
+	LogVerbosity                int                     `yaml:"logVerbosity,omitempty" json:"logVerbosity,omitempty"`
+	LogQuiet                    bool                    `yaml:"logQuiet,omitempty" json:"logQuiet,omitempty"`
+	SyslogFacility              string                  `yaml:"syslogFacility,omitempty" json:"syslogFacility,omitempty"`
+	LogTimeStampFormat          string                  `yaml:"logTimeStampFormat,omitempty" json:"logTimeStampFormat,omitempty"`
+	Name                        string                  `yaml:"name,omitempty" json:"name,omitempty"`
+	OperationProfiling          *map[string]interface{} `yaml:"operationProfiling,omitempty" json:"operationProfiling,omitempty"`
+	OplogMinRetentionHours      *float64                `yaml:"oplogMinRetentionHours,omitempty" json:"oplogMinRetentionHours,omitempty"`
+	OplogSizeMB                 *int                    `yaml:"oplogSizeMB,omitempty" json:"oplogSizeMB,omitempty"`
+	Port                        int                     `yaml:"port" json:"port"`
+	Priority                    *float64                `yaml:"priority,omitempty" json:"priority,omitempty"`
+	ProcessType                 string                  `yaml:"processType" json:"processType"`
+	SmallFiles                  *bool                   `yaml:"smallFiles,omitempty" json:"smallFiles,omitempty"`
+	SecondaryDelaySecs          *float64                `yaml:"secondaryDelaySecs,omitempty" json:"secondaryDelaySecs,omitempty"`
+	SlaveDelay                  *float64                `yaml:"slaveDelay,omitempty" json:"slaveDelay,omitempty"`
+	SyncPeriodSecs              *float64                `yaml:"syncPeriodSecs,omitempty" json:"syncPeriodSecs,omitempty"`
+	Votes                       *float64                `yaml:"votes,omitempty" json:"votes,omitempty"`
+	Security                    *map[string]interface{} `yaml:"security,omitempty" json:"security,omitempty"`
+	SetParameter                *map[string]interface{} `yaml:"setParameter,omitempty" json:"setParameter,omitempty"`
+	TLS                         *TLS                    `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Version                     string                  `yaml:"version,omitempty" json:"version,omitempty"`
+	WiredTiger                  *map[string]interface{} `yaml:"wiredTiger,omitempty" json:"wiredTiger,omitempty"`
 }
 
 // TLS defines TLS parameters for Net.
@@ -100,8 +100,8 @@ func (p *ProcessConfig) setDefaults(c *RSConfig) {
 	if p.Version == "" {
 		p.Version = c.Version
 	}
-	if p.FCVersion == "" {
-		p.FCVersion = c.FCVersion
+	if p.FeatureCompatibilityVersion == "" {
+		p.FeatureCompatibilityVersion = c.FeatureCompatibilityVersion
 	}
 	if p.BuildIndexes == nil {
 		defaultValue := true
@@ -135,31 +135,31 @@ func newLogRotate() *opsmngr.LogRotate {
 
 func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	return &ProcessConfig{
-		BuildIndexes:       &rs.BuildIndexes,
-		Priority:           &rs.Priority,
-		SlaveDelay:         rs.SlaveDelay,
-		SecondaryDelaySecs: rs.SecondaryDelaySecs,
-		Votes:              &rs.Votes,
-		ArbiterOnly:        &rs.ArbiterOnly,
-		Hidden:             &rs.Hidden,
-		LogPath:            p.Args26.SystemLog.Path,
-		LogDestination:     p.Args26.SystemLog.Destination,
-		LogAppend:          p.Args26.SystemLog.LogAppend,
-		LogVerbosity:       p.Args26.SystemLog.Verbosity,
-		LogRotate:          p.Args26.SystemLog.LogRotate,
-		LogQuiet:           p.Args26.SystemLog.Quiet,
-		LogTimeStampFormat: p.Args26.SystemLog.TimeStampFormat,
-		SyslogFacility:     p.Args26.SystemLog.SyslogFacility,
-		Port:               p.Args26.NET.Port,
-		BindIP:             p.Args26.NET.BindIP,
-		BindIPAll:          p.Args26.NET.BindIPAll,
-		IPV6:               p.Args26.NET.IPV6,
-		ProcessType:        p.ProcessType,
-		Version:            p.Version,
-		FCVersion:          p.FeatureCompatibilityVersion,
-		Hostname:           p.Hostname,
-		Name:               p.Name,
-		SetParameter:       p.Args26.SetParameter,
+		BuildIndexes:                &rs.BuildIndexes,
+		Priority:                    &rs.Priority,
+		SlaveDelay:                  rs.SlaveDelay,
+		SecondaryDelaySecs:          rs.SecondaryDelaySecs,
+		Votes:                       &rs.Votes,
+		ArbiterOnly:                 &rs.ArbiterOnly,
+		Hidden:                      &rs.Hidden,
+		LogPath:                     p.Args26.SystemLog.Path,
+		LogDestination:              p.Args26.SystemLog.Destination,
+		LogAppend:                   p.Args26.SystemLog.LogAppend,
+		LogVerbosity:                p.Args26.SystemLog.Verbosity,
+		LogRotate:                   p.Args26.SystemLog.LogRotate,
+		LogQuiet:                    p.Args26.SystemLog.Quiet,
+		LogTimeStampFormat:          p.Args26.SystemLog.TimeStampFormat,
+		SyslogFacility:              p.Args26.SystemLog.SyslogFacility,
+		Port:                        p.Args26.NET.Port,
+		BindIP:                      p.Args26.NET.BindIP,
+		BindIPAll:                   p.Args26.NET.BindIPAll,
+		IPV6:                        p.Args26.NET.IPV6,
+		ProcessType:                 p.ProcessType,
+		Version:                     p.Version,
+		FeatureCompatibilityVersion: p.FeatureCompatibilityVersion,
+		Hostname:                    p.Hostname,
+		Name:                        p.Name,
+		SetParameter:                p.Args26.SetParameter,
 	}
 }
 
@@ -216,21 +216,21 @@ func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessC
 // newMongosProcessConfig maps opsmngr.Process -> convert.ProcessConfig.
 func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	pc := &ProcessConfig{
-		LogPath:        p.Args26.SystemLog.Path,
-		LogDestination: p.Args26.SystemLog.Destination,
-		LogAppend:      p.Args26.SystemLog.LogAppend,
-		LogVerbosity:   p.Args26.SystemLog.Verbosity,
-		LogRotate:      p.Args26.SystemLog.LogRotate,
-		Port:           p.Args26.NET.Port,
-		BindIP:         p.Args26.NET.BindIP,
-		BindIPAll:      p.Args26.NET.BindIPAll,
-		IPV6:           p.Args26.NET.IPV6,
-		ProcessType:    p.ProcessType,
-		Version:        p.Version,
-		FCVersion:      p.FeatureCompatibilityVersion,
-		Hostname:       p.Hostname,
-		Name:           p.Name,
-		SetParameter:   p.Args26.SetParameter,
+		LogPath:                     p.Args26.SystemLog.Path,
+		LogDestination:              p.Args26.SystemLog.Destination,
+		LogAppend:                   p.Args26.SystemLog.LogAppend,
+		LogVerbosity:                p.Args26.SystemLog.Verbosity,
+		LogRotate:                   p.Args26.SystemLog.LogRotate,
+		Port:                        p.Args26.NET.Port,
+		BindIP:                      p.Args26.NET.BindIP,
+		BindIPAll:                   p.Args26.NET.BindIPAll,
+		IPV6:                        p.Args26.NET.IPV6,
+		ProcessType:                 p.ProcessType,
+		Version:                     p.Version,
+		FeatureCompatibilityVersion: p.FeatureCompatibilityVersion,
+		Hostname:                    p.Hostname,
+		Name:                        p.Name,
+		SetParameter:                p.Args26.SetParameter,
 	}
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
@@ -417,7 +417,7 @@ func (p *ProcessConfig) process() *opsmngr.Process {
 		ManualMode:                  false,
 		ProcessType:                 p.ProcessType,
 		Version:                     p.Version,
-		FeatureCompatibilityVersion: p.FCVersion,
+		FeatureCompatibilityVersion: p.FeatureCompatibilityVersion,
 		Hostname:                    p.Hostname,
 		Name:                        p.Name,
 	}

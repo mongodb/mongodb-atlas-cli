@@ -98,10 +98,10 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 
 	downloadArchive := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
-			FCVersion: fcVersion,
-			Name:      clusterName,
-			Version:   version,
-			ProcessConfigs: []*convert.ProcessConfig{
+			FeatureCompatibilityVersion: fcVersion,
+			Name:                        clusterName,
+			Version:                     version,
+			Processes: []*convert.ProcessConfig{
 				{
 					DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
 					Hostname: hostname,
@@ -165,13 +165,13 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 
 	downloadArchive := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
-			FCVersion: fcVersion,
-			Name:      clusterName,
-			Version:   version,
+			FeatureCompatibilityVersion: fcVersion,
+			Name:                        clusterName,
+			Version:                     version,
 		},
 		Config: &convert.RSConfig{
 			Name: "configRS",
-			ProcessConfigs: []*convert.ProcessConfig{
+			Processes: []*convert.ProcessConfig{
 				{
 					DBPath:   fmt.Sprintf("/data/%s/29000", clusterName),
 					Hostname: hostname,
@@ -229,7 +229,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 		Shards: []*convert.RSConfig{
 			{
 				Name: "myShard_0",
-				ProcessConfigs: []*convert.ProcessConfig{
+				Processes: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
 						Hostname: hostname,
@@ -279,7 +279,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 			},
 			{
 				Name: "myShard_1",
-				ProcessConfigs: []*convert.ProcessConfig{
+				Processes: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28000", clusterName),
 						Hostname: hostname,

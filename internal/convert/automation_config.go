@@ -46,7 +46,7 @@ func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 		for j, m := range rs.Members {
 			for k, p := range c.Processes {
 				if p.Name == m.Host {
-					newRS.ProcessConfigs[j] = newReplicaSetProcessConfig(m, p)
+					newRS.Processes[j] = newReplicaSetProcessConfig(m, p)
 					newRS.addToMongoURI(p)
 					c.Processes = removeProcess(c.Processes, k)
 					break

@@ -45,7 +45,7 @@ type ClusterConfig struct {
 func newReplicaSetCluster(name string, s int) *ClusterConfig {
 	rs := &ClusterConfig{}
 	rs.Name = name
-	rs.ProcessConfigs = make([]*ProcessConfig, s)
+	rs.Processes = make([]*ProcessConfig, s)
 
 	return rs
 }
@@ -65,13 +65,13 @@ func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
 // this method will modify the given AutomationConfig to add the new replica set or sharded cluster information.
 func (c *ClusterConfig) PatchAutomationConfig(out *opsmngr.AutomationConfig) error {
 	// A replica set should be just a list of processes
-	if c.ProcessConfigs != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
+	if c.Processes != nil && c.Mongos == nil && c.Shards == nil && c.Config == nil {
 		return c.patchReplicaSet(out)
 	}
 	// a sharded cluster will be a list of mongos (processes),
 	// shards, each with a list of process (replica sets)
 	// one (1) config server, with a list of process (replica set)
-	if c.ProcessConfigs == nil && c.Mongos != nil && c.Shards != nil && c.Config != nil {
+	if c.Processes == nil && c.Mongos != nil && c.Shards != nil && c.Config != nil {
 		return c.patchSharding(out)
 	}
 
@@ -83,14 +83,14 @@ func (c *ClusterConfig) patchSharding(out *opsmngr.AutomationConfig) error {
 	// transform cli config to automation config
 	for i, s := range c.Shards {
 		s.Version = c.Version
-		s.FCVersion = c.FCVersion
+		s.FeatureCompatibilityVersion = c.FeatureCompatibilityVersion
 		if err := s.patchShard(out, c.Name); err != nil {
 			return err
 		}
 		newCluster.Shards[i] = newShard(s)
 	}
 	c.Config.Version = c.Version
-	c.Config.FCVersion = c.FCVersion
+	c.Config.FeatureCompatibilityVersion = c.FeatureCompatibilityVersion
 	if err := c.Config.patchConfigServer(out, c.Name); err != nil {
 		return err
 	}

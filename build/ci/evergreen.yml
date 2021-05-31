@@ -304,6 +304,7 @@ functions:
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
 
+          # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
           EOF_BUILD_SH
     - command: shell.exec

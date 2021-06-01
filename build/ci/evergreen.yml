@@ -322,7 +322,7 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         silent: true
         script: |
-          echo "${signing_auth_token_44}" > ./signing_auth_token
+          echo "${signing_auth_token_46}" > ./signing_auth_token
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -349,6 +349,26 @@ functions:
         env:
           <<: *go_options
         command: bash.exe -c build/package/generate-msi.sh
+  "sign msi installer":
+    - command: shell.exec
+      # If the notary service is failing, it should be a system failure to alert the evg team.
+      # We overwrite the existing release.msi with a signed version via --package-file-suffix ""
+      type: system
+      params:
+        working_dir: rc/github.com/mongodb/mongocli
+        script: |
+          if [ "${mongo_os}" = "osx" ]; then
+              exit 0
+          fi
+          /usr/local/bin/notary-client.py \
+              --key-name "mongocli" \
+              --auth-token-file ./signing_auth_token \
+              --comment "Evergreen Automatic Signing (mongocli)" \
+              --notary-url http://notary-service.build.10gen.cc:5000 \
+              --skip-missing \
+              --outputs "sig" \
+              --package-file-suffix "" \
+              release.msi
   "rename pkg":
     - command: subprocess.exec
       type: test
@@ -947,7 +967,9 @@ tasks:
     commands:
       - func: "clone"
       - func: "install go-msi"
+      - func: "set up notary"
       - func: "generate msi"
+      - func: "sign msi installer"
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -955,6 +977,7 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongocli/dist/*.msi
+            - src/github.com/mongodb/mongocli/dist/*.sig
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -971,7 +994,6 @@ tasks:
       - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
-      - func: "set up notary"
       - func: "package"
       - command: shell.exec
         type: system
@@ -1052,7 +1074,6 @@ tasks:
       - func: "install goreleaser"
       - func: "install gon"
       - func: "set up gon"
-      - func: "set up notary"
       - command: subprocess.exec
         type: test
         params:

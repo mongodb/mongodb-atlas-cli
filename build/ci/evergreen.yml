@@ -315,14 +315,6 @@ functions:
           set -Eeou pipefail
           # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
           ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
-  "set up notary":
-    - command: shell.exec
-      type: system
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        silent: true
-        script: |
-          echo "${signing_auth_token_46}" > ./signing_auth_token
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -349,26 +341,15 @@ functions:
         env:
           <<: *go_options
         command: bash.exe -c build/package/generate-msi.sh
-  "sign msi installer":
+  "set up notary":
     - command: shell.exec
-      # If the notary service is failing, it should be a system failure to alert the evg team.
-      # We overwrite the existing release.msi with a signed version via --package-file-suffix ""
       type: system
       params:
-        working_dir: rc/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/dist
+        silent: true
         script: |
-          if [ "${mongo_os}" = "osx" ]; then
-              exit 0
-          fi
-          /usr/local/bin/notary-client.py \
-              --key-name "mongocli" \
-              --auth-token-file ./signing_auth_token \
-              --comment "Evergreen Automatic Signing (mongocli)" \
-              --notary-url http://notary-service.build.10gen.cc:5000 \
-              --skip-missing \
-              --outputs "sig" \
-              --package-file-suffix "" \
-              release.msi
+          echo "${signing_auth_token_46}" > ./signing_auth_token
+
   "rename pkg":
     - command: subprocess.exec
       type: test
@@ -890,49 +871,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,remote,sharded
-  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
-  # 4.2 tests are failing because of this https://github.com/mongodb/mongocli/pull/601#issuecomment-772401224
-#  - name: ops_manager_4_2_deploy_replica_set_e2e
-#    tags: ["opsmanager","clusters"]
-#    depends_on:
-#      - name: compile
-#        variant: "code_health"
-#        patch_optional: true
-#    commands:
-#      - func: "clone"
-#      - func: "install gotestsum"
-#      - func: "build"
-#      - func: "deploy spawn host"
-#      - func: ssh-ready
-#      - func: "install ops manager"
-#        vars:
-#          ARCHIVE: ${ops_manager_4_2_archive}
-#      - func: "set-up ops manager"
-#      - func: "install automation agent"
-#      - func: "e2e test"
-#        vars:
-#          E2E_TAGS: opsmanager,remote,replica
-#  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
-#  - name: ops_manager_4_2_deploy_sharded_cluster_e2e
-#    tags: ["opsmanager","clusters"]
-#    depends_on:
-#      - name: compile
-#        variant: "code_health"
-#        patch_optional: true
-#    commands:
-#      - func: "clone"
-#      - func: "install gotestsum"
-#      - func: "build"
-#      - func: "deploy spawn host"
-#      - func: ssh-ready
-#      - func: "install ops manager"
-#        vars:
-#          ARCHIVE: ${ops_manager_4_2_archive}
-#      - func: "set-up ops manager"
-#      - func: "install automation agent"
-#      - func: "e2e test"
-#        vars:
-#          E2E_TAGS: opsmanager,remote,sharded
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -969,7 +907,6 @@ tasks:
       - func: "install go-msi"
       - func: "set up notary"
       - func: "generate msi"
-      - func: "sign msi installer"
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -995,27 +932,6 @@ tasks:
       - func: "install gon"
       - func: "set up gon"
       - func: "package"
-      - command: shell.exec
-        type: system
-        params:
-          working_dir: src/github.com/mongodb/mongocli
-          silent: false
-          script: |
-            set -Eeou pipefail
-
-            ls -al
-
-            /usr/local/bin/notary-client.py \
-              --key-name "server-4.4" \
-              --auth-token-file ./signing_auth_token \
-              --comment "Evergreen Automatic Signing (mongocli)" \
-              --notary-url http://notary-service.build.10gen.cc:5000 \
-              --skip-missing \
-              --package-file-suffix "" \
-              --outputs "sig" \
-              ./dist/mongocli_next_linux_arm64.tar.gz
-
-            ls -al
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -1124,6 +1040,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install go-msi"
+      - func: "set up notary"
       - func: "generate msi"
       - func: "uninstall go-msi"
       - func: "upload dist"

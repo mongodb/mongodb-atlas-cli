@@ -17,22 +17,14 @@ package config
 import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/mongosh"
 	"github.com/mongodb/mongocli/internal/validate"
-)
-
-const (
-	omBaseURLHelp  = "FQDN and port number of the Ops Manager Application."
-	projectHelp    = "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it."
-	orgHelp        = "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it."
-	atlasAPIHelp   = "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-	omAPIHelp      = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
-	mongoShellHelp = "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments"
 )
 
 func newOMURLInput() survey.Prompt {
 	return &survey.Input{
 		Message: "URL to Access Ops Manager:",
-		Help:    omBaseURLHelp,
+		Help:    "FQDN and port number of the Ops Manager Application.",
 		Default: config.OpsManagerURL(),
 	}
 }
@@ -40,7 +32,7 @@ func newOMURLInput() survey.Prompt {
 func newOrgIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Org ID:",
-		Help:    orgHelp,
+		Help:    "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it.",
 		Default: config.OrgID(),
 	}
 }
@@ -55,7 +47,7 @@ func newOrgSelect(options []string) survey.Prompt {
 func newProjectIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Project ID:",
-		Help:    projectHelp,
+		Help:    "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it.",
 		Default: config.ProjectID(),
 	}
 }
@@ -67,18 +59,10 @@ func newProjectSelect(options []string) survey.Prompt {
 	}
 }
 
-func newMongoShellPathInput(defaultValue string) survey.Prompt {
-	return &survey.Input{
-		Message: "Default MongoDB Shell Path:",
-		Help:    mongoShellHelp,
-		Default: defaultValue,
-	}
-}
-
 func accessQuestions(isOM bool) []*survey.Question {
-	helpLink := atlasAPIHelp
+	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
 	if isOM {
-		helpLink = omAPIHelp
+		helpLink = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
 	}
 
 	q := []*survey.Question{
@@ -111,7 +95,37 @@ func accessQuestions(isOM bool) []*survey.Question {
 	return q
 }
 
-func defaultQuestions() []*survey.Question {
+func defaultQuestions(isAtlas bool) []*survey.Question {
+	q := []*survey.Question{
+		{
+			Name: "output",
+			Prompt: &survey.Select{
+				Message: "Default Output Format:",
+				Options: []string{"[none]", "json"},
+				Default: config.Output(),
+			},
+		},
+	}
+	if isAtlas {
+		defaultPath := config.MongoShellPath()
+		if defaultPath == "" {
+			defaultPath = mongosh.Path()
+		}
+		atlasQuestion := &survey.Question{
+			Name: "mongoShellPath",
+			Prompt: &survey.Input{
+				Message: "Default MongoDB Shell Path:",
+				Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments.",
+				Default: defaultPath,
+			},
+			Validate: validate.Path,
+		}
+		q = append(q, atlasQuestion)
+	}
+	return q
+}
+
+func tenantQuestions() []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name:     "projectId",

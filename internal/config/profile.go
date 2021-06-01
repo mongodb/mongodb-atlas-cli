@@ -271,8 +271,10 @@ func (p *Profile) IsAccessSet() bool {
 func Map() map[string]string { return p.Map() }
 func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
-	newSettings := make(map[string]string, len(settings))
-
+	newSettings := make(map[string]string, len(settings)+1)
+	if p.MongoShellPath() != "" {
+		newSettings[mongoShellPath] = p.MongoShellPath()
+	}
 	for k, v := range settings {
 		if k == privateAPIKey || k == publicAPIKey {
 			newSettings[k] = "redacted"

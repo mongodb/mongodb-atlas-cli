@@ -18,9 +18,9 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/mongosh"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -46,6 +46,7 @@ type configOpts struct {
 	ProjectID      string
 	OrgID          string
 	MongoShellPath string
+	Output         string
 	store          ProjectOrgsLister
 }
 
@@ -94,6 +95,12 @@ func (opts *configOpts) setUpMongoSHPath() {
 	}
 }
 
+func (opts *configOpts) setUpOutput() {
+	if opts.Output != plaintextFormat {
+		config.SetOutput(opts.Output)
+	}
+}
+
 func (opts *configOpts) Run() error {
 	fmt.Printf(`You are configuring a profile for %s.
 
@@ -121,21 +128,20 @@ Enter [?] on any option to get help.
 			return err
 		}
 	} else {
-		q = defaultQuestions()
+		q = tenantQuestions()
 		if err := survey.Ask(q, opts); err != nil {
 			return err
 		}
 	}
-
-	if opts.IsCloud() {
-		if err := opts.askMongoShellPath(); err != nil {
-			return err
-		}
-		opts.setUpMongoSHPath()
-	}
-
 	opts.SetUpProject()
 	opts.SetUpOrg()
+
+	q2 := defaultQuestions(opts.IsCloud())
+	if err := survey.Ask(q2, opts); err != nil {
+		return err
+	}
+	opts.setUpOutput()
+	opts.setUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err
@@ -203,24 +209,6 @@ func (opts *configOpts) askOrg() error {
 	return nil
 }
 
-// askMongoShellPath will try to search MongoDB Shell binary in your $PATH to use as default value.
-// If it fails, there would not be a default value.
-func (opts *configOpts) askMongoShellPath() error {
-	var mongoShellPath string
-
-	path := config.MongoShellPath()
-	if path == "" {
-		path = mongosh.Path()
-	}
-	prompt := newMongoShellPathInput(path)
-
-	if err := survey.AskOne(prompt, &mongoShellPath); err != nil {
-		return err
-	}
-	opts.MongoShellPath = mongoShellPath
-	return nil
-}
-
 // orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
@@ -268,6 +256,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		Annotations: map[string]string{
 			"toc": "true",
 		},
+		Args: require.NoArgs,
 	}
 	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
 	cmd.AddCommand(

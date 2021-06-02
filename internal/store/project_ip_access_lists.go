@@ -16,6 +16,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,6 +42,9 @@ type ProjectIPAccessListDeleter interface {
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
+	if len(entries) == 0 {
+		return nil, errors.New("no entries")
+	}
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)

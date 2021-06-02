@@ -96,7 +96,7 @@ func (opts *configOpts) setUpMongoSHPath() {
 }
 
 func (opts *configOpts) setUpOutput() {
-	if opts.Output != "[none]" {
+	if opts.Output != plaintextFormat {
 		config.SetOutput(opts.Output)
 	}
 }

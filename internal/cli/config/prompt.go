@@ -95,13 +95,18 @@ func accessQuestions(isOM bool) []*survey.Question {
 	return q
 }
 
+const (
+	plaintextFormat = "plaintext"
+	jsonFormat      = "json"
+)
+
 func defaultQuestions(isAtlas bool) []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name: "output",
 			Prompt: &survey.Select{
 				Message: "Default Output Format:",
-				Options: []string{"[none]", "json"},
+				Options: []string{plaintextFormat, jsonFormat},
 				Default: config.Output(),
 			},
 		},

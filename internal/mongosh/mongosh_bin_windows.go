@@ -13,26 +13,4 @@
 // limitations under the License.
 package mongosh
 
-import (
-	"os"
-	"os/exec"
-	"syscall"
-)
-
-func Bin() string {
-	return mongoshBin
-}
-
-func Path() string {
-	if path, err := exec.LookPath(Bin()); err == nil {
-		return path
-	}
-
-	return ""
-}
-
-func Run(binary, username, password, mongoURI string) error {
-	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
-	env := os.Environ()
-	return syscall.Exec(binary, args, env)
-}
+const mongoshBin = "mongosh.exe"

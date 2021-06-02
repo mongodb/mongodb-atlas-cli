@@ -11,28 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// +build !windows
+
 package mongosh
 
-import (
-	"os"
-	"os/exec"
-	"syscall"
-)
-
-func Bin() string {
-	return mongoshBin
-}
-
-func Path() string {
-	if path, err := exec.LookPath(Bin()); err == nil {
-		return path
-	}
-
-	return ""
-}
-
-func Run(binary, username, password, mongoURI string) error {
-	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
-	env := os.Environ()
-	return syscall.Exec(binary, args, env)
-}
+const mongoshBin = "mongosh"

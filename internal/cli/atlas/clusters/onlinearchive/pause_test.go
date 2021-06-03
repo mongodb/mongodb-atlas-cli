@@ -20,30 +20,48 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDelete_Run(t *testing.T) {
+func TestPauseBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		PauseBuilder(),
+		0,
+		[]string{
+			flag.ClusterName,
+			flag.Output,
+			flag.ProjectID,
+		},
+	)
+}
+
+func TestPause_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveDeleter(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
 	defer ctrl.Finish()
 
-	deleteOpts := &DeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Confirm: true,
-			Entry:   "test",
-		},
+	updateOpts := &PauseOpts{
+		id:    "1",
 		store: mockStore,
+	}
+
+	paused := true
+	expected := &mongodbatlas.OnlineArchive{
+		ID:     updateOpts.id,
+		Paused: &paused,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteOnlineArchive(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
-		Return(nil).
+		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, expected).
+		Return(expected, nil).
 		Times(1)
 
-	if err := deleteOpts.Run(); err != nil {
+	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

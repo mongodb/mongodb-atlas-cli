@@ -20,21 +20,36 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestPause_Run(t *testing.T) {
+func TestStartBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		StartBuilder(),
+		0,
+		[]string{
+			flag.ClusterName,
+			flag.Output,
+			flag.ProjectID,
+		},
+	)
+}
+
+func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
 	defer ctrl.Finish()
 
-	updateOpts := &PauseOpts{
+	updateOpts := &StartOpts{
 		id:    "1",
 		store: mockStore,
 	}
 
-	paused := true
+	paused := false
 	expected := &mongodbatlas.OnlineArchive{
 		ID:     updateOpts.id,
 		Paused: &paused,

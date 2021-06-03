@@ -62,8 +62,8 @@ func TestOnlineArchives(t *testing.T) {
 		listOnlineArchives(t, cliPath, clusterName)
 	})
 
-	t.Run("Stop", func(t *testing.T) {
-		stopOnlineArchive(t, cliPath, clusterName, archiveID)
+	t.Run("Pause", func(t *testing.T) {
+		pauseOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Start", func(t *testing.T) {
@@ -119,13 +119,13 @@ func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	}
 }
 
-func stopOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
-		"stop",
+		"pause",
 		archiveID,
 		"--clusterName="+clusterName,
 		"-o=json")

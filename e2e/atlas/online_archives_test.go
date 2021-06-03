@@ -114,7 +114,7 @@ func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	resp, err := cmd.CombinedOutput()
 	// online archive never reaches goal state as the db and collection must exists
 	const expectedError = "ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD"
-	if err != nil && strings.Contains(string(resp), expectedError) {
+	if err != nil && !strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 }
@@ -134,7 +134,7 @@ func stopOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	resp, err := cmd.CombinedOutput()
 	// online archive never reaches goal state as the db and collection must exists
 	const expectedError = "ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE"
-	if err != nil && strings.Contains(string(resp), expectedError) {
+	if err != nil && !strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
 }

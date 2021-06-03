@@ -147,7 +147,7 @@ func GenReSTCustom(cmd *cobra.Command, w io.Writer) error {
 			}
 			cname := name + " " + child.Name()
 			ref = strings.ReplaceAll(cname, " ", separator)
-			buf.WriteString(fmt.Sprintf("   %s </reference/%s>\n", child.Name(), ref))
+			buf.WriteString(fmt.Sprintf("   %s </command/%s>\n", child.Name(), ref))
 		}
 		buf.WriteString("\n")
 	}

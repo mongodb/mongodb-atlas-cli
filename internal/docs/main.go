@@ -24,13 +24,13 @@ import (
 
 func main() {
 	var profile string
-	if err := os.MkdirAll("./docs/reference", 0766); err != nil {
+	if err := os.MkdirAll("./docs/command", 0766); err != nil {
 		log.Fatal(err)
 	}
 
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := rest.GenReSTTree(mongocli, "./docs/reference"); err != nil {
+	if err := rest.GenReSTTree(mongocli, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

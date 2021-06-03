@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -61,16 +62,16 @@ func TestOnlineArchives(t *testing.T) {
 		listOnlineArchives(t, cliPath, clusterName)
 	})
 
-	t.Run("Update", func(t *testing.T) {
-		updateOnlineArchive(t, cliPath, clusterName, archiveID)
-	})
-
 	t.Run("Stop", func(t *testing.T) {
 		stopOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Start", func(t *testing.T) {
 		startOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		updateOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -111,14 +112,11 @@ func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
+	// online archive never reaches goal state as the db and collection must exists
+	const expectedError = "ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD"
+	if err != nil && strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archive mongodbatlas.OnlineArchive
-	if err = json.Unmarshal(resp, &archive); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	assert.False(t, *archive.Paused)
 }
 
 func stopOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
@@ -134,14 +132,11 @@ func stopOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
+	// online archive never reaches goal state as the db and collection must exists
+	const expectedError = "ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE"
+	if err != nil && strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
-	var archive mongodbatlas.OnlineArchive
-	if err = json.Unmarshal(resp, &archive); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	assert.True(t, *archive.Paused)
 }
 
 func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {

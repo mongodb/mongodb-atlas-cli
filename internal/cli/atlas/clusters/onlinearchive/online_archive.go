@@ -12,36 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
 package onlinearchive
 
 import (
-	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveLister(ctrl)
-	defer ctrl.Finish()
-
-	listOpts := &ListOpts{
-		store: mockStore,
+func Builder() *cobra.Command {
+	const use = "onlineArchives"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage online archives for your cluster.",
 	}
 
-	var expected *mongodbatlas.OnlineArchives
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		CreateBuilder(),
+		UpdateBuilder(),
+		StartBuilder(),
+		PauseBuilder(),
+		DeleteBuilder(),
+		WatchBuilder(),
+	)
 
-	mockStore.
-		EXPECT().
-		OnlineArchives(listOpts.ProjectID, listOpts.clusterName, listOpts.NewListOptions()).
-		Return(expected, nil).
-		Times(1)
-
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	return cmd
 }

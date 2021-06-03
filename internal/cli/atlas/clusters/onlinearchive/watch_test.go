@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,29 +20,41 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDescribe_Run(t *testing.T) {
+func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOnlineArchiveDescriber(ctrl)
 	defer ctrl.Finish()
 
-	describeOpts := &DescribeOpts{
+	expected := &mongodbatlas.OnlineArchive{State: "IDLE"}
+
+	opts := &WatchOpts{
 		clusterName: "test",
-		archiveID:   "1",
+		id:          "id",
 		store:       mockStore,
 	}
 
-	expected := &mongodbatlas.OnlineArchive{}
 	mockStore.
 		EXPECT().
-		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
+		OnlineArchive(opts.ProjectID, opts.clusterName, opts.id).
 		Return(expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestWatchBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		WatchBuilder(),
+		0,
+		[]string{flag.ProjectID},
+	)
 }

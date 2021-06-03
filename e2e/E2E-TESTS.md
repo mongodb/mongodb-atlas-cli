@@ -59,18 +59,18 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `cluster pause`                               | N         |           |           | Y         |       |       |
 | `cluster update`                              | Y         |           |           | Y         |       |       |
 | `cluster watch`                               | Y         |           |           | Y         |       |       |
-| `cluster onlineArchive create`                | N         |           |           | Y         |       |       |
-| `cluster onlineArchive delete`                | N         |           |           | Y         |       |       |
-| `cluster onlineArchive describe`              | N         |           |           | Y         |       |       |
-| `cluster onlineArchive list`                  | N         |           |           | Y         |       |       |
-| `cluster onlineArchive pause`                 | N         |           |           | Y         |       |       |
-| `cluster onlineArchive start`                 | N         |           |           | Y         |       |       |
-| `cluster onlineArchive update`                | N         |           |           | Y         |       |       |
-| `cluster search index create`                 | N         |           |           | Y         |       |       |
-| `cluster search index delete`                 | N         |           |           | Y         |       |       |
-| `cluster search index describe`               | N         |           |           | Y         |       |       |
-| `cluster search index list`                   | N         |           |           | Y         |       |       |
-| `cluster search index update`                 | N         |           |           | Y         |       |       |
+| `cluster onlineArchive create`                | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive delete`                | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive describe`              | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive list`                  | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive pause`                 | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive start`                 | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive update`                | Y         |           |           | Y         | N     | N     |
+| `cluster search index create`                 | Y         |           |           | Y         | N     | N     |
+| `cluster search index delete`                 | Y         |           |           | Y         | N     | N     |
+| `cluster search index describe`               | Y         |           |           | Y         | N     | N     |
+| `cluster search index list`                   | Y         |           |           | Y         | N     | N     |
+| `cluster search index update`                 | Y         |           |           | Y         | N     | N     |
 | `dbrole create`                               | Y         |           |           | Y         |       |       |
 | `dbrole delete`                               | Y         |           |           | Y         |       |       |
 | `dbrole describe`                             | Y         |           |           | Y         |       |       |
@@ -140,16 +140,16 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint interface create`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface delete`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface describe`          | N         |           |           | Y         |       |       |
-| `privateEndpoint  create`                     | Y         |           |           | Y         |       |       |
-| `privateEndpoint  delete`                     | Y         |           |           | Y         |       |       |
-| `privateEndpoint  describe`                   | Y         |           |           | Y         |       |       |
-| `privateEndpoint  list`                       | Y         |           |           | Y         |       |       |
-| `privateEndpoint  watch`                      | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode describe`      | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode enable`        | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode disable`       | Y         |           |           | Y         |       |       |
+| `privateEndpoint create`                      | Y         |           |           | Y         |       |       |
+| `privateEndpoint delete`                      | Y         |           |           | Y         |       |       |
+| `privateEndpoint describe`                    | Y         |           |           | Y         |       |       |
+| `privateEndpoint list`                        | Y         |           |           | Y         |       |       |
+| `privateEndpoint watch`                       | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode describe`       | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode enable`         | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode disable`        | Y         |           |           | Y         |       |       |
 | `process list`                                | Y         |           |           | Y         |       |       |
-| `quickstart`                                  | Y         |           |           | Y         |       |       
+| `quickstart`                                  | N         |           |           | Y         |       |       
 | `security customercert create`                | N         |           |           | Y         |       |       |
 | `security customercert disable`               | N         |           |           | Y         |       |       |
 | `security customercert describe`              | N         |           |           | Y         |       |       |
@@ -160,10 +160,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `security ldap verify`                        | Y         |           |           | Y         |       |       |
 | `security ldap watch`                         | Y         |           |           | Y         |       |       |
 | `config`                                      |           |           |           |           |       |       |
-| `config delete`                               |           |           |           |           |       |       |
-| `config list`                                 |           |           |           |           |       |       |
-| `config describe`                             |           |           |           |           |       |       |
-| `config rename`                               |           |           |           |           |       |       |
+| `completion`                                  | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config delete`                               | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config list`                                 | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config describe`                             | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config rename`                               | Y         | Y         | Y         | Y         | Y     | Y     |
 | `config set`                                  |           |           |           |           |       |       |
 | `event list`                                  | Y         | N         |Y          | Y         | Y     | Y     |
 | `iam globalAccessList create`                 |           | N         |           |           | Y     |       |

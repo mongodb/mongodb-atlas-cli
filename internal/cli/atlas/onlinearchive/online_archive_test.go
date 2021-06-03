@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,30 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build unit
+
 package onlinearchive
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	const use = "onlineArchives"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage online archives for your cluster.",
-	}
-
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		UpdateBuilder(),
-		StartBuilder(),
-		PauseBuilder(),
-		DeleteBuilder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		7,
+		[]string{},
 	)
-
-	return cmd
 }

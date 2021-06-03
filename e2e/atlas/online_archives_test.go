@@ -57,12 +57,20 @@ func TestOnlineArchives(t *testing.T) {
 		describeOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
-	t.Run("list", func(t *testing.T) {
+	t.Run("List", func(t *testing.T) {
 		listOnlineArchives(t, cliPath, clusterName)
 	})
 
 	t.Run("Update", func(t *testing.T) {
 		updateOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
+
+	t.Run("Stop", func(t *testing.T) {
+		stopOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
+
+	t.Run("Start", func(t *testing.T) {
+		startOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -88,6 +96,52 @@ func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	}
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
 	assert.Equal(t, string(resp), expected)
+}
+
+func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"start",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	assert.False(t, *archive.Paused)
+}
+
+func stopOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"stop",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+	var archive mongodbatlas.OnlineArchive
+	if err = json.Unmarshal(resp, &archive); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	assert.True(t, *archive.Paused)
 }
 
 func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {

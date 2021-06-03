@@ -20,33 +20,45 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestStart_Run(t *testing.T) {
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{
+			flag.ClusterName,
+			flag.Page,
+			flag.Limit,
+			flag.Output,
+			flag.ProjectID,
+		},
+	)
+}
+
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOnlineArchiveUpdater(ctrl)
+	mockStore := mocks.NewMockOnlineArchiveLister(ctrl)
 	defer ctrl.Finish()
 
-	updateOpts := &StartOpts{
-		id:    "1",
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
-	paused := false
-	expected := &mongodbatlas.OnlineArchive{
-		ID:     updateOpts.id,
-		Paused: &paused,
-	}
+	var expected *mongodbatlas.OnlineArchives
 
 	mockStore.
 		EXPECT().
-		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, expected).
+		OnlineArchives(listOpts.ProjectID, listOpts.clusterName, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	if err := updateOpts.Run(); err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

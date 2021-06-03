@@ -18,7 +18,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
-	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -46,7 +46,8 @@ func Builder() *cobra.Command {
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),
-		connectionstring.Builder())
+		connectionstring.Builder(),
+	)
 
 	return cmd
 }

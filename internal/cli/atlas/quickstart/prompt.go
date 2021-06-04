@@ -83,7 +83,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 func newSampleDataQuestion(clusterName string) survey.Prompt {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to load sample data into %s?", clusterName),
-		Help:    "Load some data to help you test features, cluster https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/.",
+		Help:    "Load sample data to help you test cluster features. See: https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/.",
 		Default: true,
 	}
 }

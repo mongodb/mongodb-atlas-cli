@@ -98,7 +98,7 @@ func newMongoShellQuestionAccessDeployment(clusterName string) survey.Prompt {
 
 func newMongoShellPathQuestion() survey.Prompt {
 	return &survey.Confirm{
-		Message: "Do you want to provide the path to your MongoDB shell binary?",
+		Message: "Do you want to provide the path to your MongoDB Shell binary?",
 		Help:    "MongoDB CLI will store the path in your profile, type ‘mongocli config’ to change it.",
 		Default: true,
 	}

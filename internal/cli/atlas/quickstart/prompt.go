@@ -106,7 +106,7 @@ func newMongoShellPathQuestion() survey.Prompt {
 
 func newIsMongoShellInstalledQuestion() survey.Prompt {
 	return &survey.Confirm{
-		Message: "Do you have a MongoDB shell version installed on your machine?",
+		Message: "Do you have a MongoDB Shell version installed on your machine?",
 		Default: true,
 	}
 }

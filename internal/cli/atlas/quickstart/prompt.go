@@ -91,7 +91,7 @@ func newSampleDataQuestion(clusterName string) survey.Prompt {
 func newMongoShellQuestionAccessDeployment(clusterName string) survey.Prompt {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to access %s with MongoDB Shell?", clusterName),
-		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments.",
+		Help:    "MongoDB CLI will use your installed version of MongoDB Shell to access your deployments.",
 		Default: true,
 	}
 }

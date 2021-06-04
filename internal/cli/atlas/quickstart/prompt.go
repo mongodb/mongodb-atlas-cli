@@ -114,7 +114,7 @@ func newIsMongoShellInstalledQuestion() survey.Prompt {
 func newMongoShellPathInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default MongoDB Shell Path",
-		Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments.",
+		Help:    "MongoDB CLI will use your installed version of MongoDB Shell to access your deployments.",
 		Default: mongosh.Path(),
 	}
 }

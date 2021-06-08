@@ -47,24 +47,6 @@ archives:
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
-brews:
-- name: mongocli
-  ids: [macos,linux]
-  tap:
-    owner: mongodb
-    name: homebrew-brew
-  folder: Formula
-  skip_upload: auto
-  description: MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
-  homepage: https://github.com/mongodb/mongocli
-  license: Apache-2.0
-  install: |
-    bin.install "bin/mongocli"
-    (bash_completion/"mongocli.sh").write `#{bin}/mongocli completion bash`
-    (zsh_completion/"_mongocli").write `#{bin}/mongocli completion zsh`
-    (fish_completion/"mongocli.fish").write `#{bin}/mongocli completion fish`
-  test: |
-    system "#{bin}/mongocli --version"
 nfpms:
 - package_name: mongocli
   vendor: MongoDB Inc.

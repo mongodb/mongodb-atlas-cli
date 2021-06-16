@@ -66,7 +66,7 @@ func (opts *CreateOpts) newOnlineArchive() *atlas.OnlineArchive {
 		Criteria: &atlas.OnlineArchiveCriteria{
 			DateField:       opts.dateField,
 			DateFormat:      opts.dateFormat,
-			ExpireAfterDays: opts.archiveAfter,
+			ExpireAfterDays: &opts.archiveAfter,
 		},
 		DBName:          opts.dbName,
 		PartitionFields: partitions,

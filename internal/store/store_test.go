@@ -71,18 +71,6 @@ func TestSkipVerify(t *testing.T) {
 	}
 }
 
-func TestWithPublicPathBaseURL(t *testing.T) {
-	c, err := New(Service(config.CloudService), WithBaseURL("http://test"), WithPublicPathBaseURL())
-	if err != nil {
-		t.Fatalf("New() unexpected error: %v", err)
-	}
-
-	expected := "http://test" + mongodbatlas.APIPublicV1Path
-	if c.baseURL != expected {
-		t.Errorf("New() baseURL = %s; expected %s", c.baseURL, expected)
-	}
-}
-
 type testConfig struct {
 	url string
 	auth

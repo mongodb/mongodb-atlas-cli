@@ -56,7 +56,7 @@ func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
 	archive := &atlas.OnlineArchive{
 		ID: opts.id,
 		Criteria: &atlas.OnlineArchiveCriteria{
-			ExpireAfterDays: opts.archiveAfter,
+			ExpireAfterDays: &opts.archiveAfter,
 		},
 	}
 	return archive

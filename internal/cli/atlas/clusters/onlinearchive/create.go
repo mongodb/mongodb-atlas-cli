@@ -42,7 +42,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -66,7 +66,7 @@ func (opts *CreateOpts) newOnlineArchive() *atlas.OnlineArchive {
 		Criteria: &atlas.OnlineArchiveCriteria{
 			DateField:       opts.dateField,
 			DateFormat:      opts.dateFormat,
-			ExpireAfterDays: opts.archiveAfter,
+			ExpireAfterDays: &opts.archiveAfter,
 		},
 		DBName:          opts.dbName,
 		PartitionFields: partitions,

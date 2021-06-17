@@ -39,7 +39,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) init() error {
 	var err error
-	opts.store, err = store.New(store.PublicUnauthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()))
 	return err
 }
 

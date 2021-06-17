@@ -36,7 +36,7 @@ type UpdateOpts struct {
 
 func (opts *UpdateOpts) init() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 

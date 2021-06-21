@@ -91,11 +91,13 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
+	const defaultLogLines = 20000
+
 	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
 	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
-	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, 20000, usage.NLog)
+	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, defaultLogLines, usage.NLog)
 	cmd.Flags().StringVar(&opts.namespaces, flag.Namespaces, "", usage.SlowQueryNamespaces)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

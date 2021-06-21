@@ -407,7 +407,8 @@ func (p *Profile) Save() error {
 		return err
 	}
 	if !exists {
-		err := p.fs.MkdirAll(p.configDir, 0700)
+		const defaultPermissions = 0700
+		err := p.fs.MkdirAll(p.configDir, defaultPermissions)
 		if err != nil {
 			return err
 		}

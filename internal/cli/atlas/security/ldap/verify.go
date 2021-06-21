@@ -84,7 +84,7 @@ func VerifyBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.hostname, flag.Hostname, "", usage.LDAPHostname)
-	cmd.Flags().IntVar(&opts.port, flag.Port, 636, usage.LDAPPort)
+	cmd.Flags().IntVar(&opts.port, flag.Port, defaultLDAPPort, usage.LDAPPort)
 	cmd.Flags().StringVar(&opts.bindUsername, flag.BindUsername, "", usage.BindUsername)
 	cmd.Flags().StringVar(&opts.bindPassword, flag.BindPassword, "", usage.BindPassword)
 	cmd.Flags().StringVar(&opts.caCertificate, flag.CaCertificate, "", usage.CaCertificate)

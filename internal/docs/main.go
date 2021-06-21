@@ -24,7 +24,8 @@ import (
 
 func main() {
 	var profile string
-	if err := os.MkdirAll("./docs/command", 0766); err != nil {
+	const docsPermissions = 0766
+	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 

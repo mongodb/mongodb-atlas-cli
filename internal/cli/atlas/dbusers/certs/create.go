@@ -68,7 +68,9 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.monthsUntilExpiry, flag.MonthsUntilExpiration, 3, usage.MonthsUntilExpiration)
+	const defaultExpiration = 3
+
+	cmd.Flags().IntVar(&opts.monthsUntilExpiry, flag.MonthsUntilExpiration, defaultExpiration, usage.MonthsUntilExpiration)
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.DatabaseUser)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

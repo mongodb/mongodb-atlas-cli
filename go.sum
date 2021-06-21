@@ -241,11 +241,10 @@ github.com/xdg-go/stringprep v1.0.2/go.mod h1:8F9zXuvzgwmyT5DUm4GUfZGDdT3W+LCvS6
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
-go.mongodb.org/atlas v0.8.1-0.20210616155245-ed77f8fb0b0b/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
-go.mongodb.org/atlas v0.8.1-0.20210617105011-6061b0945dd4 h1:vLw72G0G30fDpTP6rsz6ebryKsGSY5ciarw5cGVbEPY=
-go.mongodb.org/atlas v0.8.1-0.20210617105011-6061b0945dd4/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
-go.mongodb.org/ops-manager v0.22.1-0.20210618124154-28a24c0e3fb0 h1:bT5Mvz0zNJOrsj+G6e9X9V50Wjcy8afj+rges6gm9UQ=
-go.mongodb.org/ops-manager v0.22.1-0.20210618124154-28a24c0e3fb0/go.mod h1:13raq36D7hiSiDbnBGB+MChiRF3HKd9wZPkZHkZnjR8=
+go.mongodb.org/atlas v0.8.1-0.20210618172518-81dd431f1e29 h1:NsxCCORBiWUFaE1p7V8AwQrIaQ3AqOoZ5EHbSLOoLqE=
+go.mongodb.org/atlas v0.8.1-0.20210618172518-81dd431f1e29/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
+go.mongodb.org/ops-manager v0.22.1-0.20210621094759-42feeae5f80d h1:UHyzBhNAMDl6klXkH5cVlHqpMeB+vkQTDjF4fhN+9RA=
+go.mongodb.org/ops-manager v0.22.1-0.20210621094759-42feeae5f80d/go.mod h1:dHSjoyergiwfMgS2HotlbmRRVx0x3bUfE0RTk4Bs//A=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=

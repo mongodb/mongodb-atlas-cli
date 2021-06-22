@@ -19,6 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const defaultLDAPPort = 636
+
 func Builder() *cobra.Command {
 	const use = "ldap"
 	cmd := &cobra.Command{

@@ -41,7 +41,8 @@ func FlagUsages(f *pflag.FlagSet) string {
 
 		line := ""
 		varname, usage := pflag.UnquoteUsage(flag)
-		usage = strings.ReplaceAll(usage, "\n", "\n"+strings.Repeat(" ", 6))
+		const defaultIndentation = 6
+		usage = strings.ReplaceAll(usage, "\n", "\n"+strings.Repeat(" ", defaultIndentation))
 
 		if flag.Shorthand != "" && flag.ShorthandDeprecated == "" {
 			line = fmt.Sprintf("  * - -%s, --%s\n    - %s", flag.Shorthand, flag.Name, varname)

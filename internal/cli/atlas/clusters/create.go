@@ -226,17 +226,22 @@ Some of the cluster configuration options are available via flags but for full c
 
 	currentMDBVersion, _ := cli.DefaultMongoDBMajorVersion()
 
+	const (
+		defaultMembersSize = 3
+		defaultDiskSize    = 2
+		defaultShardSize   = 1
+	)
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().Int64VarP(&opts.members, flag.Members, flag.MembersShort, 3, usage.Members)
+	cmd.Flags().Int64VarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
-	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, 2, usage.DiskSizeGB)
+	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
 	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
-	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, 1, usage.Shards)
+	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

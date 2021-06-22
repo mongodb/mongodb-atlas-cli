@@ -36,7 +36,8 @@ func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
 	if !opts.Force {
 		ff |= os.O_EXCL
 	}
-	f, err := opts.Fs.OpenFile(opts.Out, ff, 0777)
+	const defaultPermissions = 0766
+	f, err := opts.Fs.OpenFile(opts.Out, ff, defaultPermissions)
 	return f, err
 }
 

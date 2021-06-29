@@ -149,7 +149,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
+		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

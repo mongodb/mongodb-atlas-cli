@@ -5,11 +5,10 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
+	reflect "reflect"
 )
 
 // MockClusterLister is a mock of ClusterLister interface
@@ -71,6 +70,21 @@ func NewMockAtlasClusterDescriber(ctrl *gomock.Controller) *MockAtlasClusterDesc
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockAtlasClusterDescriber) EXPECT() *MockAtlasClusterDescriberMockRecorder {
 	return m.recorder
+}
+
+// AtlasAdvancedCluster mocks base method
+func (m *MockAtlasClusterDescriber) AtlasAdvancedCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasAdvancedCluster", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasAdvancedCluster indicates an expected call of AtlasAdvancedCluster
+func (mr *MockAtlasClusterDescriberMockRecorder) AtlasAdvancedCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasAdvancedCluster", reflect.TypeOf((*MockAtlasClusterDescriber)(nil).AtlasAdvancedCluster), arg0, arg1)
 }
 
 // AtlasCluster mocks base method
@@ -262,6 +276,21 @@ func (m *MockAtlasClusterGetterUpdater) EXPECT() *MockAtlasClusterGetterUpdaterM
 	return m.recorder
 }
 
+// AtlasAdvancedCluster mocks base method
+func (m *MockAtlasClusterGetterUpdater) AtlasAdvancedCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasAdvancedCluster", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasAdvancedCluster indicates an expected call of AtlasAdvancedCluster
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) AtlasAdvancedCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasAdvancedCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).AtlasAdvancedCluster), arg0, arg1)
+}
+
 // AtlasCluster mocks base method
 func (m *MockAtlasClusterGetterUpdater) AtlasCluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
@@ -404,6 +433,21 @@ func (m *MockAtlasClusterQuickStarter) AddSampleData(arg0, arg1 string) (*mongod
 func (mr *MockAtlasClusterQuickStarterMockRecorder) AddSampleData(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSampleData", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).AddSampleData), arg0, arg1)
+}
+
+// AtlasAdvancedCluster mocks base method
+func (m *MockAtlasClusterQuickStarter) AtlasAdvancedCluster(arg0, arg1 string) (*mongodbatlas.AdvancedCluster, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasAdvancedCluster", arg0, arg1)
+	ret0, _ := ret[0].(*mongodbatlas.AdvancedCluster)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasAdvancedCluster indicates an expected call of AtlasAdvancedCluster
+func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasAdvancedCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasAdvancedCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).AtlasAdvancedCluster), arg0, arg1)
 }
 
 // AtlasCluster mocks base method

@@ -42,14 +42,9 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	r, err := opts.store.AtlasAdvancedCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
-	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
 	}
 	return opts.Print(r)
 }

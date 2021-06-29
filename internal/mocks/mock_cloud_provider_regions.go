@@ -5,10 +5,9 @@
 package mocks
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	reflect "reflect"
 )
 
 // MockCloudProviderRegionsLister is a mock of CloudProviderRegionsLister interface

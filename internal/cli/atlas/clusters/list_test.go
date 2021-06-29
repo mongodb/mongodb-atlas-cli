@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected []mongodbatlas.Cluster
+	var expected []mongodbatlas.AdvancedCluster
 
 	listOpts := &ListOpts{
 		store: mockStore,

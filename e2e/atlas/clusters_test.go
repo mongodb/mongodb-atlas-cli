@@ -105,12 +105,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var clusters []mongodbatlas.AdvancedCluster
+		var clusters mongodbatlas.AdvancedClustersResponse
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(clusters)
+		a.NotEmpty(clusters.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

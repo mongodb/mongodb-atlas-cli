@@ -102,7 +102,7 @@ func (opts *OutputOpts) Print(o interface{}) error {
 		return jsonpathwriter.Print(opts.ConfigWriter(), val, o)
 	}
 
-	t, err := opts.template(outputType, val)
+	t, err := template(outputType, val)
 	if err != nil {
 		return err
 	}
@@ -136,7 +136,7 @@ func (opts *OutputOpts) outputTypeAndValue() (outputType, v string) {
 var errTemplate = errors.New("error loading template")
 
 // template returns the correct template from the output type.
-func (opts *OutputOpts) template(outputType, value string) (string, error) {
+func template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
 		data, err := ioutil.ReadFile(value)
 		if err != nil {

@@ -28,10 +28,10 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
+	mockStore := mocks.NewMockAtlasClusterWatcher(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AdvancedCluster{StateName: "IDLE"}
+	expected := &mongodbatlas.ClusterStatus{ChangeStatus: "APPLIED"}
 
 	opts := &WatchOpts{
 		name:  "test",
@@ -40,7 +40,7 @@ func TestWatch_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
+		WatchAtlasCluster(opts.ProjectID, opts.name).
 		Return(expected, nil).
 		Times(1)
 

@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongocli/internal/store ClusterLister,AtlasClusterDescriber,OpsManagerClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterWatcher
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
@@ -31,6 +31,10 @@ type ClusterLister interface {
 
 type AtlasClusterDescriber interface {
 	AtlasCluster(string, string) (*atlas.AdvancedCluster, error)
+}
+
+type AtlasClusterWatcher interface {
+	WatchAtlasCluster(string, string) (*atlas.ClusterStatus, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -78,8 +82,9 @@ type AtlasClusterQuickStarter interface {
 	DatabaseUserCreator
 	DatabaseUserDescriber
 	ProjectIPAccessListCreator
-	AtlasClusterDescriber
+	AtlasClusterWatcher
 	ClusterCreator
+	AtlasClusterDescriber
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
@@ -175,6 +180,17 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, er
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(context.Background(), projectID, name)
 		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// AtlasCluster encapsulates the logic to manage different cloud providers.
+func (s *Store) WatchAtlasCluster(projectID, name string) (*atlas.ClusterStatus, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Clusters.Status(context.Background(), projectID, name)
+		return &result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

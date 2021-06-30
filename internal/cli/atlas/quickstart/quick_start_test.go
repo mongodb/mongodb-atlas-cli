@@ -37,6 +37,9 @@ func TestQuickstartOpts_Run(t *testing.T) {
 			StandardSrv: "",
 		},
 	}
+	expectedClusterStatus := &mongodbatlas.ClusterStatus{
+		ChangeStatus: "APPLIED",
+	}
 
 	expectedDBUser := &mongodbatlas.DatabaseUser{}
 
@@ -68,8 +71,13 @@ func TestQuickstartOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
+		WatchAtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedClusterStatus, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
 		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
-		Times(2)
+		Times(1)
 
 	mockStore.
 		EXPECT().

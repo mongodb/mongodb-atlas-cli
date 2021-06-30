@@ -219,11 +219,11 @@ func (opts *Opts) sampleDataWatcher() (bool, error) {
 }
 
 func (opts *Opts) clusterCreationWatcher() (bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	result, err := opts.store.WatchAtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return false, err
 	}
-	return result.StateName == "IDLE", nil
+	return result.ChangeStatus == "APPLIED", nil
 }
 
 func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {

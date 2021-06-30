@@ -28,7 +28,7 @@ type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	name  string
-	store store.AtlasClusterDescriber
+	store store.AtlasClusterWatcher
 }
 
 func (opts *WatchOpts) initStore() error {
@@ -38,11 +38,11 @@ func (opts *WatchOpts) initStore() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	result, err := opts.store.WatchAtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return false, err
 	}
-	return result.StateName == "IDLE", nil
+	return result.ChangeStatus == "APPLIED", nil
 }
 
 func (opts *WatchOpts) Run() error {

@@ -54,7 +54,7 @@ func TestClustersFlags(t *testing.T) {
 
 		req.NoError(err)
 
-		var cluster *mongodbatlas.Cluster
+		var cluster *mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -181,7 +181,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -220,7 +220,7 @@ func TestClustersFile(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -239,7 +239,7 @@ func TestClustersFile(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -287,7 +287,7 @@ func TestShardedCluster(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -305,7 +305,7 @@ func TestShardedCluster(t *testing.T) {
 	})
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
+func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)

@@ -31,6 +31,7 @@ type ClusterLister interface {
 
 type AtlasClusterDescriber interface {
 	AtlasCluster(string, string) (*atlas.Cluster, error)
+	AtlasAdvancedCluster(string, string) (*atlas.AdvancedCluster, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -148,7 +149,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
+		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -159,7 +160,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(context.Background(), projectID, opts)
@@ -174,6 +175,17 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// AtlasAdvancedCluster encapsulates the logic to manage different cloud providers.
+func (s *Store) AtlasAdvancedCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -120,10 +120,7 @@ func (p *Profile) Set(name, value string) {
 	viper.Set(p.name, settings)
 }
 
-func SetGlobal(name, value string) { p.SetGlobal(name, value) }
-func (p *Profile) SetGlobal(name, value string) {
-	viper.Set(name, value)
-}
+func SetGlobal(name, value string) { viper.Set(name, value) }
 
 func GetString(name string) string { return p.GetString(name) }
 func (p *Profile) GetString(name string) string {
@@ -240,7 +237,7 @@ func (p *Profile) MongoShellPath() string {
 // SetMongoShellPath sets the global MongoDB Shell path.
 func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
-	p.SetGlobal(mongoShellPath, v)
+	SetGlobal(mongoShellPath, v)
 }
 
 // Output get configured output format.

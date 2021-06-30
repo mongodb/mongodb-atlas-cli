@@ -38,7 +38,7 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 	return nil
 }
 
-// MarkRequiredFlagsByService marks processName or hostId as required in accordance with the service
+// MarkRequiredFlagsByService marks processName or hostId as required in accordance with the service.
 //
 // Atlas: processName is required
 //

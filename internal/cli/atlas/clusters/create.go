@@ -86,10 +86,7 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
 		}
-		// This can't be sent
-		cluster.StateName = ""
-		cluster.MongoDBVersion = ""
-		cluster.ConnectionStrings = nil
+		RemoveReadOnlyAttributes(cluster)
 	} else {
 		opts.applyOpts(cluster)
 	}

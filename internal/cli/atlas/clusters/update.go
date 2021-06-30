@@ -79,20 +79,8 @@ func (opts *UpdateOpts) cluster() (*atlas.AdvancedCluster, error) {
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func removeReadOnlyAttributes(out *atlas.AdvancedCluster) {
-	out.ID = ""
-	out.CreateDate = ""
-	out.StateName = ""
-	out.MongoDBVersion = ""
-	out.ConnectionStrings = nil
-
-	for _, spec := range out.ReplicationSpecs {
-		spec.ID = ""
-	}
-}
-
 func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
-	removeReadOnlyAttributes(out)
+	RemoveReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = opts.mdbVersion
 	}

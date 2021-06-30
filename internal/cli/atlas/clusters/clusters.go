@@ -68,3 +68,15 @@ func LabelExists(labels []atlas.Label, l atlas.Label) bool {
 	}
 	return false
 }
+
+func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
+	out.ID = ""
+	out.CreateDate = ""
+	out.StateName = ""
+	out.MongoDBVersion = ""
+	out.ConnectionStrings = nil
+
+	for _, spec := range out.ReplicationSpecs {
+		spec.ID = ""
+	}
+}

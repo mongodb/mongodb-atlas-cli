@@ -37,7 +37,7 @@ func TestPause_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &mongodbatlas.AdvancedCluster{}
 
 	mockStore.
 		EXPECT().

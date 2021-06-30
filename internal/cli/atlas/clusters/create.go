@@ -46,8 +46,8 @@ type CreateOpts struct {
 	provider    string
 	region      string
 	tier        string
-	members     int64
-	shards      int64
+	members     int
+	shards      int
 	clusterType string
 	diskSizeGB  float64
 	backup      bool
@@ -71,6 +71,7 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
 	r, err := opts.store.CreateCluster(cluster)
 	if err != nil {
 		return err
@@ -79,23 +80,13 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
-	cluster := new(atlas.Cluster)
+func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
+	cluster := new(atlas.AdvancedCluster)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
 		}
-		// There can only be one
-		if cluster.ReplicationSpecs != nil {
-			cluster.ReplicationSpec = nil
-		}
-		// This can't be sent
-		cluster.MongoURI = ""
-		cluster.MongoURIWithOptions = ""
-		cluster.MongoURIUpdated = ""
-		cluster.StateName = ""
-		cluster.MongoDBVersion = ""
-		cluster.ConnectionStrings = nil
+		RemoveReadOnlyAttributes(cluster)
 	} else {
 		opts.applyOpts(cluster)
 	}
@@ -113,10 +104,10 @@ func (opts *CreateOpts) newCluster() (*atlas.Cluster, error) {
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {
-	replicationSpec := opts.newReplicationSpec()
+func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
+	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
-		out.ProviderBackupEnabled = &opts.backup
+		out.BackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
 	if opts.biConnector {
@@ -125,24 +116,7 @@ func (opts *CreateOpts) applyOpts(out *atlas.Cluster) {
 	out.ClusterType = opts.clusterType
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
-	out.ProviderSettings = opts.newProviderSettings()
-	out.ReplicationSpecs = []atlas.ReplicationSpec{replicationSpec}
-}
-
-func (opts *CreateOpts) newProviderSettings() *atlas.ProviderSettings {
-	providerName := opts.providerName()
-
-	var backingProviderName string
-	if providerName == tenant {
-		backingProviderName = opts.provider
-	}
-
-	return &atlas.ProviderSettings{
-		InstanceSizeName:    opts.tier,
-		ProviderName:        providerName,
-		RegionName:          opts.region,
-		BackingProviderName: backingProviderName,
-	}
+	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
 }
 
 func (opts *CreateOpts) providerName() string {
@@ -152,23 +126,42 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newReplicationSpec() atlas.ReplicationSpec {
-	var (
-		readOnlyNodes int64
-		Priority      int64 = 7
-	)
-	replicationSpec := atlas.ReplicationSpec{
-		NumShards: &opts.shards,
-		ZoneName:  zoneName,
-		RegionsConfig: map[string]atlas.RegionsConfig{
-			opts.region: {
-				ReadOnlyNodes:  &readOnlyNodes,
-				ElectableNodes: &opts.members,
-				Priority:       &Priority,
-			},
-		},
+func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
+	return &atlas.AdvancedReplicationSpec{
+		NumShards:     opts.shards,
+		ZoneName:      zoneName,
+		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
 	}
-	return replicationSpec
+}
+
+func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+	priority := 7
+	readOnlyNode := 0
+	providerName := opts.providerName()
+
+	regionConfig := atlas.AdvancedRegionConfig{
+		RegionName: opts.region,
+		Priority:   &priority,
+	}
+
+	regionConfig.ProviderName = providerName
+	regionConfig.ElectableSpecs = &atlas.Specs{
+		InstanceSize: opts.tier,
+	}
+
+	if providerName == tenant {
+		regionConfig.BackingProviderName = opts.provider
+	} else {
+		regionConfig.ElectableSpecs.NodeCount = &opts.members
+	}
+
+	readOnlySpec := &atlas.Specs{
+		InstanceSize: opts.tier,
+		NodeCount:    &readOnlyNode,
+	}
+	regionConfig.ReadOnlySpecs = readOnlySpec
+
+	return &regionConfig
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
@@ -233,7 +226,7 @@ Some of the cluster configuration options are available via flags but for full c
 	)
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().Int64VarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
+	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
@@ -241,7 +234,7 @@ Some of the cluster configuration options are available via flags but for full c
 	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
 	cmd.Flags().StringVar(&opts.clusterType, flag.Type, replicaSet, usage.ClusterTypes)
-	cmd.Flags().Int64VarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
+	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

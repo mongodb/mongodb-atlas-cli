@@ -31,8 +31,11 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	defer ctrl.Finish()
 
-	expectedCluster := &mongodbatlas.Cluster{
+	expectedCluster := &mongodbatlas.AdvancedCluster{
 		StateName: "IDLE",
+		ConnectionStrings: &mongodbatlas.ConnectionStrings{
+			StandardSrv: "",
+		},
 	}
 
 	expectedDBUser := &mongodbatlas.DatabaseUser{}

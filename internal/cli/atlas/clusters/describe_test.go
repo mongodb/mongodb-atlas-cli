@@ -40,7 +40,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasAdvancedCluster(describeOpts.ProjectID, describeOpts.name).
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 

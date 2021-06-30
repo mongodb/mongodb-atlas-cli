@@ -52,7 +52,7 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func AddLabel(out *atlas.Cluster, l atlas.Label) {
+func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {
 	if LabelExists(out.Labels, l) {
 		return
 	}

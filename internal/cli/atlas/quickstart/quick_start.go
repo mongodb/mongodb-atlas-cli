@@ -147,10 +147,10 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 
 	if runMongoShell {
-		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 	}
 
 	return nil
@@ -253,14 +253,13 @@ func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	return accessListArray
 }
 
-func (opts *Opts) newCluster() *atlas.Cluster {
+func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][opts.tier]
 	mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
-	cluster := &atlas.Cluster{
+	cluster := &atlas.AdvancedCluster{
 		GroupID:             opts.ConfigProjectID(),
 		ClusterType:         replicaSet,
-		ReplicationSpecs:    []atlas.ReplicationSpec{opts.newReplicationSpec()},
-		ProviderSettings:    opts.newProviderSettings(),
+		ReplicationSpecs:    []*atlas.AdvancedRegionSpec{opts.newAdvanceReplicationSpec()},
 		MongoDBMajorVersion: mdbVersion,
 		DiskSizeGB:          &diskSizeGB,
 		Name:                opts.ClusterName,
@@ -275,41 +274,36 @@ func (opts *Opts) newCluster() *atlas.Cluster {
 	return cluster
 }
 
-func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
-	var (
-		readOnlyNodes int64
-		priority      int64 = 7
-		shards        int64 = shards
-		members       int64 = members
-	)
-	replicationSpec := atlas.ReplicationSpec{
-		NumShards: &shards,
-		ZoneName:  zoneName,
-		RegionsConfig: map[string]atlas.RegionsConfig{
-			opts.Region: {
-				ReadOnlyNodes:  &readOnlyNodes,
-				ElectableNodes: &members,
-				Priority:       &priority,
-			},
-		},
+func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedRegionSpec {
+	return &atlas.AdvancedRegionSpec{
+		NumShards:     shards,
+		ZoneName:      zoneName,
+		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
 	}
-	return replicationSpec
 }
 
-func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
+func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+	priority := 7
+	members := members
 	providerName := opts.providerName()
 
-	var backingProviderName string
-	if providerName == tenant {
-		backingProviderName = opts.Provider
+	regionConfig := atlas.AdvancedRegionConfig{
+		RegionName: opts.Region,
+		Priority:   &priority,
 	}
 
-	return &atlas.ProviderSettings{
-		InstanceSizeName:    opts.tier,
-		ProviderName:        providerName,
-		RegionName:          opts.Region,
-		BackingProviderName: backingProviderName,
+	regionConfig.ProviderName = providerName
+	regionConfig.ElectableSpecs = &atlas.Specs{
+		InstanceSize: opts.tier,
 	}
+
+	if providerName == tenant {
+		regionConfig.BackingProviderName = opts.Provider
+	} else {
+		regionConfig.ElectableSpecs.NodeCount = &members
+	}
+
+	return &regionConfig
 }
 
 func (opts *Opts) providerName() string {

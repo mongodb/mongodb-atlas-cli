@@ -34,7 +34,7 @@ func TestBuilder(t *testing.T) {
 
 func TestAddLabel(t *testing.T) {
 	type args struct {
-		out   *mongodbatlas.Cluster
+		out   *mongodbatlas.AdvancedCluster
 		label mongodbatlas.Label
 	}
 	tests := []struct {
@@ -45,7 +45,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "adds",
 			args: args{
-				out: &mongodbatlas.Cluster{
+				out: &mongodbatlas.AdvancedCluster{
 					Labels: []mongodbatlas.Label{},
 				},
 				label: mongodbatlas.Label{Key: "test", Value: "test"},
@@ -55,7 +55,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "doesn't adds",
 			args: args{
-				out: &mongodbatlas.Cluster{
+				out: &mongodbatlas.AdvancedCluster{
 					Labels: []mongodbatlas.Label{{Key: "test", Value: "test"}},
 				},
 				label: mongodbatlas.Label{Key: "test", Value: "test"},

@@ -32,7 +32,7 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &mongodbatlas.AdvancedCluster{}
 
 	describeOpts := &DescribeOpts{
 		name:  "test",

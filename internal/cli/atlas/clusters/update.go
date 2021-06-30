@@ -64,8 +64,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
-	var cluster *atlas.Cluster
+func (opts *UpdateOpts) cluster() (*atlas.AdvancedCluster, error) {
+	var cluster *atlas.AdvancedCluster
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
@@ -79,15 +79,8 @@ func (opts *UpdateOpts) cluster() (*atlas.Cluster, error) {
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
-	// There can only be one
-	if out.ReplicationSpecs != nil {
-		out.ReplicationSpec = nil
-	}
+func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	// This can't be sent
-	out.MongoURI = ""
-	out.MongoURIWithOptions = ""
-	out.MongoURIUpdated = ""
 	out.StateName = ""
 	out.MongoDBVersion = ""
 	out.ConnectionStrings = nil
@@ -99,12 +92,22 @@ func (opts *UpdateOpts) patchOpts(out *atlas.Cluster) {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
 	if opts.tier != "" {
-		out.ProviderSettings.InstanceSizeName = opts.tier
+		opts.addTierToAdvancedCluster(out)
 	}
 	AddLabel(out, atlas.Label{
 		Key:   labelKey,
 		Value: labelValue,
 	})
+}
+
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
+	for _, replicationSpec := range out.ReplicationSpecs {
+		for _, regionConf := range replicationSpec.RegionConfigs {
+			regionConf.ReadOnlySpecs.InstanceSize = opts.tier
+			regionConf.AnalyticsSpecs.InstanceSize = opts.tier
+			regionConf.ElectableSpecs.InstanceSize = opts.tier
+		}
+	}
 }
 
 // mongocli atlas cluster(s) update [name] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion].

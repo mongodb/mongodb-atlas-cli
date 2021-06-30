@@ -42,7 +42,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.AtlasAdvancedCluster(opts.ConfigProjectID(), opts.name)
+	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}

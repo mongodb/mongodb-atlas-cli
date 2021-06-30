@@ -15,7 +15,9 @@
 package clusters
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -71,6 +73,10 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
+	res2B, _ := json.Marshal(cluster)
+	fmt.Println(string(res2B))
+
 	r, err := opts.store.CreateCluster(cluster)
 	if err != nil {
 		return err

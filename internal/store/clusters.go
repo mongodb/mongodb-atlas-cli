@@ -180,17 +180,6 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, er
 	}
 }
 
-// AtlasAdvancedCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasAdvancedCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(context.Background(), projectID, name)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
 // OpsManagerCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
 	switch s.service {

@@ -254,15 +254,11 @@ func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 }
 
 func (opts *Opts) newCluster() *atlas.AdvancedCluster {
-	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][opts.tier]
-	mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 	cluster := &atlas.AdvancedCluster{
-		GroupID:             opts.ConfigProjectID(),
-		ClusterType:         replicaSet,
-		ReplicationSpecs:    []*atlas.AdvancedRegionSpec{opts.newAdvanceReplicationSpec()},
-		MongoDBMajorVersion: mdbVersion,
-		DiskSizeGB:          &diskSizeGB,
-		Name:                opts.ClusterName,
+		GroupID:          opts.ConfigProjectID(),
+		ClusterType:      replicaSet,
+		ReplicationSpecs: []*atlas.AdvancedReplicationSpec{opts.newAdvanceReplicationSpec()},
+		Name:             opts.ClusterName,
 		Labels: []atlas.Label{
 			{
 				Key:   "Infrastructure Tool",
@@ -271,11 +267,18 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 		},
 	}
 
+	if opts.providerName() != tenant {
+		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.tier]
+		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
+		cluster.DiskSizeGB = &diskSizeGB
+		cluster.MongoDBMajorVersion = mdbVersion
+	}
+
 	return cluster
 }
 
-func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedRegionSpec {
-	return &atlas.AdvancedRegionSpec{
+func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
+	return &atlas.AdvancedReplicationSpec{
 		NumShards:     shards,
 		ZoneName:      zoneName,
 		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
@@ -310,7 +313,7 @@ func (opts *Opts) providerName() string {
 	if opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
-	return opts.Provider
+	return strings.ToUpper(opts.Provider)
 }
 
 func (opts *Opts) askClusterOptions() error {

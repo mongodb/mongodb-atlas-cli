@@ -15,9 +15,7 @@
 package clusters
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -74,9 +72,6 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	res2B, _ := json.Marshal(cluster)
-	fmt.Println(string(res2B))
-
 	r, err := opts.store.CreateCluster(cluster)
 	if err != nil {
 		return err
@@ -124,7 +119,7 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 	out.ClusterType = opts.clusterType
 	out.DiskSizeGB = &opts.diskSizeGB
 	out.MongoDBMajorVersion = opts.mdbVersion
-	out.ReplicationSpecs = []*atlas.AdvancedRegionSpec{replicationSpec}
+	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
 }
 
 func (opts *CreateOpts) providerName() string {
@@ -134,8 +129,8 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedRegionSpec {
-	return &atlas.AdvancedRegionSpec{
+func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
+	return &atlas.AdvancedReplicationSpec{
 		NumShards:     opts.shards,
 		ZoneName:      zoneName,
 		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
@@ -144,6 +139,7 @@ func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedRegionSpec {
 
 func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 	priority := 7
+	readOnlyNode := 0
 	providerName := opts.providerName()
 
 	regionConfig := atlas.AdvancedRegionConfig{
@@ -161,6 +157,12 @@ func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 	} else {
 		regionConfig.ElectableSpecs.NodeCount = &opts.members
 	}
+
+	readOnlySpec := &atlas.Specs{
+		InstanceSize: opts.tier,
+		NodeCount:    &readOnlyNode,
+	}
+	regionConfig.ReadOnlySpecs = readOnlySpec
 
 	return &regionConfig
 }

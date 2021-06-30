@@ -25,5 +25,3 @@ require (
 	go.mongodb.org/ops-manager v0.23.0
 	gopkg.in/yaml.v2 v2.4.0
 )
-
-//replace go.mongodb.org/atlas => /Users/andrea.angiolillo/workspace/go-client-mongodb-atlas

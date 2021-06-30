@@ -83,17 +83,12 @@ func newRegionQuestions(defaultRegions []string) survey.Prompt {
 	}
 }
 
-func (opts *Opts) newCluster() *atlas.Cluster {
-	diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(tenant)][opts.tier]
-	mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
-	cluster := &atlas.Cluster{
-		GroupID:             opts.ConfigProjectID(),
-		ClusterType:         replicaSet,
-		ReplicationSpecs:    []atlas.ReplicationSpec{opts.newReplicationSpec()},
-		ProviderSettings:    opts.newProviderSettings(),
-		MongoDBMajorVersion: mdbVersion,
-		DiskSizeGB:          &diskSizeGB,
-		Name:                opts.ClusterName,
+func (opts *Opts) newCluster() *atlas.AdvancedCluster {
+	cluster := &atlas.AdvancedCluster{
+		GroupID:          opts.ConfigProjectID(),
+		ClusterType:      replicaSet,
+		ReplicationSpecs: []*atlas.AdvancedReplicationSpec{opts.newAdvanceReplicationSpec()},
+		Name:             opts.ClusterName,
 		Labels: []atlas.Label{
 			{
 				Key:   "Infrastructure Tool",
@@ -102,34 +97,27 @@ func (opts *Opts) newCluster() *atlas.Cluster {
 		},
 	}
 
+	if opts.providerName() != tenant {
+		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.tier]
+		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
+		cluster.DiskSizeGB = &diskSizeGB
+		cluster.MongoDBMajorVersion = mdbVersion
+	}
+
 	return cluster
 }
 
 const (
 	shards   = 1
-	members  = 3
 	zoneName = "Zone 1"
 )
 
-func (opts *Opts) newReplicationSpec() atlas.ReplicationSpec {
-	var (
-		readOnlyNodes int64
-		priority      int64 = 7
-		shards        int64 = shards
-		members       int64 = members
-	)
-	replicationSpec := atlas.ReplicationSpec{
-		NumShards: &shards,
-		ZoneName:  zoneName,
-		RegionsConfig: map[string]atlas.RegionsConfig{
-			opts.Region: {
-				ReadOnlyNodes:  &readOnlyNodes,
-				ElectableNodes: &members,
-				Priority:       &priority,
-			},
-		},
+func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
+	return &atlas.AdvancedReplicationSpec{
+		NumShards:     shards,
+		ZoneName:      zoneName,
+		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
 	}
-	return replicationSpec
 }
 
 const (
@@ -137,27 +125,35 @@ const (
 	atlasM5 = "M5"
 )
 
-func (opts *Opts) newProviderSettings() *atlas.ProviderSettings {
+func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 	providerName := opts.providerName()
 
-	var backingProviderName string
-	if providerName == tenant {
-		backingProviderName = opts.Provider
+	priority := 7
+	regionConfig := atlas.AdvancedRegionConfig{
+		RegionName: opts.Region,
+		Priority:   &priority,
 	}
 
-	return &atlas.ProviderSettings{
-		InstanceSizeName:    opts.tier,
-		ProviderName:        providerName,
-		RegionName:          opts.Region,
-		BackingProviderName: backingProviderName,
+	regionConfig.ProviderName = providerName
+	regionConfig.ElectableSpecs = &atlas.Specs{
+		InstanceSize: opts.tier,
 	}
+
+	members := 3
+	if providerName == tenant {
+		regionConfig.BackingProviderName = opts.Provider
+	} else {
+		regionConfig.ElectableSpecs.NodeCount = &members
+	}
+
+	return &regionConfig
 }
 
 func (opts *Opts) providerName() string {
 	if opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
-	return opts.Provider
+	return strings.ToUpper(opts.Provider)
 }
 
 func (opts *Opts) defaultRegions() ([]string, error) {

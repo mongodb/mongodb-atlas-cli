@@ -52,7 +52,7 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func AddLabel(out *atlas.Cluster, l atlas.Label) {
+func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {
 	if LabelExists(out.Labels, l) {
 		return
 	}
@@ -67,4 +67,16 @@ func LabelExists(labels []atlas.Label, l atlas.Label) bool {
 		}
 	}
 	return false
+}
+
+func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
+	out.ID = ""
+	out.CreateDate = ""
+	out.StateName = ""
+	out.MongoDBVersion = ""
+	out.ConnectionStrings = nil
+
+	for _, spec := range out.ReplicationSpecs {
+		spec.ID = ""
+	}
 }

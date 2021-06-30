@@ -25,7 +25,7 @@ func DefaultMongoDBMajorVersion() (string, error) {
 	if defaultMongoDBMajorVersion != "" {
 		return defaultMongoDBMajorVersion, nil
 	}
-	s, err := store.New(store.PrivateUnauthenticatedPreset(config.Default()))
+	s, err := store.New(store.UnauthenticatedPreset(config.Default()))
 	if err != nil {
 		return "", err
 	}

@@ -19,6 +19,7 @@ package clusters
 import (
 	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -34,7 +35,7 @@ func TestBuilder(t *testing.T) {
 
 func TestAddLabel(t *testing.T) {
 	type args struct {
-		out   *mongodbatlas.Cluster
+		out   *mongodbatlas.AdvancedCluster
 		label mongodbatlas.Label
 	}
 	tests := []struct {
@@ -45,7 +46,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "adds",
 			args: args{
-				out: &mongodbatlas.Cluster{
+				out: &mongodbatlas.AdvancedCluster{
 					Labels: []mongodbatlas.Label{},
 				},
 				label: mongodbatlas.Label{Key: "test", Value: "test"},
@@ -55,7 +56,7 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "doesn't adds",
 			args: args{
-				out: &mongodbatlas.Cluster{
+				out: &mongodbatlas.AdvancedCluster{
 					Labels: []mongodbatlas.Label{{Key: "test", Value: "test"}},
 				},
 				label: mongodbatlas.Label{Key: "test", Value: "test"},
@@ -121,6 +122,127 @@ func TestLabelExists(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if got := LabelExists(args.labels, args.l); got != want {
 				t.Errorf("LabelExists() = %v, want %v", got, want)
+			}
+		})
+	}
+}
+
+func TestRemoveReadOnlyAttributes(t *testing.T) {
+	tests := []struct {
+		name string
+		args *mongodbatlas.AdvancedCluster
+		want *mongodbatlas.AdvancedCluster
+	}{
+		{
+			name: "One AdvancedReplicationSpec",
+			args: &mongodbatlas.AdvancedCluster{
+				ID:             "Test",
+				MongoDBVersion: "test",
+				StateName:      "test",
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						ID:        "22",
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+				CreateDate: "test",
+			},
+			want: &mongodbatlas.AdvancedCluster{
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+			},
+		},
+		{
+			name: "More AdvancedReplicationSpecs",
+			args: &mongodbatlas.AdvancedCluster{
+				ID:             "Test",
+				MongoDBVersion: "test",
+				StateName:      "test",
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						ID:        "22",
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						ID:        "22",
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						ID:        "22",
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+				CreateDate: "test",
+			},
+			want: &mongodbatlas.AdvancedCluster{
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+			},
+		},
+		{
+			name: "Nothing to remove",
+			args: &mongodbatlas.AdvancedCluster{
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+			},
+			want: &mongodbatlas.AdvancedCluster{
+				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+					{
+						NumShards: 2,
+						ZoneName:  "1",
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		name := tt.name
+		arg := tt.args
+		want := tt.want
+		t.Run(name, func(t *testing.T) {
+			RemoveReadOnlyAttributes(arg)
+			if diff := deep.Equal(arg, want); diff != nil {
+				t.Error(diff)
 			}
 		})
 	}

@@ -30,7 +30,7 @@ type ClusterLister interface {
 }
 
 type AtlasClusterDescriber interface {
-	AtlasCluster(string, string) (*atlas.Cluster, error)
+	AtlasCluster(string, string) (*atlas.AdvancedCluster, error)
 }
 
 type OpsManagerClusterDescriber interface {
@@ -38,7 +38,7 @@ type OpsManagerClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(*atlas.Cluster) (*atlas.Cluster, error)
+	CreateCluster(*atlas.AdvancedCluster) (*atlas.AdvancedCluster, error)
 }
 
 type ClusterDeleter interface {
@@ -46,15 +46,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *atlas.Cluster) (*atlas.Cluster, error)
+	UpdateCluster(string, string, *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*atlas.Cluster, error)
+	PauseCluster(string, string) (*atlas.AdvancedCluster, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*atlas.Cluster, error)
+	StartCluster(string, string) (*atlas.AdvancedCluster, error)
 }
 
 type SampleDataAdder interface {
@@ -105,10 +105,10 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, e
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
+func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.Create(context.Background(), cluster.GroupID, cluster)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Create(context.Background(), cluster.GroupID, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -116,10 +116,10 @@ func (s *Store) CreateCluster(cluster *atlas.Cluster) (*atlas.Cluster, error) {
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.Update(context.Background(), projectID, name, cluster)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Update(context.Background(), projectID, name, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -127,18 +127,18 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.Cluster) (*
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*atlas.Cluster, error) {
+func (s *Store) PauseCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
 	paused := true
-	cluster := &atlas.Cluster{
+	cluster := &atlas.AdvancedCluster{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
+func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
 	paused := false
-	cluster := &atlas.Cluster{
+	cluster := &atlas.AdvancedCluster{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -148,7 +148,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.Cluster, error) {
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).Clusters.Delete(context.Background(), projectID, name)
+		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -159,7 +159,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Clusters.List(context.Background(), projectID, opts)
@@ -170,10 +170,10 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*atlas.Cluster, error) {
+func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Clusters.Get(context.Background(), projectID, name)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

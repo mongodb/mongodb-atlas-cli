@@ -76,7 +76,7 @@ type Opts struct {
 
 func (opts *Opts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -132,10 +132,10 @@ Creating your cluster... [It's safe to 'Ctrl + C']
 		return err
 	}
 
-	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 
 	if opts.runMongoShell {
-		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.SrvAddress)
+		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 	}
 
 	return nil
@@ -287,7 +287,8 @@ func Builder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), 10)
+			const base10 = 10
+			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
 			return opts.Run()
 		},

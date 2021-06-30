@@ -30,7 +30,8 @@ import (
 
 func TestDataLakes(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	require.NoError(t, err)
+	r := require.New(t)
+	r.NoError(err)
 
 	n, err := e2e.RandInt(1000)
 	if err != nil {
@@ -39,9 +40,9 @@ func TestDataLakes(t *testing.T) {
 
 	dataLakeName := fmt.Sprintf("e2e-data-lake-%v", n)
 	testBucket := os.Getenv("E2E_TEST_BUCKET")
-	require.NotEmpty(t, testBucket)
+	r.NotEmpty(testBucket)
 	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
-	require.NotEmpty(t, roleID)
+	r.NotEmpty(roleID)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -57,9 +58,9 @@ func TestDataLakes(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		r.NoError(err, string(resp))
 
+		a := assert.New(t)
 		var dataLake atlas.DataLake
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
 			a.Equal(dataLakeName, dataLake.Name)
@@ -76,9 +77,9 @@ func TestDataLakes(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		r.NoError(err, string(resp))
 
+		a := assert.New(t)
 		var dataLake atlas.DataLake
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
 			a.Equal(dataLakeName, dataLake.Name)
@@ -93,10 +94,10 @@ func TestDataLakes(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		r.NoError(err, string(resp))
 
-		a := assert.New(t)
-		a.NoError(err, string(resp))
 		var r []atlas.DataLake
+		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -114,11 +115,10 @@ func TestDataLakes(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		r.NoError(err, string(resp))
 
 		var dataLake atlas.DataLake
+		a := assert.New(t)
 		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
 			a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
 		}
@@ -134,9 +134,9 @@ func TestDataLakes(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		r.NoError(err, string(resp))
+
 		expected := fmt.Sprintf("Data Lake '%s' deleted\n", dataLakeName)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 }

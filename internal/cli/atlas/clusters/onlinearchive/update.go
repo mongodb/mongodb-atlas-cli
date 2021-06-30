@@ -36,7 +36,7 @@ type UpdateOpts struct {
 
 func (opts *UpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -56,7 +56,7 @@ func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
 	archive := &atlas.OnlineArchive{
 		ID: opts.id,
 		Criteria: &atlas.OnlineArchiveCriteria{
-			ExpireAfterDays: opts.archiveAfter,
+			ExpireAfterDays: &opts.archiveAfter,
 		},
 	}
 	return archive

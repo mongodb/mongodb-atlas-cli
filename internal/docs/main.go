@@ -18,19 +18,20 @@ import (
 	"log"
 	"os"
 
+	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/mongodb/mongocli/internal/cli/root"
-	"github.com/mongodb/mongocli/internal/docs/rest"
 )
 
 func main() {
 	var profile string
-	if err := os.MkdirAll("./docs/command", 0766); err != nil {
+	const docsPermissions = 0766
+	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := rest.GenReSTTree(mongocli, "./docs/command"); err != nil {
+	if err := cobra2snooty.GenSnootyTree(mongocli, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

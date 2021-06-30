@@ -33,7 +33,7 @@ type DescribeOpts struct {
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -45,11 +45,6 @@ func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
-	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
 	}
 	return opts.Print(r)
 }

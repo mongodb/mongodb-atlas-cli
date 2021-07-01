@@ -50,7 +50,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) describe|get <ID> [--orgId orgId].
+// mongocli iam organizations(s) invitations describe|get <ID> [--orgId orgId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate

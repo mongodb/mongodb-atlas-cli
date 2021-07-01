@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister,OrganizationInvitationDeleter
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
@@ -35,6 +35,10 @@ type OrganizationInvitationLister interface {
 
 type OrganizationDescriber interface {
 	Organization(string) (*atlas.Organization, error)
+}
+
+type OrganizationInvitationDescriber interface {
+	OrganizationInvitation(string, string) (*atlas.Invitation, error)
 }
 
 type OrganizationCreator interface {
@@ -111,6 +115,20 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// OrganizationInvitation encapsulate the logic to manage different cloud providers.
+func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlas.Invitation, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Organizations.Invitation(context.Background(), orgID, invitationID)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(context.Background(), orgID, invitationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

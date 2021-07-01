@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,33 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package organizations
+package invitations
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/invitations"
-	"github.com/mongodb/mongocli/internal/cli/iam/organizations/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "organizations"
+	const use = "invitations"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Organization operations.",
-		Long:    "Create, list and manage your MongoDB organizations.",
+		Short:   "Invitation operations.",
+		Long:    "Create, list and manage your MongoDB organization invites.",
 		Aliases: cli.GenerateAliases(use, "orgs", "org"),
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		apikeys.Builder(),
-		users.Builder(),
-		invitations.Builder(),
-	)
+
+	cmd.AddCommand(ListBuilder())
 	return cmd
 }

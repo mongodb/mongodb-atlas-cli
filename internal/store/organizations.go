@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister,OrganizationInvitationUpdater
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
@@ -43,6 +43,10 @@ type OrganizationCreator interface {
 
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error
+}
+
+type OrganizationInvitationUpdater interface {
+	UpdateOrganizationInvitation(string, string, *atlas.Invitation) (*atlas.Invitation, error)
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
@@ -107,6 +111,29 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// OrganizationInvitations encapsulate the logic to manage different cloud providers.
+func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+	switch s.service {
+	case config.CloudService:
+		if invitationID != "" {
+			result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitationByID(context.Background(), orgID, invitationID, invitation)
+			return result, err
+		}
+		result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitation(context.Background(), orgID, invitation)
+		return result, err
+
+	case config.CloudManagerService, config.OpsManagerService:
+		if invitationID != "" {
+			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(context.Background(), invitationID, invitation)
+			return result, err
+		}
+		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(context.Background(), invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

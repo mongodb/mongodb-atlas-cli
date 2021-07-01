@@ -354,10 +354,10 @@ go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQc
 go.etcd.io/etcd/client/pkg/v3 v3.5.0/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.0/go.mod h1:h9puh54ZTgAKtEbut2oe9P4L/oqKCVB6xsXlzd7alYQ=
 go.mongodb.org/atlas v0.9.0/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
-go.mongodb.org/atlas v0.9.1-0.20210630084015-0935f2bde3bd h1:891GNXN65Hz5qELEQhZim3o/worwTsJekLsutFJNXjs=
-go.mongodb.org/atlas v0.9.1-0.20210630084015-0935f2bde3bd/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
-go.mongodb.org/ops-manager v0.23.0 h1:eEpSWLPl1Pbg/fx0FySIff86xRghIitKqz7hlGIx8uY=
-go.mongodb.org/ops-manager v0.23.0/go.mod h1:9YkQ4+hZNLQchJZphBAHobFh//C6kban4P9hFamKVbI=
+go.mongodb.org/atlas v0.9.1-0.20210701135211-e6764bc1070f h1:E3E16/7O43r4wmCQHoivRyeoaI7EpCxxhd+YKyAyppI=
+go.mongodb.org/atlas v0.9.1-0.20210701135211-e6764bc1070f/go.mod h1:MMWDsc2akjTDSG4tVQrxv/82p3QbBnqeELbtTl45sbg=
+go.mongodb.org/ops-manager v0.23.1-0.20210701135301-c58ba663bfb8 h1:KWZOHg0x6+y5tM1qOFhC1eBMTU7qkNpvn3Aj1shlcS0=
+go.mongodb.org/ops-manager v0.23.1-0.20210701135301-c58ba663bfb8/go.mod h1:9YkQ4+hZNLQchJZphBAHobFh//C6kban4P9hFamKVbI=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.opencensus.io v0.22.2/go.mod h1:yxeiOL68Rb0Xd1ddK5vPZ/oVn4vY4Ynel7k9FzqtOIw=

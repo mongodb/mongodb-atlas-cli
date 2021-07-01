@@ -11,29 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package quickstart
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mongosh"
-	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const quickstartTemplate = `
@@ -46,61 +45,33 @@ username: %s
 password: %s
 `
 
-const clusterDetails = `
-[Set up your Atlas cluster]
-`
-
-const databaseUserDetails = `
-[Set up your database access details]
-`
-
-const accessListDetails = `
-[Set up your network access list details]
-`
-
-const mongoShellDetails = `
-[Connect to your new cluster]
-`
-
-const creatingClusterDetails = `
-Creating your cluster... [It's safe to 'Ctrl + C']
-`
-
-const loadingSampleData = `
-Loading sample data into your cluster... [It's safe to 'Ctrl + C']
-`
-
 const (
-	replicaSet        = "REPLICASET"
-	shards            = 1
-	atlasM2           = "M2"
-	atlasM5           = "M5"
-	tenant            = "TENANT"
-	members           = 3
-	zoneName          = "Zone 1"
-	accessListComment = "IP added with mongocli atlas quickstart"
-	atlasAdmin        = "atlasAdmin"
-	none              = "NONE"
-	mongoshURL        = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL   = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
-	profileDocURL     = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
+	replicaSet      = "REPLICASET"
+	atlasM2         = "M2"
+	atlasAdmin      = "atlasAdmin"
+	mongoshURL      = "https://www.mongodb.com/try/download/shell"
+	atlasAccountURL = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
+	profileDocURL   = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
 )
 
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	ClusterName     string
-	tier            string
-	Provider        string
-	Region          string
-	IPAddresses     []string
-	IPAddress       string
-	DBUsername      string
-	DBUserPassword  string
-	SampleDataJobID string
-	SkipSampleData  bool
-	SkipMongosh     bool
-	store           store.AtlasClusterQuickStarter
+	defaultName         string
+	ClusterName         string
+	tier                string
+	Provider            string
+	Region              string
+	IPAddresses         []string
+	IPAddress           string
+	DBUsername          string
+	DBUserPassword      string
+	SampleDataJobID     string
+	SkipSampleData      bool
+	SkipMongosh         bool
+	runMongoShell       bool
+	mongoShellInstalled bool
+	store               store.AtlasClusterQuickStarter
 }
 
 func (opts *Opts) initStore() error {
@@ -110,11 +81,24 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
+	fmt.Print(`You are creating a new Atlas cluster and enabling access to it.
+
+Press [Enter] to use the default values.
+
+Enter [?] on any option to get help.
+`)
+
 	if err := opts.createCluster(); err != nil {
 		return err
 	}
 
-	fmt.Println("We are deploying your cluster...")
+	fmt.Printf(`
+We are deploying %s...
+`, opts.ClusterName)
+
+	if err := opts.askSampleDataQuestion(); err != nil {
+		return err
+	}
 
 	if err := opts.createDatabaseUser(); err != nil {
 		return err
@@ -124,21 +108,22 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	opts.setupCloseHandler()
-
-	runMongoShell, er := opts.askMongoShellQuestion()
-	if er != nil {
-		return er
+	if err := opts.askMongoShellQuestion(); err != nil {
+		return err
 	}
 
-	fmt.Print(creatingClusterDetails)
+	opts.setupCloseHandler()
+
+	fmt.Print(`
+Creating your cluster... [It's safe to 'Ctrl + C']
+`)
 	// Watch cluster creation
 	if er := opts.Watch(opts.clusterCreationWatcher); er != nil {
 		return er
 	}
 
 	if err := opts.loadSampleData(); err != nil {
-		return nil
+		return err
 	}
 
 	// Get cluster's connection string
@@ -149,45 +134,8 @@ func (opts *Opts) Run() error {
 
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 
-	if runMongoShell {
+	if opts.runMongoShell {
 		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
-	}
-
-	return nil
-}
-
-func (opts *Opts) createAccessList() error {
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
-	// Add IP to project’s IP access list
-	entries := opts.newProjectIPAccessList()
-	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (opts *Opts) createDatabaseUser() error {
-	if err := opts.askDBUserOptions(); err != nil {
-		return err
-	}
-
-	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (opts *Opts) createCluster() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
-
-	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
-		return err
 	}
 
 	return nil
@@ -198,7 +146,9 @@ func (opts *Opts) loadSampleData() error {
 		return nil
 	}
 
-	fmt.Print(loadingSampleData)
+	fmt.Print(`
+Loading sample data into your cluster... [It's safe to 'Ctrl + C']
+`)
 	sampleDataJob, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.ClusterName)
 
 	if err != nil {
@@ -215,6 +165,9 @@ func (opts *Opts) sampleDataWatcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	if result.State == "FAILED" {
+		return false, fmt.Errorf("failed to load data: %s", result.ErrorMessage)
+	}
 	return result.State == "COMPLETED", nil
 }
 
@@ -226,304 +179,25 @@ func (opts *Opts) clusterCreationWatcher() (bool, error) {
 	return result.StateName == "IDLE", nil
 }
 
-func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
-	return &atlas.DatabaseUser{
-		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
-		GroupID:      opts.ConfigProjectID(),
-		Password:     opts.DBUserPassword,
-		X509Type:     none,
-		AWSIAMType:   none,
-		LDAPAuthType: none,
-		DatabaseName: convert.AdminDB,
-		Username:     opts.DBUsername,
-	}
-}
-
-func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
-	accessListArray := make([]*atlas.ProjectIPAccessList, len(opts.IPAddresses))
-	for i, addr := range opts.IPAddresses {
-		accessList := &atlas.ProjectIPAccessList{
-			GroupID:   opts.ConfigProjectID(),
-			Comment:   accessListComment,
-			IPAddress: addr,
-		}
-
-		accessListArray[i] = accessList
-	}
-	return accessListArray
-}
-
-func (opts *Opts) newCluster() *atlas.AdvancedCluster {
-	cluster := &atlas.AdvancedCluster{
-		GroupID:          opts.ConfigProjectID(),
-		ClusterType:      replicaSet,
-		ReplicationSpecs: []*atlas.AdvancedReplicationSpec{opts.newAdvanceReplicationSpec()},
-		Name:             opts.ClusterName,
-		Labels: []atlas.Label{
-			{
-				Key:   "Infrastructure Tool",
-				Value: "MongoDB CLI Quickstart",
-			},
-		},
-	}
-
-	if opts.providerName() != tenant {
-		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.tier]
-		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
-		cluster.DiskSizeGB = &diskSizeGB
-		cluster.MongoDBMajorVersion = mdbVersion
-	}
-
-	return cluster
-}
-
-func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
-	}
-}
-
-func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
-	priority := 7
-	members := members
-	providerName := opts.providerName()
-
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.Region,
-		Priority:   &priority,
-	}
-
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.tier,
-	}
-
-	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.Provider
-	} else {
-		regionConfig.ElectableSpecs.NodeCount = &members
-	}
-
-	return &regionConfig
-}
-
-func (opts *Opts) providerName() string {
-	if opts.tier == atlasM2 || opts.tier == atlasM5 {
-		return tenant
-	}
-	return strings.ToUpper(opts.Provider)
-}
-
-func (opts *Opts) askClusterOptions() error {
-	var qs []*survey.Question
-
-	if q := clusterNameQuestion(opts.ClusterName); q != nil {
-		qs = append(qs, q)
-	}
-
-	if q := providerQuestion(opts.Provider); q != nil {
-		qs = append(qs, q)
-	}
-
-	if opts.Provider == "" || opts.ClusterName == "" || opts.Region == "" {
-		fmt.Print(clusterDetails)
-	}
-
-	if err := survey.Ask(qs, opts); err != nil {
-		return err
-	}
-
-	// We need the provider to ask for the region
-	if err := opts.askClusterRegion(); err != nil {
-		return err
-	}
-
-	// We need the cluster name to ask for adding sample data
-	return opts.askSampleDataQuestion()
-}
-
 func (opts *Opts) askSampleDataQuestion() error {
 	if opts.SkipSampleData {
 		return nil
 	}
 
 	q := newSampleDataQuestion(opts.ClusterName)
-	addSampleData := false
+	var addSampleData bool
 	if err := survey.AskOne(q, &addSampleData); err != nil {
 		return err
 	}
-
 	opts.SkipSampleData = !addSampleData
 
 	return nil
 }
 
-func (opts *Opts) askClusterRegion() error {
-	if opts.Region == "" {
-		regions, err := opts.defaultRegions()
-		if err != nil {
-			return err
-		}
-		if regionQ := newRegionQuestions(regions); regionQ != nil {
-			return survey.Ask([]*survey.Question{regionQ}, opts)
-		}
-	}
-
-	return nil
-}
-
-func (opts *Opts) askDBUserOptions() error {
-	var qs []*survey.Question
-
-	if q := dbUsernameQuestion(opts.DBUsername, opts.validateUniqueUsername); q != nil {
-		qs = append(qs, q)
-	}
-
-	if pwd, q := dbUserPasswordQuestion(opts.DBUserPassword); q != nil {
-		opts.DBUsername = pwd
-		qs = append(qs, q)
-	}
-
-	if len(qs) > 0 {
-		fmt.Print(databaseUserDetails)
-		if err := survey.Ask(qs, opts); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (opts *Opts) askAccessListOptions() error {
-	q := accessListQuestion(opts.IPAddresses)
-	if q == nil {
-		return nil
-	}
-
-	fmt.Print(accessListDetails)
-	if err := survey.Ask([]*survey.Question{q}, opts); err != nil {
-		return err
-	}
-
-	if len(opts.IPAddresses) == 0 && opts.IPAddress != "" {
-		opts.IPAddresses = []string{opts.IPAddress}
-	}
-
-	return nil
-}
-
-func (opts *Opts) askMongoShellQuestion() (bool, error) {
-	if response, err := askAccessDeploymentQuestion(opts.SkipMongosh, opts.ClusterName); !response || err != nil {
-		return response, err
-	}
-
-	if config.MongoShellPath() != "" {
-		return true, nil
-	}
-
-	fmt.Println("No MongoDB shell version detected.")
-
-	if isInstalled, err := askIsMongoShellInstalledQuestion(); !isInstalled || err != nil {
-		if err != nil {
-			return isInstalled, err
-		}
-
-		runShell, err := askOpenMongoShellDownloadPage()
-		if !runShell || err != nil {
-			return runShell, err
-		}
-	}
-
-	return askMongoShellPathQuestion()
-}
-
-func askMongoShellPathQuestion() (bool, error) {
-	wantToProvidePath := false
-	q := newMongoShellPathQuestion()
-
-	if err := survey.AskOne(q, &wantToProvidePath); !wantToProvidePath || err != nil {
-		return wantToProvidePath, err
-	}
-
-	if err := askMongoShellAndSetConfig(); err != nil {
-		return false, err
-	}
-
-	return true, nil
-}
-
-func askIsMongoShellInstalledQuestion() (bool, error) {
-	isInstalled := false
-	q := newIsMongoShellInstalledQuestion()
-	if err := survey.AskOne(q, &isInstalled); !isInstalled || err != nil {
-		return isInstalled, err
-	}
-
-	return true, nil
-}
-
-func askAccessDeploymentQuestion(skip bool, clusterName string) (bool, error) {
-	if q := accessDeploymentQuestion(skip, clusterName); q != nil {
-		fmt.Print(mongoShellDetails)
-
-		runMongoShell := false
-		if err := survey.AskOne(q, &runMongoShell); !runMongoShell || err != nil {
-			return runMongoShell, err
-		}
-
-		return true, nil
-	}
-
-	return false, nil
-}
-
-func (opts *Opts) validateUniqueUsername(val interface{}) error {
-	username, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("the username %s is not valid", username)
-	}
-
-	_, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
-	var target *atlas.ErrorResponse
-
-	if err != nil && errors.As(err, &target) {
-		if target.ErrorCode == "USERNAME_NOT_FOUND" {
-			return nil
-		}
-		return err
-	}
-
-	return fmt.Errorf("a user with this username %s already exists", username)
-}
-
-func askOpenMongoShellDownloadPage() (bool, error) {
-	if openURL, err := askOpenBrowserQuestion(); !openURL || err != nil {
-		return openURL, err
-	}
-
-	if err := browser.OpenURL(mongoshURL); err != nil {
-		return false, err
-	}
-
-	return true, nil
-}
-
-func askOpenBrowserQuestion() (bool, error) {
-	openURL := false
-	prompt := newMongoShellQuestionOpenBrowser()
-	if err := survey.AskOne(prompt, &openURL); !openURL || err != nil {
-		return openURL, err
-	}
-
-	return true, nil
-}
-
 func askMongoShellAndSetConfig() error {
 	var mongoShellPath string
-	q := newMongoShellPathInput(mongosh.Path())
-	if err := survey.Ask([]*survey.Question{q}, &mongoShellPath); err != nil {
+	q := newMongoShellPathInput()
+	if err := survey.AskOne(q, &mongoShellPath, survey.WithValidator(validate.Path)); err != nil {
 		return err
 	}
 
@@ -565,38 +239,6 @@ func openBrowserAtlasAccount() error {
 	return browser.OpenURL(atlasAccountURL)
 }
 
-func (opts *Opts) defaultRegions() ([]string, error) {
-	cloudProviders, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, []*string{&opts.Provider})
-
-	if err != nil {
-		return nil, err
-	}
-
-	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
-		return nil, errors.New("no regions available")
-	}
-
-	availableRegions := cloudProviders.Results[0].InstanceSizes[0].AvailableRegions
-
-	defaultRegions := make([]string, 0, len(availableRegions))
-	popularRegionIndex := search.DefaultRegion(availableRegions)
-
-	if popularRegionIndex != -1 {
-		// the most popular region must be the first in the list
-		popularRegion := availableRegions[popularRegionIndex]
-		defaultRegions = append(defaultRegions, popularRegion.Name)
-
-		// remove popular region from availableRegions
-		availableRegions = append(availableRegions[:popularRegionIndex], availableRegions[popularRegionIndex+1:]...)
-	}
-
-	for _, v := range availableRegions {
-		defaultRegions = append(defaultRegions, v.Name)
-	}
-
-	return defaultRegions, nil
-}
-
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
@@ -615,7 +257,15 @@ func (opts *Opts) providerAndRegionToConstant() {
 	opts.Region = strings.ReplaceAll(strings.ToUpper(opts.Region), "-", "_")
 }
 
-// mongocli atlas dbuser(s) quickstart [--clusterName clusterName] [--provider provider] [--region regionName] [--projectId projectId] [--username username] [--password password] [--skipMongosh skipMongosh].
+// Builder
+// mongocli atlas dbuser(s) quickstart
+//	[--clusterName clusterName]
+//	[--provider provider]
+//	[--region regionName]
+//	[--projectId projectId]
+//	[--username username]
+//	[--password password]
+//	[--skipMongosh skipMongosh].
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
@@ -630,7 +280,6 @@ func Builder() *cobra.Command {
 				// no profile set
 				return askAtlasAccountAndProfile()
 			}
-
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
@@ -638,6 +287,8 @@ func Builder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			const base10 = 10
+			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
 			return opts.Run()
 		},

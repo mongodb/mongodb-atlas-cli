@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteInvitation, opts.ConfigOrgID())
 }
 
-// mongocli iam organization(s) invitation(s) delete <invitationId> [--force] [--orgId --orgId].
+// mongocli iam organization(s) invitation(s) delete <invitationId> [--force] [--orgId orgId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Invitation '%s' deleted\n", "Invitation not deleted"),

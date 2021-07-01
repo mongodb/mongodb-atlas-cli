@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister,OrganizationInviter
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
@@ -39,6 +39,10 @@ type OrganizationDescriber interface {
 
 type OrganizationCreator interface {
 	CreateOrganization(string) (*atlas.Organization, error)
+}
+
+type OrganizationInviter interface {
+	InviteUser(string, *atlas.Invitation) (*atlas.Invitation, error)
 }
 
 type OrganizationDeleter interface {
@@ -107,6 +111,20 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(context.Background(), orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// InviteUser encapsulate the logic to manage different cloud providers.
+func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Organizations.InviteUser(context.Background(), orgID, invitation)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(context.Background(), invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

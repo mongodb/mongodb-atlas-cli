@@ -130,10 +130,10 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
-			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(context.Background(), invitationID, invitation)
+			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(context.Background(), orgID, invitationID, invitation)
 			return result, err
 		}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(context.Background(), invitation)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(context.Background(), orgID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

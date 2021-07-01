@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Short:   "Invitation operations.",
 		Long:    "Create, list and manage your MongoDB organization invites.",
-		Aliases: cli.GenerateAliases(use, "orgs", "org"),
+		Aliases: cli.GenerateAliases(use),
 	}
 
 	cmd.AddCommand(

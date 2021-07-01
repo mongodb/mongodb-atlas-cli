@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber,OrganizationInvitationLister,OrganizationInvitationDeleter
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
@@ -43,6 +43,10 @@ type OrganizationCreator interface {
 
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error
+}
+
+type OrganizationInvitationDeleter interface {
+	DeleteInvitation(string, string) error
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
@@ -110,5 +114,19 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DeleteInvitation encapsulate the logic to manage different cloud providers.
+func (s *Store) DeleteInvitation(orgID, invitationID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(context.Background(), orgID, invitationID)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(context.Background(), orgID, invitationID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

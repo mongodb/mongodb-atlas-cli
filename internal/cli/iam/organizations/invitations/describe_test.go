@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,26 +20,38 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
+	mockStore := mocks.NewMockOrganizationInvitationDescriber(ctrl)
 	defer ctrl.Finish()
-
-	mockStore.
-		EXPECT().
-		Organization(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&mongodbatlas.Organization{}, nil).
-		Times(1)
 
 	opts := &DescribeOpts{
 		store: mockStore,
 		id:    "5a0a1e7e0f2912c554080adc",
 	}
+
+	mockStore.
+		EXPECT().
+		OrganizationInvitation(opts.ConfigOrgID(), opts.id).
+		Return(&mongodbatlas.Invitation{}, nil).
+		Times(1)
+
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.OrgID},
+	)
 }

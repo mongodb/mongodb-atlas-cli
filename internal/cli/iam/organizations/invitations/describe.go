@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,14 +24,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = `ID	NAME
-{{.ID}}	{{.Name}}
+const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
+{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
 type DescribeOpts struct {
 	cli.OutputOpts
+	cli.GlobalOpts
 	id    string
-	store store.OrganizationDescriber
+	store store.OrganizationInvitationDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -41,7 +42,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Organization(opts.id)
+	r, err := opts.store.OrganizationInvitation(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}
@@ -49,15 +50,15 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam organizations(s) describe <ID>.
+// mongocli iam organizations(s) describe|get <ID> [--orgId orgId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
-		Aliases: []string{"show"},
+		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Describe an organizations.",
+		Short:   "Retrieve details for one pending invitation to the specified Atlas organization.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
@@ -67,6 +68,8 @@ func DescribeBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

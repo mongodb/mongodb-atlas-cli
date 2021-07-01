@@ -37,6 +37,10 @@ type OrganizationDescriber interface {
 	Organization(string) (*atlas.Organization, error)
 }
 
+type OrganizationInvitationDescriber interface {
+	OrganizationInvitation(string) (*atlas.Organization, error)
+}
+
 type OrganizationCreator interface {
 	CreateOrganization(string) (*atlas.Organization, error)
 }

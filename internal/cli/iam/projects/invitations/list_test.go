@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectInvitations(listOpts.ConfigOrgID(), listOpts.newInvitationOptions()).
+		ProjectInvitations(listOpts.ConfigProjectID(), listOpts.newInvitationOptions()).
 		Return(expected, nil).
 		Times(1)
 

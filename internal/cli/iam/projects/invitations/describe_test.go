@@ -28,7 +28,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInvitationDescriber(ctrl)
+	mockStore := mocks.NewMockProjectInvitationDescriber(ctrl)
 	defer ctrl.Finish()
 
 	opts := &DescribeOpts{
@@ -38,7 +38,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		OrganizationInvitation(opts.ConfigProjectID(), opts.id).
+		ProjectInvitation(opts.ConfigProjectID(), opts.id).
 		Return(&mongodbatlas.Invitation{}, nil).
 		Times(1)
 

@@ -32,7 +32,7 @@ type DescribeOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	id    string
-	store store.OrganizationInvitationDescriber
+	store store.ProjectInvitationDescriber
 }
 
 func (opts *DescribeOpts) init() error {
@@ -42,7 +42,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.OrganizationInvitation(opts.ConfigOrgID(), opts.id)
+	r, err := opts.store.ProjectInvitation(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam project(s) invitations describe|get <ID> [--orgId orgId].
+// mongocli iam project(s) invitations describe|get <ID> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	opts.Template = describeTemplate

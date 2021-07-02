@@ -30,3 +30,12 @@ func TestBuilder(t *testing.T) {
 		[]string{},
 	)
 }
+
+func TestGlobalBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		GlobalBuilder(),
+		1,
+		[]string{},
+	)
+}

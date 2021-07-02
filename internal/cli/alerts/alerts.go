@@ -39,3 +39,13 @@ func Builder() *cobra.Command {
 
 	return cmd
 }
+
+func GlobalBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "global",
+		Short: "Retrieves all the global alerts for the specified Ops Manager project.",
+	}
+
+	cmd.AddCommand(GlobalListBuilder())
+	return cmd
+}

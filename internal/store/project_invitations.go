@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectInvitationLister,ProjectInvitationDescriber
+//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongocli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInviter
 
 type ProjectInvitationLister interface {
 	ProjectInvitations(string, *atlas.InvitationOptions) ([]*atlas.Invitation, error)
@@ -31,6 +31,10 @@ type ProjectInvitationLister interface {
 
 type ProjectInvitationDescriber interface {
 	ProjectInvitation(string, string) (*atlas.Invitation, error)
+}
+
+type ProjectInviter interface {
+	InviteUserToProject(string, *atlas.Invitation) (*atlas.Invitation, error)
 }
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
@@ -55,6 +59,20 @@ func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitati
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(context.Background(), groupID, invitationID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// InviteUserToProject encapsulate the logic to manage different cloud providers.
+func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).Projects.InviteUser(context.Background(), groupID, invitation)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Projects.InviteUser(context.Background(), groupID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

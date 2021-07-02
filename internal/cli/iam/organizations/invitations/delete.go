@@ -48,7 +48,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <invitationId>",
 		Aliases: []string{"rm"},
-		Short:   "Deletes one pending invitation to the specified Atlas organization.",
+		Short:   "Deletes one pending invitation to the specified organization.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.init(); err != nil {

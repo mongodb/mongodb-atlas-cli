@@ -58,7 +58,7 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <ID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Retrieve details for one pending invitation to the specified Atlas organization.",
+		Short:   "Retrieve details for one pending invitation to the specified organization.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

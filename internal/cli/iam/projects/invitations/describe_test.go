@@ -26,31 +26,32 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectInvitationLister(ctrl)
+	mockStore := mocks.NewMockProjectInvitationDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Invitation
-
-	listOpts := &ListOpts{store: mockStore}
+	opts := &DescribeOpts{
+		store: mockStore,
+		id:    "5a0a1e7e0f2912c554080adc",
+	}
 
 	mockStore.
 		EXPECT().
-		ProjectInvitations(listOpts.ConfigProjectID(), listOpts.newInvitationOptions()).
-		Return(expected, nil).
+		ProjectInvitation(opts.ConfigProjectID(), opts.id).
+		Return(&mongodbatlas.Invitation{}, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.Email, flag.ProjectID},
+		[]string{flag.ProjectID},
 	)
 }

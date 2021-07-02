@@ -42,7 +42,7 @@ func (opts *DescribeOpts) init() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ProjectInvitation(opts.ConfigOrgID(), opts.id)
+	r, err := opts.store.ProjectInvitation(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}

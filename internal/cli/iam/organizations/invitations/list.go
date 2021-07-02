@@ -63,7 +63,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Retrieves all pending invitations to the specified Atlas organization.",
+		Short:   "Retrieves all pending invitations to the specified organization.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

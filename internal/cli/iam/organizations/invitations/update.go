@@ -63,7 +63,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update <invitationId>",
 		Aliases: []string{"updates"},
-		Short:   "Updates one pending invitation by invitationId or email to the Atlas project that you specify.",
+		Short:   "Updates one pending invitation by invitationId or email to the project that you specify.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				opts.invitationID = args[0]

@@ -355,6 +355,16 @@ functions:
         env:
           <<: *go_options
         binary: build/package/rename-pkg.sh
+  "docker build":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - revision
+          - created_at
+          - image
+        working_dir: src/github.com/mongodb/mongocli/build/package
+        binary: ./docker-build.sh
   "send slack notification":
     - command: subprocess.exec
       type: test
@@ -392,7 +402,6 @@ functions:
           - src/github.com/mongodb/mongocli/dist/*.rpm
           - src/github.com/mongodb/mongocli/dist/*.tgz
           - src/github.com/mongodb/mongocli/dist/*.json
-          - src/github.com/mongodb/mongocli/dist/*.rb
           - src/github.com/mongodb/mongocli/dist/*.msi
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
@@ -861,49 +870,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,remote,sharded
-  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
-  # 4.2 tests are failing because of this https://github.com/mongodb/mongocli/pull/601#issuecomment-772401224
-#  - name: ops_manager_4_2_deploy_replica_set_e2e
-#    tags: ["opsmanager","clusters"]
-#    depends_on:
-#      - name: compile
-#        variant: "code_health"
-#        patch_optional: true
-#    commands:
-#      - func: "clone"
-#      - func: "install gotestsum"
-#      - func: "build"
-#      - func: "deploy spawn host"
-#      - func: ssh-ready
-#      - func: "install ops manager"
-#        vars:
-#          ARCHIVE: ${ops_manager_4_2_archive}
-#      - func: "set-up ops manager"
-#      - func: "install automation agent"
-#      - func: "e2e test"
-#        vars:
-#          E2E_TAGS: opsmanager,remote,replica
-#  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
-#  - name: ops_manager_4_2_deploy_sharded_cluster_e2e
-#    tags: ["opsmanager","clusters"]
-#    depends_on:
-#      - name: compile
-#        variant: "code_health"
-#        patch_optional: true
-#    commands:
-#      - func: "clone"
-#      - func: "install gotestsum"
-#      - func: "build"
-#      - func: "deploy spawn host"
-#      - func: ssh-ready
-#      - func: "install ops manager"
-#        vars:
-#          ARCHIVE: ${ops_manager_4_2_archive}
-#      - func: "set-up ops manager"
-#      - func: "install automation agent"
-#      - func: "e2e test"
-#        vars:
-#          E2E_TAGS: opsmanager,remote,sharded
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -982,6 +948,76 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
       - func: "upload dist"
+  - name: pkg_test_docker_ubuntu1804
+    tags: ["smoke-test"]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu18.04-deb
+  - name: pkg_test_docker_ubuntu2004
+    tags: ["smoke-test"]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu20.04-deb
+  - name: pkg_test_docker_debian9
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: debian9-deb
+  - name: pkg_test_docker_debian10
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: debian10-deb
+  - name: pkg_test_docker_amazon2
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: amazonlinux2-rpm
+  - name: pkg_test_docker_centos7
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos7-rpm
+  - name: pkg_test_docker_centos8
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos8-rpm
   - name: generate_docs
     tags: ["docs"]
     depends_on:
@@ -1536,6 +1572,17 @@ buildvariants:
       - name: .push
         run_on:
           - rhel70-small
+  - name: pkg_smoke_tests_docker
+    display_name: "Post packaging smoke tests (Docker)"
+    run_on: ubuntu1804-small
+    tasks:
+      - name: pkg_test_docker_amazon2
+      - name: pkg_test_docker_centos7
+      - name: pkg_test_docker_centos8
+      - name: pkg_test_docker_ubuntu1804
+      - name: pkg_test_docker_ubuntu2004
+      - name: pkg_test_docker_debian9
+      - name: pkg_test_docker_debian10
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:

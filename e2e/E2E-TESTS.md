@@ -189,6 +189,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam orgs delete`                             | N         | N         | N         | Y         | Y     | Y     |
 | `iam orgs describe`                           | Y         | N         | N         | Y         | Y     | Y     |
 | `iam orgs list`                               | Y         | N         | N         | Y         | Y     | Y     |
+| `iam orgs invitations list`                   | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations describe`               | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations invite`                 | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations update`                 | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations delete`                 | Y         | N         | N         | Y         | N     | N     |
 | `iam project apiKey create`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey delete`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey describe`                 | N         | N         | N         | Y         | Y     | Y     |
@@ -204,6 +209,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam project delete`                          | N         | N         | N         | Y         | Y     | Y     |
 | `iam project describe`                        | N         | N         | N         | Y         | Y     | Y     |
 | `iam project list`                            | N         | N         | N         | Y         | Y     | Y     |
+| `iam project invitations list`                | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations describe`            | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations invite`              | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations update`              | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations delete`              | Y         | N         | N         | Y         | N     | N     |
 | `iam team user add`                           | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user delete`                        | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user list`                          | Y         | N         | Y         | Y         | Y     | Y     |

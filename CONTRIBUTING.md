@@ -38,19 +38,18 @@ If you are interested in helping with the project, we will help you with your co
 
 ### Code Contribution Guidelines
 
-We want to create the best possible product for our users and the best contribution experience for our developers,
+To create the best possible product for our users and the best contribution experience for our developers,
 we have a set of guidelines to ensure that all contributions are acceptable.
 
 To make the contribution process as seamless as possible, we ask for the following:
 
-* Go ahead and fork the project and make your changes.  
-  We encourage pull requests to allow for review and discussion of code changes.
+* Fork the repository to work on your changes. Note that code contributions are accepted through pull requests to encourage discussion and allow for a smooth review experience.
 * When you’re ready to create a pull request, be sure to:
   * Sign the [CLA](https://www.mongodb.com/legal/contributor-agreement).
-  * Have test cases for the new code. If you have questions about how to do this, please ask in your pull request.
+  * Have test cases for the new code. If you have questions about how to do this, please ask in your pull request or check the [Building and Testing](#building-and-testing) section.
   * Run `make fmt`.
   * Add documentation if you are adding new features or changing functionality.  
-  * Ensure that `make check` succeeds. [GitHub Actions](https://github.com/mongodb/mongocli/actions).
+  * Confirm that `make check` succeeds. [GitHub Actions](https://github.com/mongodb/mongocli/actions).
 
 ### Development Setup
 
@@ -93,9 +92,10 @@ For a `mongocli scope newCommand` command a file `internal/cli/scope/new_command
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.
 
-Commands try to follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) approach to match the APIs, 
-this means arguments to the command try to match path and query params where the last path param will be a required argument of the command and teh rest will be handled via flag options.
-For commands that create or modify complex data structure the use of configuration files is preferred over flag options 
+Commands follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) approach to match the APIs, whenever possible. 
+For that reason, command arguments tend to match the path and query params of the APIs, 
+with the last param being a required argument and the rest handled via flag options. 
+For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
 ### Third Party Dependencies
 
@@ -106,4 +106,4 @@ To run Snyk locally please follow their [CLI reference](https://support.snyk.io/
 
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).
 
-For changes that involve user facing copy please include `docs-cloud-team` as a reviewer
+For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.

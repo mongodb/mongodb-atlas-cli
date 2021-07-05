@@ -31,7 +31,7 @@ const updateTemplate = "Invitation {{.ID}} updated.\n"
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store        store.OrganizationInvitationUpdater
+	store        store.ProjectInvitationUpdater
 	invitationID string
 	username     string
 	roles        []string
@@ -44,7 +44,7 @@ func (opts *UpdateOpts) init() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateOrganizationInvitation(opts.ConfigOrgID(), opts.invitationID, opts.newInvitation())
+	r, err := opts.store.UpdateProjectInvitation(opts.ConfigProjectID(), opts.invitationID, opts.newInvitation())
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// mongocli iam organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
+// mongocli iam project(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -98,7 +98,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Role)

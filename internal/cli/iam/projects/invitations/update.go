@@ -67,11 +67,11 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// mongocli iam project(s) invitation(s) updates <invitationId> --role role  [--orgId orgId] [--email email].
+// mongocli iam project(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:     "update <invitationId>",
+		Use:     "update [invitationId]",
 		Aliases: []string{"updates"},
 		Short:   "Updates one pending invitation by invitationId or email to the project that you specify.",
 		Annotations: map[string]string{

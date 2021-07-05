@@ -15,6 +15,8 @@
 package invitations
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -57,6 +59,14 @@ func (opts *UpdateOpts) newInvitation() *atlas.Invitation {
 	}
 }
 
+func (opts *UpdateOpts) validate() error {
+	if opts.username == "" && opts.invitationID == "" {
+		return errors.New("you must provide the email address or the invitationId")
+	}
+
+	return nil
+}
+
 // mongocli iam organization(s) invitation(s) updates <invitationId> --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
@@ -71,6 +81,7 @@ func UpdateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.validate,
 				opts.init,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)

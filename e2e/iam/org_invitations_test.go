@@ -27,36 +27,13 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	email     = "test1@mongodb.com"
-	roleName1 = "GROUP_READ_ONLY"
-	roleName2 = "GROUP_DATA_ACCESS_READ_ONLY"
-)
-
-func TestProjectInvitations(t *testing.T) {
+func TestOrgInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	var InvitationID string
-
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -67,8 +44,6 @@ func TestProjectInvitations(t *testing.T) {
 			email,
 			"--role",
 			"GROUP_READ_ONLY",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -94,8 +69,6 @@ func TestProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -120,8 +93,6 @@ func TestProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -141,8 +112,6 @@ func TestProjectInvitations(t *testing.T) {
 			projectsEntity,
 			invitationsEntity,
 			"ls",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -162,9 +131,7 @@ func TestProjectInvitations(t *testing.T) {
 			invitationsEntity,
 			"delete",
 			InvitationID,
-			"--force",
-			"--projectId",
-			projectID)
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)

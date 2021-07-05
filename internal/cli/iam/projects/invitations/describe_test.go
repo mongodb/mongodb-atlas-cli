@@ -19,14 +19,39 @@ package invitations
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectInvitationDescriber(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DescribeOpts{
+		store: mockStore,
+		id:    "5a0a1e7e0f2912c554080adc",
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectInvitation(opts.ConfigProjectID(), opts.id).
+		Return(&mongodbatlas.Invitation{}, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		5,
-		[]string{},
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

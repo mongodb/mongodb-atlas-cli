@@ -25,59 +25,71 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
-`
+const createTemplate = "User '{{.Username}}' invited.\n"
 
-type ListOpts struct {
-	cli.GlobalOpts
+type InviteOpts struct {
 	cli.OutputOpts
-	store    store.ProjectInvitationLister
+	cli.GlobalOpts
 	username string
+	roles    []string
+	teamIds  []string
+	store    store.ProjectInviter
 }
 
-func (opts *ListOpts) init() error {
+func (opts *InviteOpts) init() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.ProjectInvitations(opts.ConfigProjectID(), opts.newInvitationOptions())
+func (opts *InviteOpts) Run() error {
+	r, err := opts.store.InviteUserToProject(opts.ConfigProjectID(), opts.newInvitation())
+
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
+func (opts *InviteOpts) newInvitation() *atlas.Invitation {
+	return &atlas.Invitation{
 		Username: opts.username,
+		Roles:    opts.roles,
+		TeamIDs:  opts.teamIds,
 	}
 }
 
-// mongocli iam project(s) invitations list [--email email]  [--projectId projectId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
-	opts.Template = listTemplate
+// mongocli iam project(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
+func InviteBuilder() *cobra.Command {
+	opts := new(InviteOpts)
+	opts.Template = createTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "Retrieves all pending invitations to the specified project.",
-		Args:    require.NoArgs,
+		Use:     "invite <email>",
+		Short:   "Invites one user to the project that you specify.",
+		Aliases: []string{"create"},
+		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "email",
+			"nameDesc": "Email of the user being invited to the project.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.username = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
+	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Role)
 
 	return cmd
 }

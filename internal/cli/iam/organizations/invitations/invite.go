@@ -66,7 +66,7 @@ func InviteBuilder() *cobra.Command {
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
-		Short:   "Invites one user to the Atlas organization that you specify.",
+		Short:   "Invites one user to the organization that you specify.",
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

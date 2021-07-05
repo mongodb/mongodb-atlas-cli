@@ -20,37 +20,42 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestList_Run(t *testing.T) {
+func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectInvitationLister(ctrl)
+	mockStore := mocks.NewMockProjectInvitationDeleter(ctrl)
 	defer ctrl.Finish()
 
-	var expected []*mongodbatlas.Invitation
-
-	listOpts := &ListOpts{store: mockStore}
+	deleteOpts := &DeleteOpts{
+		store: mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "5a0a1e7e0f2912c554080adc",
+			Confirm: true,
+		},
+		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+	}
 
 	mockStore.
 		EXPECT().
-		ProjectInvitations(listOpts.ConfigProjectID(), listOpts.newInvitationOptions()).
-		Return(expected, nil).
+		DeleteProjectInvitation(deleteOpts.ConfigProjectID(), deleteOpts.Entry).
+		Return(nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestListBuilder(t *testing.T) {
+func TestDeleteBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(),
+		DeleteBuilder(),
 		0,
-		[]string{flag.Email, flag.ProjectID},
+		[]string{flag.Force, flag.ProjectID},
 	)
 }

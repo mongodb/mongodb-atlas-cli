@@ -22,59 +22,53 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
+const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
+{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
-type ListOpts struct {
-	cli.GlobalOpts
+type DescribeOpts struct {
 	cli.OutputOpts
-	store    store.ProjectInvitationLister
-	username string
+	cli.GlobalOpts
+	id    string
+	store store.ProjectInvitationDescriber
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DescribeOpts) init() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.ProjectInvitations(opts.ConfigProjectID(), opts.newInvitationOptions())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ProjectInvitation(opts.ConfigProjectID(), opts.id)
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
-		Username: opts.username,
-	}
-}
-
-// mongocli iam project(s) invitations list [--email email]  [--projectId projectId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
-	opts.Template = listTemplate
+// mongocli iam project(s) invitations describe|get <ID> [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
+	opts.Template = describeTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "Retrieves all pending invitations to the specified project.",
-		Args:    require.NoArgs,
+		Use:     "describe <ID>",
+		Aliases: []string{"get"},
+		Args:    require.ExactArgs(1),
+		Short:   "Retrieve details for one pending invitation to the specified project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

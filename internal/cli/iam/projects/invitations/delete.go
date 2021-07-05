@@ -22,62 +22,48 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
-{{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
-`
-
-type ListOpts struct {
+type DeleteOpts struct {
+	*cli.DeleteOpts
 	cli.GlobalOpts
-	cli.OutputOpts
-	store    store.ProjectInvitationLister
-	username string
+	store store.ProjectInvitationDeleter
 }
 
-func (opts *ListOpts) init() error {
+func (opts *DeleteOpts) init() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.ProjectInvitations(opts.ConfigProjectID(), opts.newInvitationOptions())
-	if err != nil {
-		return err
-	}
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteProjectInvitation, opts.ConfigProjectID())
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
-		Username: opts.username,
+// mongocli iam project(s) invitation(s) delete <invitationId> [--force] [--projectId projectId].
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Invitation '%s' deleted\n", "Invitation not deleted"),
 	}
-}
-
-// mongocli iam project(s) invitations list [--email email]  [--projectId projectId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
-	opts.Template = listTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "Retrieves all pending invitations to the specified project.",
-		Args:    require.NoArgs,
+		Use:     "delete <invitationId>",
+		Aliases: []string{"rm"},
+		Short:   "Deletes one pending invitation to the specified project.",
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			if err := opts.init(); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

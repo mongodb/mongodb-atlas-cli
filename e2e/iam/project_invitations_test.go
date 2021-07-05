@@ -78,6 +78,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(email, invitation.Username)
+			a.NotEmpty(invitation.ID)
 			InvitationID = invitation.ID
 		}
 	})

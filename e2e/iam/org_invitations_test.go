@@ -27,23 +27,27 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+const (
+	roleNameOrg = "ORG_OWNER"
+)
+
 func TestOrgInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	var InvitationID string
+	var OrgInvitationID string
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"invite",
 			email,
 			"--role",
-			"GROUP_READ_ONLY",
+			"ORG_MEMBER",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -53,22 +57,21 @@ func TestOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(email, invitation.Username)
-			InvitationID = invitation.ID
+			a.NotEmpty(invitation.ID)
+			OrgInvitationID = invitation.ID
 		}
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"update",
 			"--email",
 			email,
 			"--role",
-			roleName1,
-			"--role",
-			roleName2,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -78,21 +81,19 @@ func TestOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(email, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"update",
-			InvitationID,
+			OrgInvitationID,
 			"--role",
-			roleName1,
-			"--role",
-			roleName2,
+			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -102,14 +103,14 @@ func TestOrgInvitations(t *testing.T) {
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(email, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"ls",
 			"-o=json")
@@ -127,16 +128,16 @@ func TestOrgInvitations(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
-			projectsEntity,
+			orgEntity,
 			invitationsEntity,
 			"delete",
-			InvitationID,
+			OrgInvitationID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", InvitationID)
+			expected := fmt.Sprintf("Invitation '%s' deleted\n", OrgInvitationID)
 			a.Equal(expected, string(resp))
 		}
 	})

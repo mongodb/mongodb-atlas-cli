@@ -122,6 +122,7 @@ func TestOrgInvitations(t *testing.T) {
 		var invitations []mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
 			a.NotEmpty(invitations)
+			OrgInvitationID = invitations[0].ID
 		}
 	})
 

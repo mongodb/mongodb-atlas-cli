@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e iam
 
 package iam_test
 
@@ -29,6 +28,7 @@ import (
 
 const (
 	roleNameOrg = "ORG_OWNER"
+	emailOrg    = "test1@mongodb.com"
 )
 
 func TestOrgInvitations(t *testing.T) {
@@ -45,7 +45,7 @@ func TestOrgInvitations(t *testing.T) {
 			orgEntity,
 			invitationsEntity,
 			"invite",
-			email,
+			emailOrg,
 			"--role",
 			"ORG_MEMBER",
 			"-o=json")
@@ -56,10 +56,11 @@ func TestOrgInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(emailOrg, invitation.Username)
 			a.NotEmpty(invitation.ID)
-			OrgInvitationID = invitation.ID
 		}
+
+		OrgInvitationID = invitation.ID
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
@@ -69,7 +70,7 @@ func TestOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"update",
 			"--email",
-			email,
+			emailOrg,
 			"--role",
 			roleNameOrg,
 			"-o=json")
@@ -80,7 +81,7 @@ func TestOrgInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(emailOrg, invitation.Username)
 			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})
@@ -102,7 +103,7 @@ func TestOrgInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(emailOrg, invitation.Username)
 			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 		}
 	})

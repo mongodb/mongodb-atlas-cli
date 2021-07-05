@@ -66,7 +66,7 @@ func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitati
 		result, _, err := s.client.(*atlas.Client).Projects.Invitation(context.Background(), groupID, invitationID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(context.Background(), groupID, invitationID)
+		result, _, err := s.client.(*opsmngr.Client).Projects.Invitation(context.Background(), groupID, invitationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

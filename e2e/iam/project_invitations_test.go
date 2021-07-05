@@ -153,6 +153,7 @@ func TestProjectInvitations(t *testing.T) {
 		var invitations []mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
 			a.NotEmpty(invitations)
+			InvitationID = invitations[0].ID
 		}
 	})
 

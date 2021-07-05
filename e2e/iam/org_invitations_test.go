@@ -41,7 +41,7 @@ func TestOrgInvitations(t *testing.T) {
 	n, err := e2e.RandInt(1000)
 	require.NoError(t, err)
 
-	emailOrg := fmt.Sprintf("test%n@mongodb.com", n)
+	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string
 
 	t.Run("Invite", func(t *testing.T) {

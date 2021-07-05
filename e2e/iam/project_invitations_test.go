@@ -46,7 +46,7 @@ func TestProjectInvitations(t *testing.T) {
 	projectID, err := createProject(projectName)
 	require.NoError(t, err)
 
-	emailProject := fmt.Sprintf("test%n@mongodb.com", n)
+	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {

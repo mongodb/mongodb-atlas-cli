@@ -58,9 +58,13 @@ func (opts *UpdateOpts) Run() error {
 func UpdateBuilder() *cobra.Command {
 	opts := new(UpdateOpts)
 	cmd := &cobra.Command{
-		Use:   "update <ID>",
-		Short: "Update an alert configuration for your project.",
+		Use:   "update <alertConfigId>",
+		Short: "Updates one alert configuration in the specified project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "alertConfigId",
+			"nameDesc": "Unique identifier of the alert configuration you want to update.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

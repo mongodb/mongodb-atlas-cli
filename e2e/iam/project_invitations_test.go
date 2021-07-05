@@ -24,33 +24,29 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	emailProject = "test2@mongodb.com"
-	roleName1    = "GROUP_READ_ONLY"
-	roleName2    = "GROUP_DATA_ACCESS_READ_ONLY"
+	roleName1 = "GROUP_READ_ONLY"
+	roleName2 = "GROUP_DATA_ACCESS_READ_ONLY"
 )
 
 func TestProjectInvitations(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
-	var InvitationID string
+	var invitationID string
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	projectName := fmt.Sprintf("e2e-proj-%v", n)
 	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
+
+	emailProject := fmt.Sprintf("test%n@mongodb.com", n)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {
@@ -72,15 +68,56 @@ func TestProjectInvitations(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
 			a.Equal(emailProject, invitation.Username)
-			a.NotEmpty(invitation.ID)
+			require.NotEmpty(t, invitation.ID)
 		}
-		InvitationID = invitation.ID
+		invitationID = invitation.ID
+	})
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectsEntity,
+			invitationsEntity,
+			"ls",
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+
+		var invitations []mongodbatlas.Invitation
+		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
+			a.NotEmpty(invitations)
+		}
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			projectsEntity,
+			invitationsEntity,
+			"get",
+			invitationID,
+			"--projectId",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+
+		var invitation mongodbatlas.Invitation
+		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
+			a.Equal(invitationID, invitation.ID)
+		}
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
@@ -100,8 +137,8 @@ func TestProjectInvitations(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
@@ -116,7 +153,7 @@ func TestProjectInvitations(t *testing.T) {
 			projectsEntity,
 			invitationsEntity,
 			"update",
-			InvitationID,
+			invitationID,
 			"--role",
 			roleName1,
 			"--role",
@@ -126,8 +163,8 @@ func TestProjectInvitations(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
@@ -136,34 +173,13 @@ func TestProjectInvitations(t *testing.T) {
 		}
 	})
 
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
-			invitationsEntity,
-			"ls",
-			"--projectId",
-			projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-
-		var invitations []mongodbatlas.Invitation
-		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
-			a.NotEmpty(invitations)
-		}
-		InvitationID = invitations[0].ID
-	})
-
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"delete",
-			InvitationID,
+			invitationID,
 			"--force",
 			"--projectId",
 			projectID)
@@ -171,7 +187,7 @@ func TestProjectInvitations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", InvitationID)
+			expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)
 			a.Equal(expected, string(resp))
 		}
 	})

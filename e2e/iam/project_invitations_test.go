@@ -29,6 +29,7 @@ import (
 
 const (
 	email     = "test1@mongodb.com"
+	email2    = "test2@mongodb.com"
 	roleName1 = "GROUP_READ_ONLY"
 	roleName2 = "GROUP_DATA_ACCESS_READ_ONLY"
 )
@@ -64,7 +65,7 @@ func TestProjectInvitations(t *testing.T) {
 			projectsEntity,
 			invitationsEntity,
 			"invite",
-			email,
+			email2,
 			"--role",
 			"GROUP_READ_ONLY",
 			"--projectId",
@@ -77,7 +78,7 @@ func TestProjectInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(email2, invitation.Username)
 			a.NotEmpty(invitation.ID)
 			InvitationID = invitation.ID
 		}
@@ -90,7 +91,7 @@ func TestProjectInvitations(t *testing.T) {
 			invitationsEntity,
 			"update",
 			"--email",
-			email,
+			email2,
 			"--role",
 			roleName1,
 			"--role",
@@ -105,7 +106,7 @@ func TestProjectInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(email2, invitation.Username)
 			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})
@@ -131,7 +132,7 @@ func TestProjectInvitations(t *testing.T) {
 
 		var invitation mongodbatlas.Invitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(email, invitation.Username)
+			a.Equal(email2, invitation.Username)
 			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
 		}
 	})

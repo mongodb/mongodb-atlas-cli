@@ -48,7 +48,7 @@ type MatcherFieldsLister interface {
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
 func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -62,7 +62,7 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(context.Background(), alertConfig.GroupID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -76,7 +76,7 @@ func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 // DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(context.Background(), projectID, id)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -90,7 +90,7 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 // MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(context.Background())
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

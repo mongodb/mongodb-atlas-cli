@@ -273,18 +273,27 @@ type BasicConfig interface {
 // AuthenticatedPreset is the default Option when connecting to the public API with authentication.
 func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL))
+	if baseURLOpt := baseURLOption(c); baseURLOpt != nil {
+		options = append(options, baseURLOpt)
 	}
 	options = append(options, NetworkPresets(c))
 	return Options(options...)
 }
 
+func baseURLOption(c AuthenticatedConfig) Option {
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		return WithBaseURL(configURL)
+	} else if c.Service() == config.CloudGovService {
+		return WithBaseURL(config.CloudGovServiceURL)
+	}
+	return nil
+}
+
 // UnauthenticatedPreset is the default Option when connecting to the public API without authentication.
 func UnauthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service())}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL))
+	if option := baseURLOption(c); option != nil {
+		options = append(options, option)
 	}
 	options = append(options, NetworkPresets(c))
 	return Options(options...)
@@ -322,7 +331,7 @@ func New(opts ...Option) (*Store, error) {
 	}
 
 	switch store.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		err = store.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
 		err = store.setOpsManagerClient(client)

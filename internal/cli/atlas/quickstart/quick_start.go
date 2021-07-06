@@ -328,7 +328,8 @@ func (opts *Opts) defaultValues() error {
 //	[--projectId projectId]
 //	[--username username]
 //	[--password password]
-//	[--skipMongosh skipMongosh] [--default]
+//	[--skipMongosh skipMongosh]
+//	[--default]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{

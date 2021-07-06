@@ -55,16 +55,21 @@ Enter [?] on any option to get help.
 const quickstartTemplateCluster = `
 Creating your cluster... [It's safe to 'Ctrl + C']
 `
+const quickstartTemplateIPNotFound = `
+We could not find your public IP address. Please run "mongocli atlas accesslist create"" to add your IP address to the Atlas access list. 
+`
 
 const (
-	replicaSet      = "REPLICASET"
-	atlasM2         = "M2"
-	atlasAdmin      = "atlasAdmin"
-	mongoshURL      = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
-	profileDocURL   = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
-	aws             = "AWS"
-	region          = "US_EAST_1"
+	replicaSet       = "REPLICASET"
+	atlasM2          = "M2"
+	atlasM20         = "M20"
+	atlasAdmin       = "atlasAdmin"
+	mongoshURL       = "https://www.mongodb.com/try/download/shell"
+	atlasAccountURL  = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
+	profileDocURL    = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
+	defaultProvider  = "AWS"
+	defaultRegion    = "US_EAST_1"
+	defaultRegionGov = "US_GOV_EAST_1"
 )
 
 type Opts struct {
@@ -272,20 +277,44 @@ func (opts *Opts) defaultValues() error {
 
 	opts.SkipSampleData = true
 	opts.SkipMongosh = true
-	opts.ClusterName = opts.defaultName
-	opts.Provider = aws
-	opts.Region = region
-	opts.tier = atlasM2
-	opts.DBUsername = opts.defaultName
 
-	pwd, err := GeneratePassword()
-	if err != nil {
-		return err
+	if opts.ClusterName == "" {
+		opts.ClusterName = opts.defaultName
 	}
-	opts.DBUserPassword = pwd
 
-	if publicIP := store.IPAddress(); publicIP != "" {
-		opts.IPAddresses = []string{publicIP}
+	if config.CloudGovService == config.Service() && opts.tier == atlasM2 {
+		opts.tier = atlasM20
+	}
+
+	if opts.Provider == "" {
+		opts.Provider = defaultProvider
+	}
+
+	if opts.Region == "" {
+		opts.Region = defaultRegion
+		if config.CloudGovService == config.Service() {
+			opts.Region = defaultRegionGov
+		}
+	}
+
+	if opts.DBUsername == "" {
+		opts.DBUsername = opts.defaultName
+	}
+
+	if opts.DBUserPassword == "" {
+		pwd, err := GeneratePassword()
+		if err != nil {
+			return err
+		}
+		opts.DBUserPassword = pwd
+	}
+
+	if len(opts.IPAddresses) == 0 {
+		if publicIP := store.IPAddress(); publicIP != "" {
+			opts.IPAddresses = []string{publicIP}
+		} else {
+			fmt.Print(quickstartTemplateIPNotFound)
+		}
 	}
 
 	return nil
@@ -300,7 +329,7 @@ func (opts *Opts) defaultValues() error {
 //	[--username username]
 //	[--password password]
 //	[--skipMongosh skipMongosh]
-//  [--default]	.
+//  [--default]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
@@ -342,7 +371,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.Default)
+	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

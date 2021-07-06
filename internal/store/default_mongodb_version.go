@@ -31,7 +31,7 @@ type DefaultVersionGetter interface {
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) DefaultMongoDBVersion() (string, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).DefaultMongoDBMajorVersion.Get(context.Background())
 		return result, err
 	default:

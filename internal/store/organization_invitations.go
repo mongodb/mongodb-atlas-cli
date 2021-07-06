@@ -47,7 +47,7 @@ type OrganizationInvitationUpdater interface {
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Invitations(context.Background(), orgID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -61,7 +61,7 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Invitation(context.Background(), orgID, invitationID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -75,7 +75,7 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlas.Invit
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(context.Background(), orgID, invitationID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -89,7 +89,7 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		if invitationID != "" {
 			result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitationByID(context.Background(), orgID, invitationID, invitation)
 			return result, err
@@ -112,7 +112,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 // InviteUser encapsulate the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.InviteUser(context.Background(), orgID, invitation)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

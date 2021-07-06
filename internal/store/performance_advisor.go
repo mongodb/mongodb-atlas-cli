@@ -39,7 +39,7 @@ type PerformanceAdvisorIndexesLister interface {
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -53,7 +53,7 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -67,7 +67,7 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 // PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

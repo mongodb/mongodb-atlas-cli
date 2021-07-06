@@ -85,7 +85,7 @@ type AtlasClusterQuickStarter interface {
 // AddSampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(context.Background(), groupID, clusterName)
 		return result, err
 	default:
@@ -96,7 +96,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 // SampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(context.Background(), groupID, id)
 		return result, err
 	default:
@@ -107,7 +107,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, e
 // CreateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Create(context.Background(), cluster.GroupID, cluster)
 		return result, err
 	default:
@@ -118,7 +118,7 @@ func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCl
 // UpdateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Update(context.Background(), projectID, name, cluster)
 		return result, err
 	default:
@@ -147,7 +147,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, er
 // DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(context.Background(), projectID, name)
 		return err
 	default:
@@ -158,7 +158,7 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 // ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -172,7 +172,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 // AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(context.Background(), projectID, name)
 		return result, err
 	default:

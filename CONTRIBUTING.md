@@ -3,6 +3,24 @@
 Thanks for your interest in contributing to `mongocli`, 
 this document describes some guidelines necessary to participate in the community. 
 
+## Table of Contents
+
+* [Asking Support Questions](#asking-support-questions)
+* [Feature Requests](#feature-requests)
+* [Reporting Issues](#reporting-issues)
+* [Submitting Patches](#submitting-patches)
+  * [Code Contribution Guidelines](#code-contribution-guidelines)
+  * [Development Setup](#development-setup)
+  * [Building and Testing](#building-and-testing)
+  * [Adding a New Command](#adding-a-new-commands)
+  * [Third Party Dependencies](#third-party-dependencies)
+* [Maintainer's Guide](#maintainers-guide)
+
+## Asking Support Questions
+
+MongoDB support is provided under MongoDB Atlas or Enterprise Advance [support plans](https://support.mongodb.com/welcome).
+Please don't use the GitHub issue tracker to ask questions.
+
 ## Feature Requests
 
 We welcome any feedback or feature request, to submit yours
@@ -13,13 +31,25 @@ please head over to our [feedback page](https://feedback.mongodb.com/forums/9308
 Please create a [GitHub issue](https://github.com/mongodb/mongocli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
 with as much detail as possible, including things like operating system or anything else may be relevant to the issue.
 
-## Submitting a Patch
+## Submitting Patches
 
-Before submitting a patch to the repo please consider opening an [issue first](#reporting-issues).
+The MongoDB CLI project welcomes all contributors and contributions regardless of skill or experience level. 
+If you are interested in helping with the project, please follow our [guidelines](#code-contribution-guidelines).
 
-### Contributor License Agreement
+### Code Contribution Guidelines
 
-For patches to be accepted, contributors must sign our [CLA](https://www.mongodb.com/legal/contributor-agreement).
+To create the best possible product for our users and the best contribution experience for our developers,
+we have a set of guidelines to ensure that all contributions are acceptable.
+
+To make the contribution process as seamless as possible, we ask for the following:
+
+* Fork the repository to work on your changes. Note that code contributions are accepted through pull requests to encourage discussion and allow for a smooth review experience.
+* When you’re ready to create a pull request, be sure to:
+  * Sign the [CLA](https://www.mongodb.com/legal/contributor-agreement).
+  * Have test cases for the new code. If you have questions about how to do this, please ask in your pull request or check the [Building and Testing](#building-and-testing) section.
+  * Run `make fmt`.
+  * Add documentation if you are adding new features or changing functionality.  
+  * Confirm that `make check` succeeds. [GitHub Actions](https://github.com/mongodb/mongocli/actions).
 
 ### Development Setup
 
@@ -30,7 +60,7 @@ For patches to be accepted, contributors must sign our [CLA](https://www.mongodb
 #### Environment
 - Fork the repository.
 - Clone your forked repository locally.
-- We use Go Modules to manage dependencies, so you can develop outside of your `$GOPATH`.
+- We use Go Modules to manage dependencies, so you can develop outside your `$GOPATH`.
 - We use [golangci-lint](https://github.com/golangci/golangci-lint) to lint our code, you can install it locally via `make setup`.
 
 ### Building and Testing
@@ -48,19 +78,24 @@ The following is a short list of commands that can be run in the root of the pro
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks`.
 
-### Generating Mocks
+#### Generating Mocks
 
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
-If you need a new mock please update or add the `//go:generate` instruction to the appropriate file. 
+If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
 ### Adding a New Command
 
 `mongocli` uses [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
 in addition to this we have defined a basic structure that should be followed.
-For a `mongocli scope newCommand` command a file `internal/cli/scope_new_command.go` should implement: 
+For a `mongocli scope newCommand` command a file `internal/cli/scope/new_command.go` should implement: 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.
+
+Commands follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) approach to match the APIs, whenever possible. 
+For that reason, command arguments tend to match the path and query params of the APIs, 
+with the last param being a required argument and the rest handled via flag options. 
+For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
 ### Third Party Dependencies
 
@@ -70,3 +105,5 @@ To run Snyk locally please follow their [CLI reference](https://support.snyk.io/
 ## Maintainer's Guide
 
 Reviewers, please ensure that the CLA has been signed by referring to [the contributors tool](https://contributors.corp.mongodb.com/) (internal link).
+
+For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.

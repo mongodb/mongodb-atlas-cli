@@ -273,29 +273,26 @@ type BasicConfig interface {
 // AuthenticatedPreset is the default Option when connecting to the public API with authentication.
 func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
-	if baseURLOpt := BaseURLOption(c); baseURLOpt != nil {
+	if baseURLOpt := baseURLOption(c); baseURLOpt != nil {
 		options = append(options, baseURLOpt)
 	}
 	options = append(options, NetworkPresets(c))
 	return Options(options...)
 }
 
-func BaseURLOption(c AuthenticatedConfig) Option {
+func baseURLOption(c AuthenticatedConfig) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
-	}
-
-	if c.Service() == config.CloudGovService {
+	} else if c.Service() == config.CloudGovService {
 		return WithBaseURL(config.CloudGovServiceURL)
 	}
-
 	return nil
 }
 
 // UnauthenticatedPreset is the default Option when connecting to the public API without authentication.
 func UnauthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service())}
-	if option := BaseURLOption(c); option != nil {
+	if option := baseURLOption(c); option != nil {
 		options = append(options, option)
 	}
 	options = append(options, NetworkPresets(c))

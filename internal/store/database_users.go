@@ -56,7 +56,7 @@ type DBUserCertificateCreator interface {
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Create(context.Background(), user.GroupID, user)
 		return result, err
 	default:
@@ -66,7 +66,7 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), authDB, groupID, username)
 		return err
 	default:
@@ -76,7 +76,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 
 func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
@@ -86,7 +86,7 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atla
 
 func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(context.Background(), user.GroupID, user.Username, user)
 		return result, err
 	default:
@@ -96,7 +96,7 @@ func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 
 func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseUser, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		escapedUsername := url.PathEscape(username)
 		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, escapedUsername)
 		return result, err
@@ -108,7 +108,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
 func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCertificate, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
 		return result, err
 	default:
@@ -119,7 +119,7 @@ func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCert
 // CreateDBUserCertificate creates a new Atlas managed certificates for a database user.
 func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlas.UserCertificate, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiration)
 		return result, err
 	default:

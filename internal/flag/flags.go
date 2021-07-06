@@ -249,5 +249,6 @@ const (
 	MonthlySnapshotRetentionMonths  = "monthlySnapshotRetentionMonths"  // MonthlySnapshotRetentionMonths flag
 	Policy                          = "policy"                          // Policy flag
 	SystemID                        = "systemId"                        // SystemID flag
+	Default                         = "default"                         // Default flag
 
 )

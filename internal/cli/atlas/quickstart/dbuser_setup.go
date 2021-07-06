@@ -46,12 +46,11 @@ func (opts *Opts) askDBUserOptions() error {
 	}
 
 	if opts.DBUserPassword == "" {
-		const passwordLength = 12
-		pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+		pwd, err := GeneratePassword()
 		if err != nil {
 			return err
 		}
-		opts.DBUsername = pwd
+		opts.DBUserPassword = pwd
 		message := fmt.Sprintf(" [Press Enter to use an auto-generated password '%s']", pwd)
 
 		qs = append(qs, newDBUserPasswordQuestion(pwd, message))
@@ -96,4 +95,14 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 		DatabaseName: convert.AdminDB,
 		Username:     opts.DBUsername,
 	}
+}
+
+func GeneratePassword() (string, error) {
+	const passwordLength = 12
+	pwd, err := randgen.GenerateRandomBase64String(passwordLength)
+	if err != nil {
+		return "", err
+	}
+
+	return pwd, nil
 }

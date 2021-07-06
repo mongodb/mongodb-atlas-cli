@@ -39,7 +39,7 @@ type CustomDNSDescriber interface {
 // EnableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: true,
 		}
@@ -53,7 +53,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 // DisableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: false,
 		}
@@ -67,7 +67,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 // DescribeCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(context.Background(), projectID)
 		return result, err
 	default:

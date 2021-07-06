@@ -57,7 +57,7 @@ func (opts *configOpts) initStore() error {
 }
 
 func (opts *configOpts) IsCloud() bool {
-	return opts.Service == config.CloudService
+	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
 }
 
 func (opts *configOpts) IsOpsManager() bool {
@@ -243,6 +243,9 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		Example: `
   To configure the tool to work with Atlas
   $ mongocli config
+
+  To configure the tool to work with Atlas for Government
+  $ mongocli config --service cloudgov
   
   To configure the tool to work with Cloud Manager
   $ mongocli config --service cloud-manager

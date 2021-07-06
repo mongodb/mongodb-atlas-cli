@@ -38,7 +38,7 @@ const (
 	opsManagerSkipVerify         = "ops_manager_skip_verify"
 	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
 	output                       = "output"
-	CloudGovServiceURL           = "https://cloud-dev.mongodbgov.com/"
+	CloudGovServiceURL           = "https://cloud.mongodbgov.com/"
 	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm                   = 0600
 )

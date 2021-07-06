@@ -58,7 +58,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 // Organization encapsulate the logic to manage different cloud providers.
 func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Get(context.Background(), id)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -84,7 +84,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Organizations.Delete(context.Background(), id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:

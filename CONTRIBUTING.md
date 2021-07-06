@@ -34,7 +34,7 @@ with as much detail as possible, including things like operating system or anyth
 ## Submitting Patches
 
 The MongoDB CLI project welcomes all contributors and contributions regardless of skill or experience level. 
-If you are interested in helping with the project, we will help you with your contribution.
+If you are interested in helping with the project, please follow our [guidelines](#code-contribution-guidelines).
 
 ### Code Contribution Guidelines
 

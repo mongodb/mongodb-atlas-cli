@@ -103,7 +103,7 @@ func (s *Store) MatcherFields() ([]string, error) {
 
 func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(context.Background(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

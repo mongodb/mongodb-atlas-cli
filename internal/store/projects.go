@@ -69,7 +69,7 @@ type ProjectTeamDeleter interface {
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(context.Background(), opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

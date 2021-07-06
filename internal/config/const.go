@@ -21,6 +21,7 @@ const (
 	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
+	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
 	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
 	JSON                         = "json"          // JSON output format as json
@@ -37,6 +38,7 @@ const (
 	opsManagerSkipVerify         = "ops_manager_skip_verify"
 	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
 	output                       = "output"
+	CloudGovServiceURL           = "https://cloud-dev.mongodbgov.com/"
 	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm                   = 0600
 )

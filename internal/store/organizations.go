@@ -44,7 +44,7 @@ type OrganizationDeleter interface {
 // Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.List(context.Background(), opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

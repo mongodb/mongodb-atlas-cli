@@ -15,6 +15,7 @@
 package quickstart
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -56,8 +57,8 @@ const quickstartTemplateCluster = `
 Creating your cluster... [It's safe to 'Ctrl + C']
 `
 const quickstartTemplateIPNotFound = `
-We could not find your public IP address. Please run "mongocli atlas accesslist create"" to add your IP address to the Atlas access list. 
-`
+We could not find your public IP address. To add your IP address run:
+  mongocli atlas accesslist create`
 
 const (
 	replicaSet       = "REPLICASET"
@@ -313,7 +314,7 @@ func (opts *Opts) defaultValues() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			fmt.Print(quickstartTemplateIPNotFound)
+			return errors.New(quickstartTemplateIPNotFound)
 		}
 	}
 

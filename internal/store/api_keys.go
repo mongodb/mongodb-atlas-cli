@@ -64,7 +64,7 @@ type OrganizationAPIKeyDeleter interface {
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.List(context.Background(), orgID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -78,7 +78,7 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]at
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.Get(context.Background(), orgID, apiKeyID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -92,7 +92,7 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.Update(context.Background(), orgID, apiKeyID, input)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -106,7 +106,7 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).APIKeys.Create(context.Background(), orgID, input)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -120,7 +120,7 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 // DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).APIKeys.Delete(context.Background(), orgID, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -134,7 +134,7 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 // ProjectAPIKeys returns the API Keys for a specific project.
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -148,7 +148,7 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atl
 // CreateProjectAPIKey creates an API Keys for a project.
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(context.Background(), projectID, apiKeyInput)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -162,7 +162,7 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyI
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Assign(context.Background(), projectID, apiKeyID, input)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -176,7 +176,7 @@ func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.Ass
 // DeleteProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Unassign(context.Background(), projectID, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:

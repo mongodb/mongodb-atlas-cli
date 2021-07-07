@@ -28,7 +28,7 @@ type IPInfoDescriber interface {
 // IPInfo encapsulates the logic to manage different cloud providers.
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(context.Background())
 		return resp, err
 	default:

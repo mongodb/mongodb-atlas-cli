@@ -45,7 +45,7 @@ type X509CertificateStore interface {
 // X509Configuration retrieves the current user managed certificates for a database user.
 func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetCurrentX509Conf(context.Background(), projectID)
 		return result, err
 	default:
@@ -56,7 +56,7 @@ func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error)
 // SaveX509Configuration saves a customer-managed X.509 configuration for an Atlas project.
 func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.CustomerX509, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		userCertificate := &atlas.CustomerX509{Cas: certificate}
 		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(context.Background(), projectID, userCertificate)
 		return result, err
@@ -68,7 +68,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 // DisableX509Configuration disables customer-managed X.509 configuration for an Atlas project.
 func (s *Store) DisableX509Configuration(projectID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).X509AuthDBUsers.DisableCustomerX509(context.Background(), projectID)
 		return err
 	default:

@@ -44,7 +44,7 @@ type ContinuousSnapshotsLister interface {
 // Checkpoints encapsulate the logic to manage different cloud providers.
 func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
@@ -58,7 +58,7 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 // ContinuousRestoreJobs encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -72,7 +72,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 // CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -86,7 +86,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 // ContinuousSnapshots encapsulate the logic to manage different cloud providers.
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

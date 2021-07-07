@@ -302,7 +302,7 @@ func (opts *Opts) defaultValues() error {
 	}
 
 	if opts.DBUserPassword == "" {
-		pwd, err := GeneratePassword()
+		pwd, err := generatePassword()
 		if err != nil {
 			return err
 		}

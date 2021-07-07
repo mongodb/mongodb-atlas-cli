@@ -46,7 +46,7 @@ func (opts *Opts) askDBUserOptions() error {
 	}
 
 	if opts.DBUserPassword == "" {
-		pwd, err := GeneratePassword()
+		pwd, err := generatePassword()
 		if err != nil {
 			return err
 		}
@@ -97,7 +97,7 @@ func (opts *Opts) newDatabaseUser() *atlas.DatabaseUser {
 	}
 }
 
-func GeneratePassword() (string, error) {
+func generatePassword() (string, error) {
 	const passwordLength = 12
 	pwd, err := randgen.GenerateRandomBase64String(passwordLength)
 	if err != nil {

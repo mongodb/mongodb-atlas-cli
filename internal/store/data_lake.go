@@ -55,7 +55,7 @@ type DataLakeStore interface {
 // CreateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Create(context.Background(), projectID, dataLake)
 		return result, err
 	default:
@@ -66,7 +66,7 @@ func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateR
 // UpdateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Update(context.Background(), projectID, name, dataLake)
 		return result, err
 	default:
@@ -77,7 +77,7 @@ func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeU
 // DeleteDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDataLake(projectID, name string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		_, err := s.client.(*atlas.Client).DataLakes.Delete(context.Background(), projectID, name)
 		return err
 	default:
@@ -88,7 +88,7 @@ func (s *Store) DeleteDataLake(projectID, name string) error {
 // DataLakes encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.List(context.Background(), projectID)
 		return result, err
 	default:
@@ -99,7 +99,7 @@ func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 // DataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).DataLakes.Get(context.Background(), projectID, name)
 		return result, err
 	default:

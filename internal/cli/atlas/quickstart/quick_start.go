@@ -45,13 +45,31 @@ username: %s
 password: %s
 `
 
+const quickstartTemplateIntro = `You are creating a new Atlas cluster and enabling access to it.
+
+Press [Enter] to use the default values.
+
+Enter [?] on any option to get help.
+`
+
+const quickstartTemplateCluster = `
+Creating your cluster... [It's safe to 'Ctrl + C']
+`
+const quickstartTemplateIPNotFound = `
+We could not find your public IP address. To add your IP address run:
+  mongocli atlas accesslist create`
+
 const (
-	replicaSet      = "REPLICASET"
-	atlasM2         = "M2"
-	atlasAdmin      = "atlasAdmin"
-	mongoshURL      = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
-	profileDocURL   = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
+	replicaSet       = "REPLICASET"
+	atlasM2          = "M2"
+	atlasM20         = "M20"
+	atlasAdmin       = "atlasAdmin"
+	mongoshURL       = "https://www.mongodb.com/try/download/shell"
+	atlasAccountURL  = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
+	profileDocURL    = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
+	defaultProvider  = "AWS"
+	defaultRegion    = "US_EAST_1"
+	defaultRegionGov = "US_GOV_EAST_1"
 )
 
 type Opts struct {
@@ -71,6 +89,7 @@ type Opts struct {
 	SkipMongosh         bool
 	runMongoShell       bool
 	mongoShellInstalled bool
+	defaultValue        bool
 	store               store.AtlasClusterQuickStarter
 }
 
@@ -81,12 +100,7 @@ func (opts *Opts) initStore() error {
 }
 
 func (opts *Opts) Run() error {
-	fmt.Print(`You are creating a new Atlas cluster and enabling access to it.
-
-Press [Enter] to use the default values.
-
-Enter [?] on any option to get help.
-`)
+	fmt.Print(quickstartTemplateIntro)
 
 	if err := opts.createCluster(); err != nil {
 		return err
@@ -114,9 +128,8 @@ We are deploying %s...
 
 	opts.setupCloseHandler()
 
-	fmt.Print(`
-Creating your cluster... [It's safe to 'Ctrl + C']
-`)
+	fmt.Print(quickstartTemplateCluster)
+
 	// Watch cluster creation
 	if er := opts.Watch(opts.clusterCreationWatcher); er != nil {
 		return er
@@ -257,6 +270,56 @@ func (opts *Opts) providerAndRegionToConstant() {
 	opts.Region = strings.ReplaceAll(strings.ToUpper(opts.Region), "-", "_")
 }
 
+func (opts *Opts) defaultValues() error {
+	if !opts.defaultValue {
+		return nil
+	}
+
+	opts.SkipSampleData = true
+	opts.SkipMongosh = true
+
+	if opts.ClusterName == "" {
+		opts.ClusterName = opts.defaultName
+	}
+
+	if config.CloudGovService == config.Service() && opts.tier == atlasM2 {
+		opts.tier = atlasM20
+	}
+
+	if opts.Provider == "" {
+		opts.Provider = defaultProvider
+	}
+
+	if opts.Region == "" {
+		opts.Region = defaultRegion
+		if config.CloudGovService == config.Service() {
+			opts.Region = defaultRegionGov
+		}
+	}
+
+	if opts.DBUsername == "" {
+		opts.DBUsername = opts.defaultName
+	}
+
+	if opts.DBUserPassword == "" {
+		pwd, err := generatePassword()
+		if err != nil {
+			return err
+		}
+		opts.DBUserPassword = pwd
+	}
+
+	if len(opts.IPAddresses) == 0 {
+		if publicIP := store.IPAddress(); publicIP != "" {
+			opts.IPAddresses = []string{publicIP}
+		} else {
+			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
+		}
+	}
+
+	return nil
+}
+
 // Builder
 // mongocli atlas dbuser(s) quickstart
 //	[--clusterName clusterName]
@@ -265,7 +328,8 @@ func (opts *Opts) providerAndRegionToConstant() {
 //	[--projectId projectId]
 //	[--username username]
 //	[--password password]
-//	[--skipMongosh skipMongosh].
+//	[--skipMongosh skipMongosh]
+//	[--default]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
@@ -290,6 +354,10 @@ func Builder() *cobra.Command {
 			const base10 = 10
 			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
+
+			if err := opts.defaultValues(); err != nil {
+				return err
+			}
 			return opts.Run()
 		},
 	}
@@ -303,6 +371,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
+	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

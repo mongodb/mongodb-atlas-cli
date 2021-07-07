@@ -15,7 +15,6 @@
 package quickstart
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -314,7 +313,7 @@ func (opts *Opts) defaultValues() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			return errors.New(quickstartTemplateIPNotFound)
+			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
 		}
 	}
 

@@ -280,7 +280,7 @@ Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
 	AccessListType = `Type of access list entry.
 Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 	Service = `Type of MongoDB service.
-Valid values: cloud|cloud-manager|ops-manager`
+Valid values: cloud|cloudgov|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
 	ClusterTypes = `Type of the cluster that you want to create.

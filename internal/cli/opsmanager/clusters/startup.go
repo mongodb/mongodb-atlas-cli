@@ -119,7 +119,7 @@ func StartupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "startup [clusterName]",
 		Short: "Start up a cluster or a list of processes for your project.",
-		Args:  require.ExactArgs(1),
+		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.validateInputs, opts.initStore); err != nil {
 				return err

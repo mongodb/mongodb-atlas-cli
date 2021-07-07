@@ -63,7 +63,7 @@ type RegionalizedPrivateEndpointSettingDescriber interface {
 // PrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.List(context.Background(), projectID, provider, opts)
 		return result, err
 	default:
@@ -74,7 +74,7 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 // PrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(context.Background(), projectID, provider, privateLinkID)
 		return result, err
 	default:
@@ -85,7 +85,7 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atl
 // CreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpointConnection) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(context.Background(), projectID, r)
 		return result, err
 	default:
@@ -96,7 +96,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 // DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(context.Background(), projectID, provider, privateLinkID)
 		return err
 	default:

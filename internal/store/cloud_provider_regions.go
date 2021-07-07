@@ -35,7 +35,7 @@ func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*str
 		Tier:      tier,
 	}
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(context.Background(), projectID, options)
 		return result, err
 	default:

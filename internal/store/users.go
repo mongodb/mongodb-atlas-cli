@@ -54,7 +54,7 @@ type UserRequest struct {
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		atlasUser := &atlas.AtlasUser{
 			EmailAddress: user.EmailAddress,
 			FirstName:    user.FirstName,
@@ -78,7 +78,7 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 // UserByID encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByID(userID string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AtlasUsers.Get(context.Background(), userID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -92,7 +92,7 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 // UserByName encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(context.Background(), username)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -117,7 +117,7 @@ func (s *Store) DeleteUser(userID string) error {
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Organizations.Users(context.Background(), organizationID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -131,7 +131,7 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 // TeamUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Teams.GetTeamUsersAssigned(context.Background(), orgID, teamID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

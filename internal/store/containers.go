@@ -36,7 +36,7 @@ type ContainersDeleter interface {
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
 		return result, err
 	default:
@@ -49,7 +49,7 @@ const maxPerPage = 100
 // AzureContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		opts := &atlas.ContainersListOptions{
 			ProviderName: "Azure",
 			ListOptions: atlas.ListOptions{
@@ -67,7 +67,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 // AWSContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		opts := &atlas.ContainersListOptions{
 			ProviderName: "AWS",
 			ListOptions: atlas.ListOptions{
@@ -103,7 +103,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 // AllContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Containers.ListAll(context.Background(), projectID, opts)
 		return result, err
 	default:
@@ -114,7 +114,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 // DeleteContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteContainer(projectID, containerID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Containers.Delete(context.Background(), projectID, containerID)
 		return err
 	default:
@@ -125,7 +125,7 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 // Container encapsulates the logic to manage different cloud providers.
 func (s *Store) Container(projectID, containerID string) (*atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Containers.Get(context.Background(), projectID, containerID)
 		return result, err
 	default:
@@ -136,7 +136,7 @@ func (s *Store) Container(projectID, containerID string) (*atlas.Container, erro
 // CreateContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*atlas.Container, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Containers.Create(context.Background(), projectID, container)
 		return result, err
 	default:

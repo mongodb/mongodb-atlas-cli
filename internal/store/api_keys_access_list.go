@@ -43,7 +43,7 @@ type OrganizationAPIKeyAccessListCreator interface {
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -66,7 +66,7 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -88,7 +88,7 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

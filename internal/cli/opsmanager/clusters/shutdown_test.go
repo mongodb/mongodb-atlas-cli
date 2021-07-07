@@ -32,9 +32,9 @@ func TestShutdown_Run(t *testing.T) {
 	expected := fixture.AutomationConfig()
 
 	shutdownOpts := &ShutdownOpts{
-		store:   mockStore,
-		confirm: true,
-		name:    "myReplicaSet",
+		store:       mockStore,
+		confirm:     true,
+		clusterName: "myReplicaSet",
 	}
 
 	mockStore.

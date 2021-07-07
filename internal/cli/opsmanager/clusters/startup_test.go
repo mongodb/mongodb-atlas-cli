@@ -32,9 +32,9 @@ func TestStartup_Run(t *testing.T) {
 	expected := fixture.AutomationConfig()
 
 	startupOpts := &StartupOpts{
-		store:   mockStore,
-		confirm: true,
-		name:    "myReplicaSet",
+		store:       mockStore,
+		confirm:     true,
+		clusterName: "myReplicaSet",
 	}
 
 	mockStore.

@@ -1657,3 +1657,12 @@ buildvariants:
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_stable
+  - name: release_publish_50
+    display_name: "Publish yum/apt 5.0"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "5.0.0"
+      notary_key_name: "server-5.0"
+    tasks:
+      - name: .push_stable

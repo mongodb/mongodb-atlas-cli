@@ -53,7 +53,7 @@ func (opts *ShutdownOpts) Run() error {
 		return err
 	}
 
-	err = atmcfg.ShutdownClusterAndProcesses(current, opts.clusterName, opts.processes)
+	err = atmcfg.ShutdownProcessesByClusterName(current, opts.clusterName, opts.processes)
 	if err != nil {
 		return err
 	}

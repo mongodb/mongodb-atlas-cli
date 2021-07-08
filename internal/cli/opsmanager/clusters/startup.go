@@ -52,7 +52,7 @@ func (opts *StartupOpts) Run() error {
 		return err
 	}
 
-	err = atmcfg.StartupClusterAndProcesses(current, opts.clusterName, opts.processes)
+	err = atmcfg.StartupProcessesByClusterName(current, opts.clusterName, opts.processes)
 	if err != nil {
 		return err
 	}

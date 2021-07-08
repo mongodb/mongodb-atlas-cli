@@ -440,6 +440,7 @@ functions:
           - signing_auth_token_42
           - signing_auth_token_44
           - signing_auth_token_46
+          - signing_auth_token_50
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli

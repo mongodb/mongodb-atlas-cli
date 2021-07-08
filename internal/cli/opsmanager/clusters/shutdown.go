@@ -91,20 +91,18 @@ func (opts *ShutdownOpts) validateInputs() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) shutdown [name] --projectId projectId --processName hostname:port,hostname:port[--force].
+// mongocli cloud-manager cluster(s) shutdown <clusterName> --projectId projectId --processName hostname:port,hostname:port[--force].
 func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
 	cmd := &cobra.Command{
-		Use:   "shutdown [name]",
+		Use:   "shutdown <clusterName>",
 		Short: "Shutdown a cluster or a list of processes for your project.",
-		Args:  require.MaximumNArgs(1),
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.validateInputs, opts.initStore); err != nil {
 				return err
 			}
-			if len(args) > 0 {
-				opts.clusterName = args[0]
-			}
+			opts.clusterName = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

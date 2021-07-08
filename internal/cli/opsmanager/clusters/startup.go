@@ -84,20 +84,18 @@ func (opts *StartupOpts) validateInputs() error {
 	return nil
 }
 
-// mongocli cloud-manager cluster(s) startup [clusterName] --process hostname:port,hostname2:port2 --projectId projectId [--force].
+// mongocli cloud-manager cluster(s) startup <clusterName> --process hostname:port,hostname2:port2 --projectId projectId [--force].
 func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
 	cmd := &cobra.Command{
-		Use:   "startup [clusterName]",
+		Use:   "startup <clusterName>",
 		Short: "Start up a cluster or a list of processes for your project.",
-		Args:  require.MaximumNArgs(1),
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.validateInputs, opts.initStore); err != nil {
 				return err
 			}
-			if len(args) > 0 {
-				opts.clusterName = args[0]
-			}
+			opts.clusterName = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

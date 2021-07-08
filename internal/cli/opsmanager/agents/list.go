@@ -14,6 +14,7 @@
 package agents
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -53,12 +54,13 @@ func (opts *ListOpts) Run() error {
 
 // mongocli om agent(s) list [--projectId projectId].
 func ListBuilder() *cobra.Command {
+	validArgs := []string{"AUTOMATION", "MONITORING", "BACKUP"}
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:       "list",
+		Use:       fmt.Sprintf("list <%s>", strings.Join(validArgs, "|")),
 		Aliases:   []string{"ls"},
 		Args:      require.ExactValidArgs(1),
-		ValidArgs: []string{"AUTOMATION", "MONITORING", "BACKUP"},
+		ValidArgs: validArgs,
 		Short:     "List available MongoDB Agents for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

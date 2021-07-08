@@ -24,12 +24,10 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/atmcfg"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type ShutdownOpts struct {
@@ -46,28 +44,6 @@ func (opts *ShutdownOpts) initStore() error {
 	return err
 }
 
-func (opts *ShutdownOpts) shutdownCluster(current *opsmngr.AutomationConfig) error {
-	if opts.clusterName == "" {
-		return nil
-	}
-
-	if !search.ClusterExists(current, opts.clusterName) {
-		return fmt.Errorf("cluster '%s' doesn't exist", opts.clusterName)
-	}
-
-	atmcfg.Shutdown(current, opts.clusterName)
-
-	return nil
-}
-
-func (opts *ShutdownOpts) shutdownProcesses(current *opsmngr.AutomationConfig) error {
-	if len(opts.processes) == 0 {
-		return nil
-	}
-
-	return atmcfg.ShutdownProcess(current, opts.processes)
-}
-
 func (opts *ShutdownOpts) Run() error {
 	if !opts.confirm {
 		return nil
@@ -77,12 +53,7 @@ func (opts *ShutdownOpts) Run() error {
 		return err
 	}
 
-	err = opts.shutdownCluster(current)
-	if err != nil {
-		return err
-	}
-
-	err = opts.shutdownProcesses(current)
+	err = atmcfg.ShutdownClusterAndProcesses(current, opts.clusterName, opts.processes)
 	if err != nil {
 		return err
 	}

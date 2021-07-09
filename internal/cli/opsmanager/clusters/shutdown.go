@@ -102,7 +102,7 @@ func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
 	cmd := &cobra.Command{
 		Use:   "shutdown <clusterName>",
-		Short: "Shutdown a cluster or a list of processes for your project.",
+		Short: "Shutdown a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":     "clusterName",

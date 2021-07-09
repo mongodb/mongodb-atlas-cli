@@ -103,7 +103,7 @@ func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
 	cmd := &cobra.Command{
 		Use:   "startup <clusterName>",
-		Short: "Start up a cluster or a list of processes for your project.",
+		Short: "Start up a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":     "clusterName",

@@ -1580,8 +1580,17 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".docs"
+  - name: go_msi_snapshot
+    display_name: "Packaging (go-msi)"
+    run_on:
+      - windows-vsCurrent-small
+    expansions:
+      go_root: "c:\\golang\\go1.16"
+      go_bin: "c:\\golang\\go1.16/bin"
+    tasks:
+      - name: package_msi
   - name: goreleaser_snapshot
-    display_name: "Packaging and Publishing (goreleaser, apt, yum)"
+    display_name: "Packaging (goreleaser)"
     run_on:
       - macos-1014-codesign
     expansions:
@@ -1590,6 +1599,17 @@ buildvariants:
       server_version: "4.4.0-rc3"
     tasks:
       - name: package_goreleaser
+        run_on:
+          - rhel70-small
+  - name: publish_snapshot
+    display_name: "Publishing (apt, yum)"
+    run_on:
+      - macos-1014-codesign
+    expansions:
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
+      server_version: "4.4.0-rc3"
+    tasks:
       - name: .push
         run_on:
           - rhel70-small
@@ -1604,15 +1624,6 @@ buildvariants:
       - name: pkg_test_docker_ubuntu2004
       - name: pkg_test_docker_debian9
       - name: pkg_test_docker_debian10
-  - name: go_msi_snapshot
-    display_name: "Packaging (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    expansions:
-      go_root: "c:\\golang\\go1.16"
-      go_bin: "c:\\golang\\go1.16/bin"
-    tasks:
-      - name: package_msi
   - name: release_msi
     display_name: "Release (go-msi)"
     run_on:

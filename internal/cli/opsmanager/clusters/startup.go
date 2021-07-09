@@ -17,6 +17,7 @@ package clusters
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -70,8 +71,15 @@ func (opts *StartupOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
+
+	startupProcess := opts.clusterName
+
+	if len(opts.processes) > 0 {
+		startupProcess = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
+	}
+
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to startup: %s", opts.clusterName),
+		Message: fmt.Sprintf("Are you sure you want to startup: %s", startupProcess),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }

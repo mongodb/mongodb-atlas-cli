@@ -74,8 +74,8 @@ func (opts *ShutdownOpts) Confirm() error {
 
 	shutdownProcess := opts.clusterName
 
-	if shutdownProcess == "" {
-		shutdownProcess = strings.Join(opts.processes, ", ")
+	if len(opts.processes) > 0 {
+		shutdownProcess = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
 	}
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", shutdownProcess),

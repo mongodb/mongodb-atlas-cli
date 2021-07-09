@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/search"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -51,6 +53,10 @@ func (opts *StartupOpts) Run() error {
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
 	if err != nil {
 		return err
+	}
+
+	if !search.ClusterExists(current, opts.clusterName) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.clusterName)
 	}
 
 	err = atmcfg.StartupProcessesByClusterName(current, opts.clusterName, opts.processes)

@@ -21,7 +21,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
-	go.mongodb.org/atlas v0.9.1-0.20210707084630-612962074f5e
-	go.mongodb.org/ops-manager v0.23.1-0.20210705152314-3c9ae47df7fc
+	go.mongodb.org/atlas v0.9.1-0.20210707095538-d4a51579e8e0
+	go.mongodb.org/ops-manager v0.24.0
 	gopkg.in/yaml.v2 v2.4.0
 )

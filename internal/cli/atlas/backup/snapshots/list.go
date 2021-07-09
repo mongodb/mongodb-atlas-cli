@@ -61,8 +61,8 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "clusterName",
-			"nameDesc": "Name of the Atlas cluster that contains the snapshots you want to retrieve.",
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the Atlas cluster that contains the snapshots you want to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

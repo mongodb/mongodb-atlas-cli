@@ -152,8 +152,8 @@ func RestoresStartBuilder() *cobra.Command {
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
-			"args":     "deliveryType",
-			"nameDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
+			"args":             "deliveryType",
+			"deliveryTypeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {

@@ -440,6 +440,7 @@ functions:
           - signing_auth_token_42
           - signing_auth_token_44
           - signing_auth_token_46
+          - signing_auth_token_50
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
@@ -1655,5 +1656,14 @@ buildvariants:
     expansions:
       server_version: "4.4.3"
       notary_key_name: "server-4.4"
+    tasks:
+      - name: .push_stable
+  - name: release_publish_50
+    display_name: "Publish yum/apt 5.0"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "5.0.0"
+      notary_key_name: "server-5.0"
     tasks:
       - name: .push_stable

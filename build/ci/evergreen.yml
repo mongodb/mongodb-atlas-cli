@@ -206,7 +206,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip | tar zx
+          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip | bsdtar -x
   "install goreleaser":
     - command: shell.exec
       type: setup

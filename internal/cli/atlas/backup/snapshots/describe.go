@@ -57,6 +57,10 @@ func DescribeBuilder() *cobra.Command {
 		Use:   "describe <ID>",
 		Short: "Get a specific snapshot for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "snapshotId",
+			"nameDesc": "Unique identifier of the snapshot you want to retrieve.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

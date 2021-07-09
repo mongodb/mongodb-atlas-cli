@@ -83,6 +83,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <entry>",
 		Short: "Create an IP access list for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "entry",
+			"nameDesc": "The AWS security group ID, IP address, or CIDR address of the access list entry to create.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -1602,7 +1602,7 @@ buildvariants:
         run_on:
           - rhel70-small
   - name: publish_snapshot
-    display_name: "Publishing (apt, yum)"
+    display_name: "Publish yum/apt main"
     run_on:
       - macos-1014-codesign
     expansions:

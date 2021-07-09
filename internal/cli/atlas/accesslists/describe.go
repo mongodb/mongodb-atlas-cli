@@ -59,8 +59,8 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Describe an IP access list entry.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "entry",
-			"nameDesc": "The AWS security group ID, IP address, or CIDR address of the access list entry to retrieve.",
+			"args":      "entry",
+			"entryDesc": "The AWS security group ID, IP address, or CIDR address of the access list entry to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

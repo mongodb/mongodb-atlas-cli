@@ -51,8 +51,8 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete an IP access list from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "entry",
-			"nameDesc": "The AWS security group ID, IP address, or CIDR address of the access list entry to delete.",
+			"args":      "entry",
+			"entryDesc": "The AWS security group ID, IP address, or CIDR address of the access list entry to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -31,9 +32,10 @@ import (
 
 type StartupOpts struct {
 	cli.GlobalOpts
-	name    string
-	confirm bool
-	store   store.AutomationPatcher
+	clusterName string
+	confirm     bool
+	processes   []string
+	store       store.AutomationPatcher
 }
 
 func (opts *StartupOpts) initStore() error {
@@ -47,16 +49,18 @@ func (opts *StartupOpts) Run() error {
 		return nil
 	}
 	current, err := opts.store.GetAutomationConfig(opts.ConfigProjectID())
-
 	if err != nil {
 		return err
 	}
 
-	if !search.ClusterExists(current, opts.name) {
-		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
+	if !search.ClusterExists(current, opts.clusterName) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.clusterName)
 	}
 
-	atmcfg.Startup(current, opts.name)
+	err = atmcfg.StartupProcessesByClusterName(current, opts.clusterName, opts.processes)
+	if err != nil {
+		return err
+	}
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -71,24 +75,35 @@ func (opts *StartupOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
+
+	startupProcess := opts.clusterName
+
+	if len(opts.processes) > 0 {
+		startupProcess = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
+	}
+
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to startup: %s", opts.name),
+		Message: fmt.Sprintf("Are you sure you want to startup: %s", startupProcess),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) startup <name> --projectId projectId [--force].
+// mongocli cloud-manager cluster(s) startup <clusterName> --process hostname:port,hostname2:port2 --projectId projectId [--force].
 func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
 	cmd := &cobra.Command{
-		Use:   "startup <name>",
+		Use:   "startup <clusterName>",
 		Short: "Start up a cluster for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "clusterName",
+			"nameDesc": "Name of the cluster that you want to start.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
-			opts.name = args[0]
+			opts.clusterName = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -96,6 +111,7 @@ func StartupBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringSliceVar(&opts.processes, flag.ProcessName, []string{}, usage.ProcessName)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

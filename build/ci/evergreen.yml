@@ -1600,12 +1600,10 @@ buildvariants:
       server_version: "4.4.0-rc3"
     tasks:
       - name: package_goreleaser
-        run_on:
-          - rhel70-small
   - name: publish_snapshot
     display_name: "Publish yum/apt main"
     run_on:
-      - macos-1014-codesign
+      - rhel70-small
     expansions:
       go_root: "/opt/golang/go1.16"
       go_bin: "/opt/golang/go1.16/bin"

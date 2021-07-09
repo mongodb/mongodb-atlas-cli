@@ -15,7 +15,6 @@
 package clusters
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -89,14 +88,6 @@ func (opts *StartupOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-func (opts *StartupOpts) validateInputs() error {
-	if opts.clusterName == "" && len(opts.processes) == 0 {
-		return errors.New("you have to provide the Cluster Name or use --process")
-	}
-
-	return nil
-}
-
 // mongocli cloud-manager cluster(s) startup <clusterName> --process hostname:port,hostname2:port2 --projectId projectId [--force].
 func StartupBuilder() *cobra.Command {
 	opts := &StartupOpts{}
@@ -109,7 +100,7 @@ func StartupBuilder() *cobra.Command {
 			"nameDesc": "Name of the cluster that you want to start.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.validateInputs, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
 			opts.clusterName = args[0]

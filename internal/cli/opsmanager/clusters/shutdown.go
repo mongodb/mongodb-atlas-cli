@@ -15,7 +15,6 @@
 package clusters
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -88,14 +87,6 @@ func (opts *ShutdownOpts) Confirm() error {
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-func (opts *ShutdownOpts) validateInputs() error {
-	if opts.clusterName == "" && len(opts.processes) == 0 {
-		return errors.New("you have to provide the Cluster Name or use --process")
-	}
-
-	return nil
-}
-
 // mongocli cloud-manager cluster(s) shutdown <clusterName> --projectId projectId --processName hostname:port,hostname:port[--force].
 func ShutdownBuilder() *cobra.Command {
 	opts := &ShutdownOpts{}
@@ -108,7 +99,7 @@ func ShutdownBuilder() *cobra.Command {
 			"nameDesc": "Name of the cluster that you want to shutdown.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.validateInputs, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
 			opts.clusterName = args[0]

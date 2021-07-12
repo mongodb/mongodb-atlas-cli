@@ -39,6 +39,7 @@ func Builder() *cobra.Command {
 		IndexesBuilder(),
 		UnmanageBuilder(),
 		RestartBuilder(),
+		ReclaimFreeSpaceBuilder(),
 	)
 
 	return cmd

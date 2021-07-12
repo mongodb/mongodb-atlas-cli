@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -31,9 +32,10 @@ import (
 
 type RestartOpts struct {
 	cli.GlobalOpts
-	name    string
-	confirm bool
-	store   store.AutomationPatcher
+	clusterName string
+	confirm     bool
+	processes   []string
+	store       store.AutomationPatcher
 }
 
 func (opts *RestartOpts) initStore() error {
@@ -52,11 +54,14 @@ func (opts *RestartOpts) Run() error {
 		return err
 	}
 
-	if !search.ClusterExists(current, opts.name) {
-		return fmt.Errorf("cluster '%s' doesn't exist", opts.name)
+	if !search.ClusterExists(current, opts.clusterName) {
+		return fmt.Errorf("cluster '%s' doesn't exist", opts.clusterName)
 	}
 
-	atmcfg.Restart(current, opts.name)
+	err = atmcfg.RestartProcessesByClusterName(current, opts.clusterName, opts.processes)
+	if err != nil {
+		return err
+	}
 
 	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
@@ -71,24 +76,31 @@ func (opts *RestartOpts) Confirm() error {
 	if opts.confirm {
 		return nil
 	}
+
+	startupProcess := opts.clusterName
+
+	if len(opts.processes) > 0 {
+		startupProcess = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
+	}
+
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", opts.name),
+		Message: fmt.Sprintf("Are you sure you want to restart: %s", startupProcess),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
 
-// mongocli cloud-manager cluster(s) restart <name> --projectId projectId [--force].
+// mongocli cloud-manager cluster(s) restart <clusterName> --process hostname:port,hostname2:port2 --projectId projectId [--force].
 func RestartOptsBuilder() *cobra.Command {
 	opts := &RestartOpts{}
 	cmd := &cobra.Command{
-		Use:   "restart <name>",
+		Use:   "restart <clusterName>",
 		Short: "Restart a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err
 			}
-			opts.name = args[0]
+			opts.clusterName = args[0]
 			return opts.Confirm()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -96,6 +108,7 @@ func RestartOptsBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringSliceVar(&opts.processes, flag.ProcessName, []string{}, usage.ProcessName)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

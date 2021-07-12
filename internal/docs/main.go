@@ -31,7 +31,7 @@ func main() {
 
 	mongocli := root.Builder(&profile, []string{})
 
-	if err := cobra2snooty.GenSnootyTree(mongocli, "./docs/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(mongocli, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

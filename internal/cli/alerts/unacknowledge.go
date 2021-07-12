@@ -67,8 +67,8 @@ func UnacknowledgeBuilder() *cobra.Command {
 		Aliases: []string{"unack"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "alertID",
-			"nameDesc": "ID of the alert you want to unacknowledge.",
+			"args":        "alertId",
+			"alertIdDesc": "ID of the alert you want to unacknowledge.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

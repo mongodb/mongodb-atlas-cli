@@ -75,8 +75,8 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Short:   "Updates one pending invitation by invitationId or email to the project that you specify.",
 		Annotations: map[string]string{
-			"args":     "invitationId",
-			"nameDesc": "Unique 24-hexadecimal digit string that identifies the invitation.",
+			"args":             "invitationId",
+			"invitationIdDesc": "Unique 24-hexadecimal digit string that identifies the invitation.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

@@ -55,13 +55,13 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <alertID>",
+		Use:     "describe <alertId>",
 		Aliases: []string{"get"},
 		Short:   "Retrieves one alert for the specified project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "alertID",
-			"nameDesc": "Unique identifier of the alert you want to describe.",
+			"args":        "alertId",
+			"alertIdDesc": "Unique identifier of the alert you want to describe.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

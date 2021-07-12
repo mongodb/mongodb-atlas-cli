@@ -96,8 +96,8 @@ func StartupBuilder() *cobra.Command {
 		Short: "Start up a cluster for your project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":     "clusterName",
-			"nameDesc": "Name of the cluster that you want to start.",
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster that you want to start.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

@@ -98,7 +98,7 @@ func RestartBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster that you want to start.",
+			"clusterNameDesc": "Name of the cluster you want to restart.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

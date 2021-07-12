@@ -90,12 +90,16 @@ func (opts *RestartOpts) Confirm() error {
 }
 
 // mongocli cloud-manager cluster(s) restart <clusterName> --process hostname:port,hostname2:port2 --projectId projectId [--force].
-func RestartOptsBuilder() *cobra.Command {
+func RestartBuilder() *cobra.Command {
 	opts := &RestartOpts{}
 	cmd := &cobra.Command{
 		Use:   "restart <clusterName>",
 		Short: "Restart a cluster for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster that you want to start.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

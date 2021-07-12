@@ -38,7 +38,7 @@ func Builder() *cobra.Command {
 		ApplyBuilder(),
 		IndexesBuilder(),
 		UnmanageBuilder(),
-		RestartOptsBuilder(),
+		RestartBuilder(),
 	)
 
 	return cmd

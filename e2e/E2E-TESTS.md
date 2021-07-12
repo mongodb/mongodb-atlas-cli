@@ -252,7 +252,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `agent apikeys create`                        |           | N         | N         |           | Y     | Y     |
 | `agent apikeys delete`                        |           | N         | N         |           | Y     | Y     |
 | `agent apikeys list`                          |           | Y         | Y         |           | Y     | Y     |
-| `agent version list`                          |           | N         | N         |           | Y     | Y     |
+| `agent version list`                          |           | Y         | Y         |           | Y     | Y     |
 | `agent list`                                  |           | Y         | Y         |           | Y     | Y     |
 | `agent upgrade`                               |           | Y         | Y         |           | Y     | Y     |
 | `automation describe`                         |           | N         | N         |           | Y     | Y     |

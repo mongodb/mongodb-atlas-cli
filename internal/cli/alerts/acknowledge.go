@@ -89,8 +89,8 @@ func AcknowledgeBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"args":     "alertID",
-			"nameDesc": "ID of the alert you want to acknowledge or un-acknowledge.",
+			"args":        "alertId",
+			"alertIdDesc": "ID of the alert you want to acknowledge or un-acknowledge.",
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.alertID = args[0]

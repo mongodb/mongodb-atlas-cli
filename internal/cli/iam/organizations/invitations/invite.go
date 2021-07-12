@@ -69,6 +69,10 @@ func InviteBuilder() *cobra.Command {
 		Short:   "Invites one user to the organization that you specify.",
 		Aliases: []string{"create"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":      "email",
+			"emailDesc": "Email of the user being invited to the organization.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.init()

@@ -75,6 +75,11 @@ gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
 	go generate ./internal...
 
+.PHONY: gen-docs
+gen-docs: ## Generate docs for commands
+	@echo "==> Generating docs"
+	go run ./internal/docs/main.go
+
 .PHONY: build
 build: ## Generate a binary in ./bin
 	@echo "==> Building $(BINARY_NAME) binary"

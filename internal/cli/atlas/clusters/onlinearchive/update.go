@@ -62,13 +62,17 @@ func (opts *UpdateOpts) newOnlineArchive() *atlas.OnlineArchive {
 	return archive
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--archiveAfter N] [--projectId projectId].
+// mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
-		Use:   "update <ID>",
+		Use:   "update <archiveId>",
 		Short: "Update an online archive for a cluster.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

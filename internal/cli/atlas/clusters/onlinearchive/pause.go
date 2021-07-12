@@ -55,13 +55,17 @@ func (opts *PauseOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) pause <ID> [--clusterName name][--projectId projectId].
+// mongocli atlas cluster(s) onlineArchive(s) pause <archiveId> [--clusterName name][--projectId projectId].
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause <ID>",
+		Use:   "pause <archiveId>",
 		Short: "Pause an online archive from a cluster.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

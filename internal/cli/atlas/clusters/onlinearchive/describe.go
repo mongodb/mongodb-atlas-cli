@@ -52,13 +52,17 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <name> [--clusterName name][--projectId projectId].
+// mongocli atlas cluster(s) describe <archiveId> [--clusterName name][--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <ID>",
+		Use:   "describe <archiveId>",
 		Short: "Describe an online archive for a cluster.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

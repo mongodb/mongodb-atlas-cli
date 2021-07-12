@@ -120,7 +120,7 @@ func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 // Agents encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
-	case config.OpsManagerService:
+	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(context.Background(), projectID)
 		return result, err
 	default:

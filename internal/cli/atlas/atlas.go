@@ -35,7 +35,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
@@ -49,8 +48,6 @@ func Builder() *cobra.Command {
 		Use:   Use,
 		Short: "Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			config.SetService(config.CloudService)
-
 			if cmd.Name() == "quickstart" { // quickstart has its own check
 				return nil
 			}

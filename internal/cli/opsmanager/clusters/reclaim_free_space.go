@@ -86,7 +86,7 @@ func ReclaimFreeSpaceBuilder() *cobra.Command {
 	opts := &ReclaimFreeSpaceOpts{}
 	cmd := &cobra.Command{
 		Use:     "reclaimFreeSpace <clusterName>",
-		Short:   "Allow to reclaim free space for a cluster.",
+		Short:   "Reclaim unused space for a cluster.",
 		Aliases: []string{"rfs"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

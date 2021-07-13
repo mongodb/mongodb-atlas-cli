@@ -69,14 +69,14 @@ func (opts *ReclaimFreeSpaceOpts) Confirm() error {
 		return nil
 	}
 
-	startupProcess := opts.clusterName
+	process := opts.clusterName
 
 	if len(opts.processes) > 0 {
-		startupProcess = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
+		process = fmt.Sprintf("%s (%s)", opts.clusterName, strings.Join(opts.processes, ", "))
 	}
 
 	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to reclaim free space for: %s", startupProcess),
+		Message: fmt.Sprintf("Are you sure you want to reclaim free space for: %s", process),
 	}
 	return survey.AskOne(prompt, &opts.confirm)
 }
@@ -107,12 +107,9 @@ func ReclaimFreeSpaceBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.processes, flag.ProcessName, []string{}, usage.ProcessName)
 	cmd.Flags().BoolVar(&opts.confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.timestamp, flag.Timestamp, "", usage.Timestamp)
+	cmd.Flags().StringVar(&opts.timestamp, flag.Timestamp, "", usage.ReclaimFreeSpaceTimestamp)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	_ = cmd.MarkFlagRequired(flag.File)
-	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

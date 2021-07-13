@@ -31,14 +31,14 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		DescribeBuilder(),
 		CreateBuilder(),
-		ShutdownBuilder(),
-		StartupBuilder(),
 		UpdateBuilder(),
 		DeleteBuilder(),
 		ApplyBuilder(),
 		IndexesBuilder(),
 		UnmanageBuilder(),
 		RestartBuilder(),
+		StartupBuilder(),
+		ShutdownBuilder(),
 		ReclaimFreeSpaceBuilder(),
 	)
 

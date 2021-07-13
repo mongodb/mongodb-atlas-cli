@@ -254,7 +254,7 @@ const (
 	SkipSampleData                  = "Don't load sample data into your Atlas Cluster."
 	ContainerRegion                 = "Atlas region where the container resides."
 	ContainerRegions                = "List of Atlas regions where the container resides."
-	Timestamp                       = "Timestamp in ISO 8601 date and time format in UTC when Ops Manager last reclaimed free space on a cluster’s disks."
+	ReclaimFreeSpaceTimestamp       = "The service reclaims the space after the current time passes the provided timestamp. If not set the current timestamp will be used."
 	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
 	FormatOut                       = `Output format.
 Valid values: json|json-path|go-template|go-template-file`

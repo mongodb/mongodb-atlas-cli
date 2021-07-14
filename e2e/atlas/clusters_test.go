@@ -187,7 +187,7 @@ func TestClustersFlags(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB=20",
-			"--mdbVersion=4.2",
+			"--mdbVersion=4.4",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -197,7 +197,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterName, "4.2", 20)
+		ensureCluster(t, &cluster, clusterName, "4.4", 20)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -242,7 +242,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 10)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 10)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -261,7 +261,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 25)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 25)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

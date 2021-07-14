@@ -61,7 +61,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":         "username",
-			"usernameDesc": "Username of the database user for which you require certificates.",
+			"usernameDesc": "Username of the database user to get certificates for.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

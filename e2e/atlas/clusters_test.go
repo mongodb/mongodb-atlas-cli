@@ -23,9 +23,15 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+)
+
+const (
+	usEast1    = "US_EAST_1"
+	usGovEast1 = "US_GOV_EAST_1"
 )
 
 func TestClustersFlags(t *testing.T) {
@@ -36,15 +42,21 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
+	region := usEast1
+	service := os.Getenv("MCLI_SERVICE")
+	if service == config.CloudGovService {
+		region = "US_GOV_EAST_1"
+	}
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterName,
-			"--region=US_EAST_1",
+			"--region="+region,
 			"--members=3",
-			"--tier=M10",
+			"--tier=M30",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
 			"--diskSizeGB=10",
@@ -208,13 +220,19 @@ func TestClustersFile(t *testing.T) {
 	clusterFileName, err := RandClusterName()
 	req.NoError(err)
 
+	clusterFile := "create_cluster_test.json"
+	service := os.Getenv("MCLI_SERVICE")
+	if service == config.CloudGovService {
+		clusterFile = "create_cluster_gov_test.json"
+	}
+
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file=create_cluster_test.json",
+			"--file="+clusterFile,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -232,7 +250,7 @@ func TestClustersFile(t *testing.T) {
 			atlasEntity,
 			clustersEntity,
 			"update",
-			clusterFileName,
+			clusterFile,
 			"--file=update_cluster_test.json",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -267,17 +285,23 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
+	region := usEast1
+	service := os.Getenv("MCLI_SERVICE")
+	if service == config.CloudGovService {
+		region = usGovEast1
+	}
+
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			shardedClusterName,
-			"--region=US_EAST_1",
+			"--region="+region,
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier=M10",
+			"--tier=M30",
 			"--provider=AWS",
 			"--mdbVersion=4.2",
 			"--diskSizeGB=10",

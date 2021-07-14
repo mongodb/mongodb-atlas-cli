@@ -597,7 +597,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,clusters,gov
+          E2E_TAGS: atlas,clusters
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
     tags: ["e2e","clusters","atlas"]

@@ -224,7 +224,7 @@ func TestGovClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 10)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 40)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -243,7 +243,7 @@ func TestGovClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 25)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 40)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
@@ -273,11 +273,11 @@ func TestGovShardedCluster(t *testing.T) {
 			clustersEntity,
 			"create",
 			shardedClusterName,
-			"--region=US_EAST_1",
+			"--region=US_GOV_EAST_1",
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier=M10",
+			"--tier=M30",
 			"--provider=AWS",
 			"--mdbVersion=4.2",
 			"--diskSizeGB=10",

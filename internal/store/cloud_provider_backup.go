@@ -55,7 +55,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 		ClusterName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(context.Background(), o, opts)
 		return result, err
 	default:
@@ -70,7 +70,7 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.
 		ClusterName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(context.Background(), o, request)
 		return result, err
 	default:
@@ -85,7 +85,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 		ClusterName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(context.Background(), o, request)
 		return result, err
 	default:
@@ -100,7 +100,7 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 		ClusterName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
 		return result, err
 	default:
@@ -116,7 +116,7 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 		ClusterName: clusterName,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
 		return result, err
 	default:
@@ -132,7 +132,7 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 		SnapshotID:  snapshotID,
 	}
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(context.Background(), o)
 		return err
 	default:

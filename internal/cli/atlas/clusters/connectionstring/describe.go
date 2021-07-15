@@ -62,6 +62,10 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Short:   "Retrieve the SRV connection string of your MongoDB cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve connection strings.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

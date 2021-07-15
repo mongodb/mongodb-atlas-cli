@@ -55,13 +55,17 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <ID> [--clusterName name][--projectId projectId].
+// mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--projectId projectId].
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <ID>",
+		Use:   "start <archiveId>",
 		Short: "Start a paused online archive from a cluster.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to start.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

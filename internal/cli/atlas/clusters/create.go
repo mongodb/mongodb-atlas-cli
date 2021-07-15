@@ -212,8 +212,8 @@ Some of the cluster configuration options are available via flags but for full c
 			return opts.Run()
 		},
 		Annotations: map[string]string{
-			"args":     "name",
-			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphen.",
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphen.",
 		},
 	}
 

@@ -136,6 +136,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	}
 	cmd := exec.Command(cliPath,
 		atlasEntity,
+		clustersEntity,
 		"availableRegions",
 		"ls",
 		"--provider", provider,

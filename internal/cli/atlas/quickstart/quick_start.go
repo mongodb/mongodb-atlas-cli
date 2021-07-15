@@ -62,7 +62,7 @@ We could not find your public IP address. To add your IP address run:
 const (
 	replicaSet       = "REPLICASET"
 	atlasM2          = "M2"
-	atlasM20         = "M20"
+	atlasM30         = "M30"
 	atlasAdmin       = "atlasAdmin"
 	mongoshURL       = "https://www.mongodb.com/try/download/shell"
 	atlasAccountURL  = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
@@ -270,6 +270,12 @@ func (opts *Opts) providerAndRegionToConstant() {
 	opts.Region = strings.ReplaceAll(strings.ToUpper(opts.Region), "-", "_")
 }
 
+func (opts *Opts) setTier() {
+	if config.CloudGovService == config.Service() && opts.tier == atlasM2 {
+		opts.tier = atlasM30
+	}
+}
+
 func (opts *Opts) defaultValues() error {
 	if !opts.defaultValue {
 		return nil
@@ -280,10 +286,6 @@ func (opts *Opts) defaultValues() error {
 
 	if opts.ClusterName == "" {
 		opts.ClusterName = opts.defaultName
-	}
-
-	if config.CloudGovService == config.Service() && opts.tier == atlasM2 {
-		opts.tier = atlasM20
 	}
 
 	if opts.Provider == "" {
@@ -344,6 +346,7 @@ func Builder() *cobra.Command {
 				// no profile set
 				return askAtlasAccountAndProfile()
 			}
+			opts.setTier()
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,

@@ -54,9 +54,13 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <roleName>",
-		Short:   "Return a single custom database role for your project.",
-		Args:    require.ExactArgs(1),
+		Use:   "describe <roleName>",
+		Short: "Return a single custom database role for your project.",
+		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "roleName",
+			"roleNameDesc": "Name of the custom role to retrieve.",
+		},
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.roleName = args[0]

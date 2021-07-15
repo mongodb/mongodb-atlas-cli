@@ -280,6 +280,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `cluster  startup`                            |           | N         | N         |           | Y     | Y     |
 | `cluster  unmanage`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  update`                             |           | N         | N         |           | Y     | Y     |
+| `cluster  reclaimFreeSpace`                   |           | Y         | Y         |           | Y     | Y     |
 | `cluster  index create`                       |           | N         | N         |           | Y     | Y     |
 | `dbuser create`                               |           | N         | Y         |           | Y     | Y     |
 | `dbuser delete`                               |           | N         | Y         |           | Y     | Y     |

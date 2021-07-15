@@ -138,10 +138,7 @@ func (p *Profile) Service() string {
 		return viper.GetString(service)
 	}
 	settings := viper.GetStringMapString(p.Name())
-	if settings[service] != "" {
-		return settings[service]
-	}
-	return CloudService
+	return settings[service]
 }
 
 // SetService set configured service.

@@ -142,7 +142,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		"--provider", provider,
 		"--tier", tier,
 		"--projectId", projectID,
-		"--output=json")
+		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 

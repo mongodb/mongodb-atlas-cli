@@ -30,8 +30,10 @@ import (
 )
 
 const (
-	usEast1    = "US_EAST_1"
-	usGovEast1 = "US_GOV_EAST_1"
+	tierM30      = "M30"
+	provider     = "AWS"
+	diskSizeGB40 = "40"
+	diskSizeGB30 = "30"
 )
 
 func TestClustersFlags(t *testing.T) {
@@ -42,11 +44,9 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region := usEast1
-	service := os.Getenv("MCLI_SERVICE")
-	if service == config.CloudGovService {
-		region = usGovEast1
-	}
+	projectID := os.Getenv("MCLI_PROJECT_ID")
+	region, err := newAvailableRegion(projectID, tierM30, provider)
+	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -54,12 +54,12 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"create",
 			clusterName,
-			"--region="+region,
+			"--region=", region,
 			"--members=3",
-			"--tier=M30",
-			"--provider=AWS",
+			"--tier", tierM30,
+			"--provider", provider,
 			"--mdbVersion=4.0",
-			"--diskSizeGB=30",
+			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -186,7 +186,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterName,
-			"--diskSizeGB=40",
+			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion=4.2",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -221,8 +221,7 @@ func TestClustersFile(t *testing.T) {
 	req.NoError(err)
 
 	clusterFile := "create_cluster_test.json"
-	service := os.Getenv("MCLI_SERVICE")
-	if service == config.CloudGovService {
+	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
 		clusterFile = "create_cluster_gov_test.json"
 	}
 
@@ -300,11 +299,9 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region := usEast1
-	service := os.Getenv("MCLI_SERVICE")
-	if service == config.CloudGovService {
-		region = usGovEast1
-	}
+	projectID := os.Getenv("MCLI_PROJECT_ID")
+	region, err := newAvailableRegion(projectID, tierM30, provider)
+	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -316,10 +313,10 @@ func TestShardedCluster(t *testing.T) {
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier=M30",
-			"--provider=AWS",
+			"--tier", tierM30,
+			"--provider", provider,
 			"--mdbVersion=4.2",
-			"--diskSizeGB=30",
+			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 
 		cmd.Env = os.Environ()

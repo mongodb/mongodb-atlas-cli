@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/availableregions"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/onlinearchive"
@@ -47,6 +48,7 @@ func Builder() *cobra.Command {
 		search.Builder(),
 		onlinearchive.Builder(),
 		connectionstring.Builder(),
+		availableregions.Builder(),
 	)
 
 	return cmd

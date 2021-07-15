@@ -62,7 +62,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Annotations: map[string]string{
 			"args":         "username",
-			"usernameDesc": "Username that this resource retrieves from the MongoDB database.",
+			"usernameDesc": "Username to retrieve from the MongoDB database.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]

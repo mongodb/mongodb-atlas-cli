@@ -83,7 +83,7 @@ func UpdateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":         "username",
-			"usernameDesc": "Username that this resource updates in the MongoDB database.",
+			"usernameDesc": "Username to update in the MongoDB database.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

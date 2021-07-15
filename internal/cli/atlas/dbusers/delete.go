@@ -54,7 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":         "username",
-			"usernameDesc": "Username that this resource deletes from the MongoDB database.",
+			"usernameDesc": "Username to delete from the MongoDB database.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

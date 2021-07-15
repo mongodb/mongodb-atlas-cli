@@ -54,7 +54,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"create",
 			clusterName,
-			"--region=", region,
+			"--region", region,
 			"--members=3",
 			"--tier", tierM30,
 			"--provider", provider,
@@ -63,7 +63,6 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		req.NoError(err)
 
 		var cluster *mongodbatlas.AdvancedCluster
@@ -171,7 +170,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"indexes",
 			"create",
-			"--clusterName="+clusterName,
+			"--clusterName", clusterName,
 			"--db=tes",
 			"--collection=tes",
 			"--key=name:1")
@@ -231,7 +230,7 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file="+clusterFile,
+			"--file", clusterFile,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -309,7 +308,7 @@ func TestShardedCluster(t *testing.T) {
 			clustersEntity,
 			"create",
 			shardedClusterName,
-			"--region="+region,
+			"--region", region,
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",

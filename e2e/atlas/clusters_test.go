@@ -245,6 +245,21 @@ func TestClustersFile(t *testing.T) {
 		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
 	})
 
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			clusterFileName,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Contains(string(resp), "Cluster available")
+	})
+
 	t.Run("Update via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

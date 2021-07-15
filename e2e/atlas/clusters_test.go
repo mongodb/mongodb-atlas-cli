@@ -59,7 +59,7 @@ func TestClustersFlags(t *testing.T) {
 			"--tier=M30",
 			"--provider=AWS",
 			"--mdbVersion=4.0",
-			"--diskSizeGB=10",
+			"--diskSizeGB=30",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -70,7 +70,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "4.0", 10)
+		ensureCluster(t, cluster, clusterName, "4.0", 30)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -186,8 +186,8 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterName,
-			"--diskSizeGB=20",
-			"--mdbVersion=4.4",
+			"--diskSizeGB=40",
+			"--mdbVersion=4.2",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -197,7 +197,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterName, "4.4", 20)
+		ensureCluster(t, &cluster, clusterName, "4.2", 40)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -261,7 +261,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.4", 25)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
@@ -304,7 +304,7 @@ func TestShardedCluster(t *testing.T) {
 			"--tier=M30",
 			"--provider=AWS",
 			"--mdbVersion=4.2",
-			"--diskSizeGB=10",
+			"--diskSizeGB=30",
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -315,7 +315,7 @@ func TestShardedCluster(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, shardedClusterName, "4.2", 10)
+		ensureCluster(t, &cluster, shardedClusterName, "4.2", 30)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {

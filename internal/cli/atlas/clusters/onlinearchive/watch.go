@@ -55,15 +55,19 @@ func (opts *WatchOpts) Run() error {
 }
 
 // WatchBuilder
-//	mongocli atlas cluster(s) onlineArchive watch <id>
+//	mongocli atlas cluster(s) onlineArchive watch <archiveId>
 //	--clusterName=<name>
 //	[--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <id>",
+		Use:   "watch <archiveId>",
 		Short: "Watch for an archive to be available.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to watch.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

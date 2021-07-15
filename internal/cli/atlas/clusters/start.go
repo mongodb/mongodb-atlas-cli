@@ -48,13 +48,17 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) start <name> [--projectId projectId].
+// mongocli atlas cluster(s) start <clusterName> [--projectId projectId].
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <name>",
+		Use:   "start <clusterName>",
 		Short: "Start a paused MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster to start.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

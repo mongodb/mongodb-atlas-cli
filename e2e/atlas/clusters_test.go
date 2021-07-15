@@ -44,8 +44,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	projectID := os.Getenv("MCLI_PROJECT_ID")
-	region, err := newAvailableRegion(projectID, tierM30, provider)
+	region, err := newAvailableRegion(tierM30, provider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -298,8 +297,7 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	projectID := os.Getenv("MCLI_PROJECT_ID")
-	region, err := newAvailableRegion(projectID, tierM30, provider)
+	region, err := newAvailableRegion(tierM30, provider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {

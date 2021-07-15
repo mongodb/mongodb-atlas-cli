@@ -129,7 +129,7 @@ func deployCluster() (string, error) {
 	return clusterName, nil
 }
 
-func newAvailableRegion(projectID, tier, provider string) (string, error) {
+func newAvailableRegion(tier, provider string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
@@ -141,7 +141,6 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		"ls",
 		"--provider", provider,
 		"--tier", tier,
-		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()

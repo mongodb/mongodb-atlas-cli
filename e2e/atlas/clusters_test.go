@@ -45,7 +45,7 @@ func TestClustersFlags(t *testing.T) {
 	region := usEast1
 	service := os.Getenv("MCLI_SERVICE")
 	if service == config.CloudGovService {
-		region = "US_GOV_EAST_1"
+		region = usGovEast1
 	}
 
 	t.Run("Create", func(t *testing.T) {

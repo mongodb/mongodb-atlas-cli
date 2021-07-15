@@ -265,7 +265,7 @@ func TestClustersFile(t *testing.T) {
 			atlasEntity,
 			clustersEntity,
 			"update",
-			clusterFile,
+			clusterFileName,
 			"--file=update_cluster_test.json",
 			"-o=json")
 		cmd.Env = os.Environ()

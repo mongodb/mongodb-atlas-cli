@@ -61,7 +61,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":          "archiveId",
-			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

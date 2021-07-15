@@ -102,7 +102,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"args":          "indexName",
-			"indexNameDesc": "The name of the index.",
+			"indexNameDesc": "Name of the index.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)

@@ -96,7 +96,8 @@ func (opts *InviteOpts) Run() error {
 const keyParts = 2
 
 func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
-	if config.Service() != config.CloudService {
+	service := config.Service()
+	if service != "" && service != config.CloudService {
 		return nil, nil
 	}
 

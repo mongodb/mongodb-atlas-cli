@@ -47,7 +47,7 @@ type OnlineArchiveDeleter interface {
 // OnlineArchives encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlas.OnlineArchives, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(context.Background(), projectID, clusterName, lstOpt)
 		return result, err
 	default:
@@ -58,7 +58,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 // OnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.OnlineArchive, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(context.Background(), projectID, clusterName, archiveID)
 		return result, err
 	default:
@@ -69,7 +69,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(context.Background(), projectID, clusterName, archive)
 		return result, err
 	default:
@@ -80,7 +80,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 // UpdateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).OnlineArchives.Update(context.Background(), projectID, clusterName, archive.ID, archive)
 		return result, err
 	default:
@@ -91,7 +91,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 // DeleteOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(context.Background(), projectID, clusterName, archiveID)
 		return err
 	default:

@@ -242,7 +242,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.4", 10)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -261,7 +261,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 40)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

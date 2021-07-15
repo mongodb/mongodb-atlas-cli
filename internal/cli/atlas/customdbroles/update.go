@@ -91,7 +91,11 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <roleName>",
 		Short: "Update a custom database role for your project.",
-		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "roleName",
+			"roleNameDesc": "Name of the custom role to update.",
+		},
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

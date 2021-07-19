@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-exec_timeout_secs: 2400 # automatically fail any task if it takes longer than 40 minutes to finish.
+exec_timeout_secs: 3000 # automatically fail any task if it takes longer than 50 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true

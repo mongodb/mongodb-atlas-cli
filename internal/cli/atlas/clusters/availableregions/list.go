@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clusters
+package availableregions
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,58 +24,61 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.AtlasClusterDescriber
+	store    store.CloudProviderRegionsLister
+	provider string
+	tier     string
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}
+{{.Provider}}{{range .InstanceSizes}}	{{.Name}}{{range .AvailableRegions}}	{{.Name}}{{end}}{{end}}{{end}}
 `
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, []*string{&opts.provider})
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <clusterName> --projectId projectId.
-func DescribeBuilder() *cobra.Command {
-	opts := &DescribeOpts{}
+// mongocli atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <clusterName>",
-		Aliases: []string{"get"},
-		Short:   "Describe a cluster.",
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to retrieve.",
-		},
+		Use:     "list",
+		Short:   "List available regions for your project.",
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
+
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Tier)
+	_ = cmd.MarkFlagRequired(flag.Provider)
 
 	return cmd
 }

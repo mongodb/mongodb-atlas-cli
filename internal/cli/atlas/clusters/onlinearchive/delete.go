@@ -42,16 +42,20 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteOnlineArchive, opts.ConfigProjectID(), opts.clusterName)
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) delete <id> [--clusterName name][--projectId projectId][--force].
+// mongocli atlas cluster(s) onlineArchive(s) delete <archiveId> [--clusterName name][--projectId projectId][--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Archive '%s' deleted\n", "Archive not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <archiveId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete an online archive from a cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":          "archiveId",
+			"archiveIdDesc": "Unique identifier of the online archive to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

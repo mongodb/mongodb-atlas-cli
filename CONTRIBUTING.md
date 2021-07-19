@@ -98,7 +98,7 @@ with the last param being a required argument and the rest handled via flag opti
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
 #### How to define flags:
-Flags are a way to modify the command, also may be called "options".  Flags always have a long version with two dashes (--state) but often also have a shortcut with one dash and one letter (-s).
+Flags are a way to modify the command, also may be called "options". Flags always have a long version with two dashes (--state) but may also have a shortcut with one dash and one letter (-s).
 
 `mongocli` uses the following types of flags:
 

@@ -30,7 +30,6 @@ import (
 )
 
 const (
-	tierM30      = "M30"
 	provider     = "AWS"
 	diskSizeGB40 = "40"
 	diskSizeGB30 = "30"
@@ -44,7 +43,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, provider)
+	tier, region, err := newAvailableRegion(provider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -55,7 +54,7 @@ func TestClustersFlags(t *testing.T) {
 			clusterName,
 			"--region", region,
 			"--members=3",
-			"--tier", tierM30,
+			"--tier", tier,
 			"--provider", provider,
 			"--mdbVersion=4.0",
 			"--diskSizeGB", diskSizeGB30,
@@ -297,7 +296,7 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, provider)
+	tier, region, err := newAvailableRegion(provider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
@@ -310,7 +309,7 @@ func TestShardedCluster(t *testing.T) {
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier", tierM30,
+			"--tier", tier,
 			"--provider", provider,
 			"--mdbVersion=4.2",
 			"--diskSizeGB", diskSizeGB30,

@@ -102,9 +102,8 @@ func deployCluster() (string, error) {
 		return "", err
 	}
 
-	tier := "M30"
 	provider := "AWS"
-	region, err := newAvailableRegion(tier, provider)
+	tier, region, err := newAvailableRegion(provider)
 	if err != nil {
 		return "", err
 	}
@@ -136,10 +135,10 @@ func deployCluster() (string, error) {
 	return clusterName, nil
 }
 
-func newAvailableRegion(tier, provider string) (string, error) {
+func newAvailableRegion(provider string) (tier, region string, err error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -147,26 +146,28 @@ func newAvailableRegion(tier, provider string) (string, error) {
 		"availableRegions",
 		"ls",
 		"--provider", provider,
-		"--tier", tier,
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
-		return "", errors.New("no regions available")
+		return "", "", errors.New("no regions available")
 	}
 
-	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
+	tier = cloudProviders.Results[0].InstanceSizes[0].Name
+	region = cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name
+
+	return tier, region, err
 }
 
 func deleteCluster(clusterName string) error {

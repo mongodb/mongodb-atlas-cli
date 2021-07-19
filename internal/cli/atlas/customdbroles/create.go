@@ -72,7 +72,7 @@ func (opts *CreateOpts) validate() error {
 	return nil
 }
 
-// mongocli atlas dbrole(s) create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db.
+// mongocli atlas dbrole(s) create <roleName> --privilege action@dbName.collection --inheritedRole role@db.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -117,7 +118,7 @@ func deployCluster() (string, error) {
 	}
 
 	watch := exec.Command(cliPath,
-		"atlas",
+		atlasEntity,
 		clustersEntity,
 		"watch",
 		clusterName)
@@ -126,6 +127,39 @@ func deployCluster() (string, error) {
 		return "", fmt.Errorf("error watching cluster %w", err)
 	}
 	return clusterName, nil
+}
+
+func newAvailableRegion(tier, provider string) (string, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		"availableRegions",
+		"ls",
+		"--provider", provider,
+		"--tier", tier,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return "", err
+	}
+
+	var cloudProviders mongodbatlas.CloudProviders
+	err = json.Unmarshal(resp, &cloudProviders)
+	if err != nil {
+		return "", err
+	}
+
+	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+		return "", errors.New("no regions available")
+	}
+
+	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
 }
 
 func deleteCluster(clusterName string) error {

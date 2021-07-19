@@ -101,15 +101,22 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	tier := "M30"
+	provider := "AWS"
+	region, err := newAvailableRegion(tier, provider)
+	if err != nil {
+		return "", err
+	}
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
 		"--mdbVersion=4.2",
-		"--region=US_EAST_1",
-		"--tier=M10",
-		"--provider=AWS",
+		"--region", region,
+		"--tier", tier,
+		"--provider", provider,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()

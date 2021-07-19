@@ -113,9 +113,9 @@ func deployCluster() (string, error) {
 		"create",
 		clusterName,
 		"--mdbVersion=4.2",
-		"--region", region,
-		"--tier", tier,
-		"--provider", provider,
+		"--region="+region,
+		"--tier="+tier,
+		"--provider="+provider,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()

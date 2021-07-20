@@ -97,6 +97,17 @@ For that reason, command arguments tend to match the path and query params of th
 with the last param being a required argument and the rest handled via flag options. 
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
+#### How to define flags:
+Flags are a way to modify the command, also may be called "options". Flags always have a long version with two dashes (--state) but may also have a shortcut with one dash and one letter (-s).
+
+`mongocli` uses the following types of flags:
+
+- `--flagName value`: this type of flag passes the value to the command. Examples: `--projectId 5efda6aea3f2ed2e7dd6ce05`
+- `--booleanFlag`: this flag represents a boolean and it sets the related variable to true when the flag is used, false otherwise.  Example: `--force`
+- `--flagName value1,value2,..,valueN`: you will also find flags that accept a list of values. This type of flag can be very useful to represent data structures as `--role roleName1@db,roleName2@db`, `--privilege action@dbName.collection,action2@dbName.collection` or `--key field:type`. 
+As shown in the examples, the standard format used to represent data structures consists of splitting the first value with the second one by at sign `@` or colon `:` and the second value with the third one by a full stop `.`. 
+We recommend using configuration files for complex data structures that require more than three values (see [mongocli atlas cluster create](https://github.com/mongodb/mongocli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235)).
+
 ### Third Party Dependencies
 
 We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).

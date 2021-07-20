@@ -710,6 +710,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,processes
+  - name: atlas_gov_processes_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,processes
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
     tags: ["e2e","clusters","atlas"]
@@ -747,6 +765,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,search
+  - name: atlas_gov_search_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,search
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
@@ -806,6 +842,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: iam
+  - name: atlas_gov_iam_e2e
+    tags: ["e2e","generic","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: iam
   # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e

@@ -19,8 +19,6 @@ package config
 import (
 	"os"
 	"testing"
-
-	"github.com/mitchellh/go-homedir"
 )
 
 func TestConfig_configHome(t *testing.T) {
@@ -37,7 +35,6 @@ func TestConfig_configHome(t *testing.T) {
 		_ = os.Unsetenv("XDG_CONFIG_HOME")
 	})
 	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		homedir.DisableCache = true
 		_ = os.Setenv("HOME", ".")
 		home, err := configHome()
 		if err != nil {
@@ -46,6 +43,5 @@ func TestConfig_configHome(t *testing.T) {
 		if home != "./.config" {
 			t.Errorf("configHome() = %s; want './.config'", home)
 		}
-		homedir.DisableCache = false
 	})
 }

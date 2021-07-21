@@ -23,7 +23,7 @@ import (
 
 func TestConfig_configHome(t *testing.T) {
 	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
-		xdgHome := "my_config"
+		const xdgHome = "my_config"
 		_ = os.Setenv("XDG_CONFIG_HOME", xdgHome)
 		home, err := configHome()
 		if err != nil {
@@ -35,13 +35,13 @@ func TestConfig_configHome(t *testing.T) {
 		_ = os.Unsetenv("XDG_CONFIG_HOME")
 	})
 	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		_ = os.Setenv("HOME", ".")
 		home, err := configHome()
 		if err != nil {
 			t.Fatalf("configHome() unexpected error: %v", err)
 		}
-		if home != "./.config" {
-			t.Errorf("configHome() = %s; want './.config'", home)
+		osHome, _ := os.UserHomeDir()
+		if home != osHome+"/.config" {
+			t.Errorf("configHome() = %s; want '%s/.config'", home, osHome)
 		}
 	})
 }

@@ -123,6 +123,7 @@ func (opts *Opts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
 const (
 	tenant  = "TENANT"
 	atlasM5 = "M5"
+	atlasM2 = "M2"
 )
 
 func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
@@ -150,7 +151,7 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 }
 
 func (opts *Opts) providerName() string {
-	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+	if opts.tier == atlasM0 || opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
 	return strings.ToUpper(opts.Provider)

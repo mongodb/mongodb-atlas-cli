@@ -121,7 +121,7 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 }
 
 func (opts *CreateOpts) providerName() string {
-	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+	if opts.tier == atlasM0 || opts.tier == atlasM2 || opts.tier == atlasM5 {
 		return tenant
 	}
 	return opts.provider
@@ -228,7 +228,7 @@ Some of the cluster configuration options are available via flags but for full c
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM0, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)

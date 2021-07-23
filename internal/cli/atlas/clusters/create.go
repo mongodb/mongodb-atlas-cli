@@ -32,6 +32,7 @@ import (
 const (
 	replicaSet = "REPLICASET"
 	tenant     = "TENANT"
+	atlasM0    = "M0"
 	atlasM2    = "M2"
 	atlasM5    = "M5"
 	zoneName   = "Zone 1"

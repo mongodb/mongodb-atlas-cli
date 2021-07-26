@@ -39,10 +39,11 @@ func ExactArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) != n {
 			return fmt.Errorf(
-				"%q requires %d %s\n\nUsage:  %s",
+				"%q requires %d %s, received %d\n\nUsage:  %s",
 				cmd.CommandPath(),
 				n,
 				pluralize("argument", n),
+				len(args),
 				cmd.UseLine(),
 			)
 		}
@@ -66,10 +67,11 @@ func MaximumNArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) > n {
 			return fmt.Errorf(
-				"%q accepts at most %d %s\n\nUsage:  %s",
+				"%q accepts at most %d %s, received %d\n\nUsage:  %s",
 				cmd.CommandPath(),
 				n,
 				pluralize("argument", n),
+				len(args),
 				cmd.UseLine(),
 			)
 		}
@@ -82,10 +84,11 @@ func MinimumNArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
 		if len(args) < n {
 			return fmt.Errorf(
-				"%q requires at least %d %s\n\nUsage:  %s",
+				"%q requires at least %d %s, received %d\n\nUsage:  %s",
 				cmd.CommandPath(),
 				n,
 				pluralize("argument", n),
+				len(args),
 				cmd.UseLine(),
 			)
 		}

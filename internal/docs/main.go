@@ -31,6 +31,10 @@ func main() {
 
 	mongocli := root.Builder(&profile, []string{})
 
+	// init completion command indirectly
+	// See: https://github.com/spf13/cobra/issues/1464
+	_, _ = mongocli.ExecuteC()
+
 	if err := cobra2snooty.GenTreeDocs(mongocli, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}

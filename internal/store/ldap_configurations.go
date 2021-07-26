@@ -47,7 +47,7 @@ type LDAPConfigurationGetter interface {
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
 		return resp, err
 	default:
@@ -58,7 +58,7 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 // GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(context.Background(), projectID, requestID)
 		return resp, err
 	default:
@@ -69,7 +69,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 // SaveLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(context.Background(), projectID, ldap)
 		return resp, err
 	default:
@@ -80,7 +80,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfigur
 // DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(context.Background(), projectID)
 		return err
 	default:
@@ -91,7 +91,7 @@ func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 // GetLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(context.Background(), projectID)
 		return resp, err
 	default:

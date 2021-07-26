@@ -31,7 +31,7 @@ type ProcessDisksLister interface {
 // ProcessDisks encapsulates the logic to manage different cloud providers.
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:

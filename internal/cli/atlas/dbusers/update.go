@@ -40,7 +40,7 @@ type UpdateOpts struct {
 
 func (opts *UpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -81,6 +81,10 @@ func UpdateBuilder() *cobra.Command {
   Update scopes for a user
   $ mongocli atlas dbuser update <username> --scope resourceName:resourceType --projectId <projectId>`,
 		Args: require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "username",
+			"usernameDesc": "Username to update in the MongoDB database.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

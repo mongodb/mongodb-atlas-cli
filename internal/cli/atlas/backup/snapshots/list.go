@@ -34,7 +34,7 @@ type ListOpts struct {
 
 func (opts *ListOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -60,6 +60,10 @@ func ListBuilder() *cobra.Command {
 		Short:   "List cloud backup snapshots for your project and cluster.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the Atlas cluster that contains the snapshots you want to retrieve.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

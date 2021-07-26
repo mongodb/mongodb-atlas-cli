@@ -31,7 +31,7 @@ func TestWatch_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
+	expected := &mongodbatlas.AdvancedCluster{StateName: "IDLE"}
 
 	opts := &WatchOpts{
 		name:  "test",

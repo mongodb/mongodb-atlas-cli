@@ -64,7 +64,7 @@ type OpsManagerMaintenanceWindowUpdater interface {
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlas.MaintenanceWindow) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow)
 		return err
 	default:
@@ -75,7 +75,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 // ClearMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Reset(context.Background(), projectID)
 		return err
 	default:
@@ -86,7 +86,7 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 // DeferMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) DeferMaintenanceWindow(projectID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).MaintenanceWindows.Defer(context.Background(), projectID)
 		return err
 	default:
@@ -97,7 +97,7 @@ func (s *Store) DeferMaintenanceWindow(projectID string) error {
 // MaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).MaintenanceWindows.Get(context.Background(), projectID)
 		return resp, err
 	default:

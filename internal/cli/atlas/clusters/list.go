@@ -33,11 +33,11 @@ type ListOpts struct {
 
 func (opts *ListOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-var listTemplate = `ID	NAME	MDB VER	STATE{{range .}}
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
 {{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 

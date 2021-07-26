@@ -54,6 +54,27 @@ func TestAgents(t *testing.T) {
 		}
 	})
 
+	t.Run("Version List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			agentsEntity,
+			"version",
+			"list",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+
+		if a.NoError(err, string(resp)) {
+			var agents *opsmngr.AgentVersions
+			err := json.Unmarshal(resp, &agents)
+			require.NoError(t, err)
+			a.NotZero(agents.Count)
+		}
+	})
+
 	t.Run("Enable backup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,

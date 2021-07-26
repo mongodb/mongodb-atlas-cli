@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-exec_timeout_secs: 1800 # automatically fail any task if it takes longer than 30 minutes to finish.
+exec_timeout_secs: 2400 # automatically fail any task if it takes longer than 40 minutes to finish.
 stepback: true
 command_type: system
 pre_error_fails_task: true
@@ -206,7 +206,8 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip | tar zx
+          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip -o gon.zip
+          unzip gon.zip
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -364,6 +365,16 @@ functions:
         env:
           <<: *go_options
         binary: build/package/rename-pkg.sh
+  "docker build":
+    - command: subprocess.exec
+      type: test
+      params:
+        include_expansions_in_env:
+          - revision
+          - created_at
+          - image
+        working_dir: src/github.com/mongodb/mongocli/build/package
+        binary: ./docker-build.sh
   "send slack notification":
     - command: subprocess.exec
       type: test
@@ -374,6 +385,8 @@ functions:
           - evergreen_user
           - evergreen_api_key
           - release_slack_channel
+          - revision
+          - created_at
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
     - command: shell.exec
@@ -401,7 +414,6 @@ functions:
           - src/github.com/mongodb/mongocli/dist/*.rpm
           - src/github.com/mongodb/mongocli/dist/*.tgz
           - src/github.com/mongodb/mongocli/dist/*.json
-          - src/github.com/mongodb/mongocli/dist/*.rb
           - src/github.com/mongodb/mongocli/dist/*.msi
           - src/github.com/mongodb/mongocli/dist/*.sig
         remote_file: ${project}/dist/${revision}_${created_at}/
@@ -439,6 +451,7 @@ functions:
           - signing_auth_token_42
           - signing_auth_token_44
           - signing_auth_token_46
+          - signing_auth_token_50
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
@@ -540,6 +553,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
+  - name: atlas_gov_generic_e2e
+    tags: ["e2e","generic","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,generic
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_e2e
     tags: ["e2e","clusters","atlas"]
@@ -558,6 +589,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters
+  - name: atlas_gov_clusters_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,clusters
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
@@ -597,6 +646,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,logs
+  - name: atlas_gov_logs_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,logs
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
     tags: ["e2e","clusters","atlas"]
@@ -616,6 +683,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,metrics
+  - name: atlas_gov_metrics_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,metrics
   # Processes depend on a cluster running
   - name: atlas_processes_e2e
     tags: ["e2e","clusters","atlas"]
@@ -634,6 +719,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,processes
+  - name: atlas_gov_processes_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,processes
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
@@ -672,6 +775,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,search
+  - name: atlas_gov_search_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,search
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
@@ -731,6 +852,24 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
+          E2E_TAGS: iam
+  - name: atlas_gov_iam_e2e
+    tags: ["e2e","generic","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
           E2E_TAGS: iam
   # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e
@@ -951,6 +1090,76 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
       - func: "upload dist"
+  - name: pkg_test_docker_ubuntu1804
+    tags: ["smoke-test"]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu18.04-deb
+  - name: pkg_test_docker_ubuntu2004
+    tags: ["smoke-test"]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu20.04-deb
+  - name: pkg_test_docker_debian9
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: debian9-deb
+  - name: pkg_test_docker_debian10
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: debian10-deb
+  - name: pkg_test_docker_amazon2
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: amazonlinux2-rpm
+  - name: pkg_test_docker_centos7
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos7-rpm
+  - name: pkg_test_docker_centos8
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: centos8-rpm
   - name: generate_docs
     tags: ["docs"]
     depends_on:
@@ -962,16 +1171,16 @@ tasks:
       - func: "generate docs"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/docs/reference.tgz
+          target: src/github.com/mongodb/mongocli/docs/command.tgz
           source_dir: src/github.com/mongodb/mongocli/docs
           include:
-            - "reference/*.txt"
+            - "command/*.txt"
       - command: s3.put
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          local_file: src/github.com/mongodb/mongocli/docs/reference.tgz
-          remote_file: ${project}/docs/${revision}_${created_at}/reference.tgz
+          local_file: src/github.com/mongodb/mongocli/docs/command.tgz
+          remote_file: ${project}/docs/${revision}_${created_at}/command.tgz
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
@@ -1486,7 +1695,7 @@ buildvariants:
     tasks:
       - name: ".e2e .clusters .opsmanager"
   - name: generate_docs
-    display_name: "Generate Docs"
+    display_name: "Generate Preview Docs"
     run_on:
       - rhel70-small
     expansions:
@@ -1494,19 +1703,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".docs"
-  - name: goreleaser_snapshot
-    display_name: "Packaging and Publishing (goreleaser, apt, yum)"
-    run_on:
-      - macos-1014-codesign
-    expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
-      server_version: "4.4.0-rc3"
-    tasks:
-      - name: package_goreleaser
-      - name: .push
-        run_on:
-          - rhel70-small
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
@@ -1516,6 +1712,39 @@ buildvariants:
       go_bin: "c:\\golang\\go1.16/bin"
     tasks:
       - name: package_msi
+  - name: goreleaser_snapshot
+    display_name: "Packaging (goreleaser)"
+    run_on:
+      - macos-1014-codesign
+    expansions:
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
+      server_version: "4.4.0-rc3"
+    tasks:
+      - name: package_goreleaser
+  - name: publish_snapshot
+    display_name: "Publish yum/apt main"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
+      server_version: "4.4.0-rc3"
+    tasks:
+      - name: .push
+        run_on:
+          - rhel70-small
+  - name: pkg_smoke_tests_docker
+    display_name: "Post packaging smoke tests (Docker)"
+    run_on: ubuntu1804-small
+    tasks:
+      - name: pkg_test_docker_amazon2
+      - name: pkg_test_docker_centos7
+      - name: pkg_test_docker_centos8
+      - name: pkg_test_docker_ubuntu1804
+      - name: pkg_test_docker_ubuntu2004
+      - name: pkg_test_docker_debian9
+      - name: pkg_test_docker_debian10
   - name: release_msi
     display_name: "Release (go-msi)"
     run_on:
@@ -1534,6 +1763,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: release
+  - name: release_generate_docs
+    display_name: "Generate Stable Docs"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
+    tasks:
+      - name: ".docs"
   - name: release_publish_42
     display_name: "Publish yum/apt 4.2"
     run_on:
@@ -1550,5 +1788,14 @@ buildvariants:
     expansions:
       server_version: "4.4.3"
       notary_key_name: "server-4.4"
+    tasks:
+      - name: .push_stable
+  - name: release_publish_50
+    display_name: "Publish yum/apt 5.0"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "5.0.0"
+      notary_key_name: "server-5.0"
     tasks:
       - name: .push_stable

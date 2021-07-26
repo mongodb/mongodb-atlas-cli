@@ -254,6 +254,8 @@ const (
 	SkipSampleData                  = "Don't load sample data into your Atlas Cluster."
 	ContainerRegion                 = "Atlas region where the container resides."
 	ContainerRegions                = "List of Atlas regions where the container resides."
+	ReclaimFreeSpaceTimestamp       = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
+	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
 	FormatOut                       = `Output format.
 Valid values: json|json-path|go-template|go-template-file`
 	TargetClusterID = `Unique identifier of the target cluster.
@@ -279,7 +281,7 @@ Valid values: SCRAM-SHA-1|SCRAM-SHA-256`
 	AccessListType = `Type of access list entry.
 Valid values: cidrBlock|ipAddress|awsSecurityGroup`
 	Service = `Type of MongoDB service.
-Valid values: cloud|cloud-manager|ops-manager`
+Valid values: cloud|cloudgov|cloud-manager|ops-manager`
 	Provider = `Name of your cloud service provider.
 Valid values: AWS|AZURE|GCP.`
 	ClusterTypes = `Type of the cluster that you want to create.

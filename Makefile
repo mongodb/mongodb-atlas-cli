@@ -6,7 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/$(BINARY_NAME)
 INSTALL_PATH="${GOPATH}/bin/$(BINARY_NAME)"
 
-GOLANGCI_VERSION=v1.40.1
+GOLANGCI_VERSION=v1.41.1
 COVERAGE=coverage.out
 MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
@@ -18,7 +18,7 @@ UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_BINARY?=../../bin/${BINARY_NAME}
-E2E_TIMEOUT?=20m
+E2E_TIMEOUT?=30m
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
@@ -74,6 +74,11 @@ addcopy:
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
 	go generate ./internal...
+
+.PHONY: gen-docs
+gen-docs: ## Generate docs for commands
+	@echo "==> Generating docs"
+	go run ./internal/docs/main.go
 
 .PHONY: build
 build: ## Generate a binary in ./bin

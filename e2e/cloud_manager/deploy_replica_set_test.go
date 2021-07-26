@@ -114,6 +114,40 @@ func TestDeployReplicaSet(t *testing.T) {
 		}
 	})
 
+	t.Run("Reclaim free space", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"reclaimFreeSpace",
+			clusterName,
+			"--force",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Watch", watchAutomation(cliPath))
+
+	t.Run("Restart", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			clustersEntity,
+			"restart",
+			clusterName,
+			"--force",
+		)
+
+		cmd.Env = os.Environ()
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v\n", err, string(resp))
+		}
+	})
+
+	t.Run("Watch", watchAutomation(cliPath))
+
 	t.Run("Shutdown", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,

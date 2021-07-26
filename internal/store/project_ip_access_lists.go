@@ -16,6 +16,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,8 +42,11 @@ type ProjectIPAccessListDeleter interface {
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) (*atlas.ProjectIPAccessLists, error) {
+	if len(entries) == 0 {
+		return nil, errors.New("no entries")
+	}
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)
 		return result, err
 	default:
@@ -53,7 +57,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 // DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(context.Background(), projectID, entry)
 		return err
 	default:
@@ -64,7 +68,7 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(context.Background(), projectID, opts)
 		return result, err
 	default:
@@ -75,7 +79,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 // IPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(context.Background(), projectID, name)
 		return result, err
 	default:

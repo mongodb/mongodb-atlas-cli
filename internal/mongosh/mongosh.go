@@ -14,25 +14,12 @@
 package mongosh
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"syscall"
 )
 
-const (
-	mongoshBin = "mongosh"
-)
-
-func isWindows() bool {
-	return runtime.GOOS == "windows"
-}
-
 func Bin() string {
-	if isWindows() {
-		return fmt.Sprintf("%s.exe", mongoshBin)
-	}
 	return mongoshBin
 }
 
@@ -45,7 +32,7 @@ func Path() string {
 }
 
 func Run(binary, username, password, mongoURI string) error {
-	args := []string{"mongosh", "-u", username, "-p", password, mongoURI}
+	args := []string{mongoshBin, "-u", username, "-p", password, mongoURI}
 	env := os.Environ()
 	return syscall.Exec(binary, args, env)
 }

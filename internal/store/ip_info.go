@@ -28,7 +28,7 @@ type IPInfoDescriber interface {
 // IPInfo encapsulates the logic to manage different cloud providers.
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(context.Background())
 		return resp, err
 	default:
@@ -38,7 +38,7 @@ func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 
 // IPAddress gets the client's public ip by calling the atlas private endpoint.
 func IPAddress() string {
-	s, err := New(PrivateAuthenticatedPreset(config.Default()))
+	s, err := New(AuthenticatedPreset(config.Default()))
 	if err != nil {
 		return ""
 	}

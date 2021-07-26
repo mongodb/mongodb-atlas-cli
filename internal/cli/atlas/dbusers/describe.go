@@ -39,7 +39,7 @@ type DescribeOpts struct {
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -60,6 +60,10 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return a single Atlas database user for your project.",
 		Args:    require.ExactArgs(1),
 		Aliases: []string{"get"},
+		Annotations: map[string]string{
+			"args":         "username",
+			"usernameDesc": "Username to retrieve from the MongoDB database.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

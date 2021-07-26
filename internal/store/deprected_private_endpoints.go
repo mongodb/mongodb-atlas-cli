@@ -55,7 +55,7 @@ type InterfaceEndpointDeleterDeprecated interface {
 // PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.List(context.Background(), projectID, opts)
 		return result, err
 	default:
@@ -66,7 +66,7 @@ func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOpt
 // PrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(context.Background(), projectID, privateLinkID)
 		return result, err
 	default:
@@ -77,7 +77,7 @@ func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atl
 // DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(context.Background(), projectID, privateLinkID)
 		return err
 	default:
@@ -88,7 +88,7 @@ func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string)
 // CreateInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
 		return result, err
 	default:
@@ -99,7 +99,7 @@ func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, inte
 // CreatePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Create(context.Background(), projectID, r)
 		return result, err
 	default:
@@ -110,7 +110,7 @@ func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.Priva
 // InterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
 		return result, err
 	default:
@@ -121,7 +121,7 @@ func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceE
 // DeleteInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(context.Background(), projectID, privateLinkID, interfaceEndpointID)
 		return err
 	default:

@@ -41,7 +41,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -79,6 +79,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <roleName>",
 		Short: "Create a custom database role for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "roleName",
+			"roleNameDesc": "Name of the custom role to create.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

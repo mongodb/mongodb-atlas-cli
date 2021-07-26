@@ -34,7 +34,7 @@ type GlobalListOpts struct {
 
 func (opts *GlobalListOpts) init() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -61,7 +61,7 @@ func GlobalListBuilder() *cobra.Command {
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List Ops Manager global alerts.",
+		Short:   "Retrieves all the global alerts for the specified Ops Manager project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -37,7 +37,7 @@ type AuthorizeOpts struct {
 
 func (opts *AuthorizeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -61,9 +61,13 @@ func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudPr
 func AuthorizeBuilder() *cobra.Command {
 	opts := &AuthorizeOpts{}
 	cmd := &cobra.Command{
-		Use:   "authorize <ID>",
+		Use:   "authorize <roleId>",
 		Short: "Authorize an AWS IAM role.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":       "roleId",
+			"roleIdDesc": "Unique ID of the role to authorize.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

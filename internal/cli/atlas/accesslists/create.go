@@ -44,7 +44,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -83,6 +83,10 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <entry>",
 		Short: "Create an IP access list for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":      "entry",
+			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

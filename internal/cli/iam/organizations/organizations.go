@@ -17,6 +17,7 @@ package organizations
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations/apikeys"
+	"github.com/mongodb/mongocli/internal/cli/iam/organizations/invitations"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations/users"
 	"github.com/spf13/cobra"
 )
@@ -36,6 +37,7 @@ func Builder() *cobra.Command {
 		DeleteBuilder(),
 		apikeys.Builder(),
 		users.Builder(),
+		invitations.Builder(),
 	)
 	return cmd
 }

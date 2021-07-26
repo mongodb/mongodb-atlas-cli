@@ -31,70 +31,70 @@ func TestBuilder(t *testing.T) {
 	}{
 		{
 			name: "atlas",
-			want: 6,
+			want: 5,
 			args: args{
 				argsWithoutProg: []string{"atlas"},
 			},
 		},
 		{
 			name: "ops-manager",
-			want: 5,
+			want: 4,
 			args: args{
 				argsWithoutProg: []string{"ops-manager"},
 			},
 		},
 		{
 			name: "cloud-manager",
-			want: 5,
+			want: 4,
 			args: args{
 				argsWithoutProg: []string{"cloud-manager"},
 			},
 		},
 		{
 			name: "ops-manager alias",
-			want: 5,
+			want: 4,
 			args: args{
 				argsWithoutProg: []string{"om"},
 			},
 		},
 		{
 			name: "cloud-manager alias",
-			want: 5,
+			want: 4,
 			args: args{
 				argsWithoutProg: []string{"cm"},
 			},
 		},
 		{
 			name: "iam",
-			want: 5,
+			want: 4,
 			args: args{
 				argsWithoutProg: []string{"iam"},
 			},
 		},
 		{
 			name: "empty",
-			want: 6,
+			want: 5,
 			args: args{
 				argsWithoutProg: []string{},
 			},
 		},
 		{
 			name: "autocomplete",
-			want: 6,
+			want: 5,
 			args: args{
 				argsWithoutProg: []string{"__complete"},
 			},
 		},
 		{
 			name: "completion",
-			want: 6,
+			want: 5,
 			args: args{
 				argsWithoutProg: []string{"completion"},
 			},
 		},
 		{
 			name: "--version",
-			want: 6,
+			want: 5,
 			args: args{
 				argsWithoutProg: []string{"completion"},
 			},

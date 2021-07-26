@@ -174,20 +174,6 @@ func WithBaseURL(configURL string) Option {
 	}
 }
 
-// WithPublicPathBaseURL adds the correct public path to the base url based on service.
-// if you use WithBaseURL and need the Store to connect to the public API
-// you need to also enable this option.
-func WithPublicPathBaseURL() Option {
-	return func(s *Store) error {
-		if s.service == config.CloudService {
-			s.baseURL += atlas.APIPublicV1Path
-			return nil
-		}
-		s.baseURL += opsmngr.APIPublicV1Path
-		return nil
-	}
-}
-
 // WithCACertificate enables the Store to use a custom CA certificate.
 func WithCACertificate(caCertificate string) Option {
 	return func(s *Store) error {
@@ -284,43 +270,30 @@ type BasicConfig interface {
 	ServiceGetter
 }
 
-// PublicAuthenticatedPreset is the default Option when connecting to the public API with authentication.
-func PublicAuthenticatedPreset(c AuthenticatedConfig) Option {
+// AuthenticatedPreset is the default Option when connecting to the public API with authentication.
+func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
+	if baseURLOpt := baseURLOption(c); baseURLOpt != nil {
+		options = append(options, baseURLOpt)
 	}
 	options = append(options, NetworkPresets(c))
 	return Options(options...)
 }
 
-// PublicUnauthenticatedPreset is the default Option when connecting to the public API without authentication.
-func PublicUnauthenticatedPreset(c AuthenticatedConfig) Option {
+func baseURLOption(c AuthenticatedConfig) Option {
+	if configURL := c.OpsManagerURL(); configURL != "" {
+		return WithBaseURL(configURL)
+	} else if c.Service() == config.CloudGovService {
+		return WithBaseURL(config.CloudGovServiceURL)
+	}
+	return nil
+}
+
+// UnauthenticatedPreset is the default Option when connecting to the public API without authentication.
+func UnauthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service())}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL), WithPublicPathBaseURL())
-	}
-	options = append(options, NetworkPresets(c))
-	return Options(options...)
-}
-
-// PrivateAuthenticatedPreset is the default Option when connecting to the private API with authentication.
-func PrivateAuthenticatedPreset(c AuthenticatedConfig) Option {
-	// Default to cloud
-	options := []Option{Service(c.Service()), WithBaseURL(atlas.CloudURL), WithAuthentication(c)}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL))
-	}
-	options = append(options, NetworkPresets(c))
-	return Options(options...)
-}
-
-// PrivateUnauthenticatedPreset is the default Option when connecting to the private API without authentication.
-func PrivateUnauthenticatedPreset(c BasicConfig) Option {
-	// Default to cloud
-	options := []Option{Service(c.Service()), WithBaseURL(atlas.CloudURL)}
-	if configURL := c.OpsManagerURL(); configURL != "" {
-		options = append(options, WithBaseURL(configURL))
+	if option := baseURLOption(c); option != nil {
+		options = append(options, option)
 	}
 	options = append(options, NetworkPresets(c))
 	return Options(options...)
@@ -334,7 +307,7 @@ func PrivateUnauthenticatedPreset(c BasicConfig) Option {
 //	store := store.New(Service("cloud"))
 //
 //	// get a new Store for the public API based on a Config interface
-//	store := store.New(PublicAuthenticatedPreset(config))
+//	store := store.New(AuthenticatedPreset(config))
 //
 //	// get a new Store for the private API based on a Config interface
 //	store := store.New(PrivateAuthenticatedPreset(config))
@@ -358,7 +331,7 @@ func New(opts ...Option) (*Store, error) {
 	}
 
 	switch store.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		err = store.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
 		err = store.setOpsManagerClient(client)

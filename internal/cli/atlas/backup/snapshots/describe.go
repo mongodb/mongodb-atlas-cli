@@ -37,7 +37,7 @@ type DescribeOpts struct {
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -50,13 +50,17 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backup snapshots describe snapshotID  --clusterName clusterName --projectId projectId.
+// mongocli atlas backup snapshots describe snapshotId  --clusterName clusterName --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <ID>",
+		Use:   "describe <snapshotId>",
 		Short: "Get a specific snapshot for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":           "snapshotId",
+			"snapshotIdDesc": "Unique identifier of the snapshot you want to retrieve.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

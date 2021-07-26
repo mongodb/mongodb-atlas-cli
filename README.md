@@ -13,7 +13,6 @@
 ### Homebrew on macOS
 
 ```bash
-brew tap mongodb/brew
 brew install mongocli
 ```
 

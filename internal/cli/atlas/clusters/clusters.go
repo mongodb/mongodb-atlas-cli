@@ -16,9 +16,10 @@ package clusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/availableregions"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/connectionstring"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/indexes"
-	"github.com/mongodb/mongocli/internal/cli/atlas/onlinearchive"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -46,12 +47,14 @@ func Builder() *cobra.Command {
 		indexes.Builder(),
 		search.Builder(),
 		onlinearchive.Builder(),
-		connectionstring.Builder())
+		connectionstring.Builder(),
+		availableregions.Builder(),
+	)
 
 	return cmd
 }
 
-func AddLabel(out *atlas.Cluster, l atlas.Label) {
+func AddLabel(out *atlas.AdvancedCluster, l atlas.Label) {
 	if LabelExists(out.Labels, l) {
 		return
 	}
@@ -66,4 +69,16 @@ func LabelExists(labels []atlas.Label, l atlas.Label) bool {
 		}
 	}
 	return false
+}
+
+func RemoveReadOnlyAttributes(out *atlas.AdvancedCluster) {
+	out.ID = ""
+	out.CreateDate = ""
+	out.StateName = ""
+	out.MongoDBVersion = ""
+	out.ConnectionStrings = nil
+
+	for _, spec := range out.ReplicationSpecs {
+		spec.ID = ""
+	}
 }

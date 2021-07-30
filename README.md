@@ -75,7 +75,7 @@ or check our [online documentation](https://docs.mongodb.com/mongocli/master/) f
 
 ### Getting API Keys
 
-To use `mongocli` you'll need to get API keys, to do this follow the documentation 
+To use `mongocli` you'll need to get API keys, to get them follow the documentation 
 appropriate for the service you're using, 
 [Atlas](https://docs.atlas.mongodb.com/configure-api-access/),
 [Ops Manager](https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/),

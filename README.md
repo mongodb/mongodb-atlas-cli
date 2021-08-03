@@ -6,7 +6,16 @@
 ![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
 ![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
 
-`mongocli` is a tool for managing your MongoDB cloud services
+The MongoDB CLI is a modern command line interface that enables you to manage your MongoDB services from the terminal.
+
+![mongocli-atlas-quickstart](https://user-images.githubusercontent.com/461027/126986233-0dd5c82a-2c75-4887-ab66-eb018c59e093.gif)
+
+Use simple, one-line commands to interact with MongoDB Atlas, Cloud Manager, or Ops Manager, and to automate management tasks for your deployments.
+
+## Documentation
+
+See the [official docs](https://docs.mongodb.com/mongocli/stable/) for instructions on how to
+install, set up, and reference available commands.
 
 ## Installing
 
@@ -23,7 +32,8 @@ Once downloaded, the binary can be run from anywhere.
 You don't need to install it into a global location. 
 This works well for shared hosts and other systems where you don't have a privileged account.
 
-Ideally, you should place this binary somewhere in your `PATH` for easy use. `/usr/local/bin` is the most probable location.
+Ideally, you should place this binary somewhere in your `PATH` for easy use. 
+`/usr/local/bin` is the most probable location.
 
 ### Build From Source 
 
@@ -65,7 +75,7 @@ or check our [online documentation](https://docs.mongodb.com/mongocli/master/) f
 
 ### Getting API Keys
 
-To use mongocli you'll need to get API keys, to do this please follow the documentation 
+To use `mongocli` you'll need to get API keys, to get them follow the documentation 
 appropriate for the service you're using, 
 [Atlas](https://docs.atlas.mongodb.com/configure-api-access/),
 [Ops Manager](https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/),
@@ -74,71 +84,29 @@ or [Cloud Manager](https://docs.cloudmanager.mongodb.com/tutorial/manage-program
 ### Configuring `mongocli`
 
 Run `mongocli config` to set up your credentials, 
-this is optional and you can use [env variables](#environment-variables) instead.
+this is optional, you can use [env variables](https://docs.mongodb.com/mongocli/stable/configure/environment-variables/) instead.
 
-If you're working with Ops Manager or Cloud Manager you need to define the service using `--service`
+If you're working with Atlas Gov, Ops Manager or Cloud Manager you need to define the service using `--service`
+
+For Atlas Gov, `mongocli config --service cloudgov`.
 
 For Ops Manager, `mongocli config --service ops-manager`.
 
-For Cloud Manager, `mongocli config --service cloud-manager`.  
-
-### Environment Variables
-
-You can use a combination of the next env variables to override your profile settings
-
-- `MCLI_PUBLIC_API_KEY`
-- `MCLI_PRIVATE_API_KEY`
-- `MCLI_PROJECT_ID`
-- `MCLI_ORG_ID`
-- `MCLI_OPS_MANAGER_URL`
-- `MCLI_PROFILE`
-- `MCLI_OUTPUT`
-- `MCLI_MONGOSH_PATH`
+For Cloud Manager, `mongocli config --service cloud-manager`.
 
 ### Shell Completions
 
-If you install via [homebrew](#hombrew-on-macos) there's nothing else to do. 
-For other installations please refer to your preferred shell instructions.
+If you install via [homebrew](#hombrew-on-macos) no additional actions are needed.
 
-#### Bash
-
-```bash
-$ source <(mongocli completion bash)
-```
-
-To load completions for each session, execute once:
-
-Linux:
-```bash
-mongocli completion bash > /etc/bash_completion.d/mongocli
-```
-  
-macOS:
-```bash
-mongocli completion bash > /usr/local/etc/bash_completion.d/mongocli
-```
-
-#### Zsh
+To get specific instructions for your preferred shell run:
 
 ```bash
-source <(mongocli completion zsh)
-``` 
-
-To load completions for each session, execute once:
-
-```bash
-mongocli completion zsh > "${fpath[1]}/_mongocli"
-```
-
-#### Fish
-
-```bash
-mongocli completion fish | source
+mongocli completion <bash|zsh|fish|powershell> --help
 ```
 
 ## Contributing
 
-See our [CONTRIBUTING.md](CONTRIBUTING.md) Guide.
+See our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
 ## License
 

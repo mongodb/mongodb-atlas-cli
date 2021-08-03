@@ -133,7 +133,7 @@ func newLogRotate() *opsmngr.LogRotate {
 	}
 }
 
-func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
+func newProcessConfig(rs *opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	return &ProcessConfig{
 		BuildIndexes:                &rs.BuildIndexes,
 		Priority:                    &rs.Priority,
@@ -164,7 +164,7 @@ func newProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 }
 
 // newReplicaSetProcessConfig maps opsmngr.member -> convert.ProcessConfig.
-func newReplicaSetProcessConfig(rs opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
+func newReplicaSetProcessConfig(rs *opsmngr.Member, p *opsmngr.Process) *ProcessConfig {
 	pc := newProcessConfig(rs, p)
 
 	if p.Args26.Storage != nil {

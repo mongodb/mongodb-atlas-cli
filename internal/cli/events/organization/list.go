@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package events
+package organization
 
 import (
 	"fmt"
@@ -30,7 +30,6 @@ type ListOpts struct {
 	cli.ListOpts
 	cli.OutputOpts
 	orgID     string
-	projectID string
 	eventType []string
 	minDate   string
 	maxDate   string
@@ -55,8 +54,6 @@ func (opts *ListOpts) Run() error {
 
 	if opts.orgID != "" {
 		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
-	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
 	}
 	if err != nil {
 		return err
@@ -77,7 +74,7 @@ func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
 	}
 }
 
-// mongocli atlas event(s) list [--projectId projectId] [--orgId orgId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
+// mongocli atlas event(s) organization list [--orgId orgId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	opts.Template = listTemplate
@@ -87,10 +84,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.orgID != "" && opts.projectID != "" {
-				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
-			}
-			if opts.orgID == "" && opts.projectID == "" {
+			if opts.orgID == "" {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			opts.OutWriter = cmd.OutOrStdout()
@@ -108,7 +102,6 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.maxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.minDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

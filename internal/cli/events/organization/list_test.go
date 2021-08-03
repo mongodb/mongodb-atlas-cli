@@ -14,7 +14,7 @@
 
 // +build unit
 
-package events
+package organization
 
 import (
 	"testing"
@@ -31,36 +31,18 @@ func TestList_Run(t *testing.T) {
 
 	expected := &mongodbatlas.EventResponse{}
 
-	t.Run("for a project", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-		listOpts.orgID = "1"
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+	listOpts.orgID = "1"
 
-		mockStore.
-			EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
-			Return(expected, nil).
-			Times(1)
+	mockStore.
+		EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
+		Return(expected, nil).
+		Times(1)
 
-		err := listOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-	t.Run("for an org", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-
-		listOpts.projectID = "1"
-		mockStore.
-			EXPECT().ProjectEvents(listOpts.projectID, listOpts.newEventListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		err := listOpts.Run()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	err := listOpts.Run()
+	if err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

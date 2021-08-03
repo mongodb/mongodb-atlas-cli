@@ -74,7 +74,7 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		ProcessType: "mongod",
 		Version:     "4.4.1-ent",
 	}
-	omm := opsmngr.Member{
+	omm := &opsmngr.Member{
 		ID:                 0,
 		ArbiterOnly:        false,
 		BuildIndexes:       true,

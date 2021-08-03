@@ -19,12 +19,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command{
+func Builder() *cobra.Command {
 	const use = "project"
 	cmd := &cobra.Command{
-		Use: use,
+		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short: "Manage events for your project.",
+		Short:   "Manage events for your project.",
 	}
 
 	cmd.AddCommand(ListBuilder())

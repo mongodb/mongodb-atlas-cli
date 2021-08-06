@@ -71,6 +71,7 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws interfaces describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 
@@ -78,8 +79,6 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces describe <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

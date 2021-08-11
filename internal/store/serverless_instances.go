@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongocli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber
+//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongocli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter
 
 type ServerlessInstanceLister interface {
 	ServerlessInstances(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
@@ -32,10 +32,14 @@ type ServerlessInstanceDescriber interface {
 	ServerlessInstance(string, string) (*atlas.Cluster, error)
 }
 
+type ServerlessInstanceDeleter interface {
+	DeleteServerlessInstance(string, string) error
+}
+
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(context.Background(), projectID, listOps)
 		return result, err
 	default:
@@ -51,5 +55,16 @@ func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluste
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DeleteServerlessInstance encapsulate the logic to manage different cloud providers.
+func (s *Store) DeleteServerlessInstance(projectID, name string) error {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).ServerlessInstances.Delete(context.Background(), projectID, name)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

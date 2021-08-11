@@ -30,7 +30,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.ServerlessInstancesDescriber
+	store       store.ServerlessInstanceDescriber
 	clusterName string
 }
 

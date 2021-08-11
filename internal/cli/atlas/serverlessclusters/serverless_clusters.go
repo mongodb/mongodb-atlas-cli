@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 		Short:   "Manage serverless clusters for your project.",
 		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
 	}
-	cmd.AddCommand(ListBuilder(), DescribeBuilder())
+	cmd.AddCommand(ListBuilder(), DescribeBuilder(), DeleteBuilder())
 
 	return cmd
 }

@@ -34,17 +34,17 @@ func (m *MockServerlessLister) EXPECT() *MockServerlessListerMockRecorder {
 	return m.recorder
 }
 
-// ListServerlessClusters mocks base method.
-func (m *MockServerlessLister) ListServerlessClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
+// ServerlessClusters mocks base method.
+func (m *MockServerlessLister) ServerlessClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListServerlessClusters", arg0, arg1)
+	ret := m.ctrl.Call(m, "ServerlessClusters", arg0, arg1)
 	ret0, _ := ret[0].(*mongodbatlas.ClustersResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListServerlessClusters indicates an expected call of ListServerlessClusters.
-func (mr *MockServerlessListerMockRecorder) ListServerlessClusters(arg0, arg1 interface{}) *gomock.Call {
+// ServerlessClusters indicates an expected call of ServerlessClusters.
+func (mr *MockServerlessListerMockRecorder) ServerlessClusters(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServerlessClusters", reflect.TypeOf((*MockServerlessLister)(nil).ListServerlessClusters), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessClusters", reflect.TypeOf((*MockServerlessLister)(nil).ServerlessClusters), arg0, arg1)
 }

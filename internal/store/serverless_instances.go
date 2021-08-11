@@ -25,10 +25,10 @@ import (
 //go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongocli/internal/store ServerlessLister
 
 type ServerlessLister interface {
-	ListServerlessClusters(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
+	ServerlessClusters(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
 }
 
-func (s *Store) ListServerlessClusters(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
+func (s *Store) ServerlessClusters(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(context.Background(), projectID, listOps)

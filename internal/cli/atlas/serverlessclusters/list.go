@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore() error {
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.ListServerlessClusters(opts.ConfigProjectID(), listOpts)
+	r, err := opts.store.ServerlessClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}

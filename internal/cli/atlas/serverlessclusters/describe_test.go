@@ -26,33 +26,33 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.Limit, flag.Page, flag.Output, flag.ProjectID},
-	)
-}
-
-func TestList_Run(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
 	defer ctrl.Finish()
 
-	var expected *mongodbatlas.ClustersResponse
+	var expected mongodbatlas.Cluster
 
-	listOpts := &ListOpts{
+	describeOpts := &DescribeOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		ServerlessInstances(listOpts.ProjectID, listOpts.NewListOptions()).
-		Return(expected, nil).
+		ServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.clusterName).
+		Return(&expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
+	)
 }

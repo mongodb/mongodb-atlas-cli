@@ -22,16 +22,32 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongocli/internal/store ServerlessLister
+//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongocli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber
 
-type ServerlessLister interface {
-	ServerlessClusters(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
+type ServerlessInstanceLister interface {
+	ServerlessInstances(string, *atlas.ListOptions) (*atlas.ClustersResponse, error)
 }
 
-func (s *Store) ServerlessClusters(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
+type ServerlessInstanceDescriber interface {
+	ServerlessInstance(string, string) (*atlas.Cluster, error)
+}
+
+// ServerlessInstances encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(context.Background(), projectID, listOps)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// ServerlessInstance encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(context.Background(), projectID, clusterName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

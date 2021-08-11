@@ -14,7 +14,7 @@
 
 // +build unit
 
-package atlas
+package serverless
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		21,
+		1,
 		[]string{},
 	)
 }

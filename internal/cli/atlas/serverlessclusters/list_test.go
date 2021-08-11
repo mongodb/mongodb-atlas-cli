@@ -48,7 +48,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessClusters(listOpts.ProjectID, listOpts.NewListOptions()).
+		ServerlessInstances(listOpts.ProjectID, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 

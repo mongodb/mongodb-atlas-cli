@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "serverlessClusters"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: cli.GenerateAliases(use, "sc"),
 		Short:   "Manage serverless clusters for your project.",
 		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
 	}

@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build unit
-
-package atlas
+package serverlessclusters
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		21,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "serverlessClusters"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use, "sc"),
+		Short:   "Manage serverless clusters for your project.",
+		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
+	}
+	cmd.AddCommand(ListBuilder())
+
+	return cmd
 }

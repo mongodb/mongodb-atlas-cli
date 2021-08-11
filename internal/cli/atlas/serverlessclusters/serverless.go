@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverless
+package serverlessclusters
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"

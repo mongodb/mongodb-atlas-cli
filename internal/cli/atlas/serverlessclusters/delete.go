@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteServerlessInstance, opts.ConfigProjectID())
 }
 
-// mongocli atlas serverlessCluster(s) delete <clusterName> --projectId projectId [--confirm].
+// mongocli atlas serverlessCluster(s) delete <clusterName> --projectId projectId [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Serverless cluster '%s' deleted\n", "Serverless cluster not deleted"),

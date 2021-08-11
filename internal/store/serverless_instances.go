@@ -39,7 +39,7 @@ type ServerlessInstanceDeleter interface {
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(context.Background(), projectID, listOps)
 		return result, err
 	default:
@@ -50,7 +50,7 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 // ServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(context.Background(), projectID, clusterName)
 		return result, err
 	default:
@@ -61,7 +61,7 @@ func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluste
 // DeleteServerlessInstance encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
+	case config.CloudService:
 		_, err := s.client.(*atlas.Client).ServerlessInstances.Delete(context.Background(), projectID, name)
 		return err
 	default:

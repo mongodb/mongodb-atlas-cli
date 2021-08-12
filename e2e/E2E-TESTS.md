@@ -325,5 +325,5 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `serverlessCluster create`                    | Y         |           |           | Y         |       |       |
 | `serverlessCluster delete`                    | Y         |           |           | Y         |       |       |
 | `serverlessCluster describe`                  | Y         |           |           | Y         |       |       |
-| `serverlessCluster list`                      | Y         |           |           | Y         |       |       |                              | Y         |           |           | Y         |       |       |
-| `serverlessCluster watch`
+| `serverlessCluster list`                      | Y         |           |           | Y         |       |       |
+| `serverlessCluster watch`                     | Y         |           |           | Y         |       |       |

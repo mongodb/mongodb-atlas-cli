@@ -19,14 +19,41 @@ package serverlessclusters
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestWatch_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
+	defer ctrl.Finish()
+
+	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
+
+	opts := &WatchOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ServerlessInstance(opts.ProjectID, opts.name).
+		Return(expected, nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestWatchBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		5,
-		[]string{},
+		WatchBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

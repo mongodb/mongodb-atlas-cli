@@ -581,7 +581,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
   - name: atlas_serverless_e2e
-    tags: ["e2e","serverless","atlas"]
+    tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
         variant: "code_health"

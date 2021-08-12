@@ -256,6 +256,8 @@ const (
 	ContainerRegions                = "List of Atlas regions where the container resides."
 	ReclaimFreeSpaceTimestamp       = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
 	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
+	ProviderServerless              = "Cloud service provider that applies to the provisioned the serverless instance."
+	RegionServerless                = "Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases."
 	FormatOut                       = `Output format.
 Valid values: json|json-path|go-template|go-template-file`
 	TargetClusterID = `Unique identifier of the target cluster.

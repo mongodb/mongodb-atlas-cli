@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestServerlessClustersFlags(t *testing.T) {
+func TestServerlessClusters(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
@@ -149,7 +149,7 @@ func TestServerlessClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Serverless cluster '%s' deleted\n", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

@@ -33,23 +33,6 @@ func TestServerlessClusters(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	projectName := fmt.Sprintf("e2e-integration-serverless-%v", n)
-	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
@@ -61,8 +44,6 @@ func TestServerlessClusters(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--provider=AWS",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -83,8 +64,6 @@ func TestServerlessClusters(t *testing.T) {
 			serverlessClustersEntity,
 			"watch",
 			clusterName,
-			"--projectId",
-			projectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -99,8 +78,6 @@ func TestServerlessClusters(t *testing.T) {
 			atlasEntity,
 			serverlessClustersEntity,
 			"ls",
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -120,8 +97,6 @@ func TestServerlessClusters(t *testing.T) {
 			serverlessClustersEntity,
 			"describe",
 			clusterName,
-			"--projectId",
-			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -142,9 +117,7 @@ func TestServerlessClusters(t *testing.T) {
 			serverlessClustersEntity,
 			"delete",
 			clusterName,
-			"--force",
-			"--projectId",
-			projectID)
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)

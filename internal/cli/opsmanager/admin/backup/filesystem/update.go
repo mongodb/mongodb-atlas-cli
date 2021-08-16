@@ -15,6 +15,8 @@
 package filesystem
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -37,10 +39,12 @@ type UpdateOpts struct {
 	wtCompressionSetting     string
 }
 
-func (opts *UpdateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UpdateOpts) Run() error {
@@ -72,7 +76,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.init(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.ID = args[0]

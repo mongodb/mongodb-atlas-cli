@@ -15,6 +15,8 @@
 package teams
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -35,10 +37,12 @@ type UpdateOpts struct {
 	roles  []string
 }
 
-func (opts *UpdateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UpdateOpts) Run() error {
@@ -68,7 +72,7 @@ func UpdateBuilder() *cobra.Command {
 			opts.teamID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.init,
+				opts.init(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},

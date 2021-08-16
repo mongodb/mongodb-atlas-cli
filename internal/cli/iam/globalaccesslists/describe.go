@@ -14,6 +14,8 @@
 package globalaccesslists
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -29,10 +31,12 @@ type DescribeOpts struct {
 	store store.GlobalAPIKeyWhitelistDescriber
 }
 
-func (opts *DescribeOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DescribeOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 const describeTemplate = `ID	CIDR BLOCK	CREATED AT
@@ -59,7 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Return one Global IP access list entry.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.init(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

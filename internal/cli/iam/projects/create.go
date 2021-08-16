@@ -15,6 +15,8 @@
 package projects
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -33,14 +35,16 @@ type CreateOpts struct {
 	store store.ProjectCreator
 }
 
-func (opts *CreateOpts) init() error {
-	if opts.ConfigOrgID() == "" {
-		return cli.ErrMissingOrgID
-	}
+func (opts *CreateOpts) init(ctx context.Context) func() error {
+	return func() error {
+		if opts.ConfigOrgID() == "" {
+			return cli.ErrMissingOrgID
+		}
 
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) Run() error {
@@ -66,7 +70,7 @@ func CreateBuilder() *cobra.Command {
 			if config.Service() != config.CloudService {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.init()
+			return opts.init(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

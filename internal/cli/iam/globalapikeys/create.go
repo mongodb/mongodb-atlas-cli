@@ -15,6 +15,8 @@
 package globalapikeys
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -36,10 +38,12 @@ type CreateOpts struct {
 	store store.GlobalAPIKeyCreator
 }
 
-func (opts *CreateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) newAPIKeyInput() *atlas.APIKeyInput {
@@ -68,7 +72,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a Global API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.init(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

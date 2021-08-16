@@ -15,6 +15,8 @@
 package apikeys
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -30,10 +32,12 @@ type DeleteOpts struct {
 	store store.ProjectAPIKeyDeleter
 }
 
-func (opts *DeleteOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DeleteOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DeleteOpts) Run() error {
@@ -52,7 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete an API Key for your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.init); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.init(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

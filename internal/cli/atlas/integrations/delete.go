@@ -15,6 +15,8 @@
 package integrations
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -30,10 +32,12 @@ type DeleteOpts struct {
 	store store.IntegrationDeleter
 }
 
-func (opts *DeleteOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DeleteOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DeleteOpts) Run() error {
@@ -54,7 +58,7 @@ func DeleteBuilder() *cobra.Command {
 			opts.Entry = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.init,
+				opts.init(cmd.Context()),
 				opts.Prompt,
 			)
 		},

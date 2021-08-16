@@ -14,6 +14,8 @@
 package globalapikeys
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,10 +34,12 @@ type UpdateOpts struct {
 	store store.GlobalAPIKeyUpdater
 }
 
-func (opts *UpdateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) init(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UpdateOpts) newAPIKeyInput() *atlas.APIKeyInput {
@@ -66,7 +70,7 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update a Global API Key.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.init(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

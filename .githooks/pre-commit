@@ -14,6 +14,9 @@ if [[ -n "${STAGED_GO_FILES}" ]]; then
     go test --tags="unit integration" -race ./internal...
     make fix-lint
     set +o errexit
+
+    make gen-docs > /dev/null
+    git add docs
 fi
 
 STAGED_EVG_FILES=$(git diff --cached --name-only | grep "evergreen.yml$")
@@ -22,6 +25,3 @@ for FILE in ${STAGED_EVG_FILES}
 do
     evergreen validate "${FILE}"
 done
-
-make gen-docs > /dev/null
-git add docs

@@ -18,6 +18,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"os/signal"
 
 	"github.com/mongodb/mongocli/internal/cli/root"
 	"github.com/mongodb/mongocli/internal/config"
@@ -54,8 +55,20 @@ func initConfig() {
 }
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	signalTrap := make(chan os.Signal, 1)
+	signal.Notify(signalTrap, os.Interrupt)
+
+	go func() {
+		select {
+		case <-signalTrap:
+			cancel()
+		case <-ctx.Done():
+		}
+	}()
+
 	cobra.EnableCommandSorting = false
 	cobra.OnInitialize(initConfig)
 
-	Execute(context.Background())
+	Execute(ctx)
 }

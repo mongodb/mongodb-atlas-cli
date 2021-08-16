@@ -15,6 +15,7 @@
 package config
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -50,10 +51,12 @@ type configOpts struct {
 	store          ProjectOrgsLister
 }
 
-func (opts *configOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *configOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *configOpts) IsCloud() bool {
@@ -101,7 +104,7 @@ func (opts *configOpts) setUpOutput() {
 	}
 }
 
-func (opts *configOpts) Run() error {
+func (opts *configOpts) Run(ctx context.Context) error {
 	fmt.Printf(`You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MCLI_*) instead.
@@ -116,7 +119,7 @@ Enter [?] on any option to get help.
 	}
 	opts.SetUpAccess()
 
-	if err := opts.initStore(); err != nil {
+	if err := opts.initStore(ctx)(); err != nil {
 		return err
 	}
 
@@ -254,7 +257,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
   $ mongocli config --service ops-manager
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 		Annotations: map[string]string{
 			"toc": "true",

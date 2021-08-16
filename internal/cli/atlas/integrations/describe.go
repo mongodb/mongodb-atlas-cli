@@ -15,6 +15,7 @@
 package integrations
 
 import (
+	"context"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -33,10 +34,12 @@ type DescribeOpts struct {
 	store           store.IntegrationDescriber
 }
 
-func (opts *DescribeOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var describeTemplateSlack = `TYPE	API TOKEN	TEAM	CHANNEL
@@ -103,7 +106,7 @@ func DescribeBuilder() *cobra.Command {
 			opts.integrationType = strings.ToUpper(args[0])
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
 			)
 		},

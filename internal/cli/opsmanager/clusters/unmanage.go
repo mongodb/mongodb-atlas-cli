@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -34,10 +35,12 @@ type UnmanageOpts struct {
 	store store.AutomationPatcher
 }
 
-func (opts *UnmanageOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UnmanageOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UnmanageOpts) Run() error {
@@ -77,7 +80,7 @@ func UnmanageBuilder() *cobra.Command {
 		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

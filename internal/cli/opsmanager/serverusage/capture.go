@@ -14,6 +14,7 @@
 package serverusage
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -25,10 +26,12 @@ type CaptureOpts struct {
 	store store.SnapshotGenerator
 }
 
-func (opts *CaptureOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CaptureOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CaptureOpts) Run() error {
@@ -47,7 +50,7 @@ func CaptureBuilder() *cobra.Command {
 		Use:   "capture",
 		Short: "Capture a snapshot of usage for the processes Ops Manager manages.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.initStore()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

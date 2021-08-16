@@ -15,6 +15,7 @@
 package logs
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -39,10 +40,12 @@ type JobsCollectOpts struct {
 	store                     store.LogCollector
 }
 
-func (opts *JobsCollectOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *JobsCollectOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var collectTemplate = "Log collection job '{{.ID}}' started successfully.\n"
@@ -87,7 +90,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), collectTemplate),
 			)
 		},

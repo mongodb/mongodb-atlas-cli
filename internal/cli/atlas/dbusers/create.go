@@ -15,6 +15,7 @@
 package dbusers
 
 import (
+	"context"
 	"errors"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -75,10 +76,12 @@ func (opts *CreateOpts) isExternal() bool {
 	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet()
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) Run() error {
@@ -179,7 +182,7 @@ func CreateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.validate,
 			)

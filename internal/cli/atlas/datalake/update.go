@@ -15,6 +15,7 @@
 package datalake
 
 import (
+	"context"
 	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -39,10 +40,12 @@ type UpdateOpts struct {
 	testBucket string
 }
 
-func (opts *UpdateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateRequest {
@@ -100,7 +103,7 @@ func UpdateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},

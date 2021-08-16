@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,7 +31,7 @@ type IndexCreator interface {
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlas.IndexConfiguration) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Indexes.Create(context.Background(), projectID, clusterName, index)
+		_, err := s.client.(*atlas.Client).Indexes.Create(s.ctx, projectID, clusterName, index)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

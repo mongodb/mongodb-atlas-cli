@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
@@ -44,15 +43,15 @@ type OrganizationAPIKeyAccessListCreator interface {
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
 		var target *atlas.ErrorResponse
 		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
 			if target.HTTPCode == resourceNotFound {
-				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
+				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(s.ctx, orgID, apiKeyID, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
 				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
 		}
@@ -67,15 +66,15 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts 
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
 		var target *atlas.ErrorResponse
 		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
 			if target.HTTPCode == resourceNotFound {
-				_, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+				_, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
 				return e
 			}
 		}
@@ -89,15 +88,15 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
 		var target *atlas.ErrorResponse
 		if err != nil && errors.As(err, &target) {
 			// We keep supporting OM 4.2 and OM 4.4
 			if target.HTTPCode == resourceNotFound {
-				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
 				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
 			}
 		}

@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -38,10 +39,12 @@ type StartupOpts struct {
 	store       store.AutomationPatcher
 }
 
-func (opts *StartupOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *StartupOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *StartupOpts) Run() error {
@@ -100,7 +103,7 @@ func StartupBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster that you want to start.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.clusterName = args[0]

@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -36,7 +35,7 @@ type MonitoringStopper interface {
 func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.StartMonitoring(context.Background(), groupID, host)
+		result, _, err := s.client.(*opsmngr.Client).Deployments.StartMonitoring(s.ctx, groupID, host)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -47,7 +46,7 @@ func (s *Store) StartMonitoring(groupID string, host *opsmngr.Host) (*opsmngr.Ho
 func (s *Store) StopMonitoring(groupID, hostID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).Deployments.StopMonitoring(context.Background(), groupID, hostID)
+		_, err := s.client.(*opsmngr.Client).Deployments.StopMonitoring(s.ctx, groupID, hostID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -44,7 +43,7 @@ type IntegrationDescriber interface {
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(context.Background(), projectID, integrationType, integration)
+		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(s.ctx, projectID, integrationType, integration)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,7 +54,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).Integrations.List(context.Background(), projectID)
+		resp, _, err := s.client.(*atlas.Client).Integrations.List(s.ctx, projectID)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +65,7 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
+		_, err := s.client.(*atlas.Client).Integrations.Delete(s.ctx, projectID, integrationType)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +76,7 @@ func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPartyIntegration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).Integrations.Get(context.Background(), projectID, integrationType)
+		resp, _, err := s.client.(*atlas.Client).Integrations.Get(s.ctx, projectID, integrationType)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

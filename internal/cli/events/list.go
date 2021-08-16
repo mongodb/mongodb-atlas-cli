@@ -14,6 +14,7 @@
 package events
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -37,10 +38,12 @@ type ListOpts struct {
 	store     store.EventLister
 }
 
-func (opts *ListOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var listTemplate = `ID	TYPE	CREATED{{range .Results}}
@@ -94,7 +97,7 @@ func ListBuilder() *cobra.Command {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

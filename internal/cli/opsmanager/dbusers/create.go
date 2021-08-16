@@ -15,6 +15,7 @@
 package dbusers
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -42,10 +43,12 @@ type CreateOpts struct {
 	store      store.AutomationPatcher
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) Run() error {
@@ -101,7 +104,7 @@ func CreateBuilder() *cobra.Command {
   $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {

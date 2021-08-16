@@ -15,6 +15,7 @@
 package quickstart
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -93,10 +94,12 @@ type Opts struct {
 	store               store.AtlasClusterQuickStarter
 }
 
-func (opts *Opts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *Opts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *Opts) Run() error {
@@ -349,7 +352,7 @@ func Builder() *cobra.Command {
 			opts.setTier()
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)
 		},

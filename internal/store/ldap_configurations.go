@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -48,7 +47,7 @@ type LDAPConfigurationGetter interface {
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(context.Background(), projectID, ldap)
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Verify(s.ctx, projectID, ldap)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +58,7 @@ func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlas.LDAP) (*at
 func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(context.Background(), projectID, requestID)
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.GetStatus(s.ctx, projectID, requestID)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +69,7 @@ func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlas.
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfiguration) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(context.Background(), projectID, ldap)
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Save(s.ctx, projectID, ldap)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +80,7 @@ func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlas.LDAPConfigur
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(context.Background(), projectID)
+		_, _, err := s.client.(*atlas.Client).LDAPConfigurations.Delete(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +91,7 @@ func (s *Store) DeleteLDAPConfiguration(projectID string) error {
 func (s *Store) GetLDAPConfiguration(projectID string) (*atlas.LDAPConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(context.Background(), projectID)
+		resp, _, err := s.client.(*atlas.Client).LDAPConfigurations.Get(s.ctx, projectID)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

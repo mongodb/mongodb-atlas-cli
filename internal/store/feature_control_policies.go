@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -37,7 +36,7 @@ type FeatureControlPoliciesUpdater interface {
 func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -48,7 +47,7 @@ func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions
 func (s *Store) UpdateFeatureControlPolicy(projectID string, policy *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.Update(context.Background(), projectID, policy)
+		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.Update(s.ctx, projectID, policy)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

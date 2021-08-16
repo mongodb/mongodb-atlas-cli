@@ -15,6 +15,7 @@
 package indexes
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -39,10 +40,12 @@ type CreateOpts struct {
 	store       store.IndexCreator
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) Run() error {
@@ -105,7 +108,7 @@ func CreateBuilder() *cobra.Command {
 			"indexNameDesc": "Name of the index.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

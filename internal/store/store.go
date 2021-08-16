@@ -15,6 +15,7 @@
 package store
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
@@ -50,6 +51,7 @@ const (
 var errUnsupportedService = errors.New("unsupported service")
 
 type Store struct {
+	ctx           context.Context
 	service       string
 	baseURL       string
 	caCertificate string
@@ -205,6 +207,13 @@ func WithAuthentication(c CredentialsGetter) Option {
 	}
 }
 
+func WithContext(ctx context.Context) Option {
+	return func(s *Store) error {
+		s.ctx = ctx
+		return nil
+	}
+}
+
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
@@ -350,8 +359,9 @@ type ManifestGetter interface {
 }
 
 // NewVersionManifest ets the appropriate client for the manifest version page.
-func NewVersionManifest(c ManifestGetter) (*Store, error) {
+func NewVersionManifest(ctx context.Context, c ManifestGetter) (*Store, error) {
 	s := new(Store)
+	s.ctx = ctx
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

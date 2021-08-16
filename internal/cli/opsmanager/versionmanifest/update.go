@@ -15,6 +15,7 @@
 package versionmanifest
 
 import (
+	"context"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -35,14 +36,16 @@ type UpdateOpts struct {
 	storeStaticPath store.VersionManifestGetter
 }
 
-func (opts *UpdateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	if err != nil {
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		if err != nil {
+			return err
+		}
+		opts.storeStaticPath, err = store.NewVersionManifest(ctx, config.Default())
 		return err
 	}
-	opts.storeStaticPath, err = store.NewVersionManifest(config.Default())
-	return err
 }
 
 func (opts *UpdateOpts) Run() error {
@@ -76,7 +79,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionManifest = args[0]

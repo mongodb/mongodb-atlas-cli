@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,7 +31,7 @@ type ProcessDatabaseLister interface {
 func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDatabases.List(context.Background(), groupID, host, port, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessDatabases.List(s.ctx, groupID, host, port, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

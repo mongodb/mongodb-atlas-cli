@@ -15,6 +15,7 @@
 package servertype
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -33,10 +34,12 @@ type SetOpts struct {
 	serverType string
 }
 
-func (opts *SetOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *SetOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *SetOpts) Run() error {
@@ -67,7 +70,7 @@ func SetBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

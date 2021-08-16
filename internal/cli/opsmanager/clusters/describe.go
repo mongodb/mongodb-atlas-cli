@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -34,10 +35,12 @@ type DescribeOpts struct {
 	store store.CloudManagerClustersDescriber
 }
 
-func (opts *DescribeOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var describeTemplate = `ID	NAME	TYPE	REPLICASET NAME
@@ -82,7 +85,7 @@ When using an output format the please provide the cluster name.`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},

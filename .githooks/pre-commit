@@ -23,5 +23,5 @@ do
     evergreen validate "${FILE}"
 done
 
-make gen-docs
+make gen-docs > /dev/null
 git add docs

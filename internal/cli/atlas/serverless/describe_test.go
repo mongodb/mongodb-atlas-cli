@@ -14,7 +14,7 @@
 
 // +build unit
 
-package serverlessclusters
+package serverless
 
 import (
 	"testing"

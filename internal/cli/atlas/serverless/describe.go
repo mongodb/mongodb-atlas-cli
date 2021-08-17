@@ -11,12 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package serverlessclusters
+package serverless
 
 import (
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -26,76 +23,59 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const providerName = "SERVERLESS"
+var describeTemplate = `ID	NAME	MDB VER	STATE
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+`
 
-type CreateOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	store       store.ServerlessInstanceDescriber
 	clusterName string
-	provider    string
-	region      string
-	store       store.ServerlessInstanceCreator
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-var createTemplate = "Serverless Cluster {{.Name}} created.\n"
-
-func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateServerlessInstance(opts.ConfigProjectID(), opts.newServerlessCreateRequestParams())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.clusterName)
 	if err != nil {
 		return err
 	}
+
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCreateRequestParams {
-	return &atlas.ServerlessCreateRequestParams{
-		Name: opts.clusterName,
-		ProviderSettings: &atlas.ServerlessProviderSettings{
-			BackingProviderName: opts.provider,
-			ProviderName:        providerName,
-			RegionName:          opts.region,
-		},
-	}
-}
-
-// mongocli atlas serverlessCluster(s)|sc create <clusterName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+// mongocli atlas serverlessCluster(s) describe <clusterName> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "create <clusterName>",
-		Short: "Creates one serverless cluster in the specified project.",
+		Use:   "describe <clusterName>",
+		Short: "Return one serverless cluster in the specified project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
 			"clusterNameDesc": "Human-readable label that identifies your serverless cluster.",
 		},
+		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.clusterName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.ServerlessProvider)
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ServerlessRegion)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	_ = cmd.MarkFlagRequired(flag.Provider)
-	_ = cmd.MarkFlagRequired(flag.Region)
 
 	return cmd
 }

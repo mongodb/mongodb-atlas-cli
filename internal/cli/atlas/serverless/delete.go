@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverlessclusters
+package serverless
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,58 +24,49 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type WatchOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.WatchOpts
-	name  string
-	store store.ServerlessInstanceDescriber
+	*cli.DeleteOpts
+	store store.ServerlessInstanceDeleter
 }
 
-func (opts *WatchOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.name)
-	if err != nil {
-		return false, err
-	}
-	return result.StateName == "IDLE", nil
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteServerlessInstance, opts.ConfigProjectID())
 }
 
-func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
-		return err
+// mongocli atlas serverlessCluster(s) delete <clusterName> --projectId projectId [--force].
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Serverless cluster '%s' deleted\n", "Serverless cluster not deleted"),
 	}
-
-	return opts.Print(nil)
-}
-
-// mongocli atlas serverlessCluster(s) watch <clusterName> [--projectId projectId].
-func WatchBuilder() *cobra.Command {
-	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <clusterName>",
-		Short: "Watch for a serverless cluster to be available.",
-		Args:  require.ExactArgs(1),
+		Use:     "delete <clusterName>",
+		Aliases: []string{"rm"},
+		Short:   "Delete a serverless cluster from your project.",
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to watch.",
+			"clusterNameDesc": "Name of the cluster to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), "\nCluster available.\n"),
-			)
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+				return err
+			}
+			opts.Entry = args[0]
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

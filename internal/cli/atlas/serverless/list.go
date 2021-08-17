@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package serverlessclusters
+
+package serverless
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -23,25 +24,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
-type DescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.ServerlessInstanceDescriber
-	clusterName string
+	cli.ListOpts
+	store store.ServerlessInstanceLister
 }
 
-func (opts *DescribeOpts) initStore() error {
+func (opts *ListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.clusterName)
+func (opts *ListOpts) Run() error {
+	listOpts := opts.NewListOptions()
+	r, err := opts.store.ServerlessInstances(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
 	}
@@ -49,30 +51,28 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas serverlessCluster(s) describe <clusterName> --projectId projectId.
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas serverlessCluster(s) list [--projectId projectId] [--page N] [--limit N].
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <clusterName>",
-		Short: "Return one serverless cluster in the specified project.",
-		Args:  require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Human-readable label that identifies your serverless cluster.",
-		},
-		Aliases: []string{"get"},
+		Use:     "list",
+		Short:   "List all serverless instances in the specified project.",
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

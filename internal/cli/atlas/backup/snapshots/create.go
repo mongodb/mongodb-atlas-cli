@@ -36,7 +36,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -69,6 +69,10 @@ func CreateBuilder() *cobra.Command {
 		Aliases: []string{"take"},
 		Short:   "Create a backup snapshot for your project and cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the Atlas cluster whose snapshot you want to restore.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

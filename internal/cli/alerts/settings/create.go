@@ -33,7 +33,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -49,16 +49,19 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas alerts config(s) create [--event event] [--enabled enabled][--matcherField fieldName --matcherOperator operator --matcherValue value]
-// [--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
-// [--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
-// [--projectId projectId].
+// mongocli atlas alerts config(s) create
+//	[--event event]
+//	[--enabled enabled]
+//	[--matcherField fieldName --matcherOperator operator --matcherValue value]
+// 	[--notificationType type --notificationDelayMin min --notificationEmailEnabled --notificationSmsEnabled --notificationUsername username --notificationTeamID id
+// 	[--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
+// 	[--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create an alert configuration for your project.",
+		Short: "Creates one alert configuration in the specified project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

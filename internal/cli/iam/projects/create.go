@@ -24,7 +24,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Project '{{.ID}}' created.\n"
+const atlasCreateTemplate = "Project '{{.ID}}' created.\n"
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -39,7 +39,7 @@ func (opts *CreateOpts) init() error {
 	}
 
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -49,9 +49,6 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	if config.Service() != config.CloudService {
-		createTemplate += "Agent API Key: '{{.AgentAPIKey}}'\n"
-	}
 
 	return opts.Print(r)
 }
@@ -59,13 +56,16 @@ func (opts *CreateOpts) Run() error {
 // mongocli iam project(s) create <name> [--orgId orgId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
-	opts.Template = createTemplate
+	opts.Template = atlasCreateTemplate
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			if config.Service() != config.CloudService {
+				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
+			}
 			return opts.init()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

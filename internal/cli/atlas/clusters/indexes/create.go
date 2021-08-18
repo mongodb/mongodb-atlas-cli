@@ -41,7 +41,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -93,13 +93,17 @@ func (opts *CreateOpts) indexKeys() ([]map[string]string, error) {
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
-// mcli atlas clusters index create [name] --clusterName clusterName  --collection collection --dbName dbName [--key field:type].
+// mcli atlas clusters index create [indexName] --clusterName clusterName  --collection collection --dbName dbName [--key field:type].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create [name]",
+		Use:   "create [indexName]",
 		Short: "Create a rolling index for your MongoDB cluster.",
 		Args:  require.MaximumNArgs(1),
+		Annotations: map[string]string{
+			"args":          "indexName",
+			"indexNameDesc": "Name of the index.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
 		},

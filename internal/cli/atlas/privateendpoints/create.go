@@ -35,7 +35,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -77,6 +77,7 @@ func CreateBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]",
 	}
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
@@ -85,8 +86,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.Region)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws create [--region region] [--projectId projectId]"
 
 	return cmd
 }

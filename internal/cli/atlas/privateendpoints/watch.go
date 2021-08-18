@@ -34,7 +34,7 @@ type WatchOpts struct {
 
 func (opts *WatchOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -72,13 +72,12 @@ func WatchBuilder() *cobra.Command {
 			opts.id = args[0]
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]",
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]"
 
 	return cmd
 }

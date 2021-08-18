@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -57,8 +58,16 @@ func TestOnlineArchives(t *testing.T) {
 		describeOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
-	t.Run("list", func(t *testing.T) {
+	t.Run("List", func(t *testing.T) {
 		listOnlineArchives(t, cliPath, clusterName)
+	})
+
+	t.Run("Pause", func(t *testing.T) {
+		pauseOnlineArchive(t, cliPath, clusterName, archiveID)
+	})
+
+	t.Run("Start", func(t *testing.T) {
+		startOnlineArchive(t, cliPath, clusterName, archiveID)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -88,6 +97,46 @@ func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	}
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
 	assert.Equal(t, string(resp), expected)
+}
+
+func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"start",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	// online archive never reaches goal state as the db and collection must exists
+	const expectedError = "ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD"
+	if err != nil && !strings.Contains(string(resp), expectedError) {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+}
+
+func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		onlineArchiveEntity,
+		"pause",
+		archiveID,
+		"--clusterName="+clusterName,
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	// online archive never reaches goal state as the db and collection must exists
+	const expectedError = "ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE"
+	if err != nil && !strings.Contains(string(resp), expectedError) {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
 }
 
 func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {

@@ -33,7 +33,7 @@ type WatchOpts struct {
 
 func (opts *WatchOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -53,13 +53,17 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas cluster(s) watch <name> [--projectId projectId].
+// mongocli atlas cluster(s) watch <clusterName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <name>",
+		Use:   "watch <clusterName>",
 		Short: "Watch for a cluster to be available.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster to watch.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

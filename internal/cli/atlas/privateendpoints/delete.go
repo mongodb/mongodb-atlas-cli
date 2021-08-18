@@ -32,7 +32,7 @@ type DeleteOpts struct {
 
 func (opts *DeleteOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -60,13 +60,12 @@ func DeleteBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]",
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]"
 
 	return cmd
 }

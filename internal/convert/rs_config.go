@@ -136,7 +136,7 @@ func newRSConfig(in *opsmngr.AutomationConfig, id string) *RSConfig {
 	for i, m := range rs.Members {
 		for l, p := range in.Processes {
 			if p.Name == m.Host {
-				out.Processes[i] = newReplicaSetProcessConfig(m, p)
+				out.Processes[i] = newReplicaSetProcessConfig(&rs.Members[i], p)
 				in.Processes = append(in.Processes[:l], in.Processes[l+1:]...)
 				break
 			}

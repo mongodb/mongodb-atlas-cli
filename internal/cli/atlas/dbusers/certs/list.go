@@ -34,7 +34,7 @@ type ListOpts struct {
 
 func (opts *ListOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -59,6 +59,10 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List of all Atlas-managed, unexpired certificates for a database user.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":         "username",
+			"usernameDesc": "Username of the database user for whom you want to list Atlas-managed certificates.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

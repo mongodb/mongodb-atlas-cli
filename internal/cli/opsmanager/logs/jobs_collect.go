@@ -41,7 +41,7 @@ type JobsCollectOpts struct {
 
 func (opts *JobsCollectOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -74,7 +74,7 @@ func JobsCollectOptsBuilder() *cobra.Command {
 		Short: "Start a job to collect logs for your project.",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != argsN {
-				return fmt.Errorf("accepts %d arg(s), received %d", 2, len(args))
+				return fmt.Errorf("accepts %d arg(s), received %d", argsN, len(args))
 			}
 
 			args[0] = strings.ToLower(args[0])

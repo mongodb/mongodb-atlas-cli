@@ -17,15 +17,13 @@ package config
 import (
 	"fmt"
 	"os"
-
-	"github.com/mitchellh/go-homedir"
 )
 
 func configHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
-	home, err := homedir.Dir()
+	home, err := os.UserHomeDir()
 
 	if err != nil {
 		return "", err

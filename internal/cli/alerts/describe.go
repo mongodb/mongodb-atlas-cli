@@ -33,7 +33,7 @@ type DescribeOpts struct {
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -55,9 +55,14 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <ID>",
-		Short: "Describe an alert for your project.",
-		Args:  require.ExactArgs(1),
+		Use:     "describe <alertId>",
+		Aliases: []string{"get"},
+		Short:   "Retrieves one alert for the specified project.",
+		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":        "alertId",
+			"alertIdDesc": "Unique identifier of the alert you want to describe.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -41,7 +41,7 @@ type UpdateOpts struct {
 
 func (opts *UpdateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -80,13 +80,17 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas datalake(s) update name --projectId projectId [--role role] [--testBucket bucket] [--region region].
+// mongocli atlas datalake(s) update <name> --projectId projectId [--role role] [--testBucket bucket] [--region region].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <name>",
 		Short: "Update a data lake for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "name",
+			"nameDesc": "Name of the Atlas Data Lake to update.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 

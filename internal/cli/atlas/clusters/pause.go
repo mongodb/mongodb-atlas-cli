@@ -33,7 +33,7 @@ type PauseOpts struct {
 
 func (opts *PauseOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -48,13 +48,17 @@ func (opts *PauseOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) pause <name> [--projectId projectId].
+// mongocli atlas cluster(s) pause <clusterName> [--projectId projectId].
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause <name>",
+		Use:   "pause <clusterName>",
 		Short: "Pause a running MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster to pause.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -82,7 +82,7 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 // ProcessDisks encapsulate the logic to manage different cloud providers.
 func (s *Store) DownloadLog(groupID, host, name string, out io.Writer, opts *atlas.DateRangetOptions) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Logs.Get(context.Background(), groupID, host, name, out, opts)
 		return err
 	default:

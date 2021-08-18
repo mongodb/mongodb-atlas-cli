@@ -32,7 +32,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{}
+	expected := &mongodbatlas.AdvancedCluster{}
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{

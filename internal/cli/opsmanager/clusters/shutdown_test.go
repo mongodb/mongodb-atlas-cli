@@ -20,7 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/mongodb/mongocli/internal/test/fixture"
 )
 
@@ -32,9 +34,9 @@ func TestShutdown_Run(t *testing.T) {
 	expected := fixture.AutomationConfig()
 
 	shutdownOpts := &ShutdownOpts{
-		store:   mockStore,
-		confirm: true,
-		name:    "myReplicaSet",
+		store:       mockStore,
+		confirm:     true,
+		clusterName: "myReplicaSet",
 	}
 
 	mockStore.
@@ -52,4 +54,13 @@ func TestShutdown_Run(t *testing.T) {
 	if err := shutdownOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestShutdownBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ShutdownBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Force, flag.ProcessName},
+	)
 }

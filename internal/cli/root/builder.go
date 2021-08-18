@@ -23,7 +23,6 @@ import (
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
-	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
@@ -31,36 +30,6 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
-
-func completionBuilder(root *cobra.Command) *cobra.Command {
-	completionCmd := &cobra.Command{
-		Use:   "completion <bash|zsh|fish|powershell>",
-		Args:  require.ExactValidArgs(1),
-		Short: "Generate shell completion scripts",
-		Long: `Generate shell completion scripts for MongoDB CLI commands.
-The output of this command will be computer code and is meant to be saved to a
-file or immediately evaluated by an interactive shell.
-
-When installing MongoDB CLI through brew, it's possible that
-no additional shell configuration is necessary, see https://docs.brew.sh/Shell-Completion.`,
-		ValidArgs: []string{"bash", "zsh", "powershell", "fish"},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			switch args[0] {
-			case "bash":
-				return root.GenBashCompletion(cmd.OutOrStdout())
-			case "zsh":
-				return root.GenZshCompletion(cmd.OutOrStdout())
-			case "powershell":
-				return root.GenPowerShellCompletion(cmd.OutOrStdout())
-			case "fish":
-				return root.GenFishCompletion(cmd.OutOrStdout(), true)
-			default:
-				return fmt.Errorf("unsupported shell type %q", args[0])
-			}
-		},
-	}
-	return completionCmd
-}
 
 // rootBuilder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
@@ -102,7 +71,6 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
-		completionBuilder(rootCmd),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

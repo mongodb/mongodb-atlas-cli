@@ -33,7 +33,7 @@ type LoadSampleDataOpts struct {
 
 func (opts *LoadSampleDataOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -55,6 +55,10 @@ func LoadSampleDataBuilder() *cobra.Command {
 		Use:   "loadSampleData <clusterName>",
 		Short: "Load sample data into a MongoDB cluster in Atlas.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

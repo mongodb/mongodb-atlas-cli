@@ -40,7 +40,7 @@ type AlertAcknowledger interface {
 // Alert encapsulate the logic to manage different cloud providers.
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Get(context.Background(), projectID, alertID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -54,7 +54,7 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 // Alerts encapsulate the logic to manage different cloud providers.
 func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Alerts.List(context.Background(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
@@ -68,7 +68,7 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 // Acknowledge encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:

@@ -38,6 +38,7 @@ const (
 	usersEntity            = "users"
 	projectsEntity         = "projects"
 	teamsEntity            = "teams"
+	invitationsEntity      = "invitations"
 )
 
 func createOrgAPIKey() (string, error) {

@@ -20,7 +20,9 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
-if [[ -f "./dist/macos_darwin_amd64/bin/mongocli"&& ! -f "./dist/mongocli_macos_signed_x86_64.zip" ]]; then
+# this script could run in parallel for both x86_64 and arm64
+# we need to make sure to call the right one at the right time
+if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_x86_64.zip" ]]; then
   echo "notarizing x86_64"
   gon -log-level=error gon_x86_64.json
 

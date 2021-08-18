@@ -34,7 +34,7 @@ type WatchOpts struct {
 
 func (opts *WatchOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -61,6 +61,10 @@ func WatchBuilder() *cobra.Command {
 		Use:   "watch <snapshotId>",
 		Short: "Watch for a snapshot to be available.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":           "snapshotId",
+			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -27,6 +27,9 @@ case "${NOTARY_KEY_NAME}" in
     server-4.6)
         export NOTARY_TOKEN=${signing_auth_token_46:?}
         ;;
+    server-5.0)
+        export NOTARY_TOKEN=${signing_auth_token_50:?}
+        ;;
 esac
 
 set -Eeou pipefail

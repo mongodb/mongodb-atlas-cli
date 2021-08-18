@@ -33,7 +33,7 @@ type DescribeOpts struct {
 
 func (opts *DescribeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -46,22 +46,21 @@ func (opts *DescribeOpts) Run() error {
 	if err != nil {
 		return err
 	}
-	// When both are set we can't reuse this output as is as they are both exclusive,
-	// we pick to show the supported property over the deprecated one for this reason
-	if r.ReplicationSpec != nil && r.ReplicationSpecs != nil {
-		r.ReplicationSpec = nil
-	}
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster(s) describe <name> --projectId projectId.
+// mongocli atlas cluster(s) describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <clusterName>",
 		Aliases: []string{"get"},
 		Short:   "Describe a cluster.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster to retrieve.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

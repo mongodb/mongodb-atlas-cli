@@ -36,7 +36,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -65,13 +65,17 @@ func (opts *CreateOpts) newDataLakeRequest() *mongodbatlas.DataLakeCreateRequest
 	}
 }
 
-// mongocli atlas datalake(s) create name --projectId projectId.
+// mongocli atlas datalake(s) create <name> --projectId projectId.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a new data lake for your project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "name",
+			"nameDesc": "Name of the Atlas Data Lake to create.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.PreRunE(

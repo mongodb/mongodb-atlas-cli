@@ -59,18 +59,18 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `cluster pause`                               | N         |           |           | Y         |       |       |
 | `cluster update`                              | Y         |           |           | Y         |       |       |
 | `cluster watch`                               | Y         |           |           | Y         |       |       |
-| `cluster onlineArchive create`                | N         |           |           | Y         |       |       |
-| `cluster onlineArchive delete`                | N         |           |           | Y         |       |       |
-| `cluster onlineArchive describe`              | N         |           |           | Y         |       |       |
-| `cluster onlineArchive list`                  | N         |           |           | Y         |       |       |
-| `cluster onlineArchive pause`                 | N         |           |           | Y         |       |       |
-| `cluster onlineArchive start`                 | N         |           |           | Y         |       |       |
-| `cluster onlineArchive update`                | N         |           |           | Y         |       |       |
-| `cluster search index create`                 | N         |           |           | Y         |       |       |
-| `cluster search index delete`                 | N         |           |           | Y         |       |       |
-| `cluster search index describe`               | N         |           |           | Y         |       |       |
-| `cluster search index list`                   | N         |           |           | Y         |       |       |
-| `cluster search index update`                 | N         |           |           | Y         |       |       |
+| `cluster onlineArchive create`                | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive delete`                | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive describe`              | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive list`                  | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive pause`                 | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive start`                 | Y         |           |           | Y         | N     | N     |
+| `cluster onlineArchive update`                | Y         |           |           | Y         | N     | N     |
+| `cluster search index create`                 | Y         |           |           | Y         | N     | N     |
+| `cluster search index delete`                 | Y         |           |           | Y         | N     | N     |
+| `cluster search index describe`               | Y         |           |           | Y         | N     | N     |
+| `cluster search index list`                   | Y         |           |           | Y         | N     | N     |
+| `cluster search index update`                 | Y         |           |           | Y         | N     | N     |
 | `dbrole create`                               | Y         |           |           | Y         |       |       |
 | `dbrole delete`                               | Y         |           |           | Y         |       |       |
 | `dbrole describe`                             | Y         |           |           | Y         |       |       |
@@ -140,16 +140,16 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint interface create`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface delete`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface describe`          | N         |           |           | Y         |       |       |
-| `privateEndpoint  create`                     | Y         |           |           | Y         |       |       |
-| `privateEndpoint  delete`                     | Y         |           |           | Y         |       |       |
-| `privateEndpoint  describe`                   | Y         |           |           | Y         |       |       |
-| `privateEndpoint  list`                       | Y         |           |           | Y         |       |       |
-| `privateEndpoint  watch`                      | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode describe`      | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode enable`        | Y         |           |           | Y         |       |       |
-| `privateEndpoint  regionalMode disable`       | Y         |           |           | Y         |       |       |
+| `privateEndpoint create`                      | Y         |           |           | Y         |       |       |
+| `privateEndpoint delete`                      | Y         |           |           | Y         |       |       |
+| `privateEndpoint describe`                    | Y         |           |           | Y         |       |       |
+| `privateEndpoint list`                        | Y         |           |           | Y         |       |       |
+| `privateEndpoint watch`                       | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode describe`       | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode enable`         | Y         |           |           | Y         |       |       |
+| `privateEndpoint regionalMode disable`        | Y         |           |           | Y         |       |       |
 | `process list`                                | Y         |           |           | Y         |       |       |
-| `quickstart`                                  | Y         |           |           | Y         |       |       
+| `quickstart`                                  | N         |           |           | Y         |       |       
 | `security customercert create`                | N         |           |           | Y         |       |       |
 | `security customercert disable`               | N         |           |           | Y         |       |       |
 | `security customercert describe`              | N         |           |           | Y         |       |       |
@@ -160,10 +160,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `security ldap verify`                        | Y         |           |           | Y         |       |       |
 | `security ldap watch`                         | Y         |           |           | Y         |       |       |
 | `config`                                      |           |           |           |           |       |       |
-| `config delete`                               |           |           |           |           |       |       |
-| `config list`                                 |           |           |           |           |       |       |
-| `config describe`                             |           |           |           |           |       |       |
-| `config rename`                               |           |           |           |           |       |       |
+| `completion`                                  | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config delete`                               | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config list`                                 | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config describe`                             | Y         | Y         | Y         | Y         | Y     | Y     |
+| `config rename`                               | Y         | Y         | Y         | Y         | Y     | Y     |
 | `config set`                                  |           |           |           |           |       |       |
 | `event list`                                  | Y         | N         |Y          | Y         | Y     | Y     |
 | `iam globalAccessList create`                 |           | N         |           |           | Y     |       |
@@ -188,6 +189,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam orgs delete`                             | N         | N         | N         | Y         | Y     | Y     |
 | `iam orgs describe`                           | Y         | N         | N         | Y         | Y     | Y     |
 | `iam orgs list`                               | Y         | N         | N         | Y         | Y     | Y     |
+| `iam orgs invitations list`                   | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations describe`               | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations invite`                 | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations update`                 | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs invitations delete`                 | Y         | N         | N         | Y         | N     | N     |
 | `iam project apiKey create`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey delete`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey describe`                 | N         | N         | N         | Y         | Y     | Y     |
@@ -203,6 +209,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam project delete`                          | N         | N         | N         | Y         | Y     | Y     |
 | `iam project describe`                        | N         | N         | N         | Y         | Y     | Y     |
 | `iam project list`                            | N         | N         | N         | Y         | Y     | Y     |
+| `iam project invitations list`                | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations describe`            | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations invite`              | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations update`              | Y         | N         | N         | Y         | N     | N     |
+| `iam project invitations delete`              | Y         | N         | N         | Y         | N     | N     |
 | `iam team user add`                           | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user delete`                        | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user list`                          | Y         | N         | Y         | Y         | Y     | Y     |
@@ -241,7 +252,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `agent apikeys create`                        |           | N         | N         |           | Y     | Y     |
 | `agent apikeys delete`                        |           | N         | N         |           | Y     | Y     |
 | `agent apikeys list`                          |           | Y         | Y         |           | Y     | Y     |
-| `agent version list`                          |           | N         | N         |           | Y     | Y     |
+| `agent version list`                          |           | Y         | Y         |           | Y     | Y     |
 | `agent list`                                  |           | Y         | Y         |           | Y     | Y     |
 | `agent upgrade`                               |           | Y         | Y         |           | Y     | Y     |
 | `automation describe`                         |           | N         | N         |           | Y     | Y     |
@@ -264,11 +275,12 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `cluster  delete`                             |           | Y         | Y         |           | Y     | Y     |
 | `cluster  describe`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  list`                               |           | Y         | Y         |           | Y     | Y     |
-| `cluster  restart`                            |           | N         | N         |           | Y     | Y     |
+| `cluster  restart`                            |           | Y         | Y         |           | Y     | Y     |
 | `cluster  shutdown`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  startup`                            |           | N         | N         |           | Y     | Y     |
 | `cluster  unmanage`                           |           | Y         | Y         |           | Y     | Y     |
 | `cluster  update`                             |           | N         | N         |           | Y     | Y     |
+| `cluster  reclaimFreeSpace`                   |           | Y         | Y         |           | Y     | Y     |
 | `cluster  index create`                       |           | N         | N         |           | Y     | Y     |
 | `dbuser create`                               |           | N         | Y         |           | Y     | Y     |
 | `dbuser delete`                               |           | N         | Y         |           | Y     | Y     |
@@ -310,3 +322,8 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
+| `serverlessCluster create`                    | Y         |           |           | Y         |       |       |
+| `serverlessCluster delete`                    | Y         |           |           | Y         |       |       |
+| `serverlessCluster describe`                  | Y         |           |           | Y         |       |       |
+| `serverlessCluster list`                      | Y         |           |           | Y         |       |       |
+| `serverlessCluster watch`                     | Y         |           |           | Y         |       |       |

@@ -35,7 +35,7 @@ type ProcessDatabaseMeasurementsLister interface {
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(context.Background(), groupID, host, port, partitionName, opts)
 		return result, err
 	default:
@@ -46,7 +46,7 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(context.Background(), groupID, host, port, dbName, opts)
 		return result, err
 	default:

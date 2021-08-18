@@ -33,7 +33,7 @@ type DeleteOpts struct {
 
 func (opts *DeleteOpts) init() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 

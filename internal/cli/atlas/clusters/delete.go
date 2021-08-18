@@ -32,7 +32,7 @@ type DeleteOpts struct {
 
 func (opts *DeleteOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -42,16 +42,20 @@ func (opts *DeleteOpts) Run() error {
 
 // DeleteBuilder
 //
-// mongocli atlas cluster(s) delete <name> --projectId projectId [--confirm].
+// mongocli atlas cluster(s) delete <clusterName> --projectId projectId [--confirm].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Cluster '%s' deleted\n", "Cluster not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
+		Use:     "delete <clusterName>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a cluster from your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "clusterName",
+			"clusterNameDesc": "Name of the cluster to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

@@ -44,7 +44,7 @@ type CloudProviderAccessRoleAuthorizer interface {
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.AWSIAMRole, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		req := &atlas.CloudProviderAccessRoleRequest{
 			ProviderName: provider,
 		}
@@ -58,7 +58,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.ListRoles(context.Background(), groupID)
 		return result, err
 	default:
@@ -69,7 +69,7 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 // DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(context.Background(), req)
 		return err
 	default:
@@ -80,7 +80,7 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(context.Background(), groupID, roleID, req)
 		return result, err
 	default:

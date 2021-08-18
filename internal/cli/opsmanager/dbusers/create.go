@@ -44,7 +44,7 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -75,7 +75,7 @@ func (opts *CreateOpts) newDBUser() *opsmngr.MongoDBUser {
 		Database:                   opts.authDB,
 		Username:                   opts.username,
 		Roles:                      convert.BuildOMRoles(opts.roles),
-		AuthenticationRestrictions: []string{},
+		AuthenticationRestrictions: []opsmngr.AuthenticationRestriction{},
 		Mechanisms:                 &opts.mechanisms,
 	}
 }

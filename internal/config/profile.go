@@ -120,10 +120,7 @@ func (p *Profile) Set(name, value string) {
 	viper.Set(p.name, settings)
 }
 
-func SetGlobal(name, value string) { p.SetGlobal(name, value) }
-func (p *Profile) SetGlobal(name, value string) {
-	viper.Set(name, value)
-}
+func SetGlobal(name, value string) { viper.Set(name, value) }
 
 func GetString(name string) string { return p.GetString(name) }
 func (p *Profile) GetString(name string) string {
@@ -141,10 +138,7 @@ func (p *Profile) Service() string {
 		return viper.GetString(service)
 	}
 	settings := viper.GetStringMapString(p.Name())
-	if settings[service] != "" {
-		return settings[service]
-	}
-	return CloudService
+	return settings[service]
 }
 
 // SetService set configured service.
@@ -240,7 +234,7 @@ func (p *Profile) MongoShellPath() string {
 // SetMongoShellPath sets the global MongoDB Shell path.
 func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
-	p.SetGlobal(mongoShellPath, v)
+	SetGlobal(mongoShellPath, v)
 }
 
 // Output get configured output format.
@@ -271,17 +265,19 @@ func (p *Profile) IsAccessSet() bool {
 func Map() map[string]string { return p.Map() }
 func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
-	newSettings := make(map[string]string, len(settings))
-
+	profileSettings := make(map[string]string, len(settings)+1)
+	if p.MongoShellPath() != "" {
+		profileSettings[mongoShellPath] = p.MongoShellPath()
+	}
 	for k, v := range settings {
 		if k == privateAPIKey || k == publicAPIKey {
-			newSettings[k] = "redacted"
+			profileSettings[k] = "redacted"
 		} else {
-			newSettings[k] = v
+			profileSettings[k] = v
 		}
 	}
 
-	return newSettings
+	return profileSettings
 }
 
 // SortedKeys returns the properties of the Profile sorted.
@@ -405,7 +401,8 @@ func (p *Profile) Save() error {
 		return err
 	}
 	if !exists {
-		err := p.fs.MkdirAll(p.configDir, 0700)
+		const defaultPermissions = 0700
+		err := p.fs.MkdirAll(p.configDir, defaultPermissions)
 		if err != nil {
 			return err
 		}

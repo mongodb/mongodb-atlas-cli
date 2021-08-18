@@ -23,9 +23,17 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+)
+
+const (
+	tierM30      = "M30"
+	provider     = "AWS"
+	diskSizeGB40 = "40"
+	diskSizeGB30 = "30"
 )
 
 func TestClustersFlags(t *testing.T) {
@@ -36,29 +44,31 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
+	region, err := newAvailableRegion(tierM30, provider)
+	req.NoError(err)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterName,
-			"--region=US_EAST_1",
+			"--region", region,
 			"--members=3",
-			"--tier=M10",
-			"--provider=AWS",
+			"--tier", tierM30,
+			"--provider", provider,
 			"--mdbVersion=4.0",
-			"--diskSizeGB=10",
+			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		req.NoError(err)
 
-		var cluster *mongodbatlas.Cluster
+		var cluster *mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "4.0", 10)
+		ensureCluster(t, cluster, clusterName, "4.0", 30)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -105,12 +115,12 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var clusters []mongodbatlas.Cluster
+		var clusters mongodbatlas.AdvancedClustersResponse
 		err = json.Unmarshal(resp, &clusters)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(clusters)
+		a.NotEmpty(clusters.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -124,7 +134,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -159,7 +169,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"indexes",
 			"create",
-			"--clusterName="+clusterName,
+			"--clusterName", clusterName,
 			"--db=tes",
 			"--collection=tes",
 			"--key=name:1")
@@ -174,18 +184,18 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterName,
-			"--diskSizeGB=20",
+			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion=4.2",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterName, "4.2", 20)
+		ensureCluster(t, &cluster, clusterName, "4.2", 40)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -208,23 +218,43 @@ func TestClustersFile(t *testing.T) {
 	clusterFileName, err := RandClusterName()
 	req.NoError(err)
 
+	clusterFile := "create_cluster_test.json"
+	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
+		clusterFile = "create_cluster_gov_test.json"
+	}
+
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file=create_cluster_test.json",
+			"--file", clusterFile,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 10)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			clusterFileName,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -239,11 +269,11 @@ func TestClustersFile(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.2", 25)
+		ensureCluster(t, &cluster, clusterFileName, "4.4", 40)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
@@ -267,31 +297,34 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
+	region, err := newAvailableRegion(tierM30, provider)
+	req.NoError(err)
+
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"create",
 			shardedClusterName,
-			"--region=US_EAST_1",
+			"--region", region,
 			"--type=SHARDED",
 			"--shards=2",
 			"--members=3",
-			"--tier=M10",
-			"--provider=AWS",
+			"--tier", tierM30,
+			"--provider", provider,
 			"--mdbVersion=4.2",
-			"--diskSizeGB=10",
+			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		var cluster mongodbatlas.Cluster
+		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, shardedClusterName, "4.2", 10)
+		ensureCluster(t, &cluster, shardedClusterName, "4.2", 30)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {
@@ -305,7 +338,7 @@ func TestShardedCluster(t *testing.T) {
 	})
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, version string, diskSizeGB float64) {
+func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.Name)

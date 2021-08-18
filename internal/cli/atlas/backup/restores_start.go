@@ -50,7 +50,7 @@ type RestoresStartOpts struct {
 
 func (opts *RestoresStartOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -151,6 +151,10 @@ func RestoresStartBuilder() *cobra.Command {
 		Short:     "Start a restore job for your project and cluster.",
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
+		Annotations: map[string]string{
+			"args":             "deliveryType",
+			"deliveryTypeDesc": "Type of restore job to create. Accepted values include: automated, download, pointInTime.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.isAutomatedRestore() {
 				if err := markRequiredAutomatedRestoreFlags(cmd); err != nil {

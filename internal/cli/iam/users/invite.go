@@ -48,7 +48,7 @@ type InviteOpts struct {
 
 func (opts *InviteOpts) init() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -96,7 +96,8 @@ func (opts *InviteOpts) Run() error {
 const keyParts = 2
 
 func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
-	if config.Service() != config.CloudService {
+	service := config.Service()
+	if service != "" && service != config.CloudService {
 		return nil, nil
 	}
 

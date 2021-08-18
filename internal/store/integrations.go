@@ -43,7 +43,7 @@ type IntegrationDescriber interface {
 // CreateIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlas.ThirdPartyIntegration) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.Replace(context.Background(), projectID, integrationType, integration)
 		return resp, err
 	default:
@@ -54,7 +54,7 @@ func (s *Store) CreateIntegration(projectID, integrationType string, integration
 // Integrations encapsulates the logic to manage different cloud providers.
 func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.List(context.Background(), projectID)
 		return resp, err
 	default:
@@ -65,7 +65,7 @@ func (s *Store) Integrations(projectID string) (*atlas.ThirdPartyIntegrations, e
 // DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Integrations.Delete(context.Background(), projectID, integrationType)
 		return err
 	default:
@@ -76,7 +76,7 @@ func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 // Integration encapsulates the logic to manage different cloud providers.
 func (s *Store) Integration(projectID, integrationType string) (*atlas.ThirdPartyIntegration, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.client.(*atlas.Client).Integrations.Get(context.Background(), projectID, integrationType)
 		return resp, err
 	default:

@@ -47,7 +47,7 @@ type SearchIndexDeleter interface {
 // SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Search.ListIndexes(context.Background(), projectID, clusterName, dbName, collName, opts)
 		return result, err
 	default:
@@ -58,7 +58,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, o
 // CreateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Search.CreateIndex(context.Background(), projectID, clusterName, index)
 		return result, err
 	default:
@@ -69,7 +69,7 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 // SearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.SearchIndex, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		index, _, err := s.client.(*atlas.Client).Search.GetIndex(context.Background(), projectID, clusterName, indexID)
 		return index, err
 	default:
@@ -80,7 +80,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(context.Background(), projectID, clusterName, indexID, index)
 		return result, err
 	default:
@@ -91,7 +91,7 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 // DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).Search.DeleteIndex(context.Background(), projectID, clusterName, indexID)
 		return err
 	default:

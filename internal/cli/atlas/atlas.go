@@ -33,6 +33,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
+	"github.com/mongodb/mongocli/internal/cli/atlas/serverlessclusters"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
@@ -49,7 +50,9 @@ func Builder() *cobra.Command {
 		Use:   Use,
 		Short: "Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			config.SetService(config.CloudService)
+			if config.Service() == "" {
+				config.SetService(config.CloudService)
+			}
 
 			if cmd.Name() == "quickstart" { // quickstart has its own check
 				return nil
@@ -82,6 +85,7 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
+		serverlessclusters.Builder(),
 	)
 
 	return cmd

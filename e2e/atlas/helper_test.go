@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -28,33 +29,34 @@ import (
 )
 
 const (
-	atlasEntity            = "atlas"
-	clustersEntity         = "clusters"
-	processesEntity        = "processes"
-	metricsEntity          = "metrics"
-	searchEntity           = "search"
-	indexEntity            = "index"
-	datalakeEntity         = "datalake"
-	alertsEntity           = "alerts"
-	configEntity           = "settings"
-	dbusersEntity          = "dbusers"
-	certsEntity            = "certs"
-	privateEndpointsEntity = "privateendpoints"
-	onlineArchiveEntity    = "onlineArchives"
-	iamEntity              = "iam"
-	projectEntity          = "project"
-	maintenanceEntity      = "maintenanceWindows"
-	integrationsEntity     = "integrations"
-	securityEntity         = "security"
-	ldapEntity             = "ldap"
-	awsEntity              = "aws"
-	azureEntity            = "azure"
-	customDNSEntity        = "customDns"
-	logsEntity             = "logs"
-	cloudProvidersEntity   = "cloudProviders"
-	accessRolesEntity      = "accessRoles"
-	customDBRoleEntity     = "customDbRoles"
-	regionalModeEntity     = "regionalModes"
+	atlasEntity              = "atlas"
+	clustersEntity           = "clusters"
+	processesEntity          = "processes"
+	metricsEntity            = "metrics"
+	searchEntity             = "search"
+	indexEntity              = "index"
+	datalakeEntity           = "datalake"
+	alertsEntity             = "alerts"
+	configEntity             = "settings"
+	dbusersEntity            = "dbusers"
+	certsEntity              = "certs"
+	privateEndpointsEntity   = "privateendpoints"
+	onlineArchiveEntity      = "onlineArchives"
+	iamEntity                = "iam"
+	projectEntity            = "project"
+	maintenanceEntity        = "maintenanceWindows"
+	integrationsEntity       = "integrations"
+	securityEntity           = "security"
+	ldapEntity               = "ldap"
+	awsEntity                = "aws"
+	azureEntity              = "azure"
+	customDNSEntity          = "customDns"
+	logsEntity               = "logs"
+	cloudProvidersEntity     = "cloudProviders"
+	accessRolesEntity        = "accessRoles"
+	customDBRoleEntity       = "customDbRoles"
+	regionalModeEntity       = "regionalModes"
+	serverlessClustersEntity = "sc"
 )
 
 func getHostnameAndPort() (string, error) {
@@ -100,15 +102,22 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	tier := "M30"
+	provider := "AWS"
+	region, err := newAvailableRegion(tier, provider)
+	if err != nil {
+		return "", err
+	}
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
 		"--mdbVersion=4.2",
-		"--region=US_EAST_1",
-		"--tier=M10",
-		"--provider=AWS",
+		"--region", region,
+		"--tier", tier,
+		"--provider", provider,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()
@@ -117,7 +126,7 @@ func deployCluster() (string, error) {
 	}
 
 	watch := exec.Command(cliPath,
-		"atlas",
+		atlasEntity,
 		clustersEntity,
 		"watch",
 		clusterName)
@@ -126,6 +135,39 @@ func deployCluster() (string, error) {
 		return "", fmt.Errorf("error watching cluster %w", err)
 	}
 	return clusterName, nil
+}
+
+func newAvailableRegion(tier, provider string) (string, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		clustersEntity,
+		"availableRegions",
+		"ls",
+		"--provider", provider,
+		"--tier", tier,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return "", err
+	}
+
+	var cloudProviders mongodbatlas.CloudProviders
+	err = json.Unmarshal(resp, &cloudProviders)
+	if err != nil {
+		return "", err
+	}
+
+	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+		return "", errors.New("no regions available")
+	}
+
+	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
 }
 
 func deleteCluster(clusterName string) error {

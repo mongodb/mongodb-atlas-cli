@@ -17,6 +17,7 @@ package projects
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects/apikeys"
+	"github.com/mongodb/mongocli/internal/cli/iam/projects/invitations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects/teams"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects/users"
 	"github.com/spf13/cobra"
@@ -38,6 +39,7 @@ func Builder() *cobra.Command {
 		apikeys.Builder(),
 		users.Builder(),
 		teams.Builder(),
+		invitations.Builder(),
 	)
 
 	return cmd

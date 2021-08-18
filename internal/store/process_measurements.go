@@ -31,7 +31,7 @@ type ProcessMeasurementLister interface {
 // ProcessMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessMeasurements(groupID, host string, port int, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).ProcessMeasurements.List(context.Background(), groupID, host, port, opts)
 		return result, err
 	default:

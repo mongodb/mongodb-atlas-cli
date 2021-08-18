@@ -35,7 +35,7 @@ type UnacknowledgeOpts struct {
 
 func (opts *UnacknowledgeOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -62,10 +62,14 @@ func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest
 func UnacknowledgeBuilder() *cobra.Command {
 	opts := new(UnacknowledgeOpts)
 	cmd := &cobra.Command{
-		Use:     "unacknowledge <ID>",
-		Short:   "Unacknowledge an alert for your project.",
+		Use:     "unacknowledge <alertID>",
+		Short:   "Unacknowledges one alert for the specified project.",
 		Aliases: []string{"unack"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":        "alertId",
+			"alertIdDesc": "ID of the alert you want to unacknowledge.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

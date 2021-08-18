@@ -32,7 +32,7 @@ type DeleteOpts struct {
 
 func (opts *DeleteOpts) initStore() error {
 	var err error
-	opts.store, err = store.New(store.PublicAuthenticatedPreset(config.Default()))
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
@@ -40,7 +40,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteDataLake, opts.ConfigProjectID())
 }
 
-// mongocli atlas datalake(s) delete name --projectId projectId.
+// mongocli atlas datalake(s) delete <name> --projectId projectId.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Data Lake '%s' deleted\n", "Data Lake not deleted"),
@@ -50,6 +50,10 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete a data lake from your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":     "name",
+			"nameDesc": "Name of the Atlas Data Lake to delete.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
 				return err

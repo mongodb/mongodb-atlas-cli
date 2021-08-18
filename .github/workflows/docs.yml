@@ -1,0 +1,21 @@
+---
+name: Check Docs
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Generate docs
+        run: make gen-docs > /dev/null
+      - name: Check for uncommited files
+        run: exit $(git ls-files -o -m --directory --exclude-standard --no-empty-directory 2>/dev/null | wc -l)

@@ -1,7 +1,7 @@
-.. _mongocli-atlas-serverLess-watch:
+.. _mongocli-atlas-serverless-watch:
 
 ===============================
-mongocli atlas serverLess watch
+mongocli atlas serverless watch
 ===============================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas serverLess watch <clusterName> [options]
+   mongocli atlas serverless watch <clusterName> [options]
 
 Arguments
 ---------

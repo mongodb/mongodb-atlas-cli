@@ -1,7 +1,7 @@
-.. _mongocli-atlas-serverLess-describe:
+.. _mongocli-atlas-serverless-describe:
 
 ==================================
-mongocli atlas serverLess describe
+mongocli atlas serverless describe
 ==================================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas serverLess describe <clusterName> [options]
+   mongocli atlas serverless describe <clusterName> [options]
 
 Arguments
 ---------

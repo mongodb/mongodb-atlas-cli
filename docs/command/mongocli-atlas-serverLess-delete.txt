@@ -1,7 +1,7 @@
-.. _mongocli-atlas-serverLess-delete:
+.. _mongocli-atlas-serverless-delete:
 
 ================================
-mongocli atlas serverLess delete
+mongocli atlas serverless delete
 ================================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas serverLess delete <clusterName> [options]
+   mongocli atlas serverless delete <clusterName> [options]
 
 Arguments
 ---------

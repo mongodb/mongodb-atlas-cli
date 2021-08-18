@@ -15,15 +15,14 @@
 package serverless
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "serverLess"
+	const use = "serverless"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use, "sl"),
+		Aliases: []string{"sl"},
 		Short:   "Manage serverless clusters for your project.",
 		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
 	}

@@ -123,7 +123,7 @@ func defaultQuestions(isAtlas bool) []*survey.Question {
 				Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments.",
 				Default: defaultPath,
 			},
-			Validate: validate.Path,
+			Validate: validate.OptionalPath,
 		}
 		q = append(q, atlasQuestion)
 	}

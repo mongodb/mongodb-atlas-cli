@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestServerlessClusters(t *testing.T) {
+func TestServerless(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)

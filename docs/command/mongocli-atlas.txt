@@ -69,7 +69,7 @@ Related Commands
 * :ref:`mongocli-atlas-processes` - Manage MongoDB processes for your project.
 * :ref:`mongocli-atlas-quickstart` - Create and access an Atlas Cluster.
 * :ref:`mongocli-atlas-security` - Manage security configuration for your project.
-* :ref:`mongocli-atlas-serverless` - Manage serverless clusters for your project.
+* :ref:`mongocli-atlas-serverless` - Manage serverless instances for your project.
 
 
 .. toctree::

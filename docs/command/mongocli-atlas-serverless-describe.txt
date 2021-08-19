@@ -12,14 +12,14 @@ mongocli atlas serverless describe
    :depth: 1
    :class: singlecol
 
-Return one serverless cluster in the specified project.
+Return one serverless instance in the specified project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverless describe <clusterName> [options]
+   mongocli atlas serverless describe <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Human-readable label that identifies your serverless cluster.
+     - Human-readable label that identifies your serverless instance.
 
 Options
 -------

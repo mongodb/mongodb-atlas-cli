@@ -12,9 +12,9 @@ mongocli atlas serverless
    :depth: 1
    :class: singlecol
 
-Manage serverless clusters for your project.
+Manage serverless instances for your project.
 
-The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.
+The serverless command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.
 
 Options
 -------
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-serverless-create` - Creates one serverless cluster in the specified project.
-* :ref:`mongocli-atlas-serverless-delete` - Delete a serverless cluster from your project.
-* :ref:`mongocli-atlas-serverless-describe` - Return one serverless cluster in the specified project.
+* :ref:`mongocli-atlas-serverless-create` - Creates one serverless instance in the specified project.
+* :ref:`mongocli-atlas-serverless-delete` - Delete a serverless instance from your project.
+* :ref:`mongocli-atlas-serverless-describe` - Return one serverless instance in the specified project.
 * :ref:`mongocli-atlas-serverless-list` - List all serverless instances in the specified project.
-* :ref:`mongocli-atlas-serverless-watch` - Watch for a serverless cluster to be available.
+* :ref:`mongocli-atlas-serverless-watch` - Watch for a serverless instance to be available.
 
 
 .. toctree::

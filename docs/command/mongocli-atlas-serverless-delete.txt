@@ -12,14 +12,14 @@ mongocli atlas serverless delete
    :depth: 1
    :class: singlecol
 
-Delete a serverless cluster from your project.
+Delete a serverless instance from your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverless delete <clusterName> [options]
+   mongocli atlas serverless delete <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Name of the cluster to delete.
+     - Name of the instance to delete.
 
 Options
 -------

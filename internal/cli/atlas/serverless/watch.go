@@ -53,22 +53,22 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas serverlessCluster(s) watch <clusterName> [--projectId projectId].
+// mongocli atlas serverless|sl watch <instanceName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "watch <clusterName>",
-		Short: "Watch for a serverless cluster to be available.",
+		Use:   "watch <instanceName>",
+		Short: "Watch for a serverless instance to be available.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to watch.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Name of the instance to watch.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), "\nCluster available.\n"),
+				opts.InitOutput(cmd.OutOrStdout(), "\nInstance available.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

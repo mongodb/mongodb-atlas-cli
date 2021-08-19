@@ -12,14 +12,14 @@ mongocli atlas serverless create
    :depth: 1
    :class: singlecol
 
-Creates one serverless cluster in the specified project.
+Creates one serverless instance in the specified project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverless create <clusterName> [options]
+   mongocli atlas serverless create <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Human-readable label that identifies your serverless cluster.
+     - Human-readable label that identifies your serverless instance.
 
 Options
 -------

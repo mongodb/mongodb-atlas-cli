@@ -30,8 +30,8 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store       store.ServerlessInstanceDescriber
-	clusterName string
+	store        store.ServerlessInstanceDescriber
+	instanceName string
 }
 
 func (opts *DescribeOpts) initStore() error {
@@ -41,7 +41,7 @@ func (opts *DescribeOpts) initStore() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.clusterName)
+	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
 	if err != nil {
 		return err
 	}
@@ -49,20 +49,20 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas serverlessCluster(s) describe <clusterName> --projectId projectId.
+// mongocli atlas serverless|sl describe <instanceName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <clusterName>",
-		Short: "Return one serverless cluster in the specified project.",
+		Use:   "describe <instanceName>",
+		Short: "Return one serverless instance in the specified project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Human-readable label that identifies your serverless cluster.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 		},
 		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			opts.instanceName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,

@@ -39,7 +39,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.clusterName).
+		ServerlessInstance(describeOpts.ConfigProjectID(), describeOpts.instanceName).
 		Return(&expected, nil).
 		Times(1)
 

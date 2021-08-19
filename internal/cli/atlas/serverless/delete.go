@@ -40,19 +40,19 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteServerlessInstance, opts.ConfigProjectID())
 }
 
-// mongocli atlas serverlessCluster(s) delete <clusterName> --projectId projectId [--force].
+// mongocli atlas serverless|sl delete <instanceName> --projectId projectId [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Serverless cluster '%s' deleted\n", "Serverless cluster not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Serverless instance '%s' deleted\n", "Serverless instance not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <clusterName>",
+		Use:     "delete <instanceName>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a serverless cluster from your project.",
+		Short:   "Delete a serverless instance from your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to delete.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Name of the instance to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {

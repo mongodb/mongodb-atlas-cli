@@ -23,8 +23,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{"sl"},
-		Short:   "Manage serverless clusters for your project.",
-		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
+		Short:   "Manage serverless instances for your project.",
+		Long:    "The serverless command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

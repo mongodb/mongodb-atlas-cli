@@ -12,14 +12,14 @@ mongocli atlas serverless watch
    :depth: 1
    :class: singlecol
 
-Watch for a serverless cluster to be available.
+Watch for a serverless instance to be available.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverless watch <clusterName> [options]
+   mongocli atlas serverless watch <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +32,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Name of the cluster to watch.
+     - Name of the instance to watch.
 
 Options
 -------

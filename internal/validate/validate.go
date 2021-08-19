@@ -131,6 +131,17 @@ func Path(val interface{}) error {
 	return nil
 }
 
+func OptionalPath(val interface{}) error {
+	if val == nil {
+		return nil
+	}
+	s, err := toString(val)
+	if err != nil || s == "" {
+		return err
+	}
+	return Path(val)
+}
+
 var ErrInvalidClusterName = errors.New("invalid cluster name")
 
 func ClusterName(val interface{}) error {

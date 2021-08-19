@@ -254,12 +254,84 @@ func TestPath(t *testing.T) {
 	}
 	defer os.Remove(f.Name())
 
-	if err := Path(f.Name()); err != nil {
-		t.Errorf("ValidatePath() error = %v", err)
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid",
+			val:     f.Name(),
+			wantErr: false,
+		},
+		{
+			name:    "empty",
+			val:     "",
+			wantErr: true,
+		},
+		{
+			name:    "nil",
+			val:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
 	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err2 := Path(val); (err2 != nil) != wantErr {
+				t.Errorf("Path() error = %v, wantErr %v", err2, wantErr)
+			}
+		})
+	}
+}
 
-	if err := Path("invalid"); err == nil {
-		t.Error("ValidatePath() expected error but got none")
+func TestOptionalPath(t *testing.T) {
+	f, err := ioutil.TempFile("", "sample")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(f.Name())
+
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid",
+			val:     f.Name(),
+			wantErr: false,
+		},
+		{
+			name:    "empty",
+			val:     "",
+			wantErr: false,
+		},
+		{
+			name:    "nil",
+			val:     nil,
+			wantErr: false,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err2 := OptionalPath(val); (err2 != nil) != wantErr {
+				t.Errorf("OptionalPath() error = %v, wantErr %v", err2, wantErr)
+			}
+		})
 	}
 }
 

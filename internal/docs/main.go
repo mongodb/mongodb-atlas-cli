@@ -31,6 +31,10 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func main() {
+	if err := os.RemoveAll("./docs/command"); err != nil {
+		log.Fatal(err)
+	}
+
 	var profile string
 	const docsPermissions = 0766
 	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {

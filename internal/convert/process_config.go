@@ -38,6 +38,7 @@ type ProcessConfig struct {
 	DBPath                      string                  `yaml:"dbPath,omitempty" json:"dbPath,omitempty"`
 	BindIP                      *string                 `yaml:"bindIp,omitempty" json:"bindIp,omitempty"`
 	BindIPAll                   *bool                   `yaml:"bindIpAll,omitempty" json:"bindIpAll,omitempty"`
+	DefaultRWConcern            *DefaultRWConcern       `yaml:"defaultRWConcern,omitempty" json:"defaultRWConcern,omitempty"` //nolint:tagliatelle // correct from API
 	DirectoryPerDB              *bool                   `yaml:"directoryPerDB,omitempty" json:"directoryPerDB,omitempty"`
 	Disabled                    bool                    `yaml:"disabled" json:"disabled"`
 	Engine                      string                  `yaml:"engine,omitempty" json:"engine,omitempty"`
@@ -90,6 +91,21 @@ type TLS struct {
 	FIPSMode                   string `yaml:"FIPSMode,omitempty" json:"FIPSMode,omitempty"`
 	Mode                       string `yaml:"mode,omitempty" json:"mode,omitempty"`
 	PEMKeyFile                 string `yaml:"PEMKeyFile,omitempty" json:"PEMKeyFile,omitempty"`
+}
+
+type DefaultReadConcern struct {
+	Level string `yaml:"level" json:"level"`
+}
+
+type DefaultWriteConcern struct {
+	W        interface{} `yaml:"w,omitempty" json:"w,omitempty"` // W can be string or number
+	J        *bool       `yaml:"j,omitempty" json:"j,omitempty"`
+	Wtimeout int         `yaml:"wtimeout" json:"wtimeout"`
+}
+
+type DefaultRWConcern struct {
+	DefaultReadConcern  *DefaultReadConcern  `yaml:"defaultReadConcern,omitempty" json:"defaultReadConcern,omitempty"`
+	DefaultWriteConcern *DefaultWriteConcern `yaml:"defaultWriteConcern,omitempty" json:"defaultWriteConcern,omitempty"`
 }
 
 // setDefaults set default values based on the parent config.
@@ -232,6 +248,21 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 		Name:                        p.Name,
 		SetParameter:                p.Args26.SetParameter,
 	}
+	if p.DefaultRWConcern != nil {
+		pc.DefaultRWConcern = &DefaultRWConcern{}
+		if pc.DefaultRWConcern.DefaultReadConcern != nil {
+			pc.DefaultRWConcern.DefaultReadConcern = &DefaultReadConcern{
+				Level: pc.DefaultRWConcern.DefaultReadConcern.Level,
+			}
+		}
+		if pc.DefaultRWConcern.DefaultWriteConcern != nil {
+			pc.DefaultRWConcern.DefaultWriteConcern = &DefaultWriteConcern{
+				W:        pc.DefaultRWConcern.DefaultWriteConcern.W,
+				J:        pc.DefaultRWConcern.DefaultWriteConcern.J,
+				Wtimeout: pc.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
+			}
+		}
+	}
 	if p.Args26.AuditLog != nil {
 		pc.AuditLogDestination = p.Args26.AuditLog.Destination
 		pc.AuditLogFormat = p.Args26.AuditLog.Format
@@ -257,6 +288,9 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	if p.Args26.Security != nil {
 		pc.Security = p.Args26.Security
 	}
+	if p.Args26.Security != nil {
+		pc.Security = p.Args26.Security
+	}
 	return pc
 }
 
@@ -272,6 +306,7 @@ func newMongosProcess(p *ProcessConfig, cluster string) *opsmngr.Process {
 	if p.AuditLogPath != "" || p.AuditLogDestination != "" {
 		process.Args26.AuditLog = p.auditLog()
 	}
+	process.DefaultRWConcern = p.defaultRW()
 	return process
 }
 
@@ -383,6 +418,28 @@ func (p *ProcessConfig) systemLog() opsmngr.SystemLog {
 		LogRotate:       p.LogRotate,
 		TimeStampFormat: p.LogTimeStampFormat,
 	}
+}
+
+// net maps convert.ProcessConfig -> opsmngr.Net.
+func (p *ProcessConfig) defaultRW() *opsmngr.DefaultRWConcern {
+	if p.DefaultRWConcern == nil {
+		return nil
+	}
+	rw := &opsmngr.DefaultRWConcern{}
+	if p.DefaultRWConcern.DefaultReadConcern != nil {
+		rw.DefaultReadConcern = &opsmngr.DefaultReadConcern{
+			Level: p.DefaultRWConcern.DefaultReadConcern.Level,
+		}
+	}
+	if p.DefaultRWConcern.DefaultWriteConcern != nil {
+		rw.DefaultWriteConcern = &opsmngr.DefaultWriteConcern{
+			W:        p.DefaultRWConcern.DefaultWriteConcern.W,
+			J:        p.DefaultRWConcern.DefaultWriteConcern.J,
+			Wtimeout: p.DefaultRWConcern.DefaultWriteConcern.Wtimeout,
+		}
+	}
+
+	return rw
 }
 
 func (p *ProcessConfig) systemLogDestination() string {

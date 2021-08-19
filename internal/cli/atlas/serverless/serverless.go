@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: []string{"sl"},
 		Short:   "Manage serverless instances for your project.",
-		Long:    "The serverless command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
+		Long:    "The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

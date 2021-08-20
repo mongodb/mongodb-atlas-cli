@@ -16,8 +16,6 @@ package events
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/events/organization"
-	"github.com/mongodb/mongocli/internal/cli/events/project"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +27,7 @@ func Builder() *cobra.Command {
 		Short:   "Manage events for your organization or project.",
 	}
 
-	cmd.AddCommand(project.Builder(), organization.Builder())
+	cmd.AddCommand(ListBuilder())
 
 	return cmd
 }

@@ -12,7 +12,9 @@ mongocli atlas serverless list
    :depth: 1
    :class: singlecol
 
-List all serverless instances in the specified project.
+Return all serverless instances in the specified project.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------

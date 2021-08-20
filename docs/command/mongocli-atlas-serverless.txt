@@ -52,10 +52,10 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-serverless-create` - Creates one serverless instance in the specified project.
-* :ref:`mongocli-atlas-serverless-delete` - Delete a serverless instance from your project.
+* :ref:`mongocli-atlas-serverless-delete` - Remove a serverless instance from your project.
 * :ref:`mongocli-atlas-serverless-describe` - Return one serverless instance in the specified project.
-* :ref:`mongocli-atlas-serverless-list` - List all serverless instances in the specified project.
-* :ref:`mongocli-atlas-serverless-watch` - Watch for a serverless instance to be available.
+* :ref:`mongocli-atlas-serverless-list` - Return all serverless instances in the specified project.
+* :ref:`mongocli-atlas-serverless-watch` - Monitor the status of serverless instance.
 
 
 .. toctree::

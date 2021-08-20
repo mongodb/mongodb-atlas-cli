@@ -56,7 +56,8 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List all serverless instances in the specified project.",
+		Short:   "Return all serverless instances in the specified project.",
+		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

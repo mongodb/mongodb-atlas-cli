@@ -12,7 +12,9 @@ mongocli atlas serverless delete
    :depth: 1
    :class: singlecol
 
-Delete a serverless instance from your project.
+Remove a serverless instance from your project.
+
+Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.
 
 Syntax
 ------

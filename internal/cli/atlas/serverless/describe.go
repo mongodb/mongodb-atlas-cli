@@ -55,6 +55,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <instanceName>",
 		Short: "Return one serverless instance in the specified project.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":             "instanceName",

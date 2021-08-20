@@ -12,7 +12,9 @@ mongocli atlas serverless watch
    :depth: 1
    :class: singlecol
 
-Watch for a serverless instance to be available.
+Monitor the status of serverless instance.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------

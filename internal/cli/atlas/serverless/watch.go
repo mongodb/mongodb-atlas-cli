@@ -58,7 +58,8 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <instanceName>",
-		Short: "Watch for a serverless instance to be available.",
+		Short: "Monitor the status of serverless instance.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":             "instanceName",

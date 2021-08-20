@@ -16,6 +16,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -441,4 +442,17 @@ func (p *Profile) Save() error {
 	}
 	configFile := p.Filename()
 	return viper.WriteConfigAs(configFile)
+}
+
+func configHome() (string, error) {
+	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
+		return home, nil
+	}
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/.config", home), nil
 }

@@ -47,6 +47,7 @@ func TestDBUsers(t *testing.T) {
 			entity,
 			securityEntity,
 			"enable",
+			"MONGODB-CR",
 			"SCRAM-SHA-256")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

@@ -67,8 +67,8 @@ func TestDBUsers(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
-			securityEntity,
-			"enable",
+			dbUsersEntity,
+			"create",
 			"--username="+username,
 			"--password=passW0rd",
 			"--role=readWriteAnyDatabase",

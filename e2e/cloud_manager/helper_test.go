@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build e2e || cloudmanager || opsmanager
 // +build e2e cloudmanager opsmanager
 
 package cloud_manager_test
@@ -45,6 +46,8 @@ const (
 	eventsEntity      = "events"
 	agentsEntity      = "agents"
 	backupEntity      = "backup"
+	dbUsersEntity     = "dbusers"
+	securityEntity    = "security"
 )
 
 // automationServerHostname tries to list available server running the automation agent

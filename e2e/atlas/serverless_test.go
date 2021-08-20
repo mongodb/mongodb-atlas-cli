@@ -70,7 +70,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
+		a.Contains(string(resp), "Instance available")
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -122,7 +122,7 @@ func TestServerless(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Serverless cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Serverless instance '%s' deleted\n", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

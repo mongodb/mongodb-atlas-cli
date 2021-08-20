@@ -20,9 +20,21 @@ import (
 
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/mongodb/mongocli/internal/cli/root"
+	"github.com/spf13/cobra"
 )
 
+func setDisableAutoGenTag(cmd *cobra.Command) {
+	cmd.DisableAutoGenTag = true
+	for _, cmd := range cmd.Commands() {
+		setDisableAutoGenTag(cmd)
+	}
+}
+
 func main() {
+	if err := os.RemoveAll("./docs/command"); err != nil {
+		log.Fatal(err)
+	}
+
 	var profile string
 	const docsPermissions = 0766
 	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
@@ -34,6 +46,8 @@ func main() {
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464
 	_, _ = mongocli.ExecuteC()
+
+	setDisableAutoGenTag(mongocli)
 
 	if err := cobra2snooty.GenTreeDocs(mongocli, "./docs/command"); err != nil {
 		log.Fatal(err)

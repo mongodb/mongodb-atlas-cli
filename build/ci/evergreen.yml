@@ -411,20 +411,6 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/x-gzip}
         display_name: inernal-bucket
-  "generate docs":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          go mod download
-          go run internal/docs/main.go
-
   "push":
     - command: subprocess.exec
       type: test
@@ -580,6 +566,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters
+  - name: atlas_serverless_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,serverless
   - name: atlas_gov_clusters_e2e
     tags: ["e2e","clusters","atlas"]
     depends_on:
@@ -1148,31 +1152,6 @@ tasks:
       - func: "docker build"
         vars:
           image: centos8-rpm
-  - name: generate_docs
-    tags: ["docs"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "generate docs"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongocli/docs/command.tgz
-          source_dir: src/github.com/mongodb/mongocli/docs
-          include:
-            - "command/*.txt"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_file: src/github.com/mongodb/mongocli/docs/command.tgz
-          remote_file: ${project}/docs/${revision}_${created_at}/command.tgz
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: Docs
   - name: release
     stepback: false
     git_tag_only: true
@@ -1680,15 +1659,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .clusters .opsmanager"
-  - name: generate_docs
-    display_name: "Generate Preview Docs"
-    run_on:
-      - rhel70-small
-    expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
-    tasks:
-      - name: ".docs"
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:
@@ -1749,15 +1719,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: release
-  - name: release_generate_docs
-    display_name: "Generate Stable Docs"
-    run_on:
-      - rhel70-small
-    expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
-    tasks:
-      - name: ".docs"
   - name: release_publish_42
     display_name: "Publish yum/apt 4.2"
     run_on:

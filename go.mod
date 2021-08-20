@@ -3,7 +3,7 @@ module github.com/mongodb/mongocli
 go 1.16
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.15
+	github.com/AlecAivazis/survey/v2 v2.2.16
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.16.0
@@ -20,7 +20,7 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
-	go.mongodb.org/atlas v0.10.1
+	go.mongodb.org/atlas v0.11.0
 	go.mongodb.org/ops-manager v0.26.0
 	gopkg.in/yaml.v2 v2.4.0
 )

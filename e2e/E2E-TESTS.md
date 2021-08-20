@@ -322,3 +322,8 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
+| `serverlessCluster create`                    | Y         |           |           | Y         |       |       |
+| `serverlessCluster delete`                    | Y         |           |           | Y         |       |       |
+| `serverlessCluster describe`                  | Y         |           |           | Y         |       |       |
+| `serverlessCluster list`                      | Y         |           |           | Y         |       |       |
+| `serverlessCluster watch`                     | Y         |           |           | Y         |       |       |

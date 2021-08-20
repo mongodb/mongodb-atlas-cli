@@ -70,12 +70,11 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]",
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws describe <ID> [--projectId projectId]"
 
 	return cmd
 }

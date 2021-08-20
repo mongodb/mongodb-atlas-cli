@@ -45,10 +45,6 @@ Options
      - false
      - Output format.
        Valid values: json|json-path|go-template|go-template-file
-   * - --restrictions
-     - string
-     - false
-     - 
 
 Inherited Options
 -----------------

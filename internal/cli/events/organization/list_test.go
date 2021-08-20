@@ -17,10 +17,13 @@
 package organization
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -33,15 +36,26 @@ func TestList_Run(t *testing.T) {
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "5a0a1e7e0f2912c554080adc",
+		},
 	}
-	listOpts.orgID = "1"
 
 	mockStore.
-		EXPECT().OrganizationEvents(listOpts.orgID, listOpts.newEventListOptions()).
+		EXPECT().OrganizationEvents(listOpts.OrgID, listOpts.newEventListOptions()).
 		Return(expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.Limit, flag.Page, flag.MaxDate, flag.MinDate, flag.Type, flag.Output, flag.OrgID},
+	)
 }

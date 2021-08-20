@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "organization"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
+		Aliases: cli.GenerateAliases(use, "orgs"),
 		Short:   "Manage event for your organization.",
 	}
 

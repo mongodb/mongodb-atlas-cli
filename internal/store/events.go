@@ -33,11 +33,6 @@ type ProjectEventLister interface {
 	ProjectEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
 }
 
-type EventLister interface {
-	OrganizationEventLister
-	ProjectEventLister
-}
-
 // ProjectEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {

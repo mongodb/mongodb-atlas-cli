@@ -31,20 +31,22 @@ import (
 )
 
 const (
-	testedMDBVersion  = "4.2.0"
-	testedMDBFCV      = "4.2"
-	entity            = "cloud-manager"
-	serversEntity     = "servers"
-	iamEntity         = "iam"
-	projectsEntity    = "projects"
-	clustersEntity    = "clusters"
-	maintenanceEntity = "maintenanceWindows"
-	monitoringEntity  = "monitoring"
-	processesEntity   = "processes"
-	featurePolicies   = "featurePolicies"
-	eventsEntity      = "events"
-	agentsEntity      = "agents"
-	backupEntity      = "backup"
+	testedMDBVersion   = "4.2.0"
+	testedMDBFCV       = "4.2"
+	entity             = "cloud-manager"
+	serversEntity      = "servers"
+	iamEntity          = "iam"
+	projectsEntity     = "projects"
+	projectEntity      = "project"
+	organizationEntity = "organization"
+	clustersEntity     = "clusters"
+	maintenanceEntity  = "maintenanceWindows"
+	monitoringEntity   = "monitoring"
+	processesEntity    = "processes"
+	featurePolicies    = "featurePolicies"
+	eventsEntity       = "events"
+	agentsEntity       = "agents"
+	backupEntity       = "backup"
 )
 
 // automationServerHostname tries to list available server running the automation agent

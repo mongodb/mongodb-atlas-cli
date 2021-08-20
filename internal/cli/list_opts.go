@@ -21,6 +21,13 @@ type ListOpts struct {
 	ItemsPerPage int
 }
 
+type EventListOpts struct {
+	ListOpts
+	EventType []string
+	MinDate   string
+	MaxDate   string
+}
+
 func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
 	return &mongodbatlas.ListOptions{
 		PageNum:      opts.PageNum,

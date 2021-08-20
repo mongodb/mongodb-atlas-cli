@@ -29,8 +29,7 @@ func Builder() *cobra.Command {
 		Short:   "Manage events for your organization or project.",
 	}
 
-	cmd.AddCommand(project.Builder())
-	cmd.AddCommand(organization.Builder())
+	cmd.AddCommand(project.Builder(), organization.Builder())
 
 	return cmd
 }

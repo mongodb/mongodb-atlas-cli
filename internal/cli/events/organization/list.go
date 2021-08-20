@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
 package organization
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -27,13 +25,10 @@ import (
 )
 
 type ListOpts struct {
-	cli.ListOpts
+	cli.EventListOpts
 	cli.OutputOpts
-	orgID     string
-	eventType []string
-	minDate   string
-	maxDate   string
-	store     store.EventLister
+	cli.GlobalOpts
+	store store.OrganizationEventLister
 }
 
 func (opts *ListOpts) initStore() error {
@@ -52,9 +47,11 @@ func (opts *ListOpts) Run() error {
 	var r *atlas.EventResponse
 	var err error
 
-	if opts.orgID != "" {
-		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
+	if err = opts.ValidateOrgID(); err != nil {
+		return err
 	}
+
+	r, err = opts.store.OrganizationEvents(opts.OrgID, listOpts)
 	if err != nil {
 		return err
 	}
@@ -68,9 +65,9 @@ func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
 			PageNum:      opts.PageNum,
 			ItemsPerPage: opts.ItemsPerPage,
 		},
-		EventType: opts.eventType,
-		MinDate:   opts.minDate,
-		MaxDate:   opts.maxDate,
+		EventType: opts.EventType,
+		MinDate:   opts.MinDate,
+		MaxDate:   opts.MaxDate,
 	}
 }
 
@@ -84,11 +81,10 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.orgID == "" {
-				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
-			}
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			return opts.PreRunE(
+				opts.ValidateOrgID,
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -98,11 +94,11 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringSliceVar(&opts.eventType, flag.Type, nil, usage.Event)
-	cmd.Flags().StringVar(&opts.maxDate, flag.MaxDate, "", usage.MaxDate)
-	cmd.Flags().StringVar(&opts.minDate, flag.MinDate, "", usage.MinDate)
+	cmd.Flags().StringSliceVar(&opts.EventType, flag.Type, nil, usage.Event)
+	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
+	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

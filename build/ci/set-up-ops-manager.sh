@@ -58,7 +58,7 @@ export MCLI_PRIVATE_API_KEY={{.ProgrammaticAPIKey.PrivateKey}}
 EOF
 
 ./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl" > credentials.bash
-cat credentials.bash
+chmod +x credentials.bash
 
 ./credentials.bash
 
@@ -78,7 +78,6 @@ cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
   private_api_key = "${MCLI_PRIVATE_API_KEY}"
   org_id = "${MCLI_ORG_ID}"
   project_id = "${MCLI_PROJECT_ID}"
-  agent_api_key = "${AGENT_API_KEY}"
 
 EOF
 

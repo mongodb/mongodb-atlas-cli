@@ -288,9 +288,6 @@ func newMongosProcessConfig(p *opsmngr.Process) *ProcessConfig {
 	if p.Args26.Security != nil {
 		pc.Security = p.Args26.Security
 	}
-	if p.Args26.Security != nil {
-		pc.Security = p.Args26.Security
-	}
 	return pc
 }
 

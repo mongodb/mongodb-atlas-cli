@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package serverlessclusters
+
+package serverless
 
 import (
 	"context"
@@ -25,18 +26,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	MDB VER	STATE
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
-`
-
-type DescribeOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	store       store.ServerlessInstanceDescriber
-	clusterName string
+	cli.WatchOpts
+	name  string
+	store store.ServerlessInstanceDescriber
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,42 +41,48 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.clusterName)
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.name)
 	if err != nil {
+		return false, err
+	}
+	return result.StateName == "IDLE", nil
+}
+
+func (opts *WatchOpts) Run() error {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
-// mongocli atlas serverlessCluster(s) describe <clusterName> --projectId projectId.
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+// mongocli atlas serverless|sl watch <instanceName> [--projectId projectId].
+func WatchBuilder() *cobra.Command {
+	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <clusterName>",
-		Short: "Return one serverless cluster in the specified project.",
+		Use:   "watch <instanceName>",
+		Short: "Monitor the status of serverless instance.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Human-readable label that identifies your serverless cluster.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Name of the instance to watch.",
 		},
-		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), "\nInstance available.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

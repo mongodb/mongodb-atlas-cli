@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package serverlessclusters
+package serverless
 
 import (
 	"context"
@@ -26,18 +25,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
+var describeTemplate = `ID	NAME	MDB VER	STATE
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.ServerlessInstanceLister
+	store        store.ServerlessInstanceDescriber
+	instanceName string
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -45,9 +44,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ServerlessInstances(opts.ConfigProjectID(), listOpts)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
 	if err != nil {
 		return err
 	}
@@ -55,28 +53,31 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas serverlessCluster(s) list [--projectId projectId] [--page N] [--limit N].
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas serverless|sl describe <instanceName> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List all serverless instances in the specified project.",
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Use:   "describe <instanceName>",
+		Short: "Return one serverless instance in the specified project.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
+		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":             "instanceName",
+			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
+		},
+		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.instanceName = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

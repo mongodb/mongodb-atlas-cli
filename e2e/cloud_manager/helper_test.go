@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build e2e || cloudmanager || opsmanager
 // +build e2e cloudmanager opsmanager
 
 package cloud_manager_test
@@ -21,7 +22,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"sort"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
@@ -45,6 +48,8 @@ const (
 	eventsEntity      = "events"
 	agentsEntity      = "agents"
 	backupEntity      = "backup"
+	dbUsersEntity     = "dbusers"
+	securityEntity    = "security"
 )
 
 // automationServerHostname tries to list available server running the automation agent
@@ -64,7 +69,18 @@ func automationServerHostname(cliPath string) (string, error) {
 	if servers.TotalCount == 0 {
 		return "", errors.New("no server available")
 	}
+	sort.Sort(byLastConf(*servers))
 	return servers.Results[0].Hostname, nil
+}
+
+type byLastConf opsmngr.Agents
+
+func (s byLastConf) Len() int      { return len(s.Results) }
+func (s byLastConf) Swap(i, j int) { s.Results[i], s.Results[j] = s.Results[j], s.Results[i] }
+func (s byLastConf) Less(i, j int) bool {
+	v1, _ := time.Parse(time.RFC3339, s.Results[i].LastConf)
+	v2, _ := time.Parse(time.RFC3339, s.Results[j].LastConf)
+	return v2.Before(v1)
 }
 
 func hostIDs(cliPath string) ([]string, error) {
@@ -90,13 +106,13 @@ func hostIDs(cliPath string) ([]string, error) {
 }
 
 func generateRSConfig(filename, hostname, clusterName, version, fcVersion string) error {
-	feedFile, err := os.Create(filename)
+	configFile, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer feedFile.Close()
+	defer configFile.Close()
 
-	downloadArchive := &convert.ClusterConfig{
+	cluster := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
 			FeatureCompatibilityVersion: fcVersion,
 			Name:                        clusterName,
@@ -151,26 +167,26 @@ func generateRSConfig(filename, hostname, clusterName, version, fcVersion string
 		},
 	}
 
-	jsonEncoder := json.NewEncoder(feedFile)
+	jsonEncoder := json.NewEncoder(configFile)
 	jsonEncoder.SetIndent("", "  ")
-	return jsonEncoder.Encode(downloadArchive)
+	return jsonEncoder.Encode(cluster)
 }
 
 func generateShardedConfig(filename, hostname, clusterName, version, fcVersion string) error {
-	feedFile, err := os.Create(filename)
+	configFile, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer feedFile.Close()
+	defer configFile.Close()
 
-	downloadArchive := &convert.ClusterConfig{
+	cluster := &convert.ClusterConfig{
 		RSConfig: convert.RSConfig{
 			FeatureCompatibilityVersion: fcVersion,
 			Name:                        clusterName,
 			Version:                     version,
 		},
 		Config: &convert.RSConfig{
-			Name: "configRS",
+			Name: clusterName + "_configRS",
 			Processes: []*convert.ProcessConfig{
 				{
 					DBPath:   fmt.Sprintf("/data/%s/29000", clusterName),
@@ -228,7 +244,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 		},
 		Shards: []*convert.RSConfig{
 			{
-				Name: "myShard_0",
+				Name: clusterName + "_myShard_0",
 				Processes: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/27000", clusterName),
@@ -278,7 +294,7 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 				},
 			},
 			{
-				Name: "myShard_1",
+				Name: clusterName + "_myShard_1",
 				Processes: []*convert.ProcessConfig{
 					{
 						DBPath:   fmt.Sprintf("/data/%s/28000", clusterName),
@@ -309,9 +325,9 @@ func generateShardedConfig(filename, hostname, clusterName, version, fcVersion s
 		},
 	}
 
-	jsonEncoder := json.NewEncoder(feedFile)
+	jsonEncoder := json.NewEncoder(configFile)
 	jsonEncoder.SetIndent("", "  ")
-	return jsonEncoder.Encode(downloadArchive)
+	return jsonEncoder.Encode(cluster)
 }
 
 func watchAutomation(cliPath string) func(t *testing.T) {

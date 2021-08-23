@@ -303,7 +303,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `process`                                     |           | N         | N         |           | Y     | Y     |
 | `process describe`                            |           | N         | N         |           | Y     | Y     |
 | `process list`                                |           | N         | N         |           | Y     | Y     |
-| `security enable`                             |           | N         | N         |           | Y     | Y     |
+| `security enable`                             |           | Y         | Y         |           | Y     | Y     |
 | `monitoring enable`                           |           | Y         | Y         |           | Y     | Y     |
 | `monitoring disable`                          |           | Y         | Y         |           | Y     | Y     |
 | `monitoring stop`                             |           | Y         | Y         |           | Y     | Y     |
@@ -322,8 +322,8 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
-| `serverlessCluster create`                    | Y         |           |           | Y         |       |       |
-| `serverlessCluster delete`                    | Y         |           |           | Y         |       |       |
-| `serverlessCluster describe`                  | Y         |           |           | Y         |       |       |
-| `serverlessCluster list`                      | Y         |           |           | Y         |       |       |
-| `serverlessCluster watch`                     | Y         |           |           | Y         |       |       |
+| `serverless create`                    | Y         |           |           | Y         |       |       |
+| `serverless delete`                    | Y         |           |           | Y         |       |       |
+| `serverless describe`                  | Y         |           |           | Y         |       |       |
+| `serverless list`                      | Y         |           |           | Y         |       |       |
+| `serverless watch`                     | Y         |           |           | Y         |       |       |

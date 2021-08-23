@@ -14,7 +14,7 @@
 
 // +build unit
 
-package serverlessclusters
+package serverless
 
 import (
 	"testing"
@@ -26,21 +26,19 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestWatch_Run(t *testing.T) {
+func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.Cluster{StateName: "IDLE"}
-
-	opts := &WatchOpts{
-		name:  "test",
+	opts := &CreateOpts{
 		store: mockStore,
 	}
 
+	expected := &mongodbatlas.Cluster{}
 	mockStore.
 		EXPECT().
-		ServerlessInstance(opts.ProjectID, opts.name).
+		CreateServerlessInstance(opts.ProjectID, opts.newServerlessCreateRequestParams()).
 		Return(expected, nil).
 		Times(1)
 
@@ -49,11 +47,11 @@ func TestWatch_Run(t *testing.T) {
 	}
 }
 
-func TestWatchBuilder(t *testing.T) {
+func TestCreateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		WatchBuilder(),
+		CreateBuilder(),
 		0,
-		[]string{flag.ProjectID},
+		[]string{flag.Provider, flag.Region},
 	)
 }

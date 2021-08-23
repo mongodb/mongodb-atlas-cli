@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverlessClusters-describe:
+.. _mongocli-atlas-serverless-list:
 
-==========================================
-mongocli atlas serverlessClusters describe
-==========================================
+==============================
+mongocli atlas serverless list
+==============================
 
 .. default-domain:: mongodb
 
@@ -12,30 +12,16 @@ mongocli atlas serverlessClusters describe
    :depth: 1
    :class: singlecol
 
-Return one serverless cluster in the specified project.
+Return all serverless instances in the specified project.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverlessClusters describe <clusterName> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - clusterName
-     - string
-     - false
-     - Human-readable label that identifies your serverless cluster.
+   mongocli atlas serverless list [options]
 
 Options
 -------
@@ -51,12 +37,20 @@ Options
    * - -h, --help
      - 
      - false
-     - help for describe
+     - help for list
+   * - --limit
+     - int
+     - false
+     - Number of items per page.
    * - -o, --output
      - string
      - false
      - Output format.
        Valid values: json|json-path|go-template|go-template-file
+   * - --page
+     - int
+     - false
+     - Page number.
    * - --projectId
      - string
      - false

@@ -161,7 +161,7 @@ func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, expireAfterDays, archive.Criteria.ExpireAfterDays)
+	assert.Equal(t, expireAfterDays, *archive.Criteria.ExpireAfterDays)
 }
 
 func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {

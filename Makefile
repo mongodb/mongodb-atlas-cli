@@ -6,7 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/$(BINARY_NAME)
 INSTALL_PATH="${GOPATH}/bin/$(BINARY_NAME)"
 
-GOLANGCI_VERSION=v1.41.1
+GOLANGCI_VERSION=v1.42.0
 COVERAGE=coverage.out
 MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
@@ -39,6 +39,8 @@ deps:  ## Download go module dependencies
 setup: deps setupgolangcilint ## Set up dev env
 	@echo "==> Installing dev tools..."
 	go install github.com/google/addlicense@latest
+	go install github.com/golang/mock/mockgen@latest
+	go install golang.org/x/tools/cmd/goimports@latest
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

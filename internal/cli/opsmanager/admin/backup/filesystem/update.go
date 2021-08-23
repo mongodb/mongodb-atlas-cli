@@ -39,7 +39,7 @@ type UpdateOpts struct {
 	wtCompressionSetting     string
 }
 
-func (opts *UpdateOpts) init(ctx context.Context) func() error {
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -76,7 +76,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init(cmd.Context())()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.ID = args[0]

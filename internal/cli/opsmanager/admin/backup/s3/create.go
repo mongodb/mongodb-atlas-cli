@@ -45,7 +45,7 @@ type CreateOpts struct {
 	pathStyleAccessEnabled bool
 }
 
-func (opts *CreateOpts) init(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -91,7 +91,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a backup S3 blockstore configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init(cmd.Context())()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

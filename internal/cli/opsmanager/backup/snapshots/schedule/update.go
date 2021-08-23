@@ -45,7 +45,7 @@ type UpdateOpts struct {
 	referenceMinuteOfHour          int
 }
 
-func (opts *UpdateOpts) init(ctx context.Context) func() error {
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -103,7 +103,7 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update a snapshot schedule for a cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.PreRunE(opts.ValidateProjectID, opts.init(cmd.Context()))
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

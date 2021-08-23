@@ -35,7 +35,7 @@ type CreateOpts struct {
 	store store.ProjectCreator
 }
 
-func (opts *CreateOpts) init(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		if opts.ConfigOrgID() == "" {
 			return cli.ErrMissingOrgID
@@ -70,7 +70,7 @@ func CreateBuilder() *cobra.Command {
 			if config.Service() != config.CloudService {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.init(cmd.Context())()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

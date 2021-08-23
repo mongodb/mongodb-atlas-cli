@@ -33,7 +33,7 @@ type DeleteOpts struct {
 	store  store.OrganizationAPIKeyAccessListDeleter
 }
 
-func (opts *DeleteOpts) init(ctx context.Context) func() error {
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -57,7 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete an IP access list from your API Key.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateOrgID, opts.init(cmd.Context())); err != nil {
+			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

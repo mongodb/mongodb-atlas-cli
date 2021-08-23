@@ -35,7 +35,7 @@ type AssignOpts struct {
 	store store.ProjectAPIKeyAssigner
 }
 
-func (opts *AssignOpts) init(ctx context.Context) func() error {
+func (opts *AssignOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -71,7 +71,7 @@ func AssignBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.init(cmd.Context()),
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},

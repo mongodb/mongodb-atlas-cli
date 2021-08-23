@@ -38,7 +38,7 @@ type CreateOpts struct {
 	store     store.OwnerCreator
 }
 
-func (opts *CreateOpts) init(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -97,7 +97,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), createTemplate)()
-			if err := opts.init(cmd.Context())(); err != nil {
+			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err
 			}
 			return opts.Prompt()

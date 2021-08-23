@@ -36,7 +36,7 @@ type ListOpts struct {
 	store store.GlobalAPIKeyLister
 }
 
-func (opts *ListOpts) init(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -65,7 +65,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init(cmd.Context())()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

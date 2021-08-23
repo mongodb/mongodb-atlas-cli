@@ -35,7 +35,7 @@ type DescribeOpts struct {
 	store store.RegionalizedPrivateEndpointSettingDescriber
 }
 
-func (opts *DescribeOpts) init(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -63,7 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.init(cmd.Context()),
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},

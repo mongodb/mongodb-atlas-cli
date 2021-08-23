@@ -33,7 +33,7 @@ type ListOpts struct {
 	store store.CloudManagerClustersLister
 }
 
-func (opts *ListOpts) init(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -95,7 +95,7 @@ When using an output format the information will be provided by automation.`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), opts.template())()
-			return opts.PreRunE(opts.ValidateProjectID, opts.init(cmd.Context()))
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

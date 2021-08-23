@@ -37,7 +37,7 @@ type DescribeOpts struct {
 	store store.OrganizationInvitationDescriber
 }
 
-func (opts *DescribeOpts) init(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -65,7 +65,7 @@ func DescribeBuilder() *cobra.Command {
 		Short:   "Retrieve details for one pending invitation to the specified organization.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init(cmd.Context())()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

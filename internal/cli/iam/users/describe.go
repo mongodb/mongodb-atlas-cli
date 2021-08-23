@@ -38,7 +38,7 @@ type DescribeOpts struct {
 	id       string
 }
 
-func (opts *DescribeOpts) init(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -107,7 +107,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return PreRunE(
-				opts.init(cmd.Context()),
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 				opts.validate,
 			)

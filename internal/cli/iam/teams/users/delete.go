@@ -33,7 +33,7 @@ type DeleteOpts struct {
 	teamID string
 }
 
-func (opts *DeleteOpts) init(ctx context.Context) func() error {
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -59,7 +59,7 @@ func DeleteBuilder() *cobra.Command {
 			opts.Entry = args[0]
 			return opts.PreRunE(
 				opts.ValidateOrgID,
-				opts.init(cmd.Context()),
+				opts.initStore(cmd.Context()),
 				opts.Prompt,
 			)
 		},

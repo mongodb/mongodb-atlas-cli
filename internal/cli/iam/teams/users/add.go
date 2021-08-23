@@ -36,7 +36,7 @@ type AddOpts struct {
 	users  []string
 }
 
-func (opts *AddOpts) init(ctx context.Context) func() error {
+func (opts *AddOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -64,7 +64,7 @@ func AddBuilder() *cobra.Command {
 			opts.users = args
 			return opts.PreRunE(
 				opts.ValidateOrgID,
-				opts.init(cmd.Context()),
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), addTemplate),
 			)
 		},

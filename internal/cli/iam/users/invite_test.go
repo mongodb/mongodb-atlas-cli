@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package users
@@ -57,12 +58,14 @@ func TestInvite_Run(t *testing.T) {
 
 func TestCreateAtlasRole(t *testing.T) {
 	type test struct {
+		name  string
 		input InviteOpts
 		want  []mongodbatlas.AtlasRole
 	}
 
 	tests := []test{
 		{
+			name: "one role",
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
@@ -72,13 +75,15 @@ func TestCreateAtlasRole(t *testing.T) {
 			}},
 		},
 		{
+			name: "multple roles",
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
-			want: []mongodbatlas.AtlasRole{{
-				OrgID:    "5e4e593f70dfbf1010295836",
-				RoleName: "ORG_OWNER",
-			},
+			want: []mongodbatlas.AtlasRole{
+				{
+					OrgID:    "5e4e593f70dfbf1010295836",
+					RoleName: "ORG_OWNER",
+				},
 				{
 					OrgID:    "5e4e593f70dfbf1010295836",
 					RoleName: "ORG_GROUP_CREATOR",
@@ -86,6 +91,7 @@ func TestCreateAtlasRole(t *testing.T) {
 			},
 		},
 		{
+			name: "org and project roles",
 			input: InviteOpts{
 				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
@@ -110,33 +116,41 @@ func TestCreateAtlasRole(t *testing.T) {
 			},
 		},
 		{
+			name:  "empty",
 			input: InviteOpts{},
 			want:  []mongodbatlas.AtlasRole{},
 		},
 	}
 
 	for _, tc := range tests {
-		got, err := tc.input.createAtlasRole()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := tc.input.createAtlasRole()
+			if err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
 
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+			if !reflect.DeepEqual(tc.want, got) {
+				t.Fatalf("expected: %v, got: %v", tc.want, got)
+			}
+		})
 	}
 }
 
 func TestCreateUserRole(t *testing.T) {
 	type test struct {
+		name  string
 		input InviteOpts
 		want  []*opsmngr.UserRole
 	}
-
+	prevServ := config.Service()
 	config.SetService(config.OpsManagerService)
+	defer func() {
+		config.SetService(prevServ)
+	}()
 
 	tests := []test{
 		{
+			name: "one role",
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
 			},
@@ -146,13 +160,15 @@ func TestCreateUserRole(t *testing.T) {
 			}},
 		},
 		{
+			name: "multiple org roles",
 			input: InviteOpts{
 				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 			},
-			want: []*opsmngr.UserRole{{
-				OrgID:    "5e4e593f70dfbf1010295836",
-				RoleName: "ORG_OWNER",
-			},
+			want: []*opsmngr.UserRole{
+				{
+					OrgID:    "5e4e593f70dfbf1010295836",
+					RoleName: "ORG_OWNER",
+				},
 				{
 					OrgID:    "5e4e593f70dfbf1010295836",
 					RoleName: "ORG_GROUP_CREATOR",
@@ -160,6 +176,7 @@ func TestCreateUserRole(t *testing.T) {
 			},
 		},
 		{
+			name: "projects and orgs",
 			input: InviteOpts{
 				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
 				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
@@ -184,19 +201,22 @@ func TestCreateUserRole(t *testing.T) {
 			},
 		},
 		{
+			name:  "empty",
 			input: InviteOpts{},
 			want:  []*opsmngr.UserRole{},
 		},
 	}
 
 	for _, tc := range tests {
-		got, err := tc.input.createUserRole()
-		if err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := tc.input.createUserRole()
+			if err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
 
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("expected: %v, got: %v", tc.want, got)
-		}
+			if !reflect.DeepEqual(tc.want, got) {
+				t.Fatalf("expected: %v, got: %v", tc.want, got)
+			}
+		})
 	}
 }

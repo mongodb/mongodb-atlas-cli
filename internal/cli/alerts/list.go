@@ -15,6 +15,8 @@
 package alerts
 
 import (
+	_ "embed"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -39,9 +41,8 @@ func (opts *ListOpts) initStore() error {
 	return err
 }
 
-var listTemplate = `ID	TYPE	STATUS{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Status}}{{end}}
-`
+//go:embed list.tmpl
+var listTemplate string
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newAlertsListOptions()

@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e cloudmanager,remote,replica
+//go:build e2e || (cloudmanager && remote && replica) || (opsmanager && remote && replica)
+// +build e2e cloudmanager,remote,replica opsmanager,remote,replica
 
 package cloud_manager_test
 
@@ -40,7 +41,27 @@ func TestDBUsers(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const dbUsersEntity = "dbusers"
+	// make sure security is enabled, this should be a no-op for cloud manager
+	t.Run("Enable security", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			securityEntity,
+			"enable",
+			"MONGODB-CR",
+			"SCRAM-SHA-256")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		if !strings.Contains(string(resp), "Changes are being applied") {
+			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
+		}
+	})
+	t.Run("Watch", watchAutomation(cliPath))
+
 	username := fmt.Sprintf("user-%v", n)
 
 	t.Run("Create", func(t *testing.T) {

@@ -53,22 +53,27 @@ email=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team
 
 echo "create first user"
 cat <<EOF > credentials.tmpl
+#!/bin/bash
+
+set -euo pipefail
+
 export MCLI_PUBLIC_API_KEY={{.ProgrammaticAPIKey.PublicKey}}
 export MCLI_PRIVATE_API_KEY={{.ProgrammaticAPIKey.PrivateKey}}
 EOF
 
-./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl" > credentials.bash
-chmod +x credentials.bash
+./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl" > credentials.sh
 
-./credentials.bash
+chmod +x credentials.sh
+
+# shellcheck disable=SC1091
+source credentials.sh
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")
-
+export MCLI_ORG_ID
 echo "create project"
-AGENT_API_KEY=$(./bin/mongocli iam projects create myProj --orgId "${MCLI_ORG_ID}" -o="go-template={{.AgentAPIKey}}")
+AGENT_API_KEY=$(./bin/mongocli iam projects create myProj -o="go-template={{.AgentAPIKey}}")
 MCLI_PROJECT_ID=$(./bin/mongocli iam project list -o="go-template={{ (index .Results 0).ID }}")
-
 
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
 [default]

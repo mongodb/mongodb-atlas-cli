@@ -902,44 +902,6 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,generic
-  - name: ops_manager_generic_4_4_e2e
-    tags: ["opsmanager", "general"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_4_4_archive}
-      - func: "set-up ops manager"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: opsmanager,generic
-  - name: ops_manager_generic_4_2_e2e
-    tags: ["opsmanager", "general"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_4_2_archive}
-      - func: "set-up ops manager"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: opsmanager,generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -962,48 +924,6 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,replica
-  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
-  - name: ops_manager_4_4_deploy_replica_set_e2e
-    tags: ["e2e","clusters","opsmanager"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_4_4_archive}
-      - func: "set-up ops manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: opsmanager,remote,replica
-  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
-  - name: ops_manager_4_4_deploy_sharded_cluster_e2e
-    tags: ["e2e","clusters","opsmanager"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_4_4_archive}
-      - func: "set-up ops manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: opsmanager,remote,sharded
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1029,6 +949,127 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
+  # Deploy ops manager and test against it
+  - name: ops_manager_4_4_generic_e2e
+    tags: [ "e2e","ops-manager-44" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,generic
+  - name: ops_manager_4_4_deploy_replica_set_e2e
+    tags: [ "e2e","ops-manager-44" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,replica
+  # Deploy ops manager and test against it
+  - name: ops_manager_4_4_deploy_sharded_cluster_e2e
+    tags: [ "e2e","ops-manager-44" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_4_4_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,sharded
+  - name: ops_manager_5_0_generic_e2e
+    tags: [ "e2e","ops-manager-50" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_5_0_archive}
+      - func: "set-up ops manager"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,generic
+  - name: ops_manager_5_0_deploy_replica_set_e2e
+    tags: [ "e2e","ops-manager-50" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_5_0_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,replica
+  # Deploy ops manager and test against it
+  - name: ops_manager_5_0_deploy_sharded_cluster_e2e
+    tags: [ "e2e","ops-manager-50" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "install ops manager"
+        vars:
+          ARCHIVE: ${ops_manager_5_0_archive}
+      - func: "set-up ops manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: opsmanager,remote,sharded
   - name: package_msi
     tags: ["packaging"]
     depends_on:
@@ -1605,15 +1646,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .generic"
-  - name: opsmanager_e2e_generic
-    display_name: "Ops Manager E2E Tests Generic"
-    run_on:
-      - rhel70-small
-    expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
-    tasks:
-      - name: ".opsmanager .general"
   - name: e2e_atlas_clusters
     display_name: "E2E Atlas Cluster Tests"
     run_on:
@@ -1650,15 +1682,24 @@ buildvariants:
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
-  - name: e2e_ops_manager_remote
-    display_name: "E2E Ops Manager Remote Host Tests"
+  - name: e2e_ops_manager_44
+    display_name: "E2E Ops Manager 4.4 Tests"
     run_on:
       - rhel70-small
     expansions:
       go_root: "/opt/golang/go1.16"
       go_bin: "/opt/golang/go1.16/bin"
     tasks:
-      - name: ".e2e .clusters .opsmanager"
+      - name: ".ops-manager-44"
+  - name: e2e_ops_manager_50
+    display_name: "E2E Ops Manager 5.0 Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.16"
+      go_bin: "/opt/golang/go1.16/bin"
+    tasks:
+      - name: ".ops-manager-50"
   - name: go_msi_snapshot
     display_name: "Packaging (go-msi)"
     run_on:

@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package serverlessclusters
+package serverless
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,51 +23,60 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
+var describeTemplate = `ID	NAME	MDB VER	STATE
+{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
+`
+
+type DescribeOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
-	store store.ServerlessInstanceDeleter
+	cli.OutputOpts
+	store        store.ServerlessInstanceDescriber
+	instanceName string
 }
 
-func (opts *DeleteOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteServerlessInstance, opts.ConfigProjectID())
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.instanceName)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
-// mongocli atlas serverlessCluster(s) delete <clusterName> --projectId projectId [--force].
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Serverless cluster '%s' deleted\n", "Serverless cluster not deleted"),
-	}
+// mongocli atlas serverless|sl describe <instanceName> --projectId projectId.
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "delete <clusterName>",
-		Aliases: []string{"rm"},
-		Short:   "Delete a serverless cluster from your project.",
-		Args:    require.ExactArgs(1),
+		Use:   "describe <instanceName>",
+		Short: "Return one serverless instance in the specified project.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
+		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster to delete.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 		},
+		Aliases: []string{"get"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			opts.instanceName = args[0]
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

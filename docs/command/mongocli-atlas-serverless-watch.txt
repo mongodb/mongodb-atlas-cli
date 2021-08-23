@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverlessClusters-list:
+.. _mongocli-atlas-serverless-watch:
 
-======================================
-mongocli atlas serverlessClusters list
-======================================
+===============================
+mongocli atlas serverless watch
+===============================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,32 @@ mongocli atlas serverlessClusters list
    :depth: 1
    :class: singlecol
 
-List all serverless instances in the specified project.
+Monitor the status of serverless instance.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverlessClusters list [options]
+   mongocli atlas serverless watch <instanceName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - instanceName
+     - string
+     - false
+     - Name of the instance to watch.
 
 Options
 -------
@@ -35,20 +53,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page.
-   * - -o, --output
-     - string
-     - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
-   * - --page
-     - int
-     - false
-     - Page number.
+     - help for watch
    * - --projectId
      - string
      - false

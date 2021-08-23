@@ -57,8 +57,10 @@ export MCLI_PUBLIC_API_KEY={{.ProgrammaticAPIKey.PublicKey}}
 export MCLI_PRIVATE_API_KEY={{.ProgrammaticAPIKey.PrivateKey}}
 EOF
 
-# shellcheck source=/dev/null
-source "$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl")"
+./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl" > credentials.bash
+cat credentials.bash
+
+./credentials.bash
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")

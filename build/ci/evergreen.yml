@@ -950,7 +950,7 @@ tasks:
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
   # Deploy ops manager and test against it
-  - name: ops_manager_generic_4_4_e2e
+  - name: ops_manager_4_4_generic_e2e
     tags: [ "e2e","ops-manager-44" ]
     depends_on:
       - name: compile
@@ -1010,7 +1010,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,remote,sharded
-  - name: ops_manager_generic_5_0_e2e
+  - name: ops_manager_5_0_generic_e2e
     tags: [ "e2e","ops-manager-50" ]
     depends_on:
       - name: compile
@@ -1683,7 +1683,7 @@ buildvariants:
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_44
-    display_name: "Ops Manager 4.4 E2E Tests"
+    display_name: "E2E Ops Manager 4.4 Tests"
     run_on:
       - rhel70-small
     expansions:
@@ -1692,7 +1692,7 @@ buildvariants:
     tasks:
       - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
-    display_name: "E2E Ops Manager 5.0 E2E Tests"
+    display_name: "E2E Ops Manager 5.0 Tests"
     run_on:
       - rhel70-small
     expansions:

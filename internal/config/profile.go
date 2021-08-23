@@ -16,7 +16,9 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -28,6 +30,33 @@ import (
 )
 
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
+
+const (
+	ToolName                     = "mongocli"      // ToolName of the CLI
+	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
+	DefaultProfile               = "default"       // DefaultProfile default
+	CloudService                 = "cloud"         // CloudService setting when using Atlas API
+	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
+	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
+	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
+	JSON                         = "json"          // JSON output format as json
+	projectID                    = "project_id"
+	orgID                        = "org_id"
+	mongoShellPath               = "mongosh_path"
+	configType                   = "toml"
+	service                      = "service"
+	publicAPIKey                 = "public_api_key"
+	privateAPIKey                = "private_api_key"
+	opsManagerURL                = "ops_manager_url"
+	baseURL                      = "base_url"
+	opsManagerCACertificate      = "ops_manager_ca_certificate"
+	opsManagerSkipVerify         = "ops_manager_skip_verify"
+	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
+	output                       = "output"
+	CloudGovServiceURL           = "https://cloud.mongodbgov.com/"
+	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm                   = 0600
+)
 
 type Setter interface {
 	Set(string, string)
@@ -139,6 +168,10 @@ func (p *Profile) Service() string {
 	}
 	settings := viper.GetStringMapString(p.Name())
 	return settings[service]
+}
+
+func IsCloud() bool {
+	return p.Service() == "" || p.Service() == CloudService || p.Service() == CloudGovService
 }
 
 // SetService set configured service.
@@ -409,4 +442,17 @@ func (p *Profile) Save() error {
 	}
 	configFile := p.Filename()
 	return viper.WriteConfigAs(configFile)
+}
+
+func configHome() (string, error) {
+	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
+		return home, nil
+	}
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/.config", home), nil
 }

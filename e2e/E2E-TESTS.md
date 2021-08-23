@@ -303,7 +303,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `process`                                     |           | N         | N         |           | Y     | Y     |
 | `process describe`                            |           | N         | N         |           | Y     | Y     |
 | `process list`                                |           | N         | N         |           | Y     | Y     |
-| `security enable`                             |           | N         | N         |           | Y     | Y     |
+| `security enable`                             |           | Y         | Y         |           | Y     | Y     |
 | `monitoring enable`                           |           | Y         | Y         |           | Y     | Y     |
 | `monitoring disable`                          |           | Y         | Y         |           | Y     | Y     |
 | `monitoring stop`                             |           | Y         | Y         |           | Y     | Y     |

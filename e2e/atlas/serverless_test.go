@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestServerlessClusters(t *testing.T) {
+func TestServerless(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
@@ -39,7 +39,7 @@ func TestServerlessClusters(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			serverlessClustersEntity,
+			serverlessEntity,
 			"create",
 			clusterName,
 			"--region=US_EAST_1",
@@ -47,7 +47,7 @@ func TestServerlessClusters(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster *mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
@@ -61,27 +61,27 @@ func TestServerlessClusters(t *testing.T) {
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			serverlessClustersEntity,
+			serverlessEntity,
 			"watch",
 			clusterName,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
+		a.Contains(string(resp), "Instance available")
 	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			serverlessClustersEntity,
+			serverlessEntity,
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var clusters mongodbatlas.ClustersResponse
 		err = json.Unmarshal(resp, &clusters)
@@ -94,13 +94,13 @@ func TestServerlessClusters(t *testing.T) {
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			serverlessClustersEntity,
+			serverlessEntity,
 			"describe",
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.Cluster
 		err = json.Unmarshal(resp, &cluster)
@@ -114,15 +114,15 @@ func TestServerlessClusters(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			atlasEntity,
-			serverlessClustersEntity,
+			serverlessEntity,
 			"delete",
 			clusterName,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Serverless cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Serverless instance '%s' deleted\n", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

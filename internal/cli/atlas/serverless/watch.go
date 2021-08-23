@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverlessclusters
+package serverless
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -24,58 +24,61 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	MDB VER	STATE{{range .Results}}
-{{.ID}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
-`
-
-type ListOpts struct {
+type WatchOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	cli.ListOpts
-	store store.ServerlessInstanceLister
+	cli.WatchOpts
+	name  string
+	store store.ServerlessInstanceDescriber
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *WatchOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.ServerlessInstances(opts.ConfigProjectID(), listOpts)
+func (opts *WatchOpts) watcher() (bool, error) {
+	result, err := opts.store.ServerlessInstance(opts.ConfigProjectID(), opts.name)
 	if err != nil {
+		return false, err
+	}
+	return result.StateName == "IDLE", nil
+}
+
+func (opts *WatchOpts) Run() error {
+	if err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(nil)
 }
 
-// mongocli atlas serverlessCluster(s) list [--projectId projectId] [--page N] [--limit N].
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+// mongocli atlas serverless|sl watch <instanceName> [--projectId projectId].
+func WatchBuilder() *cobra.Command {
+	opts := &WatchOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List all serverless instances in the specified project.",
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Use:   "watch <instanceName>",
+		Short: "Monitor the status of serverless instance.",
+		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
+		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":             "instanceName",
+			"instanceNameDesc": "Name of the instance to watch.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), "\nInstance available.\n"),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

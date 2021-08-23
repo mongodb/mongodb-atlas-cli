@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverlessclusters
+package serverless
 
 import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -31,10 +31,10 @@ const providerName = "SERVERLESS"
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	clusterName string
-	provider    string
-	region      string
-	store       store.ServerlessInstanceCreator
+	instanceName string
+	provider     string
+	region       string
+	store        store.ServerlessInstanceCreator
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -43,7 +43,7 @@ func (opts *CreateOpts) initStore() error {
 	return err
 }
 
-var createTemplate = "Serverless Cluster {{.Name}} created.\n"
+var createTemplate = "Serverless instance {{.Name}} created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateServerlessInstance(opts.ConfigProjectID(), opts.newServerlessCreateRequestParams())
@@ -55,7 +55,7 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCreateRequestParams {
 	return &atlas.ServerlessCreateRequestParams{
-		Name: opts.clusterName,
+		Name: opts.instanceName,
 		ProviderSettings: &atlas.ServerlessProviderSettings{
 			BackingProviderName: opts.provider,
 			ProviderName:        providerName,
@@ -64,16 +64,17 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlas.ServerlessCrea
 	}
 }
 
-// mongocli atlas serverlessCluster(s)|sc create <clusterName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
+// mongocli atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <clusterName>",
-		Short: "Creates one serverless cluster in the specified project.",
+		Use:   "create <instanceName>",
+		Short: "Creates one serverless instance in the specified project.",
+		Long:  "Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "clusterName",
-			"clusterNameDesc": "Human-readable label that identifies your serverless cluster.",
+			"args":             "instanceName",
+			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
@@ -83,7 +84,7 @@ func CreateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.clusterName = args[0]
+			opts.instanceName = args[0]
 			return opts.Run()
 		},
 	}

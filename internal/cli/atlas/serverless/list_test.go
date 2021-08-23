@@ -14,47 +14,45 @@
 
 // +build unit
 
-package serverlessclusters
+package serverless
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDelete_Run(t *testing.T) {
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.Limit, flag.Page, flag.Output, flag.ProjectID},
+	)
+}
+
+func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDeleter(ctrl)
+	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
 	defer ctrl.Finish()
 
-	deleteOpts := &DeleteOpts{
-		DeleteOpts: &cli.DeleteOpts{
-			Confirm: true,
-			Entry:   "test",
-		},
+	var expected *mongodbatlas.ClustersResponse
+
+	listOpts := &ListOpts{
 		store: mockStore,
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteServerlessInstance(deleteOpts.ProjectID, deleteOpts.Entry).
-		Return(nil).
+		ServerlessInstances(listOpts.ProjectID, listOpts.NewListOptions()).
+		Return(expected, nil).
 		Times(1)
 
-	if err := deleteOpts.Run(); err != nil {
+	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{flag.Force, flag.ProjectID},
-	)
 }

@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverlessClusters-watch:
+.. _mongocli-atlas-serverless-delete:
 
-=======================================
-mongocli atlas serverlessClusters watch
-=======================================
+================================
+mongocli atlas serverless delete
+================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,16 @@ mongocli atlas serverlessClusters watch
    :depth: 1
    :class: singlecol
 
-Watch for a serverless cluster to be available.
+Remove a serverless instance from your project.
+
+Your API Key must have the Organization Owner or Project Owner role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverlessClusters watch <clusterName> [options]
+   mongocli atlas serverless delete <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Name of the cluster to watch.
+     - Name of the instance to delete.
 
 Options
 -------
@@ -48,10 +50,14 @@ Options
      - Type
      - Required
      - Description
+   * - --force
+     - 
+     - false
+     - Don't ask for confirmation.
    * - -h, --help
      - 
      - false
-     - help for watch
+     - help for delete
    * - --projectId
      - string
      - false

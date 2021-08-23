@@ -55,7 +55,7 @@ type InterfaceEndpointDeleterDeprecated interface {
 func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +66,7 @@ func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOpt
 func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(s.ctx, projectID, privateLinkID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(s.Context(), projectID, privateLinkID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +77,7 @@ func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atl
 func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(s.ctx, projectID, privateLinkID)
+		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(s.Context(), projectID, privateLinkID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -88,7 +88,7 @@ func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string)
 func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(s.Context(), projectID, privateLinkID, interfaceEndpointID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -99,7 +99,7 @@ func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, inte
 func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Create(s.ctx, projectID, r)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Create(s.Context(), projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -110,7 +110,7 @@ func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.Priva
 func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(s.Context(), projectID, privateLinkID, interfaceEndpointID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -121,7 +121,7 @@ func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceE
 func (s *Store) DeleteInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+		_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(s.Context(), projectID, privateLinkID, interfaceEndpointID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

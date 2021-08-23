@@ -35,7 +35,7 @@ type VersionManifestGetter interface {
 func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(s.ctx, versionManifest)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(s.Context(), versionManifest)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -46,7 +46,7 @@ func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) 
 func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(s.ctx, version)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(s.Context(), version)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

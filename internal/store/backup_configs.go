@@ -40,7 +40,7 @@ type BackupConfigUpdater interface {
 func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(s.ctx, projectID, clusterID)
+		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Get(s.Context(), projectID, clusterID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -51,7 +51,7 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(s.ctx, projectID, options)
+		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(s.Context(), projectID, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -62,7 +62,7 @@ func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) 
 func (s *Store) UpdateBackupConfig(backupConfig *opsmngr.BackupConfig) (*opsmngr.BackupConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Update(s.ctx, backupConfig.GroupID, backupConfig.ClusterID, backupConfig)
+		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.Update(s.Context(), backupConfig.GroupID, backupConfig.ClusterID, backupConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

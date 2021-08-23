@@ -47,7 +47,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 		req := &atlas.CloudProviderAccessRoleRequest{
 			ProviderName: provider,
 		}
-		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.CreateRole(s.ctx, groupID, req)
+		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.CreateRole(s.Context(), groupID, req)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlas.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAccessRoles, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.ListRoles(s.ctx, groupID)
+		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.ListRoles(s.Context(), groupID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlas.CloudProviderAc
 func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(s.ctx, req)
+		_, err := s.client.(*atlas.Client).CloudProviderAccess.DeauthorizeRole(s.Context(), req)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlas.AWSIAMRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(s.ctx, groupID, roleID, req)
+		result, _, err := s.client.(*atlas.Client).CloudProviderAccess.AuthorizeRole(s.Context(), groupID, roleID, req)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

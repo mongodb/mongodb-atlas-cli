@@ -55,7 +55,7 @@ type DataLakeStore interface {
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Create(s.ctx, projectID, dataLake)
+		result, _, err := s.client.(*atlas.Client).DataLakes.Create(s.Context(), projectID, dataLake)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +66,7 @@ func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateR
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Update(s.ctx, projectID, name, dataLake)
+		result, _, err := s.client.(*atlas.Client).DataLakes.Update(s.Context(), projectID, name, dataLake)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +77,7 @@ func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeU
 func (s *Store) DeleteDataLake(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).DataLakes.Delete(s.ctx, projectID, name)
+		_, err := s.client.(*atlas.Client).DataLakes.Delete(s.Context(), projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -88,7 +88,7 @@ func (s *Store) DeleteDataLake(projectID, name string) error {
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.List(s.ctx, projectID)
+		result, _, err := s.client.(*atlas.Client).DataLakes.List(s.Context(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -99,7 +99,7 @@ func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Get(s.ctx, projectID, name)
+		result, _, err := s.client.(*atlas.Client).DataLakes.Get(s.Context(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

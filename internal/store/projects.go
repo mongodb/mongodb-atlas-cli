@@ -69,10 +69,10 @@ type ProjectTeamDeleter interface {
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.ctx, opts)
+		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.Context(), opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
+		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.Context(), opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -83,7 +83,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.Context(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -94,10 +94,10 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.ctx, id)
+		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.Context(), id)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
+		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.Context(), id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -109,11 +109,11 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		project := &atlas.Project{Name: name, OrgID: orgID}
-		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project)
+		result, _, err := s.client.(*atlas.Client).Projects.Create(s.Context(), project)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID}
-		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project)
+		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.Context(), project)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -124,10 +124,10 @@ func (s *Store) CreateProject(name, orgID string) (interface{}, error) {
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.Delete(s.ctx, projectID)
+		_, err := s.client.(*atlas.Client).Projects.Delete(s.Context(), projectID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.ctx, projectID)
+		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.Context(), projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -138,10 +138,10 @@ func (s *Store) DeleteProject(projectID string) error {
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(s.Context(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(s.ctx, projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -152,10 +152,10 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(s.ctx, projectID, userID)
+		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(s.Context(), projectID, userID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(s.ctx, projectID, userID)
+		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(s.Context(), projectID, userID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -166,10 +166,10 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(s.ctx, projectID)
+		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(s.Context(), projectID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(s.ctx, projectID, nil)
+		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(s.Context(), projectID, nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -180,10 +180,10 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
+		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(s.Context(), projectID, teams)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
+		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(s.Context(), projectID, teams)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -194,10 +194,10 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
+		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(s.Context(), projectID, teamID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(s.Context(), projectID, teamID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

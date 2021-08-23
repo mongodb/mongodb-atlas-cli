@@ -85,7 +85,7 @@ type AtlasClusterQuickStarter interface {
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(s.ctx, groupID, clusterName)
+		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(s.Context(), groupID, clusterName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -96,7 +96,7 @@ func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDataset
 func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(s.ctx, groupID, id)
+		result, _, err := s.client.(*atlas.Client).Clusters.GetSampleDatasetStatus(s.Context(), groupID, id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -107,7 +107,7 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlas.SampleDatasetJob, e
 func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Create(s.ctx, cluster.GroupID, cluster)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Create(s.Context(), cluster.GroupID, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -118,7 +118,7 @@ func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCl
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Update(s.ctx, projectID, name, cluster)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Update(s.Context(), projectID, name, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -147,7 +147,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, er
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(s.ctx, projectID, name)
+		_, err := s.client.(*atlas.Client).AdvancedClusters.Delete(s.Context(), projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -158,10 +158,10 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.List(s.Context(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Clusters.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -172,7 +172,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(s.ctx, projectID, name)
+		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(s.Context(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -183,7 +183,7 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, er
 func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(s.ctx, projectID, name)
+		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(s.Context(), projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -194,7 +194,7 @@ func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, err
 func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(s.ctx)
+		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(s.Context())
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

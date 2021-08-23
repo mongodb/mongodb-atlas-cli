@@ -63,7 +63,7 @@ type RegionalizedPrivateEndpointSettingDescriber interface {
 func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.List(s.ctx, projectID, provider, opts)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.List(s.Context(), projectID, provider, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -74,7 +74,7 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(s.ctx, projectID, provider, privateLinkID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Get(s.Context(), projectID, provider, privateLinkID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -85,7 +85,7 @@ func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atl
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpointConnection) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(s.ctx, projectID, r)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(s.Context(), projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -96,7 +96,7 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(s.ctx, projectID, provider, privateLinkID)
+		_, err := s.client.(*atlas.Client).PrivateEndpoints.Delete(s.Context(), projectID, provider, privateLinkID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -107,7 +107,7 @@ func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string)
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlas.InterfaceEndpointConnection) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.AddOnePrivateEndpoint(s.ctx, projectID, provider, endpointServiceID, createRequest)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.AddOnePrivateEndpoint(s.Context(), projectID, provider, endpointServiceID, createRequest)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -118,7 +118,7 @@ func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID s
 func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, privateEndpointID string) (*atlas.InterfaceEndpointConnection, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetOnePrivateEndpoint(s.ctx, projectID, cloudProvider, endpointServiceID, privateEndpointID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetOnePrivateEndpoint(s.Context(), projectID, cloudProvider, endpointServiceID, privateEndpointID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -129,7 +129,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(s.ctx, projectID, provider, endpointServiceID, privateEndpointID)
+		_, err := s.client.(*atlas.Client).PrivateEndpoints.DeleteOnePrivateEndpoint(s.Context(), projectID, provider, endpointServiceID, privateEndpointID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -140,7 +140,7 @@ func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, 
 func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.UpdateRegionalizedPrivateEndpointSetting(s.ctx, projectID, enabled)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.UpdateRegionalizedPrivateEndpointSetting(s.Context(), projectID, enabled)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -151,7 +151,7 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlas.RegionalizedPrivateEndpointSetting, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetRegionalizedPrivateEndpointSetting(s.ctx, projectID)
+		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.GetRegionalizedPrivateEndpointSetting(s.Context(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

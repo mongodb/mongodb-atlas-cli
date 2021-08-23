@@ -57,10 +57,10 @@ type TeamRolesUpdater interface {
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.Get(s.ctx, orgID, teamID)
+		result, _, err := s.client.(*atlas.Client).Teams.Get(s.Context(), orgID, teamID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.Get(s.ctx, orgID, teamID)
+		result, _, err := s.client.(*opsmngr.Client).Teams.Get(s.Context(), orgID, teamID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -71,10 +71,10 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+		result, _, err := s.client.(*atlas.Client).Teams.GetOneTeamByName(s.Context(), orgID, teamName)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(s.Context(), orgID, teamName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -85,10 +85,10 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.List(s.ctx, orgID, opts)
+		result, _, err := s.client.(*atlas.Client).Teams.List(s.Context(), orgID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.List(s.ctx, orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Teams.List(s.Context(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -99,10 +99,10 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.Create(s.ctx, orgID, team)
+		result, _, err := s.client.(*atlas.Client).Teams.Create(s.Context(), orgID, team)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.Create(s.ctx, orgID, team)
+		result, _, err := s.client.(*opsmngr.Client).Teams.Create(s.Context(), orgID, team)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -113,10 +113,10 @@ func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) 
 func (s *Store) DeleteTeam(orgID, teamID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromOrganization(s.Context(), orgID, teamID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(s.Context(), orgID, teamID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -127,10 +127,10 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+		result, _, err := s.client.(*atlas.Client).Teams.AddUsersToTeam(s.Context(), orgID, teamID, users)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(s.Context(), orgID, teamID, users)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -141,10 +141,10 @@ func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(s.Context(), orgID, teamID, userID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(s.Context(), orgID, teamID, userID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -155,10 +155,10 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+		result, _, err := s.client.(*atlas.Client).Teams.UpdateTeamRoles(s.Context(), projectID, teamID, team)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(s.Context(), projectID, teamID, team)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

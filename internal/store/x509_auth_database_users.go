@@ -45,7 +45,7 @@ type X509CertificateStore interface {
 func (s *Store) X509Configuration(projectID string) (*atlas.CustomerX509, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetCurrentX509Conf(s.ctx, projectID)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetCurrentX509Conf(s.Context(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -57,7 +57,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		userCertificate := &atlas.CustomerX509{Cas: certificate}
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(s.ctx, projectID, userCertificate)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.SaveConfiguration(s.Context(), projectID, userCertificate)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -68,7 +68,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlas.Cus
 func (s *Store) DisableX509Configuration(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).X509AuthDBUsers.DisableCustomerX509(s.ctx, projectID)
+		_, err := s.client.(*atlas.Client).X509AuthDBUsers.DisableCustomerX509(s.Context(), projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

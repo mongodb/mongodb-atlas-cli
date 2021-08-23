@@ -47,7 +47,7 @@ type OnlineArchiveDeleter interface {
 func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlas.OnlineArchives, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(s.ctx, projectID, clusterName, lstOpt)
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.List(s.Context(), projectID, clusterName, lstOpt)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(s.ctx, projectID, clusterName, archiveID)
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.Get(s.Context(), projectID, clusterName, archiveID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlas.
 func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(s.ctx, projectID, clusterName, archive)
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.Create(s.Context(), projectID, clusterName, archive)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlas.OnlineArchive) (*atlas.OnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).OnlineArchives.Update(s.ctx, projectID, clusterName, archive.ID, archive)
+		result, _, err := s.client.(*atlas.Client).OnlineArchives.Update(s.Context(), projectID, clusterName, archive.ID, archive)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(s.ctx, projectID, clusterName, archiveID)
+		_, err := s.client.(*atlas.Client).OnlineArchives.Delete(s.Context(), projectID, clusterName, archiveID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

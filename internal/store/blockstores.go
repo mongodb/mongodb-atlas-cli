@@ -48,7 +48,7 @@ type BlockstoresDeleter interface {
 func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.List(s.ctx, options)
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.List(s.Context(), options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +59,7 @@ func (s *Store) ListBlockstores(options *atlas.ListOptions) (*opsmngr.BackupStor
 func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Get(s.ctx, blockstoreID)
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Get(s.Context(), blockstoreID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +70,7 @@ func (s *Store) DescribeBlockstore(blockstoreID string) (*opsmngr.BackupStore, e
 func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(s.ctx, blockstore)
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Create(s.Context(), blockstore)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +81,7 @@ func (s *Store) CreateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.Back
 func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Update(s.ctx, blockstore.ID, blockstore)
+		result, _, err := s.client.(*opsmngr.Client).BlockstoreConfig.Update(s.Context(), blockstore.ID, blockstore)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +92,7 @@ func (s *Store) UpdateBlockstore(blockstore *opsmngr.BackupStore) (*opsmngr.Back
 func (s *Store) DeleteBlockstore(blockstoreID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).BlockstoreConfig.Delete(s.ctx, blockstoreID)
+		_, err := s.client.(*opsmngr.Client).BlockstoreConfig.Delete(s.Context(), blockstoreID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

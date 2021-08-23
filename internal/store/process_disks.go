@@ -31,7 +31,7 @@ type ProcessDisksLister interface {
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(s.ctx, groupID, host, port, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessDisks.List(s.Context(), groupID, host, port, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

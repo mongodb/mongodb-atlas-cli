@@ -59,7 +59,7 @@ type PeeringConnectionDeleter interface {
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Peers.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +70,7 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Get(s.ctx, projectID, peerID)
+		result, _, err := s.client.(*atlas.Client).Peers.Get(s.Context(), projectID, peerID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +81,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error)
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Peers.Delete(s.ctx, projectID, peerID)
+		_, err := s.client.(*atlas.Client).Peers.Delete(s.Context(), projectID, peerID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +92,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Create(s.ctx, projectID, peer)
+		result, _, err := s.client.(*atlas.Client).Peers.Create(s.Context(), projectID, peer)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

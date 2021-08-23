@@ -39,10 +39,10 @@ type PerformanceAdvisorIndexesLister interface {
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(s.Context(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(s.Context(), projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -53,10 +53,10 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(s.Context(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(s.Context(), projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -67,10 +67,10 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(s.Context(), projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(s.Context(), projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

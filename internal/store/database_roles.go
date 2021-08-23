@@ -48,7 +48,7 @@ type DatabaseRoleDescriber interface {
 func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Create(s.ctx, groupID, role)
+		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Create(s.Context(), groupID, role)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +59,7 @@ func (s *Store) CreateDatabaseRole(groupID string, role *atlas.CustomDBRole) (*a
 func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).CustomDBRoles.Delete(s.ctx, groupID, roleName)
+		_, err := s.client.(*atlas.Client).CustomDBRoles.Delete(s.Context(), groupID, roleName)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +70,7 @@ func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomDBRoles.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).CustomDBRoles.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +81,7 @@ func (s *Store) DatabaseRoles(projectID string, opts *atlas.ListOptions) (*[]atl
 func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomDBRole) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(s.ctx, groupID, roleName, role)
+		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Update(s.Context(), groupID, roleName, role)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +92,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlas.CustomD
 func (s *Store) DatabaseRole(groupID, roleName string) (*atlas.CustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Get(s.ctx, groupID, roleName)
+		result, _, err := s.client.(*atlas.Client).CustomDBRoles.Get(s.Context(), groupID, roleName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

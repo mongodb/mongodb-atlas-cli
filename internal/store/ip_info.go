@@ -28,7 +28,7 @@ type IPInfoDescriber interface {
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(s.ctx)
+		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(s.Context())
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -41,10 +41,10 @@ type EventLister interface {
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(s.Context(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,10 +55,10 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
+		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(s.Context(), orgID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.Context(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

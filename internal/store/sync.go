@@ -48,7 +48,7 @@ type SyncsDeleter interface {
 func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.List(s.ctx, options)
+		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.List(s.Context(), options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +59,7 @@ func (s *Store) ListSyncs(options *atlas.ListOptions) (*opsmngr.BackupStores, er
 func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Get(s.ctx, syncID)
+		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Get(s.Context(), syncID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +70,7 @@ func (s *Store) GetSync(syncID string) (*opsmngr.BackupStore, error) {
 func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Create(s.ctx, sync)
+		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Create(s.Context(), sync)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +81,7 @@ func (s *Store) CreateSync(sync *opsmngr.BackupStore) (*opsmngr.BackupStore, err
 func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Update(s.ctx, syncID, sync)
+		result, _, err := s.client.(*opsmngr.Client).SyncStoreConfig.Update(s.Context(), syncID, sync)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +92,7 @@ func (s *Store) UpdateSync(syncID string, sync *opsmngr.BackupStore) (*opsmngr.B
 func (s *Store) DeleteSync(syncID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).SyncStoreConfig.Delete(s.ctx, syncID)
+		_, err := s.client.(*opsmngr.Client).SyncStoreConfig.Delete(s.Context(), syncID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

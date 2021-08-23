@@ -64,10 +64,10 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 			Password:     user.Password,
 			Country:      user.Country,
 		}
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(s.ctx, atlasUser)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.Create(s.Context(), atlasUser)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Users.Create(s.ctx, user.User)
+		result, _, err := s.client.(*opsmngr.Client).Users.Create(s.Context(), user.User)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -78,10 +78,10 @@ func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
 func (s *Store) UserByID(userID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.Get(s.ctx, userID)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.Get(s.Context(), userID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Users.Get(s.ctx, userID)
+		result, _, err := s.client.(*opsmngr.Client).Users.Get(s.Context(), userID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,10 +92,10 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 func (s *Store) UserByName(username string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(s.ctx, username)
+		result, _, err := s.client.(*atlas.Client).AtlasUsers.GetByName(s.Context(), username)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(s.ctx, username)
+		result, _, err := s.client.(*opsmngr.Client).Users.GetByName(s.Context(), username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -106,7 +106,7 @@ func (s *Store) UserByName(username string) (interface{}, error) {
 func (s *Store) DeleteUser(userID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Users.Delete(s.ctx, userID)
+		_, err := s.client.(*opsmngr.Client).Users.Delete(s.Context(), userID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -117,10 +117,10 @@ func (s *Store) DeleteUser(userID string) error {
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Users(s.ctx, organizationID, opts)
+		result, _, err := s.client.(*atlas.Client).Organizations.Users(s.Context(), organizationID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.ListUsers(s.ctx, organizationID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.ListUsers(s.Context(), organizationID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -131,10 +131,10 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.GetTeamUsersAssigned(s.ctx, orgID, teamID)
+		result, _, err := s.client.(*atlas.Client).Teams.GetTeamUsersAssigned(s.Context(), orgID, teamID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.GetTeamUsersAssigned(s.ctx, orgID, teamID)
+		result, _, err := s.client.(*opsmngr.Client).Teams.GetTeamUsersAssigned(s.Context(), orgID, teamID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

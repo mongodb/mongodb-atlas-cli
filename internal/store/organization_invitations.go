@@ -47,10 +47,10 @@ type OrganizationInvitationUpdater interface {
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Invitations(s.ctx, orgID, opts)
+		result, _, err := s.client.(*atlas.Client).Organizations.Invitations(s.Context(), orgID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.ctx, orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.Context(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -61,10 +61,10 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlas.Invitation, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Invitation(s.ctx, orgID, invitationID)
+		result, _, err := s.client.(*atlas.Client).Organizations.Invitation(s.Context(), orgID, invitationID)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(s.ctx, orgID, invitationID)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(s.Context(), orgID, invitationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -75,10 +75,10 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlas.Invit
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
+		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(s.Context(), orgID, invitationID)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
+		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(s.Context(), orgID, invitationID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,18 +90,18 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		if invitationID != "" {
-			result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
+			result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitationByID(s.Context(), orgID, invitationID, invitation)
 			return result, err
 		}
-		result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitation(s.ctx, orgID, invitation)
+		result, _, err := s.client.(*atlas.Client).Organizations.UpdateInvitation(s.Context(), orgID, invitation)
 		return result, err
 
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
-			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
+			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(s.Context(), orgID, invitationID, invitation)
 			return result, err
 		}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(s.ctx, orgID, invitation)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(s.Context(), orgID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -112,10 +112,10 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.InviteUser(s.ctx, orgID, invitation)
+		result, _, err := s.client.(*atlas.Client).Organizations.InviteUser(s.Context(), orgID, invitation)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(s.ctx, orgID, invitation)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(s.Context(), orgID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

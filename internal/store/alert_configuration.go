@@ -48,10 +48,10 @@ type MatcherFieldsLister interface {
 func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(s.Context(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -62,10 +62,10 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(s.Context(), alertConfig.GroupID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Create(s.Context(), alertConfig.GroupID, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,10 +76,10 @@ func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(s.ctx, projectID, id)
+		_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(s.Context(), projectID, id)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).AlertConfigurations.Delete(s.ctx, projectID, id)
+		_, err := s.client.(*opsmngr.Client).AlertConfigurations.Delete(s.Context(), projectID, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,10 +90,10 @@ func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
 func (s *Store) MatcherFields() ([]string, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(s.ctx)
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(s.Context())
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.ListMatcherFields(s.ctx)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.ListMatcherFields(s.Context())
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -103,10 +103,10 @@ func (s *Store) MatcherFields() ([]string, error) {
 func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(s.Context(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(s.Context(), alertConfig.GroupID, alertConfig.ID, alertConfig)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

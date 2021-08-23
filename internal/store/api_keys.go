@@ -64,10 +64,10 @@ type OrganizationAPIKeyDeleter interface {
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.List(s.ctx, orgID, opts)
+		result, _, err := s.client.(*atlas.Client).APIKeys.List(s.Context(), orgID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(s.ctx, orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.List(s.Context(), orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -78,10 +78,10 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]at
 func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Get(s.ctx, orgID, apiKeyID)
+		result, _, err := s.client.(*atlas.Client).APIKeys.Get(s.Context(), orgID, apiKeyID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Get(s.ctx, orgID, apiKeyID)
+		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Get(s.Context(), orgID, apiKeyID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,10 +92,10 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Update(s.ctx, orgID, apiKeyID, input)
+		result, _, err := s.client.(*atlas.Client).APIKeys.Update(s.Context(), orgID, apiKeyID, input)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Update(s.ctx, orgID, apiKeyID, input)
+		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Update(s.Context(), orgID, apiKeyID, input)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -106,10 +106,10 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).APIKeys.Create(s.ctx, orgID, input)
+		result, _, err := s.client.(*atlas.Client).APIKeys.Create(s.Context(), orgID, input)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Create(s.ctx, orgID, input)
+		result, _, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Create(s.Context(), orgID, input)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -120,10 +120,10 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput)
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).APIKeys.Delete(s.ctx, orgID, id)
+		_, err := s.client.(*atlas.Client).APIKeys.Delete(s.Context(), orgID, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(s.ctx, orgID, id)
+		_, err := s.client.(*opsmngr.Client).OrganizationAPIKeys.Delete(s.Context(), orgID, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -134,10 +134,10 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.List(s.Context(), projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(s.ctx, projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.List(s.Context(), projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -148,10 +148,10 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atl
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)
+		result, _, err := s.client.(*atlas.Client).ProjectAPIKeys.Create(s.Context(), projectID, apiKeyInput)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)
+		result, _, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Create(s.Context(), projectID, apiKeyInput)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -162,10 +162,10 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyI
 func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Assign(s.ctx, projectID, apiKeyID, input)
+		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Assign(s.Context(), projectID, apiKeyID, input)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Assign(s.ctx, projectID, apiKeyID, input)
+		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Assign(s.Context(), projectID, apiKeyID, input)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -176,10 +176,10 @@ func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.Ass
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Unassign(s.ctx, projectID, id)
+		_, err := s.client.(*atlas.Client).ProjectAPIKeys.Unassign(s.Context(), projectID, id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Unassign(s.ctx, projectID, id)
+		_, err := s.client.(*opsmngr.Client).ProjectAPIKeys.Unassign(s.Context(), projectID, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -44,10 +44,10 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Organizations, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.List(s.ctx, opts)
+		result, _, err := s.client.(*atlas.Client).Organizations.List(s.Context(), opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.Context(), opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,10 +58,10 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*atlas.Orga
 func (s *Store) Organization(id string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Get(s.ctx, id)
+		result, _, err := s.client.(*atlas.Client).Organizations.Get(s.Context(), id)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.Context(), id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -73,7 +73,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		org := &atlas.Organization{Name: name}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(s.ctx, org)
+		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(s.Context(), org)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -84,10 +84,10 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
+		_, err := s.client.(*atlas.Client).Organizations.Delete(s.Context(), id)
 		return err
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.Delete(s.ctx, id)
+		_, err := s.client.(*opsmngr.Client).Organizations.Delete(s.Context(), id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

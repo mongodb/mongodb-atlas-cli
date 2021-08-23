@@ -31,7 +31,7 @@ type DefaultVersionGetter interface {
 func (s *Store) DefaultMongoDBVersion() (string, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DefaultMongoDBMajorVersion.Get(s.ctx)
+		result, _, err := s.client.(*atlas.Client).DefaultMongoDBMajorVersion.Get(s.Context())
 		return result, err
 	default:
 		return "", fmt.Errorf("%w: %s", errUnsupportedService, s.service)

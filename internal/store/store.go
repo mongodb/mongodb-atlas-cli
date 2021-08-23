@@ -214,6 +214,14 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
+// Context returns current context.
+func (s *Store) Context() context.Context {
+	if s.ctx == nil {
+		s.ctx = context.Background()
+	}
+	return s.ctx
+}
+
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}

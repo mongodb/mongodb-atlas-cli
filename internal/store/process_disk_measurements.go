@@ -35,7 +35,7 @@ type ProcessDatabaseMeasurementsLister interface {
 func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(s.ctx, groupID, host, port, partitionName, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessDiskMeasurements.List(s.Context(), groupID, host, port, partitionName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -46,7 +46,7 @@ func (s *Store) ProcessDiskMeasurements(groupID, host string, port int, partitio
 func (s *Store) ProcessDatabaseMeasurements(groupID, host string, port int, dbName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(s.ctx, groupID, host, port, dbName, opts)
+		result, _, err := s.client.(*atlas.Client).ProcessDatabaseMeasurements.List(s.Context(), groupID, host, port, dbName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

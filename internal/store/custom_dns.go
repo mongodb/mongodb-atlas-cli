@@ -42,7 +42,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: true,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.Context(), projectID, customDNSSetting)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -56,7 +56,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: false,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.Context(), projectID, customDNSSetting)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -67,7 +67,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(s.ctx, projectID)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(s.Context(), projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

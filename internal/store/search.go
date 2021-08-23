@@ -47,7 +47,7 @@ type SearchIndexDeleter interface {
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, opts *atlas.ListOptions) ([]*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Search.ListIndexes(s.ctx, projectID, clusterName, dbName, collName, opts)
+		result, _, err := s.client.(*atlas.Client).Search.ListIndexes(s.Context(), projectID, clusterName, dbName, collName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string, o
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Search.CreateIndex(s.ctx, projectID, clusterName, index)
+		result, _, err := s.client.(*atlas.Client).Search.CreateIndex(s.Context(), projectID, clusterName, index)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlas.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		index, _, err := s.client.(*atlas.Client).Search.GetIndex(s.ctx, projectID, clusterName, indexID)
+		index, _, err := s.client.(*atlas.Client).Search.GetIndex(s.Context(), projectID, clusterName, indexID)
 		return index, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlas.Sear
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlas.SearchIndex) (*atlas.SearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(s.ctx, projectID, clusterName, indexID, index)
+		result, _, err := s.client.(*atlas.Client).Search.UpdateIndex(s.Context(), projectID, clusterName, indexID, index)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Search.DeleteIndex(s.ctx, projectID, clusterName, indexID)
+		_, err := s.client.(*atlas.Client).Search.DeleteIndex(s.Context(), projectID, clusterName, indexID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

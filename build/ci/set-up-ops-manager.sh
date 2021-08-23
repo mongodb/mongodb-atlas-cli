@@ -48,12 +48,17 @@ echo "generate password for owner"
 password=$(date +%s | sha256sum | base64 | head -c 8)0_
 
 echo "generate email for owner"
-MCLI_PUBLIC_API_KEY=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team
-export MCLI_PUBLIC_API_KEY
+email=$(date +%s | sha256sum | base64 | head -c 8)@ops-manager-team
+
 
 echo "create first user"
-MCLI_PRIVATE_API_KEY=$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${MCLI_PUBLIC_API_KEY}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template={{.APIKey}}")
-export MCLI_PRIVATE_API_KEY
+cat <<EOF > credentials.tmpl
+export MCLI_PUBLIC_API_KEY={{.ProgrammaticAPIKey.PublicKey}}
+export MCLI_PRIVATE_API_KEY={{.ProgrammaticAPIKey.PrivateKey}}
+EOF
+
+# shellcheck source=/dev/null
+source "$(./bin/mongocli om owner create --firstName evergreen --lastName evergreen --email "${email}" --password "${password}" --accessListIp "127.0.0.1/1" -o="go-template-file=credentials.tmpl")"
 
 echo "create organization"
 MCLI_ORG_ID=$(./bin/mongocli iam organizations create myOrg -o="go-template={{.ID}}")

@@ -1,8 +1,8 @@
-.. _mongocli-atlas-serverlessClusters-delete:
+.. _mongocli-atlas-serverless-describe:
 
-========================================
-mongocli atlas serverlessClusters delete
-========================================
+==================================
+mongocli atlas serverless describe
+==================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,16 @@ mongocli atlas serverlessClusters delete
    :depth: 1
    :class: singlecol
 
-Delete a serverless cluster from your project.
+Return one serverless instance in the specified project.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas serverlessClusters delete <clusterName> [options]
+   mongocli atlas serverless describe <instanceName> [options]
 
 Arguments
 ---------
@@ -32,10 +34,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - clusterName
+   * - instanceName
      - string
      - false
-     - Name of the cluster to delete.
+     - Human-readable label that identifies your serverless instance.
 
 Options
 -------
@@ -48,14 +50,15 @@ Options
      - Type
      - Required
      - Description
-   * - --force
-     - 
-     - false
-     - Don't ask for confirmation.
    * - -h, --help
      - 
      - false
-     - help for delete
+     - help for describe
+   * - -o, --output
+     - string
+     - false
+     - Output format.
+       Valid values: json|json-path|go-template|go-template-file
    * - --projectId
      - string
      - false

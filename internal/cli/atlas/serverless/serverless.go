@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverlessclusters
+package serverless
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "serverlessClusters"
+	const use = "serverless"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use, "sc"),
-		Short:   "Manage serverless clusters for your project.",
-		Long:    "The serverlessClusters command provides access to your serverless cluster configurations. You can create, edit, and delete serverless clusters.",
+		Aliases: []string{"sl"},
+		Short:   "Manage serverless instances for your project.",
+		Long:    "The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

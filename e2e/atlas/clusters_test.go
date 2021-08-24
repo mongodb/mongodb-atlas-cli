@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build e2e || (atlas && clusters)
 // +build e2e atlas,clusters
 
 package atlas_test
@@ -62,7 +63,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster *mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -80,13 +81,13 @@ func TestClustersFlags(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		a := assert.New(t)
 		a.Contains(string(resp), "Cluster available")
 	})
 
-	t.Run("LoadSampleData", func(t *testing.T) {
+	t.Run("Load Sample Data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -95,7 +96,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var job *mongodbatlas.SampleDatasetJob
 		err = json.Unmarshal(resp, &job)
@@ -113,7 +114,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var clusters mongodbatlas.AdvancedClustersResponse
 		err = json.Unmarshal(resp, &clusters)
@@ -132,7 +133,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -152,7 +153,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var connectionString mongodbatlas.ConnectionStrings
 		err = json.Unmarshal(resp, &connectionString)
@@ -174,8 +175,8 @@ func TestClustersFlags(t *testing.T) {
 			"--collection=tes",
 			"--key=name:1")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		req.NoError(err)
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -189,7 +190,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -233,7 +234,7 @@ func TestClustersFile(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -251,7 +252,7 @@ func TestClustersFile(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		a := assert.New(t)
 		a.Contains(string(resp), "Cluster available")
@@ -267,7 +268,7 @@ func TestClustersFile(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -280,7 +281,7 @@ func TestClustersFile(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
 		a := assert.New(t)
@@ -318,7 +319,7 @@ func TestShardedCluster(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var cluster mongodbatlas.AdvancedCluster
 		err = json.Unmarshal(resp, &cluster)
@@ -331,7 +332,7 @@ func TestShardedCluster(t *testing.T) {
 		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
 		a.Equal(expected, string(resp))

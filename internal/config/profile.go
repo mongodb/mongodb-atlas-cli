@@ -222,7 +222,7 @@ func (p *Profile) OpsManagerCACertificate() string {
 	return p.GetString(opsManagerCACertificate)
 }
 
-// SkipVerify get configured ops manager CA certificate location.
+// OpsManagerSkipVerify get configured if transport should skip CA verification.
 func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
 func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
@@ -435,13 +435,12 @@ func (p *Profile) Save() error {
 	}
 	if !exists {
 		const defaultPermissions = 0700
-		err := p.fs.MkdirAll(p.configDir, defaultPermissions)
-		if err != nil {
+		if err := p.fs.MkdirAll(p.configDir, defaultPermissions); err != nil {
 			return err
 		}
 	}
-	configFile := p.Filename()
-	return viper.WriteConfigAs(configFile)
+
+	return viper.WriteConfigAs(p.Filename())
 }
 
 func configHome() (string, error) {

@@ -41,6 +41,7 @@ const (
 	serversEntity     = "servers"
 	iamEntity         = "iam"
 	projectsEntity    = "projects"
+	orgsEntity        = "orgs"
 	clustersEntity    = "clusters"
 	maintenanceEntity = "maintenanceWindows"
 	monitoringEntity  = "monitoring"

@@ -63,7 +63,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			if config.Service() != config.CloudService {
+			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
 			return opts.init()

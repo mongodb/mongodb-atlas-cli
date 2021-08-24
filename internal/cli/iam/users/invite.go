@@ -96,8 +96,7 @@ func (opts *InviteOpts) Run() error {
 const keyParts = 2
 
 func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
-	service := config.Service()
-	if service != "" && service != config.CloudService {
+	if !config.IsCloud() {
 		return nil, nil
 	}
 
@@ -126,36 +125,32 @@ func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
 }
 
 func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
-	if config.Service() == config.CloudService {
+	if config.IsCloud() {
 		return nil, nil
 	}
 
-	if config.Service() != config.CloudService {
-		roles := make([]*opsmngr.UserRole, len(opts.orgRoles)+len(opts.projectRoles))
+	roles := make([]*opsmngr.UserRole, len(opts.orgRoles)+len(opts.projectRoles))
 
-		i := 0
-		for _, role := range opts.orgRoles {
-			userRole, err := newUserOrgRole(role)
-			if err != nil {
-				return nil, err
-			}
-			roles[i] = userRole
-			i++
+	i := 0
+	for _, role := range opts.orgRoles {
+		userRole, err := newUserOrgRole(role)
+		if err != nil {
+			return nil, err
 		}
-
-		for _, role := range opts.projectRoles {
-			userRole, err := newUserProjectRole(role)
-			if err != nil {
-				return nil, err
-			}
-			roles[i] = userRole
-			i++
-		}
-
-		return roles, nil
+		roles[i] = userRole
+		i++
 	}
 
-	return nil, nil
+	for _, role := range opts.projectRoles {
+		userRole, err := newUserProjectRole(role)
+		if err != nil {
+			return nil, err
+		}
+		roles[i] = userRole
+		i++
+	}
+
+	return roles, nil
 }
 
 func (opts *InviteOpts) Prompt() error {

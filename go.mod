@@ -3,7 +3,7 @@ module github.com/mongodb/mongocli
 go 1.16
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.2.16
+	github.com/AlecAivazis/survey/v2 v2.3.1
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.16.0

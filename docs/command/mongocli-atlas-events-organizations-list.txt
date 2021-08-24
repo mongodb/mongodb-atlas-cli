@@ -14,7 +14,7 @@ mongocli atlas events organizations list
 
 Return all events for an organization.
 
-Your API Key must have the Project Read Only role to successfully call this resource.
+Your API Key must have the Org Member role to successfully call this resource.
 
 Syntax
 ------

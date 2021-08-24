@@ -63,7 +63,7 @@ func OrgListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all events for an organization.",
-		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
+		Long:    "Your API Key must have the Org Member role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

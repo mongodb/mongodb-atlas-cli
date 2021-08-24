@@ -2,4 +2,4 @@
 *       @mongodb/mongocli
 
 # Docs maintained by Docs Cloud Team
-docs/*  @mongodb/docs-cloud-team
+/docs/  @mongodb/docs-cloud-team

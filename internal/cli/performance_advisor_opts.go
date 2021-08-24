@@ -45,7 +45,7 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 // OM/CM: hostId is required.
 func (opts *PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
 	return func() error {
-		if config.Service() == config.CloudService {
+		if config.IsCloud() {
 			return cmd.MarkFlagRequired(flag.ProcessName)
 		}
 		return cmd.MarkFlagRequired(flag.HostID)

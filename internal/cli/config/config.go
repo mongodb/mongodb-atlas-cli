@@ -72,7 +72,7 @@ func (opts *configOpts) SetUpAccess() {
 	if opts.PrivateAPIKey != "" {
 		config.SetPrivateAPIKey(opts.PrivateAPIKey)
 	}
-	if opts.IsOpsManager() && opts.OpsManagerURL != "" {
+	if opts.OpsManagerURL != "" {
 		config.SetOpsManagerURL(opts.OpsManagerURL)
 	}
 }

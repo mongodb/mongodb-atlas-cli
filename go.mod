@@ -10,7 +10,7 @@ require (
 	github.com/go-test/deep v1.0.7
 	github.com/golang/mock v1.6.0
 	github.com/mattn/go-isatty v0.0.13
-	github.com/mongodb-forks/digest v1.0.2
+	github.com/mongodb-forks/digest v1.0.3
 	github.com/mongodb-labs/cobra2snooty v0.2.2
 	github.com/openlyinc/pointy v1.1.2
 	github.com/pelletier/go-toml v1.9.3

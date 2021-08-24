@@ -33,7 +33,7 @@ func TestEvents(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("List Projec tEvent", func(t *testing.T) {
+	t.Run("List Project Event", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			eventsEntity,

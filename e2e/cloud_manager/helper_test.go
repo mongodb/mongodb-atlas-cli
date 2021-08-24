@@ -34,6 +34,7 @@ import (
 )
 
 const (
+	alertsEntity      = "alerts"
 	testedMDBVersion  = "4.2.0"
 	testedMDBFCV      = "4.2"
 	entity            = "cloud-manager"

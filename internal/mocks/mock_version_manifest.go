@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockVersionManifestUpdater is a mock of VersionManifestUpdater interface
+// MockVersionManifestUpdater is a mock of VersionManifestUpdater interface.
 type MockVersionManifestUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockVersionManifestUpdaterMockRecorder
 }
 
-// MockVersionManifestUpdaterMockRecorder is the mock recorder for MockVersionManifestUpdater
+// MockVersionManifestUpdaterMockRecorder is the mock recorder for MockVersionManifestUpdater.
 type MockVersionManifestUpdaterMockRecorder struct {
 	mock *MockVersionManifestUpdater
 }
 
-// NewMockVersionManifestUpdater creates a new mock instance
+// NewMockVersionManifestUpdater creates a new mock instance.
 func NewMockVersionManifestUpdater(ctrl *gomock.Controller) *MockVersionManifestUpdater {
 	mock := &MockVersionManifestUpdater{ctrl: ctrl}
 	mock.recorder = &MockVersionManifestUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockVersionManifestUpdater) EXPECT() *MockVersionManifestUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateVersionManifest mocks base method
+// UpdateVersionManifest mocks base method.
 func (m *MockVersionManifestUpdater) UpdateVersionManifest(arg0 *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateVersionManifest", arg0)
@@ -42,36 +43,36 @@ func (m *MockVersionManifestUpdater) UpdateVersionManifest(arg0 *opsmngr.Version
 	return ret0, ret1
 }
 
-// UpdateVersionManifest indicates an expected call of UpdateVersionManifest
+// UpdateVersionManifest indicates an expected call of UpdateVersionManifest.
 func (mr *MockVersionManifestUpdaterMockRecorder) UpdateVersionManifest(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateVersionManifest", reflect.TypeOf((*MockVersionManifestUpdater)(nil).UpdateVersionManifest), arg0)
 }
 
-// MockVersionManifestGetter is a mock of VersionManifestGetter interface
+// MockVersionManifestGetter is a mock of VersionManifestGetter interface.
 type MockVersionManifestGetter struct {
 	ctrl     *gomock.Controller
 	recorder *MockVersionManifestGetterMockRecorder
 }
 
-// MockVersionManifestGetterMockRecorder is the mock recorder for MockVersionManifestGetter
+// MockVersionManifestGetterMockRecorder is the mock recorder for MockVersionManifestGetter.
 type MockVersionManifestGetterMockRecorder struct {
 	mock *MockVersionManifestGetter
 }
 
-// NewMockVersionManifestGetter creates a new mock instance
+// NewMockVersionManifestGetter creates a new mock instance.
 func NewMockVersionManifestGetter(ctrl *gomock.Controller) *MockVersionManifestGetter {
 	mock := &MockVersionManifestGetter{ctrl: ctrl}
 	mock.recorder = &MockVersionManifestGetterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockVersionManifestGetter) EXPECT() *MockVersionManifestGetterMockRecorder {
 	return m.recorder
 }
 
-// GetVersionManifest mocks base method
+// GetVersionManifest mocks base method.
 func (m *MockVersionManifestGetter) GetVersionManifest(arg0 string) (*opsmngr.VersionManifest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetVersionManifest", arg0)
@@ -80,7 +81,7 @@ func (m *MockVersionManifestGetter) GetVersionManifest(arg0 string) (*opsmngr.Ve
 	return ret0, ret1
 }
 
-// GetVersionManifest indicates an expected call of GetVersionManifest
+// GetVersionManifest indicates an expected call of GetVersionManifest.
 func (mr *MockVersionManifestGetterMockRecorder) GetVersionManifest(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVersionManifest", reflect.TypeOf((*MockVersionManifestGetter)(nil).GetVersionManifest), arg0)

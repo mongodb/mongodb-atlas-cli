@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongocli/internal/store"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockUserCreator is a mock of UserCreator interface
+// MockUserCreator is a mock of UserCreator interface.
 type MockUserCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserCreatorMockRecorder
 }
 
-// MockUserCreatorMockRecorder is the mock recorder for MockUserCreator
+// MockUserCreatorMockRecorder is the mock recorder for MockUserCreator.
 type MockUserCreatorMockRecorder struct {
 	mock *MockUserCreator
 }
 
-// NewMockUserCreator creates a new mock instance
+// NewMockUserCreator creates a new mock instance.
 func NewMockUserCreator(ctrl *gomock.Controller) *MockUserCreator {
 	mock := &MockUserCreator{ctrl: ctrl}
 	mock.recorder = &MockUserCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateUser mocks base method
+// CreateUser mocks base method.
 func (m *MockUserCreator) CreateUser(arg0 *store.UserRequest) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
@@ -43,36 +44,36 @@ func (m *MockUserCreator) CreateUser(arg0 *store.UserRequest) (interface{}, erro
 	return ret0, ret1
 }
 
-// CreateUser indicates an expected call of CreateUser
+// CreateUser indicates an expected call of CreateUser.
 func (mr *MockUserCreatorMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserCreator)(nil).CreateUser), arg0)
 }
 
-// MockUserDescriber is a mock of UserDescriber interface
+// MockUserDescriber is a mock of UserDescriber interface.
 type MockUserDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserDescriberMockRecorder
 }
 
-// MockUserDescriberMockRecorder is the mock recorder for MockUserDescriber
+// MockUserDescriberMockRecorder is the mock recorder for MockUserDescriber.
 type MockUserDescriberMockRecorder struct {
 	mock *MockUserDescriber
 }
 
-// NewMockUserDescriber creates a new mock instance
+// NewMockUserDescriber creates a new mock instance.
 func NewMockUserDescriber(ctrl *gomock.Controller) *MockUserDescriber {
 	mock := &MockUserDescriber{ctrl: ctrl}
 	mock.recorder = &MockUserDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserDescriber) EXPECT() *MockUserDescriberMockRecorder {
 	return m.recorder
 }
 
-// UserByID mocks base method
+// UserByID mocks base method.
 func (m *MockUserDescriber) UserByID(arg0 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByID", arg0)
@@ -81,13 +82,13 @@ func (m *MockUserDescriber) UserByID(arg0 string) (interface{}, error) {
 	return ret0, ret1
 }
 
-// UserByID indicates an expected call of UserByID
+// UserByID indicates an expected call of UserByID.
 func (mr *MockUserDescriberMockRecorder) UserByID(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserByID", reflect.TypeOf((*MockUserDescriber)(nil).UserByID), arg0)
 }
 
-// UserByName mocks base method
+// UserByName mocks base method.
 func (m *MockUserDescriber) UserByName(arg0 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByName", arg0)
@@ -96,36 +97,36 @@ func (m *MockUserDescriber) UserByName(arg0 string) (interface{}, error) {
 	return ret0, ret1
 }
 
-// UserByName indicates an expected call of UserByName
+// UserByName indicates an expected call of UserByName.
 func (mr *MockUserDescriberMockRecorder) UserByName(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserByName", reflect.TypeOf((*MockUserDescriber)(nil).UserByName), arg0)
 }
 
-// MockUserDeleter is a mock of UserDeleter interface
+// MockUserDeleter is a mock of UserDeleter interface.
 type MockUserDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserDeleterMockRecorder
 }
 
-// MockUserDeleterMockRecorder is the mock recorder for MockUserDeleter
+// MockUserDeleterMockRecorder is the mock recorder for MockUserDeleter.
 type MockUserDeleterMockRecorder struct {
 	mock *MockUserDeleter
 }
 
-// NewMockUserDeleter creates a new mock instance
+// NewMockUserDeleter creates a new mock instance.
 func NewMockUserDeleter(ctrl *gomock.Controller) *MockUserDeleter {
 	mock := &MockUserDeleter{ctrl: ctrl}
 	mock.recorder = &MockUserDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserDeleter) EXPECT() *MockUserDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteUser mocks base method
+// DeleteUser mocks base method.
 func (m *MockUserDeleter) DeleteUser(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUser", arg0)
@@ -133,36 +134,36 @@ func (m *MockUserDeleter) DeleteUser(arg0 string) error {
 	return ret0
 }
 
-// DeleteUser indicates an expected call of DeleteUser
+// DeleteUser indicates an expected call of DeleteUser.
 func (mr *MockUserDeleterMockRecorder) DeleteUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockUserDeleter)(nil).DeleteUser), arg0)
 }
 
-// MockUserLister is a mock of UserLister interface
+// MockUserLister is a mock of UserLister interface.
 type MockUserLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserListerMockRecorder
 }
 
-// MockUserListerMockRecorder is the mock recorder for MockUserLister
+// MockUserListerMockRecorder is the mock recorder for MockUserLister.
 type MockUserListerMockRecorder struct {
 	mock *MockUserLister
 }
 
-// NewMockUserLister creates a new mock instance
+// NewMockUserLister creates a new mock instance.
 func NewMockUserLister(ctrl *gomock.Controller) *MockUserLister {
 	mock := &MockUserLister{ctrl: ctrl}
 	mock.recorder = &MockUserListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 	return m.recorder
 }
 
-// OrganizationUsers mocks base method
+// OrganizationUsers mocks base method.
 func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
@@ -171,36 +172,36 @@ func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListO
 	return ret0, ret1
 }
 
-// OrganizationUsers indicates an expected call of OrganizationUsers
+// OrganizationUsers indicates an expected call of OrganizationUsers.
 func (mr *MockUserListerMockRecorder) OrganizationUsers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationUsers", reflect.TypeOf((*MockUserLister)(nil).OrganizationUsers), arg0, arg1)
 }
 
-// MockTeamUserLister is a mock of TeamUserLister interface
+// MockTeamUserLister is a mock of TeamUserLister interface.
 type MockTeamUserLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockTeamUserListerMockRecorder
 }
 
-// MockTeamUserListerMockRecorder is the mock recorder for MockTeamUserLister
+// MockTeamUserListerMockRecorder is the mock recorder for MockTeamUserLister.
 type MockTeamUserListerMockRecorder struct {
 	mock *MockTeamUserLister
 }
 
-// NewMockTeamUserLister creates a new mock instance
+// NewMockTeamUserLister creates a new mock instance.
 func NewMockTeamUserLister(ctrl *gomock.Controller) *MockTeamUserLister {
 	mock := &MockTeamUserLister{ctrl: ctrl}
 	mock.recorder = &MockTeamUserListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTeamUserLister) EXPECT() *MockTeamUserListerMockRecorder {
 	return m.recorder
 }
 
-// TeamUsers mocks base method
+// TeamUsers mocks base method.
 func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
@@ -209,7 +210,7 @@ func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (interface{}, error) {
 	return ret0, ret1
 }
 
-// TeamUsers indicates an expected call of TeamUsers
+// TeamUsers indicates an expected call of TeamUsers.
 func (mr *MockTeamUserListerMockRecorder) TeamUsers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TeamUsers", reflect.TypeOf((*MockTeamUserLister)(nil).TeamUsers), arg0, arg1)

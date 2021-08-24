@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
 package events
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -26,54 +24,26 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type EventListOpts struct {
-	cli.ListOpts
-	EventType []string
-	MinDate   string
-	MaxDate   string
-}
-
-func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		},
-		EventType: opts.EventType,
-		MinDate:   opts.MinDate,
-		MaxDate:   opts.MaxDate,
-	}
-}
-
-type ListOpts struct {
-	EventListOpts
+type orgListOpts struct {
 	cli.OutputOpts
-	orgID     string
-	projectID string
-	store     store.EventLister
+	EventListOpts
+	cli.GlobalOpts
+	store store.OrganizationEventLister
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *orgListOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-var listTemplate = `ID	TYPE	CREATED{{range .Results}}
-{{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
-`
-
-func (opts *ListOpts) Run() error {
+func (opts *orgListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
 	var r *atlas.EventResponse
 	var err error
+	r, err = opts.store.OrganizationEvents(opts.OrgID, listOpts)
 
-	if opts.orgID != "" {
-		r, err = opts.store.OrganizationEvents(opts.orgID, listOpts)
-	} else if opts.projectID != "" {
-		r, err = opts.store.ProjectEvents(opts.projectID, listOpts)
-	}
 	if err != nil {
 		return err
 	}
@@ -81,38 +51,27 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// ListBuilder
+// OrgListBuilder
 // 	mongocli atlas event(s) list
-// [--projectId projectId]
 // [--orgId orgId]
 // [--page N]
 // [--limit N]
 // [--minDate minDate]
 // [--maxDate maxDate].
-func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
-	opts.Template = listTemplate
+func OrgListBuilder() *cobra.Command {
+	opts := &orgListOpts{}
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "Return all events for an organization or project.",
-		Deprecated: `  
-  To return project events prefer
-  $ mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
-
-  To return organization events prefer
-  $ mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
-`,
+		Use:     "list",
+		Short:   "Return all events for an organization.",
+		Long:    "Your API Key must have the Project Read Only role to successfully call this resource.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.orgID != "" && opts.projectID != "" {
-				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
-			}
-			if opts.orgID == "" && opts.projectID == "" {
-				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
-			}
-			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			return opts.PreRunE(
+				opts.ValidateOrgID,
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -126,9 +85,22 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
+	return cmd
+}
+
+func OrgsBuilder() *cobra.Command {
+	const use = "organizations"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Organization operations.",
+		Long:    "List organization events.",
+		Aliases: cli.GenerateAliases(use, "orgs", "org"),
+	}
+	cmd.AddCommand(
+		OrgListBuilder(),
+	)
 	return cmd
 }

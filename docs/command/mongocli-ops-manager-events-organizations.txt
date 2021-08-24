@@ -1,8 +1,8 @@
-.. _mongocli-atlas-events:
+.. _mongocli-ops-manager-events-organizations:
 
-=====================
-mongocli atlas events
-=====================
+=========================================
+mongocli ops-manager events organizations
+=========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,9 @@ mongocli atlas events
    :depth: 1
    :class: singlecol
 
-Manage events for your organization or project.
+Organization operations.
+
+List organization events.
 
 Options
 -------
@@ -28,7 +30,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for events
+     - help for organizations
 
 Inherited Options
 -----------------
@@ -49,13 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-events-organizations` - Organization operations.
-* :ref:`mongocli-atlas-events-projects` - Project operations.
+* :ref:`mongocli-ops-manager-events-organizations-list` - Return all events for an organization.
 
 
 .. toctree::
    :titlesonly:
 
-   organizations </command/mongocli-atlas-events-organizations>
-   projects </command/mongocli-atlas-events-projects>
+   list </command/mongocli-ops-manager-events-organizations-list>
 

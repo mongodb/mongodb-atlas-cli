@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockProcessDatabaseLister is a mock of ProcessDatabaseLister interface
+// MockProcessDatabaseLister is a mock of ProcessDatabaseLister interface.
 type MockProcessDatabaseLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockProcessDatabaseListerMockRecorder
 }
 
-// MockProcessDatabaseListerMockRecorder is the mock recorder for MockProcessDatabaseLister
+// MockProcessDatabaseListerMockRecorder is the mock recorder for MockProcessDatabaseLister.
 type MockProcessDatabaseListerMockRecorder struct {
 	mock *MockProcessDatabaseLister
 }
 
-// NewMockProcessDatabaseLister creates a new mock instance
+// NewMockProcessDatabaseLister creates a new mock instance.
 func NewMockProcessDatabaseLister(ctrl *gomock.Controller) *MockProcessDatabaseLister {
 	mock := &MockProcessDatabaseLister{ctrl: ctrl}
 	mock.recorder = &MockProcessDatabaseListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockProcessDatabaseLister) EXPECT() *MockProcessDatabaseListerMockRecorder {
 	return m.recorder
 }
 
-// ProcessDatabases mocks base method
+// ProcessDatabases mocks base method.
 func (m *MockProcessDatabaseLister) ProcessDatabases(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*mongodbatlas.ProcessDatabasesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDatabases", arg0, arg1, arg2, arg3)
@@ -42,7 +43,7 @@ func (m *MockProcessDatabaseLister) ProcessDatabases(arg0, arg1 string, arg2 int
 	return ret0, ret1
 }
 
-// ProcessDatabases indicates an expected call of ProcessDatabases
+// ProcessDatabases indicates an expected call of ProcessDatabases.
 func (mr *MockProcessDatabaseListerMockRecorder) ProcessDatabases(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDatabases", reflect.TypeOf((*MockProcessDatabaseLister)(nil).ProcessDatabases), arg0, arg1, arg2, arg3)

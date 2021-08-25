@@ -224,6 +224,7 @@ const (
 	NetworkAccessListIPEntries      = "List of IP addresses to be allowed to access the deployment."
 	NetworkAccessListIPEntry        = "IP address to be allowed to access the deployment."
 	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
+	AccessListCIDREntries           = "IP address access list entries associated with the link token."
 	PrivateEndpointID               = "Unique identifier of the AWS PrivateLink connection."
 	EndpointServiceID               = "Unique identifier of the private endpoint service for which you want to retrieve a private endpoint."
 	PrivateEndpointIDAzure          = "Unique identifier of the Azure private endpoint resource."

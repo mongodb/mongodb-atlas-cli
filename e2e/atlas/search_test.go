@@ -211,7 +211,11 @@ func TestSearchViaFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	defer os.Remove(fileName)
+	defer func() {
+		if e := os.Remove(fileName); e != nil {
+			t.Errorf("error deleting file '%v': %v", fileName, e)
+		}
+	}()
 
 	tpl := template.Must(template.New("").Parse(`
 {

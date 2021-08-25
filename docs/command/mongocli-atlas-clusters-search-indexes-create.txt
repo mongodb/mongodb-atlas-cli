@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas clusters search indexes create <name> [options]
+   mongocli atlas clusters search indexes create [<name>] [options]
 
 Options
 -------
@@ -42,11 +42,11 @@ Options
      - Name of the cluster.
    * - --collection
      - string
-     - true
+     - false
      - Collection name.
    * - --db
      - string
-     - true
+     - false
      - Database name.
    * - --dynamic
      - 
@@ -56,6 +56,10 @@ Options
      - strings
      - false
      - Static field specifications.
+   * - -f, --file
+     - string
+     - false
+     - Filename to use, optional file with a json cluster configuration.
    * - -h, --help
      - 
      - false

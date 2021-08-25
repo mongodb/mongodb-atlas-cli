@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -59,7 +60,7 @@ func (opts *CreateOpts) Run() error {
 // Create an online archive for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search create <name> [flags]
+//   mongocli atlas clusters search index create [<name>] [flags]
 //
 // Flags:
 //      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
@@ -71,20 +72,23 @@ func (opts *CreateOpts) Run() error {
 //  -h, --help                    help for create
 //      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//      --file string             JSON file to use in other to create the index
 //
 // Global Flags:
 //  -P, --profile string   Profile to use from your configuration file.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
+	opts.fs = afero.NewOsFs()
+
 	cmd := &cobra.Command{
-		Use:   "create <name>",
+		Use:   "create [<name>]",
 		Short: "Create a search index for a cluster.",
-		Args:  require.ExactArgs(1),
+		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !opts.dynamic && len(opts.fields) == 0 {
+			if opts.filename == "" && !opts.dynamic && len(opts.fields) == 0 {
 				return errors.New("you need to specify fields for the index or use a dynamic index")
 			}
-			if opts.dynamic && len(opts.fields) > 0 {
+			if opts.filename == "" && opts.dynamic && len(opts.fields) > 0 {
 				return errors.New("you can't specify fields and dynamic at the same time")
 			}
 			return opts.PreRunE(
@@ -94,7 +98,9 @@ func CreateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.name = args[0]
+			if len(args) > 0 {
+				opts.name = args[0]
+			}
 			return opts.Run()
 		},
 	}
@@ -106,13 +112,14 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, "lucene.standard", usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.Database)
-	_ = cmd.MarkFlagRequired(flag.Collection)
 
 	return cmd
 }

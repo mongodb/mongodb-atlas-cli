@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/file"
+	"github.com/spf13/afero"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,9 +31,19 @@ type IndexOpts struct {
 	searchAnalyzer string
 	dynamic        bool
 	fields         []string
+	filename       string
+	fs             afero.Fs
 }
 
 func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
+	if len(opts.filename) > 0 {
+		index := &atlas.SearchIndex{}
+		if err := file.Load(opts.fs, opts.filename, index); err != nil {
+			return nil, err
+		}
+		return index, nil
+	}
+
 	f, err := opts.indexFields()
 	if err != nil {
 		return nil, err
@@ -53,18 +65,18 @@ func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {
 // indexFieldParts index field should be fieldName:analyzer:fieldType.
 const indexFieldParts = 2
 
-func (opts *IndexOpts) indexFields() (map[string]atlas.IndexField, error) {
+func (opts *IndexOpts) indexFields() (map[string]interface{}, error) {
 	if len(opts.fields) == 0 {
 		return nil, nil
 	}
-	fields := make(map[string]atlas.IndexField, len(opts.fields))
+	fields := make(map[string]interface{})
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {
 			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
-		fields[f[0]] = atlas.IndexField{
-			Type: f[1],
+		fields[f[0]] = map[string]interface{}{
+			"type": f[1],
 		}
 	}
 	return fields, nil

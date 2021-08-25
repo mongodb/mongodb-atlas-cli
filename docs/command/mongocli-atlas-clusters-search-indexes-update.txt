@@ -44,10 +44,6 @@ Options
      - 
      - false
      - help for update
-   * - --indexName
-     - string
-     - false
-     - Name of the cluster.
    * - -o, --output
      - string
      - false

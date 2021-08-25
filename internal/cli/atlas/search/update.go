@@ -141,6 +141,7 @@ func UpdateBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
+	_ = cmd.Flags().MarkDeprecated(flag.IndexName, fmt.Sprintf("please use --%s instead", flag.File))
 	_ = cmd.Flags().MarkDeprecated(flag.Database, fmt.Sprintf("please use --%s instead", flag.File))
 	_ = cmd.Flags().MarkDeprecated(flag.Collection, fmt.Sprintf("please use --%s instead", flag.File))
 	_ = cmd.Flags().MarkDeprecated(flag.Analyzer, fmt.Sprintf("please use --%s instead", flag.File))

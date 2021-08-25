@@ -97,8 +97,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, "lucene.standard", usage.Analyzer)
-	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, "lucene.standard", usage.SearchAnalyzer)
+	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyser, usage.Analyzer)
+	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyser, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
 

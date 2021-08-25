@@ -23,6 +23,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+const defaultAnalyser = "lucene.standard"
+
 type IndexOpts struct {
 	name           string
 	dbName         string

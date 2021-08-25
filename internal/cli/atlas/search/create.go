@@ -27,8 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const defaultAnalyser = "lucene.standard"
-
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts

@@ -21,6 +21,7 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -177,5 +178,79 @@ func TestSearch(t *testing.T) {
 
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
 		assert.Equal(t, string(resp), expected)
+	})
+}
+
+func TestSearchViaFile(t *testing.T) {
+	clusterName, err := deployCluster()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	defer func() {
+		if e := deleteCluster(clusterName); e != nil {
+			t.Errorf("error deleting test cluster: %v", e)
+		}
+	}()
+
+	cliPath, err := e2e.Bin()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	indexName := fmt.Sprintf("index-%v", n)
+	collectionName := fmt.Sprintf("collection-%v", n)
+	fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+
+	file, err := os.Create(fileName)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	defer os.Remove(fileName)
+
+	tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+	err = tpl.Execute(file, map[string]string{
+		"collectionName": collectionName,
+		"indexName":      indexName,
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	t.Run("Create via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"--clusterName="+clusterName,
+			"--file",
+			fileName,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var index mongodbatlas.SearchIndex
+		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
+			assert.Equal(t, index.Name, indexName)
+		}
 	})
 }

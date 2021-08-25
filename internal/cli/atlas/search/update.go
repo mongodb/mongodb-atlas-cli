@@ -16,6 +16,7 @@ package search
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -139,6 +140,13 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
+
+	_ = cmd.Flags().MarkDeprecated(flag.Database, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.Collection, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.Analyzer, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.SearchAnalyzer, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.Dynamic, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.Field, fmt.Sprintf("please use --%s instead", flag.File))
 
 	return cmd
 }

@@ -32,30 +32,10 @@ Options
      - Type
      - Required
      - Description
-   * - --analyzer
-     - string
-     - false
-     - Analyzer to use when creating the index (default "lucene.standard")
    * - --clusterName
      - string
      - true
      - Name of the cluster.
-   * - --collection
-     - string
-     - false
-     - Collection name.
-   * - --db
-     - string
-     - false
-     - Database name.
-   * - --dynamic
-     - 
-     - false
-     - Indicates whether the index uses dynamic or static mappings.
-   * - --field
-     - strings
-     - false
-     - Static field specifications.
    * - -f, --file
      - string
      - false
@@ -73,10 +53,6 @@ Options
      - string
      - false
      - Project ID to use. Overrides configuration file or environment variable settings.
-   * - --searchAnalyzer
-     - string
-     - false
-     - Analyzer to use when searching the index. (default "lucene.standard")
 
 Inherited Options
 -----------------

@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const defaultAnalyser = "lucene.standard"
+
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -85,12 +87,41 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a search index for a cluster.",
 		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.filename == "" && !opts.dynamic && len(opts.fields) == 0 {
-				return errors.New("you need to specify fields for the index or use a dynamic index")
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.Database)
+				_ = cmd.MarkFlagRequired(flag.Collection)
+
+				if len(args) == 0 {
+					return errors.New("\"mongocli atlas clusters search indexes create\" requires 1 argument, received 0") // keeping message compatible with require.ExactArgs(1)
+				}
+
+				if !opts.dynamic && len(opts.fields) == 0 {
+					return errors.New("you need to specify fields for the index or use a dynamic index")
+				}
+				if opts.dynamic && len(opts.fields) > 0 {
+					return errors.New("you can't specify fields and dynamic at the same time")
+				}
+			} else {
+				if opts.dbName != "" {
+					return errors.New("you can't specify db and file at the same time")
+				}
+				if opts.collection != "" {
+					return errors.New("you can't specify collection and file at the same time")
+				}
+				if opts.analyzer != defaultAnalyser {
+					return errors.New("you can't specify analyzer and file at the same time")
+				}
+				if opts.searchAnalyzer != defaultAnalyser {
+					return errors.New("you can't specify searchAnalyzer and file at the same time")
+				}
+				if opts.dynamic {
+					return errors.New("you can't specify dynamic and file at the same time")
+				}
+				if len(opts.fields) > 0 {
+					return errors.New("you can't specify fields and file at the same time")
+				}
 			}
-			if opts.filename == "" && opts.dynamic && len(opts.fields) > 0 {
-				return errors.New("you can't specify fields and dynamic at the same time")
-			}
+
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
@@ -108,8 +139,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, "lucene.standard", usage.Analyzer)
-	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, "lucene.standard", usage.SearchAnalyzer)
+	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyser, usage.Analyzer)
+	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyser, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)

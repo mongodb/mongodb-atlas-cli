@@ -42,11 +42,11 @@ Options
      - Name of the cluster.
    * - --collection
      - string
-     - true
+     - false
      - Collection name.
    * - --db
      - string
-     - true
+     - false
      - Database name.
    * - --dynamic
      - 
@@ -62,7 +62,7 @@ Options
      - help for update
    * - --indexName
      - string
-     - true
+     - false
      - Name of the cluster.
    * - -o, --output
      - string

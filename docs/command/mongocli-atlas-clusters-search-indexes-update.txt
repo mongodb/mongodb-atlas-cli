@@ -42,11 +42,11 @@ Options
      - Name of the cluster.
    * - --collection
      - string
-     - true
+     - false
      - Collection name.
    * - --db
      - string
-     - true
+     - false
      - Database name.
    * - --dynamic
      - 
@@ -56,13 +56,17 @@ Options
      - strings
      - false
      - Static field specifications.
+   * - -f, --file
+     - string
+     - false
+     - Filename to use, optional file with a json cluster configuration.
    * - -h, --help
      - 
      - false
      - help for update
    * - --indexName
      - string
-     - true
+     - false
      - Name of the cluster.
    * - -o, --output
      - string

@@ -15,6 +15,8 @@
 package search
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -81,6 +83,34 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update a search index for a cluster.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.IndexName)
+				_ = cmd.MarkFlagRequired(flag.Database)
+				_ = cmd.MarkFlagRequired(flag.Collection)
+			} else {
+				if opts.name != "" {
+					return errors.New("you can't specify indexName and file at the same time")
+				}
+				if opts.dbName != "" {
+					return errors.New("you can't specify db and file at the same time")
+				}
+				if opts.collection != "" {
+					return errors.New("you can't specify collection and file at the same time")
+				}
+				if opts.analyzer != defaultAnalyser {
+					return errors.New("you can't specify analyzer and file at the same time")
+				}
+				if opts.searchAnalyzer != defaultAnalyser {
+					return errors.New("you can't specify searchAnalyzer and file at the same time")
+				}
+				if opts.dynamic {
+					return errors.New("you can't specify dynamic and file at the same time")
+				}
+				if len(opts.fields) > 0 {
+					return errors.New("you can't specify fields and file at the same time")
+				}
+			}
+
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
@@ -101,14 +131,14 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyser, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.IndexName)
-	_ = cmd.MarkFlagRequired(flag.Database)
-	_ = cmd.MarkFlagRequired(flag.Collection)
 
 	return cmd
 }

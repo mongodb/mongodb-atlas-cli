@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockOrganizationAPIKeyAccessListCreator is a mock of OrganizationAPIKeyAccessListCreator interface
+// MockOrganizationAPIKeyAccessListCreator is a mock of OrganizationAPIKeyAccessListCreator interface.
 type MockOrganizationAPIKeyAccessListCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockOrganizationAPIKeyAccessListCreatorMockRecorder
 }
 
-// MockOrganizationAPIKeyAccessListCreatorMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListCreator
+// MockOrganizationAPIKeyAccessListCreatorMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListCreator.
 type MockOrganizationAPIKeyAccessListCreatorMockRecorder struct {
 	mock *MockOrganizationAPIKeyAccessListCreator
 }
 
-// NewMockOrganizationAPIKeyAccessListCreator creates a new mock instance
+// NewMockOrganizationAPIKeyAccessListCreator creates a new mock instance.
 func NewMockOrganizationAPIKeyAccessListCreator(ctrl *gomock.Controller) *MockOrganizationAPIKeyAccessListCreator {
 	mock := &MockOrganizationAPIKeyAccessListCreator{ctrl: ctrl}
 	mock.recorder = &MockOrganizationAPIKeyAccessListCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrganizationAPIKeyAccessListCreator) EXPECT() *MockOrganizationAPIKeyAccessListCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateOrganizationAPIKeyAccessList mocks base method
+// CreateOrganizationAPIKeyAccessList mocks base method.
 func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0, arg1 string, arg2 []*mongodbatlas.AccessListAPIKeysReq) (*mongodbatlas.AccessListAPIKeys, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0, arg1, arg2)
@@ -42,36 +43,36 @@ func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccess
 	return ret0, ret1
 }
 
-// CreateOrganizationAPIKeyAccessList indicates an expected call of CreateOrganizationAPIKeyAccessList
+// CreateOrganizationAPIKeyAccessList indicates an expected call of CreateOrganizationAPIKeyAccessList.
 func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizationAPIKeyAccessList(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessList), arg0, arg1, arg2)
 }
 
-// MockOrganizationAPIKeyAccessListDeleter is a mock of OrganizationAPIKeyAccessListDeleter interface
+// MockOrganizationAPIKeyAccessListDeleter is a mock of OrganizationAPIKeyAccessListDeleter interface.
 type MockOrganizationAPIKeyAccessListDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockOrganizationAPIKeyAccessListDeleterMockRecorder
 }
 
-// MockOrganizationAPIKeyAccessListDeleterMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListDeleter
+// MockOrganizationAPIKeyAccessListDeleterMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListDeleter.
 type MockOrganizationAPIKeyAccessListDeleterMockRecorder struct {
 	mock *MockOrganizationAPIKeyAccessListDeleter
 }
 
-// NewMockOrganizationAPIKeyAccessListDeleter creates a new mock instance
+// NewMockOrganizationAPIKeyAccessListDeleter creates a new mock instance.
 func NewMockOrganizationAPIKeyAccessListDeleter(ctrl *gomock.Controller) *MockOrganizationAPIKeyAccessListDeleter {
 	mock := &MockOrganizationAPIKeyAccessListDeleter{ctrl: ctrl}
 	mock.recorder = &MockOrganizationAPIKeyAccessListDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrganizationAPIKeyAccessListDeleter) EXPECT() *MockOrganizationAPIKeyAccessListDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteOrganizationAPIKeyAccessList mocks base method
+// DeleteOrganizationAPIKeyAccessList mocks base method.
 func (m *MockOrganizationAPIKeyAccessListDeleter) DeleteOrganizationAPIKeyAccessList(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteOrganizationAPIKeyAccessList", arg0, arg1, arg2)
@@ -79,36 +80,36 @@ func (m *MockOrganizationAPIKeyAccessListDeleter) DeleteOrganizationAPIKeyAccess
 	return ret0
 }
 
-// DeleteOrganizationAPIKeyAccessList indicates an expected call of DeleteOrganizationAPIKeyAccessList
+// DeleteOrganizationAPIKeyAccessList indicates an expected call of DeleteOrganizationAPIKeyAccessList.
 func (mr *MockOrganizationAPIKeyAccessListDeleterMockRecorder) DeleteOrganizationAPIKeyAccessList(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListDeleter)(nil).DeleteOrganizationAPIKeyAccessList), arg0, arg1, arg2)
 }
 
-// MockOrganizationAPIKeyAccessListLister is a mock of OrganizationAPIKeyAccessListLister interface
+// MockOrganizationAPIKeyAccessListLister is a mock of OrganizationAPIKeyAccessListLister interface.
 type MockOrganizationAPIKeyAccessListLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockOrganizationAPIKeyAccessListListerMockRecorder
 }
 
-// MockOrganizationAPIKeyAccessListListerMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListLister
+// MockOrganizationAPIKeyAccessListListerMockRecorder is the mock recorder for MockOrganizationAPIKeyAccessListLister.
 type MockOrganizationAPIKeyAccessListListerMockRecorder struct {
 	mock *MockOrganizationAPIKeyAccessListLister
 }
 
-// NewMockOrganizationAPIKeyAccessListLister creates a new mock instance
+// NewMockOrganizationAPIKeyAccessListLister creates a new mock instance.
 func NewMockOrganizationAPIKeyAccessListLister(ctrl *gomock.Controller) *MockOrganizationAPIKeyAccessListLister {
 	mock := &MockOrganizationAPIKeyAccessListLister{ctrl: ctrl}
 	mock.recorder = &MockOrganizationAPIKeyAccessListListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrganizationAPIKeyAccessListLister) EXPECT() *MockOrganizationAPIKeyAccessListListerMockRecorder {
 	return m.recorder
 }
 
-// OrganizationAPIKeyAccessLists mocks base method
+// OrganizationAPIKeyAccessLists mocks base method.
 func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.AccessListAPIKeys, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0, arg1, arg2)
@@ -117,7 +118,7 @@ func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(a
 	return ret0, ret1
 }
 
-// OrganizationAPIKeyAccessLists indicates an expected call of OrganizationAPIKeyAccessLists
+// OrganizationAPIKeyAccessLists indicates an expected call of OrganizationAPIKeyAccessLists.
 func (mr *MockOrganizationAPIKeyAccessListListerMockRecorder) OrganizationAPIKeyAccessLists(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyAccessLists", reflect.TypeOf((*MockOrganizationAPIKeyAccessListLister)(nil).OrganizationAPIKeyAccessLists), arg0, arg1, arg2)

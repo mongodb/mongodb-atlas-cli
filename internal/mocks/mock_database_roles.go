@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockDatabaseRoleLister is a mock of DatabaseRoleLister interface
+// MockDatabaseRoleLister is a mock of DatabaseRoleLister interface.
 type MockDatabaseRoleLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockDatabaseRoleListerMockRecorder
 }
 
-// MockDatabaseRoleListerMockRecorder is the mock recorder for MockDatabaseRoleLister
+// MockDatabaseRoleListerMockRecorder is the mock recorder for MockDatabaseRoleLister.
 type MockDatabaseRoleListerMockRecorder struct {
 	mock *MockDatabaseRoleLister
 }
 
-// NewMockDatabaseRoleLister creates a new mock instance
+// NewMockDatabaseRoleLister creates a new mock instance.
 func NewMockDatabaseRoleLister(ctrl *gomock.Controller) *MockDatabaseRoleLister {
 	mock := &MockDatabaseRoleLister{ctrl: ctrl}
 	mock.recorder = &MockDatabaseRoleListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseRoleLister) EXPECT() *MockDatabaseRoleListerMockRecorder {
 	return m.recorder
 }
 
-// DatabaseRoles mocks base method
+// DatabaseRoles mocks base method.
 func (m *MockDatabaseRoleLister) DatabaseRoles(arg0 string, arg1 *mongodbatlas.ListOptions) (*[]mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockDatabaseRoleLister) DatabaseRoles(arg0 string, arg1 *mongodbatlas.L
 	return ret0, ret1
 }
 
-// DatabaseRoles indicates an expected call of DatabaseRoles
+// DatabaseRoles indicates an expected call of DatabaseRoles.
 func (mr *MockDatabaseRoleListerMockRecorder) DatabaseRoles(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockDatabaseRoleLister)(nil).DatabaseRoles), arg0, arg1)
 }
 
-// MockDatabaseRoleCreator is a mock of DatabaseRoleCreator interface
+// MockDatabaseRoleCreator is a mock of DatabaseRoleCreator interface.
 type MockDatabaseRoleCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockDatabaseRoleCreatorMockRecorder
 }
 
-// MockDatabaseRoleCreatorMockRecorder is the mock recorder for MockDatabaseRoleCreator
+// MockDatabaseRoleCreatorMockRecorder is the mock recorder for MockDatabaseRoleCreator.
 type MockDatabaseRoleCreatorMockRecorder struct {
 	mock *MockDatabaseRoleCreator
 }
 
-// NewMockDatabaseRoleCreator creates a new mock instance
+// NewMockDatabaseRoleCreator creates a new mock instance.
 func NewMockDatabaseRoleCreator(ctrl *gomock.Controller) *MockDatabaseRoleCreator {
 	mock := &MockDatabaseRoleCreator{ctrl: ctrl}
 	mock.recorder = &MockDatabaseRoleCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseRoleCreator) EXPECT() *MockDatabaseRoleCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateDatabaseRole mocks base method
+// CreateDatabaseRole mocks base method.
 func (m *MockDatabaseRoleCreator) CreateDatabaseRole(arg0 string, arg1 *mongodbatlas.CustomDBRole) (*mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDatabaseRole", arg0, arg1)
@@ -80,36 +81,36 @@ func (m *MockDatabaseRoleCreator) CreateDatabaseRole(arg0 string, arg1 *mongodba
 	return ret0, ret1
 }
 
-// CreateDatabaseRole indicates an expected call of CreateDatabaseRole
+// CreateDatabaseRole indicates an expected call of CreateDatabaseRole.
 func (mr *MockDatabaseRoleCreatorMockRecorder) CreateDatabaseRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDatabaseRole", reflect.TypeOf((*MockDatabaseRoleCreator)(nil).CreateDatabaseRole), arg0, arg1)
 }
 
-// MockDatabaseRoleDeleter is a mock of DatabaseRoleDeleter interface
+// MockDatabaseRoleDeleter is a mock of DatabaseRoleDeleter interface.
 type MockDatabaseRoleDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockDatabaseRoleDeleterMockRecorder
 }
 
-// MockDatabaseRoleDeleterMockRecorder is the mock recorder for MockDatabaseRoleDeleter
+// MockDatabaseRoleDeleterMockRecorder is the mock recorder for MockDatabaseRoleDeleter.
 type MockDatabaseRoleDeleterMockRecorder struct {
 	mock *MockDatabaseRoleDeleter
 }
 
-// NewMockDatabaseRoleDeleter creates a new mock instance
+// NewMockDatabaseRoleDeleter creates a new mock instance.
 func NewMockDatabaseRoleDeleter(ctrl *gomock.Controller) *MockDatabaseRoleDeleter {
 	mock := &MockDatabaseRoleDeleter{ctrl: ctrl}
 	mock.recorder = &MockDatabaseRoleDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseRoleDeleter) EXPECT() *MockDatabaseRoleDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteDatabaseRole mocks base method
+// DeleteDatabaseRole mocks base method.
 func (m *MockDatabaseRoleDeleter) DeleteDatabaseRole(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteDatabaseRole", arg0, arg1)
@@ -117,36 +118,36 @@ func (m *MockDatabaseRoleDeleter) DeleteDatabaseRole(arg0, arg1 string) error {
 	return ret0
 }
 
-// DeleteDatabaseRole indicates an expected call of DeleteDatabaseRole
+// DeleteDatabaseRole indicates an expected call of DeleteDatabaseRole.
 func (mr *MockDatabaseRoleDeleterMockRecorder) DeleteDatabaseRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDatabaseRole", reflect.TypeOf((*MockDatabaseRoleDeleter)(nil).DeleteDatabaseRole), arg0, arg1)
 }
 
-// MockDatabaseRoleUpdater is a mock of DatabaseRoleUpdater interface
+// MockDatabaseRoleUpdater is a mock of DatabaseRoleUpdater interface.
 type MockDatabaseRoleUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockDatabaseRoleUpdaterMockRecorder
 }
 
-// MockDatabaseRoleUpdaterMockRecorder is the mock recorder for MockDatabaseRoleUpdater
+// MockDatabaseRoleUpdaterMockRecorder is the mock recorder for MockDatabaseRoleUpdater.
 type MockDatabaseRoleUpdaterMockRecorder struct {
 	mock *MockDatabaseRoleUpdater
 }
 
-// NewMockDatabaseRoleUpdater creates a new mock instance
+// NewMockDatabaseRoleUpdater creates a new mock instance.
 func NewMockDatabaseRoleUpdater(ctrl *gomock.Controller) *MockDatabaseRoleUpdater {
 	mock := &MockDatabaseRoleUpdater{ctrl: ctrl}
 	mock.recorder = &MockDatabaseRoleUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseRoleUpdater) EXPECT() *MockDatabaseRoleUpdaterMockRecorder {
 	return m.recorder
 }
 
-// DatabaseRole mocks base method
+// DatabaseRole mocks base method.
 func (m *MockDatabaseRoleUpdater) DatabaseRole(arg0, arg1 string) (*mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRole", arg0, arg1)
@@ -155,13 +156,13 @@ func (m *MockDatabaseRoleUpdater) DatabaseRole(arg0, arg1 string) (*mongodbatlas
 	return ret0, ret1
 }
 
-// DatabaseRole indicates an expected call of DatabaseRole
+// DatabaseRole indicates an expected call of DatabaseRole.
 func (mr *MockDatabaseRoleUpdaterMockRecorder) DatabaseRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRole", reflect.TypeOf((*MockDatabaseRoleUpdater)(nil).DatabaseRole), arg0, arg1)
 }
 
-// UpdateDatabaseRole mocks base method
+// UpdateDatabaseRole mocks base method.
 func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0, arg1 string, arg2 *mongodbatlas.CustomDBRole) (*mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDatabaseRole", arg0, arg1, arg2)
@@ -170,36 +171,36 @@ func (m *MockDatabaseRoleUpdater) UpdateDatabaseRole(arg0, arg1 string, arg2 *mo
 	return ret0, ret1
 }
 
-// UpdateDatabaseRole indicates an expected call of UpdateDatabaseRole
+// UpdateDatabaseRole indicates an expected call of UpdateDatabaseRole.
 func (mr *MockDatabaseRoleUpdaterMockRecorder) UpdateDatabaseRole(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDatabaseRole", reflect.TypeOf((*MockDatabaseRoleUpdater)(nil).UpdateDatabaseRole), arg0, arg1, arg2)
 }
 
-// MockDatabaseRoleDescriber is a mock of DatabaseRoleDescriber interface
+// MockDatabaseRoleDescriber is a mock of DatabaseRoleDescriber interface.
 type MockDatabaseRoleDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockDatabaseRoleDescriberMockRecorder
 }
 
-// MockDatabaseRoleDescriberMockRecorder is the mock recorder for MockDatabaseRoleDescriber
+// MockDatabaseRoleDescriberMockRecorder is the mock recorder for MockDatabaseRoleDescriber.
 type MockDatabaseRoleDescriberMockRecorder struct {
 	mock *MockDatabaseRoleDescriber
 }
 
-// NewMockDatabaseRoleDescriber creates a new mock instance
+// NewMockDatabaseRoleDescriber creates a new mock instance.
 func NewMockDatabaseRoleDescriber(ctrl *gomock.Controller) *MockDatabaseRoleDescriber {
 	mock := &MockDatabaseRoleDescriber{ctrl: ctrl}
 	mock.recorder = &MockDatabaseRoleDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseRoleDescriber) EXPECT() *MockDatabaseRoleDescriberMockRecorder {
 	return m.recorder
 }
 
-// DatabaseRole mocks base method
+// DatabaseRole mocks base method.
 func (m *MockDatabaseRoleDescriber) DatabaseRole(arg0, arg1 string) (*mongodbatlas.CustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRole", arg0, arg1)
@@ -208,7 +209,7 @@ func (m *MockDatabaseRoleDescriber) DatabaseRole(arg0, arg1 string) (*mongodbatl
 	return ret0, ret1
 }
 
-// DatabaseRole indicates an expected call of DatabaseRole
+// DatabaseRole indicates an expected call of DatabaseRole.
 func (mr *MockDatabaseRoleDescriberMockRecorder) DatabaseRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRole", reflect.TypeOf((*MockDatabaseRoleDescriber)(nil).DatabaseRole), arg0, arg1)

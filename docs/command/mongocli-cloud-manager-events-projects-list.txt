@@ -1,8 +1,8 @@
-.. _mongocli-cloud-manager-events-list:
+.. _mongocli-cloud-manager-events-projects-list:
 
-==================================
-mongocli cloud-manager events list
-==================================
+===========================================
+mongocli cloud-manager events projects list
+===========================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,16 @@ mongocli cloud-manager events list
    :depth: 1
    :class: singlecol
 
-List events for an organization or project.
+Return all events for a project.
+
+Your API Key must have the Project Read Only role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli cloud-manager events list [options]
+   mongocli cloud-manager events projects list [options]
 
 Options
 -------
@@ -48,10 +50,6 @@ Options
      - string
      - false
      - Returns events whose created date is greater than or equal to it.
-   * - --orgId
-     - string
-     - false
-     - Organization ID to use. Overrides configuration file or environment variable settings.
    * - -o, --output
      - string
      - false

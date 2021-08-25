@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockServerlessInstanceLister is a mock of ServerlessInstanceLister interface
+// MockServerlessInstanceLister is a mock of ServerlessInstanceLister interface.
 type MockServerlessInstanceLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockServerlessInstanceListerMockRecorder
 }
 
-// MockServerlessInstanceListerMockRecorder is the mock recorder for MockServerlessInstanceLister
+// MockServerlessInstanceListerMockRecorder is the mock recorder for MockServerlessInstanceLister.
 type MockServerlessInstanceListerMockRecorder struct {
 	mock *MockServerlessInstanceLister
 }
 
-// NewMockServerlessInstanceLister creates a new mock instance
+// NewMockServerlessInstanceLister creates a new mock instance.
 func NewMockServerlessInstanceLister(ctrl *gomock.Controller) *MockServerlessInstanceLister {
 	mock := &MockServerlessInstanceLister{ctrl: ctrl}
 	mock.recorder = &MockServerlessInstanceListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockServerlessInstanceLister) EXPECT() *MockServerlessInstanceListerMockRecorder {
 	return m.recorder
 }
 
-// ServerlessInstances mocks base method
+// ServerlessInstances mocks base method.
 func (m *MockServerlessInstanceLister) ServerlessInstances(arg0 string, arg1 *mongodbatlas.ListOptions) (*mongodbatlas.ClustersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstances", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockServerlessInstanceLister) ServerlessInstances(arg0 string, arg1 *mo
 	return ret0, ret1
 }
 
-// ServerlessInstances indicates an expected call of ServerlessInstances
+// ServerlessInstances indicates an expected call of ServerlessInstances.
 func (mr *MockServerlessInstanceListerMockRecorder) ServerlessInstances(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessInstances", reflect.TypeOf((*MockServerlessInstanceLister)(nil).ServerlessInstances), arg0, arg1)
 }
 
-// MockServerlessInstanceDescriber is a mock of ServerlessInstanceDescriber interface
+// MockServerlessInstanceDescriber is a mock of ServerlessInstanceDescriber interface.
 type MockServerlessInstanceDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockServerlessInstanceDescriberMockRecorder
 }
 
-// MockServerlessInstanceDescriberMockRecorder is the mock recorder for MockServerlessInstanceDescriber
+// MockServerlessInstanceDescriberMockRecorder is the mock recorder for MockServerlessInstanceDescriber.
 type MockServerlessInstanceDescriberMockRecorder struct {
 	mock *MockServerlessInstanceDescriber
 }
 
-// NewMockServerlessInstanceDescriber creates a new mock instance
+// NewMockServerlessInstanceDescriber creates a new mock instance.
 func NewMockServerlessInstanceDescriber(ctrl *gomock.Controller) *MockServerlessInstanceDescriber {
 	mock := &MockServerlessInstanceDescriber{ctrl: ctrl}
 	mock.recorder = &MockServerlessInstanceDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockServerlessInstanceDescriber) EXPECT() *MockServerlessInstanceDescriberMockRecorder {
 	return m.recorder
 }
 
-// ServerlessInstance mocks base method
+// ServerlessInstance mocks base method.
 func (m *MockServerlessInstanceDescriber) ServerlessInstance(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessInstance", arg0, arg1)
@@ -80,36 +81,36 @@ func (m *MockServerlessInstanceDescriber) ServerlessInstance(arg0, arg1 string) 
 	return ret0, ret1
 }
 
-// ServerlessInstance indicates an expected call of ServerlessInstance
+// ServerlessInstance indicates an expected call of ServerlessInstance.
 func (mr *MockServerlessInstanceDescriberMockRecorder) ServerlessInstance(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessInstance", reflect.TypeOf((*MockServerlessInstanceDescriber)(nil).ServerlessInstance), arg0, arg1)
 }
 
-// MockServerlessInstanceDeleter is a mock of ServerlessInstanceDeleter interface
+// MockServerlessInstanceDeleter is a mock of ServerlessInstanceDeleter interface.
 type MockServerlessInstanceDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockServerlessInstanceDeleterMockRecorder
 }
 
-// MockServerlessInstanceDeleterMockRecorder is the mock recorder for MockServerlessInstanceDeleter
+// MockServerlessInstanceDeleterMockRecorder is the mock recorder for MockServerlessInstanceDeleter.
 type MockServerlessInstanceDeleterMockRecorder struct {
 	mock *MockServerlessInstanceDeleter
 }
 
-// NewMockServerlessInstanceDeleter creates a new mock instance
+// NewMockServerlessInstanceDeleter creates a new mock instance.
 func NewMockServerlessInstanceDeleter(ctrl *gomock.Controller) *MockServerlessInstanceDeleter {
 	mock := &MockServerlessInstanceDeleter{ctrl: ctrl}
 	mock.recorder = &MockServerlessInstanceDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockServerlessInstanceDeleter) EXPECT() *MockServerlessInstanceDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteServerlessInstance mocks base method
+// DeleteServerlessInstance mocks base method.
 func (m *MockServerlessInstanceDeleter) DeleteServerlessInstance(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteServerlessInstance", arg0, arg1)
@@ -117,36 +118,36 @@ func (m *MockServerlessInstanceDeleter) DeleteServerlessInstance(arg0, arg1 stri
 	return ret0
 }
 
-// DeleteServerlessInstance indicates an expected call of DeleteServerlessInstance
+// DeleteServerlessInstance indicates an expected call of DeleteServerlessInstance.
 func (mr *MockServerlessInstanceDeleterMockRecorder) DeleteServerlessInstance(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteServerlessInstance", reflect.TypeOf((*MockServerlessInstanceDeleter)(nil).DeleteServerlessInstance), arg0, arg1)
 }
 
-// MockServerlessInstanceCreator is a mock of ServerlessInstanceCreator interface
+// MockServerlessInstanceCreator is a mock of ServerlessInstanceCreator interface.
 type MockServerlessInstanceCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockServerlessInstanceCreatorMockRecorder
 }
 
-// MockServerlessInstanceCreatorMockRecorder is the mock recorder for MockServerlessInstanceCreator
+// MockServerlessInstanceCreatorMockRecorder is the mock recorder for MockServerlessInstanceCreator.
 type MockServerlessInstanceCreatorMockRecorder struct {
 	mock *MockServerlessInstanceCreator
 }
 
-// NewMockServerlessInstanceCreator creates a new mock instance
+// NewMockServerlessInstanceCreator creates a new mock instance.
 func NewMockServerlessInstanceCreator(ctrl *gomock.Controller) *MockServerlessInstanceCreator {
 	mock := &MockServerlessInstanceCreator{ctrl: ctrl}
 	mock.recorder = &MockServerlessInstanceCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockServerlessInstanceCreator) EXPECT() *MockServerlessInstanceCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateServerlessInstance mocks base method
+// CreateServerlessInstance mocks base method.
 func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, arg1 *mongodbatlas.ServerlessCreateRequestParams) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateServerlessInstance", arg0, arg1)
@@ -155,7 +156,7 @@ func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, ar
 	return ret0, ret1
 }
 
-// CreateServerlessInstance indicates an expected call of CreateServerlessInstance
+// CreateServerlessInstance indicates an expected call of CreateServerlessInstance.
 func (mr *MockServerlessInstanceCreatorMockRecorder) CreateServerlessInstance(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateServerlessInstance", reflect.TypeOf((*MockServerlessInstanceCreator)(nil).CreateServerlessInstance), arg0, arg1)

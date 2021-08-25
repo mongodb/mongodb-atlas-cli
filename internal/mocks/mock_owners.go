@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockOwnerCreator is a mock of OwnerCreator interface
+// MockOwnerCreator is a mock of OwnerCreator interface.
 type MockOwnerCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockOwnerCreatorMockRecorder
 }
 
-// MockOwnerCreatorMockRecorder is the mock recorder for MockOwnerCreator
+// MockOwnerCreatorMockRecorder is the mock recorder for MockOwnerCreator.
 type MockOwnerCreatorMockRecorder struct {
 	mock *MockOwnerCreator
 }
 
-// NewMockOwnerCreator creates a new mock instance
+// NewMockOwnerCreator creates a new mock instance.
 func NewMockOwnerCreator(ctrl *gomock.Controller) *MockOwnerCreator {
 	mock := &MockOwnerCreator{ctrl: ctrl}
 	mock.recorder = &MockOwnerCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOwnerCreator) EXPECT() *MockOwnerCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateOwner mocks base method
+// CreateOwner mocks base method.
 func (m *MockOwnerCreator) CreateOwner(arg0 *opsmngr.User, arg1 []string) (*opsmngr.CreateUserResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOwner", arg0, arg1)
@@ -42,7 +43,7 @@ func (m *MockOwnerCreator) CreateOwner(arg0 *opsmngr.User, arg1 []string) (*opsm
 	return ret0, ret1
 }
 
-// CreateOwner indicates an expected call of CreateOwner
+// CreateOwner indicates an expected call of CreateOwner.
 func (mr *MockOwnerCreatorMockRecorder) CreateOwner(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOwner", reflect.TypeOf((*MockOwnerCreator)(nil).CreateOwner), arg0, arg1)

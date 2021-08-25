@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockBlockstoresLister is a mock of BlockstoresLister interface
+// MockBlockstoresLister is a mock of BlockstoresLister interface.
 type MockBlockstoresLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockBlockstoresListerMockRecorder
 }
 
-// MockBlockstoresListerMockRecorder is the mock recorder for MockBlockstoresLister
+// MockBlockstoresListerMockRecorder is the mock recorder for MockBlockstoresLister.
 type MockBlockstoresListerMockRecorder struct {
 	mock *MockBlockstoresLister
 }
 
-// NewMockBlockstoresLister creates a new mock instance
+// NewMockBlockstoresLister creates a new mock instance.
 func NewMockBlockstoresLister(ctrl *gomock.Controller) *MockBlockstoresLister {
 	mock := &MockBlockstoresLister{ctrl: ctrl}
 	mock.recorder = &MockBlockstoresListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBlockstoresLister) EXPECT() *MockBlockstoresListerMockRecorder {
 	return m.recorder
 }
 
-// ListBlockstores mocks base method
+// ListBlockstores mocks base method.
 func (m *MockBlockstoresLister) ListBlockstores(arg0 *mongodbatlas.ListOptions) (*opsmngr.BackupStores, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBlockstores", arg0)
@@ -43,36 +44,36 @@ func (m *MockBlockstoresLister) ListBlockstores(arg0 *mongodbatlas.ListOptions) 
 	return ret0, ret1
 }
 
-// ListBlockstores indicates an expected call of ListBlockstores
+// ListBlockstores indicates an expected call of ListBlockstores.
 func (mr *MockBlockstoresListerMockRecorder) ListBlockstores(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBlockstores", reflect.TypeOf((*MockBlockstoresLister)(nil).ListBlockstores), arg0)
 }
 
-// MockBlockstoresDescriber is a mock of BlockstoresDescriber interface
+// MockBlockstoresDescriber is a mock of BlockstoresDescriber interface.
 type MockBlockstoresDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockBlockstoresDescriberMockRecorder
 }
 
-// MockBlockstoresDescriberMockRecorder is the mock recorder for MockBlockstoresDescriber
+// MockBlockstoresDescriberMockRecorder is the mock recorder for MockBlockstoresDescriber.
 type MockBlockstoresDescriberMockRecorder struct {
 	mock *MockBlockstoresDescriber
 }
 
-// NewMockBlockstoresDescriber creates a new mock instance
+// NewMockBlockstoresDescriber creates a new mock instance.
 func NewMockBlockstoresDescriber(ctrl *gomock.Controller) *MockBlockstoresDescriber {
 	mock := &MockBlockstoresDescriber{ctrl: ctrl}
 	mock.recorder = &MockBlockstoresDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBlockstoresDescriber) EXPECT() *MockBlockstoresDescriberMockRecorder {
 	return m.recorder
 }
 
-// DescribeBlockstore mocks base method
+// DescribeBlockstore mocks base method.
 func (m *MockBlockstoresDescriber) DescribeBlockstore(arg0 string) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeBlockstore", arg0)
@@ -81,36 +82,36 @@ func (m *MockBlockstoresDescriber) DescribeBlockstore(arg0 string) (*opsmngr.Bac
 	return ret0, ret1
 }
 
-// DescribeBlockstore indicates an expected call of DescribeBlockstore
+// DescribeBlockstore indicates an expected call of DescribeBlockstore.
 func (mr *MockBlockstoresDescriberMockRecorder) DescribeBlockstore(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeBlockstore", reflect.TypeOf((*MockBlockstoresDescriber)(nil).DescribeBlockstore), arg0)
 }
 
-// MockBlockstoresCreator is a mock of BlockstoresCreator interface
+// MockBlockstoresCreator is a mock of BlockstoresCreator interface.
 type MockBlockstoresCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockBlockstoresCreatorMockRecorder
 }
 
-// MockBlockstoresCreatorMockRecorder is the mock recorder for MockBlockstoresCreator
+// MockBlockstoresCreatorMockRecorder is the mock recorder for MockBlockstoresCreator.
 type MockBlockstoresCreatorMockRecorder struct {
 	mock *MockBlockstoresCreator
 }
 
-// NewMockBlockstoresCreator creates a new mock instance
+// NewMockBlockstoresCreator creates a new mock instance.
 func NewMockBlockstoresCreator(ctrl *gomock.Controller) *MockBlockstoresCreator {
 	mock := &MockBlockstoresCreator{ctrl: ctrl}
 	mock.recorder = &MockBlockstoresCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBlockstoresCreator) EXPECT() *MockBlockstoresCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateBlockstore mocks base method
+// CreateBlockstore mocks base method.
 func (m *MockBlockstoresCreator) CreateBlockstore(arg0 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBlockstore", arg0)
@@ -119,36 +120,36 @@ func (m *MockBlockstoresCreator) CreateBlockstore(arg0 *opsmngr.BackupStore) (*o
 	return ret0, ret1
 }
 
-// CreateBlockstore indicates an expected call of CreateBlockstore
+// CreateBlockstore indicates an expected call of CreateBlockstore.
 func (mr *MockBlockstoresCreatorMockRecorder) CreateBlockstore(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBlockstore", reflect.TypeOf((*MockBlockstoresCreator)(nil).CreateBlockstore), arg0)
 }
 
-// MockBlockstoresUpdater is a mock of BlockstoresUpdater interface
+// MockBlockstoresUpdater is a mock of BlockstoresUpdater interface.
 type MockBlockstoresUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockBlockstoresUpdaterMockRecorder
 }
 
-// MockBlockstoresUpdaterMockRecorder is the mock recorder for MockBlockstoresUpdater
+// MockBlockstoresUpdaterMockRecorder is the mock recorder for MockBlockstoresUpdater.
 type MockBlockstoresUpdaterMockRecorder struct {
 	mock *MockBlockstoresUpdater
 }
 
-// NewMockBlockstoresUpdater creates a new mock instance
+// NewMockBlockstoresUpdater creates a new mock instance.
 func NewMockBlockstoresUpdater(ctrl *gomock.Controller) *MockBlockstoresUpdater {
 	mock := &MockBlockstoresUpdater{ctrl: ctrl}
 	mock.recorder = &MockBlockstoresUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBlockstoresUpdater) EXPECT() *MockBlockstoresUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateBlockstore mocks base method
+// UpdateBlockstore mocks base method.
 func (m *MockBlockstoresUpdater) UpdateBlockstore(arg0 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateBlockstore", arg0)
@@ -157,36 +158,36 @@ func (m *MockBlockstoresUpdater) UpdateBlockstore(arg0 *opsmngr.BackupStore) (*o
 	return ret0, ret1
 }
 
-// UpdateBlockstore indicates an expected call of UpdateBlockstore
+// UpdateBlockstore indicates an expected call of UpdateBlockstore.
 func (mr *MockBlockstoresUpdaterMockRecorder) UpdateBlockstore(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBlockstore", reflect.TypeOf((*MockBlockstoresUpdater)(nil).UpdateBlockstore), arg0)
 }
 
-// MockBlockstoresDeleter is a mock of BlockstoresDeleter interface
+// MockBlockstoresDeleter is a mock of BlockstoresDeleter interface.
 type MockBlockstoresDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockBlockstoresDeleterMockRecorder
 }
 
-// MockBlockstoresDeleterMockRecorder is the mock recorder for MockBlockstoresDeleter
+// MockBlockstoresDeleterMockRecorder is the mock recorder for MockBlockstoresDeleter.
 type MockBlockstoresDeleterMockRecorder struct {
 	mock *MockBlockstoresDeleter
 }
 
-// NewMockBlockstoresDeleter creates a new mock instance
+// NewMockBlockstoresDeleter creates a new mock instance.
 func NewMockBlockstoresDeleter(ctrl *gomock.Controller) *MockBlockstoresDeleter {
 	mock := &MockBlockstoresDeleter{ctrl: ctrl}
 	mock.recorder = &MockBlockstoresDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBlockstoresDeleter) EXPECT() *MockBlockstoresDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteBlockstore mocks base method
+// DeleteBlockstore mocks base method.
 func (m *MockBlockstoresDeleter) DeleteBlockstore(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteBlockstore", arg0)
@@ -194,7 +195,7 @@ func (m *MockBlockstoresDeleter) DeleteBlockstore(arg0 string) error {
 	return ret0
 }
 
-// DeleteBlockstore indicates an expected call of DeleteBlockstore
+// DeleteBlockstore indicates an expected call of DeleteBlockstore.
 func (mr *MockBlockstoresDeleterMockRecorder) DeleteBlockstore(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlockstore", reflect.TypeOf((*MockBlockstoresDeleter)(nil).DeleteBlockstore), arg0)

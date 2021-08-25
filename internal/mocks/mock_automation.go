@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockAutomationGetter is a mock of AutomationGetter interface
+// MockAutomationGetter is a mock of AutomationGetter interface.
 type MockAutomationGetter struct {
 	ctrl     *gomock.Controller
 	recorder *MockAutomationGetterMockRecorder
 }
 
-// MockAutomationGetterMockRecorder is the mock recorder for MockAutomationGetter
+// MockAutomationGetterMockRecorder is the mock recorder for MockAutomationGetter.
 type MockAutomationGetterMockRecorder struct {
 	mock *MockAutomationGetter
 }
 
-// NewMockAutomationGetter creates a new mock instance
+// NewMockAutomationGetter creates a new mock instance.
 func NewMockAutomationGetter(ctrl *gomock.Controller) *MockAutomationGetter {
 	mock := &MockAutomationGetter{ctrl: ctrl}
 	mock.recorder = &MockAutomationGetterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAutomationGetter) EXPECT() *MockAutomationGetterMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationConfig mocks base method
+// GetAutomationConfig mocks base method.
 func (m *MockAutomationGetter) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
@@ -43,36 +44,36 @@ func (m *MockAutomationGetter) GetAutomationConfig(arg0 string) (*opsmngr.Automa
 	return ret0, ret1
 }
 
-// GetAutomationConfig indicates an expected call of GetAutomationConfig
+// GetAutomationConfig indicates an expected call of GetAutomationConfig.
 func (mr *MockAutomationGetterMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockAutomationGetter)(nil).GetAutomationConfig), arg0)
 }
 
-// MockAutomationUpdater is a mock of AutomationUpdater interface
+// MockAutomationUpdater is a mock of AutomationUpdater interface.
 type MockAutomationUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockAutomationUpdaterMockRecorder
 }
 
-// MockAutomationUpdaterMockRecorder is the mock recorder for MockAutomationUpdater
+// MockAutomationUpdaterMockRecorder is the mock recorder for MockAutomationUpdater.
 type MockAutomationUpdaterMockRecorder struct {
 	mock *MockAutomationUpdater
 }
 
-// NewMockAutomationUpdater creates a new mock instance
+// NewMockAutomationUpdater creates a new mock instance.
 func NewMockAutomationUpdater(ctrl *gomock.Controller) *MockAutomationUpdater {
 	mock := &MockAutomationUpdater{ctrl: ctrl}
 	mock.recorder = &MockAutomationUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAutomationUpdater) EXPECT() *MockAutomationUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateAutomationConfig mocks base method
+// UpdateAutomationConfig mocks base method.
 func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
@@ -80,36 +81,36 @@ func (m *MockAutomationUpdater) UpdateAutomationConfig(arg0 string, arg1 *opsmng
 	return ret0
 }
 
-// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig
+// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig.
 func (mr *MockAutomationUpdaterMockRecorder) UpdateAutomationConfig(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAutomationConfig", reflect.TypeOf((*MockAutomationUpdater)(nil).UpdateAutomationConfig), arg0, arg1)
 }
 
-// MockAutomationStatusGetter is a mock of AutomationStatusGetter interface
+// MockAutomationStatusGetter is a mock of AutomationStatusGetter interface.
 type MockAutomationStatusGetter struct {
 	ctrl     *gomock.Controller
 	recorder *MockAutomationStatusGetterMockRecorder
 }
 
-// MockAutomationStatusGetterMockRecorder is the mock recorder for MockAutomationStatusGetter
+// MockAutomationStatusGetterMockRecorder is the mock recorder for MockAutomationStatusGetter.
 type MockAutomationStatusGetterMockRecorder struct {
 	mock *MockAutomationStatusGetter
 }
 
-// NewMockAutomationStatusGetter creates a new mock instance
+// NewMockAutomationStatusGetter creates a new mock instance.
 func NewMockAutomationStatusGetter(ctrl *gomock.Controller) *MockAutomationStatusGetter {
 	mock := &MockAutomationStatusGetter{ctrl: ctrl}
 	mock.recorder = &MockAutomationStatusGetterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAutomationStatusGetter) EXPECT() *MockAutomationStatusGetterMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationStatus mocks base method
+// GetAutomationStatus mocks base method.
 func (m *MockAutomationStatusGetter) GetAutomationStatus(arg0 string) (*opsmngr.AutomationStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationStatus", arg0)
@@ -118,36 +119,36 @@ func (m *MockAutomationStatusGetter) GetAutomationStatus(arg0 string) (*opsmngr.
 	return ret0, ret1
 }
 
-// GetAutomationStatus indicates an expected call of GetAutomationStatus
+// GetAutomationStatus indicates an expected call of GetAutomationStatus.
 func (mr *MockAutomationStatusGetterMockRecorder) GetAutomationStatus(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationStatus", reflect.TypeOf((*MockAutomationStatusGetter)(nil).GetAutomationStatus), arg0)
 }
 
-// MockAutomationPatcher is a mock of AutomationPatcher interface
+// MockAutomationPatcher is a mock of AutomationPatcher interface.
 type MockAutomationPatcher struct {
 	ctrl     *gomock.Controller
 	recorder *MockAutomationPatcherMockRecorder
 }
 
-// MockAutomationPatcherMockRecorder is the mock recorder for MockAutomationPatcher
+// MockAutomationPatcherMockRecorder is the mock recorder for MockAutomationPatcher.
 type MockAutomationPatcherMockRecorder struct {
 	mock *MockAutomationPatcher
 }
 
-// NewMockAutomationPatcher creates a new mock instance
+// NewMockAutomationPatcher creates a new mock instance.
 func NewMockAutomationPatcher(ctrl *gomock.Controller) *MockAutomationPatcher {
 	mock := &MockAutomationPatcher{ctrl: ctrl}
 	mock.recorder = &MockAutomationPatcherMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAutomationPatcher) EXPECT() *MockAutomationPatcherMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationConfig mocks base method
+// GetAutomationConfig mocks base method.
 func (m *MockAutomationPatcher) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
@@ -156,13 +157,13 @@ func (m *MockAutomationPatcher) GetAutomationConfig(arg0 string) (*opsmngr.Autom
 	return ret0, ret1
 }
 
-// GetAutomationConfig indicates an expected call of GetAutomationConfig
+// GetAutomationConfig indicates an expected call of GetAutomationConfig.
 func (mr *MockAutomationPatcherMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockAutomationPatcher)(nil).GetAutomationConfig), arg0)
 }
 
-// UpdateAutomationConfig mocks base method
+// UpdateAutomationConfig mocks base method.
 func (m *MockAutomationPatcher) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
@@ -170,36 +171,36 @@ func (m *MockAutomationPatcher) UpdateAutomationConfig(arg0 string, arg1 *opsmng
 	return ret0
 }
 
-// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig
+// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig.
 func (mr *MockAutomationPatcherMockRecorder) UpdateAutomationConfig(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAutomationConfig", reflect.TypeOf((*MockAutomationPatcher)(nil).UpdateAutomationConfig), arg0, arg1)
 }
 
-// MockCloudManagerClustersLister is a mock of CloudManagerClustersLister interface
+// MockCloudManagerClustersLister is a mock of CloudManagerClustersLister interface.
 type MockCloudManagerClustersLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudManagerClustersListerMockRecorder
 }
 
-// MockCloudManagerClustersListerMockRecorder is the mock recorder for MockCloudManagerClustersLister
+// MockCloudManagerClustersListerMockRecorder is the mock recorder for MockCloudManagerClustersLister.
 type MockCloudManagerClustersListerMockRecorder struct {
 	mock *MockCloudManagerClustersLister
 }
 
-// NewMockCloudManagerClustersLister creates a new mock instance
+// NewMockCloudManagerClustersLister creates a new mock instance.
 func NewMockCloudManagerClustersLister(ctrl *gomock.Controller) *MockCloudManagerClustersLister {
 	mock := &MockCloudManagerClustersLister{ctrl: ctrl}
 	mock.recorder = &MockCloudManagerClustersListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudManagerClustersLister) EXPECT() *MockCloudManagerClustersListerMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationConfig mocks base method
+// GetAutomationConfig mocks base method.
 func (m *MockCloudManagerClustersLister) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
@@ -208,13 +209,13 @@ func (m *MockCloudManagerClustersLister) GetAutomationConfig(arg0 string) (*opsm
 	return ret0, ret1
 }
 
-// GetAutomationConfig indicates an expected call of GetAutomationConfig
+// GetAutomationConfig indicates an expected call of GetAutomationConfig.
 func (mr *MockCloudManagerClustersListerMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockCloudManagerClustersLister)(nil).GetAutomationConfig), arg0)
 }
 
-// ListAllProjectClusters mocks base method
+// ListAllProjectClusters mocks base method.
 func (m *MockCloudManagerClustersLister) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAllProjectClusters")
@@ -223,13 +224,13 @@ func (m *MockCloudManagerClustersLister) ListAllProjectClusters() (*opsmngr.AllC
 	return ret0, ret1
 }
 
-// ListAllProjectClusters indicates an expected call of ListAllProjectClusters
+// ListAllProjectClusters indicates an expected call of ListAllProjectClusters.
 func (mr *MockCloudManagerClustersListerMockRecorder) ListAllProjectClusters() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllProjectClusters", reflect.TypeOf((*MockCloudManagerClustersLister)(nil).ListAllProjectClusters))
 }
 
-// ProjectClusters mocks base method
+// ProjectClusters mocks base method.
 func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
@@ -238,36 +239,36 @@ func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *mong
 	return ret0, ret1
 }
 
-// ProjectClusters indicates an expected call of ProjectClusters
+// ProjectClusters indicates an expected call of ProjectClusters.
 func (mr *MockCloudManagerClustersListerMockRecorder) ProjectClusters(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectClusters", reflect.TypeOf((*MockCloudManagerClustersLister)(nil).ProjectClusters), arg0, arg1)
 }
 
-// MockCloudManagerClustersDescriber is a mock of CloudManagerClustersDescriber interface
+// MockCloudManagerClustersDescriber is a mock of CloudManagerClustersDescriber interface.
 type MockCloudManagerClustersDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudManagerClustersDescriberMockRecorder
 }
 
-// MockCloudManagerClustersDescriberMockRecorder is the mock recorder for MockCloudManagerClustersDescriber
+// MockCloudManagerClustersDescriberMockRecorder is the mock recorder for MockCloudManagerClustersDescriber.
 type MockCloudManagerClustersDescriberMockRecorder struct {
 	mock *MockCloudManagerClustersDescriber
 }
 
-// NewMockCloudManagerClustersDescriber creates a new mock instance
+// NewMockCloudManagerClustersDescriber creates a new mock instance.
 func NewMockCloudManagerClustersDescriber(ctrl *gomock.Controller) *MockCloudManagerClustersDescriber {
 	mock := &MockCloudManagerClustersDescriber{ctrl: ctrl}
 	mock.recorder = &MockCloudManagerClustersDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudManagerClustersDescriber) EXPECT() *MockCloudManagerClustersDescriberMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationConfig mocks base method
+// GetAutomationConfig mocks base method.
 func (m *MockCloudManagerClustersDescriber) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
@@ -276,13 +277,13 @@ func (m *MockCloudManagerClustersDescriber) GetAutomationConfig(arg0 string) (*o
 	return ret0, ret1
 }
 
-// GetAutomationConfig indicates an expected call of GetAutomationConfig
+// GetAutomationConfig indicates an expected call of GetAutomationConfig.
 func (mr *MockCloudManagerClustersDescriberMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockCloudManagerClustersDescriber)(nil).GetAutomationConfig), arg0)
 }
 
-// OpsManagerCluster mocks base method
+// OpsManagerCluster mocks base method.
 func (m *MockCloudManagerClustersDescriber) OpsManagerCluster(arg0, arg1 string) (*opsmngr.Cluster, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OpsManagerCluster", arg0, arg1)
@@ -291,36 +292,36 @@ func (m *MockCloudManagerClustersDescriber) OpsManagerCluster(arg0, arg1 string)
 	return ret0, ret1
 }
 
-// OpsManagerCluster indicates an expected call of OpsManagerCluster
+// OpsManagerCluster indicates an expected call of OpsManagerCluster.
 func (mr *MockCloudManagerClustersDescriberMockRecorder) OpsManagerCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpsManagerCluster", reflect.TypeOf((*MockCloudManagerClustersDescriber)(nil).OpsManagerCluster), arg0, arg1)
 }
 
-// MockCloudManagerClustersDeleter is a mock of CloudManagerClustersDeleter interface
+// MockCloudManagerClustersDeleter is a mock of CloudManagerClustersDeleter interface.
 type MockCloudManagerClustersDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudManagerClustersDeleterMockRecorder
 }
 
-// MockCloudManagerClustersDeleterMockRecorder is the mock recorder for MockCloudManagerClustersDeleter
+// MockCloudManagerClustersDeleterMockRecorder is the mock recorder for MockCloudManagerClustersDeleter.
 type MockCloudManagerClustersDeleterMockRecorder struct {
 	mock *MockCloudManagerClustersDeleter
 }
 
-// NewMockCloudManagerClustersDeleter creates a new mock instance
+// NewMockCloudManagerClustersDeleter creates a new mock instance.
 func NewMockCloudManagerClustersDeleter(ctrl *gomock.Controller) *MockCloudManagerClustersDeleter {
 	mock := &MockCloudManagerClustersDeleter{ctrl: ctrl}
 	mock.recorder = &MockCloudManagerClustersDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudManagerClustersDeleter) EXPECT() *MockCloudManagerClustersDeleterMockRecorder {
 	return m.recorder
 }
 
-// GetAutomationConfig mocks base method
+// GetAutomationConfig mocks base method.
 func (m *MockCloudManagerClustersDeleter) GetAutomationConfig(arg0 string) (*opsmngr.AutomationConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationConfig", arg0)
@@ -329,13 +330,13 @@ func (m *MockCloudManagerClustersDeleter) GetAutomationConfig(arg0 string) (*ops
 	return ret0, ret1
 }
 
-// GetAutomationConfig indicates an expected call of GetAutomationConfig
+// GetAutomationConfig indicates an expected call of GetAutomationConfig.
 func (mr *MockCloudManagerClustersDeleterMockRecorder) GetAutomationConfig(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationConfig", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).GetAutomationConfig), arg0)
 }
 
-// GetAutomationStatus mocks base method
+// GetAutomationStatus mocks base method.
 func (m *MockCloudManagerClustersDeleter) GetAutomationStatus(arg0 string) (*opsmngr.AutomationStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAutomationStatus", arg0)
@@ -344,13 +345,13 @@ func (m *MockCloudManagerClustersDeleter) GetAutomationStatus(arg0 string) (*ops
 	return ret0, ret1
 }
 
-// GetAutomationStatus indicates an expected call of GetAutomationStatus
+// GetAutomationStatus indicates an expected call of GetAutomationStatus.
 func (mr *MockCloudManagerClustersDeleterMockRecorder) GetAutomationStatus(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutomationStatus", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).GetAutomationStatus), arg0)
 }
 
-// HostByHostname mocks base method
+// HostByHostname mocks base method.
 func (m *MockCloudManagerClustersDeleter) HostByHostname(arg0, arg1 string, arg2 int) (*opsmngr.Host, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostByHostname", arg0, arg1, arg2)
@@ -359,13 +360,13 @@ func (m *MockCloudManagerClustersDeleter) HostByHostname(arg0, arg1 string, arg2
 	return ret0, ret1
 }
 
-// HostByHostname indicates an expected call of HostByHostname
+// HostByHostname indicates an expected call of HostByHostname.
 func (mr *MockCloudManagerClustersDeleterMockRecorder) HostByHostname(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HostByHostname", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).HostByHostname), arg0, arg1, arg2)
 }
 
-// StopMonitoring mocks base method
+// StopMonitoring mocks base method.
 func (m *MockCloudManagerClustersDeleter) StopMonitoring(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StopMonitoring", arg0, arg1)
@@ -373,13 +374,13 @@ func (m *MockCloudManagerClustersDeleter) StopMonitoring(arg0, arg1 string) erro
 	return ret0
 }
 
-// StopMonitoring indicates an expected call of StopMonitoring
+// StopMonitoring indicates an expected call of StopMonitoring.
 func (mr *MockCloudManagerClustersDeleterMockRecorder) StopMonitoring(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopMonitoring", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).StopMonitoring), arg0, arg1)
 }
 
-// UpdateAutomationConfig mocks base method
+// UpdateAutomationConfig mocks base method.
 func (m *MockCloudManagerClustersDeleter) UpdateAutomationConfig(arg0 string, arg1 *opsmngr.AutomationConfig) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAutomationConfig", arg0, arg1)
@@ -387,7 +388,7 @@ func (m *MockCloudManagerClustersDeleter) UpdateAutomationConfig(arg0 string, ar
 	return ret0
 }
 
-// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig
+// UpdateAutomationConfig indicates an expected call of UpdateAutomationConfig.
 func (mr *MockCloudManagerClustersDeleterMockRecorder) UpdateAutomationConfig(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAutomationConfig", reflect.TypeOf((*MockCloudManagerClustersDeleter)(nil).UpdateAutomationConfig), arg0, arg1)

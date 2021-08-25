@@ -1,8 +1,8 @@
-.. _mongocli-ops-manager-events-list:
+.. _mongocli-cloud-manager-events-organizations-list:
 
-================================
-mongocli ops-manager events list
-================================
+================================================
+mongocli cloud-manager events organizations list
+================================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,16 @@ mongocli ops-manager events list
    :depth: 1
    :class: singlecol
 
-List events for an organization or project.
+Return all events for an organization.
+
+Your API Key must have the Org Member role to successfully call this resource.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli ops-manager events list [options]
+   mongocli cloud-manager events organizations list [options]
 
 Options
 -------
@@ -61,10 +63,6 @@ Options
      - int
      - false
      - Page number.
-   * - --projectId
-     - string
-     - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
    * - --type
      - strings
      - false

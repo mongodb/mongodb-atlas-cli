@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockCloudProviderAccessRoleCreator is a mock of CloudProviderAccessRoleCreator interface
+// MockCloudProviderAccessRoleCreator is a mock of CloudProviderAccessRoleCreator interface.
 type MockCloudProviderAccessRoleCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudProviderAccessRoleCreatorMockRecorder
 }
 
-// MockCloudProviderAccessRoleCreatorMockRecorder is the mock recorder for MockCloudProviderAccessRoleCreator
+// MockCloudProviderAccessRoleCreatorMockRecorder is the mock recorder for MockCloudProviderAccessRoleCreator.
 type MockCloudProviderAccessRoleCreatorMockRecorder struct {
 	mock *MockCloudProviderAccessRoleCreator
 }
 
-// NewMockCloudProviderAccessRoleCreator creates a new mock instance
+// NewMockCloudProviderAccessRoleCreator creates a new mock instance.
 func NewMockCloudProviderAccessRoleCreator(ctrl *gomock.Controller) *MockCloudProviderAccessRoleCreator {
 	mock := &MockCloudProviderAccessRoleCreator{ctrl: ctrl}
 	mock.recorder = &MockCloudProviderAccessRoleCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudProviderAccessRoleCreator) EXPECT() *MockCloudProviderAccessRoleCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateCloudProviderAccessRole mocks base method
+// CreateCloudProviderAccessRole mocks base method.
 func (m *MockCloudProviderAccessRoleCreator) CreateCloudProviderAccessRole(arg0, arg1 string) (*mongodbatlas.AWSIAMRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCloudProviderAccessRole", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockCloudProviderAccessRoleCreator) CreateCloudProviderAccessRole(arg0,
 	return ret0, ret1
 }
 
-// CreateCloudProviderAccessRole indicates an expected call of CreateCloudProviderAccessRole
+// CreateCloudProviderAccessRole indicates an expected call of CreateCloudProviderAccessRole.
 func (mr *MockCloudProviderAccessRoleCreatorMockRecorder) CreateCloudProviderAccessRole(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCloudProviderAccessRole", reflect.TypeOf((*MockCloudProviderAccessRoleCreator)(nil).CreateCloudProviderAccessRole), arg0, arg1)
 }
 
-// MockCloudProviderAccessRoleAuthorizer is a mock of CloudProviderAccessRoleAuthorizer interface
+// MockCloudProviderAccessRoleAuthorizer is a mock of CloudProviderAccessRoleAuthorizer interface.
 type MockCloudProviderAccessRoleAuthorizer struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudProviderAccessRoleAuthorizerMockRecorder
 }
 
-// MockCloudProviderAccessRoleAuthorizerMockRecorder is the mock recorder for MockCloudProviderAccessRoleAuthorizer
+// MockCloudProviderAccessRoleAuthorizerMockRecorder is the mock recorder for MockCloudProviderAccessRoleAuthorizer.
 type MockCloudProviderAccessRoleAuthorizerMockRecorder struct {
 	mock *MockCloudProviderAccessRoleAuthorizer
 }
 
-// NewMockCloudProviderAccessRoleAuthorizer creates a new mock instance
+// NewMockCloudProviderAccessRoleAuthorizer creates a new mock instance.
 func NewMockCloudProviderAccessRoleAuthorizer(ctrl *gomock.Controller) *MockCloudProviderAccessRoleAuthorizer {
 	mock := &MockCloudProviderAccessRoleAuthorizer{ctrl: ctrl}
 	mock.recorder = &MockCloudProviderAccessRoleAuthorizerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudProviderAccessRoleAuthorizer) EXPECT() *MockCloudProviderAccessRoleAuthorizerMockRecorder {
 	return m.recorder
 }
 
-// AuthorizeCloudProviderAccessRole mocks base method
+// AuthorizeCloudProviderAccessRole mocks base method.
 func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAuthorizationRequest) (*mongodbatlas.AWSIAMRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizeCloudProviderAccessRole", arg0, arg1, arg2)
@@ -80,36 +81,36 @@ func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole
 	return ret0, ret1
 }
 
-// AuthorizeCloudProviderAccessRole indicates an expected call of AuthorizeCloudProviderAccessRole
+// AuthorizeCloudProviderAccessRole indicates an expected call of AuthorizeCloudProviderAccessRole.
 func (mr *MockCloudProviderAccessRoleAuthorizerMockRecorder) AuthorizeCloudProviderAccessRole(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthorizeCloudProviderAccessRole", reflect.TypeOf((*MockCloudProviderAccessRoleAuthorizer)(nil).AuthorizeCloudProviderAccessRole), arg0, arg1, arg2)
 }
 
-// MockCloudProviderAccessRoleLister is a mock of CloudProviderAccessRoleLister interface
+// MockCloudProviderAccessRoleLister is a mock of CloudProviderAccessRoleLister interface.
 type MockCloudProviderAccessRoleLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudProviderAccessRoleListerMockRecorder
 }
 
-// MockCloudProviderAccessRoleListerMockRecorder is the mock recorder for MockCloudProviderAccessRoleLister
+// MockCloudProviderAccessRoleListerMockRecorder is the mock recorder for MockCloudProviderAccessRoleLister.
 type MockCloudProviderAccessRoleListerMockRecorder struct {
 	mock *MockCloudProviderAccessRoleLister
 }
 
-// NewMockCloudProviderAccessRoleLister creates a new mock instance
+// NewMockCloudProviderAccessRoleLister creates a new mock instance.
 func NewMockCloudProviderAccessRoleLister(ctrl *gomock.Controller) *MockCloudProviderAccessRoleLister {
 	mock := &MockCloudProviderAccessRoleLister{ctrl: ctrl}
 	mock.recorder = &MockCloudProviderAccessRoleListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudProviderAccessRoleLister) EXPECT() *MockCloudProviderAccessRoleListerMockRecorder {
 	return m.recorder
 }
 
-// CloudProviderAccessRoles mocks base method
+// CloudProviderAccessRoles mocks base method.
 func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string) (*mongodbatlas.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
@@ -118,36 +119,36 @@ func (m *MockCloudProviderAccessRoleLister) CloudProviderAccessRoles(arg0 string
 	return ret0, ret1
 }
 
-// CloudProviderAccessRoles indicates an expected call of CloudProviderAccessRoles
+// CloudProviderAccessRoles indicates an expected call of CloudProviderAccessRoles.
 func (mr *MockCloudProviderAccessRoleListerMockRecorder) CloudProviderAccessRoles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloudProviderAccessRoles", reflect.TypeOf((*MockCloudProviderAccessRoleLister)(nil).CloudProviderAccessRoles), arg0)
 }
 
-// MockCloudProviderAccessRoleDeauthorizer is a mock of CloudProviderAccessRoleDeauthorizer interface
+// MockCloudProviderAccessRoleDeauthorizer is a mock of CloudProviderAccessRoleDeauthorizer interface.
 type MockCloudProviderAccessRoleDeauthorizer struct {
 	ctrl     *gomock.Controller
 	recorder *MockCloudProviderAccessRoleDeauthorizerMockRecorder
 }
 
-// MockCloudProviderAccessRoleDeauthorizerMockRecorder is the mock recorder for MockCloudProviderAccessRoleDeauthorizer
+// MockCloudProviderAccessRoleDeauthorizerMockRecorder is the mock recorder for MockCloudProviderAccessRoleDeauthorizer.
 type MockCloudProviderAccessRoleDeauthorizerMockRecorder struct {
 	mock *MockCloudProviderAccessRoleDeauthorizer
 }
 
-// NewMockCloudProviderAccessRoleDeauthorizer creates a new mock instance
+// NewMockCloudProviderAccessRoleDeauthorizer creates a new mock instance.
 func NewMockCloudProviderAccessRoleDeauthorizer(ctrl *gomock.Controller) *MockCloudProviderAccessRoleDeauthorizer {
 	mock := &MockCloudProviderAccessRoleDeauthorizer{ctrl: ctrl}
 	mock.recorder = &MockCloudProviderAccessRoleDeauthorizerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCloudProviderAccessRoleDeauthorizer) EXPECT() *MockCloudProviderAccessRoleDeauthorizerMockRecorder {
 	return m.recorder
 }
 
-// DeauthorizeCloudProviderAccessRoles mocks base method
+// DeauthorizeCloudProviderAccessRoles mocks base method.
 func (m *MockCloudProviderAccessRoleDeauthorizer) DeauthorizeCloudProviderAccessRoles(arg0 *mongodbatlas.CloudProviderDeauthorizationRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeauthorizeCloudProviderAccessRoles", arg0)
@@ -155,7 +156,7 @@ func (m *MockCloudProviderAccessRoleDeauthorizer) DeauthorizeCloudProviderAccess
 	return ret0
 }
 
-// DeauthorizeCloudProviderAccessRoles indicates an expected call of DeauthorizeCloudProviderAccessRoles
+// DeauthorizeCloudProviderAccessRoles indicates an expected call of DeauthorizeCloudProviderAccessRoles.
 func (mr *MockCloudProviderAccessRoleDeauthorizerMockRecorder) DeauthorizeCloudProviderAccessRoles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeauthorizeCloudProviderAccessRoles", reflect.TypeOf((*MockCloudProviderAccessRoleDeauthorizer)(nil).DeauthorizeCloudProviderAccessRoles), arg0)

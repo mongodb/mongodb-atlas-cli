@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build e2e || (cloudmanager && generic)
 // +build e2e cloudmanager,generic
 
 package cloud_manager_test
@@ -32,12 +33,12 @@ func TestEvents(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("ListProjectEvent", func(t *testing.T) {
+	t.Run("List Project Event", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			eventsEntity,
+			projectsEntity,
 			"list",
-			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
 			"-o=json",
 		)
 
@@ -53,12 +54,12 @@ func TestEvents(t *testing.T) {
 		}
 	})
 
-	t.Run("ListOrganizationEvent", func(t *testing.T) {
+	t.Run("List Organization Event", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			eventsEntity,
+			orgsEntity,
 			"list",
-			"--orgId="+os.Getenv("MCLI_ORG_ID"),
 			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
 			"-o=json",
 		)

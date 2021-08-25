@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockProcessDisksLister is a mock of ProcessDisksLister interface
+// MockProcessDisksLister is a mock of ProcessDisksLister interface.
 type MockProcessDisksLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockProcessDisksListerMockRecorder
 }
 
-// MockProcessDisksListerMockRecorder is the mock recorder for MockProcessDisksLister
+// MockProcessDisksListerMockRecorder is the mock recorder for MockProcessDisksLister.
 type MockProcessDisksListerMockRecorder struct {
 	mock *MockProcessDisksLister
 }
 
-// NewMockProcessDisksLister creates a new mock instance
+// NewMockProcessDisksLister creates a new mock instance.
 func NewMockProcessDisksLister(ctrl *gomock.Controller) *MockProcessDisksLister {
 	mock := &MockProcessDisksLister{ctrl: ctrl}
 	mock.recorder = &MockProcessDisksListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockProcessDisksLister) EXPECT() *MockProcessDisksListerMockRecorder {
 	return m.recorder
 }
 
-// ProcessDisks mocks base method
+// ProcessDisks mocks base method.
 func (m *MockProcessDisksLister) ProcessDisks(arg0, arg1 string, arg2 int, arg3 *mongodbatlas.ListOptions) (*mongodbatlas.ProcessDisksResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDisks", arg0, arg1, arg2, arg3)
@@ -42,7 +43,7 @@ func (m *MockProcessDisksLister) ProcessDisks(arg0, arg1 string, arg2 int, arg3 
 	return ret0, ret1
 }
 
-// ProcessDisks indicates an expected call of ProcessDisks
+// ProcessDisks indicates an expected call of ProcessDisks.
 func (mr *MockProcessDisksListerMockRecorder) ProcessDisks(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessDisks", reflect.TypeOf((*MockProcessDisksLister)(nil).ProcessDisks), arg0, arg1, arg2, arg3)

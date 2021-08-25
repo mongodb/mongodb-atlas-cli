@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockSnapshotScheduleDescriber is a mock of SnapshotScheduleDescriber interface
+// MockSnapshotScheduleDescriber is a mock of SnapshotScheduleDescriber interface.
 type MockSnapshotScheduleDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotScheduleDescriberMockRecorder
 }
 
-// MockSnapshotScheduleDescriberMockRecorder is the mock recorder for MockSnapshotScheduleDescriber
+// MockSnapshotScheduleDescriberMockRecorder is the mock recorder for MockSnapshotScheduleDescriber.
 type MockSnapshotScheduleDescriberMockRecorder struct {
 	mock *MockSnapshotScheduleDescriber
 }
 
-// NewMockSnapshotScheduleDescriber creates a new mock instance
+// NewMockSnapshotScheduleDescriber creates a new mock instance.
 func NewMockSnapshotScheduleDescriber(ctrl *gomock.Controller) *MockSnapshotScheduleDescriber {
 	mock := &MockSnapshotScheduleDescriber{ctrl: ctrl}
 	mock.recorder = &MockSnapshotScheduleDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotScheduleDescriber) EXPECT() *MockSnapshotScheduleDescriberMockRecorder {
 	return m.recorder
 }
 
-// GetSnapshotSchedule mocks base method
+// GetSnapshotSchedule mocks base method.
 func (m *MockSnapshotScheduleDescriber) GetSnapshotSchedule(arg0, arg1 string) (*opsmngr.SnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSnapshotSchedule", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockSnapshotScheduleDescriber) GetSnapshotSchedule(arg0, arg1 string) (
 	return ret0, ret1
 }
 
-// GetSnapshotSchedule indicates an expected call of GetSnapshotSchedule
+// GetSnapshotSchedule indicates an expected call of GetSnapshotSchedule.
 func (mr *MockSnapshotScheduleDescriberMockRecorder) GetSnapshotSchedule(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSnapshotSchedule", reflect.TypeOf((*MockSnapshotScheduleDescriber)(nil).GetSnapshotSchedule), arg0, arg1)
 }
 
-// MockSnapshotScheduleUpdater is a mock of SnapshotScheduleUpdater interface
+// MockSnapshotScheduleUpdater is a mock of SnapshotScheduleUpdater interface.
 type MockSnapshotScheduleUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotScheduleUpdaterMockRecorder
 }
 
-// MockSnapshotScheduleUpdaterMockRecorder is the mock recorder for MockSnapshotScheduleUpdater
+// MockSnapshotScheduleUpdaterMockRecorder is the mock recorder for MockSnapshotScheduleUpdater.
 type MockSnapshotScheduleUpdaterMockRecorder struct {
 	mock *MockSnapshotScheduleUpdater
 }
 
-// NewMockSnapshotScheduleUpdater creates a new mock instance
+// NewMockSnapshotScheduleUpdater creates a new mock instance.
 func NewMockSnapshotScheduleUpdater(ctrl *gomock.Controller) *MockSnapshotScheduleUpdater {
 	mock := &MockSnapshotScheduleUpdater{ctrl: ctrl}
 	mock.recorder = &MockSnapshotScheduleUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotScheduleUpdater) EXPECT() *MockSnapshotScheduleUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateSnapshotSchedule mocks base method
+// UpdateSnapshotSchedule mocks base method.
 func (m *MockSnapshotScheduleUpdater) UpdateSnapshotSchedule(arg0, arg1 string, arg2 *opsmngr.SnapshotSchedule) (*opsmngr.SnapshotSchedule, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSnapshotSchedule", arg0, arg1, arg2)
@@ -80,7 +81,7 @@ func (m *MockSnapshotScheduleUpdater) UpdateSnapshotSchedule(arg0, arg1 string, 
 	return ret0, ret1
 }
 
-// UpdateSnapshotSchedule indicates an expected call of UpdateSnapshotSchedule
+// UpdateSnapshotSchedule indicates an expected call of UpdateSnapshotSchedule.
 func (mr *MockSnapshotScheduleUpdaterMockRecorder) UpdateSnapshotSchedule(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSnapshotSchedule", reflect.TypeOf((*MockSnapshotScheduleUpdater)(nil).UpdateSnapshotSchedule), arg0, arg1, arg2)

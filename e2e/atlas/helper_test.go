@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build e2e || atlas
 // +build e2e atlas
 
 package atlas_test
@@ -30,6 +31,7 @@ import (
 
 const (
 	atlasEntity            = "atlas"
+	eventsEntity           = "events"
 	clustersEntity         = "clusters"
 	processesEntity        = "processes"
 	metricsEntity          = "metrics"
@@ -44,6 +46,7 @@ const (
 	onlineArchiveEntity    = "onlineArchives"
 	iamEntity              = "iam"
 	projectEntity          = "project"
+	orgEntity              = "org"
 	maintenanceEntity      = "maintenanceWindows"
 	integrationsEntity     = "integrations"
 	securityEntity         = "security"

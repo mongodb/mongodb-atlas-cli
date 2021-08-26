@@ -16,7 +16,6 @@ package search
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -144,13 +143,13 @@ func UpdateBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
-	_ = cmd.Flags().MarkDeprecated(flag.IndexName, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.Database, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.Collection, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.Analyzer, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.SearchAnalyzer, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.Dynamic, fmt.Sprintf("please use --%s instead", flag.File))
-	_ = cmd.Flags().MarkDeprecated(flag.Field, fmt.Sprintf("please use --%s instead", flag.File))
+	_ = cmd.Flags().MarkDeprecated(flag.IndexName, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Database, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Collection, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Analyzer, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.SearchAnalyzer, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Dynamic, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Field, deprecatedFlagMessage)
 
 	return cmd
 }

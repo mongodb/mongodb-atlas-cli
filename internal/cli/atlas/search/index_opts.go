@@ -24,6 +24,7 @@ import (
 )
 
 const defaultAnalyser = "lucene.standard"
+const deprecatedFlagMessage = "please use --file instead"
 
 type IndexOpts struct {
 	name           string

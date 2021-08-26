@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas clusters search indexes create [<name>] [options]
+   mongocli atlas clusters search indexes create [name] [options]
 
 Options
 -------

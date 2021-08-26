@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -79,6 +80,8 @@ func (opts *UpdateOpts) Run() error {
 //  -P, --profile string   Profile to use from your configuration file.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
+	opts.fs = afero.NewOsFs()
+
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Short: "Update a search index for a cluster.",

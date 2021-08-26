@@ -157,6 +157,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
+		analyzer := "lucene.simple"
 		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -174,7 +175,7 @@ func TestSearch(t *testing.T) {
 	"collectionName": "{{ .collectionName }}",
 	"database": "test",
 	"name": "{{ .indexName }}",
-	"analyzer": "lucene.simple",
+	"analyzer": "{{ .analyzer }}",
 	"mappings": {
 		"dynamic": true
 	}
@@ -182,6 +183,7 @@ func TestSearch(t *testing.T) {
 		err = tpl.Execute(file, map[string]string{
 			"collectionName": collectionName,
 			"indexName":      indexName,
+			"analyzer":       analyzer,
 		})
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -207,7 +209,9 @@ func TestSearch(t *testing.T) {
 		}
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.Name, indexName)
+			a := assert.New(t)
+			a.Equal(indexID, index.IndexID)
+			a.Equal(analyzer, index.Analyzer)
 		}
 	})
 

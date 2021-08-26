@@ -15,8 +15,6 @@
 package search
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -90,31 +88,10 @@ func UpdateBuilder() *cobra.Command {
 				_ = cmd.MarkFlagRequired(flag.IndexName)
 				_ = cmd.MarkFlagRequired(flag.Database)
 				_ = cmd.MarkFlagRequired(flag.Collection)
-			} else {
-				if opts.name != "" {
-					return errors.New("you can't specify indexName and file at the same time")
-				}
-				if opts.dbName != "" {
-					return errors.New("you can't specify db and file at the same time")
-				}
-				if opts.collection != "" {
-					return errors.New("you can't specify collection and file at the same time")
-				}
-				if opts.analyzer != defaultAnalyser {
-					return errors.New("you can't specify analyzer and file at the same time")
-				}
-				if opts.searchAnalyzer != defaultAnalyser {
-					return errors.New("you can't specify searchAnalyzer and file at the same time")
-				}
-				if opts.dynamic {
-					return errors.New("you can't specify dynamic and file at the same time")
-				}
-				if len(opts.fields) > 0 {
-					return errors.New("you can't specify fields and file at the same time")
-				}
 			}
 
 			return opts.PreRunE(
+				opts.validateOpts,
 				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),

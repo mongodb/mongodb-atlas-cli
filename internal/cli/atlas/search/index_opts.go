@@ -15,6 +15,7 @@
 package search
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -36,6 +37,40 @@ type IndexOpts struct {
 	fields         []string
 	filename       string
 	fs             afero.Fs
+}
+
+func (opts *IndexOpts) validateOpts() error {
+	if opts.filename == "" {
+		if !opts.dynamic && len(opts.fields) == 0 {
+			return errors.New("you need to specify fields for the index or use a dynamic index")
+		}
+		if opts.dynamic && len(opts.fields) > 0 {
+			return errors.New("you can't specify fields and dynamic at the same time")
+		}
+	} else {
+		if opts.name != "" {
+			return errors.New("you can't specify indexName and file at the same time")
+		}
+		if opts.dbName != "" {
+			return errors.New("you can't specify db and file at the same time")
+		}
+		if opts.collection != "" {
+			return errors.New("you can't specify collection and file at the same time")
+		}
+		if opts.analyzer != defaultAnalyser {
+			return errors.New("you can't specify analyzer and file at the same time")
+		}
+		if opts.searchAnalyzer != defaultAnalyser {
+			return errors.New("you can't specify searchAnalyzer and file at the same time")
+		}
+		if opts.dynamic {
+			return errors.New("you can't specify dynamic and file at the same time")
+		}
+		if len(opts.fields) > 0 {
+			return errors.New("you can't specify fields and file at the same time")
+		}
+	}
+	return nil
 }
 
 func (opts *IndexOpts) newSearchIndex() (*atlas.SearchIndex, error) {

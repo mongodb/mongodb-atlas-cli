@@ -89,9 +89,11 @@ func CreateBuilder() *cobra.Command {
 				_ = cmd.MarkFlagRequired(flag.Database)
 				_ = cmd.MarkFlagRequired(flag.Collection)
 
-				if len(args) == 0 {
-					return errors.New("\"mongocli atlas clusters search indexes create\" requires 1 argument, received 0") // keeping message compatible with require.ExactArgs(1)
+				if err := require.ExactArgs(1)(cmd, args); err != nil {
+					return err
 				}
+			} else if len(args) > 0 {
+				return errors.New("when passing --file no indexName should be provided")
 			}
 
 			return opts.PreRunE(

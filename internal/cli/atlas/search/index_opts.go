@@ -42,32 +42,32 @@ type IndexOpts struct {
 func (opts *IndexOpts) validateOpts() error {
 	if opts.filename == "" {
 		if !opts.dynamic && len(opts.fields) == 0 {
-			return errors.New("you need to specify fields for the index or use a dynamic index")
+			return errors.New("specify the fields to index for a static index or specify a dynamic index")
 		}
 		if opts.dynamic && len(opts.fields) > 0 {
-			return errors.New("you can't specify fields and dynamic at the same time")
+			return errors.New("do not specify --fields and --dynamic at the same time")
 		}
 	} else {
 		if opts.name != "" {
-			return errors.New("you can't specify indexName and file at the same time")
+			return errors.New("do not specify --indexName and --file at the same time")
 		}
 		if opts.dbName != "" {
-			return errors.New("you can't specify db and file at the same time")
+			return errors.New("do not specify --db and --file at the same time")
 		}
 		if opts.collection != "" {
-			return errors.New("you can't specify collection and file at the same time")
+			return errors.New("do not specify --collection and --file at the same time")
 		}
 		if opts.analyzer != defaultAnalyzer {
-			return errors.New("you can't specify analyzer and file at the same time")
+			return errors.New("do not specify --analyzer and --file at the same time")
 		}
 		if opts.searchAnalyzer != defaultAnalyzer {
-			return errors.New("you can't specify searchAnalyzer and file at the same time")
+			return errors.New("do not specify --searchAnalyzer and --file at the same time")
 		}
 		if opts.dynamic {
-			return errors.New("you can't specify dynamic and file at the same time")
+			return errors.New("do not specify --dynamic and --file at the same time")
 		}
 		if len(opts.fields) > 0 {
-			return errors.New("you can't specify fields and file at the same time")
+			return errors.New("do not specify --fields and --file at the same time")
 		}
 	}
 	return nil

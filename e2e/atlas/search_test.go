@@ -21,6 +21,7 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -53,18 +54,45 @@ func TestSearch(t *testing.T) {
 	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
-	t.Run("Create", func(t *testing.T) {
+	t.Run("Create via file", func(t *testing.T) {
+		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+
+		file, err := os.Create(fileName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
+
+		tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+		err = tpl.Execute(file, map[string]string{
+			"collectionName": collectionName,
+			"indexName":      indexName,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
 			"create",
-			indexName,
 			"--clusterName="+clusterName,
-			"--db=test",
-			"--collection="+collectionName,
-			"--dynamic",
+			"--file",
+			fileName,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -128,8 +156,39 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	t.Run("Update via file", func(t *testing.T) {
 		analyzer := "lucene.simple"
+		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
+
+		file, err := os.Create(fileName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
+
+		tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"analyzer": "{{ .analyzer }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+		err = tpl.Execute(file, map[string]string{
+			"collectionName": collectionName,
+			"indexName":      indexName,
+			"analyzer":       analyzer,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -137,19 +196,17 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--indexName="+indexName,
 			"--clusterName="+clusterName,
-			"--db=test",
-			"--collection="+collectionName,
-			"--analyzer="+analyzer,
+			"--file",
+			fileName,
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)

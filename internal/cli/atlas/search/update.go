@@ -72,6 +72,7 @@ func (opts *UpdateOpts) Run() error {
 //      --indexName string        Name of the cluster.
 //      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//  -f, --file string             JSON file to use in order to update the index
 //
 // Global Flags:
 //  -P, --profile string   Profile to use from your configuration file.

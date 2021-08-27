@@ -60,7 +60,7 @@ func (opts *CreateOpts) Run() error {
 // Create an online archive for a cluster.
 //
 // Usage:
-//   mongocli atlas clusters search index create [name] [flags]
+//   mongocli atlas clusters search index create [indexName] [flags]
 //
 // Flags:
 //      --analyzer string         Analyzer to use when creating the index (default "lucene.standard")
@@ -72,7 +72,7 @@ func (opts *CreateOpts) Run() error {
 //  -h, --help                    help for create
 //      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
-//      --file string             JSON file to use in other to create the index
+//  -f, --file string             JSON file to use in order to create the index
 //
 // Global Flags:
 //  -P, --profile string   Profile to use from your configuration file.
@@ -81,7 +81,7 @@ func CreateBuilder() *cobra.Command {
 	opts.fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
-		Use:   "create [name]",
+		Use:   "create [indexName]",
 		Short: "Create a search index for a cluster.",
 		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

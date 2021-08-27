@@ -24,7 +24,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const defaultAnalyser = "lucene.standard"
+const defaultAnalyzer = "lucene.standard"
 const deprecatedFlagMessage = "please use --file instead"
 
 type IndexOpts struct {
@@ -57,10 +57,10 @@ func (opts *IndexOpts) validateOpts() error {
 		if opts.collection != "" {
 			return errors.New("you can't specify collection and file at the same time")
 		}
-		if opts.analyzer != defaultAnalyser {
+		if opts.analyzer != defaultAnalyzer {
 			return errors.New("you can't specify analyzer and file at the same time")
 		}
-		if opts.searchAnalyzer != defaultAnalyser {
+		if opts.searchAnalyzer != defaultAnalyzer {
 			return errors.New("you can't specify searchAnalyzer and file at the same time")
 		}
 		if opts.dynamic {

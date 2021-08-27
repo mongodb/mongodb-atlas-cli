@@ -39,7 +39,7 @@ Options
    * - -f, --file
      - string
      - false
-     - Filename to use, optional file with a json cluster configuration.
+     - Filename to use, file with a json index configuration.
    * - -h, --help
      - 
      - false

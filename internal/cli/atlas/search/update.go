@@ -105,14 +105,14 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.IndexName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyzer, usage.Analyzer)
 	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyzer, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.Filename)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

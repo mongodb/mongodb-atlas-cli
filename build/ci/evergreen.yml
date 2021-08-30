@@ -102,6 +102,7 @@ functions:
           - E2E_TEST_BUCKET
           - E2E_CLOUD_ROLE_ID
           - MCLI_OPS_MANAGER_URL
+          - OM_VERSION
         working_dir: src/github.com/mongodb/mongocli
         env:
           XDG_CONFIG_HOME: ${workdir}

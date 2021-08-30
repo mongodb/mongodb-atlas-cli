@@ -969,6 +969,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,generic
+          OM_VERSION: 4.4
   - name: ops_manager_4_4_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-44" ]
     depends_on:
@@ -1029,6 +1030,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: opsmanager,generic
+          OM_VERSION: 5.0
   - name: ops_manager_5_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-50" ]
     depends_on:

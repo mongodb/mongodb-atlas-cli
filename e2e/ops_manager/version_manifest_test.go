@@ -36,7 +36,7 @@ func TestVersionManifest(t *testing.T) {
 		"om",
 		"versionManifest",
 		"update",
-		"5.0",
+		os.Getenv("OM_VERSION"),
 		"-o=json",
 	)
 

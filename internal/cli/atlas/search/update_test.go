@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package search
@@ -19,6 +20,7 @@ package search
 import (
 	"testing"
 
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/golang/mock/gomock"
@@ -32,22 +34,53 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	defer ctrl.Finish()
 
-	updateOpts := &UpdateOpts{
-		store: mockStore,
-	}
-	updateOpts.id = "1"
+	t.Run("flags run", func(t *testing.T) {
+		updateOpts := &UpdateOpts{
+			store: mockStore,
+		}
+		updateOpts.name = testName
+		updateOpts.id = "1"
 
-	expected := &mongodbatlas.SearchIndex{}
+		expected := &mongodbatlas.SearchIndex{}
 
-	request, err := updateOpts.newSearchIndex()
-	if err != nil {
-		t.Fatalf("newSearchIndex() unexpected error: %v", err)
-	}
-	mockStore.
-		EXPECT().
-		UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
-		Return(expected, nil).
-		Times(1)
+		request, err := updateOpts.newSearchIndex()
+		if err != nil {
+			t.Fatalf("newSearchIndex() unexpected error: %v", err)
+		}
+		mockStore.
+			EXPECT().
+			UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
+			Return(expected, nil).
+			Times(1)
 
-	assert.NoError(t, updateOpts.Run())
+		assert.NoError(t, updateOpts.Run())
+	})
+
+	t.Run("file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		fileName := "atlas_search_index_update_test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(testJSON), 0600)
+
+		updateOpts := &UpdateOpts{
+			store: mockStore,
+		}
+		updateOpts.id = "1"
+		updateOpts.filename = fileName
+		updateOpts.fs = appFS
+
+		expected := &mongodbatlas.SearchIndex{}
+
+		request, err := updateOpts.newSearchIndex()
+		if err != nil {
+			t.Fatalf("newSearchIndex() unexpected error: %v", err)
+		}
+		mockStore.
+			EXPECT().
+			UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
+			Return(expected, nil).
+			Times(1)
+
+		assert.NoError(t, updateOpts.Run())
+	})
 }

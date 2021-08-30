@@ -24,7 +24,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-// TODO: What do we want to see here
 var createTemplate = "Link Token '{{.LinkToken}}' successfully created.\n"
 
 type CreateOpts struct {

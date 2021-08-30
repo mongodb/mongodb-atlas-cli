@@ -24,6 +24,9 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+// TODO: What do we want to see here
+var createTemplate = "Link Token '{{.LinkToken}}' successfully created.\n"
+
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -37,9 +40,6 @@ func (opts *CreateOpts) initStore() error {
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
-
-// TODO: What do we want to see here
-var createTemplate = "Link Token '{{.Token}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newTokenCreateRequest()
@@ -58,19 +58,25 @@ func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest
 	}
 }
 
-// mongocli atlas cloudMigration|liveMigration|lm link create [--accessListIps accessListIps] [--orgId orgId]
+// mongocli atlas liveMigration|lm link create [--accessListIps accessListIps] [--orgId orgId]
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create one new link-token.",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initStore,
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+			)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.orgId, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringArrayVar(&opts.accessListIPs, flag.AccessListIPs, []string{}, usage.AccessListCIDREntries)
+	cmd.Flags().StringSliceVar(&opts.accessListIPs, flag.AccessListIPs, []string{}, usage.AccessListCIDREntries)
 
 	_ = cmd.MarkFlagRequired(flag.OrgID)
 

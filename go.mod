@@ -21,6 +21,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.11.1-0.20210827140314-0c6a090ef180
-	go.mongodb.org/ops-manager v0.28.0
+	go.mongodb.org/ops-manager v0.28.1
 	gopkg.in/yaml.v2 v2.4.0
 )

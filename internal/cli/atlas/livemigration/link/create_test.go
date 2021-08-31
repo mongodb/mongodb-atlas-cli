@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -33,15 +34,15 @@ func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.LinkToken{}
 
 	createOpts := &CreateOpts{
-		orgID:         "123",
-		accessListIPs: []string{"1.2.3.4", "5.6.7.8"},
-		store:         mockStore,
+		GlobalOpts:   cli.GlobalOpts{OrgID: "1"},
+		accessListIP: []string{"1.2.3.4", "5.6.7.8"},
+		store:        mockStore,
 	}
 
 	createRequest := createOpts.newTokenCreateRequest()
 
 	mockStore.
-		EXPECT().CreateLinkToken(createOpts.orgID, createRequest).Return(expected, nil).
+		EXPECT().CreateLinkToken(createOpts.OrgID, createRequest).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

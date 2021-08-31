@@ -15,16 +15,13 @@
 package link
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "link"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage the link token for your org.",
+		Use:   "link",
+		Short: "Manage the link token for your org.",
 	}
 
 	cmd.AddCommand(

@@ -114,7 +114,6 @@ const (
 	Force                           = "force"                           // Force flag
 	WhitelistIP                     = "whitelistIp"                     // WhitelistIP flag
 	AccessListIP                    = "accessListIp"                    // AccessListIP flag
-	AccessListIPs                   = "accessListIps"                   // AccessListIPs flag
 	Event                           = "event"                           // EventTypeName flag
 	Enabled                         = "enabled"                         // Enabled flag
 	MatcherFieldName                = "matcherFieldName"                // MatcherFieldName flag

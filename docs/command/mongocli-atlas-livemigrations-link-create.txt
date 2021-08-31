@@ -1,8 +1,8 @@
-.. _mongocli-atlas-livemigration-link-create:
+.. _mongocli-atlas-livemigrations-link-create:
 
-========================================
-mongocli atlas livemigration link create
-========================================
+=========================================
+mongocli atlas livemigrations link create
+=========================================
 
 .. default-domain:: mongodb
 
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas livemigration link create [options]
+   mongocli atlas livemigrations link create [options]
 
 Options
 -------
@@ -32,7 +32,7 @@ Options
      - Type
      - Required
      - Description
-   * - --accessListIps
+   * - --accessListIp
      - strings
      - false
      - IP address access list entries associated with the link token.

@@ -15,14 +15,16 @@
 package livemigration
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/livemigration/link"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "livemigrations"
 	cmd := &cobra.Command{
-		Use:     "livemigration",
-		Aliases: []string{"lm"},
+		Use:     use,
+		Aliases: cli.GenerateAliases(use, "lm"),
 		Short:   "Manage Atlas Live Migration for your org.",
 		Long:    "The livemigration command provides access to your org live migrations. You can create, edit, and delete live migrations.",
 	}

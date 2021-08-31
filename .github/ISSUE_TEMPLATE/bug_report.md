@@ -24,6 +24,7 @@ If possible, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. Ubuntu Linux 18.04]
  - MongoCLI version [e.g. 1.2]
+ - Ops Manager Version: [if applicable]
 
 **Additional context**
 Add any other context about the problem here.

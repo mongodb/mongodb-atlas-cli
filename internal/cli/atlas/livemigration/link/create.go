@@ -42,7 +42,7 @@ func (opts *CreateOpts) initStore() error {
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newTokenCreateRequest()
 
-	r, err := opts.store.CreateLinkToken(opts.OrgID, createRequest)
+	r, err := opts.store.CreateLinkToken(opts.ConfigOrgID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest
 	}
 }
 
-// mongocli atlas liveMigration|lm link create [--accessListIp accessListIp] [--orgId orgId].
+// mongocli atlas liveMigrations|lm link create [--accessListIp accessListIp] [--orgId orgId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -64,6 +64,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create one new link-token.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.ValidateOrgID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
@@ -74,8 +75,6 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
-
-	_ = cmd.MarkFlagRequired(flag.OrgID)
 
 	return cmd
 }

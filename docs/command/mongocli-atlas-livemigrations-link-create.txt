@@ -14,6 +14,8 @@ mongocli atlas liveMigrations link create
 
 Create one new link-token.
 
+Your API Key must have the Organization Owner role to successfully run this command.
+
 Syntax
 ------
 
@@ -35,7 +37,7 @@ Options
    * - --accessListIp
      - strings
      - false
-     - IP address access list entries associated with the link token.
+     - IP address access list entries that are associated with the link-token.
    * - -h, --help
      - 
      - false

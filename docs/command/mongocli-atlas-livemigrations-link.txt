@@ -12,7 +12,7 @@ mongocli atlas liveMigrations link
    :depth: 1
    :class: singlecol
 
-Manage the link token for your org.
+Manage the link-token for your organization.
 
 Options
 -------

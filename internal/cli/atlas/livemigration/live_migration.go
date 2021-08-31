@@ -25,8 +25,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "lm"),
-		Short:   "Manage Atlas Live Migration for your org.",
-		Long:    "The liveMigrations command provides access to your org live migrations. You can create, edit, and delete live migrations.",
+		Short:   "Manage a Live Migration to Atlas for your organization.",
+		Long:    "Manage a Live Migration to Atlas for your organization.",
 	}
 
 	cmd.AddCommand(

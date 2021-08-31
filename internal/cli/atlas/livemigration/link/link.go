@@ -21,7 +21,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "link",
-		Short: "Manage the link token for your org.",
+		Short: "Manage the link-token for your organization.",
 	}
 
 	cmd.AddCommand(

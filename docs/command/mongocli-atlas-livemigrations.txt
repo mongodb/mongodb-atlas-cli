@@ -1,7 +1,7 @@
-.. _mongocli-atlas-livemigrations:
+.. _mongocli-atlas-liveMigrations:
 
 =============================
-mongocli atlas livemigrations
+mongocli atlas liveMigrations
 =============================
 
 .. default-domain:: mongodb
@@ -14,7 +14,7 @@ mongocli atlas livemigrations
 
 Manage Atlas Live Migration for your org.
 
-The livemigration command provides access to your org live migrations. You can create, edit, and delete live migrations.
+The liveMigrations command provides access to your org live migrations. You can create, edit, and delete live migrations.
 
 Options
 -------
@@ -30,7 +30,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for livemigrations
+     - help for liveMigrations
 
 Inherited Options
 -----------------
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-livemigrations-link` - Manage the link token for your org.
+* :ref:`mongocli-atlas-liveMigrations-link` - Manage the link token for your org.
 
 
 .. toctree::
    :titlesonly:
 
-   link </command/mongocli-atlas-livemigrations-link>
+   link </command/mongocli-atlas-liveMigrations-link>
 

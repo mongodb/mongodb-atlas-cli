@@ -1,7 +1,7 @@
-.. _mongocli-atlas-livemigrations-link-create:
+.. _mongocli-atlas-liveMigrations-link-create:
 
 =========================================
-mongocli atlas livemigrations link create
+mongocli atlas liveMigrations link create
 =========================================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas livemigrations link create [options]
+   mongocli atlas liveMigrations link create [options]
 
 Options
 -------

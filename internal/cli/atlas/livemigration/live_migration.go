@@ -21,12 +21,12 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "livemigrations"
+	const use = "liveMigrations"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "lm"),
 		Short:   "Manage Atlas Live Migration for your org.",
-		Long:    "The livemigration command provides access to your org live migrations. You can create, edit, and delete live migrations.",
+		Long:    "The liveMigrations command provides access to your org live migrations. You can create, edit, and delete live migrations.",
 	}
 
 	cmd.AddCommand(

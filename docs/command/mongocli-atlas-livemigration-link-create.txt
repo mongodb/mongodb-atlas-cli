@@ -1,0 +1,63 @@
+.. _mongocli-atlas-livemigration-link-create:
+
+========================================
+mongocli atlas livemigration link create
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Create one new link-token.
+
+Syntax
+------
+
+.. code-block::
+
+   mongocli atlas livemigration link create [options]
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --accessListIps
+     - strings
+     - false
+     - IP address access list entries associated with the link token.
+   * - -h, --help
+     - 
+     - false
+     - help for create
+   * - --orgId
+     - string
+     - true
+     - Organization ID to use. Overrides configuration file or environment variable settings.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+

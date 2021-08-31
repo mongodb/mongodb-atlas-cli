@@ -42,7 +42,7 @@ func (opts *projectListOpts) Run() error {
 
 	var r *atlas.EventResponse
 	var err error
-	r, err = opts.store.ProjectEvents(opts.ProjectID, listOpts)
+	r, err = opts.store.ProjectEvents(opts.ConfigProjectID(), listOpts)
 
 	if err != nil {
 		return err

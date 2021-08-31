@@ -24,7 +24,6 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_live_migration.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator
 
-
 type LinkTokenCreator interface {
 	CreateLinkToken(string, *atlas.TokenCreateRequest) (*atlas.LinkToken, error)
 }

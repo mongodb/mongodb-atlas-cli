@@ -42,7 +42,7 @@ func (opts *orgListOpts) Run() error {
 
 	var r *atlas.EventResponse
 	var err error
-	r, err = opts.store.OrganizationEvents(opts.OrgID, listOpts)
+	r, err = opts.store.OrganizationEvents(opts.ConfigOrgID(), listOpts)
 
 	if err != nil {
 		return err

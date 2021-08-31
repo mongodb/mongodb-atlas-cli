@@ -33,7 +33,7 @@ func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.LinkToken{}
 
 	createOpts := &CreateOpts{
-		orgId:         "123",
+		orgID:         "123",
 		accessListIPs: []string{"1.2.3.4", "5.6.7.8"},
 		store:         mockStore,
 	}

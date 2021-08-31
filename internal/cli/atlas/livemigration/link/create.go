@@ -73,7 +73,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LiveMigrationAccessListCIDREntries)
+	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
 
 	_ = cmd.MarkFlagRequired(flag.OrgID)
 

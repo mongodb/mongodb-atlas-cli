@@ -41,7 +41,7 @@ func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	createRequest := createOpts.newTokenCreateRequest()
 
 	mockStore.
-		EXPECT().CreateLinkToken(createOpts.orgId, createRequest).Return(expected, nil).
+		EXPECT().CreateLinkToken(createOpts.orgID, createRequest).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

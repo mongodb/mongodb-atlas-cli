@@ -33,10 +33,10 @@ type LinkTokenStore interface {
 }
 
 // CreateLinkToken encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateLinkToken(orgId string, linkToken *atlas.TokenCreateRequest) (*atlas.LinkToken, error) {
+func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateRequest) (*atlas.LinkToken, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateLinkToken(context.Background(), orgId, linkToken)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateLinkToken(context.Background(), orgID, linkToken)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

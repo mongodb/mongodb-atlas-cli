@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
-package livemigration
+package link
 
 import (
 	"testing"
@@ -32,12 +33,12 @@ func TestLinkTokenCreateOpts_Run(t *testing.T) {
 	expected := &mongodbatlas.LinkToken{}
 
 	createOpts := &CreateOpts{
-		orgId: "123",
+		orgId:         "123",
 		accessListIPs: []string{"1.2.3.4", "5.6.7.8"},
-		store:    mockStore,
+		store:         mockStore,
 	}
 
-	createRequest := createOpts.newTokenCreateRequest();
+	createRequest := createOpts.newTokenCreateRequest()
 
 	mockStore.
 		EXPECT().CreateLinkToken(createOpts.orgId, createRequest).Return(expected, nil).

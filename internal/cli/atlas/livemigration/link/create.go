@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package livemigration
+package link
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -29,8 +29,8 @@ var createTemplate = "Link Token '{{.LinkToken}}' successfully created.\n"
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store      		store.LinkTokenCreator
-	orgId      		string
+	store         store.LinkTokenCreator
+	orgId         string
 	accessListIPs []string
 }
 

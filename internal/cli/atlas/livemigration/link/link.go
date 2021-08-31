@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package livemigration
+package link
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/atlas/livemigration/link"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	const use = "link"
 	cmd := &cobra.Command{
-		Use:     "livemigration",
-		Aliases: []string{"lm"},
-		Short:   "Manage Atlas Live Migration for your org.",
-		Long:    "The livemigration command provides access to your org live migrations. You can create, edit, and delete live migrations.",
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage the link token for your org.",
 	}
 
 	cmd.AddCommand(
-		link.Builder(),
+		CreateBuilder(),
 	)
 
 	return cmd

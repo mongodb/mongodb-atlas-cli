@@ -60,6 +60,7 @@ Related Commands
 * :ref:`mongocli-atlas-dbusers` - Manage database users for your project.
 * :ref:`mongocli-atlas-events` - Manage events for your organization or project.
 * :ref:`mongocli-atlas-integrations` - Third party integration operations
+* :ref:`mongocli-atlas-liveMigrations` - Manage a Live Migration to Atlas for your organization.
 * :ref:`mongocli-atlas-logs` - Download host logs for your project.
 * :ref:`mongocli-atlas-maintenanceWindows` - Manage Atlas maintenance windows.
 * :ref:`mongocli-atlas-metrics` - Get measurements on the state of the MongoDB process.
@@ -86,6 +87,7 @@ Related Commands
    dbusers </command/mongocli-atlas-dbusers>
    events </command/mongocli-atlas-events>
    integrations </command/mongocli-atlas-integrations>
+   liveMigrations </command/mongocli-atlas-liveMigrations>
    logs </command/mongocli-atlas-logs>
    maintenanceWindows </command/mongocli-atlas-maintenanceWindows>
    metrics </command/mongocli-atlas-metrics>

@@ -22,14 +22,19 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator
+//go:generate mockgen -destination=../mocks/mock_live_migration.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator,LinkTokenDeleter
 
 type LinkTokenCreator interface {
 	CreateLinkToken(string, *atlas.TokenCreateRequest) (*atlas.LinkToken, error)
 }
 
+type LinkTokenDeleter interface {
+	DeleteLinkToken(string) error
+}
+
 type LinkTokenStore interface {
 	LinkTokenCreator
+	LinkTokenDeleter
 }
 
 // CreateLinkToken encapsulate the logic to manage different cloud providers.
@@ -40,5 +45,16 @@ func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateReques
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DeleteLinkToken encapsulate the logic to manage different cloud providers.
+func (s *Store) DeleteLinkToken(orgID string) error {
+	switch s.service {
+	case config.CloudService:
+		_, err := s.client.(*atlas.Client).LiveMigration.DeleteLinkToken(context.Background(), orgID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

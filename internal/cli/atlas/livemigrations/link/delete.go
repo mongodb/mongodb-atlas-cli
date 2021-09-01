@@ -21,61 +21,46 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
-
-type CreateOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	store        store.LinkTokenCreator
-	accessListIP []string
+	*cli.DeleteOpts
+	store store.LinkTokenDeleter
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *DeleteOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
-	createRequest := opts.newTokenCreateRequest()
-
-	r, err := opts.store.CreateLinkToken(opts.ConfigOrgID(), createRequest)
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *DeleteOpts) Run() error {
+	return opts.Delete(opts.store.DeleteLinkToken)
 }
 
-func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest {
-	return &mongodbatlas.TokenCreateRequest{
-		AccessListIPs: opts.accessListIP,
+// mongocli atlas liveMigrations|lm link delete|rm [--orgId orgId].
+func DeleteBuilder() *cobra.Command {
+	opts := &DeleteOpts{
+		DeleteOpts: cli.NewDeleteOpts("Link-token %s successfully deleted\n", "Link-token not deleted"),
 	}
-}
-
-// mongocli atlas liveMigrations|lm link create [--accessListIp accessListIp] [--orgId orgId].
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create one new link-token.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Use:     "delete",
+		Aliases: []string{"rm"},
+		Short:   "Delete one link-token.",
+		Long:    "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.Prompt,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.Entry = opts.ConfigOrgID()
 			return opts.Run()
 		},
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
-
 	return cmd
 }

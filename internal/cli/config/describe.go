@@ -46,9 +46,15 @@ func DescribeBuilder() *cobra.Command {
 	opts := &describeOpts{}
 	opts.Template = descTemplate
 	cmd := &cobra.Command{
-		Use:     "describe <name>",
+		Use:     "describe <profileName>",
 		Aliases: []string{"get"},
-		Short:   "Return a specific profile.",
+		Short:   "Return details about a specific profile.",
+		Example: `Describe a profile called myProfile:
+$ mongocli config describe myProfile`,
+		Annotations: map[string]string{
+			"args":            "profileName",
+			"profileNameDesc": "Name of the profile to return. Specify 'default' to return the default profile.",
+		},
 		Args:    require.ExactArgs(1),
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()

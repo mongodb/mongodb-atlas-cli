@@ -1636,8 +1636,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1645,8 +1645,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .generic"
   - name: e2e_atlas_clusters
@@ -1654,8 +1654,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_atlas_networking
@@ -1663,8 +1663,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_datalake
@@ -1672,8 +1672,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
@@ -1681,8 +1681,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_44
@@ -1690,8 +1690,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
@@ -1699,8 +1699,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".ops-manager-50"
   - name: go_msi_snapshot
@@ -1708,8 +1708,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.16"
-      go_bin: "c:\\golang\\go1.16/bin"
+      go_root: "c:\\golang\\go1.17"
+      go_bin: "c:\\golang\\go1.17/bin"
     tasks:
       - name: package_msi
   - name: goreleaser_snapshot
@@ -1717,8 +1717,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
       server_version: "4.4.0-rc3"
     tasks:
       - name: package_goreleaser
@@ -1727,8 +1727,8 @@ buildvariants:
     run_on:
       - rhel70-small
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
       server_version: "4.4.0-rc3"
     tasks:
       - name: .push
@@ -1750,8 +1750,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.16"
-      go_bin: "c:\\golang\\go1.16/bin"
+      go_root: "c:\\golang\\go1.17"
+      go_bin: "c:\\golang\\go1.17/bin"
     tasks:
       - name: release_msi
   - name: release_github
@@ -1759,8 +1759,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.16"
-      go_bin: "/opt/golang/go1.16/bin"
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: release
   - name: release_publish_42

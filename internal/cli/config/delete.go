@@ -43,9 +43,17 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Profile '%s' deleted\n", "Profile not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
+		Use:     "delete <profileName>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a profile.",
+		Long:    `This command removes the specified profile from the MongoDB CLI configuration file. 
+For more information on the configuration file, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/configuration-file/ `,
+		Example:  `Delete a profile called myProfile:
+$ mongocli config delete myProfile`,
+		Annotations: map[string]string{
+			"args":            "profileName",
+			"profileNameDesc": "Name of the profile to delete. Specify 'default' to delete the default profile.",
+		},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

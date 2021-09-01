@@ -14,8 +14,6 @@ mongocli atlas liveMigrations
 
 Manage a Live Migration to Atlas for your organization.
 
-Manage a Live Migration to Atlas for your organization.
-
 Options
 -------
 

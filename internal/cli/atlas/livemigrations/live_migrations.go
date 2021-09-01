@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "lm"),
 		Short:   "Manage a Live Migration to Atlas for your organization.",
-		Long:    "Manage a Live Migration to Atlas for your organization.",
 	}
 
 	cmd.AddCommand(

@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -41,4 +42,26 @@ func (s *Store) GetServiceVersion() (*atlas.ServiceVersion, error) {
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+}
+
+func omAtLeastFive(version *atlas.ServiceVersion) (bool, error) {
+	sv, err := semver.NewVersion(version.Version)
+	if err != nil {
+		return false, err
+	}
+
+	constrain, _ := semver.NewConstraint(">= 5.0")
+	return constrain.Check(sv), nil
+}
+
+func checkOMIsAtLeastFive(s *Store) (bool, error) {
+	version, err := s.GetServiceVersion()
+	if err != nil {
+		return false, err
+	}
+	omIsAtLeastFive, err := omAtLeastFive(version)
+	if err != nil {
+		return false, err
+	}
+	return omIsAtLeastFive, nil
 }

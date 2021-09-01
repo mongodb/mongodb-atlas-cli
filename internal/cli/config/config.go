@@ -237,23 +237,23 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
-		Long: `Configure settings in a user profile.
+		Long: `You can define the settings that the MongoDB CLI uses to interact with MongoDB services.
 All settings are optional. You can specify settings individually by running: 
 $ mongocli config set --help 
 
 You can also use environment variables (MCLI_*) when running the tool.
 To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,
 		Example: `
-  To configure the tool to work with Atlas
+  Configure a profile to interact with Atlas:
   $ mongocli config
 
-  To configure the tool to work with Atlas for Government
+  Configure a profile to interact with Atlas for Government:
   $ mongocli config --service cloudgov
   
-  To configure the tool to work with Cloud Manager
+  Configure a profile to interact with Cloud Manager:
   $ mongocli config --service cloud-manager
 
-  To configure the tool to work with Ops Manager
+  Configure a profile to interact with Ops Manager:
   $ mongocli config --service ops-manager
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {

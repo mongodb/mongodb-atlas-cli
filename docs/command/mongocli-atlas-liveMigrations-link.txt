@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-liveMigrations-link-create` - Create one new link-token.
+* :ref:`mongocli-atlas-liveMigrations-link-delete` - Delete one link-token.
 
 
 .. toctree::
    :titlesonly:
 
    create </command/mongocli-atlas-liveMigrations-link-create>
+   delete </command/mongocli-atlas-liveMigrations-link-delete>
 

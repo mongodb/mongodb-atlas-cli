@@ -20,14 +20,31 @@ package link
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/mocks"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
+func TestLinkTokenDeleteOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockLinkTokenDeleter(ctrl)
+	defer ctrl.Finish()
+
+	deleteOpts := &DeleteOpts{
+		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		store:      mockStore,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "1",
+		},
+	}
+
+	mockStore.
+		EXPECT().DeleteLinkToken(deleteOpts.OrgID).
+		Return(nil).
+		Times(1)
+
+	if err := deleteOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

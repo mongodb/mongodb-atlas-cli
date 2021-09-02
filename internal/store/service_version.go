@@ -17,6 +17,7 @@ package store
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/config"
@@ -45,7 +46,17 @@ func (s *Store) GetServiceVersion() (*atlas.ServiceVersion, error) {
 }
 
 func omAtLeastFive(version *atlas.ServiceVersion) (bool, error) {
-	sv, err := semver.NewVersion(version.Version)
+	versionParts := strings.Split(version.Version, ".")
+
+	const maxVersionParts = 3
+
+	if len(versionParts) > maxVersionParts {
+		versionParts = versionParts[0:3] // ops manager versions are not semantic this is converting it to x.y.z
+	}
+
+	newVersion := strings.Join(versionParts, ".")
+
+	sv, err := semver.NewVersion(newVersion)
 	if err != nil {
 		return false, err
 	}

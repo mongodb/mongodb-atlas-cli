@@ -17,6 +17,7 @@
 package atlas_test
 
 import (
+	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -30,16 +31,19 @@ func TestLinkToken(t *testing.T) {
 	r := require.New(t)
 	r.NoError(err)
 
-	// Cleanup, do a delete in case a token already exists
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			liveMigrationsEntity,
-			"link",
-			"delete",
-			"-o=json")
-		cmd.Env = os.Environ()
-	})
+	// Cleanup, do a delete in case a token already exists from another run of the test
+	log.Printf("Removing link-tokens from previous/parallel test runs...")
+	deleteCleanup := exec.Command(cliPath,
+		atlasEntity,
+		liveMigrationsEntity,
+		"link",
+		"delete",
+		"--force")
+	deleteCleanup.Env = os.Environ()
+	if err := deleteCleanup.Run(); err == nil {
+		log.Printf("Warning: Deleted link-token.")
+	}
+	log.Printf("Cleanup complete.")
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -60,7 +64,8 @@ func TestLinkToken(t *testing.T) {
 			atlasEntity,
 			liveMigrationsEntity,
 			"link",
-			"delete")
+			"delete",
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

@@ -61,6 +61,7 @@ func DeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	return cmd
 }

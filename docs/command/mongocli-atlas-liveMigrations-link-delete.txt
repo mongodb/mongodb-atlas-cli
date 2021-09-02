@@ -34,6 +34,10 @@ Options
      - Type
      - Required
      - Description
+   * - --force
+     - 
+     - false
+     - Don't ask for confirmation.
    * - -h, --help
      - 
      - false

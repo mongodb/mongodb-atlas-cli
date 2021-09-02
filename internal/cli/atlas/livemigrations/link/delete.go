@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteLinkToken)
 }
 
-// mongocli atlas liveMigrations|lm link delete|rm [--orgId orgId].
+// mongocli atlas liveMigrations|lm link delete|rm [--orgId orgId] [--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Link-token %s successfully deleted\n", "Link-token not deleted"),
@@ -61,6 +61,7 @@ func DeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	return cmd
 }

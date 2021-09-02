@@ -34,7 +34,7 @@ func TestLinkToken(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			"lm",
+			liveMigrationsEntity,
 			"link",
 			"delete",
 			"-o=json")
@@ -44,7 +44,8 @@ func TestLinkToken(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			"lm",
+			liveMigrationsEntity,
+			"link",
 			"create",
 			"--accessListIp",
 			"1.2.3.4,5.6.7.8")
@@ -57,7 +58,8 @@ func TestLinkToken(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
-			"lm",
+			liveMigrationsEntity,
+			"link",
 			"delete")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

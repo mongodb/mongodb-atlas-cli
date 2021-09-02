@@ -322,8 +322,10 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
-| `serverless create`                    | Y         |           |           | Y         |       |       |
-| `serverless delete`                    | Y         |           |           | Y         |       |       |
-| `serverless describe`                  | Y         |           |           | Y         |       |       |
-| `serverless list`                      | Y         |           |           | Y         |       |       |
-| `serverless watch`                     | Y         |           |           | Y         |       |       |
+| `serverless create`                           | Y         |           |           | Y         |       |       |
+| `serverless delete`                           | Y         |           |           | Y         |       |       |
+| `serverless describe`                         | Y         |           |           | Y         |       |       |
+| `serverless list`                             | Y         |           |           | Y         |       |       |
+| `serverless watch`                            | Y         |           |           | Y         |       |       |
+| `livemigrations link create`                  | Y         |           |           | Y         |       |       |
+| `livemigrations link delete`                  | Y         |           |           | Y         |       |       |

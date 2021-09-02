@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package atlas_test
 
 import (
-	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -32,7 +31,7 @@ func TestLinkToken(t *testing.T) {
 	r.NoError(err)
 
 	// Cleanup, do a delete in case a token already exists from another run of the test
-	log.Printf("Removing link-tokens from previous/parallel test runs...")
+	t.Logf("Removing link-tokens from previous/parallel test runs...")
 	deleteCleanup := exec.Command(cliPath,
 		atlasEntity,
 		liveMigrationsEntity,
@@ -41,9 +40,9 @@ func TestLinkToken(t *testing.T) {
 		"--force")
 	deleteCleanup.Env = os.Environ()
 	if err := deleteCleanup.Run(); err == nil {
-		log.Printf("Warning: Deleted link-token.")
+		t.Logf("Warning: Deleted link-token.")
 	}
-	log.Printf("Cleanup complete.")
+	t.Logf("Cleanup complete.")
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

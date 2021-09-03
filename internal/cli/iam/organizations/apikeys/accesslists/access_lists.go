@@ -50,16 +50,21 @@ func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
 		return true, nil
 	}
 
-	version, err := s.ServiceVersion()
+	v, err := s.ServiceVersion()
 	if err != nil {
 		return false, err
 	}
-	versionParts := strings.Split(version.Version, ".")
+	return checkIfOMVersionIsAtLeastFive(v.Version)
+}
+
+// checkIfOMVersionIsAtLeastFive expects an Ops Manager version string and checks if it is at least 5.
+func checkIfOMVersionIsAtLeastFive(version string) (bool, error) {
+	versionParts := strings.Split(version, ".")
 
 	const maxVersionParts = 2
 
 	if len(versionParts) > maxVersionParts {
-		versionParts = versionParts[0:2] // ops manager versions are not semantic this is converting it to x.y
+		versionParts = versionParts[0:maxVersionParts] // ops manager versions are not semantic this is converting it to x.y
 	}
 
 	newVersion := strings.Join(versionParts, ".")

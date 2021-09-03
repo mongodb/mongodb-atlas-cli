@@ -34,7 +34,7 @@ type CreateOpts struct {
 	apyKey string
 	ips    []string
 	cidrs  []string
-	store  store.OrganizationAPIKeyAccessListCreator
+	store  store.OrganizationAPIKeyAccessListWhitelistCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -71,12 +71,26 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	r, err := opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
+	useWhitelist, err := shouldUseWhitelist(opts.store)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	var result *atlas.AccessListAPIKeys
+	if useWhitelist {
+		r, e := opts.store.CreateOrganizationAPIKeyWhitelist(opts.ConfigOrgID(), opts.apyKey, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(req))
+		if e != nil {
+			return e
+		}
+		result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
+	} else {
+		result, err = opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
+		if err != nil {
+			return err
+		}
+	}
+
+	return opts.Print(result)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikeys accessList create [--apiKey keyId] [--orgId orgId] [--ip ip] [--cidr cidr].
@@ -107,4 +121,21 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 
 	return cmd
+}
+
+// fromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
+func fromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
+	if in == nil {
+		return nil
+	}
+	out := make([]*atlas.WhitelistAPIKeysReq, len(in))
+	for i, element := range in {
+		accessListElement := &atlas.WhitelistAPIKeysReq{
+			IPAddress: element.IPAddress,
+			CidrBlock: element.CidrBlock,
+		}
+		out[i] = accessListElement
+	}
+	return out
 }

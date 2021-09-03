@@ -44,14 +44,14 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	shouldWhitelist, err := shouldUseWhitelist(opts.store)
+	useWhitelist, err := shouldUseWhitelist(opts.store)
 	if err != nil {
 		return err
 	}
 
 	var result *atlas.AccessListAPIKeys
 
-	if shouldWhitelist {
+	if useWhitelist {
 		r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
 		if e != nil {
 			return e

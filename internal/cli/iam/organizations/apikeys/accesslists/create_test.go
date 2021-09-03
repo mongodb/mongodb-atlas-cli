@@ -21,18 +21,23 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListCreator(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.AccessListAPIKeys{}
+	prevServ := config.Service()
+	config.SetService(config.OpsManagerService)
+	defer func() {
+		config.SetService(prevServ)
+	}()
 
 	createOpts := &CreateOpts{
 		store:  mockStore,
@@ -45,15 +50,46 @@ func TestCreate_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	mockStore.
-		EXPECT().
-		CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
-		Return(expected, nil).
-		Times(1)
+	t.Run("OM 5.0", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100"}, nil).
+			Times(1)
 
-	if err = createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		expected := &atlas.AccessListAPIKeys{}
+
+		mockStore.
+			EXPECT().
+			CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
+			Return(expected, nil).
+			Times(1)
+
+		if err = createOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("OM 4.4", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100"}, nil).
+			Times(1)
+
+		req := fromAccessListAPIKeysReqToWhitelistAPIKeysReq(r)
+		expected := &atlas.WhitelistAPIKeys{}
+
+		mockStore.
+			EXPECT().
+			CreateOrganizationAPIKeyWhitelist(createOpts.OrgID, createOpts.apyKey, req).
+			Return(expected, nil).
+			Times(1)
+
+		if err = createOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }
 
 func TestCreateBuilder(t *testing.T) {

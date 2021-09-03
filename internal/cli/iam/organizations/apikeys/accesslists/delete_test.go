@@ -22,15 +22,23 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListDeleter(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistDeleter(ctrl)
 	defer ctrl.Finish()
+
+	prevServ := config.Service()
+	config.SetService(config.OpsManagerService)
+	defer func() {
+		config.SetService(prevServ)
+	}()
 
 	deleteOpts := &DeleteOpts{
 		store: mockStore,
@@ -43,15 +51,42 @@ func TestDelete_Run(t *testing.T) {
 			OrgID: "2",
 		},
 	}
-	mockStore.
-		EXPECT().
-		DeleteOrganizationAPIKeyAccessList(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(nil).
-		Times(1)
 
-	if err := deleteOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	t.Run("OM 5.0", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100"}, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			DeleteOrganizationAPIKeyAccessList(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+			Return(nil).
+			Times(1)
+
+		if err := deleteOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("OM 4.4", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100"}, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			DeleteOrganizationAPIKeyWhitelist(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+			Return(nil).
+			Times(1)
+
+		if err := deleteOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }
 
 func TestDeleteBuilder(t *testing.T) {

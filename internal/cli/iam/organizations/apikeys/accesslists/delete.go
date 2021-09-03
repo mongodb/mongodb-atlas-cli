@@ -28,7 +28,7 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
 	apiKey string
-	store  store.OrganizationAPIKeyAccessListDeleter
+	store  store.OrganizationAPIKeyAccessListWhitelistDeleter
 }
 
 func (opts *DeleteOpts) init() error {
@@ -38,7 +38,19 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
+	useWhitelist, err := shouldUseWhitelist(opts.store)
+	if err != nil {
+		return err
+	}
+
+	var f func(string, string, string) error
+	if useWhitelist {
+		f = opts.store.DeleteOrganizationAPIKeyWhitelist
+	} else {
+		f = opts.store.DeleteOrganizationAPIKeyAccessList
+	}
+
+	return opts.Delete(f, opts.ConfigOrgID(), opts.apiKey)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force.

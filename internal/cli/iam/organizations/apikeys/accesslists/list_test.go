@@ -18,6 +18,7 @@
 package accesslists
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -29,85 +30,62 @@ import (
 )
 
 func TestListOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistLister(ctrl)
-	defer ctrl.Finish()
+	runListTest := func(t *testing.T, service string, version string, accessList bool) {
+		t.Helper()
+		t.Run(fmt.Sprintf("%s %s", service, version), func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistLister(ctrl)
+			defer ctrl.Finish()
 
-	prevServ := config.Service()
-	config.SetService(config.OpsManagerService)
-	defer func() {
-		config.SetService(prevServ)
-	}()
+			prevServ := config.Service()
+			config.SetService(service)
+			defer func() {
+				config.SetService(prevServ)
+			}()
 
-	opts := &ListOpts{
-		store: mockStore,
+			opts := &ListOpts{
+				store: mockStore,
+			}
+
+			if version != "" {
+				mockStore.
+					EXPECT().
+					ServiceVersion().
+					Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: version}, nil).
+					Times(1)
+			}
+
+			if accessList {
+				mockStore.
+					EXPECT().
+					OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
+					Return(&atlas.AccessListAPIKeys{
+						Results: []*atlas.AccessListAPIKey{},
+					}, nil).
+					Times(1)
+			} else {
+				mockStore.
+					EXPECT().
+					OrganizationAPIKeyWhitelists(opts.OrgID, opts.id, opts.NewListOptions()).
+					Return(&atlas.WhitelistAPIKeys{
+						Results: []*atlas.WhitelistAPIKey{},
+					}, nil).
+					Times(1)
+			}
+
+			if err := opts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+		})
 	}
 
-	t.Run("OM 5.0", func(t *testing.T) {
-		var expected = &atlas.AccessListAPIKeys{
-			Results: []*atlas.AccessListAPIKey{},
-		}
-
-		mockStore.
-			EXPECT().
-			ServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100.20210101T0000Z"}, nil).
-			Times(1)
-
-		mockStore.
-			EXPECT().
-			OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		if err := opts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-
-	t.Run("OM 5.0-rc0", func(t *testing.T) {
-		var expected = &atlas.AccessListAPIKeys{
-			Results: []*atlas.AccessListAPIKey{},
-		}
-
-		mockStore.
-			EXPECT().
-			ServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0-rc0.100.20210101T0000Z"}, nil).
-			Times(1)
-
-		mockStore.
-			EXPECT().
-			OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		if err := opts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-
-	t.Run("OM 4.4", func(t *testing.T) {
-		var expected = &atlas.WhitelistAPIKeys{
-			Results: []*atlas.WhitelistAPIKey{},
-		}
-
-		mockStore.
-			EXPECT().
-			ServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100.20210101T0000Z"}, nil).
-			Times(1)
-
-		mockStore.
-			EXPECT().
-			OrganizationAPIKeyWhitelists(opts.OrgID, opts.id, opts.NewListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		if err := opts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
+	runListTest(t, config.CloudService, "", true)
+	runListTest(t, config.CloudGovService, "", true)
+	runListTest(t, config.CloudManagerService, "", true)
+	runListTest(t, config.OpsManagerService, "5.0.0.100.20210101T0000Z", true)
+	runListTest(t, config.OpsManagerService, "5.0.0-rc0.100.20210101T0000Z", true)
+	runListTest(t, config.OpsManagerService, "4.4.0.100.20210101T0000Z", false)
+	runListTest(t, config.OpsManagerService, "4.2.0.100.20210101T0000Z", false)
 }
 
 func TestListBuilder(t *testing.T) {

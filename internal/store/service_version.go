@@ -17,9 +17,7 @@ package store
 import (
 	"context"
 	"fmt"
-	"strings"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -43,36 +41,4 @@ func (s *Store) GetServiceVersion() (*atlas.ServiceVersion, error) {
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-}
-
-func omAtLeastFive(version *atlas.ServiceVersion) (bool, error) {
-	versionParts := strings.Split(version.Version, ".")
-
-	const maxVersionParts = 3
-
-	if len(versionParts) > maxVersionParts {
-		versionParts = versionParts[0:3] // ops manager versions are not semantic this is converting it to x.y.z
-	}
-
-	newVersion := strings.Join(versionParts, ".")
-
-	sv, err := semver.NewVersion(newVersion)
-	if err != nil {
-		return false, err
-	}
-
-	constrain, _ := semver.NewConstraint(">= 5.0")
-	return constrain.Check(sv), nil
-}
-
-func checkOMIsAtLeastFive(s *Store) (bool, error) {
-	version, err := s.GetServiceVersion()
-	if err != nil {
-		return false, err
-	}
-	omIsAtLeastFive, err := omAtLeastFive(version)
-	if err != nil {
-		return false, err
-	}
-	return omIsAtLeastFive, nil
 }

@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package atlas
+package livemigrations
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/link"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		22,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "liveMigrations"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use, "lm"),
+		Short:   "Manage a Live Migration to Atlas for your organization.",
+	}
+
+	cmd.AddCommand(
+		link.Builder(),
 	)
+
+	return cmd
 }

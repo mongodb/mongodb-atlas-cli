@@ -60,6 +60,7 @@ const (
 	customDBRoleEntity     = "customDbRoles"
 	regionalModeEntity     = "regionalModes"
 	serverlessEntity       = "serverless"
+	liveMigrationsEntity   = "liveMigrations"
 )
 
 func getHostnameAndPort() (string, error) {

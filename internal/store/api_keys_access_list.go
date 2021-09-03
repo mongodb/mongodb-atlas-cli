@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyAccessListWhitelistLister,OrganizationAPIKeyAccessListWhitelistDeleter,OrganizationAPIKeyAccessListWhitelistCreator
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
@@ -47,6 +47,24 @@ type OrganizationAPIKeyWhitelistDeleter interface {
 
 type OrganizationAPIKeyWhitelistCreator interface {
 	CreateOrganizationAPIKeyWhitelist(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
+}
+
+type OrganizationAPIKeyAccessListWhitelistLister interface {
+	OrganizationAPIKeyAccessListLister
+	OrganizationAPIKeyWhitelistLister
+	ServiceVersionGetter
+}
+
+type OrganizationAPIKeyAccessListWhitelistDeleter interface {
+	OrganizationAPIKeyAccessListDeleter
+	OrganizationAPIKeyWhitelistDeleter
+	ServiceVersionGetter
+}
+
+type OrganizationAPIKeyAccessListWhitelistCreator interface {
+	OrganizationAPIKeyAccessListCreator
+	OrganizationAPIKeyWhitelistCreator
+	ServiceVersionGetter
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.

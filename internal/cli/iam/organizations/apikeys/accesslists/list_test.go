@@ -21,34 +21,71 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListLister(ctrl)
+	mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistLister(ctrl)
 	defer ctrl.Finish()
 
-	var expected = &mongodbatlas.AccessListAPIKeys{
-		Results: []*mongodbatlas.AccessListAPIKey{},
-	}
+	prevServ := config.Service()
+	config.SetService(config.OpsManagerService)
+	defer func() {
+		config.SetService(prevServ)
+	}()
 
 	opts := &ListOpts{
 		store: mockStore,
 	}
 
-	mockStore.
-		EXPECT().
-		OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-		Return(expected, nil).
-		Times(1)
+	t.Run("OM 5.0", func(t *testing.T) {
+		var expected = &atlas.AccessListAPIKeys{
+			Results: []*atlas.AccessListAPIKey{},
+		}
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100"}, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("OM 4.4", func(t *testing.T) {
+		var expected = &atlas.WhitelistAPIKeys{
+			Results: []*atlas.WhitelistAPIKey{},
+		}
+
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100"}, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			OrganizationAPIKeyWhitelists(opts.OrgID, opts.id, opts.NewListOptions()).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }
 
 func TestListBuilder(t *testing.T) {

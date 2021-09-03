@@ -15,8 +15,15 @@
 package accesslists
 
 import (
+	"strings"
+
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
+
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func Builder() *cobra.Command {
@@ -35,4 +42,69 @@ func Builder() *cobra.Command {
 	)
 
 	return cmd
+}
+
+// shouldUseWhitelist returns true when it is service Ops Manager and all versions below 5.0
+// returns false when Atlas, Cloud Manager or Ops Manager 5+.
+func shouldUseWhitelist(s store.ServiceVersionGetter) (bool, error) {
+	if config.Service() != config.OpsManagerService {
+		return false, nil
+	}
+
+	version, err := s.GetServiceVersion()
+	if err != nil {
+		return false, err
+	}
+	versionParts := strings.Split(version.Version, ".")
+
+	const maxVersionParts = 3
+
+	if len(versionParts) > maxVersionParts {
+		versionParts = versionParts[0:3] // ops manager versions are not semantic this is converting it to x.y.z
+	}
+
+	newVersion := strings.Join(versionParts, ".")
+
+	sv, err := semver.NewVersion(newVersion)
+	if err != nil {
+		return false, err
+	}
+
+	constrain, _ := semver.NewConstraint("< 5.0")
+	return constrain.Check(sv), nil
+}
+
+// fromWhitelistAPIKeysToAccessListAPIKeys convert from atlas.WhitelistAPIKeys format to atlas.AccessListAPIKeys
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
+func fromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
+	if in == nil {
+		return nil
+	}
+
+	out := &atlas.AccessListAPIKeys{
+		TotalCount: in.TotalCount,
+		Links:      in.Links,
+	}
+
+	results := make([]*atlas.AccessListAPIKey, len(in.Results))
+	for i, element := range in.Results {
+		results[i] = fromWhitelistAPIKeyToAccessListAPIKey(element)
+	}
+
+	out.Results = results
+	return out
+}
+
+// fromWhitelistAPIKeyToAccessListAPIKey convert from atlas.WhitelistAPIKey format to atlas.AccessListAPIKey
+// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
+func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.AccessListAPIKey {
+	return &atlas.AccessListAPIKey{
+		CidrBlock:       in.CidrBlock,
+		Count:           in.Count,
+		Created:         in.Created,
+		IPAddress:       in.IPAddress,
+		LastUsed:        in.LastUsed,
+		LastUsedAddress: in.LastUsedAddress,
+		Links:           in.Links,
+	}
 }

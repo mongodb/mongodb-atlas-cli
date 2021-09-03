@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/spf13/cobra"
-
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

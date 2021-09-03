@@ -54,7 +54,27 @@ func TestCreate_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			GetServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100"}, nil).
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100.20210101T0000Z"}, nil).
+			Times(1)
+
+		expected := &atlas.AccessListAPIKeys{}
+
+		mockStore.
+			EXPECT().
+			CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
+			Return(expected, nil).
+			Times(1)
+
+		if err = createOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("OM 5.0-rc0", func(t *testing.T) {
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0-rc0.100.20210101T0000Z"}, nil).
 			Times(1)
 
 		expected := &atlas.AccessListAPIKeys{}
@@ -74,7 +94,7 @@ func TestCreate_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			GetServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100"}, nil).
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100.20210101T0000Z"}, nil).
 			Times(1)
 
 		req := fromAccessListAPIKeysReqToWhitelistAPIKeysReq(r)

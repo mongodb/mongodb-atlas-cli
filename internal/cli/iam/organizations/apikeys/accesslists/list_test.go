@@ -51,7 +51,29 @@ func TestListOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			GetServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100"}, nil).
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100.20210101T0000Z"}, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("OM 5.0-rc0", func(t *testing.T) {
+		var expected = &atlas.AccessListAPIKeys{
+			Results: []*atlas.AccessListAPIKey{},
+		}
+
+		mockStore.
+			EXPECT().
+			GetServiceVersion().
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0-rc0.100.20210101T0000Z"}, nil).
 			Times(1)
 
 		mockStore.
@@ -73,7 +95,7 @@ func TestListOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			GetServiceVersion().
-			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100"}, nil).
+			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100.20210101T0000Z"}, nil).
 			Times(1)
 
 		mockStore.

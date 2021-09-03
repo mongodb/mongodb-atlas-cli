@@ -50,7 +50,7 @@ func TestListOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetServiceVersion().
+			ServiceVersion().
 			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0.100.20210101T0000Z"}, nil).
 			Times(1)
 
@@ -72,7 +72,7 @@ func TestListOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetServiceVersion().
+			ServiceVersion().
 			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "5.0.0-rc0.100.20210101T0000Z"}, nil).
 			Times(1)
 
@@ -94,7 +94,7 @@ func TestListOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetServiceVersion().
+			ServiceVersion().
 			Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: "4.4.0.100.20210101T0000Z"}, nil).
 			Times(1)
 

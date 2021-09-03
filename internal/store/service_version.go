@@ -23,14 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_service_version.go -package=mocks github.com/mongodb/mongocli/internal/store ServiceVersionGetter
+//go:generate mockgen -destination=../mocks/mock_service_version.go -package=mocks github.com/mongodb/mongocli/internal/store ServiceVersionDescriber
 
-type ServiceVersionGetter interface {
-	GetServiceVersion() (*opsmngr.ServiceVersion, error)
+type ServiceVersionDescriber interface {
+	ServiceVersion() (*opsmngr.ServiceVersion, error)
 }
 
-// GetCurrentVersionManifest encapsulates the logic to manage different cloud providers.
-func (s *Store) GetServiceVersion() (*atlas.ServiceVersion, error) {
+// ServiceVersion encapsulates the logic to manage different cloud providers.
+func (s *Store) ServiceVersion() (*atlas.ServiceVersion, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).ServiceVersion.Get(context.Background())

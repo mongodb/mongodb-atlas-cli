@@ -260,21 +260,6 @@ func (m *MockOrganizationAPIKeyAccessListWhitelistLister) EXPECT() *MockOrganiza
 	return m.recorder
 }
 
-// GetServiceVersion mocks base method.
-func (m *MockOrganizationAPIKeyAccessListWhitelistLister) GetServiceVersion() (*mongodbatlas.ServiceVersion, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceVersion")
-	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetServiceVersion indicates an expected call of GetServiceVersion.
-func (mr *MockOrganizationAPIKeyAccessListWhitelistListerMockRecorder) GetServiceVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistLister)(nil).GetServiceVersion))
-}
-
 // OrganizationAPIKeyAccessLists mocks base method.
 func (m *MockOrganizationAPIKeyAccessListWhitelistLister) OrganizationAPIKeyAccessLists(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.AccessListAPIKeys, error) {
 	m.ctrl.T.Helper()
@@ -303,6 +288,21 @@ func (m *MockOrganizationAPIKeyAccessListWhitelistLister) OrganizationAPIKeyWhit
 func (mr *MockOrganizationAPIKeyAccessListWhitelistListerMockRecorder) OrganizationAPIKeyWhitelists(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyWhitelists", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistLister)(nil).OrganizationAPIKeyWhitelists), arg0, arg1, arg2)
+}
+
+// ServiceVersion mocks base method.
+func (m *MockOrganizationAPIKeyAccessListWhitelistLister) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ServiceVersion")
+	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ServiceVersion indicates an expected call of ServiceVersion.
+func (mr *MockOrganizationAPIKeyAccessListWhitelistListerMockRecorder) ServiceVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistLister)(nil).ServiceVersion))
 }
 
 // MockOrganizationAPIKeyAccessListWhitelistDeleter is a mock of OrganizationAPIKeyAccessListWhitelistDeleter interface.
@@ -356,19 +356,19 @@ func (mr *MockOrganizationAPIKeyAccessListWhitelistDeleterMockRecorder) DeleteOr
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationAPIKeyWhitelist", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistDeleter)(nil).DeleteOrganizationAPIKeyWhitelist), arg0, arg1, arg2)
 }
 
-// GetServiceVersion mocks base method.
-func (m *MockOrganizationAPIKeyAccessListWhitelistDeleter) GetServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+// ServiceVersion mocks base method.
+func (m *MockOrganizationAPIKeyAccessListWhitelistDeleter) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceVersion")
+	ret := m.ctrl.Call(m, "ServiceVersion")
 	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetServiceVersion indicates an expected call of GetServiceVersion.
-func (mr *MockOrganizationAPIKeyAccessListWhitelistDeleterMockRecorder) GetServiceVersion() *gomock.Call {
+// ServiceVersion indicates an expected call of ServiceVersion.
+func (mr *MockOrganizationAPIKeyAccessListWhitelistDeleterMockRecorder) ServiceVersion() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistDeleter)(nil).GetServiceVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistDeleter)(nil).ServiceVersion))
 }
 
 // MockOrganizationAPIKeyAccessListWhitelistCreator is a mock of OrganizationAPIKeyAccessListWhitelistCreator interface.
@@ -424,17 +424,17 @@ func (mr *MockOrganizationAPIKeyAccessListWhitelistCreatorMockRecorder) CreateOr
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyWhitelist", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistCreator)(nil).CreateOrganizationAPIKeyWhitelist), arg0, arg1, arg2)
 }
 
-// GetServiceVersion mocks base method.
-func (m *MockOrganizationAPIKeyAccessListWhitelistCreator) GetServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+// ServiceVersion mocks base method.
+func (m *MockOrganizationAPIKeyAccessListWhitelistCreator) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceVersion")
+	ret := m.ctrl.Call(m, "ServiceVersion")
 	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetServiceVersion indicates an expected call of GetServiceVersion.
-func (mr *MockOrganizationAPIKeyAccessListWhitelistCreatorMockRecorder) GetServiceVersion() *gomock.Call {
+// ServiceVersion indicates an expected call of ServiceVersion.
+func (mr *MockOrganizationAPIKeyAccessListWhitelistCreatorMockRecorder) ServiceVersion() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistCreator)(nil).GetServiceVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockOrganizationAPIKeyAccessListWhitelistCreator)(nil).ServiceVersion))
 }

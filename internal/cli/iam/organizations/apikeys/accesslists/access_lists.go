@@ -44,13 +44,13 @@ func Builder() *cobra.Command {
 }
 
 // shouldUseAccessList returns true when service is Cloud, CloudGov, Cloud Manager or Ops Manager (version 5+)
-// and returns false when Ops Manager 4 or below
-func shouldUseAccessList(s store.ServiceVersionGetter) (bool, error) {
+// and returns false when Ops Manager 4 or below.
+func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
 	if config.Service() != config.OpsManagerService {
 		return true, nil
 	}
 
-	version, err := s.GetServiceVersion()
+	version, err := s.ServiceVersion()
 	if err != nil {
 		return false, err
 	}

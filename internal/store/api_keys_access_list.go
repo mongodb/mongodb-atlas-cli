@@ -52,19 +52,19 @@ type OrganizationAPIKeyWhitelistCreator interface {
 type OrganizationAPIKeyAccessListWhitelistLister interface {
 	OrganizationAPIKeyAccessListLister
 	OrganizationAPIKeyWhitelistLister
-	ServiceVersionGetter
+	ServiceVersionDescriber
 }
 
 type OrganizationAPIKeyAccessListWhitelistDeleter interface {
 	OrganizationAPIKeyAccessListDeleter
 	OrganizationAPIKeyWhitelistDeleter
-	ServiceVersionGetter
+	ServiceVersionDescriber
 }
 
 type OrganizationAPIKeyAccessListWhitelistCreator interface {
 	OrganizationAPIKeyAccessListCreator
 	OrganizationAPIKeyWhitelistCreator
-	ServiceVersionGetter
+	ServiceVersionDescriber
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.

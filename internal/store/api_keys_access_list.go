@@ -110,6 +110,8 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 }
 
 // CreateOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
 func (s *Store) CreateOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -121,6 +123,8 @@ func (s *Store) CreateOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts [
 }
 
 // DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
 func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress string) error {
 	switch s.service {
 	case config.OpsManagerService:
@@ -132,6 +136,8 @@ func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress str
 }
 
 // OrganizationAPIKeyWhitelists encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
 func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:

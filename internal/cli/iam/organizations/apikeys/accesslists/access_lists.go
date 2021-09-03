@@ -43,23 +43,14 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-// shouldUseAccessList returns true when service is Cloud, CloudGov, Cloud Manager or Ops Manager (version 5+)
-// and returns false when Ops Manager 4 or below.
-func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
-	if config.Service() != config.OpsManagerService {
-		return true, nil
-	}
-
+// parseServiceVersion parses service version into semver.Version.
+func parseServiceVersion(s store.ServiceVersionDescriber) (*semver.Version, error) {
 	v, err := s.ServiceVersion()
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-	return checkIfOMVersionIsAtLeastFive(v.Version)
-}
 
-// checkIfOMVersionIsAtLeastFive expects an Ops Manager version string and checks if it is at least 5.
-func checkIfOMVersionIsAtLeastFive(version string) (bool, error) {
-	versionParts := strings.Split(version, ".")
+	versionParts := strings.Split(v.Version, ".")
 
 	const maxVersionParts = 2
 
@@ -69,7 +60,17 @@ func checkIfOMVersionIsAtLeastFive(version string) (bool, error) {
 
 	newVersion := strings.Join(versionParts, ".")
 
-	sv, err := semver.NewVersion(newVersion)
+	return semver.NewVersion(newVersion)
+}
+
+// shouldUseAccessList returns true when service is Cloud, CloudGov, Cloud Manager or Ops Manager (version 5+)
+// and returns false when Ops Manager 4 or below.
+func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
+	if config.Service() != config.OpsManagerService {
+		return true, nil
+	}
+
+	sv, err := parseServiceVersion(s)
 	if err != nil {
 		return false, err
 	}

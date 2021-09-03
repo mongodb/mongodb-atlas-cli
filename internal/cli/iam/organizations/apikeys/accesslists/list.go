@@ -44,26 +44,26 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	useWhitelist, err := shouldUseWhitelist(opts.store)
+	useAccessList, err := shouldUseAccessList(opts.store)
 	if err != nil {
 		return err
 	}
 
 	var result *atlas.AccessListAPIKeys
 
-	if useWhitelist {
-		r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
-		if e != nil {
-			return e
-		}
-		result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
-	} else {
+	if useAccessList {
 		result, err = opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
 		if err != nil {
 			return err
 		}
+		return opts.Print(result)
 	}
 
+	r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	if e != nil {
+		return e
+	}
+	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
 	return opts.Print(result)
 }
 

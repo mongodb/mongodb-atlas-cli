@@ -38,16 +38,16 @@ func (opts *DeleteOpts) init() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	useWhitelist, err := shouldUseWhitelist(opts.store)
+	useAccessList, err := shouldUseAccessList(opts.store)
 	if err != nil {
 		return err
 	}
 
 	var f func(string, string, string) error
-	if useWhitelist {
-		f = opts.store.DeleteOrganizationAPIKeyWhitelist
-	} else {
+	if useAccessList {
 		f = opts.store.DeleteOrganizationAPIKeyAccessList
+	} else {
+		f = opts.store.DeleteOrganizationAPIKeyWhitelist
 	}
 
 	return opts.Delete(f, opts.ConfigOrgID(), opts.apiKey)

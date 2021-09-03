@@ -43,11 +43,11 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-// shouldUseWhitelist returns true when it is service Ops Manager and all versions below 5.0
-// returns false when Atlas, Cloud Manager or Ops Manager 5+.
-func shouldUseWhitelist(s store.ServiceVersionGetter) (bool, error) {
+// shouldUseAccessList returns true when service is Cloud, CloudGov, Cloud Manager or Ops Manager (version 5+)
+// and returns false when Ops Manager 4 or below
+func shouldUseAccessList(s store.ServiceVersionGetter) (bool, error) {
 	if config.Service() != config.OpsManagerService {
-		return false, nil
+		return true, nil
 	}
 
 	version, err := s.GetServiceVersion()
@@ -56,10 +56,10 @@ func shouldUseWhitelist(s store.ServiceVersionGetter) (bool, error) {
 	}
 	versionParts := strings.Split(version.Version, ".")
 
-	const maxVersionParts = 3
+	const maxVersionParts = 2
 
 	if len(versionParts) > maxVersionParts {
-		versionParts = versionParts[0:3] // ops manager versions are not semantic this is converting it to x.y.z
+		versionParts = versionParts[0:2] // ops manager versions are not semantic this is converting it to x.y
 	}
 
 	newVersion := strings.Join(versionParts, ".")
@@ -69,7 +69,7 @@ func shouldUseWhitelist(s store.ServiceVersionGetter) (bool, error) {
 		return false, err
 	}
 
-	constrain, _ := semver.NewConstraint("< 5.0")
+	constrain, _ := semver.NewConstraint(">= 5.0")
 	return constrain.Check(sv), nil
 }
 

@@ -71,25 +71,26 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	useWhitelist, err := shouldUseWhitelist(opts.store)
+	useAccessList, err := shouldUseAccessList(opts.store)
 	if err != nil {
 		return err
 	}
 
 	var result *atlas.AccessListAPIKeys
-	if useWhitelist {
-		r, e := opts.store.CreateOrganizationAPIKeyWhitelist(opts.ConfigOrgID(), opts.apyKey, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(req))
-		if e != nil {
-			return e
-		}
-		result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
-	} else {
+
+	if useAccessList {
 		result, err = opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
 		if err != nil {
 			return err
 		}
+		return opts.Print(result)
 	}
 
+	r, e := opts.store.CreateOrganizationAPIKeyWhitelist(opts.ConfigOrgID(), opts.apyKey, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(req))
+	if e != nil {
+		return e
+	}
+	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
 	return opts.Print(result)
 }
 

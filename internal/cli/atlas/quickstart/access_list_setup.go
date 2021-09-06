@@ -16,6 +16,7 @@ package quickstart
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/store"
@@ -26,8 +27,9 @@ func (opts *Opts) createAccessList() error {
 	if err := opts.askAccessListOptions(); err != nil {
 		return err
 	}
-	if opts.IPAddress != "" {
-		opts.IPAddresses = append(opts.IPAddresses, opts.IPAddress)
+	if opts.IPAddressesResponse != "" {
+		ips := strings.Split(opts.IPAddressesResponse, ",")
+		opts.IPAddresses = append(opts.IPAddresses, ips...)
 	}
 	entries := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
@@ -52,7 +54,7 @@ func (opts *Opts) askAccessListOptions() error {
 	}
 	return survey.AskOne(
 		newAccessListQuestion(publicIP, message),
-		&opts.IPAddress,
+		&opts.IPAddressesResponse,
 		survey.WithValidator(survey.Required),
 	)
 }

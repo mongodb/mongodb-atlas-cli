@@ -142,7 +142,7 @@ func OptionalPath(val interface{}) error {
 	return Path(val)
 }
 
-var ErrInvalidClusterName = errors.New("invalid cluster name")
+var ErrInvalidClusterName = errors.New("invalid cluster name. Cluster names can only contain ASCII letters, numbers, and hyphens")
 
 func ClusterName(val interface{}) error {
 	name, ok := val.(string)

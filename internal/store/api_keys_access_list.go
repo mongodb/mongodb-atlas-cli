@@ -16,7 +16,6 @@ package store
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -24,9 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
-
-const resourceNotFound = 404
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyAccessListWhitelistLister,OrganizationAPIKeyAccessListWhitelistDeleter,OrganizationAPIKeyAccessListWhitelistCreator
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
@@ -40,23 +37,44 @@ type OrganizationAPIKeyAccessListCreator interface {
 	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
 }
 
+type OrganizationAPIKeyWhitelistLister interface {
+	OrganizationAPIKeyWhitelists(string, string, *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error)
+}
+
+type OrganizationAPIKeyWhitelistDeleter interface {
+	DeleteOrganizationAPIKeyWhitelist(string, string, string) error
+}
+
+type OrganizationAPIKeyWhitelistCreator interface {
+	CreateOrganizationAPIKeyWhitelist(string, string, []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error)
+}
+
+type OrganizationAPIKeyAccessListWhitelistLister interface {
+	OrganizationAPIKeyAccessListLister
+	OrganizationAPIKeyWhitelistLister
+	ServiceVersionDescriber
+}
+
+type OrganizationAPIKeyAccessListWhitelistDeleter interface {
+	OrganizationAPIKeyAccessListDeleter
+	OrganizationAPIKeyWhitelistDeleter
+	ServiceVersionDescriber
+}
+
+type OrganizationAPIKeyAccessListWhitelistCreator interface {
+	OrganizationAPIKeyAccessListCreator
+	OrganizationAPIKeyWhitelistCreator
+	ServiceVersionDescriber
+}
+
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
 		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
-		var target *atlas.ErrorResponse
-		if err != nil && errors.As(err, &target) {
-			// We keep supporting OM 4.2 and OM 4.4
-			if target.HTTPCode == resourceNotFound {
-				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, fromAccessListAPIKeysReqToWhitelistAPIKeysReq(opts))
-				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
-			}
-		}
-
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,16 +87,8 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 	case config.CloudService, config.CloudGovService:
 		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
 		return err
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
-		var target *atlas.ErrorResponse
-		if err != nil && errors.As(err, &target) {
-			// We keep supporting OM 4.2 and OM 4.4
-			if target.HTTPCode == resourceNotFound {
-				_, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
-				return e
-			}
-		}
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,72 +101,49 @@ func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atla
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
 		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
+	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-		var target *atlas.ErrorResponse
-		if err != nil && errors.As(err, &target) {
-			// We keep supporting OM 4.2 and OM 4.4
-			if target.HTTPCode == resourceNotFound {
-				result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
-				return fromWhitelistAPIKeysToAccessListAPIKeys(result), e
-			}
-		}
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// fromWhitelistAPIKeysToAccessListAPIKeys convert from atlas.WhitelistAPIKeys format to atlas.AccessListAPIKeys
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
-func fromWhitelistAPIKeysToAccessListAPIKeys(in *atlas.WhitelistAPIKeys) *atlas.AccessListAPIKeys {
-	if in == nil {
-		return nil
-	}
-
-	out := &atlas.AccessListAPIKeys{
-		TotalCount: in.TotalCount,
-		Links:      in.Links,
-	}
-
-	results := make([]*atlas.AccessListAPIKey, len(in.Results))
-	for i, element := range in.Results {
-		results[i] = fromWhitelistAPIKeyToAccessListAPIKey(element)
-	}
-
-	out.Results = results
-	return out
-}
-
-// fromWhitelistAPIKeyToAccessListAPIKey convert from atlas.WhitelistAPIKey format to atlas.AccessListAPIKey
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
-func fromWhitelistAPIKeyToAccessListAPIKey(in *atlas.WhitelistAPIKey) *atlas.AccessListAPIKey {
-	return &atlas.AccessListAPIKey{
-		CidrBlock:       in.CidrBlock,
-		Count:           in.Count,
-		Created:         in.Created,
-		IPAddress:       in.IPAddress,
-		LastUsed:        in.LastUsed,
-		LastUsedAddress: in.LastUsedAddress,
-		Links:           in.Links,
+// CreateOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
+func (s *Store) CreateOrganizationAPIKeyWhitelist(orgID, apiKeyID string, opts []*atlas.WhitelistAPIKeysReq) (*atlas.WhitelistAPIKeys, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).WhitelistAPIKeys.Create(context.Background(), orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// fromAccessListAPIKeysReqToWhitelistAPIKeysReq convert from atlas.AccessListAPIKeysReq format to atlas.WhitelistAPIKeysReq
-// We use this function with whitelist endpoints to keep supporting OM 4.2 and OM 4.4.
-func fromAccessListAPIKeysReqToWhitelistAPIKeysReq(in []*atlas.AccessListAPIKeysReq) []*atlas.WhitelistAPIKeysReq {
-	if in == nil {
-		return nil
+// DeleteOrganizationAPIKeyWhitelist encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
+func (s *Store) DeleteOrganizationAPIKeyWhitelist(orgID, apiKeyID, ipAddress string) error {
+	switch s.service {
+	case config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(context.Background(), orgID, apiKeyID, ipAddress)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+}
 
-	out := make([]*atlas.WhitelistAPIKeysReq, len(in))
-
-	for i, element := range in {
-		accessListElement := &atlas.WhitelistAPIKeysReq{
-			IPAddress: element.IPAddress,
-			CidrBlock: element.CidrBlock,
-		}
-		out[i] = accessListElement
+// OrganizationAPIKeyWhitelists encapsulates the logic to manage different cloud providers.
+//
+// Deprecated: kept until Ops Manager 4.4 reaches EOL.
+func (s *Store) OrganizationAPIKeyWhitelists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.WhitelistAPIKeys, error) {
+	switch s.service {
+	case config.OpsManagerService:
+		result, _, e := s.client.(*opsmngr.Client).WhitelistAPIKeys.List(context.Background(), orgID, apiKeyID, opts)
+		return result, e
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	return out
 }

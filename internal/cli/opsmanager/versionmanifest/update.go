@@ -31,8 +31,7 @@ const updateTemplate = "Version manifest updated.\n"
 type UpdateOpts struct {
 	cli.OutputOpts
 	versionManifest string
-	store           store.VersionManifestUpdater
-	storeStaticPath store.VersionManifestGetter
+	store           store.VersionManifestGetterUpdater
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -41,12 +40,11 @@ func (opts *UpdateOpts) initStore() error {
 	if err != nil {
 		return err
 	}
-	opts.storeStaticPath, err = store.NewVersionManifest(config.Default())
 	return err
 }
 
 func (opts *UpdateOpts) Run() error {
-	versionManifest, err := opts.storeStaticPath.GetVersionManifest(opts.version())
+	versionManifest, err := opts.store.GetVersionManifest(opts.version())
 	if err != nil {
 		return err
 	}

@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter
+//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestGetterUpdater
 
 type VersionManifestUpdater interface {
 	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)
@@ -30,6 +30,11 @@ type VersionManifestUpdater interface {
 
 type VersionManifestGetter interface {
 	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
+}
+
+type VersionManifestGetterUpdater interface {
+	VersionManifestGetter
+	VersionManifestUpdater
 }
 
 // UpdateVersionManifest encapsulates the logic to manage different cloud providers.

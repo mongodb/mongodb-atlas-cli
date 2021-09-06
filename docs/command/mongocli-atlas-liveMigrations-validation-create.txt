@@ -38,10 +38,10 @@ Options
      - string
      - true
      - Human-readable label that identifies the Atlas destination cluster.
-   * - --destinationProjectID
+   * - --destinationProjectId
      - string
      - false
-     - Human-readable label that identifies the Atlas destination project.
+     - Unique 24-hexadecimal digit string that identifies the destination project.
    * - --drop
      - 
      - false
@@ -74,14 +74,14 @@ Options
      - string
      - false
      - Password that authenticates the username to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is passed.
-   * - --sourceProjectID
+   * - --sourceProjectId
      - string
      - true
      - Unique 24-hexadecimal digit string that identifies the source project.
    * - --sourceSsl
      - 
      - false
-     - Flag that indicates whether you have TLS enabled.
+     - Flag that indicates whether data source has TLS enabled.
    * - --sourceUsername
      - string
      - false

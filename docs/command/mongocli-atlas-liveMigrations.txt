@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-liveMigrations-link` - Manage the link-token for your organization.
-* :ref:`mongocli-atlas-liveMigrations-validation` - Manage a live migration validation job for your project.
+* :ref:`mongocli-atlas-liveMigrations-validation` - Manage a Live Migration validation job for your project.
 
 
 .. toctree::

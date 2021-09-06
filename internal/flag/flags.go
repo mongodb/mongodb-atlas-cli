@@ -252,10 +252,10 @@ const (
 	Default                                  = "default"                         // Default flag
 	Timestamp                                = "timestamp"                       // Timestamp flag
 	LiveMigrationDestinationClusterName      = "destinationClusterName"          // LiveMigrationDestinationClusterName flag
-	LiveMigrationDestinationProjectID        = "destinationProjectID"            // LiveMigrationDestinationProjectID flag
+	LiveMigrationDestinationProjectID        = "destinationProjectId"            // LiveMigrationDestinationProjectID flag
 	LiveMigrationHost                        = "migrationHost"                   // LiveMigrationHost flag
 	LiveMigrationSourceClusterName           = "sourceClusterName"               // LiveMigrationSourceClusterName flag
-	LiveMigrationSourceProjectID             = "sourceProjectID"                 // LiveMigrationSourceProjectID flag
+	LiveMigrationSourceProjectID             = "sourceProjectId"                 // LiveMigrationSourceProjectID flag
 	LiveMigrationSourceSSL                   = "sourceSsl"                       // LiveMigrationSourceSSL flag
 	LiveMigrationSourceCACertificatePath     = "sourceCACertificatePath"         // LiveMigrationSourceCACertificatePath flag
 	LiveMigrationSourceManagedAuthentication = "sourceManagedAuthentication"     // LiveMigrationSourceManagedAuthentication flag

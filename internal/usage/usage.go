@@ -312,11 +312,11 @@ Valid values: 15|30|60.`
 	SnapshotIntervalHours = `Number of hours between snapshots.
 Valid values: 6|8|12|24.`
 	LiveMigrationDestinationClusterName      = "Human-readable label that identifies the Atlas destination cluster."
-	LiveMigrationDestinationProjectID        = "Human-readable label that identifies the Atlas destination project."
+	LiveMigrationDestinationProjectID        = "Unique 24-hexadecimal digit string that identifies the destination project."
 	LiveMigrationHostEntries                 = "List of hosts running the MongoDB Agent that can transfer your MongoDB data from the source (Cloud Manager or Ops Manager) to destination (Atlas) deployments. Each live migration process uses its own dedicated migration host."
 	LiveMigrationSourceClusterName           = "Human-readable label that identifies the source Cloud Manager or Ops Manager cluster."
 	LiveMigrationSourceProjectID             = "Unique 24-hexadecimal digit string that identifies the source project."
-	LiveMigrationSourceSSL                   = "Flag that indicates whether you have TLS enabled."
+	LiveMigrationSourceSSL                   = "Flag that indicates whether data source has TLS enabled."
 	LiveMigrationSourceCACertificatePath     = "Path to the CA certificate that signed TLS certificates use to authenticate to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceSSL is not passed."
 	LiveMigrationSourceManagedAuthentication = "Flag that indicates whether MongoDB Automation manages authentication to the source Cloud Manager or Ops Manager cluster. If you set this to true, don't provide values for --sourceUsername and --sourcePassword."
 	LiveMigrationSourceUsername              = "Human-readable label that identifies the SCRAM-SHA user that connects to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is set."

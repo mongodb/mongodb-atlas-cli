@@ -20,7 +20,6 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/openlyinc/pointy"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -36,7 +35,7 @@ type CreateOpts struct {
 	sourceProjectID             string
 	sourceSSL                   bool
 	sourceManagedAuthentication bool
-	sourceUserName              string
+	sourceUsername              string
 	sourcePassword              string
 	store                       store.LiveMigrationValidationsCreator
 }
@@ -66,22 +65,22 @@ func (opts *CreateOpts) newValidationCreateRequest() *mongodbatlas.LiveMigration
 		Source: &mongodbatlas.Source{
 			ClusterName:           opts.sourceClusterName,
 			GroupID:               opts.sourceProjectID,
-			Username:              opts.sourceUserName,
+			Username:              opts.sourceUsername,
 			Password:              opts.sourcePassword,
-			SSL:                   pointy.Bool(opts.sourceSSL),
+			SSL:                   &opts.sourceSSL,
 			CACertificatePath:     opts.sourceCACertificatePath,
-			ManagedAuthentication: pointy.Bool(opts.sourceManagedAuthentication),
+			ManagedAuthentication: &opts.sourceManagedAuthentication,
 		},
 		Destination: &mongodbatlas.Destination{
 			ClusterName: opts.destinationClusterName,
 			GroupID:     opts.ConfigProjectID(),
 		},
 		MigrationHosts: opts.migrationHosts,
-		DropEnabled:    pointy.Bool(opts.destinationDropEnabled),
+		DropEnabled:    &opts.destinationDropEnabled,
 	}
 }
 
-// mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUserName userName] [--sourcePassword password] [--drop] [--projectId projectId].
+// mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -91,6 +90,7 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
+				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
@@ -102,7 +102,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.sourceClusterName, flag.LiveMigrationSourceClusterName, "", usage.LiveMigrationSourceClusterName)
 	cmd.Flags().StringVar(&opts.sourceProjectID, flag.LiveMigrationSourceProjectID, "", usage.LiveMigrationSourceProjectID)
-	cmd.Flags().StringVar(&opts.sourceUserName, flag.LiveMigrationSourceUsername, "", usage.LiveMigrationSourceUsername)
+	cmd.Flags().StringVar(&opts.sourceUsername, flag.LiveMigrationSourceUsername, "", usage.LiveMigrationSourceUsername)
 	cmd.Flags().StringVar(&opts.sourcePassword, flag.LiveMigrationSourcePassword, "", usage.LiveMigrationSourcePassword)
 	cmd.Flags().BoolVar(&opts.sourceSSL, flag.LiveMigrationSourceSSL, false, usage.LiveMigrationSourceSSL)
 	cmd.Flags().StringVar(&opts.sourceCACertificatePath, flag.LiveMigrationSourceCACertificatePath, "", usage.LiveMigrationSourceCACertificatePath)

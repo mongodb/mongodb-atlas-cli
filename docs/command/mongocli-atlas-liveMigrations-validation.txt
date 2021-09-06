@@ -12,7 +12,7 @@ mongocli atlas liveMigrations validation
    :depth: 1
    :class: singlecol
 
-Manage a live migration validation job for your project.
+Manage a Live Migration validation job for your project.
 
 Options
 -------

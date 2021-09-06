@@ -21,7 +21,7 @@ import (
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "validation",
-		Short: "Manage a live migration validation job for your project.",
+		Short: "Manage a Live Migration validation job for your project.",
 	}
 
 	cmd.AddCommand(

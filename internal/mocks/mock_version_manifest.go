@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -123,6 +124,21 @@ func (m *MockVersionManifestGetterUpdater) GetVersionManifest(arg0 string) (*ops
 func (mr *MockVersionManifestGetterUpdaterMockRecorder) GetVersionManifest(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVersionManifest", reflect.TypeOf((*MockVersionManifestGetterUpdater)(nil).GetVersionManifest), arg0)
+}
+
+// ServiceVersion mocks base method.
+func (m *MockVersionManifestGetterUpdater) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ServiceVersion")
+	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ServiceVersion indicates an expected call of ServiceVersion.
+func (mr *MockVersionManifestGetterUpdaterMockRecorder) ServiceVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockVersionManifestGetterUpdater)(nil).ServiceVersion))
 }
 
 // UpdateVersionManifest mocks base method.

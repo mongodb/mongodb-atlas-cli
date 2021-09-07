@@ -32,8 +32,9 @@ const updateTemplate = "Version manifest updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	versionManifest string
-	store           store.VersionManifestGetterUpdater
+	versionManifest       string
+	SkipVersionValidation bool
+	store                 store.VersionManifestGetterUpdater
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -46,8 +47,25 @@ func (opts *UpdateOpts) initStore() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	if err := opts.validateVersion(); err != nil {
+	svManifest, err := semver.NewVersion(opts.versionManifest)
+	if err != nil {
 		return fmt.Errorf("version '%s' is invalid use the format x.y", opts.versionManifest)
+	}
+
+	if !opts.SkipVersionValidation {
+		v, e := opts.store.ServiceVersion()
+		if e != nil {
+			return e
+		}
+
+		svOM, e := cli.ParseServiceVersion(v)
+		if e != nil {
+			return err
+		}
+
+		if svOM.Compare(svManifest) != 0 {
+			return fmt.Errorf("version '%s' is incompatible with ops manager version '%s'", opts.versionManifest, v.Version)
+		}
 	}
 
 	versionManifest, err := opts.store.GetVersionManifest(opts.version())
@@ -61,11 +79,6 @@ func (opts *UpdateOpts) Run() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *UpdateOpts) validateVersion() error {
-	_, err := semver.NewVersion(opts.versionManifest)
-	return err
 }
 
 func (opts *UpdateOpts) version() string {
@@ -93,6 +106,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.SkipVersionValidation, flag.Force, false, usage.ForceVersionManifest)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

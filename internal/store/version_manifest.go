@@ -35,6 +35,7 @@ type VersionManifestGetter interface {
 type VersionManifestGetterUpdater interface {
 	VersionManifestGetter
 	VersionManifestUpdater
+	ServiceVersionDescriber
 }
 
 // UpdateVersionManifest encapsulates the logic to manage different cloud providers.

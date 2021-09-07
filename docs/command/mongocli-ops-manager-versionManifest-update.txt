@@ -32,6 +32,10 @@ Options
      - Type
      - Required
      - Description
+   * - --force
+     - 
+     - false
+     - Skip Ops Manager version check.
    * - -h, --help
      - 
      - false

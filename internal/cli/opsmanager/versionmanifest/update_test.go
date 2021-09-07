@@ -40,6 +40,11 @@ func TestVersionManifestUpdate_Run(t *testing.T) {
 	}
 
 	mockStore.
+		EXPECT().ServiceVersion().
+		Return(&opsmngr.ServiceVersion{Version: "4.4.0.100.20210101T0000Z"}, nil).
+		Times(1)
+
+	mockStore.
 		EXPECT().GetVersionManifest(updateOpts.version()).
 		Return(expected, nil).
 		Times(1)
@@ -63,6 +68,26 @@ func TestVersionManifestUpdate_Run_BadFormat(t *testing.T) {
 		versionManifest: "bad version",
 		store:           mockStore,
 	}
+
+	if err := updateOpts.Run(); err == nil {
+		t.Fatalf("Run() expected error to be returned")
+	}
+}
+
+func TestVersionManifestUpdate_Run_InvalidOMVersion(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockVersionManifestGetterUpdater(ctrl)
+	defer ctrl.Finish()
+
+	updateOpts := &UpdateOpts{
+		versionManifest: "4.4",
+		store:           mockStore,
+	}
+
+	mockStore.
+		EXPECT().ServiceVersion().
+		Return(&opsmngr.ServiceVersion{Version: "5.0.0.100.20210101T0000Z"}, nil).
+		Times(1)
 
 	if err := updateOpts.Run(); err == nil {
 		t.Fatalf("Run() expected error to be returned")

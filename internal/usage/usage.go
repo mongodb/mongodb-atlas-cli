@@ -83,6 +83,7 @@ const (
 	Comment                         = "Optional description or comment for the entry."
 	AccessListsDeleteAfter          = "ISO-8601-formatted UTC date after which Atlas removes the entry from the entry."
 	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
+	ForceVersionManifest            = "Skip Ops Manager version check."
 	Force                           = "Don't ask for confirmation."
 	ForceFile                       = "Overwrite the destination file."
 	Email                           = "User’s email address."

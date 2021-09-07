@@ -56,7 +56,7 @@ Options
      - string
      - false
      - Single IP address that attempted to authenticate with the database. Atlas filters the returned logs to include documents with only this IP address.
-   * - --nLogs
+   * - --nLog
      - int
      - false
      - Maximum number of log lines to return.

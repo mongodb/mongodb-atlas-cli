@@ -78,6 +78,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Start, flag.End, flag.IP, flag.AuthResult, flag.NLogs},
+		[]string{flag.ProjectID, flag.Output, flag.Start, flag.End, flag.IP, flag.AuthResult, flag.NLog},
 	)
 }

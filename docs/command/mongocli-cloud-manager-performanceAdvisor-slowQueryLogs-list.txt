@@ -44,7 +44,7 @@ Options
      - string
      - false
      - The unique identifier for the host of a MongoDB process. 
-   * - --nLog
+   * - --nLogs
      - int
      - false
      - Maximum number of log lines to return. (default 20000)

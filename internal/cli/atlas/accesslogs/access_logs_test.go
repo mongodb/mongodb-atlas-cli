@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package atlas
+package accesslogs
 
 import (
 	"testing"
@@ -27,7 +27,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		23,
+		1,
 		[]string{},
 	)
 }

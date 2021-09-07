@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package atlas
+package accesslogs
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		23,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "accessLogs"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Manage access logs of a cluster.",
+	}
+	cmd.AddCommand(ListBuilder())
+
+	return cmd
 }

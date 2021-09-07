@@ -17,6 +17,7 @@ package livemigrations
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/link"
+	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/validation"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +31,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		link.Builder(),
+		validation.Builder(),
 	)
 
 	return cmd

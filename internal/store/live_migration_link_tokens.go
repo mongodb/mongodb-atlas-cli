@@ -22,7 +22,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator,LinkTokenDeleter
+//go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator,LinkTokenDeleter
 
 type LinkTokenCreator interface {
 	CreateLinkToken(string, *atlas.TokenCreateRequest) (*atlas.LinkToken, error)

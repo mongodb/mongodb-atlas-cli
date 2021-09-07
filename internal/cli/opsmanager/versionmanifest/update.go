@@ -34,7 +34,8 @@ type UpdateOpts struct {
 	cli.OutputOpts
 	versionManifest       string
 	SkipVersionValidation bool
-	store                 store.VersionManifestGetterUpdater
+	store                 store.VersionManifestUpdaterServiceVersionDescriber
+	storeStaticPath       store.VersionManifestGetter
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -43,6 +44,7 @@ func (opts *UpdateOpts) initStore() error {
 	if err != nil {
 		return err
 	}
+	opts.storeStaticPath, err = store.NewVersionManifest(config.Default())
 	return err
 }
 
@@ -68,7 +70,7 @@ func (opts *UpdateOpts) Run() error {
 		}
 	}
 
-	versionManifest, err := opts.store.GetVersionManifest(opts.version())
+	versionManifest, err := opts.storeStaticPath.GetVersionManifest(opts.version())
 	if err != nil {
 		return err
 	}

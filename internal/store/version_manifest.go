@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestGetterUpdater
+//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
 
 type VersionManifestUpdater interface {
 	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)
@@ -32,8 +32,7 @@ type VersionManifestGetter interface {
 	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
 }
 
-type VersionManifestGetterUpdater interface {
-	VersionManifestGetter
+type VersionManifestUpdaterServiceVersionDescriber interface {
 	VersionManifestUpdater
 	ServiceVersionDescriber
 }

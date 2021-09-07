@@ -15,9 +15,14 @@
 package validation
 
 import (
+	"errors"
+	"fmt"
+
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
@@ -50,6 +55,14 @@ var createTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
 {{.ID}}	{{.GroupID}}	{{.SourceGroupID}}	{{.Status}}`
 
 func (opts *CreateOpts) Run() error {
+	if err := opts.askDestinationDropConfirm(); err != nil {
+		return err
+	}
+
+	if err := opts.askPassword(); err != nil {
+		return err
+	}
+
 	createRequest := opts.newValidationCreateRequest()
 
 	r, err := opts.store.CreateValidation(opts.ConfigProjectID(), createRequest)
@@ -80,6 +93,58 @@ func (opts *CreateOpts) newValidationCreateRequest() *mongodbatlas.LiveMigration
 	}
 }
 
+func (opts *CreateOpts) askDestinationDropConfirm() error {
+	if !opts.destinationDropEnabled {
+		return nil
+	}
+	confirmDrop := false
+	p := prompt.NewConfirm("are you sure you want to drop the destination collections?")
+
+	if err := survey.AskOne(p, &confirmDrop); err != nil {
+		return err
+	}
+
+	if !confirmDrop {
+		return errors.New("user-aborted. Not dropping destination collections")
+	}
+	return nil
+}
+
+func (opts *CreateOpts) askPassword() error {
+	if opts.sourceManagedAuthentication {
+		return nil
+	}
+	if opts.sourcePassword != "" {
+		return nil
+	}
+	p := &survey.Password{
+		Message: "Password:",
+	}
+	if err := survey.AskOne(p, &opts.sourcePassword); err != nil {
+		return err
+	}
+	if opts.sourcePassword == "" {
+		return errors.New("no password provided")
+	}
+	return nil
+}
+
+func (opts *CreateOpts) validate() error {
+	if opts.sourceManagedAuthentication && opts.sourceUsername != "" {
+		return fmt.Errorf("--%s=%t and --%s are exclusive", flag.LiveMigrationSourceManagedAuthentication, opts.sourceManagedAuthentication, flag.LiveMigrationSourceUsername)
+	}
+	if !opts.sourceManagedAuthentication && opts.sourceUsername == "" {
+		return fmt.Errorf("--%s=%t, --%s must be set", flag.LiveMigrationSourceManagedAuthentication, opts.sourceManagedAuthentication, flag.LiveMigrationSourceUsername)
+	}
+	if opts.sourceCACertificatePath != "" {
+		opts.sourceSSL = true
+	}
+	if opts.sourceSSL && opts.sourceCACertificatePath == "" {
+		return fmt.Errorf("--%s=%t, --%s must be set", flag.LiveMigrationSourceSSL, opts.sourceSSL, flag.LiveMigrationSourceCACertificatePath)
+	}
+	return nil
+}
+
 // mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
@@ -93,6 +158,7 @@ func CreateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore,
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.validate,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -102,8 +168,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.sourceClusterName, flag.LiveMigrationSourceClusterName, "", usage.LiveMigrationSourceClusterName)
 	cmd.Flags().StringVar(&opts.sourceProjectID, flag.LiveMigrationSourceProjectID, "", usage.LiveMigrationSourceProjectID)
-	cmd.Flags().StringVar(&opts.sourceUsername, flag.LiveMigrationSourceUsername, "", usage.LiveMigrationSourceUsername)
-	cmd.Flags().StringVar(&opts.sourcePassword, flag.LiveMigrationSourcePassword, "", usage.LiveMigrationSourcePassword)
+	cmd.Flags().StringVarP(&opts.sourceUsername, flag.LiveMigrationSourceUsername, flag.UsernameShort, "", usage.LiveMigrationSourceUsername)
+	cmd.Flags().StringVarP(&opts.sourcePassword, flag.LiveMigrationSourcePassword, flag.PasswordShort, "", usage.LiveMigrationSourcePassword)
 	cmd.Flags().BoolVar(&opts.sourceSSL, flag.LiveMigrationSourceSSL, false, usage.LiveMigrationSourceSSL)
 	cmd.Flags().StringVar(&opts.sourceCACertificatePath, flag.LiveMigrationSourceCACertificatePath, "", usage.LiveMigrationSourceCACertificatePath)
 	cmd.Flags().BoolVar(&opts.sourceManagedAuthentication, flag.LiveMigrationSourceManagedAuthentication, false, usage.LiveMigrationSourceManagedAuthentication)

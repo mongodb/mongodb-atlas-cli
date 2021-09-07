@@ -34,12 +34,13 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	expected := mongodbatlas.Validation{}
 
 	createOpts := &CreateOpts{
-		GlobalOpts:             cli.GlobalOpts{ProjectID: "1"},
-		sourceProjectID:        "2",
-		sourceClusterName:      "testSrc",
-		destinationClusterName: "testDest",
-		migrationHosts:         []string{"mig1"},
-		store:                  mockStore,
+		GlobalOpts:                  cli.GlobalOpts{ProjectID: "1"},
+		sourceProjectID:             "2",
+		sourceClusterName:           "testSrc",
+		sourceManagedAuthentication: true,
+		destinationClusterName:      "testDest",
+		migrationHosts:              []string{"mig1"},
+		store:                       mockStore,
 	}
 
 	createRequest := createOpts.newValidationCreateRequest()

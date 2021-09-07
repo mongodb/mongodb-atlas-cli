@@ -45,6 +45,7 @@ const (
 	idleConnTimeout           = 30 * time.Second
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
+	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -284,7 +285,7 @@ func baseURLOption(c AuthenticatedConfig) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
 	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(config.CloudGovServiceURL)
+		return WithBaseURL(cloudGovServiceURL)
 	}
 	return nil
 }

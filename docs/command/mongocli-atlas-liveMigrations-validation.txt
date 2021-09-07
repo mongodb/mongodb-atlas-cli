@@ -1,8 +1,8 @@
-.. _mongocli-atlas-liveMigrations:
+.. _mongocli-atlas-liveMigrations-validation:
 
-=============================
-mongocli atlas liveMigrations
-=============================
+========================================
+mongocli atlas liveMigrations validation
+========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ mongocli atlas liveMigrations
    :depth: 1
    :class: singlecol
 
-Manage a Live Migration to Atlas for your organization.
+Manage a Live Migration validation job for your project.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for liveMigrations
+     - help for validation
 
 Inherited Options
 -----------------
@@ -49,13 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-liveMigrations-link` - Manage the link-token for your organization.
-* :ref:`mongocli-atlas-liveMigrations-validation` - Manage a Live Migration validation job for your project.
+* :ref:`mongocli-atlas-liveMigrations-validation-create` - Create one new validation request.
 
 
 .. toctree::
    :titlesonly:
 
-   link </command/mongocli-atlas-liveMigrations-link>
-   validation </command/mongocli-atlas-liveMigrations-validation>
+   create </command/mongocli-atlas-liveMigrations-validation-create>
 

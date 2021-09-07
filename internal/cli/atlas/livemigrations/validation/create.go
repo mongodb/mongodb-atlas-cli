@@ -131,16 +131,13 @@ func (opts *CreateOpts) askPassword() error {
 
 func (opts *CreateOpts) validate() error {
 	if opts.sourceManagedAuthentication && opts.sourceUsername != "" {
-		return fmt.Errorf("--%s=%t and --%s are exclusive", flag.LiveMigrationSourceManagedAuthentication, opts.sourceManagedAuthentication, flag.LiveMigrationSourceUsername)
+		return fmt.Errorf("--%s and --%s are exclusive", flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
 	}
 	if !opts.sourceManagedAuthentication && opts.sourceUsername == "" {
-		return fmt.Errorf("--%s=%t, --%s must be set", flag.LiveMigrationSourceManagedAuthentication, opts.sourceManagedAuthentication, flag.LiveMigrationSourceUsername)
+		return fmt.Errorf("--%s requires --%s to be set", flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
 	}
 	if opts.sourceCACertificatePath != "" {
 		opts.sourceSSL = true
-	}
-	if opts.sourceSSL && opts.sourceCACertificatePath == "" {
-		return fmt.Errorf("--%s=%t, --%s must be set", flag.LiveMigrationSourceSSL, opts.sourceSSL, flag.LiveMigrationSourceCACertificatePath)
 	}
 	return nil
 }

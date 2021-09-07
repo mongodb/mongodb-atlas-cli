@@ -134,7 +134,7 @@ func (opts *CreateOpts) validate() error {
 		return fmt.Errorf("--%s and --%s are exclusive", flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
 	}
 	if !opts.sourceManagedAuthentication && opts.sourceUsername == "" {
-		return fmt.Errorf("--%s requires --%s to be set", flag.LiveMigrationSourceManagedAuthentication, flag.LiveMigrationSourceUsername)
+		return fmt.Errorf("MongoDB Automation is not managing authentication, --%s must be set", flag.LiveMigrationSourceUsername)
 	}
 	if opts.sourceCACertificatePath != "" {
 		opts.sourceSSL = true

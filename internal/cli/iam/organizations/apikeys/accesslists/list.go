@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
@@ -33,7 +34,7 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.ListOpts
 	id    string
-	store store.OrganizationAPIKeyAccessListLister
+	store store.OrganizationAPIKeyAccessListWhitelistLister
 }
 
 func (opts *ListOpts) init() error {
@@ -43,11 +44,27 @@ func (opts *ListOpts) init() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	useAccessList, err := shouldUseAccessList(opts.store)
 	if err != nil {
 		return err
 	}
-	return opts.Print(r)
+
+	var result *atlas.AccessListAPIKeys
+
+	if useAccessList {
+		result, err = opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+		if err != nil {
+			return err
+		}
+		return opts.Print(result)
+	}
+
+	r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	if e != nil {
+		return e
+	}
+	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
+	return opts.Print(result)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accessList list|ls <apiKeyID> [--orgId orgId].

@@ -18,40 +18,79 @@
 package accesslists
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDelete_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListDeleter(ctrl)
-	defer ctrl.Finish()
+	runDeleteTest := func(t *testing.T, service string, version string, accessList bool) {
+		t.Helper()
+		t.Run(fmt.Sprintf("%s %s", service, version), func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistDeleter(ctrl)
+			defer ctrl.Finish()
 
-	deleteOpts := &DeleteOpts{
-		store: mockStore,
-		DeleteOpts: &cli.DeleteOpts{
-			Entry:   "5a0a1e7e0f2912c554080adc",
-			Confirm: true,
-		},
-		apiKey: "1",
-		GlobalOpts: cli.GlobalOpts{
-			OrgID: "2",
-		},
-	}
-	mockStore.
-		EXPECT().
-		DeleteOrganizationAPIKeyAccessList(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(nil).
-		Times(1)
+			prevServ := config.Service()
+			config.SetService(service)
+			defer func() {
+				config.SetService(prevServ)
+			}()
 
-	if err := deleteOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+			deleteOpts := &DeleteOpts{
+				store: mockStore,
+				DeleteOpts: &cli.DeleteOpts{
+					Entry:   "5a0a1e7e0f2912c554080adc",
+					Confirm: true,
+				},
+				apiKey: "1",
+				GlobalOpts: cli.GlobalOpts{
+					OrgID: "2",
+				},
+			}
+
+			if version != "" {
+				mockStore.
+					EXPECT().
+					ServiceVersion().
+					Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: version}, nil).
+					Times(1)
+			}
+
+			if accessList {
+				mockStore.
+					EXPECT().
+					DeleteOrganizationAPIKeyAccessList(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+					Return(nil).
+					Times(1)
+			} else {
+				mockStore.
+					EXPECT().
+					DeleteOrganizationAPIKeyWhitelist(deleteOpts.OrgID, deleteOpts.apiKey, gomock.Eq("5a0a1e7e0f2912c554080adc")).
+					Return(nil).
+					Times(1)
+			}
+
+			if err := deleteOpts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+		})
 	}
+
+	runDeleteTest(t, config.CloudService, "", true)
+	runDeleteTest(t, config.CloudGovService, "", true)
+	runDeleteTest(t, config.CloudManagerService, "", true)
+	runDeleteTest(t, config.OpsManagerService, "5.0.0.100.20210101T0000Z", true)
+	runDeleteTest(t, config.OpsManagerService, "5.0.0-rc0.100.20210101T0000Z", true)
+	runDeleteTest(t, config.OpsManagerService, "4.4.0.100.20210101T0000Z", false)
+	runDeleteTest(t, config.OpsManagerService, "4.2.0.100.20210101T0000Z", false)
 }
 
 func TestDeleteBuilder(t *testing.T) {

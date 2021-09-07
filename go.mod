@@ -13,15 +13,15 @@ require (
 	github.com/mongodb-forks/digest v1.0.3
 	github.com/mongodb-labs/cobra2snooty v0.2.2
 	github.com/openlyinc/pointy v1.1.2
-	github.com/pelletier/go-toml v1.9.3
+	github.com/pelletier/go-toml v1.9.4
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
 	github.com/spf13/afero v1.6.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
-	go.mongodb.org/atlas v0.11.1-0.20210827140314-0c6a090ef180
-	go.mongodb.org/ops-manager v0.28.1
+	go.mongodb.org/atlas v0.12.1-0.20210902121637-a40fdd6c5807
+	go.mongodb.org/ops-manager v0.28.2
 	gopkg.in/yaml.v2 v2.4.0
 )
 

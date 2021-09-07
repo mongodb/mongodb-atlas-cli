@@ -32,65 +32,67 @@ func TestVersionManifestUpdate_Run(t *testing.T) {
 	mockStore := mocks.NewMockVersionManifestGetterUpdater(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.VersionManifest{}
-
-	updateOpts := &UpdateOpts{
-		versionManifest: "4.4",
-		store:           mockStore,
+	tests := []struct {
+		name            string
+		versionManifest string
+		omVersion       string
+		wantErr         bool
+	}{
+		{
+			name:            "OM 4.4",
+			versionManifest: "4.4",
+			omVersion:       "4.4.0.100.20210101T0000Z",
+			wantErr:         false,
+		},
+		{
+			name:            "Invalid Format",
+			versionManifest: "bad version",
+			omVersion:       "",
+			wantErr:         true,
+		},
+		{
+			name:            "Invalid OM Version",
+			versionManifest: "4.4",
+			omVersion:       "5.0.0.100.20210101T0000Z",
+			wantErr:         true,
+		},
 	}
 
-	mockStore.
-		EXPECT().ServiceVersion().
-		Return(&opsmngr.ServiceVersion{Version: "4.4.0.100.20210101T0000Z"}, nil).
-		Times(1)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			updateOpts := &UpdateOpts{
+				versionManifest: tt.versionManifest,
+				store:           mockStore,
+			}
 
-	mockStore.
-		EXPECT().GetVersionManifest(updateOpts.version()).
-		Return(expected, nil).
-		Times(1)
+			if tt.omVersion != "" {
+				mockStore.
+					EXPECT().ServiceVersion().
+					Return(&opsmngr.ServiceVersion{Version: tt.omVersion}, nil).
+					Times(1)
+			}
 
-	mockStore.
-		EXPECT().UpdateVersionManifest(expected).
-		Return(expected, nil).
-		Times(1)
+			if tt.wantErr {
+				if err := updateOpts.Run(); err == nil {
+					t.Fatalf("Run() expected error to be returned")
+				}
+				return
+			}
 
-	if err := updateOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
+			mockStore.
+				EXPECT().GetVersionManifest(updateOpts.version()).
+				Return(&opsmngr.VersionManifest{}, nil).
+				Times(1)
 
-func TestVersionManifestUpdate_Run_BadFormat(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockVersionManifestGetterUpdater(ctrl)
-	defer ctrl.Finish()
+			mockStore.
+				EXPECT().UpdateVersionManifest(&opsmngr.VersionManifest{}).
+				Return(&opsmngr.VersionManifest{}, nil).
+				Times(1)
 
-	updateOpts := &UpdateOpts{
-		versionManifest: "bad version",
-		store:           mockStore,
-	}
-
-	if err := updateOpts.Run(); err == nil {
-		t.Fatalf("Run() expected error to be returned")
-	}
-}
-
-func TestVersionManifestUpdate_Run_InvalidOMVersion(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockVersionManifestGetterUpdater(ctrl)
-	defer ctrl.Finish()
-
-	updateOpts := &UpdateOpts{
-		versionManifest: "4.4",
-		store:           mockStore,
-	}
-
-	mockStore.
-		EXPECT().ServiceVersion().
-		Return(&opsmngr.ServiceVersion{Version: "5.0.0.100.20210101T0000Z"}, nil).
-		Times(1)
-
-	if err := updateOpts.Run(); err == nil {
-		t.Fatalf("Run() expected error to be returned")
+			if err := updateOpts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+		})
 	}
 }
 

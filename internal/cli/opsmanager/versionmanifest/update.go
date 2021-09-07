@@ -15,8 +15,10 @@
 package versionmanifest
 
 import (
+	"fmt"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -44,6 +46,10 @@ func (opts *UpdateOpts) initStore() error {
 }
 
 func (opts *UpdateOpts) Run() error {
+	if err := opts.validateVersion(); err != nil {
+		return fmt.Errorf("version '%s' is invalid use the format x.y", opts.versionManifest)
+	}
+
 	versionManifest, err := opts.store.GetVersionManifest(opts.version())
 	if err != nil {
 		return err
@@ -55,6 +61,11 @@ func (opts *UpdateOpts) Run() error {
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *UpdateOpts) validateVersion() error {
+	_, err := semver.NewVersion(opts.versionManifest)
+	return err
 }
 
 func (opts *UpdateOpts) version() string {

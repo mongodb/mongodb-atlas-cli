@@ -54,6 +54,21 @@ func TestVersionManifestUpdate_Run(t *testing.T) {
 	}
 }
 
+func TestVersionManifestUpdate_Run_BadFormat(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockVersionManifestGetterUpdater(ctrl)
+	defer ctrl.Finish()
+
+	updateOpts := &UpdateOpts{
+		versionManifest: "bad version",
+		store:           mockStore,
+	}
+
+	if err := updateOpts.Run(); err == nil {
+		t.Fatalf("Run() expected error to be returned")
+	}
+}
+
 func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

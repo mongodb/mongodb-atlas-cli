@@ -154,7 +154,7 @@ func ClusterName(val interface{}) error {
 		return nil
 	}
 
-	return fmt.Errorf("%w: %s", ErrInvalidClusterName, name)
+	return fmt.Errorf("%w. Cluster names can only contain ASCII letters, numbers, and hyphens: %s", ErrInvalidClusterName, name)
 }
 
 var ErrInvalidDBUsername = errors.New("invalid db username")

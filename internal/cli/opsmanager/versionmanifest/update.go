@@ -66,7 +66,7 @@ func (opts *UpdateOpts) Run() error {
 		}
 
 		if svOM.Compare(svManifest) != 0 {
-			return fmt.Errorf("version '%s' is incompatible with ops manager version '%s'", opts.versionManifest, v.Version)
+			return fmt.Errorf("version '%s' is incompatible with Ops Manager version '%s'", opts.versionManifest, v.Version)
 		}
 	}
 

@@ -20,6 +20,9 @@ package projects
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -30,11 +33,12 @@ func TestCreate_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 	defer ctrl.Finish()
 
+	opts := CreateOpts{}
 	expected := &mongodbatlas.Project{}
 
 	mockStore.
 		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc")).Return(expected, nil).
+		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newCreateProjectOptions()).Return(expected, nil).
 		Times(1)
 
 	createOpts := &CreateOpts{
@@ -46,4 +50,13 @@ func TestCreate_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.OrgID, flag.OwnerID},
+	)
 }

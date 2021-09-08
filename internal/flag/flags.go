@@ -251,5 +251,6 @@ const (
 	SystemID                        = "systemId"                        // SystemID flag
 	Default                         = "default"                         // Default flag
 	Timestamp                       = "timestamp"                       // Timestamp flag
+	OwnerID                         = "ownerId"                         // OwnerID Flag
 
 )

@@ -257,6 +257,7 @@ const (
 	SkipSampleData                  = "Don't load sample data into your Atlas Cluster."
 	ContainerRegion                 = "Atlas region where the container resides."
 	ContainerRegions                = "List of Atlas regions where the container resides."
+	ProjectOwnerID                  = "Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project."
 	ReclaimFreeSpaceTimestamp       = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
 	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
 	ServerlessProvider              = "Cloud service provider that applies to the provisioned the serverless instance."

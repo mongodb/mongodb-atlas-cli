@@ -140,16 +140,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint interface create`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface delete`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface describe`          | N         |           |           | Y         |       |       |
-| `privateEndpoint create`                      | Y         |           |           | Y         |       |       |
-| `privateEndpoint delete`                      | Y         |           |           | Y         |       |       |
-| `privateEndpoint describe`                    | Y         |           |           | Y         |       |       |
-| `privateEndpoint list`                        | Y         |           |           | Y         |       |       |
-| `privateEndpoint watch`                       | Y         |           |           | Y         |       |       |
 | `privateEndpoint regionalMode describe`       | Y         |           |           | Y         |       |       |
 | `privateEndpoint regionalMode enable`         | Y         |           |           | Y         |       |       |
 | `privateEndpoint regionalMode disable`        | Y         |           |           | Y         |       |       |
 | `process list`                                | Y         |           |           | Y         |       |       |
-| `quickstart`                                  | N         |           |           | Y         |       |       
+| `quickstart`                                  | N         |           |           | Y         |       |       |
 | `security customercert create`                | N         |           |           | Y         |       |       |
 | `security customercert disable`               | N         |           |           | Y         |       |       |
 | `security customercert describe`              | N         |           |           | Y         |       |       |

@@ -66,12 +66,12 @@ func RenameBuilder() *cobra.Command {
 		Example: `Rename a profile called myProfile to testProfile:
 $ mongocli config rename myProfile testProfile`,
 		Annotations: map[string]string{
-			"args":               "oldProfileName",
+			"args":               "oldProfileName,newProfileName",
+			"requiredArgs":       "oldProfileName,newProfileName",
 			"oldProfileNameDesc": "Name of the profile to rename.",
-			"args":               "newProfileName",
-			"newProfileName":     "New name of the profile."
+			"newProfileNameDesc": "New name of the profile.",
 		},
-		Args:    require.ExactArgs(argsN),
+		Args: require.ExactArgs(argsN),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.oldName = args[0]
 			opts.newName = args[1]

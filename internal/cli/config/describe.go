@@ -53,9 +53,10 @@ func DescribeBuilder() *cobra.Command {
 $ mongocli config describe myProfile`,
 		Annotations: map[string]string{
 			"args":            "profileName",
+			"requiredArgs":    "profileName",
 			"profileNameDesc": "Name of the profile to return. Specify 'default' to return the default profile.",
 		},
-		Args:    require.ExactArgs(1),
+		Args: require.ExactArgs(1),
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},

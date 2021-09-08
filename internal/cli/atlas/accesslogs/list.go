@@ -113,7 +113,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Retrieve the access logs of a cluster by either cluster name or hostname.",
+		Short:   "Retrieve the access logs of a cluster identified by the cluster's name or hostname.",
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

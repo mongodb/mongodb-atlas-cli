@@ -59,7 +59,7 @@ const (
 	UserID                          = "The ID of the user."
 	LDAPHostname                    = "The hostname or IP address of the LDAP server."
 	LDAPPort                        = "The port to which the LDAP server listens for client connections."
-	Hostname                        = "The name of the hostname."
+	Hostname                        = "The fully qualified domain name of the target node that received the authentication attempt."
 	BindUsername                    = "The user DN that Atlas uses to connect to the LDAP server."
 	BindPassword                    = "The password used to authenticate the bindUsername."
 	CaCertificate                   = "CA certificate used to verify the identify of the LDAP server."

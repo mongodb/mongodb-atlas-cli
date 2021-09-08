@@ -31,8 +31,8 @@ import (
 const (
 	success      = "success"
 	fail         = "fail"
-	listTemplate = `HOSTNAME	CLUSTER NAME	LOG LINE {{range .AccessLogs}}
-{{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{if .ClusterName}}{{.ClusterName}} {{else}}N/A{{end}}	{{.LogLine}}{{end}}
+	listTemplate = `HOSTNAME	CLUSTER NAME	AUTH RESULT	LOG LINE {{range .AccessLogs}}
+{{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{if .ClusterName}}{{.ClusterName}} {{else}}N/A{{end}}	{{.AuthResult}}	{{.LogLine}}{{end}}
 `
 	missingClusterNameHostnameErrorMessage = "one between --%s and --%s must be set"
 	invalidValueAuthResultErrorMessage     = `--%s must be set to "%s" or "%s"`

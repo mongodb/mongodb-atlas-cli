@@ -20,11 +20,10 @@ package projects
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

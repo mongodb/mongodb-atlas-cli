@@ -51,7 +51,7 @@ func (opts *UpdateOpts) initStore() error {
 func (opts *UpdateOpts) Run() error {
 	svManifest, err := semver.NewVersion(opts.versionManifest)
 	if err != nil {
-		return fmt.Errorf("version '%s' is invalid use the format x.y", opts.versionManifest)
+		return fmt.Errorf("version '%s' is invalid, use the format x.y", opts.versionManifest)
 	}
 
 	if !opts.SkipVersionValidation {

@@ -63,10 +63,34 @@ func (opts *SetOpts) Run() error {
 func SetBuilder() *cobra.Command {
 	const argsN = 2
 	cmd := &cobra.Command{
-		Use:   "set <property> <value>",
+		Use:   "set <propertyName> <value>",
 		Short: "Configure specific properties of a profile.",
-		Long: fmt.Sprintf(`Configure specific properties of the profile.
-Available properties include: %v.`, config.Properties()),
+		Long: `You can set the following properties in the specified profile:
+project_id - Unique identifier of a project.
+org_id - Unique identifier of an organization.
+service - MongoDB service type. Valid values: cloud|cloudgov|cloud-manager|ops-manager
+public_api_key - Public API key for programmatic access.
+private_api_key - Private API key for programmatic access.
+output - Output fields and format. Valid values: json|json-path|go-template|go-template-file
+ops_manager_url - Ops Manager only. Base URL for API calls. The URL must end with a forward slash (/).
+base_url - Base URL for API calls. The URL must end with a forward slash (/).
+ops_manager_ca-certificate - Ops Manager only. Path on your local system to the PEM-encoded Certificate Authority (CA) certificate used to sign the client and Ops Manager TLS certificates.
+ops_manager_skip_verify - Ops Manager only. When set to yes, the Ops Manager CA TLS certificate is not verified. This prevents your connections from being rejected due to an invalid certificate. This is insecure and not recommended in production environments. Valid values: yes|no
+mongosh_path - Path to the MongoDB shell (mongosh) on your system. Default value: /usr/local/bin/mongosh`,
+		Examples:`Set Ops Manager Base URL in the profile myProfile:
+$ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
+
+Set Organization ID in the default profile:
+$ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
+
+Set path for the MongoDB Shell in the default profile:
+$mongocli config set mongosh_path /usr/local/bin/mongosh`,
+		Annotations: map[string]string{
+			"args":             "propertyName",
+			"propertyNameDesc": "Property to set in the profile.",
+			"args":             "value",
+			"valueDesc":        "Value for the property to set in the profile."
+		},
 		Args: func(cmd *cobra.Command, args []string) error {
 			if err := require.ExactArgs(argsN)(cmd, args); err != nil {
 				return err

@@ -16,19 +16,21 @@ package e2e
 
 import (
 	"crypto/rand"
+	"fmt"
 	"math/big"
 	"os"
 	"path/filepath"
 )
 
 func Bin() (string, error) {
-	cliPath, err := filepath.Abs(os.Getenv("E2E_BINARY"))
+	path := os.Getenv("E2E_BINARY")
+	cliPath, err := filepath.Abs(path)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: invalid bin path '%s'", err, path)
 	}
 
 	if _, err := os.Stat(cliPath); err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: invalid bin '%s'", err, path)
 	}
 	return cliPath, nil
 }

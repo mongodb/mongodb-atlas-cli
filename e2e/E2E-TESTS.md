@@ -104,6 +104,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `integration describe`                        | Y         |           |           | Y         |       |       |
 | `integration list`                            | Y         |           |           | Y         |       |       |
 | `logs download`                               | Y         |           |           | Y         |       |       |
+| `accesslogs list`                             | Y         |           |           | Y         |       |       |
 | `maintenanceWindow clear`                     | Y         |           |           | Y         |       |       |
 | `maintenanceWindow defer`                     | N         |           |           | Y         |       |       |
 | `maintenanceWindow describe`                  | Y         |           |           | Y         |       |       |

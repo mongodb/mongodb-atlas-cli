@@ -25,7 +25,7 @@ import (
 )
 
 const describeTemplate = `CIDR BLOCK	SECURITY GROUP
-{{.CIDRBlock}}	{{if .AwsSecurityGroup}}.AwsSecurityGroup {{else}}N/A{{end}}
+{{.CIDRBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}
 `
 
 type DescribeOpts struct {

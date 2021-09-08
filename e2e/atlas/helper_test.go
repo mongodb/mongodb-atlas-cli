@@ -23,7 +23,6 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
-	"strings"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -61,12 +60,34 @@ const (
 	regionalModeEntity     = "regionalModes"
 	serverlessEntity       = "serverless"
 	liveMigrationsEntity   = "liveMigrations"
+	accessLogsEntity       = "accessLogs"
+	accessListEntity       = "accessList"
 )
 
 func getHostnameAndPort() (string, error) {
-	cliPath, err := e2e.Bin()
+	processes, err := getProcesses()
 	if err != nil {
 		return "", err
+	}
+
+	// The first element may not be the created cluster but that is fine since
+	// we just need one cluster up and running
+	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
+}
+
+func getHostname() (string, error) {
+	processes, err := getProcesses()
+	if err != nil {
+		return "", err
+	}
+
+	return processes[0].Hostname, nil
+}
+
+func getProcesses() ([]*mongodbatlas.Process, error) {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return nil, err
 	}
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -78,23 +99,21 @@ func getHostnameAndPort() (string, error) {
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	var processes []*mongodbatlas.Process
 	err = json.Unmarshal(resp, &processes)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if len(processes) == 0 {
-		return "", fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
+		return nil, fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
-	// The first element may not be the created cluster but that is fine since
-	// we just need one cluster up and running
-	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
+	return processes, nil
 }
 
 func deployCluster() (string, error) {
@@ -182,16 +201,6 @@ func deleteCluster(clusterName string) error {
 	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
 	cmd.Env = os.Environ()
 	return cmd.Run()
-}
-
-func getHostname() (string, error) {
-	hostnamePort, err := getHostnameAndPort()
-	if err != nil {
-		return "", err
-	}
-
-	parts := strings.Split(hostnamePort, ":")
-	return parts[0], nil
 }
 
 func RandClusterName() (string, error) {

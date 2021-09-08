@@ -88,6 +88,7 @@ const (
 	Status                                   = "status"                          // Status flag
 	Start                                    = "start"                           // Start flag
 	End                                      = "end"                             // End flag
+	AuthResult                               = "authResult"                      // AuthResult Flag
 	FirstName                                = "firstName"                       // FirstName flag
 	LastName                                 = "lastName"                        // LastName flag
 	Role                                     = "role"                            // Role flag

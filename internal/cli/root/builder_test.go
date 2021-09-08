@@ -18,7 +18,12 @@
 package root
 
 import (
+	"bytes"
 	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/version"
 )
 
 func TestBuilder(t *testing.T) {
@@ -112,5 +117,41 @@ func TestBuilder(t *testing.T) {
 				t.Fatalf("got=%d, want=%d", len(got.Commands()), want)
 			}
 		})
+	}
+}
+
+func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
+	prevVersion := version.Version
+	version.Version = "v1.0.0"
+	defer func() {
+		version.Version = prevVersion
+	}()
+
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockVersionDescriber(ctrl)
+	defer ctrl.Finish()
+
+	mockStore.
+		EXPECT().
+		LatestVersion().
+		Return("v2.0.0", nil).
+		Times(1)
+
+	bufOut := new(bytes.Buffer)
+	opts := &BuilderOpts{
+		store: mockStore,
+	}
+	err := opts.printNewVersionAvailable(bufOut)
+	if err != nil {
+		t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
+		return
+	}
+
+	if got, want := bufOut.String(), `
+A new MongoCLI version is available 'v2.0.0'!
+To upgrade, check https://docs.mongodb.com/mongocli/stable/install/ (run "mongocli config set skip_update_check true" to disable the alert.)
+`; got != want {
+		t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
+		return
 	}
 }

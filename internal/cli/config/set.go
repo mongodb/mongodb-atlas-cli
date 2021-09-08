@@ -43,12 +43,25 @@ func (opts *SetOpts) Run() error {
 			return err
 		}
 	}
-	opts.store.Set(opts.prop, opts.val)
+	var value interface{}
+	value = opts.val
+	if search.StringInSlice(config.BooleanProperties(), opts.prop) {
+		value = isTrue(opts.val)
+	}
+	if search.StringInSlice(config.GlobalProperties(), opts.prop) {
+		opts.store.SetGlobal(opts.prop, value)
+	} else {
+		opts.store.Set(opts.prop, value)
+	}
 	if err := opts.store.Save(); err != nil {
 		return err
 	}
 	fmt.Printf("Updated property '%s'\n", opts.prop)
 	return nil
+}
+
+func isTrue(s string) bool {
+	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
 }
 
 func SetBuilder() *cobra.Command {

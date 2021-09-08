@@ -9,6 +9,7 @@ require (
 	github.com/briandowns/spinner v1.16.0
 	github.com/go-test/deep v1.0.7
 	github.com/golang/mock v1.6.0
+	github.com/google/go-github/v38 v38.1.0
 	github.com/mattn/go-isatty v0.0.13
 	github.com/mongodb-forks/digest v1.0.3
 	github.com/mongodb-labs/cobra2snooty v0.2.2
@@ -44,6 +45,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
 	golang.org/x/term v0.0.0-20210503060354-a79de5458b56 // indirect
 	golang.org/x/text v0.3.5 // indirect

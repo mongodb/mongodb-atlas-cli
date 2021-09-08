@@ -15,7 +15,6 @@
 package accesslogs
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -33,10 +32,10 @@ const (
 	success      = "success"
 	fail         = "fail"
 	listTemplate = `HOSTNAME	CLUSTER NAME	LOG LINE {{range .AccessLogs}}
-{{if .Hostname}}.Hostname {{else}}N/A{{end}}{{.Hostname}}	{{if .ClusterName}}.ClusterName {{else}}N/A{{end}}	{{.LogLine}}{{end}}
+{{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{if .ClusterName}}{{.ClusterName}} {{else}}N/A{{end}}	{{.LogLine}}{{end}}
 `
-	missingClusterNameHostnameErrorMessage = "one between --clusterName and --hostname must be set"
-	invalidValueAuthResultErrorMessage     = `--authResult must be set to "%s" or "%s"`
+	missingClusterNameHostnameErrorMessage = "one between --%s and --%s must be set"
+	invalidValueAuthResultErrorMessage     = `--%s must be set to "%s" or "%s"`
 )
 
 type ListOpts struct {
@@ -77,9 +76,9 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
-	authResult := false
-	if strings.EqualFold(opts.authResult, success) {
-		authResult = true
+	authResult := true
+	if strings.EqualFold(opts.authResult, fail) {
+		authResult = false
 	}
 
 	return &atlas.AccessLogOptions{
@@ -97,11 +96,11 @@ func (opts *ListOpts) ValidateInput() error {
 	}
 
 	if opts.clusterName == "" && opts.hostname == "" {
-		return errors.New(missingClusterNameHostnameErrorMessage)
+		return fmt.Errorf(missingClusterNameHostnameErrorMessage, "clusterName", "hostname")
 	}
 
-	if strings.EqualFold(opts.authResult, success) || strings.EqualFold(opts.authResult, fail) {
-		return fmt.Errorf(invalidValueAuthResultErrorMessage, success, fail)
+	if !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
+		return fmt.Errorf(invalidValueAuthResultErrorMessage, "authResult", success, fail)
 	}
 
 	return nil
@@ -133,7 +132,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.AccessLogDate)
 	cmd.Flags().IntVar(&opts.nLogs, flag.NLog, 0, usage.NLog)
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
-	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
+	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, success, usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

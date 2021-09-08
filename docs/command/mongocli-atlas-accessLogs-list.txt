@@ -35,7 +35,7 @@ Options
    * - --authResult
      - string
      - false
-     - Flag that indicates whether to return either successful or failed authentication attempts. When set to true, Atlas filters the log to return only successful authentication attempts. When set to false, Atlas filters the log to return only failed authentication attempts.
+     - Flag that indicates whether to return either successful or failed authentication attempts. When set to success, Atlas filters the log to return only successful authentication attempts. When set to fail, Atlas filters the log to return only failed authentication attempts. (default "success")
    * - --clusterName
      - string
      - false

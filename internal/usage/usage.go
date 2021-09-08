@@ -109,7 +109,7 @@ const (
 	AccessListIps                   = "IP addresses to add to the new user’s access list."
 	StartDate                       = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
-	AuthResult                      = "Flag that indicates whether to return either successful or failed authentication attempts. When set to true, Atlas filters the log to return only successful authentication attempts. When set to false, Atlas filters the log to return only failed authentication attempts."
+	AuthResult                      = "Flag that indicates whether to return either successful or failed authentication attempts. When set to success, Atlas filters the log to return only successful authentication attempts. When set to fail, Atlas filters the log to return only failed authentication attempts."
 	AccessLogDate                   = "Timestamp in the number of milliseconds that have elapsed since the UNIX epoch for the first entry that Atlas returns from the database access logs."
 	AccessLogIP                     = "Single IP address that attempted to authenticate with the database. Atlas filters the returned logs to include documents with only this IP address."
 	ServerUsageStartDate            = "Timestamp in ISO 8601 date format when the list of host assignments starts."

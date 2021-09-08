@@ -12,7 +12,7 @@ mongocli atlas accessLogs list
    :depth: 1
    :class: singlecol
 
-Retrieve the access logs of a cluster by either cluster name or hostname.
+Retrieve the access logs of a cluster identified by the cluster's name or hostname.
 
 Syntax
 ------
@@ -51,7 +51,7 @@ Options
    * - --hostname
      - string
      - false
-     - The name of the hostname.
+     - The fully qualified domain name of the target node that received the authentication attempt.
    * - --ip
      - string
      - false

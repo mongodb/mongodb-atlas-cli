@@ -29,8 +29,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const accessListEntity = "accessList"
-
 func TestAccessList(t *testing.T) {
 	n, err := e2e.RandInt(255)
 	a := assert.New(t)

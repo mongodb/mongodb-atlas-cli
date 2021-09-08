@@ -50,6 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-accessLists` - Manage the access IP access list for your project.
+* :ref:`mongocli-atlas-accessLogs` - Manage access logs of a cluster.
 * :ref:`mongocli-atlas-alerts` - Manage alerts for your project.
 * :ref:`mongocli-atlas-backups` - Manage cloud backups for your project.
 * :ref:`mongocli-atlas-cloudProviders` - Manage unified IAM role access in Atlas.
@@ -77,6 +78,7 @@ Related Commands
    :titlesonly:
 
    accessLists </command/mongocli-atlas-accessLists>
+   accessLogs </command/mongocli-atlas-accessLogs>
    alerts </command/mongocli-atlas-alerts>
    backups </command/mongocli-atlas-backups>
    cloudProviders </command/mongocli-atlas-cloudProviders>

@@ -59,6 +59,7 @@ const (
 	UserID                          = "The ID of the user."
 	LDAPHostname                    = "The hostname or IP address of the LDAP server."
 	LDAPPort                        = "The port to which the LDAP server listens for client connections."
+	Hostname                        = "The name of the hostname."
 	BindUsername                    = "The user DN that Atlas uses to connect to the LDAP server."
 	BindPassword                    = "The password used to authenticate the bindUsername."
 	CaCertificate                   = "CA certificate used to verify the identify of the LDAP server."
@@ -83,6 +84,7 @@ const (
 	Comment                         = "Optional description or comment for the entry."
 	AccessListsDeleteAfter          = "ISO-8601-formatted UTC date after which Atlas removes the entry from the entry."
 	BDUsersDeleteAfter              = "Timestamp in ISO 8601 date and time format in UTC after which Atlas deletes the user."
+	ForceVersionManifest            = "Skip Ops Manager version check."
 	Force                           = "Don't ask for confirmation."
 	ForceFile                       = "Overwrite the destination file."
 	Email                           = "User’s email address."
@@ -107,6 +109,9 @@ const (
 	AccessListIps                   = "IP addresses to add to the new user’s access list."
 	StartDate                       = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                         = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."
+	AuthResult                      = "Flag that indicates whether to return either successful or failed authentication attempts. When set to success, Atlas filters the log to return only successful authentication attempts. When set to fail, Atlas filters the log to return only failed authentication attempts."
+	AccessLogDate                   = "Timestamp in the number of milliseconds that have elapsed since the UNIX epoch for the first entry that Atlas returns from the database access logs."
+	AccessLogIP                     = "Single IP address that attempted to authenticate with the database. Atlas filters the returned logs to include documents with only this IP address."
 	ServerUsageStartDate            = "Timestamp in ISO 8601 date format when the list of host assignments starts."
 	ServerUsageEndDate              = "Timestamp in ISO 8601 date format when the list of host assignments ends."
 	AlertType                       = "Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP."
@@ -312,4 +317,15 @@ Valid values: KEYS|IAM_ROLE.`
 Valid values: 15|30|60.`
 	SnapshotIntervalHours = `Number of hours between snapshots.
 Valid values: 6|8|12|24.`
+	LiveMigrationDestinationClusterName      = "Human-readable label that identifies the Atlas destination cluster."
+	LiveMigrationDestinationProjectID        = "Unique 24-hexadecimal digit string that identifies the destination project."
+	LiveMigrationHostEntries                 = "List of hosts running the MongoDB Agent that can transfer your MongoDB data from the source (Cloud Manager or Ops Manager) to destination (Atlas) deployments. Each live migration process uses its own dedicated migration host."
+	LiveMigrationSourceClusterName           = "Human-readable label that identifies the source Cloud Manager or Ops Manager cluster."
+	LiveMigrationSourceProjectID             = "Unique 24-hexadecimal digit string that identifies the source project."
+	LiveMigrationSourceSSL                   = "Flag that indicates whether data source has TLS enabled."
+	LiveMigrationSourceCACertificatePath     = "Path to the CA certificate that signed TLS certificates use to authenticate to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceSSL is not passed."
+	LiveMigrationSourceManagedAuthentication = "Flag that indicates whether MongoDB Automation manages authentication to the source Cloud Manager or Ops Manager cluster. If you set this to true, don't provide values for --sourceUsername and --sourcePassword."
+	LiveMigrationSourceUsername              = "Human-readable label that identifies the SCRAM-SHA user that connects to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is set."
+	LiveMigrationSourcePassword              = "Password that authenticates the username to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is passed."
+	LiveMigrationDropCollections             = "Flag that indicates whether this process should drop existing collections from the destination (Atlas) cluster given in --destinationClusterName before starting the migration of data from the source cluster."
 )

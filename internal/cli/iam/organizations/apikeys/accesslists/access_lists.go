@@ -15,8 +15,6 @@
 package accesslists
 
 import (
-	"strings"
-
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -43,26 +41,6 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-// parseServiceVersion parses service version into semver.Version.
-func parseServiceVersion(s store.ServiceVersionDescriber) (*semver.Version, error) {
-	v, err := s.ServiceVersion()
-	if err != nil {
-		return nil, err
-	}
-
-	versionParts := strings.Split(v.Version, ".")
-
-	const maxVersionParts = 2
-
-	if len(versionParts) > maxVersionParts {
-		versionParts = versionParts[0:maxVersionParts] // ops manager versions are not semantic this is converting it to x.y
-	}
-
-	newVersion := strings.Join(versionParts, ".")
-
-	return semver.NewVersion(newVersion)
-}
-
 // shouldUseAccessList returns true when service is Cloud, CloudGov, Cloud Manager or Ops Manager (version 5+)
 // and returns false when Ops Manager 4 or below.
 func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
@@ -70,7 +48,12 @@ func shouldUseAccessList(s store.ServiceVersionDescriber) (bool, error) {
 		return true, nil
 	}
 
-	sv, err := parseServiceVersion(s)
+	v, err := s.ServiceVersion()
+	if err != nil {
+		return false, err
+	}
+
+	sv, err := cli.ParseServiceVersion(v)
 	if err != nil {
 		return false, err
 	}

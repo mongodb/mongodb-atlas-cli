@@ -12,22 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package livemigrations
+package cli
 
 import (
-	"testing"
+	"strings"
 
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/Masterminds/semver/v3"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
+// ParseServiceVersion parses service version into semver.Version.
+func ParseServiceVersion(v *atlas.ServiceVersion) (*semver.Version, error) {
+	versionParts := strings.Split(v.Version, ".")
+
+	const maxVersionParts = 2
+
+	if len(versionParts) > maxVersionParts {
+		versionParts = versionParts[0:maxVersionParts] // ops manager versions are not semantic this is converting it to x.y
+	}
+
+	newVersion := strings.Join(versionParts, ".")
+
+	return semver.NewVersion(newVersion)
 }

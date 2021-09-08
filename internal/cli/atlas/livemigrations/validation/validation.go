@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package livemigrations
+package validation
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "validation",
+		Short: "Manage a Live Migration validation job for your project.",
+	}
+
+	cmd.AddCommand(
+		CreateBuilder(),
 	)
+
+	return cmd
 }

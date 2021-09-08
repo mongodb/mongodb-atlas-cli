@@ -586,7 +586,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,serverless
   - name: atlas_gov_clusters_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -642,7 +642,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,logs
   - name: atlas_gov_logs_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -679,7 +679,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,metrics
   - name: atlas_gov_metrics_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -716,7 +716,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,processes
   - name: atlas_gov_processes_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -772,7 +772,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,search
   - name: atlas_gov_search_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1677,6 +1677,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
+  - name: e2e_atlas_gov_clusters
+    display_name: "E2E Atlas Gov Cluster Tests"
+    run_on:
+      - rhel70-small
+    expansions:
+      go_root: "/opt/golang/go1.17"
+      go_bin: "/opt/golang/go1.17/bin"
+    tasks:
+      - name: ".e2e .clusters .atlasgov"
   - name: e2e_atlas_networking
     display_name: "E2E Atlas Networking Tests"
     run_on:

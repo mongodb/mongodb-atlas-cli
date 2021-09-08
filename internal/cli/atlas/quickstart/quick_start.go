@@ -81,7 +81,7 @@ type Opts struct {
 	Provider            string
 	Region              string
 	IPAddresses         []string
-	IPAddress           string
+	IPAddressesResponse string
 	DBUsername          string
 	DBUserPassword      string
 	SampleDataJobID     string

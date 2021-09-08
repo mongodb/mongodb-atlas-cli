@@ -76,9 +76,15 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
-	authResult := true
+	var authResult *bool
 	if strings.EqualFold(opts.authResult, fail) {
-		authResult = false
+		t := false
+		authResult = &t
+	}
+
+	if strings.EqualFold(opts.authResult, success) {
+		t := true
+		authResult = &t
 	}
 
 	return &atlas.AccessLogOptions{
@@ -86,7 +92,7 @@ func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
 		End:        opts.end,
 		NLogs:      opts.nLogs,
 		IPAddress:  opts.ipAddresses,
-		AuthResult: &authResult,
+		AuthResult: authResult,
 	}
 }
 
@@ -99,7 +105,7 @@ func (opts *ListOpts) ValidateInput() error {
 		return fmt.Errorf(missingClusterNameHostnameErrorMessage, flag.ClusterName, flag.Hostname)
 	}
 
-	if !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
+	if opts.authResult != "" && !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
 		return fmt.Errorf(invalidValueAuthResultErrorMessage, flag.AuthResult, success, fail)
 	}
 
@@ -132,7 +138,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.end, flag.End, "", usage.AccessLogDate)
 	cmd.Flags().IntVar(&opts.nLogs, flag.NLog, 0, usage.NLog)
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
-	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, success, usage.AuthResult)
+	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

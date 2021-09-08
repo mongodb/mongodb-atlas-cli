@@ -77,14 +77,9 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
 	var authResult *bool
-	if strings.EqualFold(opts.authResult, fail) {
-		t := false
-		authResult = &t
-	}
-
-	if strings.EqualFold(opts.authResult, success) {
-		t := true
-		authResult = &t
+	if opts.authResult != "" {
+		isSuccess := strings.EqualFold(opts.authResult, success)
+		authResult = &isSuccess
 	}
 
 	return &atlas.AccessLogOptions{

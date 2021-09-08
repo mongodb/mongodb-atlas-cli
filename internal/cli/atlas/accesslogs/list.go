@@ -96,11 +96,11 @@ func (opts *ListOpts) ValidateInput() error {
 	}
 
 	if opts.clusterName == "" && opts.hostname == "" {
-		return fmt.Errorf(missingClusterNameHostnameErrorMessage, "clusterName", "hostname")
+		return fmt.Errorf(missingClusterNameHostnameErrorMessage, flag.ClusterName, flag.Hostname)
 	}
 
 	if !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
-		return fmt.Errorf(invalidValueAuthResultErrorMessage, "authResult", success, fail)
+		return fmt.Errorf(invalidValueAuthResultErrorMessage, flag.AuthResult, success, fail)
 	}
 
 	return nil

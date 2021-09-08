@@ -54,10 +54,10 @@ Options
      - strings
      - true
      - List of hosts running the MongoDB Agent that can transfer your MongoDB data from the source (Cloud Manager or Ops Manager) to destination (Atlas) deployments. Each live migration process uses its own dedicated migration host.
-   * - --projectId
+   * - --orgId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Organization ID to use. Overrides configuration file or environment variable settings.
    * - --sourceCACertificatePath
      - string
      - false

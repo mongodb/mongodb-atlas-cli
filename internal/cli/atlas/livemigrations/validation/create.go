@@ -162,7 +162,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.OrgID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.sourceClusterName, flag.LiveMigrationSourceClusterName, "", usage.LiveMigrationSourceClusterName)
 	cmd.Flags().StringVar(&opts.sourceProjectID, flag.LiveMigrationSourceProjectID, "", usage.LiveMigrationSourceProjectID)
 	cmd.Flags().StringVarP(&opts.sourceUsername, flag.LiveMigrationSourceUsername, flag.UsernameShort, "", usage.LiveMigrationSourceUsername)

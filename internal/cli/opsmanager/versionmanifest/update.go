@@ -15,8 +15,10 @@
 package versionmanifest
 
 import (
+	"fmt"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -30,9 +32,10 @@ const updateTemplate = "Version manifest updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	versionManifest string
-	store           store.VersionManifestUpdater
-	storeStaticPath store.VersionManifestGetter
+	versionManifest       string
+	SkipVersionValidation bool
+	store                 store.VersionManifestUpdaterServiceVersionDescriber
+	storeStaticPath       store.VersionManifestGetter
 }
 
 func (opts *UpdateOpts) initStore() error {
@@ -46,6 +49,27 @@ func (opts *UpdateOpts) initStore() error {
 }
 
 func (opts *UpdateOpts) Run() error {
+	svManifest, err := semver.NewVersion(opts.versionManifest)
+	if err != nil {
+		return fmt.Errorf("version '%s' is invalid, use the format x.y", opts.versionManifest)
+	}
+
+	if !opts.SkipVersionValidation {
+		v, e := opts.store.ServiceVersion()
+		if e != nil {
+			return e
+		}
+
+		svOM, e := cli.ParseServiceVersion(v)
+		if e != nil {
+			return err
+		}
+
+		if svOM.Compare(svManifest) != 0 {
+			return fmt.Errorf("version '%s' is incompatible with Ops Manager version '%s'", opts.versionManifest, v.Version)
+		}
+	}
+
 	versionManifest, err := opts.storeStaticPath.GetVersionManifest(opts.version())
 	if err != nil {
 		return err
@@ -84,6 +108,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.SkipVersionValidation, flag.Force, false, usage.ForceVersionManifest)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

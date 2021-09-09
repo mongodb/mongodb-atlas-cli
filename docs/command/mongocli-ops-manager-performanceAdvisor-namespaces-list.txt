@@ -12,7 +12,7 @@ mongocli ops-manager performanceAdvisor namespaces list
    :depth: 1
    :class: singlecol
 
-List namespaces for collections experiencing slow queries
+List namespaces for collections experiencing slow queries.
 
 Syntax
 ------

@@ -12,7 +12,7 @@ mongocli cloud-manager performanceAdvisor suggestedIndexes list
    :depth: 1
    :class: singlecol
 
-Retrieves suggested indexes for collections experiencing slow queries
+Retrieves suggested indexes for collections experiencing slow queries.
 
 Syntax
 ------

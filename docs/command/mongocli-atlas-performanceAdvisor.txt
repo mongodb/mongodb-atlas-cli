@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`mongocli-atlas-performanceAdvisor-namespaces` - Retrieve namespaces for collections experiencing slow queries
 * :ref:`mongocli-atlas-performanceAdvisor-slowQueryLogs` - Get log lines for slow queries for a specified host
+* :ref:`mongocli-atlas-performanceAdvisor-slowoperationthreshold` - Manage Atlas management of the slow operation threshold for your cluster.
 * :ref:`mongocli-atlas-performanceAdvisor-suggestedIndexes` - Get suggested indexes for collections experiencing slow queries
 
 
@@ -59,5 +60,6 @@ Related Commands
 
    namespaces </command/mongocli-atlas-performanceAdvisor-namespaces>
    slowQueryLogs </command/mongocli-atlas-performanceAdvisor-slowQueryLogs>
+   slowoperationthreshold </command/mongocli-atlas-performanceAdvisor-slowoperationthreshold>
    suggestedIndexes </command/mongocli-atlas-performanceAdvisor-suggestedIndexes>
 

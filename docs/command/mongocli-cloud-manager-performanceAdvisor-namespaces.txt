@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-cloud-manager-performanceAdvisor-namespaces-list` - List namespaces for collections experiencing slow queries
+* :ref:`mongocli-cloud-manager-performanceAdvisor-namespaces-list` - List namespaces for collections experiencing slow queries.
 
 
 .. toctree::

@@ -45,6 +45,10 @@ Options
      - false
      - Output format.
        Valid values: json|json-path|go-template|go-template-file
+   * - --ownerId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project.
 
 Inherited Options
 -----------------

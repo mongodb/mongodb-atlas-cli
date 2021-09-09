@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const atlasCreateTemplate = "Project '{{.ID}}' created.\n"
@@ -29,8 +30,9 @@ const atlasCreateTemplate = "Project '{{.ID}}' created.\n"
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name  string
-	store store.ProjectCreator
+	name           string
+	projectOwnerID string
+	store          store.ProjectCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -44,7 +46,7 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -53,7 +55,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId].
+func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
+	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
+}
+
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
@@ -75,6 +81,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

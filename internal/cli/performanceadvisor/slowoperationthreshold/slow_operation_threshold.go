@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package performanceadvisor
+package slowoperationthreshold
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/slowoperationthreshold"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/slowquerylogs"
-	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "performanceAdvisor"
+	const use = "slowoperationthreshold"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Performance Advisor operations.",
+		Aliases: []string{use, "slowOT", "slowMS", "sot"},
+		Short:   "Manage Atlas management of the slow operation threshold for your cluster.",
 	}
 	cmd.AddCommand(
-		namespaces.Builder(),
-		slowquerylogs.Builder(),
-		suggestedindexes.Builder(),
-		slowoperationthreshold.Builder())
+		EnableBuilder(),
+		DisableBuilder())
 
 	return cmd
 }

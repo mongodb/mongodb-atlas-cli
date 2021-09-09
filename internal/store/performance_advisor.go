@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister
+//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongocli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
 type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
 }
@@ -34,6 +34,14 @@ type PerformanceAdvisorSlowQueriesLister interface {
 
 type PerformanceAdvisorIndexesLister interface {
 	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
+}
+
+type PerformanceAdvisorSlowOperationThresholdEnabler interface {
+	EnablePerformanceAdvisorSlowOperationThreshold(string) error
+}
+
+type PerformanceAdvisorSlowOperationThresholdDisabler interface {
+	DisablePerformanceAdvisorSlowOperationThreshold(string) error
 }
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
@@ -75,5 +83,27 @@ func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *a
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// EnablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
+func (s *Store) EnablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).PerformanceAdvisor.EnableManagedSlowOperationThreshold(context.Background(), projectID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DisablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
+func (s *Store) DisablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).PerformanceAdvisor.DisableManagedSlowOperationThreshold(context.Background(), projectID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

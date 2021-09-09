@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package namespaces
+package slowoperationthreshold
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -21,62 +21,40 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
-{{.Namespace}}	{{.Type}}{{end}}
-`
+const EnableTemplate = "Atlas management of the slow operation enabled"
 
-type ListOpts struct {
+type EnableOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
-	store    store.PerformanceAdvisorNamespacesLister
-	since    int64
-	duration int64
+	store store.PerformanceAdvisorSlowOperationThresholdEnabler
 }
 
-func (opts *ListOpts) initStore() error {
+func (opts *EnableOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *ListOpts) Run() error {
-	host, err := opts.Host()
-	if err != nil {
-		return err
-	}
-	r, err := opts.store.PerformanceAdvisorNamespaces(opts.ConfigProjectID(), host, opts.newNamespaceOptions())
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(r)
+func (opts *EnableOpts) Run() error {
+	return opts.store.EnablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID())
 }
 
-func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
-	return &atlas.NamespaceOptions{
-		Since:    opts.since,
-		Duration: opts.duration,
-	}
-}
-
-// mongocli atlas performanceAdvisor namespace(s) list  --processName processName --since since --duration duration  --projectId projectId.
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli atlas performanceAdvisor sot enable  [--projectId projectId].
+func EnableBuilder() *cobra.Command {
+	opts := new(EnableOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List namespaces for collections experiencing slow querie.",
+		Use:     "enable",
+		Short:   "Enable the Atlas managed slow operation threshold for your project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkRequiredFlagsByService(cmd),
+				opts.InitOutput(cmd.OutOrStdout(), EnableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,12 +62,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
-	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
-	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
 	return cmd
 }

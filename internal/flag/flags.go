@@ -263,5 +263,6 @@ const (
 	LiveMigrationSourceUsername              = "sourceUsername"                  // LiveMigrationSourceUsername flag
 	LiveMigrationSourcePassword              = "sourcePassword"                  // LiveMigrationSourcePassword flag
 	LiveMigrationDropCollections             = "drop"                            // LiveMigrationDropCollections flag
+	OwnerID                                  = "ownerId"                         // OwnerID Flag
 
 )

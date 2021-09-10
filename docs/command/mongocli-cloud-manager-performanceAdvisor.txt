@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-cloud-manager-performanceAdvisor-namespaces` - Retrieve namespaces for collections experiencing slow queries
-* :ref:`mongocli-cloud-manager-performanceAdvisor-slowOperationThreshold` - Manage Atlas management of the slow operation thresholds for your cluster.
+* :ref:`mongocli-cloud-manager-performanceAdvisor-slowOperationThreshold` - Manage Atlas management of the slow operation threshold for your cluster.
 * :ref:`mongocli-cloud-manager-performanceAdvisor-slowQueryLogs` - Get log lines for slow queries for a specified host
 * :ref:`mongocli-cloud-manager-performanceAdvisor-suggestedIndexes` - Get suggested indexes for collections experiencing slow queries
 

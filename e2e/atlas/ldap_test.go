@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+//go:build e2e || (atlas && ldap)
 // +build e2e atlas,ldap
 
 package atlas_test
@@ -20,9 +22,11 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -47,7 +51,7 @@ func TestLDAP(t *testing.T) {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
-
+	time.Sleep(1 * time.Minute)
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -67,10 +71,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(pending, configuration.Status)
@@ -89,10 +92,8 @@ func TestLDAP(t *testing.T) {
 			requestID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		a.Contains(string(resp), "LDAP Configuration request completed.")
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
 	})
 
 	t.Run("Get Status", func(t *testing.T) {
@@ -107,10 +108,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(requestID, configuration.RequestID)
@@ -139,10 +139,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(hostname, configuration.LDAP.Hostname)
@@ -159,10 +158,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(hostname, configuration.LDAP.Hostname)
@@ -179,9 +177,7 @@ func TestLDAP(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		a.Contains(string(resp), "LDAP configuration userToDNMapping deleted")
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
 	})
 }

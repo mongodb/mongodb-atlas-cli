@@ -25,7 +25,7 @@ import (
 func TestConfig_configHome(t *testing.T) {
 	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
 		const xdgHome = "my_config"
-		_ = os.Setenv("XDG_CONFIG_HOME", xdgHome)
+		t.Setenv("XDG_CONFIG_HOME", xdgHome)
 		home, err := configHome()
 		if err != nil {
 			t.Fatalf("configHome() unexpected error: %v", err)
@@ -33,7 +33,6 @@ func TestConfig_configHome(t *testing.T) {
 		if home != xdgHome {
 			t.Errorf("configHome() = %s; want '%s'", home, xdgHome)
 		}
-		_ = os.Unsetenv("XDG_CONFIG_HOME")
 	})
 	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
 		home, err := configHome()

@@ -131,9 +131,7 @@ func deployCluster() (string, error) {
 		return "", err
 	}
 
-	tier := "M30"
-	provider := "AWS"
-	region, err := newAvailableRegion(tier, provider)
+	region, err := newAvailableRegion(e2eClusterProvider, tierM30)
 	if err != nil {
 		return "", err
 	}
@@ -142,15 +140,15 @@ func deployCluster() (string, error) {
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion=4.2",
+		"--mdbVersion=4.4",
 		"--region", region,
-		"--tier", tier,
-		"--provider", provider,
+		"--tier", e2eClusterProvider,
+		"--provider", tierM30,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()
-	if err := create.Run(); err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
+	if resp, err := create.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
 	watch := exec.Command(cliPath,
@@ -159,8 +157,8 @@ func deployCluster() (string, error) {
 		"watch",
 		clusterName)
 	watch.Env = os.Environ()
-	if err := watch.Run(); err != nil {
-		return "", fmt.Errorf("error watching cluster %w", err)
+	if resp, err := create.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil
 }

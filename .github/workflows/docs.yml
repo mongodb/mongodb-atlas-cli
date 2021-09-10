@@ -18,4 +18,4 @@ jobs:
       - name: Generate docs
         run: make gen-docs > /dev/null
       - name: Check for uncommited files
-        run: exit $(git ls-files -o -m --directory --exclude-standard --no-empty-directory | wc -l)
+        run: exit $(git ls-files -o -m --directory --exclude-standard --no-empty-directory)

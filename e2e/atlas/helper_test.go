@@ -23,8 +23,10 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -63,6 +65,9 @@ const (
 	accessLogsEntity       = "accessLogs"
 	accessListEntity       = "accessList"
 )
+
+// e2eClusterProvider preferred provider for e2e testing.
+const e2eClusterProvider = "AWS"
 
 func getHostnameAndPort() (string, error) {
 	processes, err := getProcesses()
@@ -224,7 +229,7 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 func createProject(projectName string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: invalid bin", err)
 	}
 	cmd := exec.Command(cliPath,
 		iamEntity,
@@ -240,7 +245,7 @@ func createProject(projectName string) (string, error) {
 
 	var project mongodbatlas.Project
 	if err := json.Unmarshal(resp, &project); err != nil {
-		return "", err
+		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
 	}
 
 	return project.ID, nil
@@ -258,5 +263,17 @@ func deleteProject(projectID string) error {
 		projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	return cmd.Run()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+	return nil
+}
+
+func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
+	t.Helper()
+	a := assert.New(t)
+	a.Equal(clusterName, cluster.Name)
+	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
 }

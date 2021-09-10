@@ -60,16 +60,16 @@ We could not find your public IP address. To add your IP address run:
   mongocli atlas accesslist create`
 
 const (
-	replicaSet       = "REPLICASET"
-	atlasM2          = "M2"
-	atlasM30         = "M30"
-	atlasAdmin       = "atlasAdmin"
-	mongoshURL       = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL  = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
-	profileDocURL    = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
-	defaultProvider  = "AWS"
-	defaultRegion    = "US_EAST_1"
-	defaultRegionGov = "US_GOV_EAST_1"
+	replicaSet          = "REPLICASET"
+	defaultAtlasTier    = "M0"
+	defaultAtlasGovTier = "M30"
+	atlasAdmin          = "atlasAdmin"
+	mongoshURL          = "https://www.mongodb.com/try/download/shell"
+	atlasAccountURL     = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
+	profileDocURL       = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
+	defaultProvider     = "AWS"
+	defaultRegion       = "US_EAST_1"
+	defaultRegionGov    = "US_GOV_EAST_1"
 )
 
 type Opts struct {
@@ -271,8 +271,8 @@ func (opts *Opts) providerAndRegionToConstant() {
 }
 
 func (opts *Opts) setTier() {
-	if config.CloudGovService == config.Service() && opts.tier == atlasM2 {
-		opts.tier = atlasM30
+	if config.CloudGovService == config.Service() && opts.tier == defaultAtlasTier {
+		opts.tier = defaultAtlasGovTier
 	}
 }
 
@@ -366,7 +366,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, defaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)

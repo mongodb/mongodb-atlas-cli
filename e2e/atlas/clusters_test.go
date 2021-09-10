@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters)
-// +build e2e atlas,clusters
+
+//go:build e2e || (atlas && clusters && !m0)
+// +build e2e atlas,clusters,!m0
 
 package atlas_test
 
@@ -32,7 +33,6 @@ import (
 
 const (
 	tierM30      = "M30"
-	provider     = "AWS"
 	diskSizeGB40 = "40"
 	diskSizeGB30 = "30"
 )
@@ -45,7 +45,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, provider)
+	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -57,8 +57,8 @@ func TestClustersFlags(t *testing.T) {
 			"--region", region,
 			"--members=3",
 			"--tier", tierM30,
-			"--provider", provider,
-			"--mdbVersion=4.0",
+			"--provider", e2eClusterProvider,
+			"--mdbVersion=4.4",
 			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -69,7 +69,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "4.0", 30)
+		ensureCluster(t, cluster, clusterName, "4.4", 30)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -186,7 +186,7 @@ func TestClustersFlags(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB", diskSizeGB40,
-			"--mdbVersion=4.2",
+			"--mdbVersion=5.0",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -196,7 +196,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterName, "4.2", 40)
+		ensureCluster(t, &cluster, clusterName, "5.0", 40)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -298,7 +298,7 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, provider)
+	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
@@ -312,7 +312,7 @@ func TestShardedCluster(t *testing.T) {
 			"--shards=2",
 			"--members=3",
 			"--tier", tierM30,
-			"--provider", provider,
+			"--provider", e2eClusterProvider,
 			"--mdbVersion=4.2",
 			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
@@ -337,12 +337,4 @@ func TestShardedCluster(t *testing.T) {
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
 		a.Equal(expected, string(resp))
 	})
-}
-
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
-	t.Helper()
-	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
 }

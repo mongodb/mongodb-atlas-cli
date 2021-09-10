@@ -133,7 +133,7 @@ func deployCluster() (string, error) {
 		return "", err
 	}
 
-	region, err := newAvailableRegion(e2eClusterProvider, e2eClusterTier)
+	region, err := newAvailableRegion(e2eClusterTier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}

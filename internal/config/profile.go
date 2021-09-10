@@ -111,6 +111,10 @@ func GlobalProperties() []string {
 	}
 }
 
+func IsTrue(s string) bool {
+	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
+}
+
 var p = newProfile()
 
 func Default() *Profile {

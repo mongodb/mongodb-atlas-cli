@@ -46,3 +46,56 @@ func TestConfig_configHome(t *testing.T) {
 		}
 	})
 }
+
+func TestConfig_IsTrue(t *testing.T) {
+	tests := []struct {
+		input string
+		want  bool
+	}{
+		{
+			input: "true",
+			want:  true,
+		},
+		{
+			input: "True",
+			want:  true,
+		},
+		{
+			input: "TRUE",
+			want:  true,
+		},
+		{
+			input: "y",
+			want:  true,
+		},
+		{
+			input: "Y",
+			want:  true,
+		},
+		{
+			input: "yes",
+			want:  true,
+		},
+		{
+			input: "Yes",
+			want:  true,
+		},
+		{
+			input: "YES",
+			want:  true,
+		},
+		{
+			input: "false",
+			want:  false,
+		},
+		{
+			input: "unknown",
+			want:  false,
+		},
+	}
+	for _, tt := range tests {
+		if got := IsTrue(tt.input); got != tt.want {
+			t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
+		}
+	}
+}

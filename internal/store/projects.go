@@ -114,7 +114,7 @@ func (s *Store) CreateProject(name, orgID string, opts *atlas.CreateProjectOptio
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID}
-		result, _, err := s.client.(*opsmngr.Client).Projects.Create(context.Background(), project)
+		result, _, err := s.client.(*opsmngr.Client).Projects.Create(context.Background(), project, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

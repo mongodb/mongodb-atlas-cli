@@ -121,6 +121,8 @@ func getProcesses() ([]*mongodbatlas.Process, error) {
 	return processes, nil
 }
 
+const e2eClusterTier = "M30"
+
 func deployCluster() (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -131,10 +133,11 @@ func deployCluster() (string, error) {
 		return "", err
 	}
 
-	region, err := newAvailableRegion(e2eClusterProvider, tierM30)
+	region, err := newAvailableRegion(e2eClusterProvider, e2eClusterTier)
 	if err != nil {
 		return "", err
 	}
+
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -143,7 +146,7 @@ func deployCluster() (string, error) {
 		"--mdbVersion=4.4",
 		"--region", region,
 		"--tier", e2eClusterProvider,
-		"--provider", tierM30,
+		"--provider", e2eClusterTier,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()

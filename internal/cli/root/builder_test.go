@@ -144,14 +144,12 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 	err := opts.printNewVersionAvailable(bufOut)
 	if err != nil {
 		t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
-		return
 	}
 
 	if got, want := bufOut.String(), `
-A new MongoCLI version is available 'v2.0.0'!
+A new MongoDB CLI version is available 'v2.0.0'!
 To upgrade, check https://docs.mongodb.com/mongocli/stable/install/ (run "mongocli config set skip_update_check true" to disable the alert.)
 `; got != want {
 		t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
-		return
 	}
 }

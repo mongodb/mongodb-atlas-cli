@@ -309,7 +309,7 @@ func (p *Profile) SetMongoShellPath(v string) {
 	SetGlobal(mongoShellPath, v)
 }
 
-// MongoShellPath get the configured MongoDB Shell path.
+// SkipUpdateCheck get the global skip update check.
 func SkipUpdateCheck() bool { return p.SkipUpdateCheck() }
 func (p *Profile) SkipUpdateCheck() bool {
 	return p.GetBool(skipUpdateCheck)

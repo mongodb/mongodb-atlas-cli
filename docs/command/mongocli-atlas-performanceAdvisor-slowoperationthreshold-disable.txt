@@ -1,7 +1,7 @@
-.. _mongocli-atlas-performanceAdvisor-slowoperationthreshold-disable:
+.. _mongocli-atlas-performanceAdvisor-slowOperationThreshold-disable:
 
 ================================================================
-mongocli atlas performanceAdvisor slowoperationthreshold disable
+mongocli atlas performanceAdvisor slowOperationThreshold disable
 ================================================================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas performanceAdvisor slowoperationthreshold disable [options]
+   mongocli atlas performanceAdvisor slowOperationThreshold disable [options]
 
 Options
 -------

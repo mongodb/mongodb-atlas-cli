@@ -1,7 +1,7 @@
-.. _mongocli-ops-manager-performanceAdvisor-slowoperationthreshold:
+.. _mongocli-ops-manager-performanceAdvisor-slowOperationThreshold:
 
 ==============================================================
-mongocli ops-manager performanceAdvisor slowoperationthreshold
+mongocli ops-manager performanceAdvisor slowOperationThreshold
 ==============================================================
 
 .. default-domain:: mongodb
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for slowoperationthreshold
+     - help for slowOperationThreshold
 
 Inherited Options
 -----------------
@@ -49,13 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-performanceAdvisor-slowoperationthreshold-disable` - Disable the Atlas managed slow operation threshold for your project.
-* :ref:`mongocli-ops-manager-performanceAdvisor-slowoperationthreshold-enable` - Enable the Atlas managed slow operation threshold for your project.
+* :ref:`mongocli-ops-manager-performanceAdvisor-slowOperationThreshold-disable` - Disable the Atlas managed slow operation threshold for your project.
+* :ref:`mongocli-ops-manager-performanceAdvisor-slowOperationThreshold-enable` - Enable the Atlas managed slow operation threshold for your project.
 
 
 .. toctree::
    :titlesonly:
 
-   disable </command/mongocli-ops-manager-performanceAdvisor-slowoperationthreshold-disable>
-   enable </command/mongocli-ops-manager-performanceAdvisor-slowoperationthreshold-enable>
+   disable </command/mongocli-ops-manager-performanceAdvisor-slowOperationThreshold-disable>
+   enable </command/mongocli-ops-manager-performanceAdvisor-slowOperationThreshold-enable>
 

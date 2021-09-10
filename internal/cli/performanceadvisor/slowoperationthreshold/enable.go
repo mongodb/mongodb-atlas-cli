@@ -15,6 +15,7 @@ package slowoperationthreshold
 
 import (
 	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"

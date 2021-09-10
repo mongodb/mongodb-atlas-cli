@@ -1,7 +1,7 @@
-.. _mongocli-ops-manager-performanceAdvisor-slowoperationthreshold-enable:
+.. _mongocli-ops-manager-performanceAdvisor-slowOperationThreshold-enable:
 
 =====================================================================
-mongocli ops-manager performanceAdvisor slowoperationthreshold enable
+mongocli ops-manager performanceAdvisor slowOperationThreshold enable
 =====================================================================
 
 .. default-domain:: mongodb
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli ops-manager performanceAdvisor slowoperationthreshold enable [options]
+   mongocli ops-manager performanceAdvisor slowOperationThreshold enable [options]
 
 Options
 -------

@@ -19,7 +19,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "slowoperationthreshold"
+	const use = "slowOperationThreshold"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{use, "slowOT", "slowMS", "sot"},

@@ -11,7 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build (e2e || iam) && (e2e || opsmanager)
 // +build e2e iam
+// +build e2e opsmanager
 
 package iam_test
 
@@ -34,26 +36,6 @@ func TestOrgAPIKeys(t *testing.T) {
 	}
 
 	var ID string
-
-	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			orgEntity,
-			apiKeysEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-		var keys []mongodbatlas.APIKey
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		assert.NotEmpty(t, keys)
-	})
 
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
@@ -81,6 +63,27 @@ func TestOrgAPIKeys(t *testing.T) {
 	if ID == "" {
 		assert.FailNow(t, "Failed to create API key")
 	}
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			iamEntity,
+			orgEntity,
+			apiKeysEntity,
+			"ls",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var keys []mongodbatlas.APIKey
+		if err := json.Unmarshal(resp, &keys); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, keys)
+	})
+
 	t.Run("Update", func(t *testing.T) {
 		newDesc := "e2e-test-org-updated"
 		cmd := exec.Command(cliPath, iamEntity,

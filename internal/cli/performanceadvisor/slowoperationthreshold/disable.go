@@ -30,8 +30,6 @@ const DisableTemplate = `Atlas management of the slow operation disabled
 
 type DisableOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
-	cli.PerformanceAdvisorOpts
 	store store.PerformanceAdvisorSlowOperationThresholdDisabler
 }
 
@@ -61,7 +59,6 @@ func DisableBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), DisableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -70,6 +67,5 @@ func DisableBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	return cmd
 }

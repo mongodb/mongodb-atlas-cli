@@ -30,7 +30,6 @@ const EnableTemplate = `Atlas management of the slow operation enabled
 
 type EnableOpts struct {
 	cli.GlobalOpts
-	cli.PerformanceAdvisorOpts
 	store store.PerformanceAdvisorSlowOperationThresholdEnabler
 }
 

@@ -20,6 +20,7 @@ import (
 	"runtime"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
@@ -55,12 +56,16 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+			w := cmd.ErrOrStderr()
+			if shouldSkipPrintNewVersion(w) {
+				return nil
+			}
 			opts := &BuilderOpts{}
 			err := opts.initStore()
 			if err != nil {
 				return err
 			}
-			return opts.printNewVersionAvailable(cmd.ErrOrStderr())
+			return opts.printNewVersionAvailable(w)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -139,10 +144,11 @@ func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, new
 	return false, "", nil
 }
 
+func shouldSkipPrintNewVersion(w io.Writer) bool {
+	return config.SkipUpdateCheck() || cli.IsTerminal(w)
+}
+
 func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {
-	if config.SkipUpdateCheck() {
-		return nil
-	}
 	newVersionAvailable, latestVersion, err := opts.hasNewVersionAvailable()
 	if err != nil {
 		return err

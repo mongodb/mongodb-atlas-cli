@@ -99,7 +99,6 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowoperationThresholdEntity,
 			"enable",
-			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
@@ -114,7 +113,6 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowoperationThresholdEntity,
 			"disable",
-			"-o=json",
 		)
 
 		cmd.Env = os.Environ()

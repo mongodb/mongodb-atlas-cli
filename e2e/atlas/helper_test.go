@@ -183,13 +183,13 @@ func newAvailableRegion(tier, provider string) (string, error) {
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
 	}
 
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error unmashaling response %w: %s", err, string(resp))
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {

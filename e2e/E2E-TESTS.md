@@ -318,6 +318,8 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
 | `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
+| `performanceAdvisor slowOT enable`            |           | N         | N         |           | Y     | Y     |
+| `performanceAdvisor slowOT disable`           | N         |           |           | N         |       |       |
 | `serverless create`                           | Y         |           |           | Y         |       |       |
 | `serverless delete`                           | Y         |           |           | Y         |       |       |
 | `serverless describe`                         | Y         |           |           | Y         |       |       |

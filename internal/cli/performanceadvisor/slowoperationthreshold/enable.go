@@ -14,6 +14,7 @@
 package slowoperationthreshold
 
 import (
+	"fmt"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -23,11 +24,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const EnableTemplate = "Atlas management of the slow operation enabled"
+const EnableTemplate = `Atlas management of the slow operation enabled
+`
 
 type EnableOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store store.PerformanceAdvisorSlowOperationThresholdEnabler
 }
@@ -39,7 +40,12 @@ func (opts *EnableOpts) initStore() error {
 }
 
 func (opts *EnableOpts) Run() error {
-	return opts.store.EnablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID())
+	if err := opts.store.EnablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID()); err != nil {
+		return err
+	}
+
+	fmt.Print(EnableTemplate)
+	return nil
 }
 
 // mongocli atlas performanceAdvisor sot enable  [--projectId projectId].
@@ -54,7 +60,6 @@ func EnableBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), EnableTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -63,7 +68,6 @@ func EnableBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -14,6 +14,7 @@
 package slowoperationthreshold
 
 import (
+	"fmt"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -23,7 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const DisableTemplate = "Atlas management of the slow operation disabled"
+const DisableTemplate = `Atlas management of the slow operation disabled
+`
 
 type DisableOpts struct {
 	cli.GlobalOpts
@@ -39,7 +41,12 @@ func (opts *DisableOpts) initStore() error {
 }
 
 func (opts *DisableOpts) Run() error {
-	return opts.store.DisablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID())
+	if err := opts.store.DisablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID()); err != nil {
+		return err
+	}
+
+	fmt.Print(DisableTemplate)
+	return nil
 }
 
 // mongocli atlas performanceAdvisor sot disable  [--projectId projectId].

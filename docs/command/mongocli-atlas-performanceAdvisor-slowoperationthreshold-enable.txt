@@ -36,11 +36,6 @@ Options
      - 
      - false
      - help for enable
-   * - -o, --output
-     - string
-     - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
    * - --projectId
      - string
      - false

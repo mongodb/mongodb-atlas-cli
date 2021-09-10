@@ -12,7 +12,7 @@ mongocli ops-manager performanceAdvisor slowOperationThreshold
    :depth: 1
    :class: singlecol
 
-Manage Atlas management of the slow operation threshold for your cluster.
+Manage Atlas management of the slow operation thresholds for your cluster.
 
 Options
 -------

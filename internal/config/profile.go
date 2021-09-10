@@ -197,10 +197,14 @@ func (p *Profile) GetString(name string) string {
 func GetBool(name string) bool { return p.GetBool(name) }
 func (p *Profile) GetBool(name string) bool {
 	value := p.Get(name)
-	if value == nil {
+	switch v := value.(type) {
+	case bool:
+		return v
+	case string:
+		return IsTrue(v)
+	default:
 		return false
 	}
-	return value.(bool)
 }
 
 // Service get configured service.

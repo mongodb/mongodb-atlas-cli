@@ -148,7 +148,7 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 
 	if got, want := bufOut.String(), `
 A new MongoDB CLI version is available 'v2.0.0'!
-To upgrade, check https://docs.mongodb.com/mongocli/stable/install/ (run "mongocli config set skip_update_check true" to disable the alert.)
+To upgrade MongoCLI, see https://dochub.mongodb.org/core/mongocli-install. To disable this alert, run "mongocli config set skip_update_check true".
 `; got != want {
 		t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
 	}

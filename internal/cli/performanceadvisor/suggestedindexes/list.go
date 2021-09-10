@@ -76,7 +76,7 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Retrieves suggested indexes for collections experiencing slow queries",
+		Short:   "Retrieves suggested indexes for collections experiencing slow queries.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

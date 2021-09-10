@@ -126,7 +126,7 @@ const e2eClusterTier = "M30"
 func deployCluster() (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
+		return "", err
 	}
 	clusterName, err := RandClusterName()
 	if err != nil {

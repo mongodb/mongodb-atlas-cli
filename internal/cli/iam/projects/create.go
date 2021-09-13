@@ -15,6 +15,9 @@
 package projects
 
 import (
+	"fmt"
+
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -59,6 +62,30 @@ func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
 	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
 }
 
+func (opts *CreateOpts) validateOwnerID() error {
+	if config.Service() != config.OpsManagerService {
+		return nil
+	}
+
+	v, err := opts.store.ServiceVersion()
+	if err != nil {
+		return err
+	}
+
+	sv, err := cli.ParseServiceVersion(v)
+	if err != nil {
+		return err
+	}
+
+	constrain, _ := semver.NewConstraint(">= 6.0")
+
+	if !constrain.Check(sv) {
+		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
+	}
+
+	return nil
+}
+
 // mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
@@ -72,7 +99,7 @@ func CreateBuilder() *cobra.Command {
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.init()
+			return opts.PreRunE(opts.init, opts.validateOwnerID)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

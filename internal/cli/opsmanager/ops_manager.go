@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/diagnosearchive"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/featurepolicies"
+	"github.com/mongodb/mongocli/internal/cli/opsmanager/livemigrations"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/logs"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/metrics"
@@ -84,6 +85,6 @@ func Builder() *cobra.Command {
 		softwarecompotents.Builder(),
 		featurepolicies.Builder(),
 		serverusage.Builder(),
-	)
+		livemigrations.Builder())
 	return cmd
 }

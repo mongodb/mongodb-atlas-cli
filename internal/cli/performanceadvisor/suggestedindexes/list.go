@@ -78,7 +78,6 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   "Retrieve suggested indexes for collections experiencing slow queries.",
 		Long:    "The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance.",
-		Example: "$ mongocli atlas performanceAdvisor suggestedIndexes list  --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

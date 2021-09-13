@@ -82,7 +82,6 @@ Project Owner access
 Project Data Access Admin access
 Project Data Access Read/Write access
 Project Data Access Read Only access`,
-		Example: "$ mongocli atlas performanceAdvisor slowQueryLogs ls --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{use, "slowOT", "sot", "slowMS"},
-		Short:   "Enable or disable Atlas management of the slow operation threshold for your cluster.",
+		Short:   "Enable or disable management of the slow operation threshold for your cluster.",
 	}
 	cmd.AddCommand(
 		EnableBuilder(),

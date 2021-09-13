@@ -70,7 +70,6 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   "Retrieve up to 20 namespaces for collections experiencing slow queries for a specified host.",
 		Long:    "Namespaces appear in the following format: {database}.{collection}.",
-		Example: "$ mongocli atlas performanceAdvisor namespaces list --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

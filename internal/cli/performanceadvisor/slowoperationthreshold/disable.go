@@ -52,11 +52,10 @@ func (opts *DisableOpts) Run() error {
 func DisableBuilder() *cobra.Command {
 	opts := new(DisableOpts)
 	cmd := &cobra.Command{
-		Use:     "disable",
-		Short:   "Disable the Atlas managed slow operation threshold for your project.",
-		Long:    "The slow operation threshold determines which operations are flagged by the Performance Advisor and Query Profiler. When disabled, the application considers any operation that takes longer than 100 milliseconds to be slow.",
-		Example: "$ mongocli atlas performanceAdvisor sot disable",
-		Args:    require.NoArgs,
+		Use:   "disable",
+		Short: "Disable the application-managed slow operation threshold for your project.",
+		Long:  "The slow operation threshold determines which operations are flagged by the Performance Advisor and Query Profiler. When disabled, the application considers any operation that takes longer than 100 milliseconds to be slow.",
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

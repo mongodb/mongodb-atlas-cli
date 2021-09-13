@@ -80,10 +80,3 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
-Examples
---------
-
-.. code-block::
-
- $ mongocli atlas performanceAdvisor namespaces list --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017
-

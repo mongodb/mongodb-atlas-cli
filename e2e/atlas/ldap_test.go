@@ -33,6 +33,7 @@ import (
 const (
 	pending  = "PENDING"
 	hostname = "localhost"
+	ldapPort = "19657"
 )
 
 func TestLDAP(t *testing.T) {
@@ -51,7 +52,7 @@ func TestLDAP(t *testing.T) {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
-	time.Sleep(1 * time.Minute)
+	time.Sleep(2 * time.Minute) // wait for the cluster to be fully available
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -62,7 +63,7 @@ func TestLDAP(t *testing.T) {
 			"--hostname",
 			hostname,
 			"--port",
-			"19657",
+			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
@@ -80,6 +81,8 @@ func TestLDAP(t *testing.T) {
 			requestID = configuration.RequestID
 		}
 	})
+
+	require.NotEmpty(t, requestID)
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -126,7 +129,7 @@ func TestLDAP(t *testing.T) {
 			"--hostname",
 			hostname,
 			"--port",
-			"19657",
+			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",

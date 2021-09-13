@@ -145,7 +145,7 @@ func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, new
 }
 
 func shouldSkipPrintNewVersion(w io.Writer) bool {
-	return config.SkipUpdateCheck() || cli.IsTerminal(w)
+	return config.SkipUpdateCheck() || !cli.IsTerminal(w)
 }
 
 func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {

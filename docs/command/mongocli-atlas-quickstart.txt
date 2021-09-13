@@ -81,7 +81,7 @@ Options
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster. (default "M2")
+     - Tier for each data-bearing server in the cluster. (default "M0")
    * - --username
      - string
      - false

@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || iam || iam_mms_50
-// +build e2e iam iam_mms_50
+//go:build e2e || iam
+// +build e2e iam
 
 package iam_test
 

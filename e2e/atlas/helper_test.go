@@ -67,8 +67,12 @@ const (
 	accessListEntity       = "accessList"
 )
 
-// e2eClusterProvider preferred provider for e2e testing.
-const e2eClusterProvider = "AWS"
+// Cluster settings.
+const (
+	e2eClusterTier     = "M30"
+	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+	e2eMDBVer          = "4.4"
+)
 
 func getHostnameAndPort() (string, error) {
 	processes, err := getProcesses()
@@ -122,8 +126,6 @@ func getProcesses() ([]*mongodbatlas.Process, error) {
 	return processes, nil
 }
 
-const e2eClusterTier = "M30"
-
 func deployCluster() (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -144,10 +146,10 @@ func deployCluster() (string, error) {
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion=4.4",
+		"--mdbVersion", e2eMDBVer,
 		"--region", region,
-		"--tier", e2eClusterProvider,
-		"--provider", e2eClusterTier,
+		"--tier", e2eClusterTier,
+		"--provider", e2eClusterProvider,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()

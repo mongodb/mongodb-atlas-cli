@@ -43,7 +43,16 @@ func (opts *SetOpts) Run() error {
 			return err
 		}
 	}
-	opts.store.Set(opts.prop, opts.val)
+	var value interface{}
+	value = opts.val
+	if search.StringInSlice(config.BooleanProperties(), opts.prop) {
+		value = config.IsTrue(opts.val)
+	}
+	if search.StringInSlice(config.GlobalProperties(), opts.prop) {
+		opts.store.SetGlobal(opts.prop, value)
+	} else {
+		opts.store.Set(opts.prop, value)
+	}
 	if err := opts.store.Save(); err != nil {
 		return err
 	}

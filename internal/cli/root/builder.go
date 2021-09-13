@@ -16,8 +16,11 @@ package root
 
 import (
 	"fmt"
+	"io"
 	"runtime"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
@@ -26,10 +29,15 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
+
+type BuilderOpts struct {
+	store store.VersionDescriber
+}
 
 // rootBuilder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
@@ -46,6 +54,18 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		SilenceUsage: true,
 		Annotations: map[string]string{
 			"toc": "true",
+		},
+		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+			w := cmd.ErrOrStderr()
+			if shouldSkipPrintNewVersion(w) {
+				return nil
+			}
+			opts := &BuilderOpts{}
+			err := opts.initStore()
+			if err != nil {
+				return err
+			}
+			return opts.printNewVersionAvailable(w)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -95,4 +115,59 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
+}
+
+func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, newVersion string, err error) {
+	if version.Version == "" {
+		return false, "", nil
+	}
+
+	svCurrentVersion, err := semver.NewVersion(version.Version)
+	if err != nil {
+		return false, "", err
+	}
+
+	latestVersion, err := opts.store.LatestVersion()
+	if err != nil {
+		return false, "", err
+	}
+
+	svLatestVersion, err := semver.NewVersion(latestVersion)
+	if err != nil {
+		return false, "", err
+	}
+
+	if svCurrentVersion.Compare(svLatestVersion) < 0 {
+		return true, latestVersion, nil
+	}
+
+	return false, "", nil
+}
+
+func shouldSkipPrintNewVersion(w io.Writer) bool {
+	return config.SkipUpdateCheck() || !cli.IsTerminal(w)
+}
+
+func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {
+	newVersionAvailable, latestVersion, err := opts.hasNewVersionAvailable()
+	if err != nil {
+		return err
+	}
+	if newVersionAvailable {
+		newVersionTemplate := `
+A new version of %s is available '%s'!
+To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
+
+To disable this alert, run "mongocli config set skip_update_check true".
+`
+		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion)
+		return err
+	}
+	return nil
+}
+
+func (opts *BuilderOpts) initStore() error {
+	var err error
+	opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()))
+	return err
 }

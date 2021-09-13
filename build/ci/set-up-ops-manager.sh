@@ -76,6 +76,7 @@ AGENT_API_KEY=$(./bin/mongocli iam projects create myProj -o="go-template={{.Age
 MCLI_PROJECT_ID=$(./bin/mongocli iam project list -o="go-template={{ (index .Results 0).ID }}")
 
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
+skip_update_check = true
 [default]
   ops_manager_url = "${MCLI_OPS_MANAGER_URL}"
   service = "${MCLI_SERVICE}"

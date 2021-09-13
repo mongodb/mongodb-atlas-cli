@@ -42,7 +42,7 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return result.Status == "WAITING_FOR_USER" || result.Status == "FAILED", nil
+	return result.Status == "AVAILABLE" || result.Status == "FAILED", nil
 }
 
 func (opts *WatchOpts) Run() error {

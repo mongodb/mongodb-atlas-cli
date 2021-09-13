@@ -55,10 +55,15 @@ const (
 	output                       = "output"
 	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm                   = 0600
+	skipUpdateCheck              = "skip_update_check"
 )
 
 type Setter interface {
-	Set(string, string)
+	Set(string, interface{})
+}
+
+type GlobalSetter interface {
+	SetGlobal(string, interface{})
 }
 
 type Saver interface {
@@ -68,6 +73,7 @@ type Saver interface {
 type SetSaver interface {
 	Setter
 	Saver
+	GlobalSetter
 }
 
 type Profile struct {
@@ -89,7 +95,24 @@ func Properties() []string {
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
 		mongoShellPath,
+		skipUpdateCheck,
 	}
+}
+
+func BooleanProperties() []string {
+	return []string{
+		skipUpdateCheck,
+	}
+}
+
+func GlobalProperties() []string {
+	return []string{
+		skipUpdateCheck,
+	}
+}
+
+func IsTrue(s string) bool {
+	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
 }
 
 var p = newProfile()
@@ -141,22 +164,47 @@ func (p *Profile) SetName(name string) {
 	p.name = strings.ToLower(name)
 }
 
-func Set(name, value string) { p.Set(name, value) }
-func (p *Profile) Set(name, value string) {
-	settings := viper.GetStringMapString(p.Name())
+func Set(name string, value interface{}) { p.Set(name, value) }
+func (p *Profile) Set(name string, value interface{}) {
+	settings := viper.GetStringMap(p.Name())
 	settings[name] = value
 	viper.Set(p.name, settings)
 }
 
-func SetGlobal(name, value string) { viper.Set(name, value) }
+func SetGlobal(name string, value interface{}) { viper.Set(name, value) }
+func (p *Profile) SetGlobal(name string, value interface{}) {
+	SetGlobal(name, value)
+}
+
+func Get(name string) interface{} { return p.Get(name) }
+func (p *Profile) Get(name string) interface{} {
+	if viper.IsSet(name) && viper.Get(name) != "" {
+		return viper.Get(name)
+	}
+	settings := viper.GetStringMap(p.Name())
+	return settings[name]
+}
 
 func GetString(name string) string { return p.GetString(name) }
 func (p *Profile) GetString(name string) string {
-	if viper.IsSet(name) && viper.GetString(name) != "" {
-		return viper.GetString(name)
+	value := p.Get(name)
+	if value == nil {
+		return ""
 	}
-	settings := viper.GetStringMapString(p.Name())
-	return settings[name]
+	return value.(string)
+}
+
+func GetBool(name string) bool { return p.GetBool(name) }
+func (p *Profile) GetBool(name string) bool {
+	value := p.Get(name)
+	switch v := value.(type) {
+	case bool:
+		return v
+	case string:
+		return IsTrue(v)
+	default:
+		return false
+	}
 }
 
 // Service get configured service.
@@ -267,6 +315,18 @@ func (p *Profile) MongoShellPath() string {
 func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
 	SetGlobal(mongoShellPath, v)
+}
+
+// SkipUpdateCheck get the global skip update check.
+func SkipUpdateCheck() bool { return p.SkipUpdateCheck() }
+func (p *Profile) SkipUpdateCheck() bool {
+	return p.GetBool(skipUpdateCheck)
+}
+
+// SetSkipUpdateCheck sets the global skip update check.
+func SetSkipUpdateCheck(v bool) { p.SetSkipUpdateCheck(v) }
+func (p *Profile) SetSkipUpdateCheck(v bool) {
+	SetGlobal(skipUpdateCheck, v)
 }
 
 // Output get configured output format.

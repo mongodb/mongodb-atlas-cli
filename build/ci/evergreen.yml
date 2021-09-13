@@ -1107,7 +1107,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: "iam,opsmanager"
+          E2E_TAGS: iam_mms_50
           OM_VERSION: 5.0
   - name: ops_manager_5_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-50" ]

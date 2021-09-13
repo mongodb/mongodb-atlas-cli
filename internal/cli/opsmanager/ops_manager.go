@@ -16,6 +16,7 @@ package opsmanager
 
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
+	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/agents"
@@ -84,6 +85,7 @@ func Builder() *cobra.Command {
 		softwarecompotents.Builder(),
 		featurepolicies.Builder(),
 		serverusage.Builder(),
+		livemigrations.Builder(),
 	)
 	return cmd
 }

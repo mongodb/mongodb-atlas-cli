@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && atlas) || (iam && om50) || (iam && om44)
+//go:build e2e || iam || (iam && atlas) || (iam && om50) || (iam && om44) || (!om50 && !om44)
 
 package iam_test
 

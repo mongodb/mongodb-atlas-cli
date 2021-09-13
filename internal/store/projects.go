@@ -36,6 +36,7 @@ type OrgProjectLister interface {
 
 type ProjectCreator interface {
 	CreateProject(string, string, *atlas.CreateProjectOptions) (interface{}, error)
+	ServiceVersionDescriber
 }
 
 type ProjectDeleter interface {

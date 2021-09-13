@@ -58,6 +58,11 @@ Options
      - string
      - false
      - Organization ID to use. Overrides configuration file or environment variable settings.
+   * - -o, --output
+     - string
+     - false
+     - Output format.
+       Valid values: json|json-path|go-template|go-template-file
    * - --sourceCACertificatePath
      - string
      - false

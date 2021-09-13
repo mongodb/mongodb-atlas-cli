@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package link
+package livemigrations
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
@@ -21,28 +21,25 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
+var createTemplate = "Live migration '{{.ID}}' successfully started.\n"
 
-type CreateOpts struct {
+type CutoverOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store        store.LinkTokenCreator
-	accessListIP []string
+	store           store.LiveMigrationStarter
+	liveMigrationID string
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *CutoverOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
-	createRequest := opts.newTokenCreateRequest()
-
-	r, err := opts.store.CreateLinkToken(opts.ConfigOrgID(), createRequest)
+func (opts *CutoverOpts) Run() error {
+	r, err := opts.store.StartLiveMigration(opts.ConfigOrgID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
@@ -50,17 +47,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newTokenCreateRequest() *mongodbatlas.TokenCreateRequest {
-	return &mongodbatlas.TokenCreateRequest{
-		AccessListIPs: opts.accessListIP,
-	}
-}
-
-// mongocli atlas liveMigrations|lm link create [--accessListIp accessListIp] [--orgId orgId].
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+// mongocli atlas liveMigrations|lm cutover [--liveMigrationID liveMigrationId] [--projectId projectId].
+func CutoverBuild() *cobra.Command {
+	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
+		Use:   "cutover",
 		Short: "Create one new link-token.",
 		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -74,8 +65,8 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.liveMigrationID, flag.LiveMigrationID, "", usage.LiveMigrationID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

@@ -174,6 +174,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.LiveMigrationDestinationProjectID, "", usage.LiveMigrationDestinationProjectID)
 	cmd.Flags().StringSliceVar(&opts.migrationHosts, flag.LiveMigrationHost, []string{}, usage.LiveMigrationHostEntries)
 	cmd.Flags().BoolVar(&opts.destinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceClusterName)
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceProjectID)

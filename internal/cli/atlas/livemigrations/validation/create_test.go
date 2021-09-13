@@ -11,14 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build unit
-// +build unit
 
 package validation
 
 import (
 	"testing"
+
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -52,4 +53,17 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.OrgID, flag.Output, flag.LiveMigrationSourceClusterName, flag.LiveMigrationSourceProjectID,
+			flag.LiveMigrationSourceUsername, flag.LiveMigrationSourcePassword, flag.LiveMigrationSourceSSL,
+			flag.LiveMigrationSourceCACertificatePath, flag.LiveMigrationSourceManagedAuthentication,
+			flag.LiveMigrationDestinationClusterName, flag.LiveMigrationDestinationProjectID,
+			flag.LiveMigrationHost, flag.LiveMigrationDropCollections},
+	)
 }

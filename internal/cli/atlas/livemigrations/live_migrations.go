@@ -32,7 +32,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		link.Builder(),
 		validation.Builder(),
-	)
+		CutoverBuild())
 
 	return cmd
 }

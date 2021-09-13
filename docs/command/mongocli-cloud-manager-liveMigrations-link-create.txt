@@ -1,8 +1,8 @@
-.. _mongocli-ops-manager-liveMigrations-link-create:
+.. _mongocli-cloud-manager-liveMigrations-link-create:
 
-===============================================
-mongocli ops-manager liveMigrations link create
-===============================================
+=================================================
+mongocli cloud-manager liveMigrations link create
+=================================================
 
 .. default-domain:: mongodb
 
@@ -21,7 +21,7 @@ Syntax
 
 .. code-block::
 
-   mongocli ops-manager liveMigrations link create [options]
+   mongocli cloud-manager liveMigrations link create [options]
 
 Options
 -------

@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-liveMigrations-link-create` - Create one new link-token.
+* :ref:`mongocli-ops-manager-liveMigrations-link-create` - Create one new organization link.
 * :ref:`mongocli-ops-manager-liveMigrations-link-delete` - Delete one link-token.
 
 

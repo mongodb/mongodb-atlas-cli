@@ -24,7 +24,10 @@ func Builder() *cobra.Command {
 		Short: "Manage the link-token for your organization.",
 	}
 
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(
+		CreateBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

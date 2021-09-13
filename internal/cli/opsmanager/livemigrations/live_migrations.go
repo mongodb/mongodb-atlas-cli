@@ -25,10 +25,12 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "lm"),
-		Short:   "Manage a Live Migration for your organization.",
+		Short:   "Manage a Live Migration to Atlas for your organization.",
 	}
 
-	cmd.AddCommand(link.Builder())
+	cmd.AddCommand(
+		link.Builder(),
+	)
 
 	return cmd
 }

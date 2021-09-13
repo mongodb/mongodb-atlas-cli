@@ -324,4 +324,4 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `serverless list`                             | Y         |           |           | Y         |       |       |
 | `serverless watch`                            | Y         |           |           | Y         |       |       |
 | `livemigrations link create`                  | Y         |           |           | Y         | N     | N     |
-| `livemigrations link delete`                  | Y         |           |           | Y         |       |       |
+| `livemigrations link delete`                  | Y         |           |           | Y         | Y     | Y     |

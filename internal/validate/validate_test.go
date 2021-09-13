@@ -153,8 +153,8 @@ func TestCredentials(t *testing.T) {
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()
-		_ = os.Setenv("PUBLIC_API_KEY", "test")
-		_ = os.Setenv("PRIVATE_API_KEY", "test")
+		t.Setenv("PUBLIC_API_KEY", "test")
+		t.Setenv("PRIVATE_API_KEY", "test")
 
 		err := Credentials()
 		if err != nil {

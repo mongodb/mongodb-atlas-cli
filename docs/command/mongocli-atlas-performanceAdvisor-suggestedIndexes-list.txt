@@ -12,7 +12,9 @@ mongocli atlas performanceAdvisor suggestedIndexes list
    :depth: 1
    :class: singlecol
 
-Retrieves suggested indexes for collections experiencing slow queries.
+Retrieve suggested indexes for collections experiencing slow queries.
+
+The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance.
 
 Syntax
 ------
@@ -89,4 +91,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas performanceAdvisor suggestedIndexes list  --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017
 

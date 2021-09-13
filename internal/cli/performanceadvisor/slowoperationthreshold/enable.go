@@ -54,6 +54,8 @@ func EnableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "enable",
 		Short:   "Enable the Atlas managed slow operation threshold for your project.",
+		Long:    "The slow operation threshold determines which operations are flagged by the Performance Advisor and Query Profiler. When enabled, the application uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. Atlas-managed slow operation threshold is enabled by default for dedicated clusters (M10+).",
+		Example: "$ mongocli atlas performanceAdvisor sot enable",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

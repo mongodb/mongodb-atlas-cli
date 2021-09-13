@@ -12,7 +12,14 @@ mongocli atlas performanceAdvisor slowQueryLogs list
    :depth: 1
    :class: singlecol
 
-List namespaces for collections experiencing slow queries for a specified host.
+Return log lines for slow queries that the Performance Advisor and Query Profiler identified.
+
+The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. The threshold for slow queries varies based on the average time of operations on your cluster to provide recommendations pertinent to your workload.
+You must have one of the following roles to run this command:
+Project Owner access
+Project Data Access Admin access
+Project Data Access Read/Write access
+Project Data Access Read Only access
 
 Syntax
 ------
@@ -85,4 +92,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas performanceAdvisor slowQueryLogs ls --processName atlas-111ggi-shard-00-00.111xx.mongodb.net:27017
 

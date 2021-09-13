@@ -48,7 +48,7 @@ func (mr *MockSetSaverMockRecorder) Save() *gomock.Call {
 }
 
 // Set mocks base method.
-func (m *MockSetSaver) Set(arg0, arg1 string) {
+func (m *MockSetSaver) Set(arg0 string, arg1 interface{}) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "Set", arg0, arg1)
 }
@@ -57,4 +57,16 @@ func (m *MockSetSaver) Set(arg0, arg1 string) {
 func (mr *MockSetSaverMockRecorder) Set(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockSetSaver)(nil).Set), arg0, arg1)
+}
+
+// SetGlobal mocks base method.
+func (m *MockSetSaver) SetGlobal(arg0 string, arg1 interface{}) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetGlobal", arg0, arg1)
+}
+
+// SetGlobal indicates an expected call of SetGlobal.
+func (mr *MockSetSaverMockRecorder) SetGlobal(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetGlobal", reflect.TypeOf((*MockSetSaver)(nil).SetGlobal), arg0, arg1)
 }

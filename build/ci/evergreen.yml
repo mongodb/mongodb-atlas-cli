@@ -865,7 +865,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: iam
+          E2E_TAGS: iam,atlas
   - name: atlas_gov_iam_e2e
     tags: ["e2e","generic","atlas"]
     depends_on:
@@ -883,7 +883,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: iam
+          E2E_TAGS: iam,atlas
     # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_live_migrations_link_token_e2e
     tags: [ "e2e","atlas", "livemigrations" ]

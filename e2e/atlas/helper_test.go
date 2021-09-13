@@ -163,7 +163,7 @@ func deployCluster() (string, error) {
 		"watch",
 		clusterName)
 	watch.Env = os.Environ()
-	if resp, err := create.CombinedOutput(); err != nil {
+	if resp, err := watch.CombinedOutput(); err != nil {
 		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil

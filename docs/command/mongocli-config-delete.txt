@@ -14,12 +14,31 @@ mongocli config delete
 
 Delete a profile.
 
+This command removes the specified profile from the MongoDB CLI configuration file.
+For more information on the configuration file, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/configuration-file/ 
+
 Syntax
 ------
 
 .. code-block::
 
-   mongocli config delete <name> [options]
+   mongocli config delete <profileName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - profileName
+     - string
+     - false
+     - Name of the profile to delete. Specify 'default' to delete the default profile.
 
 Options
 -------
@@ -56,4 +75,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ Delete a profile called myProfile:
+ $ mongocli config delete myProfile
 

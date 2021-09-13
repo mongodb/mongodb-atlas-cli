@@ -14,15 +14,44 @@ mongocli config set
 
 Configure specific properties of a profile.
 
-Configure specific properties of the profile.
-Available properties include: [project_id org_id service public_api_key private_api_key output ops_manager_url base_url ops_manager_ca_certificate ops_manager_skip_verify mongosh_path skip_update_check].
+You can set the following properties in the specified profile:
+project_id - Unique identifier of a project.
+org_id - Unique identifier of an organization.
+service - MongoDB service type. Valid values: cloud|cloudgov|cloud-manager|ops-manager
+public_api_key - Public API key for programmatic access.
+private_api_key - Private API key for programmatic access.
+output - Output fields and format. Valid values: json|json-path|go-template|go-template-file
+ops_manager_url - Ops Manager only. Base URL for API calls. The URL must end with a forward slash (/).
+base_url - Base URL for API calls. The URL must end with a forward slash (/).
+ops_manager_ca-certificate - Ops Manager only. Path on your local system to the PEM-encoded Certificate Authority (CA) certificate used to sign the client and Ops Manager TLS certificates.
+ops_manager_skip_verify - Ops Manager only. When set to yes, the Ops Manager CA TLS certificate is not verified. This prevents your connections from being rejected due to an invalid certificate. This is insecure and not recommended in production environments. Valid values: yes|no
+mongosh_path - Path to the MongoDB shell (mongosh) on your system. Default value: /usr/local/bin/mongosh
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli config set <property> <value> [options]
+   mongocli config set <propertyName> <value> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - propertyName
+     - string
+     - true
+     - Property to set in the profile.   * - value
+     - string
+     - true
+     - Value for the property to set in the profile.
 
 Options
 -------
@@ -55,4 +84,18 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ Set Ops Manager Base URL in the profile myProfile:
+ $ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
+
+ Set Organization ID in the default profile:
+ $ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
+
+ Set path for the MongoDB Shell in the default profile:
+ $ mongocli config set mongosh_path /usr/local/bin/mongosh
 

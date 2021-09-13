@@ -14,7 +14,7 @@ mongocli config
 
 Configure a profile to store access settings for your MongoDB deployment.
 
-Configure settings in a user profile.
+You can define the settings that the MongoDB CLI uses to interact with MongoDB services.
 All settings are optional. You can specify settings individually by running: 
 $ mongocli config set --help 
 
@@ -71,25 +71,25 @@ Examples
 .. code-block::
 
 
-   To configure the tool to work with Atlas
-   $ mongocli config
+ Configure a profile to interact with Atlas:
+ $ mongocli config
 
-   To configure the tool to work with Atlas for Government
-   $ mongocli config --service cloudgov
+ Configure a profile to interact with Atlas for Government:
+ $ mongocli config --service cloudgov
    
-   To configure the tool to work with Cloud Manager
-   $ mongocli config --service cloud-manager
+ Configure a profile to interact with Cloud Manager:
+ $ mongocli config --service cloud-manager
 
-   To configure the tool to work with Ops Manager
-   $ mongocli config --service ops-manager
+ Configure a profile to interact with Ops Manager:
+ $ mongocli config --service ops-manager
 
 
 Related Commands
 ----------------
 
 * :ref:`mongocli-config-delete` - Delete a profile.
-* :ref:`mongocli-config-describe` - Return a specific profile.
-* :ref:`mongocli-config-list` - List available profiles.
+* :ref:`mongocli-config-describe` - Return details about a specific profile.
+* :ref:`mongocli-config-list` - Return a list of available profiles by name.
 * :ref:`mongocli-config-rename` - Rename a profile.
 * :ref:`mongocli-config-set` - Configure specific properties of a profile.
 

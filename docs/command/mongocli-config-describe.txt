@@ -12,14 +12,30 @@ mongocli config describe
    :depth: 1
    :class: singlecol
 
-Return a specific profile.
+Return details about a specific profile.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli config describe <name> [options]
+   mongocli config describe <profileName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - profileName
+     - string
+     - true
+     - Name of the profile to return. Specify 'default' to return the default profile.
 
 Options
 -------
@@ -57,4 +73,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ Describe a profile called myProfile:
+ $ mongocli config describe myProfile
 

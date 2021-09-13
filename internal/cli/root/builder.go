@@ -155,10 +155,12 @@ func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {
 	}
 	if newVersionAvailable {
 		newVersionTemplate := `
-A new MongoDB CLI version is available '%s'!
-To upgrade MongoCLI, see https://dochub.mongodb.org/core/mongocli-install. To disable this alert, run "mongocli config set skip_update_check true".
+A new version of %s is available '%s'!
+To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
+
+To disable this alert, run "mongocli config set skip_update_check true".
 `
-		_, err = fmt.Fprintf(w, newVersionTemplate, latestVersion)
+		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion)
 		return err
 	}
 	return nil

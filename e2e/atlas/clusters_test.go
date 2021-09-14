@@ -58,7 +58,7 @@ func TestClustersFlags(t *testing.T) {
 			"--members=3",
 			"--tier", tierM30,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion=4.4",
+			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -69,7 +69,7 @@ func TestClustersFlags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "4.4", 30)
+		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -240,7 +240,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.4", 30)
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -274,7 +274,7 @@ func TestClustersFile(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, "4.4", 40)
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

@@ -172,24 +172,24 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam globalApiKey describe`                   |           | N         |           |           | Y     |       |
 | `iam globalApiKey list`                       |           | N         |           |           | Y     |       |
 | `iam globalApiKey update`                     |           | N         |           |           | Y     |       |
-| `iam orgs apiKey accessList create`           | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey accessList delete`           | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey accessList list`             | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey  create`                     | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey  delete`                     | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey  describe`                   | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey  list`                       | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam orgs apiKey  update`                     | Y         | N         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey accessList create`           | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey accessList delete`           | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey accessList list`             | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey  create`                     | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey  delete`                     | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey  describe`                   | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey  list`                       | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam orgs apiKey  update`                     | Y         | Y         | Y         | Y         | Y     | Y     |
 | `iam orgs users  list`                        | N         | N         | N         | Y         | Y     | Y     |
-| `iam orgs create`                             |           | N         | N         |           | Y     | Y     |
-| `iam orgs delete`                             | N         | N         | N         | Y         | Y     | Y     |
-| `iam orgs describe`                           | Y         | N         | N         | Y         | Y     | Y     |
-| `iam orgs list`                               | Y         | N         | N         | Y         | Y     | Y     |
-| `iam orgs invitations list`                   | Y         | N         | N         | Y         | N     | N     |
-| `iam orgs invitations describe`               | Y         | N         | N         | Y         | N     | N     |
-| `iam orgs invitations invite`                 | Y         | N         | N         | Y         | N     | N     |
-| `iam orgs invitations update`                 | Y         | N         | N         | Y         | N     | N     |
-| `iam orgs invitations delete`                 | Y         | N         | N         | Y         | N     | N     |
+| `iam orgs create`                             |           | Y         | N         |           | Y     | Y     |
+| `iam orgs delete`                             | N         | Y         | N         | Y         | Y     | Y     |
+| `iam orgs describe`                           | Y         | Y         | N         | Y         | Y     | Y     |
+| `iam orgs list`                               | Y         | Y         | N         | Y         | Y     | Y     |
+| `iam orgs invitations list`                   | Y         | Y         | N         | Y         | N     | N     |
+| `iam orgs invitations describe`               | Y         | Y         | N         | Y         | N     | N     |
+| `iam orgs invitations invite`                 | Y         | Y         | N         | Y         | N     | N     |
+| `iam orgs invitations update`                 | Y         | Y         | N         | Y         | N     | N     |
+| `iam orgs invitations delete`                 | Y         | Y         | N         | Y         | N     | N     |
 | `iam project apiKey create`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey delete`                   | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam project apiKey describe`                 | N         | N         | N         | Y         | Y     | Y     |
@@ -201,15 +201,15 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `iam project team delete`                     | N         | N         | N         | Y         | Y     | Y     |
 | `iam project team list`                       | N         | N         | N         | Y         | Y     | Y     |
 | `iam project team update`                     | N         | N         | N         | Y         | Y     | Y     |
-| `iam project create`                          | Y         | N         | Y         | Y         | Y     | Y     |
-| `iam project delete`                          | N         | N         | N         | Y         | Y     | Y     |
-| `iam project describe`                        | N         | N         | N         | Y         | Y     | Y     |
-| `iam project list`                            | N         | N         | N         | Y         | Y     | Y     |
-| `iam project invitations list`                | Y         | N         | N         | Y         | N     | N     |
-| `iam project invitations describe`            | Y         | N         | N         | Y         | N     | N     |
-| `iam project invitations invite`              | Y         | N         | N         | Y         | N     | N     |
-| `iam project invitations update`              | Y         | N         | N         | Y         | N     | N     |
-| `iam project invitations delete`              | Y         | N         | N         | Y         | N     | N     |
+| `iam project create`                          | Y         | Y         | Y         | Y         | Y     | Y     |
+| `iam project delete`                          | N         | Y         | N         | Y         | Y     | Y     |
+| `iam project describe`                        | N         | Y         | N         | Y         | Y     | Y     |
+| `iam project list`                            | N         | Y         | N         | Y         | Y     | Y     |
+| `iam project invitations list`                | Y         | Y         | N         | Y         | N     | N     |
+| `iam project invitations describe`            | Y         | Y         | N         | Y         | N     | N     |
+| `iam project invitations invite`              | Y         | Y         | N         | Y         | N     | N     |
+| `iam project invitations update`              | Y         | Y         | N         | Y         | N     | N     |
+| `iam project invitations delete`              | Y         | Y         | N         | Y         | N     | N     |
 | `iam team user add`                           | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user delete`                        | Y         | N         | Y         | Y         | Y     | Y     |
 | `iam team user list`                          | Y         | N         | Y         | Y         | Y     | Y     |
@@ -315,13 +315,15 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `serverUsage projet serverType set`           |           | N         |           |           | Y     |       |
 | `serverUsage capture`                         |           | N         |           |           | Y     |       |
 | `serverUsage download`                        |           | N         |           |           | Y     |       |
-| `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
-| `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
-| `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
+| `performanceAdvisor namespace list`           | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor slowQueryLogs list`       | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor suggestedIndexes list`    | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor slowOT enable`            | Y         |           |           | Y         | N     | N     |
+| `performanceAdvisor slowOT disable`           | Y         |           |           | Y         | N     | N     |
 | `serverless create`                           | Y         |           |           | Y         |       |       |
 | `serverless delete`                           | Y         |           |           | Y         |       |       |
 | `serverless describe`                         | Y         |           |           | Y         |       |       |
 | `serverless list`                             | Y         |           |           | Y         |       |       |
 | `serverless watch`                            | Y         |           |           | Y         |       |       |
-| `livemigrations link create`                  | Y         |           |           | Y         |       |       |
-| `livemigrations link delete`                  | Y         |           |           | Y         |       |       |
+| `livemigrations link create`                  | Y         |           |           | Y         | N     | N     |
+| `livemigrations link delete`                  | Y         |           |           | Y         | Y     | Y     |

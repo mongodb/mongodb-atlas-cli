@@ -17,6 +17,7 @@ package performanceadvisor
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/namespaces"
+	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/slowoperationthreshold"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/slowquerylogs"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ func Builder() *cobra.Command {
 		namespaces.Builder(),
 		slowquerylogs.Builder(),
 		suggestedindexes.Builder(),
-	)
+		slowoperationthreshold.Builder())
 
 	return cmd
 }

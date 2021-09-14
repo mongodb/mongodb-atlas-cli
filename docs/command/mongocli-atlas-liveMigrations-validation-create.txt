@@ -54,10 +54,6 @@ Options
      - string
      - false
      - Organization ID to use. Overrides configuration file or environment variable settings.
-   * - --projectId
-     - string
-     - false
-     - Unique 24-hexadecimal digit string that identifies the destination project.
    * - --sourceCACertificatePath
      - string
      - false

@@ -22,6 +22,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/options"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
@@ -36,16 +37,18 @@ func TestLiveMigrationCreateOpts_Run(t *testing.T) {
 	expected := mongodbatlas.LiveMigration{}
 
 	createOpts := &CreateOpts{
-		GlobalOpts:                  cli.GlobalOpts{ProjectID: "1"},
-		sourceProjectID:             "2",
-		sourceClusterName:           "testSrc",
-		sourceManagedAuthentication: true,
-		destinationClusterName:      "testDest",
-		migrationHosts:              []string{"mig1"},
-		store:                       mockStore,
+		LiveMigrationsOpts: options.LiveMigrationsOpts{
+			GlobalOpts:                  cli.GlobalOpts{ProjectID: "1"},
+			SourceProjectID:             "2",
+			SourceClusterName:           "testSrc",
+			SourceManagedAuthentication: true,
+			DestinationClusterName:      "testDest",
+			MigrationHosts:              []string{"mig1"},
+		},
+		store: mockStore,
 	}
 
-	createRequest := createOpts.newCreateRequest()
+	createRequest := createOpts.CreateRequest()
 
 	mockStore.
 		EXPECT().Create(createOpts.ProjectID, createRequest).Return(&expected, nil).

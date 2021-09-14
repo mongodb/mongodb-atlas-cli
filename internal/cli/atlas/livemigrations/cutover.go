@@ -28,7 +28,7 @@ var createTemplate = "Cutover process '{{.ID}}' successfully started.\n"
 type CutoverOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store           store.LiveMigrationStarter
+	store           store.LiveMigrationCutoverStarter
 	liveMigrationID string
 }
 
@@ -39,7 +39,7 @@ func (opts *CutoverOpts) initStore() error {
 }
 
 func (opts *CutoverOpts) Run() error {
-	r, err := opts.store.StartLiveMigration(opts.ConfigOrgID(), opts.liveMigrationID)
+	r, err := opts.store.StartLiveMigrationCutover(opts.ConfigOrgID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func CutoverBuild() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "cutover",
-		Short: "Starts the cutover process to stop the data transmission between clusters.",
+		Short: "Starts the process to stop the data transmission between clusters.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

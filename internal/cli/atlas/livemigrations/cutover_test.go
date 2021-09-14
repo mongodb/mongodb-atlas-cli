@@ -27,7 +27,7 @@ import (
 
 func TestCutoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLiveMigrationStarter(ctrl)
+	mockStore := mocks.NewMockLiveMigrationCutoverStarter(ctrl)
 	defer ctrl.Finish()
 
 	expected := &mongodbatlas.Validation{}
@@ -37,7 +37,7 @@ func TestCutoverOpts_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().StartLiveMigration(opts.ConfigProjectID(), opts.liveMigrationID).Return(expected, nil).
+		EXPECT().StartLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID).Return(expected, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

@@ -219,7 +219,29 @@ func RandClusterName() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("e2e-cluster-%s-%v", revision, n), nil
+	}
 	return fmt.Sprintf("e2e-cluster-%v", n), nil
+}
+
+func RandProjectName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("e2e-proj-%s-%v", revision, n), nil
+	}
+	return fmt.Sprintf("e2e-proj-%v", n), nil
+}
+
+func RandProjectNameWithPrefix(prefix string) (string, error) {
+	name, err := RandProjectName()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s-%s", prefix, name), nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {

@@ -1,7 +1,7 @@
-.. _mongocli-ops-manager-performanceAdvisor-suggestedIndexes:
+.. _mongocli-atlas-performanceAdvisor-slowOperationThreshold:
 
 ========================================================
-mongocli ops-manager performanceAdvisor suggestedIndexes
+mongocli atlas performanceAdvisor slowOperationThreshold
 ========================================================
 
 .. default-domain:: mongodb
@@ -12,7 +12,7 @@ mongocli ops-manager performanceAdvisor suggestedIndexes
    :depth: 1
    :class: singlecol
 
-Get suggested indexes for collections experiencing slow queries
+Enable or disable management of the slow operation threshold for your cluster.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for suggestedIndexes
+     - help for slowOperationThreshold
 
 Inherited Options
 -----------------
@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-performanceAdvisor-suggestedIndexes-list` - Retrieve suggested indexes for collections experiencing slow queries.
+* :ref:`mongocli-atlas-performanceAdvisor-slowOperationThreshold-disable` - Disable the application-managed slow operation threshold for your project.
+* :ref:`mongocli-atlas-performanceAdvisor-slowOperationThreshold-enable` - Enable the application-managed slow operation threshold for your project.
 
 
 .. toctree::
    :titlesonly:
 
-   list </command/mongocli-ops-manager-performanceAdvisor-suggestedIndexes-list>
+   disable </command/mongocli-atlas-performanceAdvisor-slowOperationThreshold-disable>
+   enable </command/mongocli-atlas-performanceAdvisor-slowOperationThreshold-enable>
 

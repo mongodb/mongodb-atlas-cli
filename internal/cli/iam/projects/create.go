@@ -63,6 +63,10 @@ func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
 }
 
 func (opts *CreateOpts) validateOwnerID() error {
+	if opts.projectOwnerID == "" {
+		return nil
+	}
+
 	if config.Service() != config.OpsManagerService {
 		return nil
 	}

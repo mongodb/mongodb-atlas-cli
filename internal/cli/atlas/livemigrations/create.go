@@ -42,7 +42,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	createRequest := opts.CreateRequest()
+	createRequest := opts.NewCreateRequest()
 
 	r, err := opts.store.Create(opts.ConfigProjectID(), createRequest)
 	if err != nil {

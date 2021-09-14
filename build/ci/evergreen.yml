@@ -959,7 +959,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: iam,atlas
+          E2E_TAGS: iam
   - name: cloud_manager_generic_e2e
     tags: ["e2e","generic","cloudmanager"]
     depends_on:

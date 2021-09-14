@@ -52,8 +52,7 @@ func CutoverBuild() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "cutover",
-		Short: "Create one new link-token.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Short: "Starts the migration of one deployment.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
@@ -68,6 +67,8 @@ func CutoverBuild() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.liveMigrationID, flag.LiveMigrationID, "", usage.LiveMigrationID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.LiveMigrationID)
 
 	return cmd
 }

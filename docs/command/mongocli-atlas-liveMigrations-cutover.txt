@@ -12,9 +12,7 @@ mongocli atlas liveMigrations cutover
    :depth: 1
    :class: singlecol
 
-Create one new link-token.
-
-Your API Key must have the Organization Owner role to successfully run this command.
+Starts the migration of one deployment.
 
 Syntax
 ------
@@ -40,7 +38,7 @@ Options
      - help for cutover
    * - --liveMigrationId
      - string
-     - false
+     - true
      - Unique 24-hexadecimal digit string that identifies the live migration job.
    * - -o, --output
      - string

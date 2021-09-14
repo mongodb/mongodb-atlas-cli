@@ -41,7 +41,7 @@ type LiveMigrationsOpts struct {
 	SourcePassword              string
 }
 
-func (opts *LiveMigrationsOpts) CreateRequest() *mongodbatlas.LiveMigration {
+func (opts *LiveMigrationsOpts) NewCreateRequest() *mongodbatlas.LiveMigration {
 	return &mongodbatlas.LiveMigration{
 		Source: &mongodbatlas.Source{
 			ClusterName:           opts.SourceClusterName,

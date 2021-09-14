@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build e2e || (cloudmanager && generic)
-// +build e2e cloudmanager,generic
 
 package cloud_manager_test
 

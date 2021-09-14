@@ -231,9 +231,9 @@ func RandProjectName() (string, error) {
 		return "", err
 	}
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("e2e-proj-%s-%v", revision, n), nil
+		return fmt.Sprintf("%s-%v", revision, n), nil
 	}
-	return fmt.Sprintf("e2e-proj-%v", n), nil
+	return fmt.Sprintf("e2e-%v", n), nil
 }
 
 func RandProjectNameWithPrefix(prefix string) (string, error) {
@@ -241,7 +241,11 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s-%s", prefix, name), nil
+	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
+	if len(prefixedName) > 64 {
+		return prefixedName[:64], nil
+	}
+	return prefixedName, nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {

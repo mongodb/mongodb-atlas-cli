@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,28 +21,25 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-var createTemplate = "Organization link successfully created.\n"
-
-type CreateOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store     store.OrganizationsConnector
-	linkToken string
+	store store.OrganizationsDescriber
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-func (opts *CreateOpts) Run() error {
-	createRequest := opts.newCreateLinkRequest()
+var describeTemplate = "Organization Link status: '{{.Status}}'\n"
 
-	r, err := opts.store.ConnectOrganizations(opts.ConfigOrgID(), createRequest)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.OrganizationConnectionStatus(opts.ConfigOrgID())
+
 	if err != nil {
 		return err
 	}
@@ -50,32 +47,28 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateLinkRequest() *mongodbatlas.LinkToken {
-	return &mongodbatlas.LinkToken{
-		LinkToken: opts.linkToken,
-	}
-}
-
-// mongocli opsmanager|cloud-manager liveMigrations|lm link create --linkToken linkToken [--orgId orgId].
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+// mongocli ops-manager|cloud-manager liveMigration|lm link describe|get [--orgId orgId].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create one new organization link.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   "Return the status of the connection between the specified source organization and the target MongoDB Atlas organization.",
+		Long:    "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
+
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringVar(&opts.linkToken, flag.LinkToken, "", usage.LinkToken)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

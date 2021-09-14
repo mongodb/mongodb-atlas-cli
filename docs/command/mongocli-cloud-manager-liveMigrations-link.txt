@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-cloud-manager-liveMigrations-link-create` - Create one new organization link.
 * :ref:`mongocli-cloud-manager-liveMigrations-link-delete` - Delete one link-token.
 
 
 .. toctree::
    :titlesonly:
 
+   create </command/mongocli-cloud-manager-liveMigrations-link-create>
    delete </command/mongocli-cloud-manager-liveMigrations-link-delete>
 

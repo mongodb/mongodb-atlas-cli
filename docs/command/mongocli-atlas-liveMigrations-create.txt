@@ -12,7 +12,7 @@ mongocli atlas liveMigrations create
    :depth: 1
    :class: singlecol
 
-Create one new validation request.
+Create one new migration.
 
 Your API Key must have the Organization Owner role to successfully run this command.
 

@@ -22,7 +22,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -52,4 +54,25 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{
+			flag.OrgID,
+			flag.LiveMigrationSourceClusterName,
+			flag.LiveMigrationSourceProjectID,
+			flag.LiveMigrationSourceUsername,
+			flag.LiveMigrationSourcePassword,
+			flag.LiveMigrationSourceSSL,
+			flag.LiveMigrationSourceCACertificatePath,
+			flag.LiveMigrationSourceManagedAuthentication,
+			flag.ClusterName,
+			flag.LiveMigrationHost,
+			flag.LiveMigrationDropCollections,
+		},
+	)
 }

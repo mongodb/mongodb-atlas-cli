@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongocli/internal/store LinkTokenCreator,LinkTokenDeleter
@@ -53,6 +54,9 @@ func (s *Store) DeleteLinkToken(orgID string) error {
 	switch s.service {
 	case config.CloudService:
 		_, err := s.client.(*atlas.Client).LiveMigration.DeleteLinkToken(context.Background(), orgID)
+		return err
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*opsmngr.Client).LiveMigration.DeleteConnection(context.Background(), orgID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

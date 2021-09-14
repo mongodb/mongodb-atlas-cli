@@ -265,5 +265,5 @@ const (
 	LiveMigrationDropCollections             = "drop"                            // LiveMigrationDropCollections flag
 	LiveMigrationID                          = "liveMigrationId"                 // LiveMigrationID flag
 	OwnerID                                  = "ownerId"                         // OwnerID Flag
-
+	LinkToken                                = "linkToken"                       // LinkToken flag
 )

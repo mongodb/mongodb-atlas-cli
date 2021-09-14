@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Live migration '{{.ID}}' successfully started.\n"
+var createTemplate = "Cutover process '{{.ID}}' successfully started.\n"
 
 type CutoverOpts struct {
 	cli.GlobalOpts
@@ -52,7 +52,7 @@ func CutoverBuild() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "cutover",
-		Short: "Starts the migration of one deployment.",
+		Short: "Starts the cutover process to stop the data transmission between clusters.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

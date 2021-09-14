@@ -68,7 +68,8 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List namespaces for collections experiencing slow queries",
+		Short:   "Retrieve up to 20 namespaces for collections experiencing slow queries for a specified host.",
+		Long:    "Namespaces appear in the following format: {database}.{collection}.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

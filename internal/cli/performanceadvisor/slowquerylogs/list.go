@@ -74,8 +74,14 @@ func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List namespaces for collections experiencing slow queries for a specified host",
+		Use:   "list",
+		Short: "Return log lines for slow queries that the Performance Advisor and Query Profiler identified.",
+		Long: `The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. The threshold for slow queries varies based on the average time of operations on your cluster to provide recommendations pertinent to your workload.
+You must have one of the following roles to run this command:
+Project Owner access
+Project Data Access Admin access
+Project Data Access Read/Write access
+Project Data Access Read Only access`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

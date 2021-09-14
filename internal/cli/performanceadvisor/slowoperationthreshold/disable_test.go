@@ -11,23 +11,44 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build unit
 // +build unit
 
-package link
+package slowoperationthreshold
 
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDisable_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockPerformanceAdvisorSlowOperationThresholdDisabler(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DisableOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().DisablePerformanceAdvisorSlowOperationThreshold(opts.ConfigProjectID()).
+		Return(nil).
+		Times(1)
+
+	if err := opts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDisableBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		DisableBuilder(),
+		0,
+		[]string{flag.ProjectID},
 	)
 }

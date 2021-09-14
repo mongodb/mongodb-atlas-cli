@@ -315,9 +315,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `serverUsage projet serverType set`           |           | N         |           |           | Y     |       |
 | `serverUsage capture`                         |           | N         |           |           | Y     |       |
 | `serverUsage download`                        |           | N         |           |           | Y     |       |
-| `performanceAdvisor namespace list`           |           | N         | N         |           | Y     | Y     |
-| `performanceAdvisor slowQueryLogs list`       |           | N         | N         |           | Y     | Y     |
-| `performanceAdvisor suggestedIndexes list`    |           | N         | N         |           | Y     | Y     |
+| `performanceAdvisor namespace list`           | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor slowQueryLogs list`       | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor suggestedIndexes list`    | Y         | N         | N         | Y         | Y     | Y     |
+| `performanceAdvisor slowOT enable`            | Y         |           |           | Y         | N     | N     |
+| `performanceAdvisor slowOT disable`           | Y         |           |           | Y         | N     | N     |
 | `serverless create`                           | Y         |           |           | Y         |       |       |
 | `serverless delete`                           | Y         |           |           | Y         |       |       |
 | `serverless describe`                         | Y         |           |           | Y         |       |       |

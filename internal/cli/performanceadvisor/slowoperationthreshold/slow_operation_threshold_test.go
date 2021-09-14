@@ -11,23 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build unit
+// +build unit
 
-package link
+package slowoperationthreshold
 
 import (
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "link",
-		Short: "Manage the link-token for your organization.",
-	}
-
-	cmd.AddCommand(
-		CreateBuilder(),
-		DeleteBuilder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
 	)
-
-	return cmd
 }

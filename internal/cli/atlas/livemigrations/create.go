@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package validation
+package livemigrations
 
 import (
 	"errors"
@@ -42,7 +42,7 @@ type CreateOpts struct {
 	sourceManagedAuthentication bool
 	sourceUsername              string
 	sourcePassword              string
-	store                       store.LiveMigrationValidationsCreator
+	store                       store.LiveMigrationCreator
 }
 
 func (opts *CreateOpts) initStore() error {
@@ -63,9 +63,9 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	createRequest := opts.newValidationCreateRequest()
+	createRequest := opts.newCreateRequest()
 
-	r, err := opts.store.CreateValidation(opts.ConfigProjectID(), createRequest)
+	r, err := opts.store.Create(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newValidationCreateRequest() *mongodbatlas.LiveMigration {
+func (opts *CreateOpts) newCreateRequest() *mongodbatlas.LiveMigration {
 	return &mongodbatlas.LiveMigration{
 		Source: &mongodbatlas.Source{
 			ClusterName:           opts.sourceClusterName,
@@ -142,7 +142,7 @@ func (opts *CreateOpts) validate() error {
 	return nil
 }
 
-// mongocli atlas liveMigrations|lm validation create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
+// mongocli atlas liveMigrations|lm create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -171,7 +171,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.sourceCACertificatePath, flag.LiveMigrationSourceCACertificatePath, "", usage.LiveMigrationSourceCACertificatePath)
 	cmd.Flags().BoolVar(&opts.sourceManagedAuthentication, flag.LiveMigrationSourceManagedAuthentication, false, usage.LiveMigrationSourceManagedAuthentication)
 	cmd.Flags().StringVar(&opts.destinationClusterName, flag.ClusterName, "", usage.LiveMigrationDestinationClusterName)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.LiveMigrationDestinationProjectID)
 	cmd.Flags().StringSliceVar(&opts.migrationHosts, flag.LiveMigrationHost, []string{}, usage.LiveMigrationHostEntries)
 	cmd.Flags().BoolVar(&opts.destinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
 

@@ -1,8 +1,8 @@
-.. _mongocli-atlas-liveMigrations-validation-create:
+.. _mongocli-atlas-liveMigrations-create:
 
-===============================================
-mongocli atlas liveMigrations validation create
-===============================================
+====================================
+mongocli atlas liveMigrations create
+====================================
 
 .. default-domain:: mongodb
 
@@ -21,7 +21,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas liveMigrations validation create [options]
+   mongocli atlas liveMigrations create [options]
 
 Options
 -------
@@ -54,10 +54,6 @@ Options
      - string
      - false
      - Organization ID to use. Overrides configuration file or environment variable settings.
-   * - --projectId
-     - string
-     - false
-     - Unique 24-hexadecimal digit string that identifies the destination project.
    * - --sourceCACertificatePath
      - string
      - false

@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var createTemplate = "Cutover process '{{.ID}}' successfully started.\n"
+var cutoverTemplate = "Cutover process '{{.ID}}' successfully started.\n"
 
 type CutoverOpts struct {
 	cli.GlobalOpts
@@ -58,7 +58,7 @@ func CutoverBuild() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), cutoverTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

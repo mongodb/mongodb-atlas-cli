@@ -23,10 +23,14 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_connect_orgs.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationsConnector
+//go:generate mockgen -destination=../mocks/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationsConnector,OrganizationsDescriber
 
 type OrganizationsConnector interface {
 	ConnectOrganizations(string, *atlas.LinkToken) (*opsmngr.ConnectionStatus, error)
+}
+
+type OrganizationsDescriber interface {
+	OrganizationConnectionStatus(string) (*opsmngr.ConnectionStatus, error)
 }
 
 // CreateLinkConnection encapsulate the logic to manage different cloud providers.
@@ -34,6 +38,17 @@ func (s *Store) ConnectOrganizations(orgID string, linkToken *atlas.LinkToken) (
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).LiveMigration.ConnectOrganizations(context.Background(), orgID, linkToken)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// OrganizationsLinkStatus encapsulate the logic to manage different cloud providers.
+func (s *Store) OrganizationConnectionStatus(orgID string) (*opsmngr.ConnectionStatus, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).LiveMigration.ConnectionStatus(context.Background(), orgID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

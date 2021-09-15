@@ -52,7 +52,8 @@ func CutoverBuild() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "cutover",
-		Short: "Starts the process to stop the data transmission between clusters.",
+		Short: "Terminates data transmission between clusters.",
+		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

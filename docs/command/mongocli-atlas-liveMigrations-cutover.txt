@@ -12,7 +12,7 @@ mongocli atlas liveMigrations cutover
    :depth: 1
    :class: singlecol
 
-Terminates data transmission between clusters.
+Start the cutover and confirm when the cutover completes. When the cutover completes, the application completes the live migration process and stops synchronizing with the source cluster.
 
 Your API Key must have the Organization Owner role to successfully run this command.
 

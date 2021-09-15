@@ -262,7 +262,7 @@ func RandClusterName() (string, error) {
 		return "", err
 	}
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("%s-cluster-%v", revision, n), nil
+		return fmt.Sprintf("cluster-%v-%s", n, revision), nil
 	}
 	return fmt.Sprintf("cluster-%v", n), nil
 }
@@ -273,7 +273,7 @@ func RandProjectName() (string, error) {
 		return "", err
 	}
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("%s-%v", revision, n), nil
+		return fmt.Sprintf("%v-%s", n, revision), nil
 	}
 	return fmt.Sprintf("e2e-%v", n), nil
 }

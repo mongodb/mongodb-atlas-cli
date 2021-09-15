@@ -262,9 +262,9 @@ func RandClusterName() (string, error) {
 		return "", err
 	}
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("e2e-cluster-%s-%v", revision, n), nil
+		return fmt.Sprintf("%s-cluster-%v", revision, n), nil
 	}
-	return fmt.Sprintf("e2e-cluster-%v", n), nil
+	return fmt.Sprintf("cluster-%v", n), nil
 }
 
 func RandProjectName() (string, error) {

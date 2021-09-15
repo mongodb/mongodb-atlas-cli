@@ -72,7 +72,7 @@ func TestClustersM0Flags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "4.4", 0.5)
+		ensureCluster(t, cluster, clusterName, e2eMDBVer, 0.5)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

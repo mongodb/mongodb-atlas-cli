@@ -20,15 +20,18 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
 	pending  = "PENDING"
 	hostname = "localhost"
+	ldapPort = "19657"
 )
 
 func TestLDAP(t *testing.T) {
@@ -47,7 +50,7 @@ func TestLDAP(t *testing.T) {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
-
+	time.Sleep(2 * time.Minute) // wait for the cluster to be fully available
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -58,7 +61,7 @@ func TestLDAP(t *testing.T) {
 			"--hostname",
 			hostname,
 			"--port",
-			"19657",
+			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
@@ -67,16 +70,17 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(pending, configuration.Status)
 			requestID = configuration.RequestID
 		}
 	})
+
+	require.NotEmpty(t, requestID)
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -89,10 +93,8 @@ func TestLDAP(t *testing.T) {
 			requestID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		a.Contains(string(resp), "LDAP Configuration request completed.")
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
 	})
 
 	t.Run("Get Status", func(t *testing.T) {
@@ -107,10 +109,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(requestID, configuration.RequestID)
@@ -126,7 +127,7 @@ func TestLDAP(t *testing.T) {
 			"--hostname",
 			hostname,
 			"--port",
-			"19657",
+			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
@@ -139,10 +140,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(hostname, configuration.LDAP.Hostname)
@@ -159,10 +159,9 @@ func TestLDAP(t *testing.T) {
 			"json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 			a.Equal(hostname, configuration.LDAP.Hostname)
@@ -179,9 +178,7 @@ func TestLDAP(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-		a.Contains(string(resp), "LDAP configuration userToDNMapping deleted")
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
 	})
 }

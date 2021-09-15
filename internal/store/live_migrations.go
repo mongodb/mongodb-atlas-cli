@@ -20,20 +20,19 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_connect_orgs.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationsConnector
+//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationCreator
 
-type OrganizationsConnector interface {
-	ConnectOrganizations(string, *atlas.LinkToken) (*opsmngr.ConnectionStatus, error)
+type LiveMigrationCreator interface {
+	Create(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)
 }
 
-// CreateLinkConnection encapsulate the logic to manage different cloud providers.
-func (s *Store) ConnectOrganizations(orgID string, linkToken *atlas.LinkToken) (*opsmngr.ConnectionStatus, error) {
+// Create encapsulate the logic to manage different cloud providers.
+func (s *Store) Create(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
 	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).LiveMigration.ConnectOrganizations(context.Background(), orgID, linkToken)
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(context.Background(), groupID, liveMigration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

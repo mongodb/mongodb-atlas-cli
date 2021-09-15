@@ -17,32 +17,23 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCustomDNS(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	projectName := fmt.Sprintf("e2e-integration-custom-dns-%v", n)
+	require.NoError(t, err)
+	projectName, err := RandProjectNameWithPrefix("integration-custom-dns")
+	require.NoError(t, err)
 	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {

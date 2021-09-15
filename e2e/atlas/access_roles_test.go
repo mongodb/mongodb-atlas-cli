@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -31,13 +30,10 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	require.NoError(t, err)
-
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
+	projectName, err := RandProjectNameWithPrefix("access-roles")
+	require.NoError(t, err)
 	projectID, err := createProject(projectName)
 	require.NoError(t, err)
 

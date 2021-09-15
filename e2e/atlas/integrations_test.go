@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -39,22 +40,15 @@ const (
 
 func TestIntegrations(t *testing.T) {
 	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+	require.NoError(t, err)
 	key := "51c0ef87e9951c3e147accf0e12" + n.String()
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	projectName := fmt.Sprintf("e2e-integration-proj-%v", n)
+	require.NoError(t, err)
+	projectName, err := RandProjectNameWithPrefix("integration")
+	require.NoError(t, err)
 	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {

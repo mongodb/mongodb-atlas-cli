@@ -21,9 +21,11 @@ import (
 	"bytes"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
@@ -124,22 +126,22 @@ func TestBuilder(t *testing.T) {
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 	tests := []struct {
 		currentVersion string
-		latestVersion  string
+		latestVersion  *store.ReleaseInformation
 		wantPrint      bool
 	}{
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  "v2.0.0",
+			latestVersion:  &store.ReleaseInformation{Version: "v2.0.0", PublishedAt: time.Now()},
 			wantPrint:      true,
 		},
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  "v1.0.0",
+			latestVersion:  &store.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
 			wantPrint:      false,
 		},
 		{
 			currentVersion: "v1.0.0-123",
-			latestVersion:  "v1.0.0",
+			latestVersion:  &store.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
 			wantPrint:      false,
 		},
 	}
@@ -153,7 +155,7 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 			}()
 
 			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockVersionDescriber(ctrl)
+			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
 			defer ctrl.Finish()
 
 			mockStore.
@@ -178,7 +180,7 @@ A new version of mongocli is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
 
 To disable this alert, run "mongocli config set skip_update_check true".
-`, tt.latestVersion)
+`, tt.latestVersion.Version)
 			}
 
 			if got := bufOut.String(); got != want {

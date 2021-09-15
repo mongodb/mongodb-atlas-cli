@@ -32,10 +32,10 @@ Options
      - Type
      - Required
      - Description
-   * - --govcloudRegionsOnly
+   * - --govCloudRegionsOnly
      - 
      - false
-     - Make the project gov region only.
+     - Only for AtlasGov organizations. If specified, designates that the project uses the AWS GovCloud region only. If unspecified, the project uses the AWS Standard region only. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project.
    * - -h, --help
      - 
      - false

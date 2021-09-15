@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,7 +31,7 @@ type LiveMigrationValidationsCreator interface {
 func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigration) (*atlas.Validation, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateValidation(context.Background(), groupID, liveMigration)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateValidation(s.ctx, groupID, liveMigration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,7 +40,7 @@ type AccessLogsLister interface {
 func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByHostname(context.Background(), groupID, hostname, opts)
+		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByHostname(s.ctx, groupID, hostname, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -52,7 +51,7 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlas.AccessLogSettings, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByCluster(context.Background(), groupID, clusterName, opts)
+		result, _, err := s.client.(*atlas.Client).AccessTracking.ListByCluster(s.ctx, groupID, clusterName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

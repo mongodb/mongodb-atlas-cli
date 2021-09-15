@@ -15,8 +15,6 @@
 package store
 
 import (
-	"context"
-
 	"github.com/google/go-github/v38/github"
 )
 
@@ -29,7 +27,7 @@ type VersionDescriber interface {
 // LatestVersion encapsulates the logic to manage different cloud providers.
 func (s *Store) LatestVersion() (string, error) {
 	client := github.NewClient(nil)
-	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "mongodb", "mongocli")
+	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
 	if err != nil {
 		return "", err
 	}

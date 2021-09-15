@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,7 +31,7 @@ type LiveMigrationCreator interface {
 func (s *Store) Create(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(context.Background(), groupID, liveMigration)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(s.ctx, groupID, liveMigration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

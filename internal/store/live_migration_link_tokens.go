@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -42,7 +41,7 @@ type LinkTokenStore interface {
 func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateRequest) (*atlas.LinkToken, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateLinkToken(context.Background(), orgID, linkToken)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateLinkToken(s.ctx, orgID, linkToken)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -53,10 +52,10 @@ func (s *Store) CreateLinkToken(orgID string, linkToken *atlas.TokenCreateReques
 func (s *Store) DeleteLinkToken(orgID string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).LiveMigration.DeleteLinkToken(context.Background(), orgID)
+		_, err := s.client.(*atlas.Client).LiveMigration.DeleteLinkToken(s.ctx, orgID)
 		return err
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).LiveMigration.DeleteConnection(context.Background(), orgID)
+		_, err := s.client.(*opsmngr.Client).LiveMigration.DeleteConnection(s.ctx, orgID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

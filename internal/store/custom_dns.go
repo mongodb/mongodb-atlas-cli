@@ -17,7 +17,6 @@ package store
 //go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongocli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -43,7 +42,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, e
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: true,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -57,7 +56,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 		customDNSSetting := &atlas.AWSCustomDNSSetting{
 			Enabled: false,
 		}
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(context.Background(), projectID, customDNSSetting)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Update(s.ctx, projectID, customDNSSetting)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -68,7 +67,7 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, 
 func (s *Store) DescribeCustomDNS(projectID string) (*atlas.AWSCustomDNSSetting, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(context.Background(), projectID)
+		result, _, err := s.client.(*atlas.Client).CustomAWSDNS.Get(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,7 +40,7 @@ type VersionManifestUpdaterServiceVersionDescriber interface {
 func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(s.ctx, versionManifest)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -52,7 +51,7 @@ func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) 
 func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(s.ctx, version)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

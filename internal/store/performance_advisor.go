@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -48,10 +47,10 @@ type PerformanceAdvisorSlowOperationThresholdDisabler interface {
 func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -62,10 +61,10 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,10 +75,10 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(context.Background(), projectID, processName, opts)
+		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,7 +89,7 @@ func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *a
 func (s *Store) EnablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PerformanceAdvisor.EnableManagedSlowOperationThreshold(context.Background(), projectID)
+		_, err := s.client.(*atlas.Client).PerformanceAdvisor.EnableManagedSlowOperationThreshold(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -101,7 +100,7 @@ func (s *Store) EnablePerformanceAdvisorSlowOperationThreshold(projectID string)
 func (s *Store) DisablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PerformanceAdvisor.DisableManagedSlowOperationThreshold(context.Background(), projectID)
+		_, err := s.client.(*atlas.Client).PerformanceAdvisor.DisableManagedSlowOperationThreshold(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

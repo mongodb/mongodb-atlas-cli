@@ -15,6 +15,7 @@
 package store
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
@@ -58,6 +59,7 @@ type Store struct {
 	username      string
 	password      string
 	client        interface{}
+	ctx           context.Context
 }
 
 var defaultTransport = &http.Transport{
@@ -206,6 +208,14 @@ func WithAuthentication(c CredentialsGetter) Option {
 	}
 }
 
+// WithContext sets the store context.
+func WithContext(ctx context.Context) Option {
+	return func(s *Store) error {
+		s.ctx = ctx
+		return nil
+	}
+}
+
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
 	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
@@ -342,6 +352,11 @@ func New(opts ...Option) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if store.ctx == nil {
+		store.ctx = context.Background()
+	}
+
 	return store, nil
 }
 
@@ -353,6 +368,7 @@ type ManifestGetter interface {
 // NewVersionManifest ets the appropriate client for the manifest version page.
 func NewVersionManifest(c ManifestGetter) (*Store, error) {
 	s := new(Store)
+	s.ctx = context.Background()
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -18,6 +18,7 @@
 package store
 
 import (
+	"context"
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -110,5 +111,30 @@ func TestWithAuthentication(t *testing.T) {
 	}
 	if c.password != a.password {
 		t.Errorf("New() password = %s; expected %s", c.password, a.password)
+	}
+}
+
+func TestWithContext(t *testing.T) {
+	c, err := New(Service(config.CloudService))
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if c.ctx != context.Background() {
+		t.Errorf("New() got %v; expected %v", c.ctx, context.Background())
+	}
+
+	type myCustomType string
+	var k, v myCustomType = "custom key", "custom value"
+
+	ctx := context.WithValue(context.Background(), k, v)
+
+	c, err = New(Service(config.CloudService), WithContext(ctx))
+	if err != nil {
+		t.Fatalf("New() unexpected error: %v", err)
+	}
+
+	if c.ctx != ctx {
+		t.Errorf("New() got %v; expected %v", c.ctx, ctx)
 	}
 }

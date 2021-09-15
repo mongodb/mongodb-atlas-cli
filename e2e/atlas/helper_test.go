@@ -72,8 +72,12 @@ const (
 	slowoperationThresholdEntity = "slowOperationThreshold"
 )
 
-// e2eClusterProvider preferred provider for e2e testing.
-const e2eClusterProvider = "AWS"
+// Cluster settings.
+const (
+	e2eClusterTier     = "M30"
+	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+	e2eMDBVer          = "4.4"
+)
 
 func getHostnameAndPort() (string, error) {
 	processes, err := getProcesses()
@@ -130,33 +134,32 @@ func getProcesses() ([]*mongodbatlas.Process, error) {
 func deployCluster() (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
+		return "", err
 	}
 	clusterName, err := RandClusterName()
 	if err != nil {
 		return "", err
 	}
 
-	tier := "M30"
-	provider := "AWS"
-	region, err := newAvailableRegion(tier, provider)
+	region, err := newAvailableRegion(e2eClusterTier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
+
 	create := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion=4.2",
+		"--mdbVersion", e2eMDBVer,
 		"--region", region,
-		"--tier", tier,
-		"--provider", provider,
+		"--tier", e2eClusterTier,
+		"--provider", e2eClusterProvider,
 		"--diskSizeGB=10",
 		"--biConnector")
 	create.Env = os.Environ()
-	if err := create.Run(); err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
+	if resp, err := create.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
 	watch := exec.Command(cliPath,
@@ -165,8 +168,8 @@ func deployCluster() (string, error) {
 		"watch",
 		clusterName)
 	watch.Env = os.Environ()
-	if err := watch.Run(); err != nil {
-		return "", fmt.Errorf("error watching cluster %w", err)
+	if resp, err := watch.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil
 }
@@ -188,13 +191,13 @@ func newAvailableRegion(tier, provider string) (string, error) {
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
 	}
 
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error unmashaling response %w: %s", err, string(resp))
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {

@@ -28,10 +28,6 @@ type LiveMigrationValidationsCreator interface {
 	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)
 }
 
-type LiveMigrationValidationsStore interface {
-	LiveMigrationValidationsCreator
-}
-
 // CreateValidation encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigration) (*atlas.Validation, error) {
 	switch s.service {

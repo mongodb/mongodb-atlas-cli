@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockAccessLogsListerByClusterName is a mock of AccessLogsListerByClusterName interface
+// MockAccessLogsListerByClusterName is a mock of AccessLogsListerByClusterName interface.
 type MockAccessLogsListerByClusterName struct {
 	ctrl     *gomock.Controller
 	recorder *MockAccessLogsListerByClusterNameMockRecorder
 }
 
-// MockAccessLogsListerByClusterNameMockRecorder is the mock recorder for MockAccessLogsListerByClusterName
+// MockAccessLogsListerByClusterNameMockRecorder is the mock recorder for MockAccessLogsListerByClusterName.
 type MockAccessLogsListerByClusterNameMockRecorder struct {
 	mock *MockAccessLogsListerByClusterName
 }
 
-// NewMockAccessLogsListerByClusterName creates a new mock instance
+// NewMockAccessLogsListerByClusterName creates a new mock instance.
 func NewMockAccessLogsListerByClusterName(ctrl *gomock.Controller) *MockAccessLogsListerByClusterName {
 	mock := &MockAccessLogsListerByClusterName{ctrl: ctrl}
 	mock.recorder = &MockAccessLogsListerByClusterNameMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAccessLogsListerByClusterName) EXPECT() *MockAccessLogsListerByClusterNameMockRecorder {
 	return m.recorder
 }
 
-// AccessLogsByClusterName mocks base method
+// AccessLogsByClusterName mocks base method.
 func (m *MockAccessLogsListerByClusterName) AccessLogsByClusterName(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByClusterName", arg0, arg1, arg2)
@@ -42,36 +43,36 @@ func (m *MockAccessLogsListerByClusterName) AccessLogsByClusterName(arg0, arg1 s
 	return ret0, ret1
 }
 
-// AccessLogsByClusterName indicates an expected call of AccessLogsByClusterName
+// AccessLogsByClusterName indicates an expected call of AccessLogsByClusterName.
 func (mr *MockAccessLogsListerByClusterNameMockRecorder) AccessLogsByClusterName(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessLogsByClusterName", reflect.TypeOf((*MockAccessLogsListerByClusterName)(nil).AccessLogsByClusterName), arg0, arg1, arg2)
 }
 
-// MockAccessLogsListerByHostname is a mock of AccessLogsListerByHostname interface
+// MockAccessLogsListerByHostname is a mock of AccessLogsListerByHostname interface.
 type MockAccessLogsListerByHostname struct {
 	ctrl     *gomock.Controller
 	recorder *MockAccessLogsListerByHostnameMockRecorder
 }
 
-// MockAccessLogsListerByHostnameMockRecorder is the mock recorder for MockAccessLogsListerByHostname
+// MockAccessLogsListerByHostnameMockRecorder is the mock recorder for MockAccessLogsListerByHostname.
 type MockAccessLogsListerByHostnameMockRecorder struct {
 	mock *MockAccessLogsListerByHostname
 }
 
-// NewMockAccessLogsListerByHostname creates a new mock instance
+// NewMockAccessLogsListerByHostname creates a new mock instance.
 func NewMockAccessLogsListerByHostname(ctrl *gomock.Controller) *MockAccessLogsListerByHostname {
 	mock := &MockAccessLogsListerByHostname{ctrl: ctrl}
 	mock.recorder = &MockAccessLogsListerByHostnameMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAccessLogsListerByHostname) EXPECT() *MockAccessLogsListerByHostnameMockRecorder {
 	return m.recorder
 }
 
-// AccessLogsByHostname mocks base method
+// AccessLogsByHostname mocks base method.
 func (m *MockAccessLogsListerByHostname) AccessLogsByHostname(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByHostname", arg0, arg1, arg2)
@@ -80,36 +81,36 @@ func (m *MockAccessLogsListerByHostname) AccessLogsByHostname(arg0, arg1 string,
 	return ret0, ret1
 }
 
-// AccessLogsByHostname indicates an expected call of AccessLogsByHostname
+// AccessLogsByHostname indicates an expected call of AccessLogsByHostname.
 func (mr *MockAccessLogsListerByHostnameMockRecorder) AccessLogsByHostname(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessLogsByHostname", reflect.TypeOf((*MockAccessLogsListerByHostname)(nil).AccessLogsByHostname), arg0, arg1, arg2)
 }
 
-// MockAccessLogsLister is a mock of AccessLogsLister interface
+// MockAccessLogsLister is a mock of AccessLogsLister interface.
 type MockAccessLogsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockAccessLogsListerMockRecorder
 }
 
-// MockAccessLogsListerMockRecorder is the mock recorder for MockAccessLogsLister
+// MockAccessLogsListerMockRecorder is the mock recorder for MockAccessLogsLister.
 type MockAccessLogsListerMockRecorder struct {
 	mock *MockAccessLogsLister
 }
 
-// NewMockAccessLogsLister creates a new mock instance
+// NewMockAccessLogsLister creates a new mock instance.
 func NewMockAccessLogsLister(ctrl *gomock.Controller) *MockAccessLogsLister {
 	mock := &MockAccessLogsLister{ctrl: ctrl}
 	mock.recorder = &MockAccessLogsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAccessLogsLister) EXPECT() *MockAccessLogsListerMockRecorder {
 	return m.recorder
 }
 
-// AccessLogsByClusterName mocks base method
+// AccessLogsByClusterName mocks base method.
 func (m *MockAccessLogsLister) AccessLogsByClusterName(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByClusterName", arg0, arg1, arg2)
@@ -118,13 +119,13 @@ func (m *MockAccessLogsLister) AccessLogsByClusterName(arg0, arg1 string, arg2 *
 	return ret0, ret1
 }
 
-// AccessLogsByClusterName indicates an expected call of AccessLogsByClusterName
+// AccessLogsByClusterName indicates an expected call of AccessLogsByClusterName.
 func (mr *MockAccessLogsListerMockRecorder) AccessLogsByClusterName(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessLogsByClusterName", reflect.TypeOf((*MockAccessLogsLister)(nil).AccessLogsByClusterName), arg0, arg1, arg2)
 }
 
-// AccessLogsByHostname mocks base method
+// AccessLogsByHostname mocks base method.
 func (m *MockAccessLogsLister) AccessLogsByHostname(arg0, arg1 string, arg2 *mongodbatlas.AccessLogOptions) (*mongodbatlas.AccessLogSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AccessLogsByHostname", arg0, arg1, arg2)
@@ -133,7 +134,7 @@ func (m *MockAccessLogsLister) AccessLogsByHostname(arg0, arg1 string, arg2 *mon
 	return ret0, ret1
 }
 
-// AccessLogsByHostname indicates an expected call of AccessLogsByHostname
+// AccessLogsByHostname indicates an expected call of AccessLogsByHostname.
 func (mr *MockAccessLogsListerMockRecorder) AccessLogsByHostname(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessLogsByHostname", reflect.TypeOf((*MockAccessLogsLister)(nil).AccessLogsByHostname), arg0, arg1, arg2)

@@ -1044,7 +1044,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,generic
+          E2E_TAGS: om44,generic
           OM_VERSION: 4.4
   - name: ops_manager_4_4_iam_e2e
     tags: [ "e2e","ops-manager-44" ]
@@ -1085,7 +1085,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,remote,replica
+          E2E_TAGS: om44,remote,replica
   # Deploy ops manager and test against it
   - name: ops_manager_4_4_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-44" ]
@@ -1106,7 +1106,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,remote,sharded
+          E2E_TAGS: om44,remote,sharded
   - name: ops_manager_5_0_generic_e2e
     tags: [ "e2e","ops-manager-50" ]
     depends_on:
@@ -1125,7 +1125,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,generic
+          E2E_TAGS: om50,generic
           OM_VERSION: 5.0
   - name: ops_manager_5_0_iam_e2e
     tags: [ "e2e","ops-manager-50" ]
@@ -1145,7 +1145,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: iam,opsmanager
+          E2E_TAGS: iam,om50
           OM_VERSION: 5.0
   - name: ops_manager_5_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-50" ]
@@ -1166,7 +1166,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,remote,replica
+          E2E_TAGS: om50,remote,replica
   # Deploy ops manager and test against it
   - name: ops_manager_5_0_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-50" ]
@@ -1187,7 +1187,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: opsmanager,remote,sharded
+          E2E_TAGS: om50,remote,sharded
   - name: package_msi
     tags: ["packaging"]
     depends_on:

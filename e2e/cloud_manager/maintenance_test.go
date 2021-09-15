@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (cloudmanager && generic) || (opsmanager && generic)
+//go:build e2e || (cloudmanager && generic) || (om44 && generic) || (om50 && generic)
 
 package cloud_manager_test
 

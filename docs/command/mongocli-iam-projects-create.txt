@@ -32,6 +32,10 @@ Options
      - Type
      - Required
      - Description
+   * - --govcloudRegionsOnly
+     - 
+     - false
+     - Make the project gov region only.
    * - -h, --help
      - 
      - false

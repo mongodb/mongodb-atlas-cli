@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-liveMigrations-validation-create` - Create one new validation request.
+* :ref:`mongocli-atlas-liveMigrations-validation-describe` - Return one validation job.
 
 
 .. toctree::
    :titlesonly:
 
    create </command/mongocli-atlas-liveMigrations-validation-create>
+   describe </command/mongocli-atlas-liveMigrations-validation-describe>
 

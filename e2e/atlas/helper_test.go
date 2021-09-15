@@ -201,10 +201,10 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
 	}
-	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
-	if err := cmd.Run(); err != nil {
-		return err
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -217,7 +217,7 @@ func deleteClusterForProject(projectID, clusterName string) error {
 		watchArgs = append(watchArgs, "--projectId", projectID)
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
-	cmd.Env = os.Environ()
+	watchCmd.Env = os.Environ()
 	// this command will fail with 404 once the cluster is deleted
 	// we just need to wait for this to close the project
 	_ = watchCmd.Run()

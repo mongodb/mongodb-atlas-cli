@@ -34,6 +34,7 @@ func Builder() *cobra.Command {
 		validation.Builder(),
 		CreateBuilder(),
 		DescribeBuilder(),
+		CutoverBuilder(),
 	)
 
 	return cmd

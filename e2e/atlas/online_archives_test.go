@@ -45,7 +45,7 @@ func TestOnlineArchives(t *testing.T) {
 	clusterName, err := deployClusterForProject(projectID)
 	require.NoError(t, err)
 	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
+		if e := deleteClusterForProject(projectID, clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()

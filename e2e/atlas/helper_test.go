@@ -165,11 +165,15 @@ func deployClusterForProject(projectID string) (string, error) {
 		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
-	watch := exec.Command(cliPath,
+	watchArgs := []string{
 		atlasEntity,
 		clustersEntity,
 		"watch",
-		clusterName)
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
 	if resp, err := watch.CombinedOutput(); err != nil {
 		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))

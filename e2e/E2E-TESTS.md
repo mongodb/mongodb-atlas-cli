@@ -329,3 +329,4 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `livemigrations link delete`                  | Y         |           |           | Y         | Y     | Y     |
 | `livemigrations validation create`            |           |           |           | Y         |       |       |
 | `livemigrations create`                       |           |           |           | Y         |       |       |
+| `livemigrations cutover`                      | N         |           |           | Y         | N     | N     |

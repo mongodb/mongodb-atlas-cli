@@ -22,17 +22,17 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationValidationsCreator
+//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationCreator
 
-type LiveMigrationValidationsCreator interface {
-	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)
+type LiveMigrationCreator interface {
+	Create(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)
 }
 
-// CreateValidation encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigration) (*atlas.Validation, error) {
+// Create encapsulate the logic to manage different cloud providers.
+func (s *Store) Create(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateValidation(context.Background(), groupID, liveMigration)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(context.Background(), groupID, liveMigration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

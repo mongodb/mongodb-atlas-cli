@@ -50,6 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-liveMigrations-create` - Create one new migration.
+* :ref:`mongocli-atlas-liveMigrations-describe` - Return one migration job.
 * :ref:`mongocli-atlas-liveMigrations-link` - Manage the link-token for your organization.
 * :ref:`mongocli-atlas-liveMigrations-validation` - Manage a Live Migration validation job for your project.
 
@@ -58,6 +59,7 @@ Related Commands
    :titlesonly:
 
    create </command/mongocli-atlas-liveMigrations-create>
+   describe </command/mongocli-atlas-liveMigrations-describe>
    link </command/mongocli-atlas-liveMigrations-link>
    validation </command/mongocli-atlas-liveMigrations-validation>
 

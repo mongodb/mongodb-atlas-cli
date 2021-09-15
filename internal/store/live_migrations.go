@@ -22,17 +22,32 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationCreator
+//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationCreator,LiveMigrationDescriber
 
 type LiveMigrationCreator interface {
-	Create(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)
+	LiveMigrationCreate(string, *atlas.LiveMigration) (*atlas.LiveMigration, error)
 }
 
-// Create encapsulate the logic to manage different cloud providers.
-func (s *Store) Create(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
+type LiveMigrationDescriber interface {
+	LiveMigrationDescribe(string, string) (*atlas.LiveMigration, error)
+}
+
+// LiveMigrationCreate encapsulate the logic to manage different cloud providers.
+func (s *Store) LiveMigrationCreate(groupID string, liveMigration *atlas.LiveMigration) (*atlas.LiveMigration, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).LiveMigration.Create(context.Background(), groupID, liveMigration)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// LiveMigrationCreate encapsulate the logic to manage different cloud providers.
+func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlas.LiveMigration, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Get(context.Background(), groupID, migrationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

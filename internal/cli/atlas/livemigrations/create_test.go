@@ -51,7 +51,7 @@ func TestLiveMigrationCreateOpts_Run(t *testing.T) {
 	createRequest := createOpts.NewCreateRequest()
 
 	mockStore.
-		EXPECT().Create(createOpts.ProjectID, createRequest).Return(&expected, nil).
+		EXPECT().LiveMigrationCreate(createOpts.ProjectID, createRequest).Return(&expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

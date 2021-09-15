@@ -13,8 +13,9 @@
 // limitations under the License.
 
 //go:build unit
+// +build unit
 
-package validation
+package livemigrations
 
 import (
 	"testing"
@@ -28,12 +29,12 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
+func TestLiveMigrationCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLiveMigrationValidationsCreator(ctrl)
+	mockStore := mocks.NewMockLiveMigrationCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := mongodbatlas.Validation{}
+	expected := mongodbatlas.LiveMigration{}
 
 	createOpts := &CreateOpts{
 		LiveMigrationsOpts: options.LiveMigrationsOpts{
@@ -50,7 +51,7 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	createRequest := createOpts.NewCreateRequest()
 
 	mockStore.
-		EXPECT().CreateValidation(createOpts.ProjectID, createRequest).Return(&expected, nil).
+		EXPECT().Create(createOpts.ProjectID, createRequest).Return(&expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

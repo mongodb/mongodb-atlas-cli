@@ -252,8 +252,6 @@ const (
 	SystemID                                 = "systemId"                        // SystemID flag
 	Default                                  = "default"                         // Default flag
 	Timestamp                                = "timestamp"                       // Timestamp flag
-	LiveMigrationDestinationClusterName      = "destinationClusterName"          // LiveMigrationDestinationClusterName flag
-	LiveMigrationDestinationProjectID        = "destinationProjectId"            // LiveMigrationDestinationProjectID flag
 	LiveMigrationHost                        = "migrationHost"                   // LiveMigrationHost flag
 	LiveMigrationSourceClusterName           = "sourceClusterName"               // LiveMigrationSourceClusterName flag
 	LiveMigrationSourceProjectID             = "sourceProjectId"                 // LiveMigrationSourceProjectID flag

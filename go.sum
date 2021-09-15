@@ -233,8 +233,8 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/mongodb-forks/digest v1.0.3 h1:ZUK1vyZnBiRMvET0O1SzmnBmv935CkcOTjhfR4zIQ2s=
 github.com/mongodb-forks/digest v1.0.3/go.mod h1:eHRfgovT+dvSFfltrOa27hy1oR/rcwyDdp5H1ZQxEMA=
-github.com/mongodb-labs/cobra2snooty v0.2.2 h1:RVlQ8TOR90MZzpQJIbp9nEp7kV+DDYorh5gNaO9ZxLE=
-github.com/mongodb-labs/cobra2snooty v0.2.2/go.mod h1:zSDwcF/JUfHZtV773mN/lUAfnNMGFIzbsu3MLHqDxt0=
+github.com/mongodb-labs/cobra2snooty v0.2.3 h1:4f3NKjNbe0jffZZBODTGiZ98yaMmSzr/LBJkQwWZvyA=
+github.com/mongodb-labs/cobra2snooty v0.2.3/go.mod h1:ZxpF5kA7C5Nk6XYz2GeNcr0W3QjbUQbtMBYrpOwir0w=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/openlyinc/pointy v1.1.2 h1:LywVV2BWC5Sp5v7FoP4bUD+2Yn5k0VNeRbU5vq9jUMY=

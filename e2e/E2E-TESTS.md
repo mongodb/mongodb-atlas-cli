@@ -327,3 +327,5 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `serverless watch`                            | Y         |           |           | Y         |       |       |
 | `livemigrations link create`                  | Y         |           |           | Y         | N     | N     |
 | `livemigrations link delete`                  | Y         |           |           | Y         | Y     | Y     |
+| `livemigrations validation create`            |           |           |           | Y         |       |       |
+| `livemigrations create`                       |           |           |           | Y         |       |       |

@@ -21,10 +21,18 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationValidationsCreator
+//go:generate mockgen -destination=../mocks/mock_live_migration.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator
 
 type LiveMigrationValidationsCreator interface {
 	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)
+}
+
+type LiveMigrationCutoverCreator interface {
+	CreateLiveMigrationCutover(string, string) (*atlas.Validation, error)
+}
+
+type LiveMigrationValidationsStore interface {
+	LiveMigrationValidationsCreator
 }
 
 // CreateValidation encapsulate the logic to manage different cloud providers.
@@ -32,6 +40,17 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigrat
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.client.(*atlas.Client).LiveMigration.CreateValidation(s.ctx, groupID, liveMigration)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// StartLiveMigrationCutover encapsulate the logic to manage different cloud providers.
+func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) (*atlas.Validation, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Start(context.Background(), groupID, liveMigrationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

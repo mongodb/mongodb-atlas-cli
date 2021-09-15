@@ -127,6 +127,13 @@ func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, new
 		return false, "", err
 	}
 
+	if svCurrentVersion.Prerelease() != "" { // ignoring prerelease for code changes against master
+		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
+		if err != nil {
+			return false, "", err
+		}
+	}
+
 	latestVersion, err := opts.store.LatestVersion()
 	if err != nil {
 		return false, "", err

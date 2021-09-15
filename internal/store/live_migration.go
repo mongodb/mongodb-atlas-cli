@@ -50,7 +50,7 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlas.LiveMigrat
 func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) (*atlas.Validation, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).LiveMigration.Start(context.Background(), groupID, liveMigrationID)
+		result, _, err := s.client.(*atlas.Client).LiveMigration.Start(s.ctx, groupID, liveMigrationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

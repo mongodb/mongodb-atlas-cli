@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (opsmanager && generic)
-// +build e2e opsmanager,generic
+//go:build e2e || (generic && (om44 || om50))
 
 package ops_manager_test
 

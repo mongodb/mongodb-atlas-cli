@@ -11,9 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build e2e || atlas
-// +build e2e atlas
 
 package atlas_test
 
@@ -222,7 +220,33 @@ func RandClusterName() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("e2e-cluster-%s-%v", revision, n), nil
+	}
 	return fmt.Sprintf("e2e-cluster-%v", n), nil
+}
+
+func RandProjectName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("%s-%v", revision, n), nil
+	}
+	return fmt.Sprintf("e2e-%v", n), nil
+}
+
+func RandProjectNameWithPrefix(prefix string) (string, error) {
+	name, err := RandProjectName()
+	if err != nil {
+		return "", err
+	}
+	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
+	if len(prefixedName) > 64 {
+		return prefixedName[:64], nil
+	}
+	return prefixedName, nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {

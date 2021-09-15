@@ -39,7 +39,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteLinkToken)
 }
 
-// mongocli ops-manager|cm liveMigrations|lm link delete|rm [--orgId orgId] [--force].
+// mongocli ops-manager|cloud-manager liveMigrations|lm link delete|rm [--orgId orgId] [--force].
 
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{

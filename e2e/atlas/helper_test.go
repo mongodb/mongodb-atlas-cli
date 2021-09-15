@@ -169,6 +169,7 @@ func deployClusterForProject(projectID string) (string, error) {
 		atlasEntity,
 		clustersEntity,
 		"watch",
+		clusterName,
 	}
 	if projectID != "" {
 		watchArgs = append(watchArgs, "--projectId", projectID)

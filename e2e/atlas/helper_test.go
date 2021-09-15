@@ -141,7 +141,7 @@ func deployClusterForProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	region, err := newAvailableRegion(e2eClusterTier, e2eClusterProvider)
+	region, err := newAvailableRegion(projectID, e2eClusterTier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
@@ -227,19 +227,24 @@ func deleteCluster(clusterName string) error {
 	return deleteClusterForProject("", clusterName)
 }
 
-func newAvailableRegion(tier, provider string) (string, error) {
+func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
 	}
-	cmd := exec.Command(cliPath,
+	args := []string{
 		atlasEntity,
 		clustersEntity,
 		"availableRegions",
 		"ls",
 		"--provider", provider,
 		"--tier", tier,
-		"-o=json")
+		"-o=json",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 

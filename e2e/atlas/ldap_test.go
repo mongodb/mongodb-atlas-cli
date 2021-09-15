@@ -40,16 +40,18 @@ func TestLDAP(t *testing.T) {
 	name, err := RandProjectNameWithPrefix("search")
 	require.NoError(t, err)
 	projectID, err := createProject(name)
+	defer func() {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
+	t.Logf("projectID=%s", projectID)
 	require.NoError(t, err)
 	clusterName, err := deployClusterForProject(projectID)
 	require.NoError(t, err)
-
 	defer func() {
 		if e := deleteCluster(clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
-		}
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
 		}
 	}()
 	t.Logf("clusterName=%s", clusterName)

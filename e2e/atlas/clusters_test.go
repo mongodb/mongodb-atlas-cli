@@ -45,7 +45,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
+	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -298,7 +298,7 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
+	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {

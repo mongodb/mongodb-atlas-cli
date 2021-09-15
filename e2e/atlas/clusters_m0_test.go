@@ -44,9 +44,7 @@ func TestClustersM0Flags(t *testing.T) {
 
 	// 1 free cluster per project, let's prevent issues with parallel tests
 	projectID, err := createProject(clusterName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 
 	defer func() {
 		if e := deleteProject(projectID); e != nil {

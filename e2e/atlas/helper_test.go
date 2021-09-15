@@ -108,7 +108,8 @@ func getProcesses() ([]*mongodbatlas.Process, error) {
 		atlasEntity,
 		processesEntity,
 		"list",
-		"-o=json")
+		"-o=json",
+	)
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -131,7 +132,7 @@ func getProcesses() ([]*mongodbatlas.Process, error) {
 	return processes, nil
 }
 
-func deployCluster() (string, error) {
+func deployClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
@@ -140,13 +141,11 @@ func deployCluster() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	region, err := newAvailableRegion(e2eClusterTier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
-
-	create := exec.Command(cliPath,
+	args := []string{
 		atlasEntity,
 		clustersEntity,
 		"create",
@@ -155,8 +154,12 @@ func deployCluster() (string, error) {
 		"--region", region,
 		"--tier", e2eClusterTier,
 		"--provider", e2eClusterProvider,
-		"--diskSizeGB=10",
-		"--biConnector")
+		"--diskSizeGB=30",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := create.CombinedOutput(); err != nil {
 		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
@@ -172,6 +175,52 @@ func deployCluster() (string, error) {
 		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil
+}
+
+func deployCluster() (string, error) {
+	return deployClusterForProject("")
+}
+
+func deleteClusterForProject(projectID, clusterName string) error {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		atlasEntity,
+		clustersEntity,
+		"delete",
+		clusterName,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	watchArgs := []string{
+		atlasEntity,
+		clustersEntity,
+		"watch",
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watchCmd := exec.Command(cliPath, watchArgs...)
+	cmd.Env = os.Environ()
+	// this command will fail with 404 once the cluster is deleted
+	// we just need to wait for this to close the project
+	_ = watchCmd.Run()
+	return nil
+}
+
+func deleteCluster(clusterName string) error {
+	return deleteClusterForProject("", clusterName)
 }
 
 func newAvailableRegion(tier, provider string) (string, error) {
@@ -205,16 +254,6 @@ func newAvailableRegion(tier, provider string) (string, error) {
 	}
 
 	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
-}
-
-func deleteCluster(clusterName string) error {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
-	cmd.Env = os.Environ()
-	return cmd.Run()
 }
 
 func RandClusterName() (string, error) {

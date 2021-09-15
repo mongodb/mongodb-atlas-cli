@@ -13,48 +13,43 @@
 // limitations under the License.
 //go:build unit
 
-package link
+package livemigrations
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestLinkTokenCreateOpts_Run(t *testing.T) {
+func TestCutoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLinkTokenCreator(ctrl)
+	mockStore := mocks.NewMockLiveMigrationCutoverCreator(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.LinkToken{}
+	expected := &mongodbatlas.Validation{}
 
-	createOpts := &CreateOpts{
-		GlobalOpts:   cli.GlobalOpts{OrgID: "1"},
-		accessListIP: []string{"1.2.3.4", "5.6.7.8"},
-		store:        mockStore,
+	opts := &CutoverOpts{
+		store: mockStore,
 	}
 
-	createRequest := createOpts.newTokenCreateRequest()
-
 	mockStore.
-		EXPECT().CreateLinkToken(createOpts.OrgID, createRequest).Return(expected, nil).
+		EXPECT().CreateLiveMigrationCutover(opts.ConfigProjectID(), opts.liveMigrationID).Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestCutoverBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		CutoverBuilder(),
 		0,
-		[]string{flag.OrgID, flag.Output, flag.AccessListIP},
+		[]string{flag.ProjectID, flag.Output, flag.LiveMigrationID},
 	)
 }

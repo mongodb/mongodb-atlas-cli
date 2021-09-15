@@ -263,5 +263,6 @@ const (
 	LiveMigrationDropCollections             = "drop"                            // LiveMigrationDropCollections flag
 	OwnerID                                  = "ownerId"                         // OwnerID flag
 	GovCloudRegionsOnly                      = "govCloudRegionsOnly"             // GovCloudRegionsOnly flag
+	LiveMigrationID                          = "liveMigrationId"                 // LiveMigrationID flag
 	LinkToken                                = "linkToken"                       // LinkToken flag
 )

@@ -25,7 +25,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
@@ -126,22 +125,22 @@ func TestBuilder(t *testing.T) {
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 	tests := []struct {
 		currentVersion string
-		latestVersion  *store.ReleaseInformation
+		latestVersion  *version.ReleaseInformation
 		wantPrint      bool
 	}{
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  &store.ReleaseInformation{Version: "v2.0.0", PublishedAt: time.Now()},
+			latestVersion:  &version.ReleaseInformation{Version: "v2.0.0", PublishedAt: time.Now()},
 			wantPrint:      true,
 		},
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  &store.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
+			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
 			wantPrint:      false,
 		},
 		{
 			currentVersion: "v1.0.0-123",
-			latestVersion:  &store.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
+			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
 			wantPrint:      false,
 		},
 	}

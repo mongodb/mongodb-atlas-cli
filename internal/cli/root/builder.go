@@ -34,14 +34,13 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
 
 type BuilderOpts struct {
-	store store.ReleaseVersionDescriber
+	store version.ReleaseVersionDescriber
 }
 
 // rootBuilder conditionally adds children commands as needed.
@@ -60,17 +59,15 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		Annotations: map[string]string{
 			"toc": "true",
 		},
-		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			w := cmd.ErrOrStderr()
 			if shouldSkipPrintNewVersion(w) {
-				return nil
+				return
 			}
-			opts := &BuilderOpts{}
-			err := opts.initStore()
-			if err != nil {
-				return err
+			opts := &BuilderOpts{
+				store: version.NewReleaseVersionDescriber(),
 			}
-			return opts.printNewVersionAvailable(w)
+			_ = opts.printNewVersionAvailable(w)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -232,10 +229,4 @@ To disable this alert, run "mongocli config set skip_update_check true".
 		return err
 	}
 	return nil
-}
-
-func (opts *BuilderOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()))
-	return err
 }

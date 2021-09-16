@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package store
+package version
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/go-github/v38/github"
 )
 
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/store ReleaseVersionDescriber
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version ReleaseVersionDescriber
 
 type ReleaseVersionDescriber interface {
 	LatestVersion() (*ReleaseInformation, error)
@@ -31,8 +32,16 @@ type ReleaseInformation struct {
 	PublishedAt time.Time
 }
 
+func NewReleaseVersionDescriber() ReleaseVersionDescriber {
+	return &releaseVersionFetcher{ctx: context.Background()}
+}
+
+type releaseVersionFetcher struct {
+	ctx context.Context
+}
+
 // LatestVersion encapsulates the logic to manage different cloud providers.
-func (s *Store) LatestVersion() (*ReleaseInformation, error) {
+func (s *releaseVersionFetcher) LatestVersion() (*ReleaseInformation, error) {
 	client := github.NewClient(nil)
 	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
 	if err != nil {

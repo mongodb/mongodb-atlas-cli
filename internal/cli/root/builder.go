@@ -17,7 +17,12 @@ package root
 import (
 	"fmt"
 	"io"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"runtime"
+	"strings"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -36,7 +41,7 @@ import (
 )
 
 type BuilderOpts struct {
-	store store.VersionDescriber
+	store store.ReleaseVersionDescriber
 }
 
 // rootBuilder conditionally adds children commands as needed.
@@ -139,16 +144,65 @@ func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, new
 		return false, "", err
 	}
 
-	svLatestVersion, err := semver.NewVersion(latestVersion)
+	svLatestVersion, err := semver.NewVersion(latestVersion.Version)
 	if err != nil {
 		return false, "", err
 	}
 
-	if svCurrentVersion.Compare(svLatestVersion) < 0 {
-		return true, latestVersion, nil
+	if svCurrentVersion.Compare(svLatestVersion) < 0 && (!isHomebrew() || isAtLeast24HoursPast(latestVersion.PublishedAt)) {
+		return true, latestVersion.Version, nil
 	}
 
 	return false, "", nil
+}
+
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
+}
+
+func isHomebrew() bool {
+	brewFormulaPath, err := homebrewFormulaPath()
+	if err != nil {
+		return false
+	}
+
+	executablePath, err := executableCurrentPath()
+	if err != nil {
+		return false
+	}
+
+	return strings.HasPrefix(executablePath, brewFormulaPath)
+}
+
+func homebrewFormulaPath() (string, error) {
+	formula := config.ToolName
+	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
+	if err != nil {
+		return "", err
+	}
+
+	brewFormulaPath := strings.TrimSpace(string(brewFormulaPathBytes))
+
+	brewFormulaPath, err = filepath.EvalSymlinks(brewFormulaPath)
+	if err != nil {
+		return "", err
+	}
+
+	return brewFormulaPath, nil
+}
+
+func executableCurrentPath() (string, error) {
+	executablePath, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+
+	executablePath, err = filepath.EvalSymlinks(executablePath)
+	if err != nil {
+		return "", err
+	}
+
+	return executablePath, nil
 }
 
 func shouldSkipPrintNewVersion(w io.Writer) bool {
@@ -161,13 +215,20 @@ func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {
 		return err
 	}
 	if newVersionAvailable {
+		var upgradeInstructions string
+		if isHomebrew() {
+			upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongocli".`
+		} else {
+			upgradeInstructions = `To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.`
+		}
+
 		newVersionTemplate := `
 A new version of %s is available '%s'!
-To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
+%s
 
 To disable this alert, run "mongocli config set skip_update_check true".
 `
-		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion)
+		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion, upgradeInstructions)
 		return err
 	}
 	return nil

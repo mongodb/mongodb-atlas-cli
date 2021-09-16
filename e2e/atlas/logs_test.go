@@ -23,13 +23,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLogs(t *testing.T) {
 	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
+	require.NoError(t, err)
 	defer func() {
 		if e := deleteCluster(clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
@@ -37,14 +36,10 @@ func TestLogs(t *testing.T) {
 	}()
 
 	hostname, err := getHostname()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	logTypes := []string{
 		"mongodb.gz",
 		"mongos.gz",
@@ -83,11 +78,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
-
+	require.NoError(t, err, string(resp))
 	if _, err := os.Stat(filepath); err != nil {
 		t.Fatalf("%v has not been downloaded", filepath)
 	}
@@ -105,10 +96,7 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 
 	outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
 	if _, err := os.Stat(outputFile); err != nil {

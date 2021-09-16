@@ -28,6 +28,7 @@ import (
 )
 
 type LiveMigrationsOpts struct {
+	cli.OutputOpts
 	cli.GlobalOpts
 	DestinationClusterName      string
 	DestinationDropEnabled      bool
@@ -138,6 +139,7 @@ func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(&opts.DestinationClusterName, flag.ClusterName, "", usage.LiveMigrationDestinationClusterName)
 	cmd.Flags().StringSliceVar(&opts.MigrationHosts, flag.LiveMigrationHost, []string{}, usage.LiveMigrationHostEntries)
 	cmd.Flags().BoolVar(&opts.DestinationDropEnabled, flag.LiveMigrationDropCollections, false, usage.LiveMigrationDropCollections)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceClusterName)
 	_ = cmd.MarkFlagRequired(flag.LiveMigrationSourceProjectID)

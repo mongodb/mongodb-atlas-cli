@@ -15,7 +15,6 @@
 package validation
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/options"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/store"
@@ -23,7 +22,6 @@ import (
 )
 
 type CreateOpts struct {
-	cli.OutputOpts
 	options.LiveMigrationsOpts
 	store store.LiveMigrationValidationsCreator
 }

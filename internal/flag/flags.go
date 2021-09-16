@@ -264,5 +264,6 @@ const (
 	OwnerID                                  = "ownerId"                         // OwnerID flag
 	GovCloudRegionsOnly                      = "govCloudRegionsOnly"             // GovCloudRegionsOnly flag
 	LiveMigrationID                          = "liveMigrationId"                 // LiveMigrationID flag
+	LiveMigrationValidationID                = "validationId"                    // LiveMigrationDropCollections flag
 	LinkToken                                = "linkToken"                       // LinkToken flag
 )

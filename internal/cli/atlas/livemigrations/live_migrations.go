@@ -33,7 +33,9 @@ func Builder() *cobra.Command {
 		link.Builder(),
 		validation.Builder(),
 		CreateBuilder(),
-		CutoverBuilder())
+		DescribeBuilder(),
+		CutoverBuilder(),
+	)
 
 	return cmd
 }

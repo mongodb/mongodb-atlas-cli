@@ -16,35 +16,31 @@ package livemigrations
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/options"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type CreateOpts struct {
+type DescribeOpts struct {
 	cli.OutputOpts
-	options.LiveMigrationsOpts
-	store store.LiveMigrationCreator
+	cli.GlobalOpts
+	liveMigrationID string
+	store           store.LiveMigrationDescriber
 }
 
-func (opts *CreateOpts) initStore() error {
+func (opts *DescribeOpts) initStore() error {
 	var err error
 	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
 	return err
 }
 
-var createTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
+var describeTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
 {{.ID}}	{{.Destination.GroupID}}	{{.Source.GroupID}}	{{.Status}}`
 
-func (opts *CreateOpts) Run() error {
-	if err := opts.Prompt(); err != nil {
-		return err
-	}
-
-	createRequest := opts.NewCreateRequest()
-
-	r, err := opts.store.LiveMigrationCreate(opts.ConfigProjectID(), createRequest)
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.LiveMigrationDescribe(opts.ConfigProjectID(), opts.liveMigrationID)
 	if err != nil {
 		return err
 	}
@@ -52,18 +48,18 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas liveMigrations|lm create --clusterName clusterName --migrationHosts hosts --sourceClusterName clusterName --sourceProjectId projectId [--sourceSSL] [--sourceCACertificatePath path] [--sourceManagedAuthentication] [--sourceUsername userName] [--sourcePassword password] [--drop] [--projectId projectId].
-func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+// mongocli atlas liveMigrations|lm describe --liveMigrationId <liveMigrationId> [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create one new migration.",
-		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
+		Use:     "describe",
+		Aliases: []string{"get"},
+		Short:   "Return one migration job.",
+		Long:    "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore,
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
-				opts.Validate,
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -71,7 +67,9 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	opts.GenerateFlags(cmd)
+	cmd.Flags().StringVar(&opts.liveMigrationID, flag.LiveMigrationID, "", usage.LiveMigrationID)
+
+	_ = cmd.MarkFlagRequired(flag.LiveMigrationID)
 
 	return cmd
 }

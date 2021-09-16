@@ -161,30 +161,48 @@ func isAtLeast24HoursPast(t time.Time) bool {
 }
 
 func isHomebrew() bool {
-	if runtime.GOOS != "darwin" {
-		return false
-	}
-
-	brewPath, err := exec.LookPath("brew")
+	brewFormulaPath, err := homebrewFormulaPath()
 	if err != nil {
 		return false
 	}
 
-	brewPrefixBytes, err := exec.Command(brewPath, "--prefix").Output()
+	executablePath, err := executableCurrentPath()
 	if err != nil {
 		return false
 	}
 
-	brewPrefixPath := strings.TrimSpace(string(brewPrefixBytes))
-	brewBinPrefix := filepath.Join(brewPrefixPath, "bin") + string(filepath.Separator)
+	return strings.HasPrefix(executablePath, brewFormulaPath)
+}
 
-	mongocliPath, err := os.Executable()
-
+func homebrewFormulaPath() (string, error) {
+	formula := config.ToolName
+	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
 	if err != nil {
-		return false
+		return "", err
 	}
 
-	return strings.HasPrefix(mongocliPath, brewBinPrefix)
+	brewFormulaPath := strings.TrimSpace(string(brewFormulaPathBytes))
+
+	brewFormulaPath, err = filepath.EvalSymlinks(brewFormulaPath)
+	if err != nil {
+		return "", err
+	}
+
+	return brewFormulaPath, nil
+}
+
+func executableCurrentPath() (string, error) {
+	executablePath, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+
+	executablePath, err = filepath.EvalSymlinks(executablePath)
+	if err != nil {
+		return "", err
+	}
+
+	return executablePath, nil
 }
 
 func shouldSkipPrintNewVersion(w io.Writer) bool {

@@ -265,6 +265,7 @@ const (
 	ContainerRegion                 = "Atlas region where the container resides."
 	ContainerRegions                = "List of Atlas regions where the container resides."
 	ProjectOwnerID                  = "Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project."
+	GovCloudRegionsOnly             = "Only for AtlasGov organizations. If specified, designates that the project uses the AWS GovCloud region only. If unspecified, the project uses the AWS Standard region only. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project."
 	ReclaimFreeSpaceTimestamp       = "Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp."
 	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
 	ServerlessProvider              = "Cloud service provider that applies to the provisioned the serverless instance."
@@ -330,4 +331,5 @@ Valid values: 6|8|12|24.`
 	LiveMigrationSourceUsername              = "Human-readable label that identifies the SCRAM-SHA user that connects to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is set."
 	LiveMigrationSourcePassword              = "Password that authenticates the username to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is passed."
 	LiveMigrationDropCollections             = "Flag that indicates whether this process should drop existing collections from the destination (Atlas) cluster given in --destinationClusterName before starting the migration of data from the source cluster."
+	LiveMigrationValidationID                = "Unique 24-hexadecimal digit string that identifies the validation job."
 )

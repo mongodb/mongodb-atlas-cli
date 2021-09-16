@@ -34,7 +34,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, string, *atlas.CreateProjectOptions) (interface{}, error)
 	ServiceVersionDescriber
 }
 
@@ -106,10 +106,10 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID string, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, opts *atlas.CreateProjectOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		project := &atlas.Project{Name: name, OrgID: orgID}
+		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions}
 		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:

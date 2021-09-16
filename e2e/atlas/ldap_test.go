@@ -29,28 +29,36 @@ import (
 )
 
 const (
-	pending  = "PENDING"
-	hostname = "localhost"
-	ldapPort = "19657"
+	pending      = "PENDING"
+	ldapHostname = "localhost"
+	ldapPort     = "19657"
 )
 
 func TestLDAP(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+	name, err := RandProjectNameWithPrefix("search")
+	require.NoError(t, err)
+	projectID, err := createProject(name)
 	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
+		if e := deleteProject(projectID); e != nil {
+			t.Errorf("error deleting project: %v", e)
+		}
+	}()
+	t.Logf("projectID=%s", projectID)
+	require.NoError(t, err)
+	clusterName, err := deployClusterForProject(projectID)
+	require.NoError(t, err)
+	defer func() {
+		if e := deleteClusterForProject(projectID, clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
+	t.Logf("clusterName=%s", clusterName)
+
 	time.Sleep(2 * time.Minute) // wait for the cluster to be fully available
+
+	cliPath, err := e2e.Bin()
+	require.NoError(t, err)
+
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -59,13 +67,14 @@ func TestLDAP(t *testing.T) {
 			ldapEntity,
 			"verify",
 			"--hostname",
-			hostname,
+			ldapHostname,
 			"--port",
 			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
 			"admin",
+			"--projectId", projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -90,7 +99,9 @@ func TestLDAP(t *testing.T) {
 			"verify",
 			"status",
 			"watch",
-			requestID)
+			requestID,
+			"--projectId", projectID,
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
@@ -105,8 +116,10 @@ func TestLDAP(t *testing.T) {
 			"verify",
 			"status",
 			requestID,
+			"--projectId", projectID,
 			"-o",
-			"json")
+			"json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
@@ -125,7 +138,7 @@ func TestLDAP(t *testing.T) {
 			ldapEntity,
 			"save",
 			"--hostname",
-			hostname,
+			ldapHostname,
 			"--port",
 			ldapPort,
 			"--bindUsername",
@@ -136,8 +149,10 @@ func TestLDAP(t *testing.T) {
 			"(.+)@ENGINEERING.EXAMPLE.COM",
 			"--mappingSubstitution",
 			"cn={0},ou=engineering,dc=example,dc=com",
+			"--projectId", projectID,
 			"-o",
-			"json")
+			"json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
@@ -145,7 +160,7 @@ func TestLDAP(t *testing.T) {
 		a := assert.New(t)
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(hostname, configuration.LDAP.Hostname)
+			a.Equal(ldapHostname, configuration.LDAP.Hostname)
 		}
 	})
 
@@ -155,6 +170,7 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"get",
+			"--projectId", projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -164,7 +180,7 @@ func TestLDAP(t *testing.T) {
 		a := assert.New(t)
 		var configuration mongodbatlas.LDAPConfiguration
 		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(hostname, configuration.LDAP.Hostname)
+			a.Equal(ldapHostname, configuration.LDAP.Hostname)
 			requestID = configuration.RequestID
 		}
 	})
@@ -175,6 +191,7 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"delete",
+			"--projectId", projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

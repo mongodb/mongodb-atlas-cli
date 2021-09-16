@@ -33,17 +33,16 @@ func TestAccessLogs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	hostname, err := getHostname()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
 	defer func() {
 		if e := deleteCluster(clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
+
+	h, err := getHostname()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	cliPath, err := e2e.Bin()
 	req.NoError(err)
@@ -68,7 +67,7 @@ func TestAccessLogs(t *testing.T) {
 			atlasEntity,
 			accessLogsEntity,
 			"ls",
-			"--hostname", hostname,
+			"--hostname", h,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

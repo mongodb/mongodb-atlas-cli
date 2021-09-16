@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,49 +13,50 @@
 // limitations under the License.
 
 //go:build unit
-// +build unit
 
-package projects
+package validation
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestCreate_Run(t *testing.T) {
+func TestValidationDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectCreator(ctrl)
+	mockStore := mocks.NewMockLiveMigrationValidationsDescriber(ctrl)
 	defer ctrl.Finish()
 
-	opts := CreateOpts{}
-	expected := &mongodbatlas.Project{}
+	expected := mongodbatlas.Validation{}
+
+	describeOpts := &DescribeOpts{
+		GlobalOpts:   cli.GlobalOpts{ProjectID: "2"},
+		validationID: "3",
+		store:        mockStore,
+	}
 
 	mockStore.
-		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newRegionUsageRestrictions(), opts.newCreateProjectOptions()).Return(expected, nil).
+		EXPECT().GetValidationStatus(describeOpts.ProjectID, describeOpts.validationID).Return(&expected, nil).
 		Times(1)
 
-	createOpts := &CreateOpts{
-		store: mockStore,
-		name:  "ProjectBar",
-	}
-	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
-
-	if err := createOpts.Run(); err != nil {
+	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		DescribeBuilder(),
 		0,
-		[]string{flag.OrgID, flag.OwnerID, flag.GovCloudRegionsOnly},
+		[]string{
+			flag.ProjectID,
+			flag.LiveMigrationValidationID,
+		},
 	)
 }

@@ -15,21 +15,31 @@
 package store
 
 import (
+	"time"
+
 	"github.com/google/go-github/v38/github"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version.go -package=mocks github.com/mongodb/mongocli/internal/store VersionDescriber
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/store ReleaseVersionDescriber
 
-type VersionDescriber interface {
-	LatestVersion() (string, error)
+type ReleaseVersionDescriber interface {
+	LatestVersion() (*ReleaseInformation, error)
+}
+
+type ReleaseInformation struct {
+	Version     string
+	PublishedAt time.Time
 }
 
 // LatestVersion encapsulates the logic to manage different cloud providers.
-func (s *Store) LatestVersion() (string, error) {
+func (s *Store) LatestVersion() (*ReleaseInformation, error) {
 	client := github.NewClient(nil)
 	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return release.GetTagName(), nil
+	return &ReleaseInformation{
+		Version:     release.GetTagName(),
+		PublishedAt: release.PublishedAt.Time,
+	}, nil
 }

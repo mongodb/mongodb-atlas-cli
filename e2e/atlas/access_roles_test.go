@@ -11,15 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build e2e || (atlas && generic)
-// +build e2e atlas,generic
 
 package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -33,13 +30,10 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	require.NoError(t, err)
-
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
+	projectName, err := RandProjectNameWithPrefix("access-roles")
+	require.NoError(t, err)
 	projectID, err := createProject(projectName)
 	require.NoError(t, err)
 

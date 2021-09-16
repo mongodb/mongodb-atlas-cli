@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //go:build e2e || (atlas && performanceAdvisor)
-// +build e2e atlas,performanceAdvisor
 
 package atlas_test
 

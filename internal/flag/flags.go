@@ -26,9 +26,9 @@ const (
 	ProcessName                              = "processName"                     // Process Name
 	HostID                                   = "hostId"                          // HostID flag
 	Since                                    = "since"                           // Since flag
-	Duration                                 = "duration"                        // Duration Flag
+	Duration                                 = "duration"                        // Duration flag
 	NLog                                     = "nLog"                            // NLog flag
-	Namespaces                               = "namespaces"                      // Namespaces flag 	// Namespaces flag
+	Namespaces                               = "namespaces"                      // Namespaces flag
 	NIndexes                                 = "nIndexes"                        // NIndexes flag
 	NExamples                                = "nExamples"                       // NExamples flag
 	AuthDB                                   = "authDB"                          // AuthDB flag
@@ -43,7 +43,7 @@ const (
 	MappingSubstitution                      = "mappingSubstitution"             // MappingSubstitution flag
 	AuthenticationEnabled                    = "authenticationEnabled"           // AuthenticationEnabled flag
 	AuthorizationEnabled                     = "authorizationEnabled"            // AuthorizationEnabled flag
-	Provider                                 = "provider"                        // Provider flag to set the cloud provider
+	Provider                                 = "provider"                        // Provider flag
 	Region                                   = "region"                          // Region flag
 	RegionShort                              = "r"                               // RegionShort flag
 	Members                                  = "members"                         // Members flag
@@ -88,7 +88,7 @@ const (
 	Status                                   = "status"                          // Status flag
 	Start                                    = "start"                           // Start flag
 	End                                      = "end"                             // End flag
-	AuthResult                               = "authResult"                      // AuthResult Flag
+	AuthResult                               = "authResult"                      // AuthResult flag
 	FirstName                                = "firstName"                       // FirstName flag
 	LastName                                 = "lastName"                        // LastName flag
 	Role                                     = "role"                            // Role flag
@@ -261,7 +261,9 @@ const (
 	LiveMigrationSourceUsername              = "sourceUsername"                  // LiveMigrationSourceUsername flag
 	LiveMigrationSourcePassword              = "sourcePassword"                  // LiveMigrationSourcePassword flag
 	LiveMigrationDropCollections             = "drop"                            // LiveMigrationDropCollections flag
+	OwnerID                                  = "ownerId"                         // OwnerID flag
+	GovCloudRegionsOnly                      = "govCloudRegionsOnly"             // GovCloudRegionsOnly flag
+	LiveMigrationID                          = "liveMigrationId"                 // LiveMigrationID flag
 	LiveMigrationValidationID                = "validationId"                    // LiveMigrationDropCollections flag
-	OwnerID                                  = "ownerId"                         // OwnerID Flag
 	LinkToken                                = "linkToken"                       // LinkToken flag
 )

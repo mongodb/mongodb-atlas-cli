@@ -11,9 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build e2e || (atlas && metrics)
-// +build e2e atlas,metrics
 
 package atlas_test
 
@@ -24,28 +22,23 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestMetrics(t *testing.T) {
 	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
+	require.NoError(t, err)
 	defer func() {
 		if e := deleteCluster(clusterName); e != nil {
 			t.Errorf("error deleting test cluster: %v", e)
 		}
 	}()
 	hostname, err := getHostnameAndPort()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	t.Run("processes", func(t *testing.T) {
 		process(t, cliPath, hostname)

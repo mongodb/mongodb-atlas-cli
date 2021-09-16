@@ -1,8 +1,8 @@
-.. _mongocli-atlas-liveMigrations-link-create:
+.. _mongocli-atlas-liveMigrations-describe:
 
-=========================================
-mongocli atlas liveMigrations link create
-=========================================
+======================================
+mongocli atlas liveMigrations describe
+======================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ mongocli atlas liveMigrations link create
    :depth: 1
    :class: singlecol
 
-Create one new link-token.
+Return one migration job.
 
 Your API Key must have the Organization Owner role to successfully run this command.
 
@@ -21,7 +21,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas liveMigrations link create [options]
+   mongocli atlas liveMigrations describe [options]
 
 Options
 -------
@@ -34,23 +34,14 @@ Options
      - Type
      - Required
      - Description
-   * - --accessListIp
-     - strings
-     - false
-     - IP address access list entries that are associated with the link-token.
    * - -h, --help
      - 
      - false
-     - help for create
-   * - --orgId
+     - help for describe
+   * - --liveMigrationId
      - string
-     - false
-     - Organization ID to use. Overrides configuration file or environment variable settings.
-   * - -o, --output
-     - string
-     - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - true
+     - Unique 24-hexadecimal digit string that identifies the live migration job.
 
 Inherited Options
 -----------------

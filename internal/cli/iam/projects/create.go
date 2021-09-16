@@ -28,14 +28,18 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const atlasCreateTemplate = "Project '{{.ID}}' created.\n"
+const (
+	atlasCreateTemplate = "Project '{{.ID}}' created.\n"
+	govRegionOnly       = "GOV_REGIONS_ONLY"
+)
 
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name           string
-	projectOwnerID string
-	store          store.ProjectCreator
+	name                    string
+	projectOwnerID          string
+	regionUsageRestrictions bool
+	store                   store.ProjectCreator
 }
 
 func (opts *CreateOpts) init() error {
@@ -49,13 +53,21 @@ func (opts *CreateOpts) init() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newRegionUsageRestrictions(), opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *CreateOpts) newRegionUsageRestrictions() string {
+	if opts.regionUsageRestrictions {
+		return govRegionOnly
+	}
+
+	return ""
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
@@ -113,6 +125,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
+	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

@@ -11,9 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build e2e || (atlas && clusters && !m0)
-// +build e2e atlas,clusters,!m0
 
 package atlas_test
 
@@ -45,7 +43,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
+	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -298,7 +296,7 @@ func TestShardedCluster(t *testing.T) {
 	shardedClusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion(tierM30, e2eClusterProvider)
+	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {

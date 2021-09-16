@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,10 +40,10 @@ type AlertAcknowledger interface {
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.Get(context.Background(), projectID, alertID)
+		result, _, err := s.client.(*atlas.Client).Alerts.Get(s.ctx, projectID, alertID)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(context.Background(), projectID, alertID)
+		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(s.ctx, projectID, alertID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,10 +54,10 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Alerts.List(s.ctx, projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Alerts.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,10 +68,10 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
+		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(context.Background(), projectID, alertID, body)
+		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

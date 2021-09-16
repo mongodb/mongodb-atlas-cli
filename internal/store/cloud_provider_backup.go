@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -56,7 +55,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(context.Background(), o, opts)
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.List(s.ctx, o, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -71,7 +70,7 @@ func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlas.
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(context.Background(), o, request)
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshotRestoreJobs.Create(s.ctx, o, request)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -86,7 +85,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlas.Clo
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(context.Background(), o, request)
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.Create(s.ctx, o, request)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -101,7 +100,7 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(context.Background(), o, opts)
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetAllCloudProviderSnapshots(s.ctx, o, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -117,7 +116,7 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlas.Clou
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(context.Background(), o)
+		result, _, err := s.client.(*atlas.Client).CloudProviderSnapshots.GetOneCloudProviderSnapshot(s.ctx, o)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -133,7 +132,7 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(context.Background(), o)
+		_, err := s.client.(*atlas.Client).CloudProviderSnapshots.Delete(s.ctx, o)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

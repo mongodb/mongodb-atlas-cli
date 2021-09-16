@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -36,7 +35,7 @@ func (s *Store) CloudProviderRegions(projectID, tier string, providerName []*str
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(context.Background(), projectID, options)
+		result, _, err := s.client.(*atlas.Client).Clusters.ListCloudProviderRegions(s.ctx, projectID, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

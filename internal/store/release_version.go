@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/go-github/v38/github"
@@ -35,7 +34,7 @@ type ReleaseInformation struct {
 // LatestVersion encapsulates the logic to manage different cloud providers.
 func (s *Store) LatestVersion() (*ReleaseInformation, error) {
 	client := github.NewClient(nil)
-	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "mongodb", "mongocli")
+	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
 	if err != nil {
 		return nil, err
 	}

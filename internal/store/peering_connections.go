@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -60,7 +59,7 @@ type PeeringConnectionDeleter interface {
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Peers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -71,7 +70,7 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Get(context.Background(), projectID, peerID)
+		result, _, err := s.client.(*atlas.Client).Peers.Get(s.ctx, projectID, peerID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -82,7 +81,7 @@ func (s *Store) PeeringConnection(projectID, peerID string) (*atlas.Peer, error)
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Peers.Delete(context.Background(), projectID, peerID)
+		_, err := s.client.(*atlas.Client).Peers.Delete(s.ctx, projectID, peerID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -93,7 +92,7 @@ func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlas.Peer) (*atlas.Peer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Peers.Create(context.Background(), projectID, peer)
+		result, _, err := s.client.(*atlas.Client).Peers.Create(s.ctx, projectID, peer)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

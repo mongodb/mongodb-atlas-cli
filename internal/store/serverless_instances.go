@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -44,7 +43,7 @@ type ServerlessInstanceCreator interface {
 func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlas.ClustersResponse, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(context.Background(), projectID, listOps)
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.List(s.ctx, projectID, listOps)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,7 +54,7 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(context.Background(), projectID, clusterName)
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(s.ctx, projectID, clusterName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +65,7 @@ func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluste
 func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 	switch s.service {
 	case config.CloudService:
-		_, err := s.client.(*atlas.Client).ServerlessInstances.Delete(context.Background(), projectID, name)
+		_, err := s.client.(*atlas.Client).ServerlessInstances.Delete(s.ctx, projectID, name)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +76,7 @@ func (s *Store) DeleteServerlessInstance(projectID, name string) error {
 func (s *Store) CreateServerlessInstance(projectID string, cluster *atlas.ServerlessCreateRequestParams) (*atlas.Cluster, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Create(context.Background(), projectID, cluster)
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Create(s.ctx, projectID, cluster)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

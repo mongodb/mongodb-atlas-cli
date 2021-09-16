@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -45,10 +44,10 @@ type ContinuousSnapshotsLister interface {
 func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*atlas.Client).Checkpoints.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Checkpoints.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,10 +58,10 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -73,10 +72,10 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
+		result, _, err := s.client.(*atlas.Client).ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(context.Background(), projectID, clusterID, request)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -87,10 +86,10 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*atlas.Client).ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(context.Background(), projectID, clusterID, opts)
+		result, _, err := s.client.(*opsmngr.Client).ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

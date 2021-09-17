@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -59,10 +60,12 @@ type CreateOpts struct {
 	store       store.ClusterCreator
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTmpl = "Deploying cluster {{.Name}}.\n"
@@ -213,7 +216,7 @@ Some of the cluster configuration options are available via flags but for full c
 			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
 			)
 		},

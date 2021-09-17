@@ -15,6 +15,8 @@
 package livemigrations
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations/options"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/store"
@@ -26,10 +28,12 @@ type CreateOpts struct {
 	store store.LiveMigrationCreator
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTemplate = `ID	PROJECT ID	SOURCE PROJECT ID	STATUS
@@ -59,7 +63,7 @@ func CreateBuilder() *cobra.Command {
 		Long:  "Your API Key must have the Organization Owner role to successfully run this command.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.Validate,
 			)

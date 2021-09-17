@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -50,10 +51,12 @@ type IndexesCreateOpts struct {
 	store           store.AutomationPatcher
 }
 
-func (opts *IndexesCreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *IndexesCreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *IndexesCreateOpts) Run() error {
@@ -149,7 +152,7 @@ func IndexesCreateBuilder() *cobra.Command {
 		Short: "Create a rolling index for your MongoDB cluster.",
 		Args:  require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

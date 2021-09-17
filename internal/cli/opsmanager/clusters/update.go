@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -36,10 +37,12 @@ type UpdateOpts struct {
 	store    store.AutomationPatcher
 }
 
-func (opts *UpdateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *UpdateOpts) Run() error {
@@ -80,7 +83,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: "Update a MongoDB cluster.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

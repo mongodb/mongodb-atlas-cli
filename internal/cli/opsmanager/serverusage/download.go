@@ -15,6 +15,7 @@
 package serverusage
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -37,10 +38,12 @@ type DownloadOpts struct {
 
 var downloadMessage = "Download of %s completed.\n"
 
-func (opts *DownloadOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DownloadOpts) Run() error {
@@ -82,7 +85,7 @@ func DownloadBuilder() *cobra.Command {
 		Short: "Download the server usage report.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.initDefaultOut()
-			return opts.initStore()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

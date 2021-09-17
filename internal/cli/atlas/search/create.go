@@ -15,6 +15,7 @@
 package search
 
 import (
+	"context"
 	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -35,10 +36,12 @@ type CreateOpts struct {
 	store       store.SearchIndexCreator
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTemplate = "Index {{.Name}} created.\n"
@@ -99,7 +102,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.validateOpts,
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},

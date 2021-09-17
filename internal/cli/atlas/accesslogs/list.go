@@ -15,6 +15,7 @@
 package accesslogs
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -51,10 +52,12 @@ type ListOpts struct {
 	store       store.AccessLogsLister
 }
 
-func (opts *ListOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *ListOpts) Run() error {
@@ -118,7 +121,7 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateInput,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},

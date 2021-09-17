@@ -15,6 +15,7 @@
 package backup
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -48,10 +49,12 @@ type RestoresStartOpts struct {
 	store                store.RestoreJobsCreator
 }
 
-func (opts *RestoresStartOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *RestoresStartOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var startTemplate = "Restore job '{{.ID}}' successfully started\n"
@@ -176,7 +179,7 @@ func RestoresStartBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)
 		},

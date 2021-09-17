@@ -15,6 +15,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -30,9 +31,9 @@ var (
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(ctx context.Context) {
 	rootCmd := root.Builder(&profile, os.Args[1:])
-	if err := rootCmd.Execute(); err != nil {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}
 }
@@ -56,5 +57,5 @@ func main() {
 	cobra.EnableCommandSorting = false
 	cobra.OnInitialize(initConfig)
 
-	Execute()
+	Execute(context.Background())
 }

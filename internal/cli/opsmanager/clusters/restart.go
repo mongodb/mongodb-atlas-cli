@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -38,10 +39,12 @@ type RestartOpts struct {
 	store       store.AutomationPatcher
 }
 
-func (opts *RestartOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *RestartOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *RestartOpts) Run() error {
@@ -101,7 +104,7 @@ func RestartBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster you want to restart.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.clusterName = args[0]

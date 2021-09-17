@@ -15,6 +15,7 @@
 package owner
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -37,10 +38,12 @@ type CreateOpts struct {
 	store     store.OwnerCreator
 }
 
-func (opts *CreateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTemplate = `Owner successfully created.
@@ -94,7 +97,7 @@ func CreateBuilder() *cobra.Command {
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			_ = opts.InitOutput(cmd.OutOrStdout(), createTemplate)()
-			if err := opts.init(); err != nil {
+			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err
 			}
 			return opts.Prompt()

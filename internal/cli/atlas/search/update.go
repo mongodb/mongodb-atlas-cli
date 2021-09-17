@@ -15,6 +15,8 @@
 package search
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -34,10 +36,12 @@ type UpdateOpts struct {
 	store       store.SearchIndexUpdater
 }
 
-func (opts *UpdateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var updateTemplate = "Index {{.Name}} updated.\n"
@@ -94,7 +98,7 @@ func UpdateBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.validateOpts,
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},

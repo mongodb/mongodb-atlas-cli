@@ -366,9 +366,9 @@ type ManifestGetter interface {
 }
 
 // NewVersionManifest ets the appropriate client for the manifest version page.
-func NewVersionManifest(c ManifestGetter) (*Store, error) {
+func NewVersionManifest(ctx context.Context, c ManifestGetter) (*Store, error) {
 	s := new(Store)
-	s.ctx = context.Background()
+	s.ctx = ctx
 	s.service = c.Service()
 	if s.service != config.OpsManagerService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

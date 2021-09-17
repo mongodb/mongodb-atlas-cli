@@ -14,6 +14,7 @@
 package slowoperationthreshold
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -33,10 +34,12 @@ type DisableOpts struct {
 	store store.PerformanceAdvisorSlowOperationThresholdDisabler
 }
 
-func (opts *DisableOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DisableOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DisableOpts) Run() error {
@@ -59,7 +62,7 @@ func DisableBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -15,6 +15,7 @@
 package logs
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -42,10 +43,12 @@ type DownloadOpts struct {
 
 var downloadMessage = "Download of %s completed.\n"
 
-func (opts *DownloadOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DownloadOpts) Run() error {
@@ -93,7 +96,7 @@ To find the hostnames for an Atlas project, you can use the process list command
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.host = args[0]
 			opts.name = args[1]
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore, opts.initDefaultOut)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()), opts.initDefaultOut)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !search.StringInSlice(cmd.ValidArgs, opts.name) {

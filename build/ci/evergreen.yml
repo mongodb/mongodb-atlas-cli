@@ -513,6 +513,18 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
+  - name: brew_e2e
+    tags: ["e2e","brew"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: brew
   # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
     tags: ["e2e","generic","atlas"]

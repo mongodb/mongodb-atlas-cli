@@ -80,7 +80,6 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs: ## Generate docs for commands
 	@echo "==> Generating docs"
-	rm -rf ./docs/command
 	go run ./internal/docs/main.go
 
 .PHONY: build

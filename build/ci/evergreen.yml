@@ -514,7 +514,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,config
   - name: brew_e2e
-    tags: ["e2e","brew"]
+    tags: ["e2e","generic"]
     depends_on:
       - name: compile
         variant: "code_health"

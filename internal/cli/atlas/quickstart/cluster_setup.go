@@ -27,9 +27,6 @@ import (
 )
 
 func (opts *Opts) createCluster() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
 	}

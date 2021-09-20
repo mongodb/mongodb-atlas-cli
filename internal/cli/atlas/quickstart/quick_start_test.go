@@ -53,6 +53,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		Provider:       "AWS",
 		SkipMongosh:    true,
 		SkipSampleData: true,
+		Confirm:        true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()

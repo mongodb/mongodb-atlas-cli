@@ -90,6 +90,7 @@ type Opts struct {
 	runMongoShell       bool
 	mongoShellInstalled bool
 	defaultValue        bool
+	Confirm             bool
 	store               store.AtlasClusterQuickStarter
 }
 
@@ -102,13 +103,9 @@ func (opts *Opts) initStore() error {
 func (opts *Opts) Run() error {
 	fmt.Print(quickstartTemplateIntro)
 
-	if err := opts.createCluster(); err != nil {
+	if err := opts.askClusterOptions(); err != nil {
 		return err
 	}
-
-	fmt.Printf(`
-We are deploying %s...
-`, opts.ClusterName)
 
 	if err := opts.askSampleDataQuestion(); err != nil {
 		return err
@@ -123,6 +120,15 @@ We are deploying %s...
 	}
 
 	if err := opts.askMongoShellQuestion(); err != nil {
+		return err
+	}
+
+	if err := opts.askConfirmConfigQuestion(); err != nil {
+		return err
+	}
+
+	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
+	if err := opts.createCluster(); err != nil {
 		return err
 	}
 

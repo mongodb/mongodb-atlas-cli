@@ -26,7 +26,11 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 		return nil
 	}
 
-	diskSize := uint64(*opts.newCluster().DiskSizeGB)
+	diskSize := uint64(0)
+	if opts.newCluster().DiskSizeGB != nil {
+		diskSize = uint64(*opts.newCluster().DiskSizeGB)
+	}
+
 	fmt.Printf(`
 [Summary of changes]
 Name:			%s
@@ -43,7 +47,7 @@ Ip Address:		%s
 
 	confirmCreate := false
 	q := newClusterCreateConfirm(opts.ClusterName)
-	if err := survey.AskOne(q, &confirmCreate); err != nil || !opts.runMongoShell {
+	if err := survey.AskOne(q, &confirmCreate); err != nil {
 		return err
 	}
 

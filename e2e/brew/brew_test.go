@@ -16,6 +16,7 @@
 package brew_test
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -30,9 +31,11 @@ func TestConfig(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	tempDirEnv := fmt.Sprintf("XDG_CONFIG_HOME=%s", os.TempDir()) // make sure no mongocli.toml is detected
+
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := cmd.CombinedOutput()
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -41,6 +44,21 @@ func TestConfig(t *testing.T) {
 		want := "PROFILE NAME"
 
 		if got != want {
+			t.Errorf("want '%s'; got '%s'\n", want, got)
+		}
+	})
+
+	t.Run("iam projects ls", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "iam", "projects", "ls")
+		cmd.Env = append(os.Environ(), tempDirEnv)
+		resp, err := cmd.CombinedOutput()
+		if err == nil {
+			t.Fatalf("expected error, resp: %v", string(resp))
+		}
+		got := strings.TrimSpace(string(resp))
+		want := "Error: missing credentials"
+
+		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
 		}
 	})

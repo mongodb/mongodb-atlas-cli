@@ -210,7 +210,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--force")
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)

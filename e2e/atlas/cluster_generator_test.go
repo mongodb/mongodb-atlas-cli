@@ -95,6 +95,12 @@ func (pg *clusterGenerator) generateProjectAndCluster(prefix string) {
 	pg.generateCluster()
 }
 
+func (pg *clusterGenerator) newAvailableRegion(tier, provider string) (string, error) {
+	pg.t.Helper()
+
+	return newAvailableRegion(pg.projectID, tier, provider)
+}
+
 func (pg *clusterGenerator) getHostnameAndPort() (string, error) {
 	pg.t.Helper()
 

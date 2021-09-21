@@ -36,8 +36,6 @@ const (
 func TestLDAP(t *testing.T) {
 	g := newClusterGenerator(t)
 	g.generateProjectAndCluster("ldap")
-	t.Logf("projectID=%s", g.projectID)
-	t.Logf("clusterName=%s", g.clusterName)
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)

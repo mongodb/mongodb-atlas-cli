@@ -32,7 +32,6 @@ import (
 func TestSearch(t *testing.T) {
 	g := newClusterGenerator(t)
 	g.generateProjectAndCluster("search")
-	t.Logf("projectID=%s", g.projectID)
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)

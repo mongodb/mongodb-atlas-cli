@@ -31,7 +31,6 @@ import (
 func TestOnlineArchives(t *testing.T) {
 	g := newClusterGenerator(t)
 	g.generateProjectAndCluster("onlineArchives")
-	t.Logf("projectID=%s", g.projectID)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {

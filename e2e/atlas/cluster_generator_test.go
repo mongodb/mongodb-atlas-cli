@@ -62,6 +62,7 @@ func (g *clusterGenerator) generateProject(prefix string) {
 		g.t.Errorf("unexpected error: %v", err)
 	}
 	g.t.Logf("projectID=%s", g.projectID)
+	g.t.Logf("projectName=%s", g.projectName)
 
 	g.t.Cleanup(func() {
 		if e := deleteProject(g.projectID); e != nil {

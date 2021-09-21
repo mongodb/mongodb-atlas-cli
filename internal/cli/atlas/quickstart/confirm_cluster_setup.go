@@ -33,13 +33,13 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 	}
 	fmt.Printf(`
 [Summary of changes]
-Name:			%s
-Tier:			%s
-Cloud Provider:		%s
-Region:			%s
-Disk Size (GiB):	%.1f
-User:			%s
-Ip Address:		%s
+Cluster Name:				%s
+Cluster Tier:				%s
+Cloud Provider:				%s
+Region:					%s
+Cluster Disk Size (GiB):		%.1f
+Database Username:			%s
+Allow connections from (IP Address):	%s
 `,
 		opts.ClusterName,
 		opts.tier,

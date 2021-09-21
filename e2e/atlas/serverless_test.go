@@ -134,4 +134,19 @@ func TestServerless(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			serverlessEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
 }

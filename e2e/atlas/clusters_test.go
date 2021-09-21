@@ -219,6 +219,21 @@ func TestClustersFlags(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
 }
 
 func TestClustersFile(t *testing.T) {
@@ -303,6 +318,21 @@ func TestClustersFile(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			clusterFileName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
 }
 
 func TestShardedCluster(t *testing.T) {
@@ -356,5 +386,20 @@ func TestShardedCluster(t *testing.T) {
 
 		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
 		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			clustersEntity,
+			"watch",
+			shardedClusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 }

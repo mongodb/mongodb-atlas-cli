@@ -29,20 +29,11 @@ import (
 func TestAccessLogs(t *testing.T) {
 	req := require.New(t)
 
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newClusterGenerator(t)
+	g.generateProjectAndCluster("accessLogs")
 
-	h, err := getHostname()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	h, err := g.getHostname()
+	req.NoError(err)
 
 	cliPath, err := e2e.Bin()
 	req.NoError(err)
@@ -52,7 +43,8 @@ func TestAccessLogs(t *testing.T) {
 			atlasEntity,
 			accessLogsEntity,
 			"ls",
-			"--clusterName", clusterName,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -68,6 +60,7 @@ func TestAccessLogs(t *testing.T) {
 			accessLogsEntity,
 			"ls",
 			"--hostname", h,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

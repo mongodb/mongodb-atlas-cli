@@ -29,6 +29,9 @@ import (
 )
 
 func TestServerless(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("serverless")
+
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
@@ -44,6 +47,7 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--provider=AWS",
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -63,6 +67,7 @@ func TestServerless(t *testing.T) {
 			atlasEntity,
 			serverlessEntity,
 			"watch",
+			"--projectId", g.projectID,
 			clusterName,
 		)
 		cmd.Env = os.Environ()
@@ -78,6 +83,7 @@ func TestServerless(t *testing.T) {
 			atlasEntity,
 			serverlessEntity,
 			"ls",
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -97,6 +103,7 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"describe",
 			clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -117,6 +124,7 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"delete",
 			clusterName,
+			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

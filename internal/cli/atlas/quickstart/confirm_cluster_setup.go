@@ -31,6 +31,19 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 	if opts.newCluster().DiskSizeGB != nil {
 		diskSize = *opts.newCluster().DiskSizeGB
 	}
+
+	const noMsg = "No"
+	const yesMsg = "Yes"
+	loadSampleData := yesMsg
+	if opts.SkipSampleData {
+		loadSampleData = noMsg
+	}
+
+	runMongoShell := noMsg
+	if opts.runMongoShell {
+		runMongoShell = yesMsg
+	}
+
 	fmt.Printf(`
 [Summary of changes]
 Cluster Name:				%s
@@ -40,6 +53,8 @@ Region:					%s
 Cluster Disk Size (GiB):		%.1f
 Database Username:			%s
 Allow connections from (IP Address):	%s
+Load sample data:			%s
+Open shell:				%s
 `,
 		opts.ClusterName,
 		opts.tier,
@@ -48,6 +63,8 @@ Allow connections from (IP Address):	%s
 		diskSize,
 		opts.DBUsername,
 		strings.Join(opts.IPAddresses, ", "),
+		loadSampleData,
+		runMongoShell,
 	)
 
 	q := newClusterCreateConfirm(opts.ClusterName)

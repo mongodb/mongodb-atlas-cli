@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -76,50 +75,6 @@ const (
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
 )
-
-func getHostnameAndPort() (string, error) {
-	processes, err := getProcesses()
-	if err != nil {
-		return "", err
-	}
-
-	// The first element may not be the created cluster but that is fine since
-	// we just need one cluster up and running
-	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
-}
-
-func getProcesses() ([]*mongodbatlas.Process, error) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return nil, err
-	}
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		processesEntity,
-		"list",
-		"-o=json",
-	)
-
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return nil, err
-	}
-
-	var processes []*mongodbatlas.Process
-	err = json.Unmarshal(resp, &processes)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if len(processes) == 0 {
-		return nil, fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
-	}
-
-	return processes, nil
-}
 
 func deployClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()

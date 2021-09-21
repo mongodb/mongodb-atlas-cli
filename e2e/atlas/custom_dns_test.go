@@ -28,18 +28,11 @@ import (
 )
 
 func TestCustomDNS(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("customDNS")
+
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-	projectName, err := RandProjectNameWithPrefix("integration-custom-dns")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Enable", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -48,7 +41,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"enable",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -69,7 +62,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"describe",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -90,7 +83,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"disable",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

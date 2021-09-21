@@ -91,6 +91,7 @@ type Opts struct {
 	runMongoShell       bool
 	mongoShellInstalled bool
 	defaultValue        bool
+	Confirm             bool
 	store               store.AtlasClusterQuickStarter
 }
 
@@ -105,13 +106,9 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 func (opts *Opts) Run() error {
 	fmt.Print(quickstartTemplateIntro)
 
-	if err := opts.createCluster(); err != nil {
+	if err := opts.askClusterOptions(); err != nil {
 		return err
 	}
-
-	fmt.Printf(`
-We are deploying %s...
-`, opts.ClusterName)
 
 	if err := opts.askSampleDataQuestion(); err != nil {
 		return err
@@ -126,6 +123,15 @@ We are deploying %s...
 	}
 
 	if err := opts.askMongoShellQuestion(); err != nil {
+		return err
+	}
+
+	if err := opts.askConfirmConfigQuestion(); err != nil {
+		return err
+	}
+
+	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
+	if err := opts.createCluster(); err != nil {
 		return err
 	}
 
@@ -378,6 +384,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

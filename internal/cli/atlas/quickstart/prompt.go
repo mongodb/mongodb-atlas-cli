@@ -139,3 +139,10 @@ func newProfileDocQuestionOpenBrowser() survey.Prompt {
 		Default: true,
 	}
 }
+
+func newClusterCreateConfirm(clusterName string) survey.Prompt {
+	return &survey.Confirm{
+		Message: fmt.Sprintf("Do you want to create a new cluster %s with the following settings?", clusterName),
+		Default: true,
+	}
+}

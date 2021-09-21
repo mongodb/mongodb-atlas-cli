@@ -17,6 +17,7 @@ package quickstart
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 )
@@ -26,32 +27,35 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 		return nil
 	}
 
-	diskSize := uint64(0)
+	diskSize := 0.5
 	if opts.newCluster().DiskSizeGB != nil {
-		diskSize = uint64(*opts.newCluster().DiskSizeGB)
+		diskSize = *opts.newCluster().DiskSizeGB
 	}
-
 	fmt.Printf(`
 [Summary of changes]
 Name:			%s
 Tier:			%s
-Disk Size (GB):		%d
+Cloud Provider:		%s
+Region:			%s
+Disk Size (GiB):	%.1f
 User:			%s
 Ip Address:		%s
 `,
 		opts.ClusterName,
 		opts.tier,
+		opts.Provider,
+		opts.Region,
 		diskSize,
 		opts.DBUsername,
-		opts.IPAddresses)
+		strings.Join(opts.IPAddresses, ", "),
+	)
 
-	confirmCreate := false
 	q := newClusterCreateConfirm(opts.ClusterName)
-	if err := survey.AskOne(q, &confirmCreate); err != nil {
+	if err := survey.AskOne(q, &opts.Confirm); err != nil {
 		return err
 	}
 
-	if !confirmCreate {
+	if !opts.Confirm {
 		return errors.New("user-aborted. Not creating cluster")
 	}
 	return nil

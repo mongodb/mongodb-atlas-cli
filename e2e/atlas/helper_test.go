@@ -88,15 +88,6 @@ func getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func getHostname() (string, error) {
-	processes, err := getProcesses()
-	if err != nil {
-		return "", err
-	}
-
-	return processes[0].Hostname, nil
-}
-
 func getProcesses() ([]*mongodbatlas.Process, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {

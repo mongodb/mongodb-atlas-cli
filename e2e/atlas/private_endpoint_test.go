@@ -50,6 +50,9 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("privateEndpointsAWS")
+
 	n, err := e2e.RandInt(int64(len(regionsAWS)))
 	require.NoError(t, err)
 
@@ -59,17 +62,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	region := regionsAWS[n.Int64()]
 	var id string
 
-	projectName, err := RandProjectNameWithPrefix("private-endpoint-aws")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -78,7 +70,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"create",
 			"--region="+region,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -100,7 +92,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -115,7 +107,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"describe",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -134,7 +126,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			awsEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -155,7 +147,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"delete",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 
@@ -174,7 +166,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -193,6 +185,9 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("privateEndpointsAzure")
+
 	n, err := e2e.RandInt(int64(len(regionsAzure)))
 	require.NoError(t, err)
 
@@ -202,17 +197,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	region := regionsAzure[n.Int64()]
 	var id string
 
-	projectName, err := RandProjectNameWithPrefix("private-endpoint-azure")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -221,7 +205,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"create",
 			"--region="+region,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -245,7 +229,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		_, err := cmd.CombinedOutput()
@@ -261,7 +245,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"describe",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -280,7 +264,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			azureEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -302,7 +286,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--force",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -320,7 +304,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -332,19 +316,11 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("regionalizedPrivateEndpointsSettings")
+
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-
-	projectName, err := RandProjectNameWithPrefix("regionalized-private-endpoint-setting")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -353,7 +329,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"enable",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -369,7 +345,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"disable",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -385,7 +361,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"get",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 

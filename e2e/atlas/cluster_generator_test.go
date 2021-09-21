@@ -40,71 +40,71 @@ func newClusterGenerator(t *testing.T) *clusterGenerator {
 	return &clusterGenerator{t: t}
 }
 
-func (pg *clusterGenerator) generateProject(prefix string) {
-	pg.t.Helper()
+func (g *clusterGenerator) generateProject(prefix string) {
+	g.t.Helper()
 
-	if pg.projectID != "" {
-		pg.t.Errorf("generateProject() may be called only once per test")
+	if g.projectID != "" {
+		g.t.Errorf("generateProject() may be called only once per test")
 	}
 
 	var err error
 	if prefix == "" {
-		pg.projectName, err = RandProjectName()
+		g.projectName, err = RandProjectName()
 	} else {
-		pg.projectName, err = RandProjectNameWithPrefix(prefix)
+		g.projectName, err = RandProjectNameWithPrefix(prefix)
 	}
 	if err != nil {
-		pg.t.Errorf("unexpected error: %v", err)
+		g.t.Errorf("unexpected error: %v", err)
 	}
 
-	pg.projectID, err = createProject(pg.projectName)
+	g.projectID, err = createProject(g.projectName)
 	if err != nil {
-		pg.t.Errorf("unexpected error: %v", err)
+		g.t.Errorf("unexpected error: %v", err)
 	}
-	pg.t.Cleanup(func() {
-		if e := deleteProject(pg.projectID); e != nil {
-			pg.t.Errorf("unexpected error: %v", e)
+	g.t.Cleanup(func() {
+		if e := deleteProject(g.projectID); e != nil {
+			g.t.Errorf("unexpected error: %v", e)
 		}
 	})
 }
 
-func (pg *clusterGenerator) generateCluster() {
-	pg.t.Helper()
+func (g *clusterGenerator) generateCluster() {
+	g.t.Helper()
 
-	if pg.projectID == "" {
-		pg.t.Errorf("unexpected error: generateProject() must be called before generateCluster()")
+	if g.projectID == "" {
+		g.t.Errorf("unexpected error: generateProject() must be called before generateCluster()")
 	}
 
 	var err error
-	pg.clusterName, err = deployClusterForProject(pg.projectID)
+	g.clusterName, err = deployClusterForProject(g.projectID)
 	if err != nil {
-		pg.t.Errorf("unexpected error: %v", err)
+		g.t.Errorf("unexpected error: %v", err)
 	}
 
-	pg.t.Cleanup(func() {
-		if e := deleteClusterForProject(pg.projectID, pg.clusterName); e != nil {
-			pg.t.Errorf("unexpected error: %v", e)
+	g.t.Cleanup(func() {
+		if e := deleteClusterForProject(g.projectID, g.clusterName); e != nil {
+			g.t.Errorf("unexpected error: %v", e)
 		}
 	})
 }
 
-func (pg *clusterGenerator) generateProjectAndCluster(prefix string) {
-	pg.t.Helper()
+func (g *clusterGenerator) generateProjectAndCluster(prefix string) {
+	g.t.Helper()
 
-	pg.generateProject(prefix)
-	pg.generateCluster()
+	g.generateProject(prefix)
+	g.generateCluster()
 }
 
-func (pg *clusterGenerator) newAvailableRegion(tier, provider string) (string, error) {
-	pg.t.Helper()
+func (g *clusterGenerator) newAvailableRegion(tier, provider string) (string, error) {
+	g.t.Helper()
 
-	return newAvailableRegion(pg.projectID, tier, provider)
+	return newAvailableRegion(g.projectID, tier, provider)
 }
 
-func (pg *clusterGenerator) getHostnameAndPort() (string, error) {
-	pg.t.Helper()
+func (g *clusterGenerator) getHostnameAndPort() (string, error) {
+	g.t.Helper()
 
-	processes, err := pg.getProcesses()
+	processes, err := g.getProcesses()
 	if err != nil {
 		return "", err
 	}
@@ -114,10 +114,10 @@ func (pg *clusterGenerator) getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func (pg *clusterGenerator) getHostname() (string, error) {
-	pg.t.Helper()
+func (g *clusterGenerator) getHostname() (string, error) {
+	g.t.Helper()
 
-	processes, err := pg.getProcesses()
+	processes, err := g.getProcesses()
 	if err != nil {
 		return "", err
 	}
@@ -125,14 +125,14 @@ func (pg *clusterGenerator) getHostname() (string, error) {
 	return processes[0].Hostname, nil
 }
 
-func (pg *clusterGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
-	pg.t.Helper()
+func (g *clusterGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
+	g.t.Helper()
 
-	resp, err := pg.runCommand(atlasEntity,
+	resp, err := g.runCommand(atlasEntity,
 		processesEntity,
 		"list",
 		"--projectId",
-		pg.projectID,
+		g.projectID,
 		"-o=json",
 	)
 
@@ -154,8 +154,8 @@ func (pg *clusterGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
 	return processes, nil
 }
 
-func (pg *clusterGenerator) runCommand(args ...string) ([]byte, error) {
-	pg.t.Helper()
+func (g *clusterGenerator) runCommand(args ...string) ([]byte, error) {
+	g.t.Helper()
 
 	cliPath, err := e2e.Bin()
 	if err != nil {

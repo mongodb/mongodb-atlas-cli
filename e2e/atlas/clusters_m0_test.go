@@ -33,22 +33,15 @@ const (
 )
 
 func TestClustersM0Flags(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProject("clustersM0")
+
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
 
 	clusterName, err := RandClusterName()
 	req.NoError(err)
-
-	// 1 free cluster per project, let's prevent issues with parallel tests
-	projectID, err := createProject(clusterName)
-	req.NoError(err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -60,7 +53,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--members=3",
 			"--tier", tierM0,
 			"--provider", e2eClusterProvider,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -79,7 +72,7 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -95,7 +88,7 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
@@ -117,7 +110,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"delete",
 			clusterName,
 			"--force",
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -134,7 +127,7 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted

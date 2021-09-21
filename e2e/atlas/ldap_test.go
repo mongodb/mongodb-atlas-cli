@@ -20,7 +20,6 @@ import (
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -35,26 +34,10 @@ const (
 )
 
 func TestLDAP(t *testing.T) {
-	name, err := RandProjectNameWithPrefix("search")
-	require.NoError(t, err)
-	projectID, err := createProject(name)
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-	t.Logf("projectID=%s", projectID)
-	require.NoError(t, err)
-	clusterName, err := deployClusterForProject(projectID)
-	require.NoError(t, err)
-	defer func() {
-		if e := deleteClusterForProject(projectID, clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
-	t.Logf("clusterName=%s", clusterName)
-
-	time.Sleep(2 * time.Minute) // wait for the cluster to be fully available
+	g := newClusterGenerator(t)
+	g.generateProjectAndCluster("ldap")
+	t.Logf("projectID=%s", g.projectID)
+	t.Logf("clusterName=%s", g.clusterName)
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
@@ -74,7 +57,7 @@ func TestLDAP(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
 			"admin",
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -100,7 +83,7 @@ func TestLDAP(t *testing.T) {
 			"status",
 			"watch",
 			requestID,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -116,7 +99,7 @@ func TestLDAP(t *testing.T) {
 			"verify",
 			"status",
 			requestID,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o",
 			"json",
 		)
@@ -149,7 +132,7 @@ func TestLDAP(t *testing.T) {
 			"(.+)@ENGINEERING.EXAMPLE.COM",
 			"--mappingSubstitution",
 			"cn={0},ou=engineering,dc=example,dc=com",
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o",
 			"json",
 		)
@@ -170,7 +153,7 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"get",
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
@@ -191,7 +174,7 @@ func TestLDAP(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"delete",
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

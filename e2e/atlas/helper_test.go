@@ -126,10 +126,6 @@ func deployClusterForProject(projectID string) (string, error) {
 	return clusterName, nil
 }
 
-func deployCluster() (string, error) {
-	return deployClusterForProject("")
-}
-
 func deleteClusterForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -166,10 +162,6 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	// we just need to wait for this to close the project
 	_ = watchCmd.Run()
 	return nil
-}
-
-func deleteCluster(clusterName string) error {
-	return deleteClusterForProject("", clusterName)
 }
 
 func newAvailableRegion(projectID, tier, provider string) (string, error) {

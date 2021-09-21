@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -92,6 +93,19 @@ func (pg *clusterGenerator) generateProjectAndCluster(prefix string) {
 
 	pg.generateProject(prefix)
 	pg.generateCluster()
+}
+
+func (pg *clusterGenerator) getHostnameAndPort() (string, error) {
+	pg.t.Helper()
+
+	processes, err := pg.getProcesses()
+	if err != nil {
+		return "", err
+	}
+
+	// The first element may not be the created cluster but that is fine since
+	// we just need one cluster up and running
+	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
 func (pg *clusterGenerator) getHostname() (string, error) {

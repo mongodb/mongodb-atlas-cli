@@ -25,21 +25,15 @@ import (
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
+	g := newClusterGenerator(t)
+	g.generateProjectAndCluster("performanceAdvisor")
+
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
-	hostname, err := getHostnameAndPort()
+	hostname, err := g.getHostnameAndPort()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -51,6 +45,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 			namespacesEntity,
 			"list",
 			"--processName", hostname,
+			"--projectId", g.projectID,
 			"-o=json",
 		)
 
@@ -67,6 +62,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 			slowQueryLogsEntity,
 			"list",
 			"--processName", hostname,
+			"--projectId", g.projectID,
 			"-o=json",
 		)
 
@@ -83,6 +79,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 			suggestedIndexesEntity,
 			"list",
 			"--processName", hostname,
+			"--projectId", g.projectID,
 			"-o=json",
 		)
 
@@ -98,6 +95,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowoperationThresholdEntity,
 			"enable",
+			"--projectId", g.projectID,
 		)
 
 		cmd.Env = os.Environ()
@@ -112,6 +110,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowoperationThresholdEntity,
 			"disable",
+			"--projectId", g.projectID,
 		)
 
 		cmd.Env = os.Environ()

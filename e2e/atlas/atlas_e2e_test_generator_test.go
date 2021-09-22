@@ -29,10 +29,11 @@ import (
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
-	projectID   string
-	projectName string
-	clusterName string
-	t           *testing.T
+	projectID    string
+	projectName  string
+	clusterName  string
+	firstProcess *mongodbatlas.Process
+	t            *testing.T
 }
 
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
@@ -119,26 +120,44 @@ func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (strin
 func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	g.t.Helper()
 
-	processes, err := g.getProcesses()
+	process, err := g.getFirstProcess()
 	if err != nil {
 		return "", err
 	}
 
 	// The first element may not be the created cluster but that is fine since
 	// we just need one cluster up and running
-	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
+	return process.Hostname + ":" + strconv.Itoa(process.Port), nil
 }
 
 // getHostname returns the hostname of first process.
 func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 	g.t.Helper()
 
-	processes, err := g.getProcesses()
+	process, err := g.getFirstProcess()
 	if err != nil {
 		return "", err
 	}
 
-	return processes[0].Hostname, nil
+	return process.Hostname, nil
+}
+
+// getFirstProcess returns the first process of the project.
+func (g *atlasE2ETestGenerator) getFirstProcess() (*mongodbatlas.Process, error) {
+	g.t.Helper()
+
+	if g.firstProcess != nil {
+		return g.firstProcess, nil
+	}
+
+	processes, err := g.getProcesses()
+	if err != nil {
+		return nil, err
+	}
+
+	g.firstProcess = processes[0]
+
+	return g.firstProcess, nil
 }
 
 // getHostname returns the list of processes.

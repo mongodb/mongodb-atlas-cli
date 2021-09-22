@@ -563,7 +563,7 @@ tasks:
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,generic
   # This is all about cluster which tends to be slow to get a healthy one
-  - name: atlas_clusters_e2e
+  - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas"]
     depends_on:
       - name: compile
@@ -580,7 +580,43 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters
+          E2E_TAGS: atlas,clusters,flags
+  - name: atlas_clusters_file_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters,file
+  - name: atlas_clusters_sharded_e2e
+    tags: ["e2e","clusters","atlas"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters,sharded
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas"]
     depends_on:
@@ -617,7 +653,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,serverless
-  - name: atlas_gov_clusters_e2e
+  - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     depends_on:
       - name: compile
@@ -634,7 +670,43 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,clusters
+          E2E_TAGS: atlas,clusters,flags
+  - name: atlas_gov_clusters_file_e2e
+    tags: ["e2e","clusters","atlasgov"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,clusters,file
+  - name: atlas_gov_clusters_sharded_e2e
+    tags: ["e2e","clusters","atlasgov"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_gov_org_id}
+          MCLI_PROJECT_ID: ${atlas_gov_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_gov_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
+          MCLI_SERVICE: cloudgov
+          E2E_TAGS: atlas,clusters,sharded
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
     tags: ["e2e","clusters","atlas"]

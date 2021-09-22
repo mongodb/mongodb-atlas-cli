@@ -18,7 +18,7 @@ UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_BINARY?=../../bin/${BINARY_NAME}
-E2E_TIMEOUT?=30m
+E2E_TIMEOUT?=60m
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on

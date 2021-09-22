@@ -67,6 +67,9 @@ const (
 	namespacesEntity             = "namespaces"
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowoperationThresholdEntity = "slowOperationThreshold"
+	tierM30                      = "M30"
+	diskSizeGB40                 = "40"
+	diskSizeGB30                 = "30"
 )
 
 // Cluster settings.

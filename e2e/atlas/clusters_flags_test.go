@@ -28,12 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	tierM30      = "M30"
-	diskSizeGB40 = "40"
-	diskSizeGB30 = "30"
-)
-
 func TestClustersFlags(t *testing.T) {
 	g := newClusterGenerator(t)
 	g.generateProject("clustersFlags")

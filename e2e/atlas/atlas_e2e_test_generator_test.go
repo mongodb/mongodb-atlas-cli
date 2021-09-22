@@ -27,6 +27,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+// atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests
 type atlasE2ETestGenerator struct {
 	projectID   string
 	projectName string
@@ -34,17 +35,19 @@ type atlasE2ETestGenerator struct {
 	t           *testing.T
 }
 
+// newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct
 func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
 
 	return &atlasE2ETestGenerator{t: t}
 }
 
+// generateProject generates a new project and also registers it's deletion on test cleanup
 func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Helper()
 
 	if g.projectID != "" {
-		g.t.Errorf("generateProject() may be called only once per test")
+		g.t.Errorf("unexpected error: project was already generated")
 	}
 
 	var err error
@@ -71,11 +74,12 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	})
 }
 
+// generateCluster generates a new cluster and also registers it's deletion on test cleanup
 func (g *atlasE2ETestGenerator) generateCluster() {
 	g.t.Helper()
 
 	if g.projectID == "" {
-		g.t.Errorf("unexpected error: generateProject() must be called before generateCluster()")
+		g.t.Errorf("unexpected error: project must be generated")
 	}
 
 	var err error
@@ -92,6 +96,7 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 	})
 }
 
+// generateProjectAndCluster calls both generateProject and generateCluster
 func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
@@ -99,12 +104,18 @@ func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 	g.generateCluster()
 }
 
+// newAvailableRegion returns the first region for the provider/tier
 func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) {
 	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Errorf("unexpected error: project must be generated")
+	}
 
 	return newAvailableRegion(g.projectID, tier, provider)
 }
 
+// getHostnameAndPort returns hostname:port from the first process
 func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	g.t.Helper()
 
@@ -118,6 +129,7 @@ func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
+// getHostname returns the hostname of first process
 func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 	g.t.Helper()
 
@@ -129,8 +141,13 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 	return processes[0].Hostname, nil
 }
 
+// getHostname returns the list of processes
 func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
 	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Errorf("unexpected error: project must be generated")
+	}
 
 	resp, err := g.runCommand(atlasEntity,
 		processesEntity,
@@ -158,6 +175,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 	return processes, nil
 }
 
+// runCommand runs a command on mongocli tool
 func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	g.t.Helper()
 

@@ -251,12 +251,17 @@ func createProject(projectName string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%w: invalid bin", err)
 	}
-	cmd := exec.Command(cliPath,
+	args := []string{
 		iamEntity,
 		projectEntity,
 		"create",
 		projectName,
-		"-o=json")
+		"-o=json",
+	}
+	if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+		args = append(args, "--govCloudRegionsOnly")
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {

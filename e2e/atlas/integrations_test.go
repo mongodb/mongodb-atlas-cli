@@ -39,22 +39,15 @@ const (
 )
 
 func TestIntegrations(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("integrations")
+
 	n, err := e2e.RandInt(255)
 	require.NoError(t, err)
 	key := "51c0ef87e9951c3e147accf0e12" + n.String()
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-	projectName, err := RandProjectNameWithPrefix("integration")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create DATADOG", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -65,7 +58,7 @@ func TestIntegrations(t *testing.T) {
 			"--apiKey",
 			key,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -92,7 +85,7 @@ func TestIntegrations(t *testing.T) {
 			"--orgName",
 			"testOrg",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -121,7 +114,7 @@ func TestIntegrations(t *testing.T) {
 			"--readToken",
 			key,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -144,7 +137,7 @@ func TestIntegrations(t *testing.T) {
 			"--apiKey",
 			key,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -167,7 +160,7 @@ func TestIntegrations(t *testing.T) {
 			"--serviceKey",
 			key,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -192,7 +185,7 @@ func TestIntegrations(t *testing.T) {
 			"--routingKey",
 			"test",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -217,7 +210,7 @@ func TestIntegrations(t *testing.T) {
 			"--secret",
 			key,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -237,7 +230,7 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -257,7 +250,7 @@ func TestIntegrations(t *testing.T) {
 			"describe",
 			datadogEntity,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -278,7 +271,7 @@ func TestIntegrations(t *testing.T) {
 			datadogEntity,
 			"--force",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

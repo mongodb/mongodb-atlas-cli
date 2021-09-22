@@ -28,18 +28,11 @@ import (
 )
 
 func TestMaintenanceWindows(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("maintenance")
+
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-	projectName, err := RandProjectNameWithPrefix("maintenance")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -51,7 +44,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--hourOfDay",
 			"1",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -70,7 +63,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"-o",
 			"json",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -91,7 +84,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"clear",
 			"--force",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 

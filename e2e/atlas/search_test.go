@@ -30,23 +30,8 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	name, err := RandProjectNameWithPrefix("search")
-	require.NoError(t, err)
-	projectID, err := createProject(name)
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-	t.Logf("projectID=%s", projectID)
-	require.NoError(t, err)
-	clusterName, err := deployClusterForProject(projectID)
-	require.NoError(t, err)
-	defer func() {
-		if e := deleteClusterForProject(projectID, clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("search")
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
@@ -93,10 +78,10 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", clusterName,
+			"--clusterName", g.clusterName,
 			"--file",
 			fileName,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -119,10 +104,10 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"list",
-			"--clusterName", clusterName,
+			"--clusterName", g.clusterName,
 			"--db=test",
 			"--collection", collectionName,
-			"--projectId", projectID,
+			"--projectId", g.projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -146,8 +131,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName", clusterName,
-			"--projectId", projectID,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -202,8 +187,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--clusterName", clusterName,
-			"--projectId", projectID,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"--file",
 			fileName,
 			"-o=json")
@@ -230,8 +215,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"delete",
 			indexID,
-			"--clusterName", clusterName,
-			"--projectId", projectID,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

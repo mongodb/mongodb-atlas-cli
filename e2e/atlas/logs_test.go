@@ -27,15 +27,11 @@ import (
 )
 
 func TestLogs(t *testing.T) {
-	clusterName, err := deployCluster()
-	require.NoError(t, err)
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
 
-	hostname, err := getHostname()
+	g.generateProjectAndCluster("logs")
+
+	hostname, err := g.getHostname()
 	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
@@ -49,16 +45,16 @@ func TestLogs(t *testing.T) {
 	for _, logType := range logTypes {
 		lt := logType
 		t.Run("Download "+lt, func(t *testing.T) {
-			downloadLogTmpPath(t, cliPath, hostname, lt)
+			downloadLogTmpPath(t, cliPath, hostname, lt, g.projectID)
 		})
 	}
 
 	t.Run("Download mongodb.gz no output path", func(t *testing.T) {
-		downloadLog(t, cliPath, hostname, "mongodb.gz")
+		downloadLog(t, cliPath, hostname, "mongodb.gz", g.projectID)
 	})
 }
 
-func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
+func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
 	dir, err := os.Getwd()
 	if err != nil {
@@ -74,6 +70,8 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
 		logFile,
 		"--out",
 		filepath,
+		"--projectId",
+		projectID,
 	)
 
 	cmd.Env = os.Environ()
@@ -82,9 +80,10 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
 	if _, err := os.Stat(filepath); err != nil {
 		t.Fatalf("%v has not been downloaded", filepath)
 	}
+	_ = os.Remove(filepath)
 }
 
-func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
+func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -92,6 +91,8 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
 		"download",
 		hostname,
 		logFile,
+		"--projectId",
+		projectID,
 	)
 
 	cmd.Env = os.Environ()
@@ -102,4 +103,6 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
 	if _, err := os.Stat(outputFile); err != nil {
 		t.Fatalf("%v has not been downloaded", logFile)
 	}
+	_ = os.Remove(logFile)
+	_ = os.Remove(outputFile)
 }

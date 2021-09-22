@@ -25,28 +25,12 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestOnlineArchives(t *testing.T) {
-	name, err := RandProjectNameWithPrefix("online-archive")
-	require.NoError(t, err)
-	projectID, err := createProject(name)
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
-	t.Logf("projectID=%s", projectID)
-	require.NoError(t, err)
-	clusterName, err := deployClusterForProject(projectID)
-	require.NoError(t, err)
-	defer func() {
-		if e := deleteClusterForProject(projectID, clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("onlineArchives")
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -55,7 +39,7 @@ func TestOnlineArchives(t *testing.T) {
 
 	var archiveID string
 	t.Run("Create", func(t *testing.T) {
-		archiveID = createOnlineArchive(t, cliPath, projectID, clusterName)
+		archiveID = createOnlineArchive(t, cliPath, g.projectID, g.clusterName)
 	})
 
 	if archiveID == "" {
@@ -63,27 +47,27 @@ func TestOnlineArchives(t *testing.T) {
 	}
 
 	t.Run("Describe", func(t *testing.T) {
-		describeOnlineArchive(t, cliPath, projectID, clusterName, archiveID)
+		describeOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("List", func(t *testing.T) {
-		listOnlineArchives(t, cliPath, projectID, clusterName)
+		listOnlineArchives(t, cliPath, g.projectID, g.clusterName)
 	})
 
 	t.Run("Pause", func(t *testing.T) {
-		pauseOnlineArchive(t, cliPath, projectID, clusterName, archiveID)
+		pauseOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Start", func(t *testing.T) {
-		startOnlineArchive(t, cliPath, projectID, clusterName, archiveID)
+		startOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		updateOnlineArchive(t, cliPath, projectID, clusterName, archiveID)
+		updateOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		deleteOnlineArchive(t, cliPath, projectID, clusterName, archiveID)
+		deleteOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 }
 

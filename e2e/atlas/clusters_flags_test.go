@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && !m0)
+//go:build e2e || (atlas && clusters && flags)
 
 package atlas_test
 
@@ -23,19 +23,15 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	tierM30      = "M30"
-	diskSizeGB40 = "40"
-	diskSizeGB30 = "30"
-)
-
 func TestClustersFlags(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("clustersFlags")
+
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
@@ -43,7 +39,7 @@ func TestClustersFlags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
-	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
+	region, err := g.newAvailableRegion(tierM30, e2eClusterProvider)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {
@@ -58,6 +54,7 @@ func TestClustersFlags(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -76,6 +73,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -91,6 +89,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"loadSampleData",
 			clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -109,6 +108,7 @@ func TestClustersFlags(t *testing.T) {
 			atlasEntity,
 			clustersEntity,
 			"ls",
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -128,6 +128,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -148,6 +149,7 @@ func TestClustersFlags(t *testing.T) {
 			"cs",
 			"describe",
 			clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -171,7 +173,9 @@ func TestClustersFlags(t *testing.T) {
 			"--clusterName", clusterName,
 			"--db=tes",
 			"--collection=tes",
-			"--key=name:1")
+			"--key=name:1",
+			"--projectId", g.projectID,
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -185,6 +189,7 @@ func TestClustersFlags(t *testing.T) {
 			clusterName,
 			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion=5.0",
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -198,7 +203,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--force")
+		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
@@ -207,132 +212,19 @@ func TestClustersFlags(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
-}
 
-func TestClustersFile(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	req := require.New(t)
-	req.NoError(err)
-
-	clusterFileName, err := RandClusterName()
-	req.NoError(err)
-
-	clusterFile := "create_cluster_test.json"
-	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
-		clusterFile = "create_cluster_gov_test.json"
-	}
-
-	t.Run("Create via file", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			"create",
-			clusterFileName,
-			"--file", clusterFile,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var cluster mongodbatlas.AdvancedCluster
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
-
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30)
-	})
-
-	t.Run("Watch", func(t *testing.T) {
+	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			"watch",
-			clusterFileName,
+			clusterName,
+			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
-	})
-
-	t.Run("Update via file", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			"update",
-			clusterFileName,
-			"--file=update_cluster_test.json",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var cluster mongodbatlas.AdvancedCluster
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
-
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40)
-	})
-
-	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--force")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterFileName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-}
-
-func TestShardedCluster(t *testing.T) {
-	cliPath, err := e2e.Bin()
-	a := assert.New(t)
-	req := require.New(t)
-	req.NoError(err)
-
-	shardedClusterName, err := RandClusterName()
-	req.NoError(err)
-
-	region, err := newAvailableRegion("", tierM30, e2eClusterProvider)
-	req.NoError(err)
-
-	t.Run("Create sharded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			clustersEntity,
-			"create",
-			shardedClusterName,
-			"--region", region,
-			"--type=SHARDED",
-			"--shards=2",
-			"--members=3",
-			"--tier", tierM30,
-			"--provider", e2eClusterProvider,
-			"--mdbVersion=4.2",
-			"--diskSizeGB", diskSizeGB30,
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var cluster mongodbatlas.AdvancedCluster
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
-
-		ensureCluster(t, &cluster, shardedClusterName, "4.2", 30)
-	})
-
-	t.Run("Delete sharded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--force")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
-		a.Equal(expected, string(resp))
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 }

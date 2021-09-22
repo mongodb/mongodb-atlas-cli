@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -68,6 +67,9 @@ const (
 	namespacesEntity             = "namespaces"
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowoperationThresholdEntity = "slowOperationThreshold"
+	tierM30                      = "M30"
+	diskSizeGB40                 = "40"
+	diskSizeGB30                 = "30"
 )
 
 // Cluster settings.
@@ -76,59 +78,6 @@ const (
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
 )
-
-func getHostnameAndPort() (string, error) {
-	processes, err := getProcesses()
-	if err != nil {
-		return "", err
-	}
-
-	// The first element may not be the created cluster but that is fine since
-	// we just need one cluster up and running
-	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
-}
-
-func getHostname() (string, error) {
-	processes, err := getProcesses()
-	if err != nil {
-		return "", err
-	}
-
-	return processes[0].Hostname, nil
-}
-
-func getProcesses() ([]*mongodbatlas.Process, error) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return nil, err
-	}
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		processesEntity,
-		"list",
-		"-o=json",
-	)
-
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return nil, err
-	}
-
-	var processes []*mongodbatlas.Process
-	err = json.Unmarshal(resp, &processes)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if len(processes) == 0 {
-		return nil, fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
-	}
-
-	return processes, nil
-}
 
 func deployClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
@@ -180,10 +129,6 @@ func deployClusterForProject(projectID string) (string, error) {
 	return clusterName, nil
 }
 
-func deployCluster() (string, error) {
-	return deployClusterForProject("")
-}
-
 func deleteClusterForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -220,10 +165,6 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	// we just need to wait for this to close the project
 	_ = watchCmd.Run()
 	return nil
-}
-
-func deleteCluster(clusterName string) error {
-	return deleteClusterForProject("", clusterName)
 }
 
 func newAvailableRegion(projectID, tier, provider string) (string, error) {
@@ -313,12 +254,17 @@ func createProject(projectName string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%w: invalid bin", err)
 	}
-	cmd := exec.Command(cliPath,
+	args := []string{
 		iamEntity,
 		projectEntity,
 		"create",
 		projectName,
-		"-o=json")
+		"-o=json",
+	}
+	if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+		args = append(args, "--govCloudRegionsOnly")
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {

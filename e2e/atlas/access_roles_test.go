@@ -30,18 +30,11 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("accessRoles")
+
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-	projectName, err := RandProjectNameWithPrefix("access-roles")
-	require.NoError(t, err)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -51,7 +44,7 @@ func TestAccessRoles(t *testing.T) {
 			awsEntity,
 			"create",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -72,7 +65,7 @@ func TestAccessRoles(t *testing.T) {
 			accessRolesEntity,
 			"list",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

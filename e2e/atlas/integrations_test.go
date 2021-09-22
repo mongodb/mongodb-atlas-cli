@@ -39,7 +39,7 @@ const (
 )
 
 func TestIntegrations(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("integrations")
 
 	n, err := e2e.RandInt(255)

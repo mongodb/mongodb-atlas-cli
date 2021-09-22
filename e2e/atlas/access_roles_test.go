@@ -30,7 +30,7 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("accessRoles")
 
 	cliPath, err := e2e.Bin()

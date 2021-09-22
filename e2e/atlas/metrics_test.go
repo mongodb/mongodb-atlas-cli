@@ -27,7 +27,7 @@ import (
 )
 
 func TestMetrics(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("metrics")
 
 	hostname, err := g.getHostnameAndPort()

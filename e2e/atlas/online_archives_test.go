@@ -29,7 +29,7 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("onlineArchives")
 
 	cliPath, err := e2e.Bin()

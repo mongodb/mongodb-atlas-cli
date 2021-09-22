@@ -28,7 +28,7 @@ import (
 )
 
 func TestMaintenanceWindows(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("maintenance")
 
 	cliPath, err := e2e.Bin()

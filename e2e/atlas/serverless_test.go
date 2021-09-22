@@ -29,7 +29,7 @@ import (
 )
 
 func TestServerless(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("serverless")
 
 	cliPath, err := e2e.Bin()

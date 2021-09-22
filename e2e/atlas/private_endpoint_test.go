@@ -50,7 +50,7 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAWS")
 
 	n, err := e2e.RandInt(int64(len(regionsAWS)))
@@ -185,7 +185,7 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAzure")
 
 	n, err := e2e.RandInt(int64(len(regionsAzure)))
@@ -316,7 +316,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("regionalizedPrivateEndpointsSettings")
 
 	cliPath, err := e2e.Bin()

@@ -34,7 +34,7 @@ const (
 )
 
 func TestLDAP(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
 	cliPath, err := e2e.Bin()

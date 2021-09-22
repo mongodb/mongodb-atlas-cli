@@ -33,7 +33,7 @@ const (
 )
 
 func TestClustersM0Flags(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersM0")
 
 	cliPath, err := e2e.Bin()

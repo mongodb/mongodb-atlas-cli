@@ -27,20 +27,20 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-type clusterGenerator struct {
+type atlasE2ETestGenerator struct {
 	projectID   string
 	projectName string
 	clusterName string
 	t           *testing.T
 }
 
-func newClusterGenerator(t *testing.T) *clusterGenerator {
+func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
 
-	return &clusterGenerator{t: t}
+	return &atlasE2ETestGenerator{t: t}
 }
 
-func (g *clusterGenerator) generateProject(prefix string) {
+func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Helper()
 
 	if g.projectID != "" {
@@ -71,7 +71,7 @@ func (g *clusterGenerator) generateProject(prefix string) {
 	})
 }
 
-func (g *clusterGenerator) generateCluster() {
+func (g *atlasE2ETestGenerator) generateCluster() {
 	g.t.Helper()
 
 	if g.projectID == "" {
@@ -92,20 +92,20 @@ func (g *clusterGenerator) generateCluster() {
 	})
 }
 
-func (g *clusterGenerator) generateProjectAndCluster(prefix string) {
+func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.generateProject(prefix)
 	g.generateCluster()
 }
 
-func (g *clusterGenerator) newAvailableRegion(tier, provider string) (string, error) {
+func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) {
 	g.t.Helper()
 
 	return newAvailableRegion(g.projectID, tier, provider)
 }
 
-func (g *clusterGenerator) getHostnameAndPort() (string, error) {
+func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	g.t.Helper()
 
 	processes, err := g.getProcesses()
@@ -118,7 +118,7 @@ func (g *clusterGenerator) getHostnameAndPort() (string, error) {
 	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
 }
 
-func (g *clusterGenerator) getHostname() (string, error) {
+func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 	g.t.Helper()
 
 	processes, err := g.getProcesses()
@@ -129,7 +129,7 @@ func (g *clusterGenerator) getHostname() (string, error) {
 	return processes[0].Hostname, nil
 }
 
-func (g *clusterGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
+func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
 	g.t.Helper()
 
 	resp, err := g.runCommand(atlasEntity,
@@ -158,7 +158,7 @@ func (g *clusterGenerator) getProcesses() ([]*mongodbatlas.Process, error) {
 	return processes, nil
 }
 
-func (g *clusterGenerator) runCommand(args ...string) ([]byte, error) {
+func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	g.t.Helper()
 
 	cliPath, err := e2e.Bin()

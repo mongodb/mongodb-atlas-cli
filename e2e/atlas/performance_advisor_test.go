@@ -25,7 +25,7 @@ import (
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("performanceAdvisor")
 
 	cliPath, err := e2e.Bin()

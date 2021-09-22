@@ -28,7 +28,7 @@ import (
 )
 
 func TestCustomDNS(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("customDNS")
 
 	cliPath, err := e2e.Bin()

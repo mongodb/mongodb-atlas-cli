@@ -27,7 +27,7 @@ import (
 )
 
 func TestProcesses(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("processes")
 
 	cliPath, err := e2e.Bin()

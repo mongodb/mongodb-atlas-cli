@@ -30,7 +30,7 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
 
 	cliPath, err := e2e.Bin()

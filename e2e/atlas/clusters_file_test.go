@@ -30,7 +30,7 @@ import (
 )
 
 func TestClustersFile(t *testing.T) {
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersFile")
 
 	cliPath, err := e2e.Bin()

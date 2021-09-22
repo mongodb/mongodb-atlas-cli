@@ -29,7 +29,7 @@ import (
 func TestAccessLogs(t *testing.T) {
 	req := require.New(t)
 
-	g := newClusterGenerator(t)
+	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("accessLogs")
 
 	h, err := g.getHostname()

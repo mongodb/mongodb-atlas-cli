@@ -65,5 +65,5 @@ Examples
 
 .. code-block::
 
- $ mongocli config ls
+   $ mongocli config ls
 

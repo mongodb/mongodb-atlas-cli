@@ -48,7 +48,8 @@ Arguments
    * - propertyName
      - string
      - true
-     - Property to set in the profile.   * - value
+     - Property to set in the profile.
+   * - value
      - string
      - true
      - Value for the property to set in the profile.
@@ -90,12 +91,13 @@ Examples
 
 .. code-block::
 
- Set Ops Manager Base URL in the profile myProfile:
- $ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
 
- Set Organization ID in the default profile:
- $ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
+   Set Ops Manager Base URL in the profile myProfile:
+   $ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
 
- Set path for the MongoDB Shell in the default profile:
- $ mongocli config set mongosh_path /usr/local/bin/mongosh
+   Set Organization ID in the default profile:
+   $ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
+
+   Set path for the MongoDB Shell in the default profile:
+   $ mongocli config set mongosh_path /usr/local/bin/mongosh
 

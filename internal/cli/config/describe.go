@@ -49,8 +49,8 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe <profileName>",
 		Aliases: []string{"get"},
 		Short:   "Return details about a specific profile.",
-		Example: `Describe a profile called myProfile:
-$ mongocli config describe myProfile`,
+		Example: `  Describe a profile called myProfile:
+  $ mongocli config describe myProfile`,
 		Annotations: map[string]string{
 			"args":            "profileName",
 			"requiredArgs":    "profileName",

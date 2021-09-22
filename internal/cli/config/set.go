@@ -77,14 +77,15 @@ base_url - Base URL for API calls. The URL must end with a forward slash (/).
 ops_manager_ca-certificate - Ops Manager only. Path on your local system to the PEM-encoded Certificate Authority (CA) certificate used to sign the client and Ops Manager TLS certificates.
 ops_manager_skip_verify - Ops Manager only. When set to yes, the Ops Manager CA TLS certificate is not verified. This prevents your connections from being rejected due to an invalid certificate. This is insecure and not recommended in production environments. Valid values: yes|no
 mongosh_path - Path to the MongoDB shell (mongosh) on your system. Default value: /usr/local/bin/mongosh`,
-		Example: `Set Ops Manager Base URL in the profile myProfile:
-$ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
+		Example: `
+  Set Ops Manager Base URL in the profile myProfile:
+  $ mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
 
-Set Organization ID in the default profile:
-$ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
+  Set Organization ID in the default profile:
+  $ mognocli config set org_id 5dd5aaef7a3e5a6c5bd12de4
 
-Set path for the MongoDB Shell in the default profile:
-$ mongocli config set mongosh_path /usr/local/bin/mongosh`,
+  Set path for the MongoDB Shell in the default profile:
+  $ mongocli config set mongosh_path /usr/local/bin/mongosh`,
 		Annotations: map[string]string{
 			"args":             "propertyName,value",
 			"requiredArgs":     "propertyName,value",

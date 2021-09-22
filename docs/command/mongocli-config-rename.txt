@@ -35,7 +35,8 @@ Arguments
    * - oldProfileName
      - string
      - true
-     - Name of the profile to rename.   * - newProfileName
+     - Name of the profile to rename.
+   * - newProfileName
      - string
      - true
      - New name of the profile.
@@ -77,6 +78,6 @@ Examples
 
 .. code-block::
 
- Rename a profile called myProfile to testProfile:
- $ mongocli config rename myProfile testProfile
+   Rename a profile called myProfile to testProfile:
+   $ mongocli config rename myProfile testProfile
 

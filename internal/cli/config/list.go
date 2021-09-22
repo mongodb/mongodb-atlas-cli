@@ -42,7 +42,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Return a list of available profiles by name.",
 		Long:    "If you did not specify a name for your profile, it displays as the default profile.",
-		Example: "$ mongocli config ls",
+		Example: "  $ mongocli config ls",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},

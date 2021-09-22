@@ -79,6 +79,6 @@ Examples
 
 .. code-block::
 
- Describe a profile called myProfile:
- $ mongocli config describe myProfile
+   Describe a profile called myProfile:
+   $ mongocli config describe myProfile
 

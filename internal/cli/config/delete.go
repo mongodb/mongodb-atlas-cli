@@ -48,8 +48,8 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a profile.",
 		Long: `This command removes the specified profile from the MongoDB CLI configuration file.
 For more information on the configuration file, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/configuration-file/ `,
-		Example: `Delete a profile called myProfile:
-$ mongocli config delete myProfile`,
+		Example: `  Delete a profile called myProfile:
+  $ mongocli config delete myProfile`,
 		Annotations: map[string]string{
 			"args":            "profileName",
 			"requiredArgs":    "profIleName",

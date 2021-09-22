@@ -81,6 +81,6 @@ Examples
 
 .. code-block::
 
- Delete a profile called myProfile:
- $ mongocli config delete myProfile
+   Delete a profile called myProfile:
+   $ mongocli config delete myProfile
 

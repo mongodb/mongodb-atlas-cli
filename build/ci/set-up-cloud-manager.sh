@@ -16,29 +16,6 @@
 
 set -euo pipefail
 
-_print_usage() {
-    echo
-    echo '  -h <hostsFile>                Output of Evergreen host.list'
-}
-
-while getopts 'h:' opt; do
-  case ${opt} in
-  h) hostsFile="${OPTARG}" ;; # Output of Evergreen host.list
-  * ) echo "invalid option for set-up-cloud-manager $1" ; _print_usage "$@" ; exit 1 ;;
-  esac
-done
-
-host=$(
-  cat <<EOF | python - "${hostsFile}"
-import sys
-import json
-with open(sys.argv[1]) as hostsfile:
-    hosts = json.load(hostsfile)
-    print(hosts[0]["dns_name"])
-EOF
-
-)
-
 pushd ../..
 
 export MCLI_SERVICE="${cloud_manager_service:?}"
@@ -50,6 +27,7 @@ skip_update_check = true
   public_api_key = "${MCLI_PUBLIC_API_KEY}"
   private_api_key = "${MCLI_PRIVATE_API_KEY}"
   org_id = "${MCLI_ORG_ID}"
+  ops_manager_url = "${MCLI_OPS_MANAGER_URL}"
 
 EOF
 

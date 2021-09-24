@@ -1111,12 +1111,6 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,replica
       - func: "clean-up cloud manager"
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
@@ -1139,12 +1133,6 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,remote,sharded
       - func: "clean-up cloud manager"
   # Deploy ops manager and test against it

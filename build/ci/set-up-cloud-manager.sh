@@ -43,14 +43,14 @@ EOF
 
 # shellcheck disable=SC2154
 GROUP_NAME="cloudManager-e2e-$((1 + RANDOM % 1000))-$revision"
-./bin/mongocli iam projects create "$GROUP_NAME" -o="go-template-file=project.tmpl" > project.sh
+mongocli iam projects create "$GROUP_NAME" -o="go-template-file=project.tmpl" > project.sh
 
 chmod +x project.sh
 
 # shellcheck disable=SC1091
 source project.sh
 
-./bin/mongocli config set project_id "$MCLI_PROJECT_ID"
+mongocli config set project_id "$MCLI_PROJECT_ID"
 
 cat <<EOF > automation_agent_settings.sh
 export BASE_URL=${MCLI_OPS_MANAGER_URL}

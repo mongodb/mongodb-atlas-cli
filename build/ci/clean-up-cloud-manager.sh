@@ -19,4 +19,4 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source project.sh
 
-./bin/mongocli iam projects remove "$MCLI_PROJECT_ID"
+mongocli iam projects remove "$MCLI_PROJECT_ID"

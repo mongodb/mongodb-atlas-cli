@@ -181,7 +181,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-          - src/github.com/mongodb/mongocli/bin
+          - ../../bin
         working_dir: src/github.com/mongodb/mongocli/build/ci
         include_expansions_in_env:
           - cloud_manager_service
@@ -202,7 +202,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-          - src/github.com/mongodb/mongocli/bin
+          - ../../bin
         working_dir: src/github.com/mongodb/mongocli/build/ci
         binary: ./clean-up-cloud-manager.sh
         args: ['-h', 'hosts.json']

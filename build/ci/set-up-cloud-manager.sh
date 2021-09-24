@@ -16,8 +16,6 @@
 
 set -euo pipefail
 
-pushd ../..
-
 export MCLI_SERVICE="${cloud_manager_service:?}"
 
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli.toml"
@@ -54,7 +52,6 @@ source project.sh
 
 ./bin/mongocli config set project_id "$MCLI_PROJECT_ID"
 
-popd
 cat <<EOF > automation_agent_settings.sh
 export BASE_URL=${MCLI_OPS_MANAGER_URL}
 export LC_AGENT_KEY=${AGENT_API_KEY}

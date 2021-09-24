@@ -12,7 +12,7 @@ require (
 	github.com/google/go-github/v38 v38.1.0
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mongodb-forks/digest v1.0.3
-	github.com/mongodb-labs/cobra2snooty v0.2.3
+	github.com/mongodb-labs/cobra2snooty v0.3.0
 	github.com/openlyinc/pointy v1.1.2
 	github.com/pelletier/go-toml v1.9.4
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4

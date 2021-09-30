@@ -16,6 +16,7 @@
 package cloud_manager_test
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -72,16 +73,23 @@ func TestDBUsers(t *testing.T) {
 			"--password=passW0rd",
 			"--role=readWriteAnyDatabase",
 			"--mechanisms=SCRAM-SHA-256")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		testCreatePasswordCmd(t, cmd)
+	})
 
-		if !strings.Contains(string(resp), "Changes are being applied") {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
-		}
+	t.Run("CreatePasswordStdin", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			dbUsersEntity,
+			"create",
+			"--username="+username,
+			"--role=readWriteAnyDatabase",
+			"--mechanisms=SCRAM-SHA-256")
+
+		passwordStdin := bytes.NewBuffer([]byte("passW0rd"))
+		cmd.Stdin = passwordStdin
+
+		testCreatePasswordCmd(t, cmd)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -129,4 +137,20 @@ func TestDBUsers(t *testing.T) {
 			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
 		}
 	})
+}
+
+func testCreatePasswordCmd(t *testing.T, cmd *exec.Cmd) {
+	t.Helper()
+
+	cmd.Env = os.Environ()
+
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	if !strings.Contains(string(resp), "Changes are being applied") {
+		t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
+	}
 }

@@ -16,9 +16,27 @@ package prompt
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mattn/go-isatty"
 )
+
+// IsTerminalInput returns true if input device is a terminal
+// Will return false in the case of input being piped.
+func IsTerminalInput() bool {
+	return IsTerminalInputStream(os.Stdin)
+}
+
+// isTerminalInput returns true if input device is a terminal
+// Will return false in the case of the reader not being a terminal.
+func IsTerminalInputStream(stream io.Reader) bool {
+	if inputStream, ok := stream.(*os.File); ok {
+		return isatty.IsTerminal(inputStream.Fd()) || isatty.IsCygwinTerminal(inputStream.Fd())
+	}
+	return false
+}
 
 // NewDeleteConfirm creates a prompt to confirm if the entry should be deleted.
 func NewDeleteConfirm(entry string) survey.Prompt {

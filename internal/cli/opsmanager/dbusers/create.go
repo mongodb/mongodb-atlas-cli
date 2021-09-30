@@ -35,6 +35,7 @@ const scramSHA1 = "SCRAM-SHA-1"
 
 type CreateOpts struct {
 	cli.GlobalOpts
+	cli.InputOpts
 	username   string
 	password   string
 	authDB     string
@@ -57,6 +58,7 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
 	dbuser := opts.newDBUser()
 	if err := atmcfg.ConfigureScramCredentials(dbuser, opts.password); err != nil {
 		return err
@@ -87,10 +89,16 @@ func (opts *CreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
-	prompt := &survey.Password{
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.password)
+		return err
+	}
+
+	surveyPrompt := &survey.Password{
 		Message: "Password:",
 	}
-	return survey.AskOne(prompt, &opts.password)
+	return survey.AskOne(surveyPrompt, &opts.password)
 }
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId].
@@ -104,7 +112,10 @@ func CreateBuilder() *cobra.Command {
   $ mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.InitInput(cmd.InOrStdin()),
+				opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {

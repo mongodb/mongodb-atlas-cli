@@ -38,7 +38,7 @@ Options
      - An LDAP query template that Atlas executes to obtain the LDAP groups to which the authenticated user belongs.
    * - --bindPassword
      - string
-     - true
+     - false
      - The password used to authenticate the bindUsername.
    * - --bindUsername
      - string

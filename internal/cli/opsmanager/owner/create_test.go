@@ -18,6 +18,7 @@
 package owner
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -74,4 +75,17 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestManagerOwnerCreateWithPasswordStdin(t *testing.T) {
+	password := "P4ssw0rd!"
+
+	createOpts := &CreateOpts{}
+
+	createOpts.InitInput(bytes.NewReader([]byte(password)))()
+	createOpts.Prompt()
+
+	if u := createOpts.newOwner(); u.Password != password {
+		t.Fatalf("failed to set password from input stream")
+	}
 }

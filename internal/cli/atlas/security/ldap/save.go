@@ -17,7 +17,9 @@ package ldap
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -30,6 +32,7 @@ import (
 type SaveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.InputOpts
 	hostname              string
 	port                  int
 	bindUsername          string
@@ -65,6 +68,23 @@ func (opts *SaveOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *SaveOpts) Prompt() error {
+	if opts.bindPassword != "" {
+		return nil
+	}
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.bindPassword)
+		return err
+	}
+
+	prompt := &survey.Password{
+		Message: "Password:",
+	}
+
+	return survey.AskOne(prompt, &opts.bindPassword)
+}
+
 func (opts *SaveOpts) validate() error {
 	if opts.mappingMatch != "" {
 		if opts.mappingLdapQuery == "" && opts.mappingSubstitution == "" {
@@ -74,6 +94,7 @@ func (opts *SaveOpts) validate() error {
 			return errors.New("can't supply both a query and a substitution for userToDNMapping")
 		}
 	}
+
 	return nil
 }
 
@@ -110,7 +131,8 @@ func SaveBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.validate,
-				opts.InitOutput(cmd.OutOrStdout(), saveTemplate))
+				opts.InitOutput(cmd.OutOrStdout(), saveTemplate),
+				opts.InitInput(cmd.InOrStdin()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -134,7 +156,6 @@ func SaveBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
-	_ = cmd.MarkFlagRequired(flag.BindPassword)
 
 	return cmd
 }

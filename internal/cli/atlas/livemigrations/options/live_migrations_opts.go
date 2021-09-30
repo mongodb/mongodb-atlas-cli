@@ -29,6 +29,7 @@ import (
 
 type LiveMigrationsOpts struct {
 	cli.OutputOpts
+	cli.InputOpts
 	cli.GlobalOpts
 	DestinationClusterName      string
 	DestinationDropEnabled      bool
@@ -86,11 +87,18 @@ func (opts *LiveMigrationsOpts) askPassword() error {
 	if opts.SourcePassword != "" {
 		return nil
 	}
-	p := &survey.Password{
-		Message: "Password:",
-	}
-	if err := survey.AskOne(p, &opts.SourcePassword); err != nil {
-		return err
+
+	if !opts.IsTerminalInput() {
+		if _, err := fmt.Fscanln(opts.InReader, &opts.SourcePassword); err != nil {
+			return err
+		}
+	} else {
+		p := &survey.Password{
+			Message: "Password:",
+		}
+		if err := survey.AskOne(p, &opts.SourcePassword); err != nil {
+			return err
+		}
 	}
 	if opts.SourcePassword == "" {
 		return errors.New("no password provided")

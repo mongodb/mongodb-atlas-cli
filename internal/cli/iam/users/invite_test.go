@@ -18,6 +18,7 @@
 package users
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 
@@ -218,5 +219,24 @@ func TestCreateUserRole(t *testing.T) {
 				t.Fatalf("expected: %v, got: %v", tc.want, got)
 			}
 		})
+	}
+}
+
+func TestNewUserRequestWithPasswordStin(t *testing.T) {
+	password := "p@ssw0rd"
+	opts := &InviteOpts{
+		username: "testUser",
+	}
+
+	opts.InitInput(bytes.NewReader([]byte(password)))()
+	opts.Prompt()
+
+	user, err := opts.newUserRequest()
+	if err != nil {
+		t.Fatalf("newUserRequest() unexpected error: %v", err)
+	}
+
+	if user.Password != password {
+		t.Fatalf("failed to read password from stream")
 	}
 }

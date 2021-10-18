@@ -35,7 +35,7 @@ const (
 	NIndexes                        = "Maximum number of indexes to suggest."
 	MDBVersion                      = "MongoDB version of the cluster to deploy."
 	AuthDB                          = "Authentication database name."
-	Granularity                     = "Duration in ISO 8601 notation that specifies the interval between measurement data points."
+	Granularity                     = "Duration in ISO 8601 notation that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D"
 	Page                            = "Page number."
 	Forever                         = "Acknowledge an alert “forever”."
 	Status                          = "Alert's status."

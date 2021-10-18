@@ -32,10 +32,6 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterId
-     - string
-     - false
-     - Unique identifier of the cluster.
    * - -h, --help
      - 
      - false

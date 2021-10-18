@@ -248,11 +248,12 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongocli/bin
         script: |
           set -Eeou pipefail
 
-          curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+          curl -sfL https://github.com/goreleaser/goreleaser/releases/download/v${gorelaser_ver}/goreleaser_Darwin_all.tar.gz | tar zx
+
   "install snyk":
     - command: shell.exec
       type: setup

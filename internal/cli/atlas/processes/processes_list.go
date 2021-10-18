@@ -35,8 +35,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	clusterID string
-	store     store.ProcessLister
+	store store.ProcessLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -59,12 +58,11 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) newProcessesListOptions() *atlas.ProcessesListOptions {
 	return &atlas.ProcessesListOptions{
-		ClusterID:   opts.clusterID,
 		ListOptions: *opts.NewListOptions(),
 	}
 }
 
-// mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
+// ListBuilder mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -84,7 +82,6 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.clusterID, flag.ClusterID, "", usage.ClusterID)
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 

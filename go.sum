@@ -335,10 +335,10 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQcPvs=
 go.etcd.io/etcd/client/pkg/v3 v3.5.0/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.0/go.mod h1:h9puh54ZTgAKtEbut2oe9P4L/oqKCVB6xsXlzd7alYQ=
-go.mongodb.org/atlas v0.12.1-0.20210908180847-a8f9b16316e3 h1:cD6BlSgXT7sPYdp3ZUARdJ96JyKYueMgGicX7ZjgwsQ=
-go.mongodb.org/atlas v0.12.1-0.20210908180847-a8f9b16316e3/go.mod h1:wVCnHcm/7/IfTjEB6K8K35PLG70yGz8BdkRwX0oK9/M=
-go.mongodb.org/ops-manager v0.29.1-0.20210910160826-d185a14856e5 h1:vkvksgdK6Z4F8qapgXoLoECQFFM81cB7QKfB6sQgjSA=
-go.mongodb.org/ops-manager v0.29.1-0.20210910160826-d185a14856e5/go.mod h1:PUwsgRiLuYP1V37snltLAxHsfzJyZuvOLvT7uqengNQ=
+go.mongodb.org/atlas v0.13.0 h1:JkJOWsKm9k2mcFaivaaMNDpKDsxJJj1O0eUsDtnNvuE=
+go.mongodb.org/atlas v0.13.0/go.mod h1:wVCnHcm/7/IfTjEB6K8K35PLG70yGz8BdkRwX0oK9/M=
+go.mongodb.org/ops-manager v0.30.0 h1:8nKyxdUo83cRny4kVOcDeZzf09WseVF5RtHUtGxHpZ0=
+go.mongodb.org/ops-manager v0.30.0/go.mod h1:x3CljG6FzfD/DwPCkt/7fKpGccKpHk91VlLOgK0eMTE=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.opencensus.io v0.22.2/go.mod h1:yxeiOL68Rb0Xd1ddK5vPZ/oVn4vY4Ynel7k9FzqtOIw=

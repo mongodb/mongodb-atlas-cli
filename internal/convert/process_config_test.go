@@ -27,6 +27,7 @@ import (
 
 func Test_newReplicaSetProcessConfig(t *testing.T) {
 	var slaveDelay float64
+	fipsMode := true
 	omp := &opsmngr.Process{
 		Args26: opsmngr.Args26{
 			AuditLog: &opsmngr.AuditLog{
@@ -37,7 +38,10 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 			},
 			NET: opsmngr.Net{
 				Port: 27017,
-				TLS:  &opsmngr.TLS{Mode: "disabled"},
+				TLS: &opsmngr.TLS{
+					Mode:     "disabled",
+					FIPSMode: &fipsMode,
+				},
 			},
 			Replication: &opsmngr.Replication{
 				ReplSetName: "myReplicaSet",
@@ -111,7 +115,10 @@ func Test_newReplicaSetProcessConfig(t *testing.T) {
 		ArbiterOnly:                 pointy.Bool(false),
 		Disabled:                    false,
 		Hidden:                      pointy.Bool(false),
-		TLS:                         &TLS{Mode: "disabled"},
+		TLS: &TLS{
+			Mode:     "disabled",
+			FIPSMode: &fipsMode,
+		},
 		SetParameter: &map[string]interface{}{
 			"param": "param",
 		},

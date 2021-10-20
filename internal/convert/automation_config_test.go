@@ -27,6 +27,7 @@ import (
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
+	fipsMode := true
 	t.Run("replica set", func(t *testing.T) {
 		t.Parallel()
 		config := fixture.AutomationConfigWithOneReplicaSet(name, false)
@@ -66,7 +67,7 @@ func TestFromAutomationConfig(t *testing.T) {
 								ClusterPassword:            "ClusterPassword",
 								CRLFile:                    "CRLFile",
 								DisabledProtocols:          "DisabledProtocols",
-								FIPSMode:                   "FIPSMode",
+								FIPSMode:                   &fipsMode,
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},

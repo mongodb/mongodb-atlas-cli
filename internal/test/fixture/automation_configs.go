@@ -190,6 +190,7 @@ func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
 }
 
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
+	fipsMode := true
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{
 			{
@@ -206,7 +207,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 							ClusterPassword:            "ClusterPassword",
 							CRLFile:                    "CRLFile",
 							DisabledProtocols:          "DisabledProtocols",
-							FIPSMode:                   "FIPSMode",
+							FIPSMode:                   &fipsMode,
 							Mode:                       "Mode",
 							PEMKeyFile:                 "PEMKeyFile",
 						},

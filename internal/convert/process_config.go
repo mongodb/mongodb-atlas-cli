@@ -88,7 +88,7 @@ type TLS struct {
 	ClusterPassword            string `yaml:"clusterPassword,omitempty" json:"clusterPassword,omitempty"`
 	CRLFile                    string `yaml:"CRLFile,omitempty" json:"CRLFile,omitempty"`
 	DisabledProtocols          string `yaml:"disabledProtocols,omitempty" json:"disabledProtocols,omitempty"`
-	FIPSMode                   string `yaml:"FIPSMode,omitempty" json:"FIPSMode,omitempty"`
+	FIPSMode                   *bool  `yaml:"FIPSMode,omitempty" json:"FIPSMode,omitempty"`
 	Mode                       string `yaml:"mode,omitempty" json:"mode,omitempty"`
 	PEMKeyFile                 string `yaml:"PEMKeyFile,omitempty" json:"PEMKeyFile,omitempty"`
 }

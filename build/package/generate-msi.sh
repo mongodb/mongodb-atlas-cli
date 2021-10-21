@@ -35,7 +35,7 @@ go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version "${VER
 
 pushd dist
 
-./notary-client.py \
+./build/package/notary-client.py \
       --key-name "mongocli" \
       --auth-token-file ./signing_auth_token \
       --comment "Evergreen Automatic Signing (mongocli)" \

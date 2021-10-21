@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -Eeou pipefail
 
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
@@ -36,12 +35,12 @@ go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version "${VER
 
 pushd dist
 
-/usr/local/bin/notary-client.py \
-              --key-name "mongocli" \
-              --auth-token-file ./signing_auth_token \
-              --comment "Evergreen Automatic Signing (mongocli)" \
-              --notary-url http://notary-service.build.10gen.cc:5000 \
-              --skip-missing \
-              --outputs "sig" \
-              --package-file-suffix "" \
-              "mongocli_${VERSION}_windows_x86_64.msi"
+./notary-client.py \
+      --key-name "mongocli" \
+      --auth-token-file ./signing_auth_token \
+      --comment "Evergreen Automatic Signing (mongocli)" \
+      --notary-url http://notary-service.build.10gen.cc:5000 \
+      --skip-missing \
+      --outputs "sig" \
+      --package-file-suffix "" \
+      "mongocli_${VERSION}_windows_x86_64.msi"

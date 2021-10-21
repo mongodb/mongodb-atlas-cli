@@ -118,9 +118,6 @@ _determine_architecture() {
         elif grep -qE '^8' /etc/debian_version; then
             OSVER=8
 
-        elif grep -qE '^7' /etc/debian_version; then
-            OSVER=7
-
         else
             _unsupported_distro
         fi
@@ -136,12 +133,6 @@ _determine_architecture() {
 
         elif "$LSB_RELEASE" -a 2>&1 | grep 18.04 > /dev/null 2>&1; then
             OSVER=18
-
-        elif "$LSB_RELEASE" -a 2>&1 | grep 17.10 > /dev/null 2>&1; then
-            OSVER=17
-
-        elif "$LSB_RELEASE" -a 2>&1 | grep 16.04 > /dev/null 2>&1; then
-            OSVER=16
 
         else
             _unsupported_distro
@@ -211,9 +202,6 @@ _determine_architecture() {
     elif [[ -f /etc/os-release ]] && grep PRETTY /etc/os-release | grep -q 'Amazon Linux 2' > /dev/null; then # Amazon Linux 2
         PLATFORM="amazon"
         OSVER=2
-
-    elif uname -a | grep -q 'Microsoft'; then # Microsoft Windows Subsystem for Linux
-        PLATFORM="wsl"
 
     else
         _unsupported_distro

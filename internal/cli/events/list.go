@@ -14,6 +14,7 @@
 package events
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -26,21 +27,39 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ListOpts struct {
+type EventListOpts struct {
 	cli.ListOpts
+	EventType []string
+	MinDate   string
+	MaxDate   string
+}
+
+func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
+	return &atlas.EventListOptions{
+		ListOptions: atlas.ListOptions{
+			PageNum:      opts.PageNum,
+			ItemsPerPage: opts.ItemsPerPage,
+		},
+		EventType: opts.EventType,
+		MinDate:   opts.MinDate,
+		MaxDate:   opts.MaxDate,
+	}
+}
+
+type ListOpts struct {
+	EventListOpts
 	cli.OutputOpts
 	orgID     string
 	projectID string
-	eventType []string
-	minDate   string
-	maxDate   string
 	store     store.EventLister
 }
 
-func (opts *ListOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var listTemplate = `ID	TYPE	CREATED{{range .Results}}
@@ -65,25 +84,27 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
-			PageNum:      opts.PageNum,
-			ItemsPerPage: opts.ItemsPerPage,
-		},
-		EventType: opts.eventType,
-		MinDate:   opts.minDate,
-		MaxDate:   opts.maxDate,
-	}
-}
-
-// mongocli atlas event(s) list [--projectId projectId] [--orgId orgId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
+// ListBuilder
+// 	mongocli atlas event(s) list
+// [--projectId projectId]
+// [--orgId orgId]
+// [--page N]
+// [--limit N]
+// [--minDate minDate]
+// [--maxDate maxDate].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List events for an organization or project.",
+		Use:   "list",
+		Short: "Return all events for an organization or project.",
+		Deprecated: `  
+  To return project events prefer
+  $ mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
+
+  To return organization events prefer
+  $ mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
+`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -94,7 +115,7 @@ func ListBuilder() *cobra.Command {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.initStore()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -104,9 +125,9 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
-	cmd.Flags().StringSliceVar(&opts.eventType, flag.Type, nil, usage.Event)
-	cmd.Flags().StringVar(&opts.maxDate, flag.MaxDate, "", usage.MaxDate)
-	cmd.Flags().StringVar(&opts.minDate, flag.MinDate, "", usage.MinDate)
+	cmd.Flags().StringSliceVar(&opts.EventType, flag.Type, nil, usage.Event)
+	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
+	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)

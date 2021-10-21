@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockFeatureControlPoliciesLister is a mock of FeatureControlPoliciesLister interface
+// MockFeatureControlPoliciesLister is a mock of FeatureControlPoliciesLister interface.
 type MockFeatureControlPoliciesLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockFeatureControlPoliciesListerMockRecorder
 }
 
-// MockFeatureControlPoliciesListerMockRecorder is the mock recorder for MockFeatureControlPoliciesLister
+// MockFeatureControlPoliciesListerMockRecorder is the mock recorder for MockFeatureControlPoliciesLister.
 type MockFeatureControlPoliciesListerMockRecorder struct {
 	mock *MockFeatureControlPoliciesLister
 }
 
-// NewMockFeatureControlPoliciesLister creates a new mock instance
+// NewMockFeatureControlPoliciesLister creates a new mock instance.
 func NewMockFeatureControlPoliciesLister(ctrl *gomock.Controller) *MockFeatureControlPoliciesLister {
 	mock := &MockFeatureControlPoliciesLister{ctrl: ctrl}
 	mock.recorder = &MockFeatureControlPoliciesListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFeatureControlPoliciesLister) EXPECT() *MockFeatureControlPoliciesListerMockRecorder {
 	return m.recorder
 }
 
-// FeatureControlPolicies mocks base method
+// FeatureControlPolicies mocks base method.
 func (m *MockFeatureControlPoliciesLister) FeatureControlPolicies(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FeatureControlPolicies", arg0, arg1)
@@ -43,36 +44,36 @@ func (m *MockFeatureControlPoliciesLister) FeatureControlPolicies(arg0 string, a
 	return ret0, ret1
 }
 
-// FeatureControlPolicies indicates an expected call of FeatureControlPolicies
+// FeatureControlPolicies indicates an expected call of FeatureControlPolicies.
 func (mr *MockFeatureControlPoliciesListerMockRecorder) FeatureControlPolicies(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FeatureControlPolicies", reflect.TypeOf((*MockFeatureControlPoliciesLister)(nil).FeatureControlPolicies), arg0, arg1)
 }
 
-// MockFeatureControlPoliciesUpdater is a mock of FeatureControlPoliciesUpdater interface
+// MockFeatureControlPoliciesUpdater is a mock of FeatureControlPoliciesUpdater interface.
 type MockFeatureControlPoliciesUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockFeatureControlPoliciesUpdaterMockRecorder
 }
 
-// MockFeatureControlPoliciesUpdaterMockRecorder is the mock recorder for MockFeatureControlPoliciesUpdater
+// MockFeatureControlPoliciesUpdaterMockRecorder is the mock recorder for MockFeatureControlPoliciesUpdater.
 type MockFeatureControlPoliciesUpdaterMockRecorder struct {
 	mock *MockFeatureControlPoliciesUpdater
 }
 
-// NewMockFeatureControlPoliciesUpdater creates a new mock instance
+// NewMockFeatureControlPoliciesUpdater creates a new mock instance.
 func NewMockFeatureControlPoliciesUpdater(ctrl *gomock.Controller) *MockFeatureControlPoliciesUpdater {
 	mock := &MockFeatureControlPoliciesUpdater{ctrl: ctrl}
 	mock.recorder = &MockFeatureControlPoliciesUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFeatureControlPoliciesUpdater) EXPECT() *MockFeatureControlPoliciesUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateFeatureControlPolicy mocks base method
+// UpdateFeatureControlPolicy mocks base method.
 func (m *MockFeatureControlPoliciesUpdater) UpdateFeatureControlPolicy(arg0 string, arg1 *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateFeatureControlPolicy", arg0, arg1)
@@ -81,7 +82,7 @@ func (m *MockFeatureControlPoliciesUpdater) UpdateFeatureControlPolicy(arg0 stri
 	return ret0, ret1
 }
 
-// UpdateFeatureControlPolicy indicates an expected call of UpdateFeatureControlPolicy
+// UpdateFeatureControlPolicy indicates an expected call of UpdateFeatureControlPolicy.
 func (mr *MockFeatureControlPoliciesUpdaterMockRecorder) UpdateFeatureControlPolicy(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFeatureControlPolicy", reflect.TypeOf((*MockFeatureControlPoliciesUpdater)(nil).UpdateFeatureControlPolicy), arg0, arg1)

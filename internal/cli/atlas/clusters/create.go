@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"errors"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -32,6 +33,7 @@ import (
 const (
 	replicaSet = "REPLICASET"
 	tenant     = "TENANT"
+	atlasM0    = "M0"
 	atlasM2    = "M2"
 	atlasM5    = "M5"
 	zoneName   = "Zone 1"
@@ -58,10 +60,12 @@ type CreateOpts struct {
 	store       store.ClusterCreator
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTmpl = "Deploying cluster {{.Name}}.\n"
@@ -114,13 +118,21 @@ func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
 		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.ClusterType = opts.clusterType
-	out.DiskSizeGB = &opts.diskSizeGB
+
+	if !opts.isTenant() {
+		out.DiskSizeGB = &opts.diskSizeGB
+	}
+
 	out.MongoDBMajorVersion = opts.mdbVersion
 	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
 }
 
+func (opts *CreateOpts) isTenant() bool {
+	return opts.tier == atlasM0 || opts.tier == atlasM2 || opts.tier == atlasM5
+}
+
 func (opts *CreateOpts) providerName() string {
-	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+	if opts.isTenant() {
 		return tenant
 	}
 	return opts.provider
@@ -204,7 +216,7 @@ Some of the cluster configuration options are available via flags but for full c
 			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
 			)
 		},

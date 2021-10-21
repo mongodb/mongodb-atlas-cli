@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockGlobalAlertLister is a mock of GlobalAlertLister interface
+// MockGlobalAlertLister is a mock of GlobalAlertLister interface.
 type MockGlobalAlertLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockGlobalAlertListerMockRecorder
 }
 
-// MockGlobalAlertListerMockRecorder is the mock recorder for MockGlobalAlertLister
+// MockGlobalAlertListerMockRecorder is the mock recorder for MockGlobalAlertLister.
 type MockGlobalAlertListerMockRecorder struct {
 	mock *MockGlobalAlertLister
 }
 
-// NewMockGlobalAlertLister creates a new mock instance
+// NewMockGlobalAlertLister creates a new mock instance.
 func NewMockGlobalAlertLister(ctrl *gomock.Controller) *MockGlobalAlertLister {
 	mock := &MockGlobalAlertLister{ctrl: ctrl}
 	mock.recorder = &MockGlobalAlertListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockGlobalAlertLister) EXPECT() *MockGlobalAlertListerMockRecorder {
 	return m.recorder
 }
 
-// GlobalAlerts mocks base method
+// GlobalAlerts mocks base method.
 func (m *MockGlobalAlertLister) GlobalAlerts(arg0 *mongodbatlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAlerts", arg0)
@@ -43,7 +44,7 @@ func (m *MockGlobalAlertLister) GlobalAlerts(arg0 *mongodbatlas.AlertsListOption
 	return ret0, ret1
 }
 
-// GlobalAlerts indicates an expected call of GlobalAlerts
+// GlobalAlerts indicates an expected call of GlobalAlerts.
 func (mr *MockGlobalAlertListerMockRecorder) GlobalAlerts(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GlobalAlerts", reflect.TypeOf((*MockGlobalAlertLister)(nil).GlobalAlerts), arg0)

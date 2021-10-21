@@ -26,7 +26,9 @@ import (
 func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags []string) {
 	t.Helper()
 	a := assert.New(t)
-	a.Len(subject.Commands(), nSubCommands)
+	if len(subject.Commands()) != nSubCommands {
+		t.Errorf("Sub command count mismatch. Expected %d, got %d. Check the CmdValidator for your command.\n", len(subject.Commands()), nSubCommands)
+	}
 	if len(flags) == 0 {
 		a.False(subject.HasAvailableFlags())
 		return

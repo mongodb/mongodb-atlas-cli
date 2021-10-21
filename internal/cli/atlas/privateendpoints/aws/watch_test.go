@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package aws
@@ -36,7 +37,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.PrivateEndpointConnection{Status: "WAITING_FOR_USER"}
+	expected := &mongodbatlas.PrivateEndpointConnection{Status: "AVAILABLE"}
 
 	mockStore.
 		EXPECT().

@@ -15,6 +15,8 @@
 package interfaces
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -31,10 +33,12 @@ type DeleteOpts struct {
 	store             store.InterfaceEndpointDeleterDeprecated
 }
 
-func (opts *DeleteOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DeleteOpts) Run() error {
@@ -52,7 +56,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a private endpoint interface from your project.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
@@ -61,6 +65,7 @@ func DeleteBuilder() *cobra.Command {
 			}
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
@@ -69,8 +74,6 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces delete <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

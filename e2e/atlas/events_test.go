@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+//go:build e2e || (atlas && generic)
 
 package atlas_test
 
@@ -27,25 +27,21 @@ import (
 )
 
 func TestEvents(t *testing.T) {
-	atlasEntity := "atlas"
-	eventsEntity := "events"
-
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	t.Run("ListProjectEvent", func(t *testing.T) {
+	t.Run("List Project Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			eventsEntity,
+			projectEntity,
 			"list",
-			"--projectId="+os.Getenv("MCLI_PROJECT_ID"),
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -60,19 +56,18 @@ func TestEvents(t *testing.T) {
 		}
 	})
 
-	t.Run("ListOrganizationEvent", func(t *testing.T) {
+	t.Run("List Organization Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			eventsEntity,
+			orgEntity,
 			"list",
-			"--orgId="+os.Getenv("MCLI_ORG_ID"),
 			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}

@@ -27,9 +27,6 @@ import (
 )
 
 func (opts *Opts) createCluster() error {
-	if err := opts.askClusterOptions(); err != nil {
-		return err
-	}
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
 	}
@@ -150,7 +147,7 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 }
 
 func (opts *Opts) providerName() string {
-	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+	if opts.tier == defaultAtlasTier || opts.tier == atlasM5 {
 		return tenant
 	}
 	return strings.ToUpper(opts.Provider)

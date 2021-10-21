@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -35,10 +36,12 @@ type ApplyOpts struct {
 	store    store.AutomationPatcher
 }
 
-func (opts *ApplyOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ApplyOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *ApplyOpts) Run() error {
@@ -75,7 +78,7 @@ func ApplyBuilder() *cobra.Command {
 		Use:   "apply",
 		Short: "Apply a new cluster configuration for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

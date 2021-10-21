@@ -16,8 +16,16 @@ package root
 
 import (
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"runtime"
+	"strings"
+	"time"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
@@ -30,6 +38,10 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
+
+type BuilderOpts struct {
+	store version.ReleaseVersionDescriber
+}
 
 // rootBuilder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
@@ -46,6 +58,16 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		SilenceUsage: true,
 		Annotations: map[string]string{
 			"toc": "true",
+		},
+		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			w := cmd.ErrOrStderr()
+			if shouldSkipPrintNewVersion(w) {
+				return
+			}
+			opts := &BuilderOpts{
+				store: version.NewReleaseVersionDescriber(),
+			}
+			_ = opts.printNewVersionAvailable(w)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -95,4 +117,116 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
+}
+
+func (opts *BuilderOpts) hasNewVersionAvailable() (newVersionAvailable bool, newVersion string, err error) {
+	if version.Version == "" {
+		return false, "", nil
+	}
+
+	svCurrentVersion, err := semver.NewVersion(version.Version)
+	if err != nil {
+		return false, "", err
+	}
+
+	if svCurrentVersion.Prerelease() != "" { // ignoring prerelease for code changes against master
+		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
+		if err != nil {
+			return false, "", err
+		}
+	}
+
+	latestVersion, err := opts.store.LatestVersion()
+	if err != nil {
+		return false, "", err
+	}
+
+	svLatestVersion, err := semver.NewVersion(latestVersion.Version)
+	if err != nil {
+		return false, "", err
+	}
+
+	if svCurrentVersion.Compare(svLatestVersion) < 0 && (!isHomebrew() || isAtLeast24HoursPast(latestVersion.PublishedAt)) {
+		return true, latestVersion.Version, nil
+	}
+
+	return false, "", nil
+}
+
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
+}
+
+func isHomebrew() bool {
+	brewFormulaPath, err := homebrewFormulaPath()
+	if err != nil {
+		return false
+	}
+
+	executablePath, err := executableCurrentPath()
+	if err != nil {
+		return false
+	}
+
+	return strings.HasPrefix(executablePath, brewFormulaPath)
+}
+
+func homebrewFormulaPath() (string, error) {
+	formula := config.ToolName
+	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
+	if err != nil {
+		return "", err
+	}
+
+	brewFormulaPath := strings.TrimSpace(string(brewFormulaPathBytes))
+
+	brewFormulaPath, err = filepath.EvalSymlinks(brewFormulaPath)
+	if err != nil {
+		return "", err
+	}
+
+	return brewFormulaPath, nil
+}
+
+func executableCurrentPath() (string, error) {
+	executablePath, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+
+	executablePath, err = filepath.EvalSymlinks(executablePath)
+	if err != nil {
+		return "", err
+	}
+
+	return executablePath, nil
+}
+
+func shouldSkipPrintNewVersion(w io.Writer) bool {
+	return config.SkipUpdateCheck() || !cli.IsTerminal(w)
+}
+
+func (opts *BuilderOpts) printNewVersionAvailable(w io.Writer) error {
+	newVersionAvailable, latestVersion, err := opts.hasNewVersionAvailable()
+	if err != nil {
+		return err
+	}
+	if newVersionAvailable {
+		var upgradeInstructions string
+		if isHomebrew() {
+			upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongocli".`
+		} else {
+			upgradeInstructions = `To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.`
+		}
+
+		newVersionTemplate := `
+A new version of %s is available '%s'!
+%s
+
+To disable this alert, run "mongocli config set skip_update_check true".
+`
+		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion, upgradeInstructions)
+		return err
+	}
+	return nil
 }

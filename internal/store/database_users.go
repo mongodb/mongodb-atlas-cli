@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 	"net/url"
 
@@ -57,7 +56,7 @@ type DBUserCertificateCreator interface {
 func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Create(context.Background(), user.GroupID, user)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Create(s.ctx, user.GroupID, user)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -67,7 +66,7 @@ func (s *Store) CreateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUse
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(context.Background(), authDB, groupID, username)
+		_, err := s.client.(*atlas.Client).DatabaseUsers.Delete(s.ctx, authDB, groupID, username)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +76,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -87,7 +86,7 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) ([]atla
 func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser) (*atlas.DatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(context.Background(), user.GroupID, user.Username, user)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(s.ctx, user.GroupID, user.Username, user)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -98,7 +97,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		escapedUsername := url.PathEscape(username)
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(context.Background(), authDB, groupID, escapedUsername)
+		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Get(s.ctx, authDB, groupID, escapedUsername)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -109,7 +108,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlas.DatabaseU
 func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(context.Background(), projectID, username)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.GetUserCertificates(s.ctx, projectID, username)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -120,7 +119,7 @@ func (s *Store) DBUserCertificates(projectID, username string) ([]atlas.UserCert
 func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlas.UserCertificate, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(context.Background(), projectID, username, monthsUntilExpiration)
+		result, _, err := s.client.(*atlas.Client).X509AuthDBUsers.CreateUserCertificate(s.ctx, projectID, username, monthsUntilExpiration)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

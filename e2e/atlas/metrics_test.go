@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,metrics
+//go:build e2e || (atlas && metrics)
 
 package atlas_test
 
@@ -22,43 +22,34 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestMetrics(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
-	hostname, err := getHostnameAndPort()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("metrics")
+
+	hostname, err := g.getHostnameAndPort()
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	t.Run("processes", func(t *testing.T) {
-		process(t, cliPath, hostname)
+		process(t, cliPath, hostname, g.projectID)
 	})
 
 	t.Run("databases", func(t *testing.T) {
-		databases(t, cliPath, hostname)
+		databases(t, cliPath, hostname, g.projectID)
 	})
 
 	t.Run("disks", func(t *testing.T) {
-		disks(t, cliPath, hostname)
+		disks(t, cliPath, hostname, g.projectID)
 	})
 }
 
-func process(t *testing.T, cliPath, hostname string) {
+func process(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -67,6 +58,7 @@ func process(t *testing.T, cliPath, hostname string) {
 		hostname,
 		"--granularity=PT30M",
 		"--period=P1DT12H",
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -92,7 +84,7 @@ func process(t *testing.T, cliPath, hostname string) {
 	}
 }
 
-func databases(t *testing.T, cliPath, hostname string) {
+func databases(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("databases list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -101,6 +93,7 @@ func databases(t *testing.T, cliPath, hostname string) {
 			"databases",
 			"list",
 			hostname,
+			"--projectId", projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -132,6 +125,7 @@ func databases(t *testing.T, cliPath, hostname string) {
 			"config",
 			"--granularity=PT30M",
 			"--period=P1DT12H",
+			"--projectId", projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -156,7 +150,7 @@ func databases(t *testing.T, cliPath, hostname string) {
 	})
 }
 
-func disks(t *testing.T, cliPath, hostname string) {
+func disks(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -165,6 +159,7 @@ func disks(t *testing.T, cliPath, hostname string) {
 			"disks",
 			"list",
 			hostname,
+			"--projectId", projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -193,6 +188,7 @@ func disks(t *testing.T, cliPath, hostname string) {
 			"data",
 			"--granularity=PT30M",
 			"--period=P1DT12H",
+			"--projectId", projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()

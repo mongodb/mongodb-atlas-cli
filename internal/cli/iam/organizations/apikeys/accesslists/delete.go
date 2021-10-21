@@ -15,6 +15,8 @@
 package accesslists
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -28,17 +30,31 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.GlobalOpts
 	apiKey string
-	store  store.OrganizationAPIKeyAccessListDeleter
+	store  store.OrganizationAPIKeyAccessListWhitelistDeleter
 }
 
-func (opts *DeleteOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
+	useAccessList, err := shouldUseAccessList(opts.store)
+	if err != nil {
+		return err
+	}
+
+	var f func(string, string, string) error
+	if useAccessList {
+		f = opts.store.DeleteOrganizationAPIKeyAccessList
+	} else {
+		f = opts.store.DeleteOrganizationAPIKeyWhitelist
+	}
+
+	return opts.Delete(f, opts.ConfigOrgID(), opts.apiKey)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force.
@@ -53,7 +69,7 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete an IP access list from your API Key.",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateOrgID, opts.init); err != nil {
+			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

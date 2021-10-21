@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,search
+//go:build e2e || (atlas && search)
 
 package atlas_test
 
@@ -21,50 +21,67 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSearch(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("search")
 
 	cliPath, err := e2e.Bin()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	indexName := fmt.Sprintf("index-%v", n)
 	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
-	t.Run("Create", func(t *testing.T) {
+	t.Run("Create via file", func(t *testing.T) {
+		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
+
+		file, err := os.Create(fileName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
+
+		tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+		err = tpl.Execute(file, map[string]string{
+			"collectionName": collectionName,
+			"indexName":      indexName,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
 			searchEntity,
 			indexEntity,
 			"create",
-			indexName,
-			"--clusterName="+clusterName,
-			"--db=test",
-			"--collection="+collectionName,
-			"--dynamic",
+			"--clusterName", g.clusterName,
+			"--file",
+			fileName,
+			"--projectId", g.projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -87,9 +104,10 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"list",
-			"--clusterName="+clusterName,
+			"--clusterName", g.clusterName,
 			"--db=test",
-			"--collection="+collectionName,
+			"--collection", collectionName,
+			"--projectId", g.projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -113,7 +131,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName="+clusterName,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -128,8 +147,39 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	t.Run("Update via file", func(t *testing.T) {
 		analyzer := "lucene.simple"
+		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
+
+		file, err := os.Create(fileName)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
+
+		tpl := template.Must(template.New("").Parse(`
+{
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"analyzer": "{{ .analyzer }}",
+	"mappings": {
+		"dynamic": true
+	}
+}`))
+		err = tpl.Execute(file, map[string]string{
+			"collectionName": collectionName,
+			"indexName":      indexName,
+			"analyzer":       analyzer,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			clustersEntity,
@@ -137,19 +187,18 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--indexName="+indexName,
-			"--clusterName="+clusterName,
-			"--db=test",
-			"--collection="+collectionName,
-			"--analyzer="+analyzer,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
+			"--file",
+			fileName,
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-
 		var index mongodbatlas.SearchIndex
 		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
 			a := assert.New(t)
@@ -166,7 +215,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"delete",
 			indexID,
-			"--clusterName="+clusterName,
+			"--clusterName", g.clusterName,
+			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

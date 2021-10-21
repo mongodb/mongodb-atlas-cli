@@ -15,6 +15,8 @@
 package privateendpoints
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,10 +34,12 @@ type WatchOpts struct {
 	store    store.PrivateEndpointDescriberDeprecated
 }
 
-func (opts *WatchOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *WatchOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
@@ -64,7 +68,7 @@ func WatchBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
 			)
 		},
@@ -72,13 +76,12 @@ func WatchBuilder() *cobra.Command {
 			opts.id = args[0]
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]",
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws watch [--projectId projectId]"
 
 	return cmd
 }

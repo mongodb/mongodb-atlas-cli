@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
 	"github.com/mongodb/mongocli/internal/cli/iam/teams"
 	"github.com/mongodb/mongocli/internal/cli/iam/users"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
@@ -29,6 +30,9 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if config.Service() == "" {
+				config.SetService(config.CloudService)
+			}
 			return validate.Credentials()
 		},
 		Short: "Organization and projects operations.",

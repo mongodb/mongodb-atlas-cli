@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,onlinearchive
+//go:build e2e || (atlas && onlinearchive)
 
 package atlas_test
 
@@ -29,16 +29,8 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
-
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("onlineArchives")
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -47,7 +39,7 @@ func TestOnlineArchives(t *testing.T) {
 
 	var archiveID string
 	t.Run("Create", func(t *testing.T) {
-		archiveID = createOnlineArchive(t, cliPath, clusterName)
+		archiveID = createOnlineArchive(t, cliPath, g.projectID, g.clusterName)
 	})
 
 	if archiveID == "" {
@@ -55,31 +47,31 @@ func TestOnlineArchives(t *testing.T) {
 	}
 
 	t.Run("Describe", func(t *testing.T) {
-		describeOnlineArchive(t, cliPath, clusterName, archiveID)
+		describeOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("List", func(t *testing.T) {
-		listOnlineArchives(t, cliPath, clusterName)
+		listOnlineArchives(t, cliPath, g.projectID, g.clusterName)
 	})
 
 	t.Run("Pause", func(t *testing.T) {
-		pauseOnlineArchive(t, cliPath, clusterName, archiveID)
+		pauseOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Start", func(t *testing.T) {
-		startOnlineArchive(t, cliPath, clusterName, archiveID)
+		startOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		updateOnlineArchive(t, cliPath, clusterName, archiveID)
+		updateOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		deleteOnlineArchive(t, cliPath, clusterName, archiveID)
+		deleteOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 }
 
-func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -87,7 +79,8 @@ func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 		onlineArchiveEntity,
 		"rm",
 		archiveID,
-		"--clusterName="+clusterName,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
 		"--force")
 
 	cmd.Env = os.Environ()
@@ -99,7 +92,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	assert.Equal(t, string(resp), expected)
 }
 
-func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -107,7 +100,8 @@ func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 		onlineArchiveEntity,
 		"start",
 		archiveID,
-		"--clusterName="+clusterName,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -119,7 +113,7 @@ func startOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	}
 }
 
-func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -127,7 +121,8 @@ func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 		onlineArchiveEntity,
 		"pause",
 		archiveID,
-		"--clusterName="+clusterName,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -139,7 +134,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	}
 }
 
-func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	const expireAfterDays = float64(4)
 	cmd := exec.Command(cliPath,
@@ -148,8 +143,9 @@ func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 		onlineArchiveEntity,
 		"update",
 		archiveID,
-		"--clusterName="+clusterName,
-		"--archiveAfter="+fmt.Sprintf("%.0f", expireAfterDays),
+		"--clusterName", clusterName,
+		"--projectId", projectID,
+		"--archiveAfter", fmt.Sprintf("%.0f", expireAfterDays),
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -161,10 +157,10 @@ func updateOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
 	if err = json.Unmarshal(resp, &archive); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assert.Equal(t, expireAfterDays, archive.Criteria.ExpireAfterDays)
+	assert.Equal(t, expireAfterDays, *archive.Criteria.ExpireAfterDays)
 }
 
-func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string) {
+func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -172,7 +168,8 @@ func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string)
 		onlineArchiveEntity,
 		"describe",
 		archiveID,
-		"--clusterName="+clusterName,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -188,14 +185,15 @@ func describeOnlineArchive(t *testing.T, cliPath, clusterName, archiveID string)
 	assert.Equal(t, archiveID, archive.ID)
 }
 
-func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
+func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"list",
-		"--clusterName="+clusterName,
+		"--clusterName", clusterName,
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()
@@ -210,7 +208,7 @@ func listOnlineArchives(t *testing.T, cliPath, clusterName string) {
 	assert.NotEmpty(t, archives)
 }
 
-func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
+func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) string {
 	t.Helper()
 	const dbName = "test"
 	cmd := exec.Command(cliPath,
@@ -218,12 +216,13 @@ func createOnlineArchive(t *testing.T, cliPath, clusterName string) string {
 		clustersEntity,
 		onlineArchiveEntity,
 		"create",
-		"--clusterName="+clusterName,
-		"--db="+dbName,
+		"--clusterName", clusterName,
+		"--db", dbName,
 		"--collection=test",
 		"--dateField=test",
 		"--archiveAfter=3",
 		"--partition=test",
+		"--projectId", projectID,
 		"-o=json")
 
 	cmd.Env = os.Environ()

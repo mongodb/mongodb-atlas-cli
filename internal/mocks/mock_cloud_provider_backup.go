@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockRestoreJobsLister is a mock of RestoreJobsLister interface
+// MockRestoreJobsLister is a mock of RestoreJobsLister interface.
 type MockRestoreJobsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockRestoreJobsListerMockRecorder
 }
 
-// MockRestoreJobsListerMockRecorder is the mock recorder for MockRestoreJobsLister
+// MockRestoreJobsListerMockRecorder is the mock recorder for MockRestoreJobsLister.
 type MockRestoreJobsListerMockRecorder struct {
 	mock *MockRestoreJobsLister
 }
 
-// NewMockRestoreJobsLister creates a new mock instance
+// NewMockRestoreJobsLister creates a new mock instance.
 func NewMockRestoreJobsLister(ctrl *gomock.Controller) *MockRestoreJobsLister {
 	mock := &MockRestoreJobsLister{ctrl: ctrl}
 	mock.recorder = &MockRestoreJobsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRestoreJobsLister) EXPECT() *MockRestoreJobsListerMockRecorder {
 	return m.recorder
 }
 
-// RestoreJobs mocks base method
+// RestoreJobs mocks base method.
 func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshotRestoreJobs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreJobs", arg0, arg1, arg2)
@@ -42,36 +43,36 @@ func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *mongodbatla
 	return ret0, ret1
 }
 
-// RestoreJobs indicates an expected call of RestoreJobs
+// RestoreJobs indicates an expected call of RestoreJobs.
 func (mr *MockRestoreJobsListerMockRecorder) RestoreJobs(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RestoreJobs", reflect.TypeOf((*MockRestoreJobsLister)(nil).RestoreJobs), arg0, arg1, arg2)
 }
 
-// MockRestoreJobsCreator is a mock of RestoreJobsCreator interface
+// MockRestoreJobsCreator is a mock of RestoreJobsCreator interface.
 type MockRestoreJobsCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockRestoreJobsCreatorMockRecorder
 }
 
-// MockRestoreJobsCreatorMockRecorder is the mock recorder for MockRestoreJobsCreator
+// MockRestoreJobsCreatorMockRecorder is the mock recorder for MockRestoreJobsCreator.
 type MockRestoreJobsCreatorMockRecorder struct {
 	mock *MockRestoreJobsCreator
 }
 
-// NewMockRestoreJobsCreator creates a new mock instance
+// NewMockRestoreJobsCreator creates a new mock instance.
 func NewMockRestoreJobsCreator(ctrl *gomock.Controller) *MockRestoreJobsCreator {
 	mock := &MockRestoreJobsCreator{ctrl: ctrl}
 	mock.recorder = &MockRestoreJobsCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRestoreJobsCreator) EXPECT() *MockRestoreJobsCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateRestoreJobs mocks base method
+// CreateRestoreJobs mocks base method.
 func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshotRestoreJob) (*mongodbatlas.CloudProviderSnapshotRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestoreJobs", arg0, arg1, arg2)
@@ -80,36 +81,36 @@ func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *mong
 	return ret0, ret1
 }
 
-// CreateRestoreJobs indicates an expected call of CreateRestoreJobs
+// CreateRestoreJobs indicates an expected call of CreateRestoreJobs.
 func (mr *MockRestoreJobsCreatorMockRecorder) CreateRestoreJobs(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRestoreJobs", reflect.TypeOf((*MockRestoreJobsCreator)(nil).CreateRestoreJobs), arg0, arg1, arg2)
 }
 
-// MockSnapshotsLister is a mock of SnapshotsLister interface
+// MockSnapshotsLister is a mock of SnapshotsLister interface.
 type MockSnapshotsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotsListerMockRecorder
 }
 
-// MockSnapshotsListerMockRecorder is the mock recorder for MockSnapshotsLister
+// MockSnapshotsListerMockRecorder is the mock recorder for MockSnapshotsLister.
 type MockSnapshotsListerMockRecorder struct {
 	mock *MockSnapshotsLister
 }
 
-// NewMockSnapshotsLister creates a new mock instance
+// NewMockSnapshotsLister creates a new mock instance.
 func NewMockSnapshotsLister(ctrl *gomock.Controller) *MockSnapshotsLister {
 	mock := &MockSnapshotsLister{ctrl: ctrl}
 	mock.recorder = &MockSnapshotsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotsLister) EXPECT() *MockSnapshotsListerMockRecorder {
 	return m.recorder
 }
 
-// Snapshots mocks base method
+// Snapshots mocks base method.
 func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.CloudProviderSnapshots, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Snapshots", arg0, arg1, arg2)
@@ -118,36 +119,36 @@ func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *mongodbatlas.Li
 	return ret0, ret1
 }
 
-// Snapshots indicates an expected call of Snapshots
+// Snapshots indicates an expected call of Snapshots.
 func (mr *MockSnapshotsListerMockRecorder) Snapshots(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Snapshots", reflect.TypeOf((*MockSnapshotsLister)(nil).Snapshots), arg0, arg1, arg2)
 }
 
-// MockSnapshotsCreator is a mock of SnapshotsCreator interface
+// MockSnapshotsCreator is a mock of SnapshotsCreator interface.
 type MockSnapshotsCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotsCreatorMockRecorder
 }
 
-// MockSnapshotsCreatorMockRecorder is the mock recorder for MockSnapshotsCreator
+// MockSnapshotsCreatorMockRecorder is the mock recorder for MockSnapshotsCreator.
 type MockSnapshotsCreatorMockRecorder struct {
 	mock *MockSnapshotsCreator
 }
 
-// NewMockSnapshotsCreator creates a new mock instance
+// NewMockSnapshotsCreator creates a new mock instance.
 func NewMockSnapshotsCreator(ctrl *gomock.Controller) *MockSnapshotsCreator {
 	mock := &MockSnapshotsCreator{ctrl: ctrl}
 	mock.recorder = &MockSnapshotsCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotsCreator) EXPECT() *MockSnapshotsCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateSnapshot mocks base method
+// CreateSnapshot mocks base method.
 func (m *MockSnapshotsCreator) CreateSnapshot(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderSnapshot) (*mongodbatlas.CloudProviderSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSnapshot", arg0, arg1, arg2)
@@ -156,36 +157,36 @@ func (m *MockSnapshotsCreator) CreateSnapshot(arg0, arg1 string, arg2 *mongodbat
 	return ret0, ret1
 }
 
-// CreateSnapshot indicates an expected call of CreateSnapshot
+// CreateSnapshot indicates an expected call of CreateSnapshot.
 func (mr *MockSnapshotsCreatorMockRecorder) CreateSnapshot(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSnapshot", reflect.TypeOf((*MockSnapshotsCreator)(nil).CreateSnapshot), arg0, arg1, arg2)
 }
 
-// MockSnapshotsDescriber is a mock of SnapshotsDescriber interface
+// MockSnapshotsDescriber is a mock of SnapshotsDescriber interface.
 type MockSnapshotsDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotsDescriberMockRecorder
 }
 
-// MockSnapshotsDescriberMockRecorder is the mock recorder for MockSnapshotsDescriber
+// MockSnapshotsDescriberMockRecorder is the mock recorder for MockSnapshotsDescriber.
 type MockSnapshotsDescriberMockRecorder struct {
 	mock *MockSnapshotsDescriber
 }
 
-// NewMockSnapshotsDescriber creates a new mock instance
+// NewMockSnapshotsDescriber creates a new mock instance.
 func NewMockSnapshotsDescriber(ctrl *gomock.Controller) *MockSnapshotsDescriber {
 	mock := &MockSnapshotsDescriber{ctrl: ctrl}
 	mock.recorder = &MockSnapshotsDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotsDescriber) EXPECT() *MockSnapshotsDescriberMockRecorder {
 	return m.recorder
 }
 
-// Snapshot mocks base method
+// Snapshot mocks base method.
 func (m *MockSnapshotsDescriber) Snapshot(arg0, arg1, arg2 string) (*mongodbatlas.CloudProviderSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Snapshot", arg0, arg1, arg2)
@@ -194,36 +195,36 @@ func (m *MockSnapshotsDescriber) Snapshot(arg0, arg1, arg2 string) (*mongodbatla
 	return ret0, ret1
 }
 
-// Snapshot indicates an expected call of Snapshot
+// Snapshot indicates an expected call of Snapshot.
 func (mr *MockSnapshotsDescriberMockRecorder) Snapshot(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Snapshot", reflect.TypeOf((*MockSnapshotsDescriber)(nil).Snapshot), arg0, arg1, arg2)
 }
 
-// MockSnapshotsDeleter is a mock of SnapshotsDeleter interface
+// MockSnapshotsDeleter is a mock of SnapshotsDeleter interface.
 type MockSnapshotsDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockSnapshotsDeleterMockRecorder
 }
 
-// MockSnapshotsDeleterMockRecorder is the mock recorder for MockSnapshotsDeleter
+// MockSnapshotsDeleterMockRecorder is the mock recorder for MockSnapshotsDeleter.
 type MockSnapshotsDeleterMockRecorder struct {
 	mock *MockSnapshotsDeleter
 }
 
-// NewMockSnapshotsDeleter creates a new mock instance
+// NewMockSnapshotsDeleter creates a new mock instance.
 func NewMockSnapshotsDeleter(ctrl *gomock.Controller) *MockSnapshotsDeleter {
 	mock := &MockSnapshotsDeleter{ctrl: ctrl}
 	mock.recorder = &MockSnapshotsDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSnapshotsDeleter) EXPECT() *MockSnapshotsDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteSnapshot mocks base method
+// DeleteSnapshot mocks base method.
 func (m *MockSnapshotsDeleter) DeleteSnapshot(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteSnapshot", arg0, arg1, arg2)
@@ -231,7 +232,7 @@ func (m *MockSnapshotsDeleter) DeleteSnapshot(arg0, arg1, arg2 string) error {
 	return ret0
 }
 
-// DeleteSnapshot indicates an expected call of DeleteSnapshot
+// DeleteSnapshot indicates an expected call of DeleteSnapshot.
 func (mr *MockSnapshotsDeleterMockRecorder) DeleteSnapshot(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSnapshot", reflect.TypeOf((*MockSnapshotsDeleter)(nil).DeleteSnapshot), arg0, arg1, arg2)

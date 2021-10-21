@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e cloudmanager,generic
+//go:build e2e || (cloudmanager && generic)
 
 package cloud_manager_test
 
@@ -37,8 +37,33 @@ func TestAlerts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	const alertsEntity = "alerts"
-	alertID := "5ec2ac941271767f21cbaefe"
+	var alertID string
+
+	t.Run("List with no status", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			entity,
+			alertsEntity,
+			"list",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+
+		var alerts mongodbatlas.AlertsResponse
+		if err = json.Unmarshal(resp, &alerts); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if len(alerts.Results) == 0 {
+			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
+		}
+		alertID = alerts.Results[0].ID
+	})
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -74,37 +99,13 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("List with no status", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			alertsEntity,
-			"list",
-			"-o=json",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var alerts mongodbatlas.AlertsResponse
-		if err = json.Unmarshal(resp, &alerts); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
-	})
 	t.Run("List with status OPEN", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
 			"list",
 			"--status",
-			"OPEN",
+			open,
 			"-o=json",
 		)
 
@@ -119,11 +120,8 @@ func TestAlerts(t *testing.T) {
 		if err := json.Unmarshal(resp, &alerts); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-
-		if len(alerts.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(alerts.Results))
-		}
 	})
+
 	t.Run("List with status CLOSED", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
@@ -144,10 +142,6 @@ func TestAlerts(t *testing.T) {
 		var alerts mongodbatlas.AlertsResponse
 		if err := json.Unmarshal(resp, &alerts); err != nil {
 			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(alerts.Results) > 0 {
-			t.Errorf("got=%#v\nwant=0\n", len(alerts.Results))
 		}
 	})
 
@@ -204,7 +198,7 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("UnaAcknowledge", func(t *testing.T) {
+	t.Run("UnAcknowledge", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,

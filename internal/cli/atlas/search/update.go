@@ -15,12 +15,15 @@
 package search
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -33,10 +36,12 @@ type UpdateOpts struct {
 	store       store.SearchIndexUpdater
 }
 
-func (opts *UpdateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var updateTemplate = "Index {{.Name}} updated.\n"
@@ -71,19 +76,29 @@ func (opts *UpdateOpts) Run() error {
 //      --indexName string        Name of the cluster.
 //      --projectId string        Project ID to use. Overrides configuration file or environment variable settings.
 //      --searchAnalyzer string   Analyzer to use when searching the index. (default "lucene.standard")
+//  -f, --file string             JSON file to use in order to update the index
 //
 // Global Flags:
 //  -P, --profile string   Profile to use from your configuration file.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
+	opts.fs = afero.NewOsFs()
+
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Short: "Update a search index for a cluster.",
 		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.IndexName)
+				_ = cmd.MarkFlagRequired(flag.Database)
+				_ = cmd.MarkFlagRequired(flag.Collection)
+			}
+
 			return opts.PreRunE(
+				opts.validateOpts,
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
@@ -94,21 +109,29 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.name, flag.IndexName, "", usage.IndexName)
 	cmd.Flags().StringVar(&opts.dbName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
-	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, "lucene.standard", usage.Analyzer)
-	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, "lucene.standard", usage.SearchAnalyzer)
+	cmd.Flags().StringVar(&opts.analyzer, flag.Analyzer, defaultAnalyzer, usage.Analyzer)
+	cmd.Flags().StringVar(&opts.searchAnalyzer, flag.SearchAnalyzer, defaultAnalyzer, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.IndexName)
-	_ = cmd.MarkFlagRequired(flag.Database)
-	_ = cmd.MarkFlagRequired(flag.Collection)
+
+	_ = cmd.Flags().MarkDeprecated(flag.IndexName, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Database, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Collection, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Analyzer, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.SearchAnalyzer, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Dynamic, deprecatedFlagMessage)
+	_ = cmd.Flags().MarkDeprecated(flag.Field, deprecatedFlagMessage)
 
 	return cmd
 }

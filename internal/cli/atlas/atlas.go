@@ -17,6 +17,7 @@ package atlas
 import (
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
+	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
@@ -25,6 +26,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
 	"github.com/mongodb/mongocli/internal/cli/atlas/integrations"
+	"github.com/mongodb/mongocli/internal/cli/atlas/livemigrations"
 	"github.com/mongodb/mongocli/internal/cli/atlas/logs"
 	"github.com/mongodb/mongocli/internal/cli/atlas/maintenance"
 	"github.com/mongodb/mongocli/internal/cli/atlas/metrics"
@@ -33,6 +35,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/processes"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
+	"github.com/mongodb/mongocli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
@@ -84,6 +87,9 @@ func Builder() *cobra.Command {
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
+		serverless.Builder(),
+		livemigrations.Builder(),
+		accesslogs.Builder(),
 	)
 
 	return cmd

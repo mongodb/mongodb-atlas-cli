@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas
+//go:build e2e || atlas
 
 package atlas_test
 
@@ -21,145 +21,181 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
-	"strings"
+	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	atlasEntity            = "atlas"
-	clustersEntity         = "clusters"
-	processesEntity        = "processes"
-	metricsEntity          = "metrics"
-	searchEntity           = "search"
-	indexEntity            = "index"
-	datalakeEntity         = "datalake"
-	alertsEntity           = "alerts"
-	configEntity           = "settings"
-	dbusersEntity          = "dbusers"
-	certsEntity            = "certs"
-	privateEndpointsEntity = "privateendpoints"
-	onlineArchiveEntity    = "onlineArchives"
-	iamEntity              = "iam"
-	projectEntity          = "project"
-	maintenanceEntity      = "maintenanceWindows"
-	integrationsEntity     = "integrations"
-	securityEntity         = "security"
-	ldapEntity             = "ldap"
-	awsEntity              = "aws"
-	azureEntity            = "azure"
-	customDNSEntity        = "customDns"
-	logsEntity             = "logs"
-	cloudProvidersEntity   = "cloudProviders"
-	accessRolesEntity      = "accessRoles"
-	customDBRoleEntity     = "customDbRoles"
-	regionalModeEntity     = "regionalModes"
+	atlasEntity                  = "atlas"
+	eventsEntity                 = "events"
+	clustersEntity               = "clusters"
+	processesEntity              = "processes"
+	metricsEntity                = "metrics"
+	searchEntity                 = "search"
+	indexEntity                  = "index"
+	datalakeEntity               = "datalake"
+	alertsEntity                 = "alerts"
+	configEntity                 = "settings"
+	dbusersEntity                = "dbusers"
+	certsEntity                  = "certs"
+	privateEndpointsEntity       = "privateendpoints"
+	onlineArchiveEntity          = "onlineArchives"
+	iamEntity                    = "iam"
+	projectEntity                = "project"
+	orgEntity                    = "org"
+	maintenanceEntity            = "maintenanceWindows"
+	integrationsEntity           = "integrations"
+	securityEntity               = "security"
+	ldapEntity                   = "ldap"
+	awsEntity                    = "aws"
+	azureEntity                  = "azure"
+	customDNSEntity              = "customDns"
+	logsEntity                   = "logs"
+	cloudProvidersEntity         = "cloudProviders"
+	accessRolesEntity            = "accessRoles"
+	customDBRoleEntity           = "customDbRoles"
+	regionalModeEntity           = "regionalModes"
+	serverlessEntity             = "serverless"
+	liveMigrationsEntity         = "liveMigrations"
+	accessLogsEntity             = "accessLogs"
+	accessListEntity             = "accessList"
+	performanceAdvisorEntity     = "performanceAdvisor"
+	slowQueryLogsEntity          = "slowQueryLogs"
+	namespacesEntity             = "namespaces"
+	suggestedIndexesEntity       = "suggestedIndexes"
+	slowoperationThresholdEntity = "slowOperationThreshold"
+	tierM30                      = "M30"
+	diskSizeGB40                 = "40"
+	diskSizeGB30                 = "30"
 )
 
-func getHostnameAndPort() (string, error) {
+// Cluster settings.
+const (
+	e2eClusterTier     = "M30"
+	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+	e2eMDBVer          = "4.4"
+)
+
+func deployClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
-	}
-	cmd := exec.Command(cliPath,
-		atlasEntity,
-		processesEntity,
-		"list",
-		"-o=json")
-
-	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return "", err
-	}
-
-	var processes []*mongodbatlas.Process
-	err = json.Unmarshal(resp, &processes)
-
-	if err != nil {
-		return "", err
-	}
-
-	if len(processes) == 0 {
-		return "", fmt.Errorf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
-	}
-
-	// The first element may not be the created cluster but that is fine since
-	// we just need one cluster up and running
-	return processes[0].Hostname + ":" + strconv.Itoa(processes[0].Port), nil
-}
-
-func deployCluster() (string, error) {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
 	}
 	clusterName, err := RandClusterName()
 	if err != nil {
 		return "", err
 	}
-
-	tier := "M30"
-	provider := "AWS"
-	region, err := newAvailableRegion(tier, provider)
+	region, err := newAvailableRegion(projectID, e2eClusterTier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
-	create := exec.Command(cliPath,
+	args := []string{
 		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion=4.2",
+		"--mdbVersion", e2eMDBVer,
 		"--region", region,
-		"--tier", tier,
-		"--provider", provider,
-		"--diskSizeGB=10",
-		"--biConnector")
+		"--tier", e2eClusterTier,
+		"--provider", e2eClusterProvider,
+		"--diskSizeGB=30",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
-	if err := create.Run(); err != nil {
-		return "", fmt.Errorf("error creating cluster %w", err)
+	if resp, err := create.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
-	watch := exec.Command(cliPath,
+	watchArgs := []string{
 		atlasEntity,
 		clustersEntity,
 		"watch",
-		clusterName)
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
-	if err := watch.Run(); err != nil {
-		return "", fmt.Errorf("error watching cluster %w", err)
+	if resp, err := watch.CombinedOutput(); err != nil {
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, nil
 }
 
-func newAvailableRegion(tier, provider string) (string, error) {
+func deleteClusterForProject(projectID, clusterName string) error {
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		atlasEntity,
+		clustersEntity,
+		"delete",
+		clusterName,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
+	}
+
+	watchArgs := []string{
+		atlasEntity,
+		clustersEntity,
+		"watch",
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watchCmd := exec.Command(cliPath, watchArgs...)
+	watchCmd.Env = os.Environ()
+	// this command will fail with 404 once the cluster is deleted
+	// we just need to wait for this to close the project
+	_ = watchCmd.Run()
+	return nil
+}
+
+func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
 	}
-	cmd := exec.Command(cliPath,
+	args := []string{
 		atlasEntity,
 		clustersEntity,
 		"availableRegions",
 		"ls",
 		"--provider", provider,
 		"--tier", tier,
-		"-o=json")
+		"-o=json",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
 	}
 
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error unmashaling response %w: %s", err, string(resp))
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
@@ -169,32 +205,38 @@ func newAvailableRegion(tier, provider string) (string, error) {
 	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
 }
 
-func deleteCluster(clusterName string) error {
-	cliPath, err := e2e.Bin()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command(cliPath, atlasEntity, "clusters", "delete", clusterName, "--force")
-	cmd.Env = os.Environ()
-	return cmd.Run()
-}
-
-func getHostname() (string, error) {
-	hostnamePort, err := getHostnameAndPort()
-	if err != nil {
-		return "", err
-	}
-
-	parts := strings.Split(hostnamePort, ":")
-	return parts[0], nil
-}
-
 func RandClusterName() (string, error) {
 	n, err := e2e.RandInt(1000)
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("e2e-cluster-%v", n), nil
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("cluster-%v-%s", n, revision), nil
+	}
+	return fmt.Sprintf("cluster-%v", n), nil
+}
+
+func RandProjectName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("%v-%s", n, revision), nil
+	}
+	return fmt.Sprintf("e2e-%v", n), nil
+}
+
+func RandProjectNameWithPrefix(prefix string) (string, error) {
+	name, err := RandProjectName()
+	if err != nil {
+		return "", err
+	}
+	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
+	if len(prefixedName) > 64 {
+		return prefixedName[:64], nil
+	}
+	return prefixedName, nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {
@@ -210,14 +252,19 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 func createProject(projectName string) (string, error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: invalid bin", err)
 	}
-	cmd := exec.Command(cliPath,
+	args := []string{
 		iamEntity,
 		projectEntity,
 		"create",
 		projectName,
-		"-o=json")
+		"-o=json",
+	}
+	if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+		args = append(args, "--govCloudRegionsOnly")
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
@@ -226,7 +273,7 @@ func createProject(projectName string) (string, error) {
 
 	var project mongodbatlas.Project
 	if err := json.Unmarshal(resp, &project); err != nil {
-		return "", err
+		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
 	}
 
 	return project.ID, nil
@@ -244,5 +291,17 @@ func deleteProject(projectID string) error {
 		projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	return cmd.Run()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+	return nil
+}
+
+func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64) {
+	t.Helper()
+	a := assert.New(t)
+	a.Equal(clusterName, cluster.Name)
+	a.Equal(version, cluster.MongoDBMajorVersion)
+	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
 }

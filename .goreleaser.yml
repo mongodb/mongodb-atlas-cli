@@ -54,7 +54,7 @@ nfpms:
   maintainer: MongoDB Inc. <support@mongodb.com>
   description: MongoDB Command Line Interface (mongocli) is a tool for managing your MongoDB cloud services, like MongoDB Atlas, MongoDB Cloud Manager, and MongoDB Ops Manager.
   license: Apache 2.0
-  bindir: /usr/bin
+  bindir: /usr
   builds: [linux]
   formats: [deb,rpm]
   replacements:

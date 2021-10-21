@@ -11,13 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+//go:build e2e || (atlas && generic)
 
 package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -31,21 +30,11 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("accessRoles")
 
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-access-roles-%v", n)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -55,7 +44,7 @@ func TestAccessRoles(t *testing.T) {
 			awsEntity,
 			"create",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -76,7 +65,7 @@ func TestAccessRoles(t *testing.T) {
 			accessRolesEntity,
 			"list",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

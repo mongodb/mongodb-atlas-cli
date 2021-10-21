@@ -15,6 +15,8 @@
 package accesslists
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -22,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
@@ -33,21 +36,39 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.ListOpts
 	id    string
-	store store.OrganizationAPIKeyAccessListLister
+	store store.OrganizationAPIKeyAccessListWhitelistLister
 }
 
-func (opts *ListOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	useAccessList, err := shouldUseAccessList(opts.store)
 	if err != nil {
 		return err
 	}
-	return opts.Print(r)
+
+	var result *atlas.AccessListAPIKeys
+
+	if useAccessList {
+		result, err = opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+		if err != nil {
+			return err
+		}
+		return opts.Print(result)
+	}
+
+	r, e := opts.store.OrganizationAPIKeyWhitelists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	if e != nil {
+		return e
+	}
+	result = fromWhitelistAPIKeysToAccessListAPIKeys(r)
+	return opts.Print(result)
 }
 
 // mongocli iam organizations|orgs apiKey(s)|apikey(s) accessList list|ls <apiKeyID> [--orgId orgId].
@@ -61,7 +82,7 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
-				opts.init,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},

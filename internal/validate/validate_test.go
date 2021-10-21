@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package validate
@@ -152,8 +153,8 @@ func TestCredentials(t *testing.T) {
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()
-		_ = os.Setenv("PUBLIC_API_KEY", "test")
-		_ = os.Setenv("PRIVATE_API_KEY", "test")
+		t.Setenv("PUBLIC_API_KEY", "test")
+		t.Setenv("PRIVATE_API_KEY", "test")
 
 		err := Credentials()
 		if err != nil {
@@ -254,12 +255,84 @@ func TestPath(t *testing.T) {
 	}
 	defer os.Remove(f.Name())
 
-	if err := Path(f.Name()); err != nil {
-		t.Errorf("ValidatePath() error = %v", err)
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid",
+			val:     f.Name(),
+			wantErr: false,
+		},
+		{
+			name:    "empty",
+			val:     "",
+			wantErr: true,
+		},
+		{
+			name:    "nil",
+			val:     nil,
+			wantErr: true,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
 	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err2 := Path(val); (err2 != nil) != wantErr {
+				t.Errorf("Path() error = %v, wantErr %v", err2, wantErr)
+			}
+		})
+	}
+}
 
-	if err := Path("invalid"); err == nil {
-		t.Error("ValidatePath() expected error but got none")
+func TestOptionalPath(t *testing.T) {
+	f, err := ioutil.TempFile("", "sample")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(f.Name())
+
+	tests := []struct {
+		name    string
+		val     interface{}
+		wantErr bool
+	}{
+		{
+			name:    "valid",
+			val:     f.Name(),
+			wantErr: false,
+		},
+		{
+			name:    "empty",
+			val:     "",
+			wantErr: false,
+		},
+		{
+			name:    "nil",
+			val:     nil,
+			wantErr: false,
+		},
+		{
+			name:    "invalid value",
+			val:     1,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		val := tt.val
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			if err2 := OptionalPath(val); (err2 != nil) != wantErr {
+				t.Errorf("OptionalPath() error = %v, wantErr %v", err2, wantErr)
+			}
+		})
 	}
 }
 

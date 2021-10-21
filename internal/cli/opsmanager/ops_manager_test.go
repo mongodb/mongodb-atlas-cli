@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package opsmanager
@@ -26,7 +27,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		22,
+		23,
 		[]string{},
 	)
 }

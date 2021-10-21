@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockContainersLister is a mock of ContainersLister interface
+// MockContainersLister is a mock of ContainersLister interface.
 type MockContainersLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockContainersListerMockRecorder
 }
 
-// MockContainersListerMockRecorder is the mock recorder for MockContainersLister
+// MockContainersListerMockRecorder is the mock recorder for MockContainersLister.
 type MockContainersListerMockRecorder struct {
 	mock *MockContainersLister
 }
 
-// NewMockContainersLister creates a new mock instance
+// NewMockContainersLister creates a new mock instance.
 func NewMockContainersLister(ctrl *gomock.Controller) *MockContainersLister {
 	mock := &MockContainersLister{ctrl: ctrl}
 	mock.recorder = &MockContainersListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockContainersLister) EXPECT() *MockContainersListerMockRecorder {
 	return m.recorder
 }
 
-// AllContainers mocks base method
+// AllContainers mocks base method.
 func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Container, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
@@ -42,13 +43,13 @@ func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.Lis
 	return ret0, ret1
 }
 
-// AllContainers indicates an expected call of AllContainers
+// AllContainers indicates an expected call of AllContainers.
 func (mr *MockContainersListerMockRecorder) AllContainers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllContainers", reflect.TypeOf((*MockContainersLister)(nil).AllContainers), arg0, arg1)
 }
 
-// ContainersByProvider mocks base method
+// ContainersByProvider mocks base method.
 func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]mongodbatlas.Container, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContainersByProvider", arg0, arg1)
@@ -57,36 +58,36 @@ func (m *MockContainersLister) ContainersByProvider(arg0 string, arg1 *mongodbat
 	return ret0, ret1
 }
 
-// ContainersByProvider indicates an expected call of ContainersByProvider
+// ContainersByProvider indicates an expected call of ContainersByProvider.
 func (mr *MockContainersListerMockRecorder) ContainersByProvider(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainersByProvider", reflect.TypeOf((*MockContainersLister)(nil).ContainersByProvider), arg0, arg1)
 }
 
-// MockContainersDeleter is a mock of ContainersDeleter interface
+// MockContainersDeleter is a mock of ContainersDeleter interface.
 type MockContainersDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockContainersDeleterMockRecorder
 }
 
-// MockContainersDeleterMockRecorder is the mock recorder for MockContainersDeleter
+// MockContainersDeleterMockRecorder is the mock recorder for MockContainersDeleter.
 type MockContainersDeleterMockRecorder struct {
 	mock *MockContainersDeleter
 }
 
-// NewMockContainersDeleter creates a new mock instance
+// NewMockContainersDeleter creates a new mock instance.
 func NewMockContainersDeleter(ctrl *gomock.Controller) *MockContainersDeleter {
 	mock := &MockContainersDeleter{ctrl: ctrl}
 	mock.recorder = &MockContainersDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockContainersDeleter) EXPECT() *MockContainersDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteContainer mocks base method
+// DeleteContainer mocks base method.
 func (m *MockContainersDeleter) DeleteContainer(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteContainer", arg0, arg1)
@@ -94,7 +95,7 @@ func (m *MockContainersDeleter) DeleteContainer(arg0, arg1 string) error {
 	return ret0
 }
 
-// DeleteContainer indicates an expected call of DeleteContainer
+// DeleteContainer indicates an expected call of DeleteContainer.
 func (mr *MockContainersDeleterMockRecorder) DeleteContainer(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteContainer", reflect.TypeOf((*MockContainersDeleter)(nil).DeleteContainer), arg0, arg1)

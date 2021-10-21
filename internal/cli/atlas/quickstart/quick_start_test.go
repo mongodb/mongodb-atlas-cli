@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package quickstart
@@ -52,6 +53,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 		Provider:       "AWS",
 		SkipMongosh:    true,
 		SkipSampleData: true,
+		Confirm:        true,
 	}
 
 	projectIPAccessList := opts.newProjectIPAccessList()

@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockHostMeasurementLister is a mock of HostMeasurementLister interface
+// MockHostMeasurementLister is a mock of HostMeasurementLister interface.
 type MockHostMeasurementLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockHostMeasurementListerMockRecorder
 }
 
-// MockHostMeasurementListerMockRecorder is the mock recorder for MockHostMeasurementLister
+// MockHostMeasurementListerMockRecorder is the mock recorder for MockHostMeasurementLister.
 type MockHostMeasurementListerMockRecorder struct {
 	mock *MockHostMeasurementLister
 }
 
-// NewMockHostMeasurementLister creates a new mock instance
+// NewMockHostMeasurementLister creates a new mock instance.
 func NewMockHostMeasurementLister(ctrl *gomock.Controller) *MockHostMeasurementLister {
 	mock := &MockHostMeasurementLister{ctrl: ctrl}
 	mock.recorder = &MockHostMeasurementListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockHostMeasurementLister) EXPECT() *MockHostMeasurementListerMockRecorder {
 	return m.recorder
 }
 
-// HostMeasurements mocks base method
+// HostMeasurements mocks base method.
 func (m *MockHostMeasurementLister) HostMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostMeasurements", arg0, arg1, arg2)
@@ -42,36 +43,36 @@ func (m *MockHostMeasurementLister) HostMeasurements(arg0, arg1 string, arg2 *mo
 	return ret0, ret1
 }
 
-// HostMeasurements indicates an expected call of HostMeasurements
+// HostMeasurements indicates an expected call of HostMeasurements.
 func (mr *MockHostMeasurementListerMockRecorder) HostMeasurements(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HostMeasurements", reflect.TypeOf((*MockHostMeasurementLister)(nil).HostMeasurements), arg0, arg1, arg2)
 }
 
-// MockHostDiskMeasurementsLister is a mock of HostDiskMeasurementsLister interface
+// MockHostDiskMeasurementsLister is a mock of HostDiskMeasurementsLister interface.
 type MockHostDiskMeasurementsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockHostDiskMeasurementsListerMockRecorder
 }
 
-// MockHostDiskMeasurementsListerMockRecorder is the mock recorder for MockHostDiskMeasurementsLister
+// MockHostDiskMeasurementsListerMockRecorder is the mock recorder for MockHostDiskMeasurementsLister.
 type MockHostDiskMeasurementsListerMockRecorder struct {
 	mock *MockHostDiskMeasurementsLister
 }
 
-// NewMockHostDiskMeasurementsLister creates a new mock instance
+// NewMockHostDiskMeasurementsLister creates a new mock instance.
 func NewMockHostDiskMeasurementsLister(ctrl *gomock.Controller) *MockHostDiskMeasurementsLister {
 	mock := &MockHostDiskMeasurementsLister{ctrl: ctrl}
 	mock.recorder = &MockHostDiskMeasurementsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockHostDiskMeasurementsLister) EXPECT() *MockHostDiskMeasurementsListerMockRecorder {
 	return m.recorder
 }
 
-// HostDiskMeasurements mocks base method
+// HostDiskMeasurements mocks base method.
 func (m *MockHostDiskMeasurementsLister) HostDiskMeasurements(arg0, arg1, arg2 string, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDiskMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDiskMeasurements", arg0, arg1, arg2, arg3)
@@ -80,36 +81,36 @@ func (m *MockHostDiskMeasurementsLister) HostDiskMeasurements(arg0, arg1, arg2 s
 	return ret0, ret1
 }
 
-// HostDiskMeasurements indicates an expected call of HostDiskMeasurements
+// HostDiskMeasurements indicates an expected call of HostDiskMeasurements.
 func (mr *MockHostDiskMeasurementsListerMockRecorder) HostDiskMeasurements(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HostDiskMeasurements", reflect.TypeOf((*MockHostDiskMeasurementsLister)(nil).HostDiskMeasurements), arg0, arg1, arg2, arg3)
 }
 
-// MockHostDatabaseMeasurementsLister is a mock of HostDatabaseMeasurementsLister interface
+// MockHostDatabaseMeasurementsLister is a mock of HostDatabaseMeasurementsLister interface.
 type MockHostDatabaseMeasurementsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockHostDatabaseMeasurementsListerMockRecorder
 }
 
-// MockHostDatabaseMeasurementsListerMockRecorder is the mock recorder for MockHostDatabaseMeasurementsLister
+// MockHostDatabaseMeasurementsListerMockRecorder is the mock recorder for MockHostDatabaseMeasurementsLister.
 type MockHostDatabaseMeasurementsListerMockRecorder struct {
 	mock *MockHostDatabaseMeasurementsLister
 }
 
-// NewMockHostDatabaseMeasurementsLister creates a new mock instance
+// NewMockHostDatabaseMeasurementsLister creates a new mock instance.
 func NewMockHostDatabaseMeasurementsLister(ctrl *gomock.Controller) *MockHostDatabaseMeasurementsLister {
 	mock := &MockHostDatabaseMeasurementsLister{ctrl: ctrl}
 	mock.recorder = &MockHostDatabaseMeasurementsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockHostDatabaseMeasurementsLister) EXPECT() *MockHostDatabaseMeasurementsListerMockRecorder {
 	return m.recorder
 }
 
-// HostDatabaseMeasurements mocks base method
+// HostDatabaseMeasurements mocks base method.
 func (m *MockHostDatabaseMeasurementsLister) HostDatabaseMeasurements(arg0, arg1, arg2 string, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDatabaseMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDatabaseMeasurements", arg0, arg1, arg2, arg3)
@@ -118,7 +119,7 @@ func (m *MockHostDatabaseMeasurementsLister) HostDatabaseMeasurements(arg0, arg1
 	return ret0, ret1
 }
 
-// HostDatabaseMeasurements indicates an expected call of HostDatabaseMeasurements
+// HostDatabaseMeasurements indicates an expected call of HostDatabaseMeasurements.
 func (mr *MockHostDatabaseMeasurementsListerMockRecorder) HostDatabaseMeasurements(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HostDatabaseMeasurements", reflect.TypeOf((*MockHostDatabaseMeasurementsLister)(nil).HostDatabaseMeasurements), arg0, arg1, arg2, arg3)

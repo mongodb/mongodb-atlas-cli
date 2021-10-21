@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
@@ -47,7 +46,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 	}
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(context.Background(), entries[0].GroupID, entries)
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Create(s.ctx, entries[0].GroupID, entries)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +57,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlas.ProjectIPAccessList) 
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(context.Background(), projectID, entry)
+		_, err := s.client.(*atlas.Client).ProjectIPAccessList.Delete(s.ctx, projectID, entry)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +68,7 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlas.ProjectIPAccessLists, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +79,7 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) 
 func (s *Store) IPAccessList(projectID, name string) (*atlas.ProjectIPAccessList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(context.Background(), projectID, name)
+		result, _, err := s.client.(*atlas.Client).ProjectIPAccessList.Get(s.ctx, projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

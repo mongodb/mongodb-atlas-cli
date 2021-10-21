@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,networking
+//go:build e2e || (atlas && networking)
 
 package atlas_test
 
@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -49,28 +50,17 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("privateEndpointsAWS")
+
 	n, err := e2e.RandInt(int64(len(regionsAWS)))
-	a := assert.New(t)
-	a.NoError(err)
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	a.NoError(err)
+	require.NoError(t, err)
 
 	region := regionsAWS[n.Int64()]
 	var id string
-
-	n, err = e2e.RandInt(1000)
-	a.NoError(err)
-
-	projectName := fmt.Sprintf("e2e-integration-private-endpoint-aws-%v", n)
-	projectID, err := createProject(projectName)
-	a.NoError(err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -80,7 +70,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"create",
 			"--region="+region,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -92,9 +82,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			}
 		}
 	})
-	if id == "" {
-		assert.FailNow(t, "Failed to create alert private endpoint")
-	}
+	require.NotEmpty(t, id)
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -104,12 +92,11 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
-		_, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -120,12 +107,12 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"describe",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 		var r atlas.PrivateEndpointConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.Equal(id, r.ID)
@@ -139,7 +126,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			awsEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -160,7 +147,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"delete",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 
@@ -179,7 +166,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -198,28 +185,17 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("privateEndpointsAzure")
+
 	n, err := e2e.RandInt(int64(len(regionsAzure)))
-	a := assert.New(t)
-	a.NoError(err)
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	a.NoError(err)
+	require.NoError(t, err)
 
 	region := regionsAzure[n.Int64()]
 	var id string
-
-	n, err = e2e.RandInt(1000)
-	a.NoError(err)
-
-	projectName := fmt.Sprintf("e2e-integration-private-endpoint-azure-%v", n)
-	projectID, err := createProject(projectName)
-	a.NoError(err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -229,7 +205,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"create",
 			"--region="+region,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
@@ -242,7 +218,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		}
 	})
 	if id == "" {
-		assert.FailNow(t, "Failed to create alert private endpoint")
+		assert.FailNow(t, "Failed to create private endpoint")
 	}
 
 	t.Run("Watch", func(t *testing.T) {
@@ -253,7 +229,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		_, err := cmd.CombinedOutput()
@@ -269,7 +245,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"describe",
 			id,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -288,7 +264,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			azureEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -310,7 +286,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--force",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -328,7 +304,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -340,22 +316,11 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("regionalizedPrivateEndpointsSettings")
+
 	cliPath, err := e2e.Bin()
-	a := assert.New(t)
-	a.NoError(err)
-
-	n, err := e2e.RandInt(1000)
-	a.NoError(err)
-
-	projectName := fmt.Sprintf("e2e-integration-regionalized-private-endpoint-setting-%v", n)
-	projectID, err := createProject(projectName)
-	a.NoError(err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	require.NoError(t, err)
 
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -364,7 +329,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"enable",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -380,7 +345,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"disable",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -396,7 +361,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"get",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 

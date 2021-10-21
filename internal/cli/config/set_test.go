@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package config
@@ -185,6 +186,54 @@ func TestSet_Run(t *testing.T) {
 
 		if err == nil {
 			t.Fatal("Run() expected an error but got none\n")
+		}
+	})
+
+	t.Run("set skip_update_check to true", func(t *testing.T) {
+		setOpts := &SetOpts{
+			store: mockStore,
+			prop:  "skip_update_check",
+			val:   "true",
+		}
+
+		mockStore.
+			EXPECT().
+			SetGlobal(setOpts.prop, true).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			Save().Return(nil).
+			Times(1)
+
+		err := setOpts.Run()
+
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v\n", err)
+		}
+	})
+
+	t.Run("set skip_update_check to false", func(t *testing.T) {
+		setOpts := &SetOpts{
+			store: mockStore,
+			prop:  "skip_update_check",
+			val:   "not true at all",
+		}
+
+		mockStore.
+			EXPECT().
+			SetGlobal(setOpts.prop, false).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			Save().Return(nil).
+			Times(1)
+
+		err := setOpts.Run()
+
+		if err != nil {
+			t.Fatalf("Run() unexpected error: %v\n", err)
 		}
 	})
 }

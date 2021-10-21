@@ -15,6 +15,8 @@
 package monitoring
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -30,10 +32,12 @@ type StopOpts struct {
 	store store.MonitoringStopper
 }
 
-func (opts *StopOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *StopOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *StopOpts) Run() error {
@@ -51,7 +55,7 @@ func StopBuilder() *cobra.Command {
 		Short:   "Stops monitoring the MongoDB process  specified",
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore); err != nil {
+			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
 			}
 			opts.Entry = args[0]

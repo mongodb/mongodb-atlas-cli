@@ -12,42 +12,80 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package accesslists
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestListOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationAPIKeyAccessListLister(ctrl)
-	defer ctrl.Finish()
+	runListTest := func(t *testing.T, service string, version string, accessList bool) {
+		t.Helper()
+		t.Run(fmt.Sprintf("%s %s", service, version), func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockOrganizationAPIKeyAccessListWhitelistLister(ctrl)
+			defer ctrl.Finish()
 
-	var expected = &mongodbatlas.AccessListAPIKeys{
-		Results: []*mongodbatlas.AccessListAPIKey{},
+			prevServ := config.Service()
+			config.SetService(service)
+			defer func() {
+				config.SetService(prevServ)
+			}()
+
+			opts := &ListOpts{
+				store: mockStore,
+			}
+
+			if version != "" {
+				mockStore.
+					EXPECT().
+					ServiceVersion().
+					Return(&atlas.ServiceVersion{GitHash: "some git hash", Version: version}, nil).
+					Times(1)
+			}
+
+			if accessList {
+				mockStore.
+					EXPECT().
+					OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
+					Return(&atlas.AccessListAPIKeys{
+						Results: []*atlas.AccessListAPIKey{},
+					}, nil).
+					Times(1)
+			} else {
+				mockStore.
+					EXPECT().
+					OrganizationAPIKeyWhitelists(opts.OrgID, opts.id, opts.NewListOptions()).
+					Return(&atlas.WhitelistAPIKeys{
+						Results: []*atlas.WhitelistAPIKey{},
+					}, nil).
+					Times(1)
+			}
+
+			if err := opts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+		})
 	}
 
-	opts := &ListOpts{
-		store: mockStore,
-	}
-
-	mockStore.
-		EXPECT().
-		OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-		Return(expected, nil).
-		Times(1)
-
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	runListTest(t, config.CloudService, "", true)
+	runListTest(t, config.CloudGovService, "", true)
+	runListTest(t, config.CloudManagerService, "", true)
+	runListTest(t, config.OpsManagerService, "5.0.0.100.20210101T0000Z", true)
+	runListTest(t, config.OpsManagerService, "5.0.0-rc0.100.20210101T0000Z", true)
+	runListTest(t, config.OpsManagerService, "4.4.0.100.20210101T0000Z", false)
+	runListTest(t, config.OpsManagerService, "4.2.0.100.20210101T0000Z", false)
 }
 
 func TestListBuilder(t *testing.T) {

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package versionmanifest
@@ -28,30 +29,72 @@ import (
 
 func TestVersionManifestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockVersionManifestUpdater(ctrl)
+	mockStore := mocks.NewMockVersionManifestUpdaterServiceVersionDescriber(ctrl)
 	mockStoreStaticPath := mocks.NewMockVersionManifestGetter(ctrl)
 	defer ctrl.Finish()
 
-	expected := &opsmngr.VersionManifest{}
-
-	updateOpts := &UpdateOpts{
-		versionManifest: "4.4",
-		store:           mockStore,
-		storeStaticPath: mockStoreStaticPath,
+	tests := []struct {
+		name            string
+		versionManifest string
+		omVersion       string
+		wantErr         bool
+	}{
+		{
+			name:            "OM 4.4",
+			versionManifest: "4.4",
+			omVersion:       "4.4.0.100.20210101T0000Z",
+			wantErr:         false,
+		},
+		{
+			name:            "Invalid Format",
+			versionManifest: "bad version",
+			omVersion:       "",
+			wantErr:         true,
+		},
+		{
+			name:            "Invalid OM Version",
+			versionManifest: "4.4",
+			omVersion:       "5.0.0.100.20210101T0000Z",
+			wantErr:         true,
+		},
 	}
 
-	mockStoreStaticPath.
-		EXPECT().GetVersionManifest(updateOpts.version()).
-		Return(expected, nil).
-		Times(1)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			updateOpts := &UpdateOpts{
+				versionManifest: tt.versionManifest,
+				store:           mockStore,
+				storeStaticPath: mockStoreStaticPath,
+			}
 
-	mockStore.
-		EXPECT().UpdateVersionManifest(expected).
-		Return(expected, nil).
-		Times(1)
+			if tt.omVersion != "" {
+				mockStore.
+					EXPECT().ServiceVersion().
+					Return(&opsmngr.ServiceVersion{Version: tt.omVersion}, nil).
+					Times(1)
+			}
 
-	if err := updateOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+			if tt.wantErr {
+				if err := updateOpts.Run(); err == nil {
+					t.Fatalf("Run() expected error to be returned")
+				}
+				return
+			}
+
+			mockStoreStaticPath.
+				EXPECT().GetVersionManifest(updateOpts.version()).
+				Return(&opsmngr.VersionManifest{}, nil).
+				Times(1)
+
+			mockStore.
+				EXPECT().UpdateVersionManifest(&opsmngr.VersionManifest{}).
+				Return(&opsmngr.VersionManifest{}, nil).
+				Times(1)
+
+			if err := updateOpts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+		})
 	}
 }
 

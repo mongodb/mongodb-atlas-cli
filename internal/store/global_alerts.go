@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -33,7 +32,7 @@ type GlobalAlertLister interface {
 func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAlerts.List(context.Background(), opts)
+		result, _, err := s.client.(*opsmngr.Client).GlobalAlerts.List(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

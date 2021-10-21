@@ -15,14 +15,13 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter
+//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/mongodb/mongocli/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
 
 type VersionManifestUpdater interface {
 	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)
@@ -32,11 +31,16 @@ type VersionManifestGetter interface {
 	GetVersionManifest(string) (*opsmngr.VersionManifest, error)
 }
 
+type VersionManifestUpdaterServiceVersionDescriber interface {
+	VersionManifestUpdater
+	ServiceVersionDescriber
+}
+
 // UpdateVersionManifest encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(context.Background(), versionManifest)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Update(s.ctx, versionManifest)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -47,7 +51,7 @@ func (s *Store) UpdateVersionManifest(versionManifest *opsmngr.VersionManifest) 
 func (s *Store) GetVersionManifest(version string) (*opsmngr.VersionManifest, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(context.Background(), version)
+		result, _, err := s.client.(*opsmngr.Client).VersionManifest.Get(s.ctx, version)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

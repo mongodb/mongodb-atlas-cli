@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockAlertConfigurationLister is a mock of AlertConfigurationLister interface
+// MockAlertConfigurationLister is a mock of AlertConfigurationLister interface.
 type MockAlertConfigurationLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockAlertConfigurationListerMockRecorder
 }
 
-// MockAlertConfigurationListerMockRecorder is the mock recorder for MockAlertConfigurationLister
+// MockAlertConfigurationListerMockRecorder is the mock recorder for MockAlertConfigurationLister.
 type MockAlertConfigurationListerMockRecorder struct {
 	mock *MockAlertConfigurationLister
 }
 
-// NewMockAlertConfigurationLister creates a new mock instance
+// NewMockAlertConfigurationLister creates a new mock instance.
 func NewMockAlertConfigurationLister(ctrl *gomock.Controller) *MockAlertConfigurationLister {
 	mock := &MockAlertConfigurationLister{ctrl: ctrl}
 	mock.recorder = &MockAlertConfigurationListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAlertConfigurationLister) EXPECT() *MockAlertConfigurationListerMockRecorder {
 	return m.recorder
 }
 
-// AlertConfigurations mocks base method
+// AlertConfigurations mocks base method.
 func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AlertConfigurations", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 string, arg1 *mo
 	return ret0, ret1
 }
 
-// AlertConfigurations indicates an expected call of AlertConfigurations
+// AlertConfigurations indicates an expected call of AlertConfigurations.
 func (mr *MockAlertConfigurationListerMockRecorder) AlertConfigurations(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlertConfigurations", reflect.TypeOf((*MockAlertConfigurationLister)(nil).AlertConfigurations), arg0, arg1)
 }
 
-// MockAlertConfigurationCreator is a mock of AlertConfigurationCreator interface
+// MockAlertConfigurationCreator is a mock of AlertConfigurationCreator interface.
 type MockAlertConfigurationCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockAlertConfigurationCreatorMockRecorder
 }
 
-// MockAlertConfigurationCreatorMockRecorder is the mock recorder for MockAlertConfigurationCreator
+// MockAlertConfigurationCreatorMockRecorder is the mock recorder for MockAlertConfigurationCreator.
 type MockAlertConfigurationCreatorMockRecorder struct {
 	mock *MockAlertConfigurationCreator
 }
 
-// NewMockAlertConfigurationCreator creates a new mock instance
+// NewMockAlertConfigurationCreator creates a new mock instance.
 func NewMockAlertConfigurationCreator(ctrl *gomock.Controller) *MockAlertConfigurationCreator {
 	mock := &MockAlertConfigurationCreator{ctrl: ctrl}
 	mock.recorder = &MockAlertConfigurationCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAlertConfigurationCreator) EXPECT() *MockAlertConfigurationCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateAlertConfiguration mocks base method
+// CreateAlertConfiguration mocks base method.
 func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAlertConfiguration", arg0)
@@ -80,36 +81,36 @@ func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *mongodbat
 	return ret0, ret1
 }
 
-// CreateAlertConfiguration indicates an expected call of CreateAlertConfiguration
+// CreateAlertConfiguration indicates an expected call of CreateAlertConfiguration.
 func (mr *MockAlertConfigurationCreatorMockRecorder) CreateAlertConfiguration(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationCreator)(nil).CreateAlertConfiguration), arg0)
 }
 
-// MockAlertConfigurationDeleter is a mock of AlertConfigurationDeleter interface
+// MockAlertConfigurationDeleter is a mock of AlertConfigurationDeleter interface.
 type MockAlertConfigurationDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockAlertConfigurationDeleterMockRecorder
 }
 
-// MockAlertConfigurationDeleterMockRecorder is the mock recorder for MockAlertConfigurationDeleter
+// MockAlertConfigurationDeleterMockRecorder is the mock recorder for MockAlertConfigurationDeleter.
 type MockAlertConfigurationDeleterMockRecorder struct {
 	mock *MockAlertConfigurationDeleter
 }
 
-// NewMockAlertConfigurationDeleter creates a new mock instance
+// NewMockAlertConfigurationDeleter creates a new mock instance.
 func NewMockAlertConfigurationDeleter(ctrl *gomock.Controller) *MockAlertConfigurationDeleter {
 	mock := &MockAlertConfigurationDeleter{ctrl: ctrl}
 	mock.recorder = &MockAlertConfigurationDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAlertConfigurationDeleter) EXPECT() *MockAlertConfigurationDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteAlertConfiguration mocks base method
+// DeleteAlertConfiguration mocks base method.
 func (m *MockAlertConfigurationDeleter) DeleteAlertConfiguration(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAlertConfiguration", arg0, arg1)
@@ -117,36 +118,36 @@ func (m *MockAlertConfigurationDeleter) DeleteAlertConfiguration(arg0, arg1 stri
 	return ret0
 }
 
-// DeleteAlertConfiguration indicates an expected call of DeleteAlertConfiguration
+// DeleteAlertConfiguration indicates an expected call of DeleteAlertConfiguration.
 func (mr *MockAlertConfigurationDeleterMockRecorder) DeleteAlertConfiguration(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationDeleter)(nil).DeleteAlertConfiguration), arg0, arg1)
 }
 
-// MockAlertConfigurationUpdater is a mock of AlertConfigurationUpdater interface
+// MockAlertConfigurationUpdater is a mock of AlertConfigurationUpdater interface.
 type MockAlertConfigurationUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockAlertConfigurationUpdaterMockRecorder
 }
 
-// MockAlertConfigurationUpdaterMockRecorder is the mock recorder for MockAlertConfigurationUpdater
+// MockAlertConfigurationUpdaterMockRecorder is the mock recorder for MockAlertConfigurationUpdater.
 type MockAlertConfigurationUpdaterMockRecorder struct {
 	mock *MockAlertConfigurationUpdater
 }
 
-// NewMockAlertConfigurationUpdater creates a new mock instance
+// NewMockAlertConfigurationUpdater creates a new mock instance.
 func NewMockAlertConfigurationUpdater(ctrl *gomock.Controller) *MockAlertConfigurationUpdater {
 	mock := &MockAlertConfigurationUpdater{ctrl: ctrl}
 	mock.recorder = &MockAlertConfigurationUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAlertConfigurationUpdater) EXPECT() *MockAlertConfigurationUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateAlertConfiguration mocks base method
+// UpdateAlertConfiguration mocks base method.
 func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAlertConfiguration", arg0)
@@ -155,36 +156,36 @@ func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *mongodbat
 	return ret0, ret1
 }
 
-// UpdateAlertConfiguration indicates an expected call of UpdateAlertConfiguration
+// UpdateAlertConfiguration indicates an expected call of UpdateAlertConfiguration.
 func (mr *MockAlertConfigurationUpdaterMockRecorder) UpdateAlertConfiguration(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAlertConfiguration", reflect.TypeOf((*MockAlertConfigurationUpdater)(nil).UpdateAlertConfiguration), arg0)
 }
 
-// MockMatcherFieldsLister is a mock of MatcherFieldsLister interface
+// MockMatcherFieldsLister is a mock of MatcherFieldsLister interface.
 type MockMatcherFieldsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockMatcherFieldsListerMockRecorder
 }
 
-// MockMatcherFieldsListerMockRecorder is the mock recorder for MockMatcherFieldsLister
+// MockMatcherFieldsListerMockRecorder is the mock recorder for MockMatcherFieldsLister.
 type MockMatcherFieldsListerMockRecorder struct {
 	mock *MockMatcherFieldsLister
 }
 
-// NewMockMatcherFieldsLister creates a new mock instance
+// NewMockMatcherFieldsLister creates a new mock instance.
 func NewMockMatcherFieldsLister(ctrl *gomock.Controller) *MockMatcherFieldsLister {
 	mock := &MockMatcherFieldsLister{ctrl: ctrl}
 	mock.recorder = &MockMatcherFieldsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMatcherFieldsLister) EXPECT() *MockMatcherFieldsListerMockRecorder {
 	return m.recorder
 }
 
-// MatcherFields mocks base method
+// MatcherFields mocks base method.
 func (m *MockMatcherFieldsLister) MatcherFields() ([]string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MatcherFields")
@@ -193,7 +194,7 @@ func (m *MockMatcherFieldsLister) MatcherFields() ([]string, error) {
 	return ret0, ret1
 }
 
-// MatcherFields indicates an expected call of MatcherFields
+// MatcherFields indicates an expected call of MatcherFields.
 func (mr *MockMatcherFieldsListerMockRecorder) MatcherFields() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatcherFields", reflect.TypeOf((*MockMatcherFieldsLister)(nil).MatcherFields))

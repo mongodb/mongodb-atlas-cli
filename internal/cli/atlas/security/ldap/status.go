@@ -15,6 +15,8 @@
 package ldap
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -31,10 +33,12 @@ type StatusOpts struct {
 	store store.LDAPConfigurationDescriber
 }
 
-func (opts *StatusOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *StatusOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var verifyStatusTemplate = `REQUEST ID	PROJECT ID	STATUS
@@ -60,7 +64,7 @@ func StatusBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), verifyStatusTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

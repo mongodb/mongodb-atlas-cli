@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,logs
+//go:build e2e || (atlas && logs)
 
 package atlas_test
 
@@ -23,28 +23,19 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLogs(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("failed to deploy a cluster: %v", err)
-	}
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
 
-	hostname, err := getHostname()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	g.generateProjectAndCluster("logs")
+
+	hostname, err := g.getHostname()
+	require.NoError(t, err)
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	logTypes := []string{
 		"mongodb.gz",
 		"mongos.gz",
@@ -54,16 +45,16 @@ func TestLogs(t *testing.T) {
 	for _, logType := range logTypes {
 		lt := logType
 		t.Run("Download "+lt, func(t *testing.T) {
-			downloadLogTmpPath(t, cliPath, hostname, lt)
+			downloadLogTmpPath(t, cliPath, hostname, lt, g.projectID)
 		})
 	}
 
 	t.Run("Download mongodb.gz no output path", func(t *testing.T) {
-		downloadLog(t, cliPath, hostname, "mongodb.gz")
+		downloadLog(t, cliPath, hostname, "mongodb.gz", g.projectID)
 	})
 }
 
-func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
+func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
 	dir, err := os.Getwd()
 	if err != nil {
@@ -79,21 +70,20 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile string) {
 		logFile,
 		"--out",
 		filepath,
+		"--projectId",
+		projectID,
 	)
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
-
+	require.NoError(t, err, string(resp))
 	if _, err := os.Stat(filepath); err != nil {
 		t.Fatalf("%v has not been downloaded", filepath)
 	}
+	_ = os.Remove(filepath)
 }
 
-func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
+func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		atlasEntity,
@@ -101,17 +91,18 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile string) {
 		"download",
 		hostname,
 		logFile,
+		"--projectId",
+		projectID,
 	)
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 
 	outputFile := strings.ReplaceAll(logFile, ".gz", ".log.gz")
 	if _, err := os.Stat(outputFile); err != nil {
 		t.Fatalf("%v has not been downloaded", logFile)
 	}
+	_ = os.Remove(logFile)
+	_ = os.Remove(outputFile)
 }

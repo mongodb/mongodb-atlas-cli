@@ -14,6 +14,8 @@
 package apikeys
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -28,10 +30,12 @@ type ListOpts struct {
 	store store.AgentAPIKeyLister
 }
 
-func (opts *ListOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range .}}
@@ -57,7 +61,7 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},

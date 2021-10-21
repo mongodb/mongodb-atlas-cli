@@ -5,35 +5,36 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
-	reflect "reflect"
 )
 
-// MockLDAPConfigurationVerifier is a mock of LDAPConfigurationVerifier interface
+// MockLDAPConfigurationVerifier is a mock of LDAPConfigurationVerifier interface.
 type MockLDAPConfigurationVerifier struct {
 	ctrl     *gomock.Controller
 	recorder *MockLDAPConfigurationVerifierMockRecorder
 }
 
-// MockLDAPConfigurationVerifierMockRecorder is the mock recorder for MockLDAPConfigurationVerifier
+// MockLDAPConfigurationVerifierMockRecorder is the mock recorder for MockLDAPConfigurationVerifier.
 type MockLDAPConfigurationVerifierMockRecorder struct {
 	mock *MockLDAPConfigurationVerifier
 }
 
-// NewMockLDAPConfigurationVerifier creates a new mock instance
+// NewMockLDAPConfigurationVerifier creates a new mock instance.
 func NewMockLDAPConfigurationVerifier(ctrl *gomock.Controller) *MockLDAPConfigurationVerifier {
 	mock := &MockLDAPConfigurationVerifier{ctrl: ctrl}
 	mock.recorder = &MockLDAPConfigurationVerifierMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLDAPConfigurationVerifier) EXPECT() *MockLDAPConfigurationVerifierMockRecorder {
 	return m.recorder
 }
 
-// VerifyLDAPConfiguration mocks base method
+// VerifyLDAPConfiguration mocks base method.
 func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAP) (*mongodbatlas.LDAPConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VerifyLDAPConfiguration", arg0, arg1)
@@ -42,36 +43,36 @@ func (m *MockLDAPConfigurationVerifier) VerifyLDAPConfiguration(arg0 string, arg
 	return ret0, ret1
 }
 
-// VerifyLDAPConfiguration indicates an expected call of VerifyLDAPConfiguration
+// VerifyLDAPConfiguration indicates an expected call of VerifyLDAPConfiguration.
 func (mr *MockLDAPConfigurationVerifierMockRecorder) VerifyLDAPConfiguration(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyLDAPConfiguration", reflect.TypeOf((*MockLDAPConfigurationVerifier)(nil).VerifyLDAPConfiguration), arg0, arg1)
 }
 
-// MockLDAPConfigurationDescriber is a mock of LDAPConfigurationDescriber interface
+// MockLDAPConfigurationDescriber is a mock of LDAPConfigurationDescriber interface.
 type MockLDAPConfigurationDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockLDAPConfigurationDescriberMockRecorder
 }
 
-// MockLDAPConfigurationDescriberMockRecorder is the mock recorder for MockLDAPConfigurationDescriber
+// MockLDAPConfigurationDescriberMockRecorder is the mock recorder for MockLDAPConfigurationDescriber.
 type MockLDAPConfigurationDescriberMockRecorder struct {
 	mock *MockLDAPConfigurationDescriber
 }
 
-// NewMockLDAPConfigurationDescriber creates a new mock instance
+// NewMockLDAPConfigurationDescriber creates a new mock instance.
 func NewMockLDAPConfigurationDescriber(ctrl *gomock.Controller) *MockLDAPConfigurationDescriber {
 	mock := &MockLDAPConfigurationDescriber{ctrl: ctrl}
 	mock.recorder = &MockLDAPConfigurationDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLDAPConfigurationDescriber) EXPECT() *MockLDAPConfigurationDescriberMockRecorder {
 	return m.recorder
 }
 
-// GetStatusLDAPConfiguration mocks base method
+// GetStatusLDAPConfiguration mocks base method.
 func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 string) (*mongodbatlas.LDAPConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetStatusLDAPConfiguration", arg0, arg1)
@@ -80,36 +81,36 @@ func (m *MockLDAPConfigurationDescriber) GetStatusLDAPConfiguration(arg0, arg1 s
 	return ret0, ret1
 }
 
-// GetStatusLDAPConfiguration indicates an expected call of GetStatusLDAPConfiguration
+// GetStatusLDAPConfiguration indicates an expected call of GetStatusLDAPConfiguration.
 func (mr *MockLDAPConfigurationDescriberMockRecorder) GetStatusLDAPConfiguration(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatusLDAPConfiguration", reflect.TypeOf((*MockLDAPConfigurationDescriber)(nil).GetStatusLDAPConfiguration), arg0, arg1)
 }
 
-// MockLDAPConfigurationSaver is a mock of LDAPConfigurationSaver interface
+// MockLDAPConfigurationSaver is a mock of LDAPConfigurationSaver interface.
 type MockLDAPConfigurationSaver struct {
 	ctrl     *gomock.Controller
 	recorder *MockLDAPConfigurationSaverMockRecorder
 }
 
-// MockLDAPConfigurationSaverMockRecorder is the mock recorder for MockLDAPConfigurationSaver
+// MockLDAPConfigurationSaverMockRecorder is the mock recorder for MockLDAPConfigurationSaver.
 type MockLDAPConfigurationSaverMockRecorder struct {
 	mock *MockLDAPConfigurationSaver
 }
 
-// NewMockLDAPConfigurationSaver creates a new mock instance
+// NewMockLDAPConfigurationSaver creates a new mock instance.
 func NewMockLDAPConfigurationSaver(ctrl *gomock.Controller) *MockLDAPConfigurationSaver {
 	mock := &MockLDAPConfigurationSaver{ctrl: ctrl}
 	mock.recorder = &MockLDAPConfigurationSaverMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLDAPConfigurationSaver) EXPECT() *MockLDAPConfigurationSaverMockRecorder {
 	return m.recorder
 }
 
-// SaveLDAPConfiguration mocks base method
+// SaveLDAPConfiguration mocks base method.
 func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mongodbatlas.LDAPConfiguration) (*mongodbatlas.LDAPConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveLDAPConfiguration", arg0, arg1)
@@ -118,36 +119,36 @@ func (m *MockLDAPConfigurationSaver) SaveLDAPConfiguration(arg0 string, arg1 *mo
 	return ret0, ret1
 }
 
-// SaveLDAPConfiguration indicates an expected call of SaveLDAPConfiguration
+// SaveLDAPConfiguration indicates an expected call of SaveLDAPConfiguration.
 func (mr *MockLDAPConfigurationSaverMockRecorder) SaveLDAPConfiguration(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveLDAPConfiguration", reflect.TypeOf((*MockLDAPConfigurationSaver)(nil).SaveLDAPConfiguration), arg0, arg1)
 }
 
-// MockLDAPConfigurationDeleter is a mock of LDAPConfigurationDeleter interface
+// MockLDAPConfigurationDeleter is a mock of LDAPConfigurationDeleter interface.
 type MockLDAPConfigurationDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockLDAPConfigurationDeleterMockRecorder
 }
 
-// MockLDAPConfigurationDeleterMockRecorder is the mock recorder for MockLDAPConfigurationDeleter
+// MockLDAPConfigurationDeleterMockRecorder is the mock recorder for MockLDAPConfigurationDeleter.
 type MockLDAPConfigurationDeleterMockRecorder struct {
 	mock *MockLDAPConfigurationDeleter
 }
 
-// NewMockLDAPConfigurationDeleter creates a new mock instance
+// NewMockLDAPConfigurationDeleter creates a new mock instance.
 func NewMockLDAPConfigurationDeleter(ctrl *gomock.Controller) *MockLDAPConfigurationDeleter {
 	mock := &MockLDAPConfigurationDeleter{ctrl: ctrl}
 	mock.recorder = &MockLDAPConfigurationDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLDAPConfigurationDeleter) EXPECT() *MockLDAPConfigurationDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteLDAPConfiguration mocks base method
+// DeleteLDAPConfiguration mocks base method.
 func (m *MockLDAPConfigurationDeleter) DeleteLDAPConfiguration(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteLDAPConfiguration", arg0)
@@ -155,36 +156,36 @@ func (m *MockLDAPConfigurationDeleter) DeleteLDAPConfiguration(arg0 string) erro
 	return ret0
 }
 
-// DeleteLDAPConfiguration indicates an expected call of DeleteLDAPConfiguration
+// DeleteLDAPConfiguration indicates an expected call of DeleteLDAPConfiguration.
 func (mr *MockLDAPConfigurationDeleterMockRecorder) DeleteLDAPConfiguration(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteLDAPConfiguration", reflect.TypeOf((*MockLDAPConfigurationDeleter)(nil).DeleteLDAPConfiguration), arg0)
 }
 
-// MockLDAPConfigurationGetter is a mock of LDAPConfigurationGetter interface
+// MockLDAPConfigurationGetter is a mock of LDAPConfigurationGetter interface.
 type MockLDAPConfigurationGetter struct {
 	ctrl     *gomock.Controller
 	recorder *MockLDAPConfigurationGetterMockRecorder
 }
 
-// MockLDAPConfigurationGetterMockRecorder is the mock recorder for MockLDAPConfigurationGetter
+// MockLDAPConfigurationGetterMockRecorder is the mock recorder for MockLDAPConfigurationGetter.
 type MockLDAPConfigurationGetterMockRecorder struct {
 	mock *MockLDAPConfigurationGetter
 }
 
-// NewMockLDAPConfigurationGetter creates a new mock instance
+// NewMockLDAPConfigurationGetter creates a new mock instance.
 func NewMockLDAPConfigurationGetter(ctrl *gomock.Controller) *MockLDAPConfigurationGetter {
 	mock := &MockLDAPConfigurationGetter{ctrl: ctrl}
 	mock.recorder = &MockLDAPConfigurationGetterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLDAPConfigurationGetter) EXPECT() *MockLDAPConfigurationGetterMockRecorder {
 	return m.recorder
 }
 
-// GetLDAPConfiguration mocks base method
+// GetLDAPConfiguration mocks base method.
 func (m *MockLDAPConfigurationGetter) GetLDAPConfiguration(arg0 string) (*mongodbatlas.LDAPConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetLDAPConfiguration", arg0)
@@ -193,7 +194,7 @@ func (m *MockLDAPConfigurationGetter) GetLDAPConfiguration(arg0 string) (*mongod
 	return ret0, ret1
 }
 
-// GetLDAPConfiguration indicates an expected call of GetLDAPConfiguration
+// GetLDAPConfiguration indicates an expected call of GetLDAPConfiguration.
 func (mr *MockLDAPConfigurationGetterMockRecorder) GetLDAPConfiguration(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLDAPConfiguration", reflect.TypeOf((*MockLDAPConfigurationGetter)(nil).GetLDAPConfiguration), arg0)

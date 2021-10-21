@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -37,7 +36,7 @@ type ContainersDeleter interface {
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -57,7 +56,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlas.Container, error) {
 				ItemsPerPage: maxPerPage,
 			},
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -75,7 +74,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlas.Container, error) {
 				ItemsPerPage: maxPerPage,
 			},
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -93,7 +92,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 				ItemsPerPage: maxPerPage,
 			},
 		}
-		result, _, err := s.client.(*atlas.Client).Containers.List(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Containers.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -104,7 +103,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlas.Container, error) {
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlas.Container, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.ListAll(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Containers.ListAll(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -115,7 +114,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 func (s *Store) DeleteContainer(projectID, containerID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Containers.Delete(context.Background(), projectID, containerID)
+		_, err := s.client.(*atlas.Client).Containers.Delete(s.ctx, projectID, containerID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -126,7 +125,7 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 func (s *Store) Container(projectID, containerID string) (*atlas.Container, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.Get(context.Background(), projectID, containerID)
+		result, _, err := s.client.(*atlas.Client).Containers.Get(s.ctx, projectID, containerID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -137,7 +136,7 @@ func (s *Store) Container(projectID, containerID string) (*atlas.Container, erro
 func (s *Store) CreateContainer(projectID string, container *atlas.Container) (*atlas.Container, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Containers.Create(context.Background(), projectID, container)
+		result, _, err := s.client.(*atlas.Client).Containers.Create(s.ctx, projectID, container)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

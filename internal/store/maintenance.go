@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -65,7 +64,7 @@ type OpsManagerMaintenanceWindowUpdater interface {
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlas.MaintenanceWindow) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow)
+		_, err := s.client.(*atlas.Client).MaintenanceWindows.Update(s.ctx, projectID, maintenanceWindow)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,7 +75,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).MaintenanceWindows.Reset(context.Background(), projectID)
+		_, err := s.client.(*atlas.Client).MaintenanceWindows.Reset(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -87,7 +86,7 @@ func (s *Store) ClearMaintenanceWindow(projectID string) error {
 func (s *Store) DeferMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).MaintenanceWindows.Defer(context.Background(), projectID)
+		_, err := s.client.(*atlas.Client).MaintenanceWindows.Defer(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -98,7 +97,7 @@ func (s *Store) DeferMaintenanceWindow(projectID string) error {
 func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).MaintenanceWindows.Get(context.Background(), projectID)
+		resp, _, err := s.client.(*atlas.Client).MaintenanceWindows.Get(s.ctx, projectID)
 		return resp, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -109,7 +108,7 @@ func (s *Store) MaintenanceWindow(projectID string) (*atlas.MaintenanceWindow, e
 func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(context.Background(), projectID, maintenanceWindow)
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Create(s.ctx, projectID, maintenanceWindow)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -120,7 +119,7 @@ func (s *Store) CreateOpsManagerMaintenanceWindow(projectID string, maintenanceW
 func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.MaintenanceWindows, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(context.Background(), projectID)
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.List(s.ctx, projectID)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -131,7 +130,7 @@ func (s *Store) OpsManagerMaintenanceWindows(projectID string) (*opsmngr.Mainten
 func (s *Store) DeleteOpsManagerMaintenanceWindow(projectID, maintenanceWindowID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).MaintenanceWindows.Delete(context.Background(), projectID, maintenanceWindowID)
+		_, err := s.client.(*opsmngr.Client).MaintenanceWindows.Delete(s.ctx, projectID, maintenanceWindowID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -142,7 +141,7 @@ func (s *Store) DeleteOpsManagerMaintenanceWindow(projectID, maintenanceWindowID
 func (s *Store) OpsManagerMaintenanceWindow(projectID, maintenanceWindowID string) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Get(context.Background(), projectID, maintenanceWindowID)
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Get(s.ctx, projectID, maintenanceWindowID)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -153,7 +152,7 @@ func (s *Store) OpsManagerMaintenanceWindow(projectID, maintenanceWindowID strin
 func (s *Store) UpdateOpsManagerMaintenanceWindow(projectID string, maintenanceWindow *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Update(context.Background(), projectID, maintenanceWindow.ID, maintenanceWindow)
+		log, _, err := s.client.(*opsmngr.Client).MaintenanceWindows.Update(s.ctx, projectID, maintenanceWindow.ID, maintenanceWindow)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

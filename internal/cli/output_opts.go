@@ -75,8 +75,13 @@ func (opts *OutputOpts) ConfigWriter() io.Writer {
 
 // IsTerminal returns true is the current file descriptor is TTY kind of terminal.
 func (opts *OutputOpts) IsTerminal() bool {
-	if f, isFile := opts.OutWriter.(*os.File); isFile {
-		return isatty.IsTerminal(f.Fd()) || opts.IsCygwinTerminal()
+	return IsTerminal(opts.OutWriter)
+}
+
+// IsTerminal returns true is the current file descriptor is TTY kind of terminal.
+func IsTerminal(w io.Writer) bool {
+	if f, isFile := w.(*os.File); isFile {
+		return isatty.IsTerminal(f.Fd()) || IsCygwinTerminal(w)
 	}
 
 	return false
@@ -84,7 +89,12 @@ func (opts *OutputOpts) IsTerminal() bool {
 
 // IsCygwinTerminal returns true is the current file descriptor is cygwin.
 func (opts *OutputOpts) IsCygwinTerminal() bool {
-	if f, isFile := opts.OutWriter.(*os.File); isFile {
+	return IsCygwinTerminal(opts.OutWriter)
+}
+
+// IsCygwinTerminal returns true is the current file descriptor is cygwin.
+func IsCygwinTerminal(w io.Writer) bool {
+	if f, isFile := w.(*os.File); isFile {
 		return isatty.IsCygwinTerminal(f.Fd())
 	}
 

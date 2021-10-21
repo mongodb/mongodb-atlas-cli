@@ -5,36 +5,37 @@
 package mocks
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
-	reflect "reflect"
 )
 
-// MockOplogsLister is a mock of OplogsLister interface
+// MockOplogsLister is a mock of OplogsLister interface.
 type MockOplogsLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockOplogsListerMockRecorder
 }
 
-// MockOplogsListerMockRecorder is the mock recorder for MockOplogsLister
+// MockOplogsListerMockRecorder is the mock recorder for MockOplogsLister.
 type MockOplogsListerMockRecorder struct {
 	mock *MockOplogsLister
 }
 
-// NewMockOplogsLister creates a new mock instance
+// NewMockOplogsLister creates a new mock instance.
 func NewMockOplogsLister(ctrl *gomock.Controller) *MockOplogsLister {
 	mock := &MockOplogsLister{ctrl: ctrl}
 	mock.recorder = &MockOplogsListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOplogsLister) EXPECT() *MockOplogsListerMockRecorder {
 	return m.recorder
 }
 
-// ListOplogs mocks base method
+// ListOplogs mocks base method.
 func (m *MockOplogsLister) ListOplogs(arg0 *mongodbatlas.ListOptions) (*opsmngr.BackupStores, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOplogs", arg0)
@@ -43,36 +44,36 @@ func (m *MockOplogsLister) ListOplogs(arg0 *mongodbatlas.ListOptions) (*opsmngr.
 	return ret0, ret1
 }
 
-// ListOplogs indicates an expected call of ListOplogs
+// ListOplogs indicates an expected call of ListOplogs.
 func (mr *MockOplogsListerMockRecorder) ListOplogs(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOplogs", reflect.TypeOf((*MockOplogsLister)(nil).ListOplogs), arg0)
 }
 
-// MockOplogsDescriber is a mock of OplogsDescriber interface
+// MockOplogsDescriber is a mock of OplogsDescriber interface.
 type MockOplogsDescriber struct {
 	ctrl     *gomock.Controller
 	recorder *MockOplogsDescriberMockRecorder
 }
 
-// MockOplogsDescriberMockRecorder is the mock recorder for MockOplogsDescriber
+// MockOplogsDescriberMockRecorder is the mock recorder for MockOplogsDescriber.
 type MockOplogsDescriberMockRecorder struct {
 	mock *MockOplogsDescriber
 }
 
-// NewMockOplogsDescriber creates a new mock instance
+// NewMockOplogsDescriber creates a new mock instance.
 func NewMockOplogsDescriber(ctrl *gomock.Controller) *MockOplogsDescriber {
 	mock := &MockOplogsDescriber{ctrl: ctrl}
 	mock.recorder = &MockOplogsDescriberMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOplogsDescriber) EXPECT() *MockOplogsDescriberMockRecorder {
 	return m.recorder
 }
 
-// GetOplog mocks base method
+// GetOplog mocks base method.
 func (m *MockOplogsDescriber) GetOplog(arg0 string) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOplog", arg0)
@@ -81,36 +82,36 @@ func (m *MockOplogsDescriber) GetOplog(arg0 string) (*opsmngr.BackupStore, error
 	return ret0, ret1
 }
 
-// GetOplog indicates an expected call of GetOplog
+// GetOplog indicates an expected call of GetOplog.
 func (mr *MockOplogsDescriberMockRecorder) GetOplog(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOplog", reflect.TypeOf((*MockOplogsDescriber)(nil).GetOplog), arg0)
 }
 
-// MockOplogsCreator is a mock of OplogsCreator interface
+// MockOplogsCreator is a mock of OplogsCreator interface.
 type MockOplogsCreator struct {
 	ctrl     *gomock.Controller
 	recorder *MockOplogsCreatorMockRecorder
 }
 
-// MockOplogsCreatorMockRecorder is the mock recorder for MockOplogsCreator
+// MockOplogsCreatorMockRecorder is the mock recorder for MockOplogsCreator.
 type MockOplogsCreatorMockRecorder struct {
 	mock *MockOplogsCreator
 }
 
-// NewMockOplogsCreator creates a new mock instance
+// NewMockOplogsCreator creates a new mock instance.
 func NewMockOplogsCreator(ctrl *gomock.Controller) *MockOplogsCreator {
 	mock := &MockOplogsCreator{ctrl: ctrl}
 	mock.recorder = &MockOplogsCreatorMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOplogsCreator) EXPECT() *MockOplogsCreatorMockRecorder {
 	return m.recorder
 }
 
-// CreateOplog mocks base method
+// CreateOplog mocks base method.
 func (m *MockOplogsCreator) CreateOplog(arg0 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOplog", arg0)
@@ -119,36 +120,36 @@ func (m *MockOplogsCreator) CreateOplog(arg0 *opsmngr.BackupStore) (*opsmngr.Bac
 	return ret0, ret1
 }
 
-// CreateOplog indicates an expected call of CreateOplog
+// CreateOplog indicates an expected call of CreateOplog.
 func (mr *MockOplogsCreatorMockRecorder) CreateOplog(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOplog", reflect.TypeOf((*MockOplogsCreator)(nil).CreateOplog), arg0)
 }
 
-// MockOplogsUpdater is a mock of OplogsUpdater interface
+// MockOplogsUpdater is a mock of OplogsUpdater interface.
 type MockOplogsUpdater struct {
 	ctrl     *gomock.Controller
 	recorder *MockOplogsUpdaterMockRecorder
 }
 
-// MockOplogsUpdaterMockRecorder is the mock recorder for MockOplogsUpdater
+// MockOplogsUpdaterMockRecorder is the mock recorder for MockOplogsUpdater.
 type MockOplogsUpdaterMockRecorder struct {
 	mock *MockOplogsUpdater
 }
 
-// NewMockOplogsUpdater creates a new mock instance
+// NewMockOplogsUpdater creates a new mock instance.
 func NewMockOplogsUpdater(ctrl *gomock.Controller) *MockOplogsUpdater {
 	mock := &MockOplogsUpdater{ctrl: ctrl}
 	mock.recorder = &MockOplogsUpdaterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOplogsUpdater) EXPECT() *MockOplogsUpdaterMockRecorder {
 	return m.recorder
 }
 
-// UpdateOplog mocks base method
+// UpdateOplog mocks base method.
 func (m *MockOplogsUpdater) UpdateOplog(arg0 string, arg1 *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOplog", arg0, arg1)
@@ -157,36 +158,36 @@ func (m *MockOplogsUpdater) UpdateOplog(arg0 string, arg1 *opsmngr.BackupStore) 
 	return ret0, ret1
 }
 
-// UpdateOplog indicates an expected call of UpdateOplog
+// UpdateOplog indicates an expected call of UpdateOplog.
 func (mr *MockOplogsUpdaterMockRecorder) UpdateOplog(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOplog", reflect.TypeOf((*MockOplogsUpdater)(nil).UpdateOplog), arg0, arg1)
 }
 
-// MockOplogsDeleter is a mock of OplogsDeleter interface
+// MockOplogsDeleter is a mock of OplogsDeleter interface.
 type MockOplogsDeleter struct {
 	ctrl     *gomock.Controller
 	recorder *MockOplogsDeleterMockRecorder
 }
 
-// MockOplogsDeleterMockRecorder is the mock recorder for MockOplogsDeleter
+// MockOplogsDeleterMockRecorder is the mock recorder for MockOplogsDeleter.
 type MockOplogsDeleterMockRecorder struct {
 	mock *MockOplogsDeleter
 }
 
-// NewMockOplogsDeleter creates a new mock instance
+// NewMockOplogsDeleter creates a new mock instance.
 func NewMockOplogsDeleter(ctrl *gomock.Controller) *MockOplogsDeleter {
 	mock := &MockOplogsDeleter{ctrl: ctrl}
 	mock.recorder = &MockOplogsDeleterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOplogsDeleter) EXPECT() *MockOplogsDeleterMockRecorder {
 	return m.recorder
 }
 
-// DeleteOplog mocks base method
+// DeleteOplog mocks base method.
 func (m *MockOplogsDeleter) DeleteOplog(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteOplog", arg0)
@@ -194,7 +195,7 @@ func (m *MockOplogsDeleter) DeleteOplog(arg0 string) error {
 	return ret0
 }
 
-// DeleteOplog indicates an expected call of DeleteOplog
+// DeleteOplog indicates an expected call of DeleteOplog.
 func (mr *MockOplogsDeleterMockRecorder) DeleteOplog(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOplog", reflect.TypeOf((*MockOplogsDeleter)(nil).DeleteOplog), arg0)

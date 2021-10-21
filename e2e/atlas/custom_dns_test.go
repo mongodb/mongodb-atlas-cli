@@ -11,44 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,generic
+//go:build e2e || (atlas && generic)
 
 package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestCustomDNS(t *testing.T) {
-	n, err := e2e.RandInt(255)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("customDNS")
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	projectName := fmt.Sprintf("e2e-integration-custom-dns-%v", n)
-	projectID, err := createProject(projectName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	require.NoError(t, err)
 
 	t.Run("Enable", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -57,7 +41,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"enable",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -78,7 +62,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"describe",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -99,7 +83,7 @@ func TestCustomDNS(t *testing.T) {
 			awsEntity,
 			"disable",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

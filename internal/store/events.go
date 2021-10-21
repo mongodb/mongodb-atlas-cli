@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -23,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongocli/internal/store EventLister
+//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
 	OrganizationEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
@@ -42,10 +41,10 @@ type EventLister interface {
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
+		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(context.Background(), projectID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -56,10 +55,10 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
+		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
 		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(context.Background(), orgID, opts)
+		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

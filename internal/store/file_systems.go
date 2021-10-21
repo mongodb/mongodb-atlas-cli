@@ -15,7 +15,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -49,7 +48,7 @@ type FileSystemsUpdater interface {
 func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(context.Background(), options)
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(s.ctx, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -60,7 +59,7 @@ func (s *Store) ListFileSystems(options *atlas.ListOptions) (*opsmngr.FileSystem
 func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(context.Background(), fileSystemID)
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(s.ctx, fileSystemID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -71,7 +70,7 @@ func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStor
 func (s *Store) DeleteFileSystem(fileSystemID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(context.Background(), fileSystemID)
+		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(s.ctx, fileSystemID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -82,7 +81,7 @@ func (s *Store) DeleteFileSystem(fileSystemID string) error {
 func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(context.Background(), fileSystem)
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(s.ctx, fileSystem)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -93,7 +92,7 @@ func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfigurati
 func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(context.Background(), fileSystem.ID, fileSystem)
+		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(s.ctx, fileSystem.ID, fileSystem)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -15,6 +15,8 @@
 package blockstore
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager/admin/backup"
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,10 +34,12 @@ type CreateOpts struct {
 	store store.BlockstoresCreator
 }
 
-func (opts *CreateOpts) init() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *CreateOpts) Run() error {
@@ -56,7 +60,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a backup blockstore configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.init()
+			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

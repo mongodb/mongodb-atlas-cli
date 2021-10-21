@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
 // +build unit
 
 package convert
@@ -26,6 +27,7 @@ import (
 )
 
 func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
+	fipsMode := true
 	testCases := map[string]struct {
 		current  *opsmngr.AutomationConfig
 		expected *opsmngr.AutomationConfig
@@ -132,7 +134,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 								ClusterPassword:            "ClusterPassword",
 								CRLFile:                    "CRLFile",
 								DisabledProtocols:          "DisabledProtocols",
-								FIPSMode:                   "FIPSMode",
+								FIPSMode:                   &fipsMode,
 								Mode:                       "Mode",
 								PEMKeyFile:                 "PEMKeyFile",
 							},
@@ -162,7 +164,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 									ClusterPassword:            "ClusterPassword",
 									CRLFile:                    "CRLFile",
 									DisabledProtocols:          "DisabledProtocols",
-									FIPSMode:                   "FIPSMode",
+									FIPSMode:                   &fipsMode,
 									Mode:                       "Mode",
 									PEMKeyFile:                 "PEMKeyFile",
 								},
@@ -214,7 +216,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 									ClusterPassword:            "ClusterPassword",
 									CRLFile:                    "CRLFile",
 									DisabledProtocols:          "DisabledProtocols",
-									FIPSMode:                   "FIPSMode",
+									FIPSMode:                   &fipsMode,
 									Mode:                       "Mode",
 									PEMKeyFile:                 "PEMKeyFile",
 								},
@@ -449,7 +451,7 @@ func TestClusterConfig_PatchAutomationConfig(t *testing.T) {
 									ClusterPassword:            "ClusterPassword",
 									CRLFile:                    "CRLFile",
 									DisabledProtocols:          "DisabledProtocols",
-									FIPSMode:                   "FIPSMode",
+									FIPSMode:                   &fipsMode,
 									Mode:                       "Mode",
 									PEMKeyFile:                 "PEMKeyFile",
 								},

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// +build e2e atlas,processes
+//go:build e2e || (atlas && processes)
 
 package atlas_test
 
@@ -27,16 +27,8 @@ import (
 )
 
 func TestProcesses(t *testing.T) {
-	clusterName, err := deployCluster()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	defer func() {
-		if e := deleteCluster(clusterName); e != nil {
-			t.Errorf("error deleting test cluster: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("processes")
 
 	cliPath, err := e2e.Bin()
 
@@ -49,6 +41,7 @@ func TestProcesses(t *testing.T) {
 			atlasEntity,
 			processesEntity,
 			"list",
+			"--projectId", g.projectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()

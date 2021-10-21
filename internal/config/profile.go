@@ -16,7 +16,9 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -29,8 +31,39 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
+const (
+	ToolName                     = "mongocli"      // ToolName of the CLI
+	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
+	DefaultProfile               = "default"       // DefaultProfile default
+	CloudService                 = "cloud"         // CloudService setting when using Atlas API
+	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
+	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
+	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
+	JSON                         = "json"          // JSON output format as json
+	projectID                    = "project_id"
+	orgID                        = "org_id"
+	mongoShellPath               = "mongosh_path"
+	configType                   = "toml"
+	service                      = "service"
+	publicAPIKey                 = "public_api_key"
+	privateAPIKey                = "private_api_key"
+	opsManagerURL                = "ops_manager_url"
+	baseURL                      = "base_url"
+	opsManagerCACertificate      = "ops_manager_ca_certificate"
+	opsManagerSkipVerify         = "ops_manager_skip_verify"
+	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
+	output                       = "output"
+	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm                   = 0600
+	skipUpdateCheck              = "skip_update_check"
+)
+
 type Setter interface {
-	Set(string, string)
+	Set(string, interface{})
+}
+
+type GlobalSetter interface {
+	SetGlobal(string, interface{})
 }
 
 type Saver interface {
@@ -40,6 +73,7 @@ type Saver interface {
 type SetSaver interface {
 	Setter
 	Saver
+	GlobalSetter
 }
 
 type Profile struct {
@@ -61,7 +95,24 @@ func Properties() []string {
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
 		mongoShellPath,
+		skipUpdateCheck,
 	}
+}
+
+func BooleanProperties() []string {
+	return []string{
+		skipUpdateCheck,
+	}
+}
+
+func GlobalProperties() []string {
+	return []string{
+		skipUpdateCheck,
+	}
+}
+
+func IsTrue(s string) bool {
+	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
 }
 
 var p = newProfile()
@@ -113,22 +164,47 @@ func (p *Profile) SetName(name string) {
 	p.name = strings.ToLower(name)
 }
 
-func Set(name, value string) { p.Set(name, value) }
-func (p *Profile) Set(name, value string) {
-	settings := viper.GetStringMapString(p.Name())
+func Set(name string, value interface{}) { p.Set(name, value) }
+func (p *Profile) Set(name string, value interface{}) {
+	settings := viper.GetStringMap(p.Name())
 	settings[name] = value
 	viper.Set(p.name, settings)
 }
 
-func SetGlobal(name, value string) { viper.Set(name, value) }
+func SetGlobal(name string, value interface{}) { viper.Set(name, value) }
+func (p *Profile) SetGlobal(name string, value interface{}) {
+	SetGlobal(name, value)
+}
+
+func Get(name string) interface{} { return p.Get(name) }
+func (p *Profile) Get(name string) interface{} {
+	if viper.IsSet(name) && viper.Get(name) != "" {
+		return viper.Get(name)
+	}
+	settings := viper.GetStringMap(p.Name())
+	return settings[name]
+}
 
 func GetString(name string) string { return p.GetString(name) }
 func (p *Profile) GetString(name string) string {
-	if viper.IsSet(name) && viper.GetString(name) != "" {
-		return viper.GetString(name)
+	value := p.Get(name)
+	if value == nil {
+		return ""
 	}
-	settings := viper.GetStringMapString(p.Name())
-	return settings[name]
+	return value.(string)
+}
+
+func GetBool(name string) bool { return p.GetBool(name) }
+func (p *Profile) GetBool(name string) bool {
+	value := p.Get(name)
+	switch v := value.(type) {
+	case bool:
+		return v
+	case string:
+		return IsTrue(v)
+	default:
+		return false
+	}
 }
 
 // Service get configured service.
@@ -139,6 +215,10 @@ func (p *Profile) Service() string {
 	}
 	settings := viper.GetStringMapString(p.Name())
 	return settings[service]
+}
+
+func IsCloud() bool {
+	return p.Service() == "" || p.Service() == CloudService || p.Service() == CloudGovService
 }
 
 // SetService set configured service.
@@ -189,7 +269,7 @@ func (p *Profile) OpsManagerCACertificate() string {
 	return p.GetString(opsManagerCACertificate)
 }
 
-// SkipVerify get configured ops manager CA certificate location.
+// OpsManagerSkipVerify get configured if transport should skip CA verification.
 func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
 func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
@@ -235,6 +315,18 @@ func (p *Profile) MongoShellPath() string {
 func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
 	SetGlobal(mongoShellPath, v)
+}
+
+// SkipUpdateCheck get the global skip update check.
+func SkipUpdateCheck() bool { return p.SkipUpdateCheck() }
+func (p *Profile) SkipUpdateCheck() bool {
+	return p.GetBool(skipUpdateCheck)
+}
+
+// SetSkipUpdateCheck sets the global skip update check.
+func SetSkipUpdateCheck(v bool) { p.SetSkipUpdateCheck(v) }
+func (p *Profile) SetSkipUpdateCheck(v bool) {
+	SetGlobal(skipUpdateCheck, v)
 }
 
 // Output get configured output format.
@@ -319,11 +411,8 @@ func (p *Profile) Delete() error {
 	}
 	defer f.Close()
 
-	if _, err := f.WriteString(s); err != nil {
-		return err
-	}
-
-	return nil
+	_, err = f.WriteString(s)
+	return err
 }
 
 func (p *Profile) Filename() string {
@@ -402,11 +491,23 @@ func (p *Profile) Save() error {
 	}
 	if !exists {
 		const defaultPermissions = 0700
-		err := p.fs.MkdirAll(p.configDir, defaultPermissions)
-		if err != nil {
+		if err := p.fs.MkdirAll(p.configDir, defaultPermissions); err != nil {
 			return err
 		}
 	}
-	configFile := p.Filename()
-	return viper.WriteConfigAs(configFile)
+
+	return viper.WriteConfigAs(p.Filename())
+}
+
+func configHome() (string, error) {
+	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
+		return home, nil
+	}
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/.config", home), nil
 }

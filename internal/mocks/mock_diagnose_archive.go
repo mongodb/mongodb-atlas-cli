@@ -5,36 +5,37 @@
 package mocks
 
 import (
-	gomock "github.com/golang/mock/gomock"
-	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 	io "io"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
-// MockArchivesDownloader is a mock of ArchivesDownloader interface
+// MockArchivesDownloader is a mock of ArchivesDownloader interface.
 type MockArchivesDownloader struct {
 	ctrl     *gomock.Controller
 	recorder *MockArchivesDownloaderMockRecorder
 }
 
-// MockArchivesDownloaderMockRecorder is the mock recorder for MockArchivesDownloader
+// MockArchivesDownloaderMockRecorder is the mock recorder for MockArchivesDownloader.
 type MockArchivesDownloaderMockRecorder struct {
 	mock *MockArchivesDownloader
 }
 
-// NewMockArchivesDownloader creates a new mock instance
+// NewMockArchivesDownloader creates a new mock instance.
 func NewMockArchivesDownloader(ctrl *gomock.Controller) *MockArchivesDownloader {
 	mock := &MockArchivesDownloader{ctrl: ctrl}
 	mock.recorder = &MockArchivesDownloaderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockArchivesDownloader) EXPECT() *MockArchivesDownloaderMockRecorder {
 	return m.recorder
 }
 
-// DownloadArchive mocks base method
+// DownloadArchive mocks base method.
 func (m *MockArchivesDownloader) DownloadArchive(arg0 string, arg1 *opsmngr.DiagnosticsListOpts, arg2 io.Writer) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadArchive", arg0, arg1, arg2)
@@ -42,7 +43,7 @@ func (m *MockArchivesDownloader) DownloadArchive(arg0 string, arg1 *opsmngr.Diag
 	return ret0
 }
 
-// DownloadArchive indicates an expected call of DownloadArchive
+// DownloadArchive indicates an expected call of DownloadArchive.
 func (mr *MockArchivesDownloaderMockRecorder) DownloadArchive(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadArchive", reflect.TypeOf((*MockArchivesDownloader)(nil).DownloadArchive), arg0, arg1, arg2)

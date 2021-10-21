@@ -15,6 +15,8 @@
 package interfaces
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -32,10 +34,12 @@ type CreateOpts struct {
 	interfaceEndpointID string
 }
 
-func (opts *CreateOpts) initStore() error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()))
-	return err
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 var createTemplate = "Interface endpoint '{{.ID}}' created.\n"
@@ -60,7 +64,7 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.initStore,
+				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
@@ -68,6 +72,7 @@ func CreateBuilder() *cobra.Command {
 			opts.interfaceEndpointID = args[0]
 			return opts.Run()
 		},
+		Deprecated: "Please use mongocli atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 
@@ -75,8 +80,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)
-
-	cmd.Deprecated = "Please use mongocli atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]"
 
 	return cmd
 }

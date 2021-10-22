@@ -24,26 +24,20 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestTeamUsers(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	teamName := fmt.Sprintf("teams%v", n)
 	teamID, err := createTeam(teamName)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+	require.NoError(t, err)
 	defer func() {
 		if e := deleteTeam(teamID); e != nil {
 			t.Errorf("error deleting project: %v", e)
@@ -51,16 +45,9 @@ func TestTeamUsers(t *testing.T) {
 	}()
 
 	username, userID, err := OrgNUser(1)
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	t.Run("Add", func(t *testing.T) {
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
 		cmd := exec.Command(cliPath,
 			iamEntity,
 			teamsEntity,
@@ -69,12 +56,12 @@ func TestTeamUsers(t *testing.T) {
 			userID,
 			"--teamId",
 			teamID,
-			"-o=json")
+			"-o=json",
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
 
 		var users []mongodbatlas.AtlasUser
 		if err := json.Unmarshal(resp, &users); a.NoError(err) {
@@ -101,10 +88,8 @@ func TestTeamUsers(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
+		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
 		var teams []mongodbatlas.AtlasUser
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			a.NotEmpty(teams)
@@ -123,6 +108,7 @@ func TestTeamUsers(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {

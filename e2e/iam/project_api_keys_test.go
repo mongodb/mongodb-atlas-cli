@@ -37,7 +37,7 @@ func TestProjectAPIKeys(t *testing.T) {
 
 	// This test must run first to grab the ID of the project to later describe
 	t.Run("Create", func(t *testing.T) {
-		desc := "e2e-test"
+		const desc = "e2e-test"
 		cmd := exec.Command(cliPath, iamEntity,
 			projectsEntity,
 			apiKeysEntity,

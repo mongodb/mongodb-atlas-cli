@@ -23,9 +23,6 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/mongodb/mongocli/internal/config"
-	"go.mongodb.org/ops-manager/opsmngr"
-
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -180,7 +177,7 @@ func deleteTeam(teamID string) error {
 // OrgNUser returns the user at the position userIndex.
 // We need to pass the userIndex because the command iam teams users add would not work
 // if the the user is already in the team.
-func OrgNUser(userIndex int) (username, userID string, err error) {
+func OrgNUser(n int) (username, userID string, err error) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", "", err
@@ -191,35 +188,22 @@ func OrgNUser(userIndex int) (username, userID string, err error) {
 		usersEntity,
 		"list",
 		"--limit",
-		strconv.Itoa(userIndex+1),
+		strconv.Itoa(n+1),
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
 	if err != nil {
-		return "", "", err
+		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}
 
-	if config.Service() == config.CloudService {
-		var users mongodbatlas.AtlasUsersResponse
-		if err := json.Unmarshal(resp, &users); err != nil {
-			return "", "", err
-		}
-
-		if len(users.Results) < userIndex {
-			return "", "", fmt.Errorf("invalid index %d for %d users", userIndex, len(users.Results))
-		}
-
-		return users.Results[userIndex].Username, users.Results[userIndex].ID, nil
-	}
-	var users opsmngr.UsersResponse
+	var users mongodbatlas.AtlasUsersResponse
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}
 
-	if len(users.Results) < userIndex {
-		return "", "", fmt.Errorf("invalid index %d for %d users", userIndex, len(users.Results))
+	if len(users.Results) <= n {
+		return "", "", fmt.Errorf("invalid index %d for %d users", n, len(users.Results))
 	}
 
-	return users.Results[userIndex].Username, users.Results[userIndex].ID, nil
+	return users.Results[n].Username, users.Results[n].ID, nil
 }

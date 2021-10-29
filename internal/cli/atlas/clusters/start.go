@@ -41,7 +41,7 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var startTmpl = "Starting cluster {{.Name}}.\n"
+var startTmpl = "Starting cluster '{{.Name}}'.\n"
 
 func (opts *StartOpts) Run() error {
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)

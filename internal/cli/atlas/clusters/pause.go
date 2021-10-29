@@ -41,7 +41,7 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var pauseTmpl = "Pausing cluster {{.Name}}.\n"
+var pauseTmpl = "Pausing cluster '{{.Name}}'.\n"
 
 func (opts *PauseOpts) Run() error {
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.name)

@@ -68,7 +68,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTmpl = "Deploying cluster {{.Name}}.\n"
+var createTmpl = "Deploying cluster '{{.Name}}'.\n"
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()

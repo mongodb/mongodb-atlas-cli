@@ -49,7 +49,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var updateTmpl = "Updating cluster {{.Name}}.\n"
+var updateTmpl = "Updating cluster '{{.Name}}'.\n"
 
 func (opts *UpdateOpts) Run() error {
 	cluster, err := opts.cluster()

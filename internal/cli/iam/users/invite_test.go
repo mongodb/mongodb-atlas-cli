@@ -25,6 +25,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -228,8 +229,8 @@ func TestNewUserRequestWithPasswordStin(t *testing.T) {
 		username: "testUser",
 	}
 
-	opts.InitInput(bytes.NewReader([]byte(password)))()
-	opts.Prompt()
+	require.NoError(t, opts.InitInput(bytes.NewReader([]byte(password)))())
+	require.NoError(t, opts.Prompt())
 
 	user, err := opts.newUserRequest()
 	if err != nil {

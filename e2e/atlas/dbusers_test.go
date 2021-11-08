@@ -26,6 +26,7 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -110,9 +111,8 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		var users []mongodbatlas.DatabaseUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &users))
+
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
@@ -191,14 +191,14 @@ func testCreatePasswordCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	cmd.Env = os.Environ()
 
 	resp, err := cmd.CombinedOutput()
-	a := assert.New(t)
-	a.NoError(err)
+	require.NoError(t, err)
 
 	var user mongodbatlas.DatabaseUser
 	if err := json.Unmarshal(resp, &user); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	a := assert.New(t)
 	a.Equal(username, user.Username)
 	if a.Len(user.Scopes, 2) {
 		a.Equal(user.Scopes[0].Name, clusterName0)

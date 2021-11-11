@@ -26,7 +26,10 @@ go-msi check-env
 SOURCE_FILES=./cmd/mongocli
 
 VERSION=$(git describe | cut -d "v" -f 2)
+COMMIT=$(git log -n1 --format=format:"%H")
 
-env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION}" -o ./bin/mongocli.exe "${SOURCE_FILES}"
+env GOOS=windows GOARCH=amd64 go build \
+  -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${COMMIT}" \
+  -o ./bin/mongocli.exe "${SOURCE_FILES}"
 
 go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version "${VERSION}"

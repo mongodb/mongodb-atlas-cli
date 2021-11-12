@@ -35,7 +35,7 @@ const (
 	ldapBindPassword = "admin"
 )
 
-func TestLDAP(t *testing.T) {
+func TestLDAPWithFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
@@ -65,28 +65,6 @@ func TestLDAP(t *testing.T) {
 	})
 
 	require.NotEmpty(t, requestID)
-
-	t.Run("VerifyPasswordStdin", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			securityEntity,
-			ldapEntity,
-			"verify",
-			"--hostname",
-			ldapHostname,
-			"--port",
-			ldapPort,
-			"--bindUsername",
-			"cn=admin,dc=example,dc=org",
-			"--projectId", g.projectID,
-			"-o",
-			"json")
-
-		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
-		cmd.Stdin = passwordStdin
-
-		requestID = testLDAPVerifyCmd(t, cmd)
-	})
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -154,7 +132,66 @@ func TestLDAP(t *testing.T) {
 		testLDAPSaveCmd(t, cmd)
 	})
 
-	t.Run("SavePasswordStdin", func(t *testing.T) {
+	t.Run("Get", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			securityEntity,
+			ldapEntity,
+			"get",
+			"--projectId", g.projectID,
+			"-o",
+			"json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		a := assert.New(t)
+		var configuration mongodbatlas.LDAPConfiguration
+		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
+			a.Equal(ldapHostname, configuration.LDAP.Hostname)
+			requestID = configuration.RequestID
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		testLDAPDelete(t, cliPath, g.projectID)
+	})
+}
+
+func TestLDAPWithStdin(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("ldap")
+
+	cliPath, err := e2e.Bin()
+	require.NoError(t, err)
+
+	var requestID string
+
+	t.Run("Verify", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			securityEntity,
+			ldapEntity,
+			"verify",
+			"--hostname",
+			ldapHostname,
+			"--port",
+			ldapPort,
+			"--bindUsername",
+			"cn=admin,dc=example,dc=org",
+			"--projectId", g.projectID,
+			"-o",
+			"json")
+
+		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
+		cmd.Stdin = passwordStdin
+
+		requestID = testLDAPVerifyCmd(t, cmd)
+	})
+
+	require.NotEmpty(t, requestID)
+
+	t.Run("Save", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			securityEntity,
@@ -181,40 +218,23 @@ func TestLDAP(t *testing.T) {
 		testLDAPSaveCmd(t, cmd)
 	})
 
-	t.Run("Get", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			securityEntity,
-			ldapEntity,
-			"get",
-			"--projectId", g.projectID,
-			"-o",
-			"json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-
-		a := assert.New(t)
-		var configuration mongodbatlas.LDAPConfiguration
-		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(ldapHostname, configuration.LDAP.Hostname)
-			requestID = configuration.RequestID
-		}
-	})
-
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			securityEntity,
-			ldapEntity,
-			"delete",
-			"--projectId", g.projectID,
-			"--force")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
+		testLDAPDelete(t, cliPath, g.projectID)
 	})
+}
+
+func testLDAPDelete(t *testing.T, cliPath string, projectID string) {
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		securityEntity,
+		ldapEntity,
+		"delete",
+		"--projectId", projectID,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
 }
 
 func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
@@ -228,7 +248,6 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	var configuration mongodbatlas.LDAPConfiguration
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 		a.Equal(pending, configuration.Status)
-		a.Equal(ldapBindPassword, configuration.LDAP.BindPassword)
 		return configuration.RequestID
 	}
 

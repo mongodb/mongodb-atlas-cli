@@ -139,7 +139,7 @@ func (opts *CreateOpts) validate() error {
 		return errors.New("missing role for the user")
 	}
 
-	if opts.isExternal() && (opts.password != "") {
+	if opts.isExternal() && opts.password != "" {
 		return errors.New("can't supply both $external authentication and password")
 	}
 

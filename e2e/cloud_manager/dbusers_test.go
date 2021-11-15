@@ -17,10 +17,8 @@ package cloud_manager_test
 
 import (
 	"bytes"
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"os/exec"
 	"strings"
@@ -30,39 +28,23 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-func TestDBUsers(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func TestDBUsersWithFlags(t *testing.T) {
+	username, err := generateUsername()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n, err := rand.Int(rand.Reader, big.NewInt(1000))
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	// make sure security is enabled, this should be a no-op for cloud manager
 	t.Run("Enable security", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			securityEntity,
-			"enable",
-			"MONGODB-CR",
-			"SCRAM-SHA-256")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if !strings.Contains(string(resp), "Changes are being applied") {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
-		}
+		testEnableSecurity(t, cliPath)
 	})
-	t.Run("Watch", watchAutomation(cliPath))
 
-	username := fmt.Sprintf("user-%v", n)
+	t.Run("Watch", watchAutomation(cliPath))
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -73,21 +55,6 @@ func TestDBUsers(t *testing.T) {
 			"--password=passW0rd",
 			"--role=readWriteAnyDatabase",
 			"--mechanisms=SCRAM-SHA-256")
-
-		testCreatePasswordCmd(t, cmd)
-	})
-
-	t.Run("CreatePasswordStdin", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			entity,
-			dbUsersEntity,
-			"create",
-			"--username="+username,
-			"--role=readWriteAnyDatabase",
-			"--mechanisms=SCRAM-SHA-256")
-
-		passwordStdin := bytes.NewBuffer([]byte("passW0rd"))
-		cmd.Stdin = passwordStdin
 
 		testCreatePasswordCmd(t, cmd)
 	})
@@ -117,26 +84,99 @@ func TestDBUsers(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
+		testDelete(t, cliPath, username)
+	})
+}
+
+func TestDBUsersWithStdin(t *testing.T) {
+	username, err := generateUsername()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// make sure security is enabled, this should be a no-op for cloud manager
+	t.Run("Enable security", func(t *testing.T) {
+		testEnableSecurity(t, cliPath)
+	})
+
+	t.Run("Watch", watchAutomation(cliPath))
+
+	t.Run("CreatePassword", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			dbUsersEntity,
-			"delete",
-			username,
-			"--force",
-			"--authDB",
-			"admin",
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+			"create",
+			"--username="+username,
+			"--role=readWriteAnyDatabase",
+			"--mechanisms=SCRAM-SHA-256")
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		passwordStdin := bytes.NewBuffer([]byte("passW0rd"))
+		cmd.Stdin = passwordStdin
 
-		if !strings.Contains(string(resp), "Changes are being applied") {
-			t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
-		}
+		testCreatePasswordCmd(t, cmd)
 	})
+
+	t.Run("Delete", func(t *testing.T) {
+		testDelete(t, cliPath, username)
+	})
+}
+
+func generateUsername() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("user-%v", n), nil
+}
+
+func testEnableSecurity(t *testing.T, cliPath string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		entity,
+		securityEntity,
+		"enable",
+		"MONGODB-CR",
+		"SCRAM-SHA-256")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	if !strings.Contains(string(resp), "Changes are being applied") {
+		t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
+	}
+}
+
+func testDelete(t *testing.T, cliPath, username string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		entity,
+		dbUsersEntity,
+		"delete",
+		username,
+		"--force",
+		"--authDB",
+		"admin",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	if !strings.Contains(string(resp), "Changes are being applied") {
+		t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
+	}
 }
 
 func testCreatePasswordCmd(t *testing.T, cmd *exec.Cmd) {

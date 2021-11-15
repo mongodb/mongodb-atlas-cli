@@ -267,6 +267,5 @@ func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 	var configuration mongodbatlas.LDAPConfiguration
 	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
 		a.Equal(ldapHostname, configuration.LDAP.Hostname)
-		a.Equal(ldapBindPassword, configuration.LDAP.BindPassword)
 	}
 }

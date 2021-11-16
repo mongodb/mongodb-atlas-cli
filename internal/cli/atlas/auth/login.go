@@ -41,7 +41,7 @@ type loginOpts struct {
 }
 
 func (o *loginOpts) Run() error {
-	const clientID = "0oa10ni0xn0e8CCQ90h8"
+	const clientID = "0oadn4hoajpzxeSEy357"
 	device, err := RequestCode(
 		http.DefaultClient,
 		"http://localhost:8080/device/generate",

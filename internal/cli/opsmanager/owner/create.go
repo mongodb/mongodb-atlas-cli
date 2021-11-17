@@ -29,7 +29,9 @@ import (
 )
 
 type CreateOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
+	cli.InputOpts
 	email     string
 	password  string
 	firstName string
@@ -81,6 +83,12 @@ func (opts *CreateOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.password)
+		return err
+	}
+
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
@@ -96,10 +104,13 @@ func CreateBuilder() *cobra.Command {
 		Long:  "Create the first user for Ops Manager. Use this command to automate Ops Manager Installations.",
 		Args:  cobra.OnlyValidArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			_ = opts.InitOutput(cmd.OutOrStdout(), createTemplate)()
-			if err := opts.initStore(cmd.Context())(); err != nil {
+			if err := opts.PreRunE(
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitInput(cmd.InOrStdin())); err != nil {
 				return err
 			}
+
 			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

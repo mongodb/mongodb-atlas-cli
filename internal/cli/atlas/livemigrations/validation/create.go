@@ -65,6 +65,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitInput(cmd.InOrStdin()),
 				opts.Validate,
 			)
 		},

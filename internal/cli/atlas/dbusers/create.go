@@ -17,6 +17,7 @@ package dbusers
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
@@ -33,6 +34,7 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.InputOpts
 	username    string
 	password    string
 	x509Type    string
@@ -120,6 +122,12 @@ func (opts *CreateOpts) Prompt() error {
 	if opts.isExternal() || opts.password != "" {
 		return nil
 	}
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.password)
+		return err
+	}
+
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
@@ -184,6 +192,7 @@ func CreateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitInput(cmd.InOrStdin()),
 				opts.validate,
 			)
 		},

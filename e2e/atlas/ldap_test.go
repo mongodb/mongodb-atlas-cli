@@ -16,6 +16,7 @@
 package atlas_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"os/exec"
@@ -28,12 +29,13 @@ import (
 )
 
 const (
-	pending      = "PENDING"
-	ldapHostname = "localhost"
-	ldapPort     = "19657"
+	pending          = "PENDING"
+	ldapHostname     = "localhost"
+	ldapPort         = "19657"
+	ldapBindPassword = "admin"
 )
 
-func TestLDAP(t *testing.T) {
+func TestLDAPWithFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
@@ -54,20 +56,12 @@ func TestLDAP(t *testing.T) {
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
-			"admin",
+			ldapBindPassword,
 			"--projectId", g.projectID,
 			"-o",
 			"json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
-		var configuration mongodbatlas.LDAPConfiguration
-		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(pending, configuration.Status)
-			requestID = configuration.RequestID
-		}
+		requestID = testLDAPVerifyCmd(t, cmd)
 	})
 
 	require.NotEmpty(t, requestID)
@@ -125,7 +119,7 @@ func TestLDAP(t *testing.T) {
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
-			"admin",
+			ldapBindPassword,
 			"--mappingMatch",
 			"(.+)@ENGINEERING.EXAMPLE.COM",
 			"--mappingSubstitution",
@@ -134,15 +128,8 @@ func TestLDAP(t *testing.T) {
 			"-o",
 			"json",
 		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
-		var configuration mongodbatlas.LDAPConfiguration
-		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(ldapHostname, configuration.LDAP.Hostname)
-		}
+		testLDAPSaveCmd(t, cmd)
 	})
 
 	t.Run("Get", func(t *testing.T) {
@@ -167,16 +154,118 @@ func TestLDAP(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
+		testLDAPDelete(t, cliPath, g.projectID)
+	})
+}
+
+func TestLDAPWithStdin(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProjectAndCluster("ldap")
+
+	cliPath, err := e2e.Bin()
+	require.NoError(t, err)
+
+	var requestID string
+
+	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			securityEntity,
 			ldapEntity,
-			"delete",
+			"verify",
+			"--hostname",
+			ldapHostname,
+			"--port",
+			ldapPort,
+			"--bindUsername",
+			"cn=admin,dc=example,dc=org",
 			"--projectId", g.projectID,
-			"--force")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
+			"-o",
+			"json")
+
+		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
+		cmd.Stdin = passwordStdin
+
+		requestID = testLDAPVerifyCmd(t, cmd)
 	})
+
+	require.NotEmpty(t, requestID)
+
+	t.Run("Save", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			securityEntity,
+			ldapEntity,
+			"save",
+			"--hostname",
+			ldapHostname,
+			"--port",
+			ldapPort,
+			"--bindUsername",
+			"cn=admin,dc=example,dc=org",
+			"--mappingMatch",
+			"(.+)@ENGINEERING.EXAMPLE.COM",
+			"--mappingSubstitution",
+			"cn={0},ou=engineering,dc=example,dc=com",
+			"--projectId", g.projectID,
+			"-o",
+			"json",
+		)
+
+		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
+		cmd.Stdin = passwordStdin
+
+		testLDAPSaveCmd(t, cmd)
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		testLDAPDelete(t, cliPath, g.projectID)
+	})
+}
+
+func testLDAPDelete(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		securityEntity,
+		ldapEntity,
+		"delete",
+		"--projectId", projectID,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+	assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
+}
+
+func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
+	t.Helper()
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+
+	a := assert.New(t)
+	var configuration mongodbatlas.LDAPConfiguration
+	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
+		a.Equal(pending, configuration.Status)
+		return configuration.RequestID
+	}
+
+	return ""
+}
+
+func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
+	t.Helper()
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
+
+	a := assert.New(t)
+	var configuration mongodbatlas.LDAPConfiguration
+	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
+		a.Equal(ldapHostname, configuration.LDAP.Hostname)
+	}
 }

@@ -16,7 +16,10 @@ package ldap
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -29,6 +32,7 @@ import (
 type VerifyOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.InputOpts
 	hostname           string
 	port               int
 	bindUsername       string
@@ -59,6 +63,31 @@ func (opts *VerifyOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *VerifyOpts) Prompt() error {
+	if opts.bindPassword != "" {
+		return nil
+	}
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.bindPassword)
+		return err
+	}
+
+	prompt := &survey.Password{
+		Message: "Password:",
+	}
+
+	if err := survey.AskOne(prompt, &opts.bindPassword); err != nil {
+		return err
+	}
+
+	if opts.bindPassword == "" {
+		return errors.New("no password provided")
+	}
+
+	return nil
+}
+
 func (opts *VerifyOpts) newLDAP() *atlas.LDAP {
 	return &atlas.LDAP{
 		Hostname:           opts.hostname,
@@ -77,10 +106,14 @@ func VerifyBuilder() *cobra.Command {
 		Use:   "verify",
 		Short: "Request verification of an LDAP configuration.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
+			if err := opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), verifyTemplate))
+				opts.InitOutput(cmd.OutOrStdout(), verifyTemplate),
+				opts.InitInput(cmd.InOrStdin())); err != nil {
+				return err
+			}
+			return opts.Prompt()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -99,7 +132,6 @@ func VerifyBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.Hostname)
 	_ = cmd.MarkFlagRequired(flag.BindUsername)
-	_ = cmd.MarkFlagRequired(flag.BindPassword)
 
 	cmd.AddCommand(
 		StatusBuilder(),

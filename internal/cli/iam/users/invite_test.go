@@ -18,12 +18,14 @@
 package users
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -218,5 +220,24 @@ func TestCreateUserRole(t *testing.T) {
 				t.Fatalf("expected: %v, got: %v", tc.want, got)
 			}
 		})
+	}
+}
+
+func TestNewUserRequestWithPasswordStin(t *testing.T) {
+	password := "p@ssw0rd"
+	opts := &InviteOpts{
+		username: "testUser",
+	}
+
+	require.NoError(t, opts.InitInput(bytes.NewReader([]byte(password)))())
+	require.NoError(t, opts.Prompt())
+
+	user, err := opts.newUserRequest()
+	if err != nil {
+		t.Fatalf("newUserRequest() unexpected error: %v", err)
+	}
+
+	if user.Password != password {
+		t.Fatalf("failed to read password from stream")
 	}
 }

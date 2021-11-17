@@ -18,10 +18,12 @@
 package owner
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -74,4 +76,17 @@ func TestManagerOwnerCreate_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
+}
+
+func TestManagerOwnerCreateWithPasswordStdin(t *testing.T) {
+	password := "P4ssw0rd!"
+
+	createOpts := &CreateOpts{}
+
+	require.NoError(t, createOpts.InitInput(bytes.NewReader([]byte(password)))())
+	require.NoError(t, createOpts.Prompt())
+
+	if u := createOpts.newOwner(); u.Password != password {
+		t.Fatalf("failed to set password from input stream")
+	}
 }

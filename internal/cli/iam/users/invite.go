@@ -35,6 +35,7 @@ var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users 
 
 type InviteOpts struct {
 	cli.OutputOpts
+	cli.InputOpts
 	username     string
 	password     string
 	country      string
@@ -65,6 +66,7 @@ func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	user := &store.UserRequest{
 		AtlasRoles: atlasRoles,
 		User: &opsmngr.User{
@@ -160,6 +162,12 @@ func (opts *InviteOpts) Prompt() error {
 	if opts.password != "" {
 		return nil
 	}
+
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.password)
+		return err
+	}
+
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
@@ -238,6 +246,7 @@ func InviteBuilder() *cobra.Command {
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			opts.InitInput(cmd.InOrStdin())
 			if config.Service() != config.OpsManagerService {
 				_ = cmd.MarkFlagRequired(flag.Country)
 			}

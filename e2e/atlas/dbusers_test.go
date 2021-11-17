@@ -16,6 +16,7 @@
 package atlas_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -25,28 +26,30 @@ import (
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
 	roleReadWrite        = "readWrite"
+	userPassword         = "passW0rd"
 	scopeClusterDataLake = "Cluster0,Cluster1:CLUSTER"
 	clusterName0         = "Cluster0"
 	clusterName1         = "Cluster1"
 	clusterType          = "CLUSTER"
 )
 
-func TestDBUsers(t *testing.T) {
-	n, err := e2e.RandInt(1000)
+func TestDBUserWithFlags(t *testing.T) {
+	username, err := generateUsername()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	username := fmt.Sprintf("user-%v", n)
 
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -55,27 +58,12 @@ func TestDBUsers(t *testing.T) {
 			"atlasAdmin",
 			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
-			"--password=passW0rd",
+			"--password", userPassword,
 			"--scope", scopeClusterDataLake,
 			"-o=json",
 		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		a.NoError(err)
 
-		var user mongodbatlas.DatabaseUser
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		a.Equal(username, user.Username)
-		if a.Len(user.Scopes, 2) {
-			a.Equal(user.Scopes[0].Name, clusterName0)
-			a.Equal(user.Scopes[0].Type, clusterType)
-			a.Equal(user.Scopes[1].Name, clusterName1)
-			a.Equal(user.Scopes[0].Type, clusterType)
-		}
+		testCreateUserCmd(t, cmd, username)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -92,35 +80,70 @@ func TestDBUsers(t *testing.T) {
 		}
 
 		var users []mongodbatlas.DatabaseUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &users))
+
 		if len(users) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})
 
 	t.Run("Describe", func(t *testing.T) {
+		testDescribeUser(t, cliPath, username)
+	})
+
+	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			dbusersEntity,
-			"describe",
+			"update",
 			username,
+			"--role",
+			roleReadWrite,
+			"--scope",
+			clusterName0,
+			"--password",
+			userPassword,
 			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		testUpdateUserCmd(t, cmd, username)
+	})
 
-		var user mongodbatlas.DatabaseUser
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-		if user.Username != username {
-			t.Fatalf("expected username to match %v, got %v", username, user.Username)
-		}
+	t.Run("Delete", func(t *testing.T) {
+		testDeleteUser(t, cliPath, atlasEntity, dbusersEntity, username)
+	})
+}
+
+func TestDBUsersWithStdin(t *testing.T) {
+	username, err := generateUsername()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	cliPath, err := e2e.Bin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
+			"--username", username,
+			"--scope", scopeClusterDataLake,
+			"-o=json",
+		)
+
+		passwordStdin := bytes.NewBuffer([]byte(userPassword))
+		cmd.Stdin = passwordStdin
+
+		testCreateUserCmd(t, cmd, username)
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		testDescribeUser(t, cliPath, username)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -134,47 +157,116 @@ func TestDBUsers(t *testing.T) {
 			"--scope",
 			clusterName0,
 			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var user mongodbatlas.DatabaseUser
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		a := assert.New(t)
-		a.Equal(username, user.Username)
-		if a.Len(user.Roles, 1) {
-			a.Equal("admin", user.Roles[0].DatabaseName)
-			a.Equal(roleReadWrite, user.Roles[0].RoleName)
-		}
-
-		a.Len(user.Scopes, 1)
-		a.Equal(user.Scopes[0].Name, clusterName0)
-		a.Equal(user.Scopes[0].Type, clusterType)
+		testUpdateUserCmd(t, cmd, username)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			atlasEntity,
-			dbusersEntity,
-			"delete",
-			username,
-			"--force",
-			"--authDB",
-			"admin")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		expected := fmt.Sprintf("DB user '%s' deleted\n", username)
-		assert.Equal(t, expected, string(resp))
+		testDeleteUser(t, cliPath, atlasEntity, dbusersEntity, username)
 	})
+}
+
+func generateUsername() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("user-%v", n), nil
+}
+
+func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
+	t.Helper()
+
+	cmd.Env = os.Environ()
+
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err)
+
+	var user mongodbatlas.DatabaseUser
+	if err := json.Unmarshal(resp, &user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	a := assert.New(t)
+	a.Equal(username, user.Username)
+	if a.Len(user.Scopes, 2) {
+		a.Equal(user.Scopes[0].Name, clusterName0)
+		a.Equal(user.Scopes[0].Type, clusterType)
+		a.Equal(user.Scopes[1].Name, clusterName1)
+		a.Equal(user.Scopes[1].Type, clusterType)
+	}
+}
+
+func testDescribeUser(t *testing.T, cliPath, username string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		dbusersEntity,
+		"describe",
+		username,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	var user mongodbatlas.DatabaseUser
+	if err := json.Unmarshal(resp, &user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if user.Username != username {
+		t.Fatalf("expected username to match %v, got %v", username, user.Username)
+	}
+}
+
+func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
+	t.Helper()
+
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	var user mongodbatlas.DatabaseUser
+	if err := json.Unmarshal(resp, &user); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	a := assert.New(t)
+	a.Equal(username, user.Username)
+	if a.Len(user.Roles, 1) {
+		a.Equal("admin", user.Roles[0].DatabaseName)
+		a.Equal(roleReadWrite, user.Roles[0].RoleName)
+	}
+
+	a.Len(user.Scopes, 1)
+	a.Equal(user.Scopes[0].Name, clusterName0)
+	a.Equal(user.Scopes[0].Type, clusterType)
+}
+
+func testDeleteUser(t *testing.T, cliPath, atlasEntity, dbusersEntity, username string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		atlasEntity,
+		dbusersEntity,
+		"delete",
+		username,
+		"--force",
+		"--authDB",
+		"admin")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+	}
+
+	expected := fmt.Sprintf("DB user '%s' deleted\n", username)
+	assert.Equal(t, expected, string(resp))
 }

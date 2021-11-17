@@ -128,7 +128,7 @@ const (
 	MetricMode                      = "Atlas computes the current metric value as an average."
 	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
-	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key." //nolint:gosec // This is just a message not a credential
 	APIKey                          = "API Key."
 	RoutingKey                      = "An optional field for your Routing Key."
 	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
@@ -164,7 +164,7 @@ const (
 	SSEEnabled                      = "Flag indicating whether this S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled          = "Flag indicating the style of this endpoint."
 	APIKeyDescription               = "Description of the API key."
-	APIKeyRoles                     = "List of roles for the API key."
+	APIKeyRoles                     = "List of roles for the API key." //nolint:gosec // This is just a message not a credential
 	NotificationRegion              = "Region that indicates which API URL to use."
 	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress        = "Email address to which alert notifications are sent."
@@ -228,7 +228,6 @@ const (
 	ArchiveAfter                    = "Number of days that specifies the age limit for the data in the live Atlas cluster."
 	TargetProjectID                 = "Unique identifier of the project that contains the destination cluster for the restore job."
 	APIAccessListIPEntry            = "IP address to be allowed for a given API key."
-	NetworkAccessListIPEntries      = "List of IP addresses to be allowed to access the deployment."
 	NetworkAccessListIPEntry        = "IP address to be allowed to access the deployment."
 	AccessListCIDREntry             = "Whitelist entry in CIDR notation to be added for a given API key."
 	LinkTokenAccessListCIDREntries  = "IP address access list entries that are associated with the link-token." //nolint:gosec // This is just a message not a credential
@@ -321,7 +320,6 @@ Valid values: 15|30|60.`
 	SnapshotIntervalHours = `Number of hours between snapshots.
 Valid values: 6|8|12|24.`
 	LiveMigrationDestinationClusterName      = "Human-readable label that identifies the Atlas destination cluster."
-	LiveMigrationDestinationProjectID        = "Unique 24-hexadecimal digit string that identifies the destination project."
 	LiveMigrationHostEntries                 = "List of hosts running the MongoDB Agent that can transfer your MongoDB data from the source (Cloud Manager or Ops Manager) to destination (Atlas) deployments. Each live migration process uses its own dedicated migration host."
 	LiveMigrationSourceClusterName           = "Human-readable label that identifies the source Cloud Manager or Ops Manager cluster."
 	LiveMigrationSourceProjectID             = "Unique 24-hexadecimal digit string that identifies the source project."

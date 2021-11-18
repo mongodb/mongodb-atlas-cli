@@ -218,7 +218,7 @@ functions:
 
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
-          golangci-lint run --timeout 2m0s --out-format junit-xml > lint-tests.xml
+          golangci-lint run --timeout 5m0s --out-format junit-xml > lint-tests.xml
   "install gotestsum":
     - command: shell.exec
       type: setup

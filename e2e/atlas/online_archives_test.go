@@ -137,6 +137,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	const expireAfterDays = float64(4)
+	expireAfterDaysStr := fmt.Sprintf("%.0f", expireAfterDays)
 	cmd := exec.Command(cliPath,
 		atlasEntity,
 		clustersEntity,
@@ -145,7 +146,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"--archiveAfter", fmt.Sprintf("%.0f", expireAfterDays),
+		"--archiveAfter", expireAfterDaysStr,
 		"-o=json")
 
 	cmd.Env = os.Environ()

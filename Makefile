@@ -6,7 +6,7 @@ BINARY_NAME=mongocli
 DESTINATION=./bin/$(BINARY_NAME)
 INSTALL_PATH="${GOPATH}/bin/$(BINARY_NAME)"
 
-GOLANGCI_VERSION=v1.42.0
+GOLANGCI_VERSION=v1.43.0
 COVERAGE=coverage.out
 MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
@@ -58,7 +58,7 @@ test: unit-test integration-test
 .PHONY: lint
 lint: ## Run linter
 	@echo "==> Linting all packages..."
-	golangci-lint run
+	golangci-lint run --timeout 5m
 
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors

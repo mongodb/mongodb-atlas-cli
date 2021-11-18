@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -148,7 +147,7 @@ var errTemplate = errors.New("error loading template")
 // template returns the correct template from the output type.
 func template(outputType, value string) (string, error) {
 	if outputType == goTemplateFile {
-		data, err := ioutil.ReadFile(value)
+		data, err := os.ReadFile(value)
 		if err != nil {
 			return "", fmt.Errorf("%w: %s, %v", errTemplate, value, err)
 		}

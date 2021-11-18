@@ -20,9 +20,9 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"net/http"
+	"os"
 	"runtime"
 	"time"
 
@@ -129,7 +129,7 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 func (s *Store) transport() (*http.Transport, error) {
 	switch {
 	case s.caCertificate != "":
-		dat, err := ioutil.ReadFile(s.caCertificate)
+		dat, err := os.ReadFile(s.caCertificate)
 		if err != nil {
 			return nil, err
 		}

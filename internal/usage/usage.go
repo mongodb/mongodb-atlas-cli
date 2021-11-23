@@ -128,7 +128,7 @@ const (
 	MetricMode                      = "Atlas computes the current metric value as an average."
 	NotificationToken               = "Slack API token or Bot token or Flowdock personal API token." //nolint:gosec // This is just a message not a password
 	NotificationsChannelName        = "Slack channel name. Required for the SLACK notifications type."
-	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key."
+	AlertConfigAPIKey               = "Datadog API Key, Opsgenie API Key, VictorOps API key." //nolint:gosec // This is just a message not a credential
 	APIKey                          = "API Key."
 	RoutingKey                      = "An optional field for your Routing Key."
 	IntegrationAPIToken             = "Your API Token." //nolint:gosec // This is just a message not a credential
@@ -164,7 +164,7 @@ const (
 	SSEEnabled                      = "Flag indicating whether this S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled          = "Flag indicating the style of this endpoint."
 	APIKeyDescription               = "Description of the API key."
-	APIKeyRoles                     = "List of roles for the API key."
+	APIKeyRoles                     = "List of roles for the API key." //nolint:gosec // This is just a message not a credential
 	NotificationRegion              = "Region that indicates which API URL to use."
 	NotificationDelayMin            = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
 	NotificationEmailAddress        = "Email address to which alert notifications are sent."

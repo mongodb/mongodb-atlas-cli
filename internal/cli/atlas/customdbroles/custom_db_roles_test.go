@@ -39,6 +39,10 @@ func Test_appendActions(t *testing.T) {
 		existingActions []mongodbatlas.Action
 		newActions      []mongodbatlas.Action
 	}
+
+	test1 := "test1"
+	test2 := "test2"
+
 	tests := []struct {
 		name string
 		args args
@@ -60,8 +64,8 @@ func Test_appendActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test1,
+								DB:         &test1,
 							},
 						},
 					},
@@ -73,8 +77,8 @@ func Test_appendActions(t *testing.T) {
 					Action: "TEST",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test1,
+							DB:         &test1,
 						},
 					},
 				},
@@ -88,8 +92,8 @@ func Test_appendActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test1,
+								DB:         &test1,
 							},
 						},
 					},
@@ -99,8 +103,8 @@ func Test_appendActions(t *testing.T) {
 						Action: "NEW",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test1,
+								DB:         &test1,
 							},
 						},
 					},
@@ -111,8 +115,8 @@ func Test_appendActions(t *testing.T) {
 					Action: "TEST",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test1,
+							DB:         &test1,
 						},
 					},
 				},
@@ -120,8 +124,8 @@ func Test_appendActions(t *testing.T) {
 					Action: "NEW",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test1,
+							DB:         &test1,
 						},
 					},
 				},
@@ -135,8 +139,8 @@ func Test_appendActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test2",
+								Collection: &test1,
+								DB:         &test2,
 							},
 						},
 					},
@@ -146,8 +150,8 @@ func Test_appendActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test1,
+								DB:         &test1,
 							},
 						},
 					},
@@ -158,12 +162,12 @@ func Test_appendActions(t *testing.T) {
 					Action: "TEST",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test1,
+							DB:         &test1,
 						},
 						{
-							Collection: "test",
-							Db:         "test2",
+							Collection: &test1,
+							DB:         &test2,
 						},
 					},
 				},
@@ -184,6 +188,10 @@ func Test_joinActions(t *testing.T) {
 	type args struct {
 		newActions []mongodbatlas.Action
 	}
+
+	test3 := "test3"
+	test4 := "test4"
+
 	tests := []struct {
 		name string
 		args args
@@ -204,8 +212,8 @@ func Test_joinActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test3,
+								DB:         &test3,
 							},
 						},
 					},
@@ -213,8 +221,8 @@ func Test_joinActions(t *testing.T) {
 						Action: "TEST2",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test3,
+								DB:         &test3,
 							},
 						},
 					},
@@ -225,8 +233,8 @@ func Test_joinActions(t *testing.T) {
 					Action: "TEST",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test3,
+							DB:         &test3,
 						},
 					},
 				},
@@ -234,8 +242,8 @@ func Test_joinActions(t *testing.T) {
 					Action: "TEST2",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test3,
+							DB:         &test3,
 						},
 					},
 				},
@@ -249,8 +257,8 @@ func Test_joinActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test",
+								Collection: &test3,
+								DB:         &test3,
 							},
 						},
 					},
@@ -258,8 +266,8 @@ func Test_joinActions(t *testing.T) {
 						Action: "TEST",
 						Resources: []mongodbatlas.Resource{
 							{
-								Collection: "test",
-								Db:         "test1",
+								Collection: &test3,
+								DB:         &test4,
 							},
 						},
 					},
@@ -270,12 +278,12 @@ func Test_joinActions(t *testing.T) {
 					Action: "TEST",
 					Resources: []mongodbatlas.Resource{
 						{
-							Collection: "test",
-							Db:         "test1",
+							Collection: &test3,
+							DB:         &test4,
 						},
 						{
-							Collection: "test",
-							Db:         "test",
+							Collection: &test3,
+							DB:         &test3,
 						},
 					},
 				},

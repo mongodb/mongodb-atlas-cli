@@ -85,6 +85,10 @@ func TestBuildAtlasActions(t *testing.T) {
 
 	cluster := true
 
+	testdb := "testdb"
+	collection := "collection"
+	datalake := "DATA_LAKE"
+
 	tests := []test{
 		{
 			input: []string{"clusterName"},
@@ -106,8 +110,8 @@ func TestBuildAtlasActions(t *testing.T) {
 					Action: "clusterName",
 					Resources: []mongodbatlas.Resource{
 						{
-							Db:         "testdb",
-							Collection: "collection",
+							DB:         &testdb,
+							Collection: &collection,
 						},
 					},
 				},
@@ -128,7 +132,7 @@ func TestBuildAtlasActions(t *testing.T) {
 					Action: "name",
 					Resources: []mongodbatlas.Resource{
 						{
-							Db: "DATA_LAKE",
+							DB: &datalake,
 						},
 					},
 				},

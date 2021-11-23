@@ -54,9 +54,9 @@ func BuildAtlasActions(a []string) []atlas.Action {
 		actionName := action[0]
 		if len(action) > 1 {
 			resource := strings.Split(action[1], resourceSep)
-			resourceStruct.Db = resource[0]
+			resourceStruct.DB = &resource[0]
 			if len(resource) > 1 {
-				resourceStruct.Collection = resource[1]
+				resourceStruct.Collection = &resource[1]
 			}
 		} else {
 			resourceStruct.Cluster = pointy.Bool(true)

@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 
@@ -45,7 +44,7 @@ func PostForm(c httpClient, u string, params url.Values, v interface{}) (*atlas.
 		// won't reuse it anyway.
 		const maxBodySlurpSize = 2 << 10
 		if resp.ContentLength == -1 || resp.ContentLength <= maxBodySlurpSize {
-			_, _ = io.CopyN(ioutil.Discard, resp.Body, maxBodySlurpSize)
+			_, _ = io.CopyN(io.Discard, resp.Body, maxBodySlurpSize)
 		}
 
 		resp.Body.Close()

@@ -27,6 +27,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
+	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
@@ -43,7 +44,7 @@ type BuilderOpts struct {
 	store version.ReleaseVersionDescriber
 }
 
-// rootBuilder conditionally adds children commands as needed.
+// Builder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
 // this can be slow to timeout on environments with limited internet access (Ops Manager).
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
@@ -93,6 +94,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
+		auth.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

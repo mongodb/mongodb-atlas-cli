@@ -44,7 +44,7 @@ func (o *loginOpts) Run() error {
 	const clientID = "0oadn4hoajpzxeSEy357"
 	device, err := RequestCode(
 		http.DefaultClient,
-		"http://localhost:8080/device/generate",
+		"http://localhost:8080/api/private/unauth/account/device/authorize",
 		clientID,
 		[]string{"openid"},
 	)
@@ -53,7 +53,8 @@ func (o *loginOpts) Run() error {
 	}
 	fmt.Printf("Copy this: %v\n", device.UserCode)
 	fmt.Printf("Visit the URL for the auth dialog: %v\n", device.VerificationURI)
-	accessToken, err := PollToken(http.DefaultClient, "http://localhost:8080/device/token", clientID, device)
+	fmt.Printf("device.ExpiresIn: %v\n", device.ExpiresIn)
+	accessToken, err := PollToken(http.DefaultClient, "http://localhost:8080/api/private/unauth/account/device/token", clientID, device)
 	if err != nil {
 		panic(err)
 	}

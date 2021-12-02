@@ -97,7 +97,7 @@ func PollToken(c httpClient, pollURL, clientID string, code *CodeResponse) (*Acc
 				"grant_type":  {grantType},
 			}, &r)
 		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "THROTTLED" {
+		if errors.As(err, &target) && target.ErrorCode == "DEVICE_AUTHORIZATION_PENDING" {
 			continue
 		}
 		if err != nil {

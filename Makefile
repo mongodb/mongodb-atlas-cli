@@ -63,7 +63,7 @@ lint: ## Run linter
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors
 	@echo "==> Fixing lint errors"
-	golangci-lint run --fix
+	golangci-lint run --fix --timeout 5m
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters

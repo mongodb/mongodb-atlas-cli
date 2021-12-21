@@ -12,8 +12,7 @@ mongocli completion
    :depth: 1
    :class: singlecol
 
-generate the autocompletion script for the specified shell
-
+Generate the autocompletion script for the specified shell
 
 Generate the autocompletion script for mongocli for the specified shell.
 See each sub-command's help for details on how to use the generated script.
@@ -54,10 +53,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-completion-bash` - generate the autocompletion script for bash
-* :ref:`mongocli-completion-fish` - generate the autocompletion script for fish
-* :ref:`mongocli-completion-powershell` - generate the autocompletion script for powershell
-* :ref:`mongocli-completion-zsh` - generate the autocompletion script for zsh
+* :ref:`mongocli-completion-bash` - Generate the autocompletion script for bash
+* :ref:`mongocli-completion-fish` - Generate the autocompletion script for fish
+* :ref:`mongocli-completion-powershell` - Generate the autocompletion script for powershell
+* :ref:`mongocli-completion-zsh` - Generate the autocompletion script for zsh
 
 
 .. toctree::

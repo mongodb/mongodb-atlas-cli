@@ -6,7 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/briandowns/spinner v1.16.0
+	github.com/briandowns/spinner v1.18.0
 	github.com/go-test/deep v1.0.8
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v38 v38.1.0

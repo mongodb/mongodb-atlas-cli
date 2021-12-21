@@ -18,7 +18,7 @@ require (
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
 	github.com/spf13/afero v1.6.0
 	github.com/spf13/cobra v1.2.1
-	github.com/spf13/viper v1.10.0
+	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.14.0
@@ -46,7 +46,7 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
+	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/term v0.0.0-20210503060354-a79de5458b56 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect

@@ -60,7 +60,7 @@ ssh -i "$keyfile" -o ConnectTimeout=10  -o StrictHostKeyChecking=no -tt "${user}
   source ~/.bashrc
 
   #install mms
-  ego ops_manager_install_from_link --archive "$ARCHIVE" --mongodb-version "4.2.8" --central-url "http://localhost:9080"
+  ego ops_manager_install_from_link --archive "$ARCHIVE" --mongodb-version "4.4.10" --central-url "http://localhost:9080"
   exit
 
 ENDSSH

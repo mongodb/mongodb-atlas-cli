@@ -12,7 +12,7 @@ mongocli completion bash
    :depth: 1
    :class: singlecol
 
-generate the autocompletion script for bash
+Generate the autocompletion script for bash
 
 
 Generate the autocompletion script for the bash shell.

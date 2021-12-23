@@ -126,7 +126,7 @@ functions:
       type: system
       params:
         provider: ec2
-        distro: ubuntu2004-medium
+        distro: ubuntu2004-large
         num_hosts: 1
         security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
     - command: host.list

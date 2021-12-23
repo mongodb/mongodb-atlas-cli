@@ -224,7 +224,7 @@ func TestDeployAndDeleteReplicaSet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if err := generateRSConfig(testFile, hostname, clusterName, "4.2.0", "4.2"); err != nil {
+	if err := generateRSConfig(testFile, hostname, clusterName, testedMDBVersion, testedMDBFCV); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

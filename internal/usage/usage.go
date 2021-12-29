@@ -423,7 +423,7 @@ Valid values: 6|8|12|24.`
 	ServerUsageEndDate                       = "Timestamp, in ISO 8601 date format, when the list of host assignments ends."
 	AlertType                                = "Alert types to silence during maintenance window. Valid values are HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP."
 	MaintenanceDescription                   = "Description of the maintenance window."
-	Event                                    = "Type of the event that triggerred the alert."
+	Event                                    = "Type of the event that triggered the alert."
 	Enabled                                  = "If set to true, the alert configuration is enabled."
 	MatcherFieldName                         = "Name of the field in the target object to match on."
 	MatcherOperator                          = "Operator to test the field's value."

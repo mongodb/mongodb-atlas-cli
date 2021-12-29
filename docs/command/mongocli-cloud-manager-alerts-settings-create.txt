@@ -46,7 +46,7 @@ Options
    * - --event
      - string
      - false
-     - Type of the event that triggerred the alert.
+     - Type of the event that triggered the alert.
    * - -h, --help
      - 
      - false

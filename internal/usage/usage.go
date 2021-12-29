@@ -345,7 +345,7 @@ Valid values: 6|8|12|24.`
 	Granularity                              = "Duration in ISO 8601 notation that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D."
 	Page                                     = "Page number."
 	Forever                                  = "Acknowledges an alert 'forever'."
-	Status                                   = "Alert's status. The values are TRACKING, OPEN, CLOSED, and CANCELLED."
+	Status                                   = "Alert's status. The values are TRACKING, OPEN, CLOSED, and CANCELED."
 	Until                                    = "Time, in ISO 8601 format, until which the alert has been acknowledged. mongocli returns this value after the alert has been acknowledged."
 	ConnectionStringType                     = "When set to 'private', retrieves the connection string for the network peering endpoint."
 	Limit                                    = "Number of items per page."
@@ -377,7 +377,7 @@ Valid values: 6|8|12|24.`
 	AuthenticationEnabled                    = "Specifies whether user authentication with LDAP is enabled."
 	AuthorizationEnabled                     = "Specifies whether user authorization with LDAP is enabled."
 	TeamID                                   = "Unique identification of the team."
-	Password                                 = "User's password." //nolint:gosec // This is just a message not a password
+	Password                                 = "User's password."
 	Country                                  = "The ISO 3166-1 alpha two-letter country code of the user's country of residence."
 	Mobile                                   = "The user's mobile or cell phone number."
 	Period                                   = "Duration in ISO 8601 that specifies how far back in the past to retrieve measurements."

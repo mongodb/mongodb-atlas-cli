@@ -43,15 +43,15 @@ Options
    * - --minutes
      - int
      - false
-     - Beginning of the period for which to retrieve diagnose archive. Ops Manager takes out minutes from the current time.
+     - Beginning of the period, in UNIX Epoch format, from which to start retrieving the diagnose archive. Ops Manager takes out minutes from the current time.
    * - --out
      - string
      - false
-     - Optional output filename, if none given will use diagnose-archive.tar.gz. (default "diagnose-archive.tar.gz")
+     - Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified. (default "diagnose-archive.tar.gz")
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------

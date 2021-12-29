@@ -21,22 +21,6 @@ Syntax
 
    mongocli atlas alerts settings update <alertConfigId> [options]
 
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - alertConfigId
-     - string
-     - false
-     - Unique identifier of the alert configuration you want to update.
-
 Options
 -------
 
@@ -59,7 +43,7 @@ Options
    * - --event
      - string
      - false
-     - Type of event that will trigger an alert.
+     - Type of the event that triggerred the alert.
    * - -h, --help
      - 
      - false
@@ -71,7 +55,7 @@ Options
    * - --matcherOperator
      - string
      - false
-     - The operator to test the field’s value.
+     - Operator to test the field's value.
    * - --matcherValue
      - string
      - false
@@ -79,11 +63,11 @@ Options
    * - --metricMode
      - string
      - false
-     - Atlas computes the current metric value as an average.
+     - If specified, Atlas computes the current metric value as an average.
    * - --metricName
      - string
      - false
-     - Name of the metric against which Atlas checks the configured
+     - Name of the metric against which Atlas checks the configured alert.
    * - --metricOperator
      - string
      - false
@@ -95,7 +79,7 @@ Options
    * - --metricUnits
      - string
      - false
-     - The units for the threshold value.
+     - Units for the threshold value.
    * - --notificationChannelName
      - string
      - false
@@ -111,11 +95,11 @@ Options
    * - --notificationEmailEnabled
      - 
      - false
-     - Flag indicating if email notifications should be sent.
+     - Flag indicating whether email notifications should be sent.
    * - --notificationFlowName
      - string
      - false
-     - Flowdock flow name in lower-case letters.
+     - Flowdock Flow name in lower-case letters for sending alert notifications.
    * - --notificationIntervalMin
      - int
      - false
@@ -127,7 +111,7 @@ Options
    * - --notificationOrgName
      - string
      - false
-     - Flowdock organization name in lower-case letters.
+     - Flowdock organization's name in lower-case letters.
    * - --notificationRegion
      - string
      - false
@@ -139,7 +123,7 @@ Options
    * - --notificationSmsEnabled
      - 
      - false
-     - Flag indicating if text message notifications should be sent.
+     - Flag indicating whether text message notifications should be sent.
    * - --notificationTeamId
      - string
      - false
@@ -147,11 +131,11 @@ Options
    * - --notificationToken
      - string
      - false
-     - Slack API token or Bot token or Flowdock personal API token.
+     - Slack API token, Bot token, or Flowdock personal API token.
    * - --notificationType
      - string
      - false
-     - Type of alert notification.
+     - Type of alert notification. The values are DATADOG, EMAIL, FLOWDOCK, GROUP (Project), ORG, OPS_GENIE, PAGER_DUTY, SLACK, SMS, USER, or VICTOR_OPS.
    * - --notificationUsername
      - string
      - false
@@ -163,12 +147,11 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------

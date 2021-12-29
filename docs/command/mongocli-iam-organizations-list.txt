@@ -39,7 +39,7 @@ Options
    * - --includeDeleted
      - 
      - false
-     - Include deleted organization.
+     - If specified, Atlas includes the deleted organizations.
    * - --limit
      - int
      - false
@@ -47,12 +47,11 @@ Options
    * - --name
      - string
      - false
-     - Performs a case-insensitive search for organizations which exactly match the specified name
+     - Performs a case-insensitive search for organizations which exactly match the specified name.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --page
      - int
      - false

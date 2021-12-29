@@ -12,7 +12,9 @@ mongocli atlas alerts global list
    :depth: 1
    :class: singlecol
 
-Retrieves all the global alerts for the specified Ops Manager project.
+Returns all global alerts for the specified Ops Manager project.
+
+Returns a list of all global alerts for the specified Ops Manager project.
 
 Syntax
 ------
@@ -43,8 +45,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --page
      - int
      - false
@@ -52,7 +53,7 @@ Options
    * - --status
      - string
      - false
-     - Alert's status.
+     - Alert's status. The values are TRACKING, OPEN, CLOSED, and CANCELED.
 
 Inherited Options
 -----------------

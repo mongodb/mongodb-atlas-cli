@@ -53,11 +53,11 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <alertConfigId>",
 		Aliases: []string{"rm"},
-		Short:   "Deletes the specified alert configuration in a project.",
+		Short:   "Deletes the specified alert configuration in a specified project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":              "alertConfigId",
-			"alertConfigIdDesc": "ID of the alert configuration to delete.",
+			"requiredArgs":      "alertConfigId",
+			"alertConfigIdDesc": "Unique identifier of the alert configuration to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

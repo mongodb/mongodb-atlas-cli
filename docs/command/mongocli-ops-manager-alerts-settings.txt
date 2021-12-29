@@ -12,10 +12,11 @@ mongocli ops-manager alerts settings
    :depth: 1
    :class: singlecol
 
-Manage alerts configuration for your project.
+Manages alerts configuration for your project.
 
-The settings command provides access to your alerts configurations.
-You can create, edit, and delete alert configurations.
+The 'mongocli atlas alerts settings' command provides
+access to your alerts configurations. You can list, create, edit, and
+delete alert configurations.
 
 Options
 -------
@@ -53,9 +54,9 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-ops-manager-alerts-settings-create` - Creates one alert configuration in the specified project.
-* :ref:`mongocli-ops-manager-alerts-settings-delete` - Deletes the specified alert configuration in a project.
-* :ref:`mongocli-ops-manager-alerts-settings-fields` - Manage alert configuration fields for your project.
-* :ref:`mongocli-ops-manager-alerts-settings-list` - List alert configurations for your project.
+* :ref:`mongocli-ops-manager-alerts-settings-delete` - Deletes the specified alert configuration in a specified project.
+* :ref:`mongocli-ops-manager-alerts-settings-fields` - Manages alert configuration fields for your project.
+* :ref:`mongocli-ops-manager-alerts-settings-list` - Returns alert configurations for the specified project.
 * :ref:`mongocli-ops-manager-alerts-settings-update` - Updates one alert configuration in the specified project.
 
 

@@ -35,23 +35,23 @@ Options
    * - --MaxVariable
      - string
      - false
-     - Determines which characters are are considered ignorable. This field applies only if indexConfigs.collation.alternate is set to shifted.
+     - Flag that, if specified, determines which characters to ignore. This flag applies only if indexConfigs.collation.alternate is set to shifted.
    * - --alternate
      - string
      - false
-     - Determines whether collation should consider whitespace and punctuation as base characters during comparisons.
+     - Flag that, if specified, determines whether collation should consider whitespace and punctuation as base characters during comparisons.
    * - --backwards
      - 
      - false
-     - If true, strings with diacritics sort from the back to the front of the string.
+     - Flag that, if set to true, strings with diacritics sort from the back to the front of the string.
    * - --caseFirst
      - string
      - false
-     - Determines the sort order of case differences during tertiary level comparisons. 
+     - Flag that, if specified, determines the sort order of case differences during tertiary level comparisons.
    * - --caseLevel
      - 
      - false
-     - If set to true, the index uses case comparison. This field applies only if the strength level is set to 1 or 2.
+     - Flag that indicates whether the index uses case comparison. This flag applies only if the strength level is set to 1 or 2.
    * - --collectionName
      - string
      - true
@@ -75,15 +75,15 @@ Options
    * - --normalization
      - 
      - false
-     - If true, collation checks if text requires normalization and performs normalization to compare text.
+     - Flag that, if set to true, collation checks if text requires normalization and performs normalization to compare text.
    * - --numericOrdering
      - 
      - false
-     - If set to true, collation compares numeric strings as numbers. If false, collation compares numeric strings as strings.
+     - Flag that, if set to true, indicates that collation compares numeric strings as numbers. If set to false, collation compares numeric strings as strings.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
    * - --rsName
      - string
      - true
@@ -91,7 +91,7 @@ Options
    * - --sparse
      - 
      - false
-     - Create a sparse index.
+     - Flag that indicates whether Atlas should create a sparse index.
    * - --strength
      - int
      - false

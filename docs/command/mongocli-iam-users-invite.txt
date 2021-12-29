@@ -35,15 +35,15 @@ Options
    * - --country
      - string
      - false
-     - The ISO 3166-1 alpha 2 country code of the user’s country of residence.
+     - The ISO 3166-1 alpha two-letter country code of the user's country of residence.
    * - --email
      - string
      - true
-     - User’s email address.
+     - User's email address.
    * - --firstName
      - string
      - true
-     - User’s first name.
+     - User's first name.
    * - -h, --help
      - 
      - false
@@ -51,11 +51,11 @@ Options
    * - --lastName
      - string
      - true
-     - User’s last name.
+     - User's last name.
    * - --mobile
      - string
      - false
-     - The user’s mobile or cell phone number.
+     - The user's mobile or cell phone number.
    * - --orgRole
      - strings
      - false
@@ -63,12 +63,11 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --password
      - string
      - false
-     - User’s password.
+     - User's password.
    * - --projectRole
      - strings
      - false

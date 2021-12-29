@@ -12,7 +12,7 @@ mongocli atlas alerts settings delete
    :depth: 1
    :class: singlecol
 
-Deletes the specified alert configuration in a project.
+Deletes the specified alert configuration in a specified project.
 
 Syntax
 ------
@@ -20,22 +20,6 @@ Syntax
 .. code-block::
 
    mongocli atlas alerts settings delete <alertConfigId> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - alertConfigId
-     - string
-     - false
-     - ID of the alert configuration to delete.
 
 Options
 -------
@@ -51,7 +35,7 @@ Options
    * - --force
      - 
      - false
-     - Don't ask for confirmation.
+     - If specified, skips asking for confirmation before proceeding with a requsted action.
    * - -h, --help
      - 
      - false
@@ -59,7 +43,7 @@ Options
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------

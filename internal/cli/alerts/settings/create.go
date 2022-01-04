@@ -53,7 +53,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas alerts config(s) create
+// CreateBuilder mongocli atlas alerts config(s) create
 //	[--event event]
 //	[--enabled enabled]
 //	[--matcherField fieldName --matcherOperator operator --matcherValue value]

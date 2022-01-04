@@ -20,6 +20,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -95,14 +96,14 @@ func (opts *CreateOpts) Prompt() error {
 	return survey.AskOne(prompt, &opts.password)
 }
 
-// mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --accessListIp <IP>.
+// CreateBuilder mongocli ops-manager owner create --email username --password password --firstName firstName --lastName lastName --accessListIp <IP>.
 func CreateBuilder() *cobra.Command {
 	opts := new(CreateOpts)
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create the first user for Ops Manager.",
 		Long:  "Create the first user for Ops Manager. Use this command to automate Ops Manager Installations.",
-		Args:  cobra.OnlyValidArgs,
+		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
@@ -123,8 +124,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.firstName, flag.FirstName, "", usage.FirstName)
 	cmd.Flags().StringVar(&opts.lastName, flag.LastName, "", usage.LastName)
 	cmd.Flags().StringSliceVar(&opts.accessIps, flag.AccessListIP, []string{}, usage.AccessListIps)
-	_ = cmd.Flags().MarkDeprecated(flag.WhitelistIP, fmt.Sprintf("please use --%s instead", flag.AccessListIP))
 	cmd.Flags().StringSliceVar(&opts.accessIps, flag.WhitelistIP, []string{}, usage.AccessListIps)
+	_ = cmd.Flags().MarkDeprecated(flag.WhitelistIP, fmt.Sprintf("please use --%s instead", flag.AccessListIP))
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 

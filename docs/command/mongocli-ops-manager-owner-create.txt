@@ -63,10 +63,6 @@ Options
      - string
      - false
      - User’s password.
-   * - --whitelistIp
-     - strings
-     - false
-     - IP addresses to add to the new user’s access list.
 
 Inherited Options
 -----------------

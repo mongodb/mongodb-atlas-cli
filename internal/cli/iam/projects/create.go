@@ -37,11 +37,11 @@ const (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name                    string
-	projectOwnerID          string
-	regionUsageRestrictions bool
-	noDefaultAlertSettings  bool
-	store                   store.ProjectCreator
+	name                        string
+	projectOwnerID              string
+	regionUsageRestrictions     bool
+	disableDefaultAlertSettings bool
+	store                       store.ProjectCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -58,7 +58,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), !opts.noDefaultAlertSettings, opts.newCreateProjectOptions())
+		opts.newRegionUsageRestrictions(), !opts.disableDefaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -85,21 +85,14 @@ func (opts *CreateOpts) validateOwnerID() error {
 		return nil
 	}
 
-	if config.Service() != config.OpsManagerService {
+	sv, constrain, err := opts.newOpsManagerConstrain()
+	if err != nil {
+		return err
+	}
+
+	if sv == nil || constrain == nil {
 		return nil
 	}
-
-	v, err := opts.store.ServiceVersion()
-	if err != nil {
-		return err
-	}
-
-	sv, err := cli.ParseServiceVersion(v)
-	if err != nil {
-		return err
-	}
-
-	constrain, _ := semver.NewConstraint(">= 6.0")
 
 	if !constrain.Check(sv) {
 		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
@@ -108,7 +101,48 @@ func (opts *CreateOpts) validateOwnerID() error {
 	return nil
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--defaulAlertSettings].
+func (opts *CreateOpts) validateDisableDefaultAlertSettings() error {
+	if !opts.disableDefaultAlertSettings {
+		return nil
+	}
+
+	sv, constrain, err := opts.newOpsManagerConstrain()
+	if err != nil {
+		return err
+	}
+
+	if sv == nil || constrain == nil {
+		return nil
+	}
+
+	if !constrain.Check(sv) {
+		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.DisableDefaultAlertSettings)
+	}
+
+	return nil
+}
+
+func (opts *CreateOpts) newOpsManagerConstrain() (*semver.Version, *semver.Constraints, error) {
+	if config.Service() != config.OpsManagerService {
+		return nil, nil, nil
+	}
+
+	v, err := opts.store.ServiceVersion()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	sv, err := cli.ParseServiceVersion(v)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	constrain, err := semver.NewConstraint(">= 6.0")
+
+	return sv, constrain, err
+}
+
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--disableDefaultAlertSettings].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
@@ -121,7 +155,7 @@ func CreateBuilder() *cobra.Command {
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID)
+			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID, opts.validateDisableDefaultAlertSettings)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
@@ -132,7 +166,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
-	cmd.Flags().BoolVar(&opts.noDefaultAlertSettings, flag.NoDefaultAlertSettings, false, usage.NoDefaultAlertSettings)
+	cmd.Flags().BoolVar(&opts.disableDefaultAlertSettings, flag.DisableDefaultAlertSettings, false, usage.DisableDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

@@ -47,7 +47,7 @@ func TestProjects(t *testing.T) {
 			projectsEntity,
 			"create",
 			projectName,
-			"--noDefaultAlertSettings",
+			"--disableDefaultAlertSettings",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

@@ -35,11 +35,11 @@ Options
    * - --defaultAlertSettings
      - 
      - false
-     - Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
+     - Only for Atlas projects. Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
    * - --govCloudRegionsOnly
      - 
      - false
-     - Only for AtlasGov organizations. If specified, designates that the project uses the AWS GovCloud region only. If unspecified, the project uses the AWS Standard region only. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project.
+     - Only for AtlasGov projects. If specified, designates that the project uses the AWS GovCloud region only. If unspecified, the project uses the AWS Standard region only. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project.
    * - -h, --help
      - 
      - false

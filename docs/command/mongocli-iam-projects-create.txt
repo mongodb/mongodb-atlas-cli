@@ -32,10 +32,6 @@ Options
      - Type
      - Required
      - Description
-   * - --defaultAlertSettings
-     - 
-     - false
-     - Only for Atlas projects. Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
    * - --govCloudRegionsOnly
      - 
      - false
@@ -44,6 +40,10 @@ Options
      - 
      - false
      - help for create
+   * - --noDefaultAlertSettings
+     - 
+     - false
+     - Only for Atlas projects. Flag that indicates whether to create the new project with the default alert settings enabled.
    * - --orgId
      - string
      - false

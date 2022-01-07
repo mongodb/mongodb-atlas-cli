@@ -112,7 +112,11 @@ func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defau
 		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: &defaultAlertSettings}
 		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
 		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
+	case config.OpsManagerService:
+		project := &opsmngr.Project{Name: name, OrgID: orgID}
+		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
+		return result, err
+	case config.CloudManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: &defaultAlertSettings}
 		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
 		return result, err

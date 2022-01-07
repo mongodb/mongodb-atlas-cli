@@ -108,7 +108,7 @@ func (opts *CreateOpts) validateOwnerID() error {
 	return nil
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID][--noDefaulAlertSettings].
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--noDefaulAlertSettings].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate

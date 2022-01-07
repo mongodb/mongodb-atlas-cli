@@ -43,7 +43,7 @@ Options
    * - --noDefaultAlertSettings
      - 
      - false
-     - Flag that indicates whether to create the new project with the default alert settings enabled.
+     - Only for Atlas projects. Flag that indicates whether to create the new project with the default alert settings enabled.
    * - --orgId
      - string
      - false

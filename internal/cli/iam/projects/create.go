@@ -40,6 +40,7 @@ type CreateOpts struct {
 	name                    string
 	projectOwnerID          string
 	regionUsageRestrictions bool
+	noDefaultAlertSettings  bool
 	store                   store.ProjectCreator
 }
 
@@ -56,7 +57,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newRegionUsageRestrictions(), opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
+		opts.newRegionUsageRestrictions(), opts.noDefaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -74,7 +76,8 @@ func (opts *CreateOpts) newRegionUsageRestrictions() string {
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
-	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
+	return &atlas.CreateProjectOptions{
+		ProjectOwnerID: opts.projectOwnerID}
 }
 
 func (opts *CreateOpts) validateOwnerID() error {
@@ -105,7 +108,7 @@ func (opts *CreateOpts) validateOwnerID() error {
 	return nil
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID].
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID][--noDefaulAlertSettings].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
@@ -129,6 +132,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
+	cmd.Flags().BoolVar(&opts.noDefaultAlertSettings, flag.NoDefaultAlertSettings, false, usage.NoDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

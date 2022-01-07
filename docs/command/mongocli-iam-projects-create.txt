@@ -40,6 +40,10 @@ Options
      - 
      - false
      - help for create
+   * - --noDefaultAlertSettings
+     - 
+     - false
+     - Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
    * - --orgId
      - string
      - false

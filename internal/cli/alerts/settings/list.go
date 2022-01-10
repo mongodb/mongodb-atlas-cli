@@ -61,15 +61,11 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Returns alert configurations for the specified project.",
-		Long:  "The 'mongocli atlas alerts settings list' command returns a list of alert configurations for the specified project.",
 		Example: `  This example uses the profile named "myprofile" for accessing Atlas.
   $ mongocli atlas alerts settings list --projectId 5df90590f10fab5e33de2305 -o json --profile myprofile`,
-		Annotations: map[string]string{
-			"Args":      "projectId",
-			"projectId": "Project ID to use. Overrides settings from the configuration file or environment variable.",
-		},
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Annotations: map[string]string{},
+		Aliases:     []string{"ls"},
+		Args:        require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

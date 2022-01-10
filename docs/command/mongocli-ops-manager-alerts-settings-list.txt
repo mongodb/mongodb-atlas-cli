@@ -14,8 +14,6 @@ mongocli ops-manager alerts settings list
 
 Returns alert configurations for the specified project.
 
-The 'mongocli atlas alerts settings list' command returns a list of alert configurations for the specified project.
-
 Syntax
 ------
 

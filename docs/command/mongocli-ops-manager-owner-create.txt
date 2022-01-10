@@ -61,15 +61,7 @@ Options
    * - -p, --password
      - string
      - false
-<<<<<<< HEAD
-     - User’s password.
-=======
      - User's password.
-   * - --whitelistIp
-     - strings
-     - false
-     - IP addresses to add to the new user's access list.
->>>>>>> dcadb81d (Added some alert annotations, edited the usage options.)
 
 Inherited Options
 -----------------

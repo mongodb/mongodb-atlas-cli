@@ -158,9 +158,7 @@ func Builder() *cobra.Command {
 		Use:     "settings",
 		Aliases: []string{"config"},
 		Short:   "Manages alerts configuration for your project.",
-		Long: `The 'mongocli atlas alerts settings' command provides
-access to your alerts configurations. You can list, create, edit, and
-delete alert configurations.`,
+		Long:    `Use this command to ist, create, edit, and delete alert configurations.`,
 	}
 
 	cmd.AddCommand(

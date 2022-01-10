@@ -57,6 +57,7 @@ func DeleteBuilder() *cobra.Command {
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"requiredArgs":      "alertConfigId",
+			"args":              "alertConfigId",
 			"alertConfigIdDesc": "Unique identifier of the alert configuration to delete.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

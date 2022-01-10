@@ -14,9 +14,7 @@ mongocli atlas alerts settings
 
 Manages alerts configuration for your project.
 
-The 'mongocli atlas alerts settings' command provides
-access to your alerts configurations. You can list, create, edit, and
-delete alert configurations.
+Use this command to ist, create, edit, and delete alert configurations.
 
 Options
 -------

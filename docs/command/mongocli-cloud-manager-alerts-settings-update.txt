@@ -21,6 +21,22 @@ Syntax
 
    mongocli cloud-manager alerts settings update <alertConfigId> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - alertConfigId
+     - string
+     - true
+     - Unique identifier of the alert configuration you want to update.
+
 Options
 -------
 

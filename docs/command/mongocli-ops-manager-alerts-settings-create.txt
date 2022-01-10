@@ -14,9 +14,6 @@ mongocli ops-manager alerts settings create
 
 Creates one alert configuration in the specified project.
 
-The mongocli atlas alerts settings create command creates
-		one alert configuration in the specified project.
-
 Syntax
 ------
 
@@ -177,9 +174,7 @@ Examples
 
 .. code-block::
 
-   This example uses the mongocli atlas alerts settings create
- 		command to create one alert configuration in the specified
- 		project. It uses the default profile to access the Atlas project:
+   This example uses the mongocli atlas alerts settings create command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
  		
  		$ mongocli atlas alert settings create --event JOINED_GROUP --enabled \
  		--notificationType USER --notificationEmailEnabled \

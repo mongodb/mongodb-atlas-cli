@@ -59,7 +59,7 @@ func DescribeBuilder() *cobra.Command {
 	opts.Template = describeTemplate
 	cmd := &cobra.Command{
 		Use:     "describe <ID>",
-		Aliases: []string{"show"},
+		Aliases: []string{"show", "get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Describe a project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {

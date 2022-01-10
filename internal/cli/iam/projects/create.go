@@ -37,10 +37,12 @@ const (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	name                    string
-	projectOwnerID          string
-	regionUsageRestrictions bool
-	store                   store.ProjectCreator
+	name                        string
+	projectOwnerID              string
+	regionUsageRestrictions     bool
+	withoutDefaultAlertSettings bool
+	serviceVersion              *semver.Version
+	store                       store.ProjectCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -56,7 +58,14 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), opts.newRegionUsageRestrictions(), opts.newCreateProjectOptions())
+	var defaultAlertSettings *bool
+	if opts.withoutDefaultAlertSettings {
+		f := false
+		defaultAlertSettings = &f
+	}
+
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
+		opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -78,14 +87,43 @@ func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
 }
 
 func (opts *CreateOpts) validateOwnerID() error {
-	if opts.projectOwnerID == "" {
+	if opts.projectOwnerID == "" || opts.serviceVersion == nil {
 		return nil
 	}
 
+	constrain, err := semver.NewConstraint(">= 6.0")
+	if err != nil {
+		return err
+	}
+
+	if !constrain.Check(opts.serviceVersion) {
+		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
+	}
+
+	return nil
+}
+
+func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
+	if !opts.withoutDefaultAlertSettings || opts.serviceVersion == nil {
+		return nil
+	}
+
+	constrain, err := semver.NewConstraint(">= 6.0")
+	if err != nil {
+		return err
+	}
+
+	if !constrain.Check(opts.serviceVersion) {
+		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.WithoutDefaultAlertSettings)
+	}
+
+	return nil
+}
+
+func (opts *CreateOpts) initServiceVersion() error {
 	if config.Service() != config.OpsManagerService {
 		return nil
 	}
-
 	v, err := opts.store.ServiceVersion()
 	if err != nil {
 		return err
@@ -96,39 +134,39 @@ func (opts *CreateOpts) validateOwnerID() error {
 		return err
 	}
 
-	constrain, _ := semver.NewConstraint(">= 6.0")
-
-	if !constrain.Check(sv) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
-	}
-
+	opts.serviceVersion = sv
 	return nil
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID].
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
 	cmd := &cobra.Command{
-		Use:   "create <name>",
+		Use:   "create <projectName>",
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "projectName",
+			"requiredArgs":    "projectName",
+			"projectNameDesc": "Name of the project.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID)
+			return opts.PreRunE(opts.initStore(cmd.Context()), opts.initServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
-
 			return opts.Run()
 		},
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
+	cmd.Flags().BoolVar(&opts.withoutDefaultAlertSettings, flag.WithoutDefaultAlertSettings, false, usage.WithoutDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

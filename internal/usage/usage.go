@@ -269,7 +269,7 @@ const (
 	QuickstartDefault               = "Run the Quickstart command with all the auto generated values to deploy and access an Atlas cluster."
 	ServerlessProvider              = "Cloud service provider that applies to the provisioned the serverless instance."
 	ServerlessRegion                = "Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases."
-	WithoutDefaultAlertSettings     = "Flag that indicates whether to create the new project with the default alert settings enabled.This flag defaults to false. In this case, Atlas creates a new project without the default alert settings. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings. To create a project that uses the default alert settings, set this flag to true."
+	WithoutDefaultAlertSettings     = "Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false. In this case, Atlas creates a new project without the default alert settings. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings. To create a project that uses the default alert settings, set this flag to true."
 	FormatOut                       = `Output format.
 Valid values: json|json-path|go-template|go-template-file`
 	TargetClusterID = `Unique identifier of the target cluster.

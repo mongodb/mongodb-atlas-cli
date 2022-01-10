@@ -72,7 +72,7 @@ Options
    * - --withoutDefaultAlertSettings
      - 
      - false
-     - Flag that indicates whether to create the new project with the default alert settings enabled.This flag defaults to false. In this case, Atlas creates a new project without the default alert settings. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings. To create a project that uses the default alert settings, set this flag to true.
+     - Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false. In this case, Atlas creates a new project without the default alert settings. This is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings. To create a project that uses the default alert settings, set this flag to true.
 
 Inherited Options
 -----------------

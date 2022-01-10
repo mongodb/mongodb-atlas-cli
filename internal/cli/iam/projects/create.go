@@ -41,6 +41,7 @@ type CreateOpts struct {
 	projectOwnerID              string
 	regionUsageRestrictions     bool
 	withoutDefaultAlertSettings bool
+	serviceVersion              *semver.Version
 	store                       store.ProjectCreator
 }
 
@@ -80,20 +81,16 @@ func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
 }
 
 func (opts *CreateOpts) validateOwnerID() error {
-	if opts.projectOwnerID == "" {
+	if opts.projectOwnerID == "" || opts.serviceVersion == nil {
 		return nil
 	}
 
-	sv, constrain, err := opts.newOpsManagerConstrain()
+	constrain, err := semver.NewConstraint(">= 6.0")
 	if err != nil {
 		return err
 	}
 
-	if sv == nil || constrain == nil {
-		return nil
-	}
-
-	if !constrain.Check(sv) {
+	if !constrain.Check(opts.serviceVersion) {
 		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
 	}
 
@@ -101,44 +98,38 @@ func (opts *CreateOpts) validateOwnerID() error {
 }
 
 func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
-	if !opts.withoutDefaultAlertSettings {
+	if !opts.withoutDefaultAlertSettings || opts.serviceVersion == nil {
 		return nil
 	}
 
-	sv, constrain, err := opts.newOpsManagerConstrain()
+	constrain, err := semver.NewConstraint(">= 6.0")
 	if err != nil {
 		return err
 	}
 
-	if sv == nil || constrain == nil {
-		return nil
-	}
-
-	if !constrain.Check(sv) {
+	if !constrain.Check(opts.serviceVersion) {
 		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.WithoutDefaultAlertSettings)
 	}
 
 	return nil
 }
 
-func (opts *CreateOpts) newOpsManagerConstrain() (*semver.Version, *semver.Constraints, error) {
+func (opts *CreateOpts) newServiceVersion() error {
 	if config.Service() != config.OpsManagerService {
-		return nil, nil, nil
+		return nil
 	}
-
 	v, err := opts.store.ServiceVersion()
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
 	sv, err := cli.ParseServiceVersion(v)
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
-	constrain, err := semver.NewConstraint(">= 6.0")
-
-	return sv, constrain, err
+	opts.serviceVersion = sv
+	return nil
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].
@@ -158,11 +149,10 @@ func CreateBuilder() *cobra.Command {
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
+			return opts.PreRunE(opts.initStore(cmd.Context()), opts.newServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
-
 			return opts.Run()
 		},
 	}

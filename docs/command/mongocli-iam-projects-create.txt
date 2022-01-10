@@ -21,6 +21,22 @@ Syntax
 
    mongocli iam projects create <projectName> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - projectName
+     - string
+     - false
+     - projectName
+
 Options
 -------
 

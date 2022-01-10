@@ -120,7 +120,7 @@ func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
 	return nil
 }
 
-func (opts *CreateOpts) newServiceVersion() error {
+func (opts *CreateOpts) initServiceVersion() error {
 	if config.Service() != config.OpsManagerService {
 		return nil
 	}
@@ -147,6 +147,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
+			"args":            "projectName",
 			"projectNameDesc": "projectName",
 			"requiredArgs":    "Name of the project.",
 		},
@@ -155,7 +156,7 @@ func CreateBuilder() *cobra.Command {
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.newServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
+			return opts.PreRunE(opts.initStore(cmd.Context()), opts.initServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

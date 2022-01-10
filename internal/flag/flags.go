@@ -266,5 +266,5 @@ const (
 	LiveMigrationID                          = "liveMigrationId"                 // LiveMigrationID flag
 	LiveMigrationValidationID                = "validationId"                    // LiveMigrationDropCollections flag
 	LinkToken                                = "linkToken"                       // LinkToken flag
-	DisableDefaultAlertSettings              = "disableDefaultAlertSettings"     // DisableDefaultAlertSettings flag
+	WithoutDefaultAlertSettings              = "withoutDefaultAlertSettings"     // WithoutDefaultAlertSettings flag
 )

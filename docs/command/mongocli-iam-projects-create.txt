@@ -21,6 +21,22 @@ Syntax
 
    mongocli iam projects create <name> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - projectName
+     - string
+     - false
+     - Name of the project.
+
 Options
 -------
 
@@ -32,10 +48,6 @@ Options
      - Type
      - Required
      - Description
-   * - --disableDefaultAlertSettings
-     - 
-     - false
-     - Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
    * - --govCloudRegionsOnly
      - 
      - false
@@ -57,6 +69,10 @@ Options
      - string
      - false
      - Unique 24-hexadecimal digit string that identifies the Atlas user account to be granted the Project Owner role on the specified project.
+   * - --withoutDefaultAlertSettings
+     - 
+     - false
+     - Flag that indicates whether to create the new project with the default alert settings enabled. This flag defaults to false.
 
 Inherited Options
 -----------------

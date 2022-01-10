@@ -40,7 +40,7 @@ type CreateOpts struct {
 	name                        string
 	projectOwnerID              string
 	regionUsageRestrictions     bool
-	disableDefaultAlertSettings bool
+	withoutDefaultAlertSettings bool
 	store                       store.ProjectCreator
 }
 
@@ -58,7 +58,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), !opts.disableDefaultAlertSettings, opts.newCreateProjectOptions())
+		opts.newRegionUsageRestrictions(), !opts.withoutDefaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
@@ -101,8 +101,8 @@ func (opts *CreateOpts) validateOwnerID() error {
 	return nil
 }
 
-func (opts *CreateOpts) validateDisableDefaultAlertSettings() error {
-	if !opts.disableDefaultAlertSettings {
+func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
+	if !opts.withoutDefaultAlertSettings {
 		return nil
 	}
 
@@ -116,7 +116,7 @@ func (opts *CreateOpts) validateDisableDefaultAlertSettings() error {
 	}
 
 	if !constrain.Check(sv) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.DisableDefaultAlertSettings)
+		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.WithoutDefaultAlertSettings)
 	}
 
 	return nil
@@ -142,7 +142,7 @@ func (opts *CreateOpts) newOpsManagerConstrain() (*semver.Version, *semver.Const
 	return sv, constrain, err
 }
 
-// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--disableDefaultAlertSettings].
+// mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
@@ -150,12 +150,16 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <name>",
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":            "projectName",
+			"projectNameDesc": "Name of the project.",
+		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID, opts.validateDisableDefaultAlertSettings)
+			return opts.PreRunE(opts.initStore(cmd.Context()), opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
@@ -166,7 +170,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
-	cmd.Flags().BoolVar(&opts.disableDefaultAlertSettings, flag.DisableDefaultAlertSettings, false, usage.DisableDefaultAlertSettings)
+	cmd.Flags().BoolVar(&opts.withoutDefaultAlertSettings, flag.WithoutDefaultAlertSettings, false, usage.WithoutDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

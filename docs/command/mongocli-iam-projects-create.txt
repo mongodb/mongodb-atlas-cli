@@ -19,23 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli iam projects create <name> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - projectName
-     - string
-     - false
-     - Name of the project.
+   mongocli iam projects create <projectName> [options]
 
 Options
 -------

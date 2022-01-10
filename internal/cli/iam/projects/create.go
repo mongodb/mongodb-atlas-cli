@@ -76,8 +76,7 @@ func (opts *CreateOpts) newRegionUsageRestrictions() string {
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
-	return &atlas.CreateProjectOptions{
-		ProjectOwnerID: opts.projectOwnerID}
+	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
 }
 
 func (opts *CreateOpts) validateOwnerID() error {
@@ -147,12 +146,12 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.Template = atlasCreateTemplate
 	cmd := &cobra.Command{
-		Use:   "create <name>",
+		Use:   "create <projectName>",
 		Short: "Create a project.",
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":            "projectName",
-			"projectNameDesc": "Name of the project.",
+			"projectNameDesc": "projectName",
+			"requiredArgs":    "Name of the project.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

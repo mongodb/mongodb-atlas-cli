@@ -12,7 +12,7 @@ mongocli ops-manager alerts list
    :depth: 1
    :class: singlecol
 
-Retrieves all alerts for the specified project.
+Retrieves all alerts for the specified Atlas project.
 
 Syntax
 ------
@@ -72,4 +72,14 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   This example uses the mongocli atlas alerts list command to retrieve all alerts that occurred for the specified project. It uses the profile named myprofile for accessing Atlas.
+ 		
+ 		$ mongocli atlas alerts list --projectId 5df90590f10fab5e33de2305 \
+ 		 -o json --profile myprofile
 

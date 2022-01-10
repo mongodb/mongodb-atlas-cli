@@ -52,7 +52,7 @@ Related Commands
 * :ref:`mongocli-ops-manager-alerts-acknowledge` - Acknowledges one alert for the specified project.
 * :ref:`mongocli-ops-manager-alerts-describe` - Retrieves one alert for the specified project.
 * :ref:`mongocli-ops-manager-alerts-global` - Retrieves all the global alerts for the specified Ops Manager project.
-* :ref:`mongocli-ops-manager-alerts-list` - Retrieves all alerts for the specified project.
+* :ref:`mongocli-ops-manager-alerts-list` - Retrieves all alerts for the specified Atlas project.
 * :ref:`mongocli-ops-manager-alerts-settings` - Manages alerts configuration for your project.
 * :ref:`mongocli-ops-manager-alerts-unacknowledge` - Unacknowledges one alert for the specified project.
 

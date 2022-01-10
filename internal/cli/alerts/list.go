@@ -71,8 +71,12 @@ func (opts *ListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "Retrieves all alerts for the specified project.",
+		Use:   "list",
+		Short: "Retrieves all alerts for the specified Atlas project.",
+		Example: `  This example uses the mongocli atlas alerts list command to retrieve all alerts that occurred for the specified project. It uses the profile named myprofile for accessing Atlas.
+		
+		$ mongocli atlas alerts list --projectId 5df90590f10fab5e33de2305 \
+		 -o json --profile myprofile`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

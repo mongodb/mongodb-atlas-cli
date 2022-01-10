@@ -37,7 +37,7 @@ func TestCreate_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newRegionUsageRestrictions(), !opts.withoutDefaultAlertSettings, opts.newCreateProjectOptions()).Return(expected, nil).
+		CreateProject(gomock.Eq("ProjectBar"), gomock.Eq("5a0a1e7e0f2912c554080adc"), opts.newRegionUsageRestrictions(), nil, opts.newCreateProjectOptions()).Return(expected, nil).
 		Times(1)
 
 	createOpts := &CreateOpts{

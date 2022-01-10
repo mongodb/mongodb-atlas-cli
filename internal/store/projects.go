@@ -34,7 +34,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
 	ServiceVersionDescriber
 }
 
@@ -106,18 +106,14 @@ func (s *Store) Project(id string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: &defaultAlertSettings}
+		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: defaultAlertSettings}
 		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
 		return result, err
-	case config.OpsManagerService:
-		project := &opsmngr.Project{Name: name, OrgID: orgID}
-		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
-		return result, err
-	case config.CloudManagerService:
-		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: &defaultAlertSettings}
+	case config.CloudManagerService, config.OpsManagerService:
+		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
 		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
 		return result, err
 	default:

@@ -58,8 +58,14 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
+	var defaultAlertSettings *bool
+	if opts.withoutDefaultAlertSettings {
+		f := false
+		defaultAlertSettings = &f
+	}
+
 	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), !opts.withoutDefaultAlertSettings, opts.newCreateProjectOptions())
+		opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err

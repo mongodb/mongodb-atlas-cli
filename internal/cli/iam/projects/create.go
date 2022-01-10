@@ -148,8 +148,8 @@ func CreateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "projectName",
-			"projectNameDesc": "projectName",
-			"requiredArgs":    "Name of the project.",
+			"requiredArgs":    "projectName",
+			"projectNameDesc": "Name of the project.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

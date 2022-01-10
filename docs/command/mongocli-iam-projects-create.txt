@@ -34,8 +34,8 @@ Arguments
      - Description
    * - projectName
      - string
-     - false
-     - projectName
+     - true
+     - Name of the project.
 
 Options
 -------

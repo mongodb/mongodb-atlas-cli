@@ -14,8 +14,6 @@ mongocli ops-manager alerts global list
 
 Returns all global alerts for the specified Ops Manager project.
 
-Returns a list of all global alerts for the specified Ops Manager project.
-
 Syntax
 ------
 

@@ -158,7 +158,7 @@ func Builder() *cobra.Command {
 		Use:     "settings",
 		Aliases: []string{"config"},
 		Short:   "Manages alerts configuration for your project.",
-		Long:    `Use this command to ist, create, edit, and delete alert configurations.`,
+		Long:    `Use this command to list, create, edit, and delete alert configurations.`,
 	}
 
 	cmd.AddCommand(

@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints dataLakes aws list
    :depth: 1
    :class: singlecol
 
-List AWS Private Endpoints for your project.
+List Data Lake Private Endpoints for your project.
 
 Syntax
 ------
@@ -36,19 +36,11 @@ Options
      - 
      - false
      - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page.
    * - -o, --output
      - string
      - false
      - Output format.
        Valid values: json|json-path|go-template|go-template-file
-   * - --page
-     - int
-     - false
-     - Page number.
    * - --projectId
      - string
      - false

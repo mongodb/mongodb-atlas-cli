@@ -49,21 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-create` - Create a new AWS Private Endpoint for your project.
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-delete` - Delete a specific AWS Private Endpoint for your project.
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-describe` - Return a specific AWS Private Endpoints for your project.
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-interfaces` - Manage Atlas AWS private endpoint interfaces.
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-list` - List AWS Private Endpoints for your project.
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-watch` - Watch for a specific AWS Private Endpoint to be available.
+* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-list` - List Data Lake Private Endpoints for your project.
 
 
 .. toctree::
    :titlesonly:
 
-   create </command/mongocli-atlas-privateEndpoints-dataLakes-aws-create>
-   delete </command/mongocli-atlas-privateEndpoints-dataLakes-aws-delete>
-   describe </command/mongocli-atlas-privateEndpoints-dataLakes-aws-describe>
-   interfaces </command/mongocli-atlas-privateEndpoints-dataLakes-aws-interfaces>
    list </command/mongocli-atlas-privateEndpoints-dataLakes-aws-list>
-   watch </command/mongocli-atlas-privateEndpoints-dataLakes-aws-watch>
 

@@ -18,13 +18,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	provider            = "AWS"
+	privateEndpointType = "DATA_LAKE"
+)
+
 func Builder() *cobra.Command {
 	const use = "aws"
 	cmd := &cobra.Command{
 		Use:   use,
 		Short: "Manage AWS Private Endpoints.",
 	}
-	cmd.AddCommand(ListBuilder())
+	cmd.AddCommand(
+		ListBuilder(),
+		CreateBuilder())
 
 	return cmd
 }

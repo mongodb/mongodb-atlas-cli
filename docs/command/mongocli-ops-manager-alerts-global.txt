@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-alerts-global-list` - Retrieves all the global alerts for the specified Ops Manager project.
+* :ref:`mongocli-ops-manager-alerts-global-list` - Returns all global alerts for the specified Ops Manager project.
 
 
 .. toctree::

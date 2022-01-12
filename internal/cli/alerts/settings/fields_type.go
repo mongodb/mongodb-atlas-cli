@@ -56,7 +56,7 @@ func FieldsTypeBuilder() *cobra.Command {
 	opts.Template = matcherFieldsTemplate
 	cmd := &cobra.Command{
 		Use:     "type",
-		Short:   "List alert configurations available field types.",
+		Short:   "Lists available field types for your alert configurations.",
 		Aliases: []string{"types"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

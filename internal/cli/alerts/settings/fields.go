@@ -24,7 +24,7 @@ func FieldsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage alert configuration fields for your project.",
+		Short:   "Manages alert configuration fields for your project.",
 	}
 
 	cmd.AddCommand(FieldsTypeBuilder())

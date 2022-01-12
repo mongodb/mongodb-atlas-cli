@@ -18,7 +18,6 @@ import (
 	"context"
 
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -66,7 +65,12 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Creates one alert configuration in the specified project.",
-		Args:  require.NoArgs,
+		Example: `  
+  This example uses the "mongocli atlas alerts settings create" command to create one alert configuration in the specified project. It uses the default profile to access the Atlas project:
+  $ mongocli atlas alert settings create --event JOINED_GROUP --enabled \
+  --notificationType USER --notificationEmailEnabled \
+  --notificationUsername john@example.com \
+  -o json --projectId 5df90590f10fab5e33de2305`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

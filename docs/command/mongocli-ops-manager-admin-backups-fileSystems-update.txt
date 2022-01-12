@@ -39,7 +39,7 @@ Options
    * - --encryptedCredentials
      - 
      - false
-     - Flag indicating whether the username and password were encrypted using the credentialstool.
+     - Flag indicating whether the username and password were encrypted using the credentials tool.
    * - -h, --help
      - 
      - false
@@ -59,8 +59,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --storePath
      - string
      - true

@@ -39,7 +39,7 @@ Options
    * - --id
      - string
      - false
-     - The ID of the team.
+     - Unique identification of the team.
    * - --name
      - string
      - false
@@ -47,12 +47,11 @@ Options
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides configuration file or environment variable settings.
+     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------

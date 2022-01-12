@@ -73,10 +73,11 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Retrieves all alerts for the specified Atlas project.",
-		Example: `  This example uses the mongocli atlas alerts list command to retrieve all alerts that occurred for the specified project. It uses the profile named myprofile for accessing Atlas.
-		
-		$ mongocli atlas alerts list --projectId 5df90590f10fab5e33de2305 \
-		 -o json --profile myprofile`,
+		Example: `  
+  This example uses the "mongocli atlas alerts list" command to retrieve all alerts that occurred for the specified project. It uses the profile named "myprofile" for accessing Atlas.
+  $ mongocli atlas alerts list --projectId 5df90590f10fab5e33de2305 \
+  -o json --profile myprofile
+`,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -90,13 +91,10 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 	cmd.Flags().StringVar(&opts.status, flag.Status, "", usage.Status)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-
 	return cmd
 }

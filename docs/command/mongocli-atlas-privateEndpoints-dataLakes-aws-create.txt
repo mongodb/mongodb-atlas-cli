@@ -1,8 +1,8 @@
-.. _mongocli-ops-manager-alerts-global-list:
+.. _mongocli-atlas-privateEndpoints-dataLakes-aws-create:
 
-=======================================
-mongocli ops-manager alerts global list
-=======================================
+====================================================
+mongocli atlas privateEndpoints dataLakes aws create
+====================================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ mongocli ops-manager alerts global list
    :depth: 1
    :class: singlecol
 
-Returns all global alerts for the specified Ops Manager project.
+Create a new Data Lake Private Endpoint for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli ops-manager alerts global list [options]
+   mongocli atlas privateEndpoints dataLakes aws create [options]
 
 Options
 -------
@@ -32,26 +32,26 @@ Options
      - Type
      - Required
      - Description
+   * - --comment
+     - string
+     - false
+     - Optional description or comment for the entry.
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page.
+     - help for create
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number.
-   * - --status
+   * - --privateEndpointId
      - string
      - false
-     - Alert's status. The values are TRACKING, OPEN, CLOSED, and CANCELED.
+     - Unique identifier of the AWS PrivateLink connection.
+   * - --projectId
+     - string
+     - false
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------

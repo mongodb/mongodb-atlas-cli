@@ -35,7 +35,7 @@ Options
    * - --alertType
      - strings
      - true
-     - Alert types to silence during maintenance window. For example: HOST, REPLICA_SET, CLUSTER, AGENT, BACKUP.
+     - Alert types to silence during maintenance window. Valid values are HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP.
    * - --desc
      - string
      - false
@@ -51,12 +51,11 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
    * - --startDate
      - string
      - true

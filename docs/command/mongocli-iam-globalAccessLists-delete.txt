@@ -35,7 +35,7 @@ Options
    * - --force
      - 
      - false
-     - Don't ask for confirmation.
+     - If specified, skips asking for confirmation before proceeding with a requsted action.
    * - -h, --help
      - 
      - false

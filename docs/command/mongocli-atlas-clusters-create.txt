@@ -15,9 +15,9 @@ mongocli atlas clusters create
 Create a MongoDB cluster for your project.
 
 You can create MongoDB clusters using this command.
-To quickest way to get started is to just specify a name for your cluster and cloud provider and region to deploy, 
-this will create a 3 member replica set with the latest available mongodb server version available.
-Some of the cluster configuration options are available via flags but for full control of your deployment you can provide a config file.
+The quickest way to get started is to specify a name for your cluster and cloud provider and region to deploy.
+This will create a 3 member replica set with the latest available MongoDB server version available.
+Some of the cluster configuration options are available via flags, but for full control of your deployment you can provide a config file.
 
 Syntax
 ------
@@ -56,19 +56,19 @@ Options
    * - --backup
      - 
      - false
-     - If true, enables Continuous Cloud Backup for your cluster.
+     - If true, enables Continuous Cloud Backup for your deployment.
    * - --biConnector
      - 
      - false
-     - If true, enables BI Connector for Atlas on the cluster.
+     - If true, enables BI Connector for Atlas on the deployment.
    * - --diskSizeGB
      - float
      - false
-     - Capacity, in gigabytes, of the host’s root volume. (default 2)
+     - Capacity, in gigabytes, of the host's root volume. (default 2)
    * - -f, --file
      - string
      - false
-     - Filename to use, optional file with a json cluster configuration.
+     - File name to use, optional file with a json cluster configuration.
    * - -h, --help
      - 
      - false
@@ -84,24 +84,19 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
    * - --provider
      - string
      - false
-     - Name of your cloud service provider.
-       Valid values: AWS|AZURE|GCP.
+     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP.
    * - -r, --region
      - string
      - false
-     - Physical location of your MongoDB cluster.
-       For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws
-       For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure
-       For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp
+     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://docs.atlas.mongodb.com/reference/amazon-aws/#amazon-aws. For a complete list of supported Azure regions, see: https://docs.atlas.mongodb.com/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://docs.atlas.mongodb.com/reference/google-gcp/#google-gcp.
    * - -s, --shards
      - int
      - false
@@ -113,8 +108,7 @@ Options
    * - --type
      - string
      - false
-     - Type of the cluster that you want to create.
-       Valid values: REPLICASET|SHARDED. (default "REPLICASET")
+     - Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED. (default "REPLICASET")
 
 Inherited Options
 -----------------
@@ -138,16 +132,16 @@ Examples
 .. code-block::
 
    
-   Deploy a 3 members replica set in AWS
+   Deploy a 3 member replica set in AWS:
    $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
 
-   Deploy a 3 members replica set in AZURE
+   Deploy a 3 member replica set in AZURE:
    $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
    
-   Deploy a 3 members replica set in GCP
+   Deploy a 3 member replica set in GCP:
    $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
 
-   Deploy a cluster from a config file
+   Deploy a cluster from a config file:
    $ mongocli atlas cluster create --projectId <projectId> --file <path/to/cluster.json>
 
 

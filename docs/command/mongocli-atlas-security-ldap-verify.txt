@@ -39,11 +39,11 @@ Options
    * - --bindPassword
      - string
      - false
-     - The password used to authenticate the bindUsername.
+     - Password used to authenticate the bindUsername.
    * - --bindUsername
      - string
      - true
-     - The user DN that Atlas uses to connect to the LDAP server.
+     - The user distinguished name (DN) that Atlas uses to connect to the LDAP server.
    * - --caCertificate
      - string
      - false
@@ -55,20 +55,19 @@ Options
    * - --hostname
      - string
      - true
-     - The hostname or IP address of the LDAP server.
+     - Hostname or IP address of the LDAP server.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --port
      - int
      - false
-     - The port to which the LDAP server listens for client connections. (default 636)
+     - Port to which the LDAP server listens to for client connections. (default 636)
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------

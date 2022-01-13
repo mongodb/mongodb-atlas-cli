@@ -67,6 +67,7 @@ func UpdateBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":              "alertConfigId",
+			"requiredArgs":      "alertConfigId",
 			"alertConfigIdDesc": "Unique identifier of the alert configuration you want to update.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

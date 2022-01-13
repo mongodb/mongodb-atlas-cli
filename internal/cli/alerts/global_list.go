@@ -65,7 +65,7 @@ func GlobalListBuilder() *cobra.Command {
 	opts.Template = listTemplate
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Retrieves all the global alerts for the specified Ops Manager project.",
+		Short:   "Returns all global alerts for the specified Ops Manager project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

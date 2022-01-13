@@ -40,8 +40,6 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%n", n)
 
-	var id string
-
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -57,9 +55,10 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlas.PrivateEndpointConnection
+			var r atlas.PrivateLinkEndpointDataLakeResponse
 			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				id = vpcID
+				a.NotEmpty(r.Results)
+				a.Equal(r.Results[0].EndpointID, vpcID)
 			}
 		}
 	})
@@ -79,7 +78,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		var r []atlas.PrivateEndpointConnection
+		var r atlas.PrivateLinkEndpointDataLakeResponse
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
@@ -101,7 +100,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		a.NoError(err, string(resp))
-		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
+		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", vpcID)
 		a.Equal(expected, string(resp))
 	})
 }

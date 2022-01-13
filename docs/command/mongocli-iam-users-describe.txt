@@ -39,12 +39,11 @@ Options
    * - --id
      - string
      - false
-     - The ID of the user.
+     - Unique identifier of the user.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --username
      - string
      - false

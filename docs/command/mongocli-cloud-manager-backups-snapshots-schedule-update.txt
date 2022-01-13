@@ -35,8 +35,7 @@ Options
    * - --clusterCheckpointIntervalMin
      - int
      - false
-     - Number of minutes between successive cluster checkpoints.
-       Valid values: 15|30|60.
+     - Number of minutes between successive cluster checkpoints. Valid values are 15, 30, or 60.
    * - --clusterId
      - string
      - true
@@ -44,7 +43,7 @@ Options
    * - --dailySnapshotRetentionDays
      - int
      - false
-     - Number of days to retain daily snapshots. Accepted values for this option are: values between 1 and 365 inclusive.
+     - Number of days to retain daily snapshots. Accepted values are between 1 and 365 inclusive.
    * - -h, --help
      - 
      - false
@@ -52,45 +51,43 @@ Options
    * - --monthlySnapshotRetentionMonths
      - int
      - false
-     - Number of months to retain monthly snapshots. Accepted values for this option are: values between 1 and 36 inclusive.
+     - Number of months to retain monthly snapshots. Accepted values are between 1 and 36 inclusive.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --pointInTimeWindowHours
      - int
      - false
-     - Number of hours in the past for which a point-in-time snapshot can be created.
+     - Number of hours in the past for which MongoDB should create a point-in-time snapshot.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
    * - --referenceHourOfDay
      - int
      - false
-     - Hour of the day to schedule snapshots using a 24 hour clock. Accepted values for this option are: values between 0 and 23 inclusive.
+     - Hour of the day to schedule snapshots using a 24-hour clock. Accepted values are between 0 and 23 inclusive.
    * - --referenceMinuteOfHour
      - int
      - false
-     - Minute of the hour to schedule snapshots. Accepted values for this option are: values between 0 and 59 inclusive.
+     - Minute of the hour to schedule snapshots. Accepted values are between 0 and 59 inclusive.
    * - --referenceTimeZoneOffset
      - string
      - false
-     - The ISO-8601 timezone offset where the Ops Manager host resides.
+     - The ISO-8601-formatted timezone offset where the Ops Manager host resides.
    * - --snapshotIntervalHours
      - int
      - false
-     - Number of hours between snapshots.
-       Valid values: 6|8|12|24.
+     - Number of hours between snapshots. Valid values are 6, 8, 12, or 24.
    * - --snapshotRetentionDays
      - int
      - false
-     - Number of days to keep recent snapshots. Accepted values for this option are: values between 2 and 5 inclusive.
+     - Number of days to keep recent snapshots. Accepted values are between 2 and 5 inclusive.
    * - --weeklySnapshotRetentionWeeks
      - int
      - false
-     - Number of weeks to retain weekly snapshots. Accepted values for this option are: values between 1 and 52 inclusive.
+     - Number of weeks to retain weekly snapshots. Accepted values are between 1 and 52 inclusive.
 
 Inherited Options
 -----------------

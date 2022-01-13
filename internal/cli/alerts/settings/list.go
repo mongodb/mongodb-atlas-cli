@@ -59,10 +59,14 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List alert configurations for your project.",
-		Aliases: []string{"ls"},
-		Args:    require.NoArgs,
+		Use:   "list",
+		Short: "Returns alert configurations for the specified project.",
+		Example: `  
+  This example uses the profile named "myprofile" for accessing Atlas.
+  $ mongocli atlas alerts settings list --projectId 5df90590f10fab5e33de2305 -o json --profile myprofile`,
+		Annotations: map[string]string{},
+		Aliases:     []string{"ls"},
+		Args:        require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

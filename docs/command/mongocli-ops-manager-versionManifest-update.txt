@@ -35,7 +35,7 @@ Options
    * - --force
      - 
      - false
-     - Skip Ops Manager version check.
+     - If specified, skips Ops Manager version check.
    * - -h, --help
      - 
      - false
@@ -43,8 +43,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------

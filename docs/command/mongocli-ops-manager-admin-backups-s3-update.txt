@@ -35,7 +35,7 @@ Options
    * - --acceptedTos
      - 
      - true
-     - Flag indicating whether or not you accepted the terms of service for using S3-compatible stores with Ops Manager.
+     - Flag indicating whether or not you accepted the terms of service for using Amazon S3-compatible stores with Ops Manager.
    * - --assignment
      - 
      - false
@@ -43,19 +43,19 @@ Options
    * - --awsAccessKey
      - string
      - false
-     - AWS Access Key ID that can access the S3 bucket specified in s3BucketName.
+     - AWS Access Key ID that can access the Amazon S3 bucket specified in s3BucketName.
    * - --awsSecretKey
      - string
      - false
-     - AWS Secret Access Key that can access the S3 bucket specified in s3BucketName.
+     - AWS Secret Access Key that can access the Amazon S3 bucket specified in s3BucketName.
    * - --disableProxyS3
      - 
      - false
-     - Flag indicating whether the HTTP proxy should be used when connecting to S3.
+     - Flag indicating whether the HTTP proxy should be used when connecting to Amazon S3.
    * - --encryptedCredentials
      - 
      - false
-     - Flag indicating whether the username and password were encrypted using the credentialstool.
+     - Flag indicating whether the username and password were encrypted using the credentials tool.
    * - -h, --help
      - 
      - false
@@ -71,8 +71,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --pathStyleAccessEnabled
      - 
      - false
@@ -80,24 +79,23 @@ Options
    * - --s3AuthMethod
      - string
      - true
-     - Method used to authorize access to the S3 bucket specified in s3BucketName. 
-       Valid values: KEYS|IAM_ROLE.
+     - Method used to authorize access to the Amazon S3 bucket specified in s3BucketName. Valid values are KEYS or IAM_ROLE.
    * - --s3BucketEndpoint
      - string
      - true
-     - URL that Ops Manager uses to access this AWS S3 or S3-compatible bucket.
+     - URL that Ops Manager uses to access this Amazon S3 or S3-compatible bucket.
    * - --s3BucketName
      - string
      - true
-     - Name of the S3 bucket that hosts the S3 blockstore.
+     - Name of the Amazon S3 bucket that hosts the S3 blockstore.
    * - --s3MaxConnections
      - int
      - false
-     - Positive integer indicating the maximum number of connections to this S3 blockstore.
+     - Positive integer indicating the maximum number of connections to this Amazon S3 blockstore.
    * - --sseEnabled
      - 
      - false
-     - Flag indicating whether this S3 blockstore enables server-side encryption.
+     - Flag indicating whether this Amazon S3 blockstore enables server-side encryption.
    * - --uri
      - string
      - true

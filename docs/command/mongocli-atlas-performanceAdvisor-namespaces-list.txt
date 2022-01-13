@@ -45,20 +45,19 @@ Options
    * - --hostId
      - string
      - false
-     - The unique identifier for the host of a MongoDB process. 
+     - Unique identifier for the host of a MongoDB process.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - --processName
      - string
      - false
-     - The unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
+     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
    * - --projectId
      - string
      - false
-     - Project ID to use. Overrides configuration file or environment variable settings.
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
    * - --since
      - int
      - false

@@ -12,7 +12,7 @@ mongocli ops-manager alerts settings fields
    :depth: 1
    :class: singlecol
 
-Manage alert configuration fields for your project.
+Manages alert configuration fields for your project.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-alerts-settings-fields-type` - List alert configurations available field types.
+* :ref:`mongocli-ops-manager-alerts-settings-fields-type` - Lists available field types for your alert configurations.
 
 
 .. toctree::

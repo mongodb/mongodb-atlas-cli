@@ -37,15 +37,15 @@ Options
    * - --accessListIp
      - strings
      - false
-     - IP addresses to add to the new user’s access list.
+     - IP addresses to add to the new user's access list.
    * - --email
      - string
      - true
-     - User’s email address.
+     - User's email address.
    * - --firstName
      - string
      - true
-     - User’s first name.
+     - User's first name.
    * - -h, --help
      - 
      - false
@@ -53,16 +53,15 @@ Options
    * - --lastName
      - string
      - true
-     - User’s last name.
+     - User's last name.
    * - -o, --output
      - string
      - false
-     - Output format.
-       Valid values: json|json-path|go-template|go-template-file
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
    * - -p, --password
      - string
      - false
-     - User’s password.
+     - User's password.
 
 Inherited Options
 -----------------

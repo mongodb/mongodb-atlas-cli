@@ -38,7 +38,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 
-	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%n", n)
+	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", n)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

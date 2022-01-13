@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-gcp-list` - List GCP endpoints for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-list` - List GCP private endpoints for your project.
 
 
 .. toctree::

@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints gcp list
    :depth: 1
    :class: singlecol
 
-List GCP endpoints for your project.
+List GCP private endpoints for your project.
 
 Syntax
 ------

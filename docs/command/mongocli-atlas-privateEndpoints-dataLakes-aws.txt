@@ -50,6 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-create` - Create a new Data Lake private endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-delete` - Delete a specific Data Lake private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-list` - List Data Lake private endpoints for your project.
 
 
@@ -57,5 +58,6 @@ Related Commands
    :titlesonly:
 
    create </command/mongocli-atlas-privateEndpoints-dataLakes-aws-create>
+   delete </command/mongocli-atlas-privateEndpoints-dataLakes-aws-delete>
    list </command/mongocli-atlas-privateEndpoints-dataLakes-aws-list>
 

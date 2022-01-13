@@ -33,8 +33,8 @@ var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
-	store store.DataLakePrivateEndpointDescriber
+	privateEndpointID string
+	store             store.DataLakePrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -46,7 +46,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.DataLakePrivateEndpoint(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.DataLakePrivateEndpoint(opts.ConfigProjectID(), opts.privateEndpointID)
 	if err != nil {
 		return err
 	}
@@ -54,16 +54,16 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws describe|get <ID> [--projectId projectId].
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws describe|get <privateEndpointID> [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <privateEndpointID>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific Data Lake Private Endpoint for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
+			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -76,6 +76,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

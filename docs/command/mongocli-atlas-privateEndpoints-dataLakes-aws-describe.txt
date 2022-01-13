@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints dataLakes aws describe <ID> [options]
+   mongocli atlas privateEndpoints dataLakes aws describe <privateEndpointID> [options]
 
 Options
 -------
@@ -40,6 +40,10 @@ Options
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
+   * - --privateEndpointId
+     - string
+     - false
+     - Unique identifier of the AWS PrivateLink connection.
    * - --projectId
      - string
      - false

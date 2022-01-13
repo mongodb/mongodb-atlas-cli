@@ -28,7 +28,6 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataLakePrivateEndpointDescriber(ctrl)
@@ -42,7 +41,7 @@ func TestDescribe_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DataLakePrivateEndpoint(describeOpts.ProjectID, describeOpts.id).
+		DataLakePrivateEndpoint(describeOpts.ProjectID, describeOpts.privateEndpointID).
 		Return(expected, nil).
 		Times(1)
 

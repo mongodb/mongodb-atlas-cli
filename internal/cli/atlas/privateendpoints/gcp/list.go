@@ -26,8 +26,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{range .}}
-{{.ID}}	{{.EndpointGroupNames}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+var listTemplate = `ID	REGION	STATUS	ERROR{{range .}}
+{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
 type ListOpts struct {

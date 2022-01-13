@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints dataLakes aws
    :depth: 1
    :class: singlecol
 
-Manage AWS Private Endpoints.
+Manage AWS private endpoints.
 
 Options
 -------

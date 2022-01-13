@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Data Lake Private Endpoints.",
+		Short:   "Manage Data Lake private endpoints.",
 	}
 
 	cmd.AddCommand(aws.Builder())

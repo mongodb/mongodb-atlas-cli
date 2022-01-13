@@ -43,7 +43,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Data Lake Private endpoint '{{ (index .Results 0).EndpointID }}' created.\n"
+var createTemplate = "Data Lake private endpoint '{{ (index .Results 0).EndpointID }}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.DataLakeCreatePrivateEndpoint(opts.ConfigProjectID(), opts.newPrivateLinkEndpointDataLake())

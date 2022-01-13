@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,37 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package privateendpoints
+package datalake
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/datalake"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
-	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/regionalmodes"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/datalake/aws"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "privateEndpoints"
+	const use = "dataLakes"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas private endpoints.",
+		Short:   "Manage Data Lake private endpoints.",
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		CreateBuilder(),
-		DeleteBuilder(),
-		WatchBuilder(),
-		interfaces.Builder(),
-		aws.Builder(),
-		azure.Builder(),
-		regionalmodes.Builder(),
-		datalake.Builder(),
-	)
+
+	cmd.AddCommand(aws.Builder())
 
 	return cmd
 }

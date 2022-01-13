@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package privateendpoints
+package aws
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		10,
-		[]string{},
-	)
+func Builder() *cobra.Command {
+	const use = "aws"
+	cmd := &cobra.Command{
+		Use:   use,
+		Short: "Manage AWS private endpoints.",
+	}
+	cmd.AddCommand(ListBuilder())
+
+	return cmd
 }

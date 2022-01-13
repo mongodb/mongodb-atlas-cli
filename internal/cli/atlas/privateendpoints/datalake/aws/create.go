@@ -30,7 +30,7 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	privateEndpointId string
+	privateEndpointID string
 	comment           string
 	store             store.DataLakePrivateEndpointCreator
 }
@@ -57,7 +57,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newPrivateLinkEndpointDataLake() *mongodbatlas.PrivateLinkEndpointDataLake {
 	createRequest := &mongodbatlas.PrivateLinkEndpointDataLake{
 		Comment:    opts.comment,
-		EndpointID: opts.privateEndpointId,
+		EndpointID: opts.privateEndpointID,
 		Provider:   provider,
 		Type:       privateEndpointType,
 	}
@@ -83,7 +83,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.privateEndpointId, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
+	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

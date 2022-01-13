@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints dataLakes aws list
    :depth: 1
    :class: singlecol
 
-List Data Lake Private Endpoints for your project.
+List Data Lake private endpoints for your project.
 
 Syntax
 ------

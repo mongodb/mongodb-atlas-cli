@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints dataLakes aws describe <privateEndpointId> [options]
+   mongocli atlas privateEndpoints dataLakes aws describe <privateEndpointID> [options]
 
 Options
 -------

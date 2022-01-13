@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-create` - Create a new Data Lake Private Endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-create` - Create a new Data Lake private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-list` - List Data Lake private endpoints for your project.
 
 

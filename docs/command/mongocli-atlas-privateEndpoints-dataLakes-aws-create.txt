@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints dataLakes aws create
    :depth: 1
    :class: singlecol
 
-Create a new Data Lake Private Endpoint for your project.
+Create a new Data Lake private endpoint for your project.
 
 Syntax
 ------

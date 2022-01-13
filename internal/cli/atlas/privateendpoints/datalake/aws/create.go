@@ -69,7 +69,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "Create a new Data Lake Private Endpoint for your project.",
+		Short: "Create a new Data Lake private endpoint for your project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

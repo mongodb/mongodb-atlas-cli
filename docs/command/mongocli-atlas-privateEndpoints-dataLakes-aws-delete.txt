@@ -21,6 +21,22 @@ Syntax
 
    mongocli atlas privateEndpoints dataLakes aws delete <ID> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - entry
+     - string
+     - false
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
+
 Options
 -------
 
@@ -60,4 +76,13 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ mongocli atlas privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force
 

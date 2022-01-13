@@ -49,13 +49,14 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-describe` - Return a specific Data Lake Private Endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-create` - Create a new Data Lake private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-list` - List Data Lake private endpoints for your project.
+* :ref:`mongocli-atlas-privateEndpoints-dataLakes-aws-describe` - Return a specific Data Lake Private Endpoint for your project.
 
 
 .. toctree::
    :titlesonly:
 
-   describe </command/mongocli-atlas-privateEndpoints-dataLakes-aws-describe>
+   create </command/mongocli-atlas-privateEndpoints-dataLakes-aws-create>
    list </command/mongocli-atlas-privateEndpoints-dataLakes-aws-list>
-
+   describe </command/mongocli-atlas-privateEndpoints-dataLakes-aws-describe>

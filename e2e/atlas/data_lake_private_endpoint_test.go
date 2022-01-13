@@ -32,13 +32,10 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("dataLakePrivateEndpointsAWS")
 
-	n, err := e2e.RandInt(int64(1000))
-	require.NoError(t, err)
-
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 
-	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", n)
+	vpcID := "vpce-0fcd9d80bbafe1607"
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

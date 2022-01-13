@@ -21,10 +21,14 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber
+//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongocli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnection, error)
+}
+
+type DataLakePrivateEndpointLister interface {
+	DataLakePrivateEndpoints(string) (*atlas.PrivateLinkEndpointDataLakeResponse, error)
 }
 
 type PrivateEndpointDescriber interface {
@@ -33,6 +37,10 @@ type PrivateEndpointDescriber interface {
 
 type PrivateEndpointCreator interface {
 	CreatePrivateEndpoint(string, *atlas.PrivateEndpointConnection) (*atlas.PrivateEndpointConnection, error)
+}
+
+type DataLakePrivateEndpointCreator interface {
+	DataLakeCreatePrivateEndpoint(string, *atlas.PrivateLinkEndpointDataLake) (*atlas.PrivateLinkEndpointDataLakeResponse, error)
 }
 
 type PrivateEndpointDeleter interface {
@@ -70,6 +78,17 @@ func (s *Store) PrivateEndpoints(projectID, provider string, opts *atlas.ListOpt
 	}
 }
 
+// DataLakePrivateEndpoints encapsulates the logic to manage different cloud providers.
+func (s *Store) DataLakePrivateEndpoints(projectID string) (*atlas.PrivateLinkEndpointDataLakeResponse, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).DataLakes.ListPrivateLinkEndpoint(s.ctx, projectID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
 // PrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlas.PrivateEndpointConnection, error) {
 	switch s.service {
@@ -86,6 +105,17 @@ func (s *Store) CreatePrivateEndpoint(projectID string, r *atlas.PrivateEndpoint
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.client.(*atlas.Client).PrivateEndpoints.Create(s.ctx, projectID, r)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+// DataLakeCreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
+func (s *Store) DataLakeCreatePrivateEndpoint(projectID string, r *atlas.PrivateLinkEndpointDataLake) (*atlas.PrivateLinkEndpointDataLakeResponse, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).DataLakes.CreatePrivateLinkEndpoint(s.ctx, projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

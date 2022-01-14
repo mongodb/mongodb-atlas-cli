@@ -16,6 +16,7 @@ package privateendpoints
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/datalake"
@@ -42,6 +43,7 @@ func Builder() *cobra.Command {
 		azure.Builder(),
 		regionalmodes.Builder(),
 		datalake.Builder(),
+		onlinearchive.Builder(),
 	)
 
 	return cmd

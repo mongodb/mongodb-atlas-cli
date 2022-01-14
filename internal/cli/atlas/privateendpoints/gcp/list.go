@@ -62,7 +62,9 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List GCP private endpoints for your project.",
-		Args:    require.NoArgs,
+		Example: `
+  $ mongocli atlas privateEndpoint gcp ls`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

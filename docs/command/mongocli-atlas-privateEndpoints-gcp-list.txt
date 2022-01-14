@@ -69,3 +69,11 @@ Inherited Options
      - false
      - Profile to use from your configuration file.
 
+Examples
+--------
+
+.. code-block::
+
+
+   $ mongocli atlas privateEndpoint gcp ls
+

@@ -60,8 +60,16 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <privateEndpointID>",
 		Aliases: []string{"get"},
-		Args:    require.ExactArgs(1),
-		Short:   "Return a specific Data Lake Private Endpoint for your project.",
+		Short:   "Return a specific Data Lake private endpoint for your project.",
+		Annotations: map[string]string{
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
+		Example: `
+  This example uses the profile named "myprofile" for accessing Atlas.
+  $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 --force`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
@@ -76,7 +84,6 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd

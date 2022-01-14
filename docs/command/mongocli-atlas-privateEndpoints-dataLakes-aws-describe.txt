@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints dataLakes aws describe
    :depth: 1
    :class: singlecol
 
-Return a specific Data Lake Private Endpoint for your project.
+Return a specific Data Lake private endpoint for your project.
 
 Syntax
 ------
@@ -20,6 +20,22 @@ Syntax
 .. code-block::
 
    mongocli atlas privateEndpoints dataLakes aws describe <privateEndpointID> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - privateEndpointId
+     - string
+     - true
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -40,10 +56,6 @@ Options
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --privateEndpointId
-     - string
-     - false
-     - Unique identifier of the AWS PrivateLink connection.
    * - --projectId
      - string
      - false
@@ -64,4 +76,13 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 --force
 

@@ -59,14 +59,14 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <ID>",
+		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific GCP private endpoint for your project.",
 		Annotations: map[string]string{
-			"args":         "ID",
-			"requiredArgs": "ID",
-			"IDDesc":       "Unique identifier of the private endpoint service that you want to retrieve.",
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique identifier of the private endpoint service that you want to retrieve.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]

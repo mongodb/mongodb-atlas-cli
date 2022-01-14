@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints gcp describe <ID> [options]
+   mongocli atlas privateEndpoints gcp describe <privateEndpointId> [options]
 
 Arguments
 ---------
@@ -32,7 +32,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - ID
+   * - privateEndpointId
      - string
      - true
      - Unique identifier of the private endpoint service that you want to retrieve.

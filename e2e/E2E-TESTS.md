@@ -142,6 +142,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint dataLake aws create`         | Y         |           |           | Y         |       |       |
 | `privateEndpoint dataLake aws list`           | Y         |           |           | Y         |       |       |
 | `privateEndpoint dataLake aws delete`         | Y         |           |           | Y         |       |       |
+| `privateEndpoint dataLake aws describe`       | Y         |           |           | Y         |       |       |
 | `privateEndpoint interface create`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface delete`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface describe`          | N         |           |           | Y         |       |       |

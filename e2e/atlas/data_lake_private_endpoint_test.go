@@ -62,6 +62,26 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 		}
 	})
 
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			awsEntity,
+			"describe",
+			vpcID,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var r atlas.PrivateLinkEndpointDataLake
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.Equal(vpcID, r.EndpointID)
+		}
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,

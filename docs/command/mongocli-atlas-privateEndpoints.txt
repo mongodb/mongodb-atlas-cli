@@ -52,7 +52,7 @@ Related Commands
 * :ref:`mongocli-atlas-privateEndpoints-aws` - Manage AWS Private Endpoints.
 * :ref:`mongocli-atlas-privateEndpoints-azure` - Manage Azure Private Endpoints.
 * :ref:`mongocli-atlas-privateEndpoints-dataLakes` - Manage Data Lake private endpoints.
-* :ref:`mongocli-atlas-privateEndpoints-onlineArchives` - Manage online archives for your cluster.
+* :ref:`mongocli-atlas-privateEndpoints-onlineArchive` - Manage Online Archive private endpoints.
 * :ref:`mongocli-atlas-privateEndpoints-regionalModes` - Manage regionalized private endpoint setting for your Atlas project.
 
 
@@ -62,6 +62,6 @@ Related Commands
    aws </command/mongocli-atlas-privateEndpoints-aws>
    azure </command/mongocli-atlas-privateEndpoints-azure>
    dataLakes </command/mongocli-atlas-privateEndpoints-dataLakes>
-   onlineArchives </command/mongocli-atlas-privateEndpoints-onlineArchives>
+   onlineArchive </command/mongocli-atlas-privateEndpoints-onlineArchive>
    regionalModes </command/mongocli-atlas-privateEndpoints-regionalModes>
 

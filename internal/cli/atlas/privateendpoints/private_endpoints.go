@@ -19,6 +19,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/aws"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/azure"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/datalake"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/gcp"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/regionalmodes"
@@ -41,6 +42,7 @@ func Builder() *cobra.Command {
 		interfaces.Builder(),
 		aws.Builder(),
 		azure.Builder(),
+		gcp.Builder(),
 		regionalmodes.Builder(),
 		datalake.Builder(),
 		onlinearchive.Builder(),

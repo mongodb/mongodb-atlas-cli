@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
-package aws
+package gcp
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
+const provider = "GCP"
+
+func Builder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "gcp",
+		Short: "Manage GCP private endpoints.",
+	}
+	cmd.AddCommand(ListBuilder())
+
+	return cmd
 }

@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import (
 type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
-	store store.PrivateEndpointDeleter
+	store store.DataLakePrivateEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -41,7 +41,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), provider)
+	return opts.Delete(opts.store.DataLakeDeletePrivateEndpoint, opts.ConfigProjectID())
 }
 
 // mongocli atlas privateEndpoint(s) delete <privateEndpointId> --projectId projectId.
@@ -52,15 +52,15 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a specific AWS Private Endpoint for your project.",
-		Args:    require.ExactArgs(1),
+		Short:   "Delete a specific Data Lake private endpoint for your project.",
 		Annotations: map[string]string{
 			"args":                  "privateEndpointId",
 			"requiredArgs":          "privateEndpointId",
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: `
-  $ mongocli atlas privateEndpoint aws delete vpce-0fcd9d80bbafe1607 --force`,
+  $ mongocli atlas privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package aws
+package gcp
 
 import (
 	"context"
@@ -26,13 +26,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DeleteOpts struct {
+var listTemplate = `ID	REGION	STATUS	ERROR{{range .}}
+{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+`
+
+type ListOpts struct {
 	cli.GlobalOpts
-	*cli.DeleteOpts
-	store store.PrivateEndpointDeleter
+	cli.OutputOpts
+	cli.ListOpts
+	store store.PrivateEndpointLister
 }
 
-func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -40,42 +45,43 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), provider)
+func (opts *ListOpts) Run() error {
+	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
+
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) delete <privateEndpointId> --projectId projectId.
-func DeleteBuilder() *cobra.Command {
-	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
-	}
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) gcp list|ls [--projectId projectId].
+func ListBuilder() *cobra.Command {
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "delete <privateEndpointId>",
-		Aliases: []string{"rm"},
-		Short:   "Delete a specific AWS Private Endpoint for your project.",
-		Args:    require.ExactArgs(1),
-		Annotations: map[string]string{
-			"args":                  "privateEndpointId",
-			"requiredArgs":          "privateEndpointId",
-			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
-		},
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   "List GCP private endpoints for your project.",
 		Example: `
-  $ mongocli atlas privateEndpoint aws delete vpce-0fcd9d80bbafe1607 --force`,
+  $ mongocli atlas privateEndpoint gcp ls`,
+		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
-				return err
-			}
-			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

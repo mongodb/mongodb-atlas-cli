@@ -58,7 +58,7 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <privateEndpointID>",
+		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
 		Short:   "Return a specific Data Lake private endpoint for your project.",
 		Annotations: map[string]string{

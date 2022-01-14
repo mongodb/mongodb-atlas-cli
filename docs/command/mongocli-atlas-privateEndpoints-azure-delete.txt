@@ -19,7 +19,23 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints azure delete <ID> [options]
+   mongocli atlas privateEndpoints azure delete <privateEndpointId> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - privateEndpointId
+     - string
+     - true
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -60,4 +76,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   $ mongocli atlas privateEndpoint azure delete 0fcd9d80bbafe1607 --force
 

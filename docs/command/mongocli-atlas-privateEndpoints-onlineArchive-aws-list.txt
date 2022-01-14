@@ -1,7 +1,7 @@
-.. _mongocli-atlas-privateEndpoints-dataLakes-aws-describe:
+.. _mongocli-atlas-privateEndpoints-onlineArchive-aws-list:
 
 ======================================================
-mongocli atlas privateEndpoints dataLakes aws describe
+mongocli atlas privateEndpoints onlineArchive aws list
 ======================================================
 
 .. default-domain:: mongodb
@@ -12,30 +12,14 @@ mongocli atlas privateEndpoints dataLakes aws describe
    :depth: 1
    :class: singlecol
 
-Return a specific Data Lake private endpoint for your project.
+List Data Lake private endpoints for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas privateEndpoints dataLakes aws describe <privateEndpointId> [options]
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - privateEndpointId
-     - string
-     - true
-     - Unique 22-character alphanumeric string that identifies the private endpoint.
+   mongocli atlas privateEndpoints onlineArchive aws list [options]
 
 Options
 -------
@@ -51,7 +35,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for describe
+     - help for list
    * - -o, --output
      - string
      - false
@@ -76,12 +60,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-   This example uses the profile named "myprofile" for accessing Atlas.
-   $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789
 

@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/datalake"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/gcp"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/interfaces"
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/onlinearchive"
 	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/regionalmodes"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,7 @@ func Builder() *cobra.Command {
 		gcp.Builder(),
 		regionalmodes.Builder(),
 		datalake.Builder(),
+		onlinearchive.Builder(),
 	)
 
 	return cmd

@@ -1,8 +1,8 @@
-.. _mongocli-atlas-privateEndpoints-gcp-list:
+.. _mongocli-atlas-privateEndpoints-onlineArchive-aws-describe:
 
-========================================
-mongocli atlas privateEndpoints gcp list
-========================================
+==========================================================
+mongocli atlas privateEndpoints onlineArchive aws describe
+==========================================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,30 @@ mongocli atlas privateEndpoints gcp list
    :depth: 1
    :class: singlecol
 
-List GCP private endpoints for your project.
+Return a specific Data Lake private endpoint for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas privateEndpoints gcp list [options]
+   mongocli atlas privateEndpoints onlineArchive aws describe <privateEndpointID> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - privateEndpointId
+     - string
+     - true
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -35,19 +51,11 @@ Options
    * - -h, --help
      - 
      - false
-     - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page.
+     - help for describe
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number.
    * - --projectId
      - string
      - false
@@ -74,6 +82,6 @@ Examples
 
 .. code-block::
 
-
-   $ mongocli atlas privateEndpoint gcp ls
+   This example uses the profile named "myprofile" for accessing Atlas.
+   $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789
 

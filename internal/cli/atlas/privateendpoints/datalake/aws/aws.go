@@ -30,8 +30,11 @@ func Builder() *cobra.Command {
 		Short: "Manage AWS private endpoints.",
 	}
 	cmd.AddCommand(
+		CreateBuilder(),
 		ListBuilder(),
-		CreateBuilder())
+		DescribeBuilder(),
+		DeleteBuilder(),
+	)
 
 	return cmd
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package gcp
+package aws
 
 import (
 	"context"
@@ -26,18 +26,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	REGION	STATUS	ERROR{{range .}}
-{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
+var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
+{{.EndpointID}}	{{.Provider}}	{{.Type}}	{{.Comment}}
 `
 
-type ListOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.ListOpts
-	store store.PrivateEndpointLister
+	privateEndpointID string
+	store             store.DataLakePrivateEndpointDescriber
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -45,9 +45,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpoints(opts.ConfigProjectID(), provider, opts.NewListOptions())
-
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.DataLakePrivateEndpoint(opts.ConfigProjectID(), opts.privateEndpointID)
 	if err != nil {
 		return err
 	}
@@ -55,30 +54,33 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) gcp list|ls [--projectId projectId].
-func ListBuilder() *cobra.Command {
-	opts := new(ListOpts)
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws describe|get <privateEndpointId> [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "List GCP private endpoints for your project.",
-		Example: `
-  $ mongocli atlas privateEndpoint gcp ls`,
-		Args: require.NoArgs,
+		Use:     "describe <privateEndpointID>",
+		Aliases: []string{"get"},
+		Short:   "Return a specific Data Lake private endpoint for your project.",
+		Annotations: map[string]string{
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
+		Example: `  This example uses the profile named "myprofile" for accessing Atlas.
+  $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, 0, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, 0, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

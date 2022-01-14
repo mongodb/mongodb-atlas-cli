@@ -1,8 +1,8 @@
-.. _mongocli-atlas-privateEndpoints-gcp-list:
+.. _mongocli-atlas-privateEndpoints-onlineArchive-aws-list:
 
-========================================
-mongocli atlas privateEndpoints gcp list
-========================================
+======================================================
+mongocli atlas privateEndpoints onlineArchive aws list
+======================================================
 
 .. default-domain:: mongodb
 
@@ -12,14 +12,14 @@ mongocli atlas privateEndpoints gcp list
    :depth: 1
    :class: singlecol
 
-List GCP private endpoints for your project.
+List Data Lake private endpoints for your project.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas privateEndpoints gcp list [options]
+   mongocli atlas privateEndpoints onlineArchive aws list [options]
 
 Options
 -------
@@ -36,18 +36,10 @@ Options
      - 
      - false
      - help for list
-   * - --limit
-     - int
-     - false
-     - Number of items per page.
    * - -o, --output
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file.
-   * - --page
-     - int
-     - false
-     - Page number.
    * - --projectId
      - string
      - false
@@ -68,12 +60,4 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
-
-Examples
---------
-
-.. code-block::
-
-
-   $ mongocli atlas privateEndpoint gcp ls
 

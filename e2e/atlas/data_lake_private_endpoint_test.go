@@ -66,6 +66,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			privateEndpointsEntity,
+			datalakeEntity,
 			awsEntity,
 			"describe",
 			vpcID,

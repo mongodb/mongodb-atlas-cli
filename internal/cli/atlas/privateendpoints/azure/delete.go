@@ -55,8 +55,9 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Delete a specific Azure Private Endpoint for your project.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"args":      "privateEndpointId",
-			"entryDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: `
   $ mongocli atlas privateEndpoint aws delete 0fcd9d80bbafe1607 --force`,

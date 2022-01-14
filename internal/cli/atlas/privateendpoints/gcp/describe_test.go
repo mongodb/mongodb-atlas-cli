@@ -20,14 +20,40 @@ package gcp
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestBuilder(t *testing.T) {
+func TestDescribeOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
+	defer ctrl.Finish()
+
+	opts := &DescribeOpts{
+		store: mockStore,
+	}
+
+	expected := &mongodbatlas.PrivateEndpointConnection{}
+
+	mockStore.
+		EXPECT().
+		PrivateEndpoint(opts.ProjectID, provider, opts.id).
+		Return(expected, nil).
+		Times(1)
+
+	err := opts.Run()
+	assert.NoError(t, err)
+}
+
+func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		2,
-		[]string{},
+		DescribeBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output},
 	)
 }

@@ -139,6 +139,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint azure  list`                 | Y         |           |           | Y         |       |       |
 | `privateEndpoint azure  watch`                | Y         |           |           | Y         |       |       |
 | `privateEndpoint gcp  list`                   | Y         |           |           | Y         |       |       |
+| `privateEndpoint gcp  describe`               | Y         |           |           | Y         |       |       |
 | `privateEndpoint interface create`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface delete`            | N         |           |           | Y         |       |       |
 | `privateEndpoint interface describe`          | N         |           |           | Y         |       |       |

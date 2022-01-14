@@ -322,6 +322,8 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
 
+	var id string
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -339,6 +341,27 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		var r []atlas.PrivateEndpointConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.Empty(r)
+		}
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"describe",
+			id,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var r atlas.PrivateEndpointConnection
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.Equal(id, r.ID)
 		}
 	})
 }

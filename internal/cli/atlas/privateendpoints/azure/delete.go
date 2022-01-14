@@ -60,7 +60,7 @@ func DeleteBuilder() *cobra.Command {
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
 		Example: `
-  $ mongocli atlas privateEndpoint aws delete 0fcd9d80bbafe1607 --force`,
+  $ mongocli atlas privateEndpoint azure delete 0fcd9d80bbafe1607 --force`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

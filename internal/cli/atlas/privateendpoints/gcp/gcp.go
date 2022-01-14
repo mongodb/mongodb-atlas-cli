@@ -21,9 +21,8 @@ import (
 const provider = "GCP"
 
 func Builder() *cobra.Command {
-	const use = "gcp"
 	cmd := &cobra.Command{
-		Use:   use,
+		Use:   "gcp",
 		Short: "Manage GCP private endpoints.",
 	}
 	cmd.AddCommand(ListBuilder())

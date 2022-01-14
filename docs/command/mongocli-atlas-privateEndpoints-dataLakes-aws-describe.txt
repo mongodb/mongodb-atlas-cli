@@ -82,7 +82,6 @@ Examples
 
 .. code-block::
 
-
    This example uses the profile named "myprofile" for accessing Atlas.
-   $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 --force
+   $ mongocli atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789
 

@@ -50,15 +50,14 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a specific Data Lake private endpoint for your project.",
 		Annotations: map[string]string{
-			"args":      "entry",
+			"args":      "privateEndpointId",
 			"entryDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: `  
-  This example uses the profile named "myprofile" for accessing Atlas.
+		Example: `
   $ mongocli atlas privateEndpoint dataLake aws delete vpce-0fcd9d80bbafe1607 --force`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

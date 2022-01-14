@@ -44,16 +44,22 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeletePrivateEndpoint, opts.ConfigProjectID(), provider)
 }
 
-// mongocli atlas privateEndpoint(s) delete <ID>> --projectId projectId.
+// mongocli atlas privateEndpoint(s) delete <privateEndpointId> --projectId projectId.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Private endpoint '%s' deleted\n", "Private endpoint not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <ID>",
+		Use:     "delete <privateEndpointId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete a specific Azure Private Endpoint for your project.",
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":      "privateEndpointId",
+			"entryDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
+		Example: `
+  $ mongocli atlas privateEndpoint aws delete 0fcd9d80bbafe1607 --force`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

@@ -315,6 +315,34 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 }
 
+func TestPrivateEndpointsGCP(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("privateEndpointsGPC")
+
+	cliPath, err := e2e.Bin()
+	require.NoError(t, err)
+
+	t.Run("List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"ls",
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var r []atlas.PrivateEndpointConnection
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.Empty(r)
+		}
+	})
+}
+
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("regionalizedPrivateEndpointsSettings")

@@ -67,11 +67,10 @@ func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndp
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create",
-		Short: "Create a new GCP private endpoint for your project.",
-		Args:  require.NoArgs,
-		Example: `  This example uses the profile named "myprofile" for accessing Atlas.
-  $ mongocli atlas privateEndpoints gcp create --region CENTRAL_US`,
+		Use:     "create",
+		Short:   "Create a new GCP private endpoint for your project.",
+		Args:    require.NoArgs,
+		Example: `$ mongocli atlas privateEndpoints gcp create --region CENTRAL_US`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

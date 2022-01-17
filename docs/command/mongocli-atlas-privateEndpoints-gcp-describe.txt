@@ -82,6 +82,5 @@ Examples
 
 .. code-block::
 
-   This example uses the profile named "myprofile" for accessing Atlas.
- 			$ mongocli atlas privateEndpoint gcp describe vpce-abcdefg0123456789
+ $ mongocli atlas privateEndpoint gcp describe vpce-abcdefg0123456789
 

@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints onlineArchive aws describe <privateEndpointID> [options]
+   mongocli atlas privateEndpoints onlineArchive aws describe <privateEndpointId> [options]
 
 Arguments
 ---------

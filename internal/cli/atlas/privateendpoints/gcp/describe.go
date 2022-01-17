@@ -66,8 +66,10 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"args":                  "privateEndpointId",
 			"requiredArgs":          "privateEndpointId",
-			"privateEndpointIdDesc": "Unique identifier of the private endpoint service that you want to retrieve.",
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
+		Example: `  This example uses the profile named "myprofile" for accessing Atlas.
+			$ mongocli atlas privateEndpoint gcp describe vpce-abcdefg0123456789`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

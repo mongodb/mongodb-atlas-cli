@@ -35,7 +35,7 @@ Arguments
    * - privateEndpointId
      - string
      - true
-     - Unique identifier of the private endpoint service that you want to retrieve.
+     - Unique 22-character alphanumeric string that identifies the private endpoint.
 
 Options
 -------
@@ -76,4 +76,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   This example uses the profile named "myprofile" for accessing Atlas.
+ 			$ mongocli atlas privateEndpoint gcp describe vpce-abcdefg0123456789
 

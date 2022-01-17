@@ -50,6 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-privateEndpoints-gcp-create` - Create a new GCP private endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-delete` - Delete a GCP private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-gcp-list` - List GCP private endpoints for your project.
 
 
@@ -57,5 +58,6 @@ Related Commands
    :titlesonly:
 
    create </command/mongocli-atlas-privateEndpoints-gcp-create>
+   delete </command/mongocli-atlas-privateEndpoints-gcp-delete>
    list </command/mongocli-atlas-privateEndpoints-gcp-list>
 

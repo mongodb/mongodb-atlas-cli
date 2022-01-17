@@ -82,7 +82,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.Region)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

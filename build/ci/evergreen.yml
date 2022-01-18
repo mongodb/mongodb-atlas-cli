@@ -306,9 +306,9 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         include_expansions_in_env:
-          - notary_key_id
-          - notary_secret
-          - notary_url
+          - notary_service_key_id
+          - notary_service_secret
+          - notary_service_url
         silent: true
         script: |
           set -Eeou pipefail
@@ -316,9 +316,9 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
-          export NOTARY_SERVICE_URL=${notary_url}
-          export NOTARY_SERVICE_KEY_ID=${notary_key_id}
-          export NOTARY_SERVICE_SECRET=${notary_secret}
+          export NOTARY_SERVICE_URL=${notary_service_url}
+          export NOTARY_SERVICE_KEY_ID=${notary_service_key_id}
+          export NOTARY_SERVICE_SECRET=${notary_service_secret}
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}

@@ -22,18 +22,37 @@ set -Eeou pipefail
 
 # this script could run in parallel for both x86_64 and arm64
 # we need to make sure to call the right one at the right time
+
+curl "${NOTARY_SERVICE_URL}" --output macos-notary.zip
+unzip -u macos-notary.zip
+chmod 755 ./darwin_amd64/macnotary
+
 if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_x86_64.zip" ]]; then
   echo "notarizing x86_64"
-  gon -log-level=error gon_x86_64.json
+  zip -rj ./dist/macos_darwin_amd64/mongocli_amd64_bin.zip ./dist/macos_darwin_amd64/bin/mongocli # The Notarization Service takes an archive as input
+  ./darwin_amd64/macnotary \
+    -f ./dist/macos_darwin_amd64/mongocli_amd64_bin.zip \
+    -m notarizeAndSign -u https://dev.macos-notary.build.10gen.cc/api \
+    -s "${NOTARY_SERVICE_SECRET:?}" \
+    -k "${NOTARY_SERVICE_KEY_ID:?}"  \
+    -b com.mongodb.mongocli \
+    -o ./dist/mongocli_macos_signed_x86_64.zip
 
-  echo "replacing original file"
-  unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
+    echo "replacing original file"
+    unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
 fi
 
 if [[ -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_arm64.zip" ]]; then
   echo "notarizing arm64"
-  gon -log-level=error gon_arm64.json
+  zip -rj ./dist/macos_darwin_arm64/mongocli_arm64_bin.zip ./dist/macos_darwin_arm64/bin/mongocli # The Notarization Service takes an archive as input
+  ./darwin_amd64/macnotary \
+    -f ./dist/macos_darwin_arm64/mongocli_arm64_bin.zip \
+    -m notarizeAndSign -u https://dev.macos-notary.build.10gen.cc/api \
+    -s "${NOTARY_SERVICE_SECRET:?}" \
+    -k "${NOTARY_SERVICE_KEY_ID:?}"  \
+    -b com.mongodb.mongocli \
+    -o ./dist/mongocli_macos_signed_arm64.zip
 
-  echo "replacing original file"
-  unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
+    echo "replacing original file"
+    unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
 fi

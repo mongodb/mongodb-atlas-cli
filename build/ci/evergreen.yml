@@ -320,7 +320,6 @@ functions:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
-        silent: true
         script: |
           set -Eeou pipefail
 

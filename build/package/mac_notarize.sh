@@ -23,10 +23,6 @@ set -Eeou pipefail
 # this script could run in parallel for both x86_64 and arm64
 # we need to make sure to call the right one at the right time
 
-curl "${NOTARY_SERVICE_URL}" --output macos-notary.zip
-unzip -u macos-notary.zip
-chmod 755 ./darwin_amd64/macnotary
-
 if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_x86_64.zip" ]]; then
   echo "notarizing x86_64"
   zip -rj ./dist/macos_darwin_amd64/mongocli_amd64_bin.zip ./dist/macos_darwin_amd64/bin/mongocli # The Notarization Service takes an archive as input

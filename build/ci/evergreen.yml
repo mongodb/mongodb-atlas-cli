@@ -243,7 +243,18 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://github.com/goreleaser/goreleaser/releases/download/v${gorelaser_ver}/goreleaser_Darwin_all.tar.gz | tar zx
-
+  "install macos notarization service":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        include_expansions_in_env:
+          - notary_service_url
+        script: |
+          set -Eeou pipefail
+          curl "${notary_service_url}" --output macos-notary.zip
+          unzip -u macos-notary.zip
+          chmod 755 ./darwin_amd64/macnotary
   "install snyk":
     - command: shell.exec
       type: setup
@@ -1301,6 +1312,7 @@ tasks:
       - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
+      - func: "install macos notarization service"
       - func: "package"
       - func: "rename pkg"
         vars:
@@ -1403,6 +1415,7 @@ tasks:
       - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
+      - func: "install macos notarization service"
       - command: subprocess.exec
         type: test
         params:

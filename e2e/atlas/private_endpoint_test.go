@@ -315,12 +315,71 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 }
 
+var regionsGCP = []string{
+	"CENTRAL_US",
+	"EASTERN_US",
+	"US_EAST_4",
+	"NORTH_AMERICA_NORTHEAST_1",
+	"NORTH_AMERICA_NORTHEAST_2",
+	"SOUTH_AMERICA_EAST_1",
+	"WESTERN_US",
+	"US_WEST_2",
+	"US-WEST_3",
+	"US-WEST_4",
+	"EASTERN_ASIA_PACIFIC",
+	"ASIA_EAST_2",
+	"NORTHEASTERN_ASIA_PACIFIC",
+	"ASIA_NORTHEAST_2",
+	"ASIA_NORTHEAST_3",
+	"SOUTHEASTERN_ASIA_PACIFIC",
+	"ASIA_SOUTH_1",
+	"ASIA_SOUTH_2",
+	"AUSTRALIA_SOUTHEAST_1",
+	"AUSTRALIA_SOUTHEAST_2",
+	"ASIA_SOUTHEAST_2",
+	"WESTERN_EUROPE",
+	"EUROPE_NORTH_1",
+	"EUROPE_WEST_2",
+	"EUROPE_WEST_3",
+	"EUROPE_WEST_4",
+	"EUROPE_WEST_6",
+	"EUROPE_CENTRAL_2",
+}
+
 func TestPrivateEndpointsGCP(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsGPC")
 
+	n, err := e2e.RandInt(int64(len(regionsAWS)))
+	require.NoError(t, err)
+
+	region := regionsGCP[n.Int64()]
+
 	cliPath, err := e2e.Bin()
 	require.NoError(t, err)
+	var id string
+
+	t.Run("Create", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"create",
+			"--region="+region,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+
+		a := assert.New(t)
+		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
+			var r atlas.PrivateEndpointConnection
+			if err = json.Unmarshal(resp, &r); a.NoError(err) {
+				id = r.ID
+				a.NotEmpty(id)
+			}
+		}
+	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -338,7 +397,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		a.NoError(err, string(resp))
 		var r []atlas.PrivateEndpointConnection
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Empty(r)
+			a.NotEmpty(r)
 		}
 	})
 }

@@ -70,6 +70,6 @@ Examples
 
 .. code-block::
 
-   This example uses the profile named "myprofile" for accessing Atlas.
-   $ mongocli atlas privateEndpoints gcp create --region CENTRAL_US
+
+ $ mongocli atlas privateEndpoints gcp create --region CENTRAL_US
 

@@ -38,8 +38,8 @@ if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && ! -f "./dist/mongocli_macos
     -b com.mongodb.mongocli \
     -o ./dist/mongocli_macos_signed_x86_64.zip
 
-    echo "replacing original file"
-    unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
+  echo "replacing original file"
+  unzip -od ./dist/macos_darwin_amd64/bin/ ./dist/mongocli_macos_signed_x86_64.zip
 fi
 
 if [[ -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos_signed_arm64.zip" ]]; then
@@ -53,6 +53,6 @@ if [[ -f "./dist/macos_darwin_arm64/bin/mongocli" && ! -f "./dist/mongocli_macos
     -b com.mongodb.mongocli \
     -o ./dist/mongocli_macos_signed_arm64.zip
 
-    echo "replacing original file"
-    unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
+  echo "replacing original file"
+  unzip -od ./dist/macos_darwin_arm64/bin/ ./dist/mongocli_macos_signed_arm64.zip
 fi

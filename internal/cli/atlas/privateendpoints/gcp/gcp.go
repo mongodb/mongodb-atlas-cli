@@ -26,6 +26,8 @@ func Builder() *cobra.Command {
 		Short: "Manage GCP private endpoints.",
 	}
 	cmd.AddCommand(
+		CreateBuilder(),
+		DeleteBuilder(),
 		ListBuilder(),
 		DescribeBuilder(),
 	)

@@ -62,7 +62,7 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <privateEndpointId>",
-		Short: "Watch for a specific GCP Private Endpoint to be available.",
+		Short: "Watch for a specific GCP private endpoint to be available.",
 		Annotations: map[string]string{
 			"args":                  "privateEndpointId",
 			"requiredArgs":          "privateEndpointId",

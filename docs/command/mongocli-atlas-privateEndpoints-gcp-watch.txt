@@ -12,7 +12,7 @@ mongocli atlas privateEndpoints gcp watch
    :depth: 1
    :class: singlecol
 
-Watch for a specific GCP Private Endpoint to be available.
+Watch for a specific GCP private endpoint to be available.
 
 Syntax
 ------

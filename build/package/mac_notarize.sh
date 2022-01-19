@@ -26,8 +26,6 @@ if [[ -f "./dist/macos_darwin_amd64/bin/mongocli" && -f "./dist/macos_darwin_arm
   ./darwin_amd64/macnotary \
       -f ./dist/mongocli_amd64_arm64_bin.zip \
       -m notarizeAndSign -u https://dev.macos-notary.build.10gen.cc/api \
-      -s "${NOTARY_SERVICE_SECRET:?}" \
-      -k "${NOTARY_SERVICE_KEY_ID:?}"  \
       -b com.mongodb.mongocli \
       -o ./dist/mongocli_macos_signed.zip
 

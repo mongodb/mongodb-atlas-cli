@@ -138,11 +138,11 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `privateEndpoint azure  describe`             | Y         |           |           | Y         |       |       |
 | `privateEndpoint azure  list`                 | Y         |           |           | Y         |       |       |
 | `privateEndpoint azure  watch`                | Y         |           |           | Y         |       |       |
-| `privateEndpoint gcp create`                 | Y         |           |           | Y         |       |       |
-| `privateEndpoint gcp delete`                 | Y         |           |           | Y         |       |       |
-| `privateEndpoint gcp list`                   | Y         |           |           | Y         |       |       |
+| `privateEndpoint gcp create`                  | Y         |           |           | Y         |       |       |
+| `privateEndpoint gcp delete`                  | Y         |           |           | Y         |       |       |
+| `privateEndpoint gcp list`                    | Y         |           |           | Y         |       |       |
 | `privateEndpoint gcp descibe`                 | Y         |           |           | Y         |       |       |
-| `privateEndpoint gcp watch`                 | Y         |           |           | Y         |       |       |
+| `privateEndpoint gcp watch`                   | Y         |           |           | Y         |       |       |
 | `privateEndpoint dataLake aws create`         | Y         |           |           | Y         |       |       |
 | `privateEndpoint dataLake aws list`           | Y         |           |           | Y         |       |       |
 | `privateEndpoint dataLake aws delete`         | Y         |           |           | Y         |       |       |

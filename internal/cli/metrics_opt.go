@@ -14,7 +14,11 @@
 
 package cli
 
-import atlas "go.mongodb.org/atlas/mongodbatlas"
+import (
+	"fmt"
+
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
 
 type MetricsOpts struct {
 	ListOpts
@@ -36,4 +40,18 @@ func (opts *MetricsOpts) NewProcessMetricsListOptions() *atlas.ProcessMeasuremen
 	o.M = opts.MeasurementType
 
 	return o
+}
+
+// ValidatePeriodStartEnd validates period, start and end flags.
+func (opts *MetricsOpts) ValidatePeriodStartEnd() error {
+	if opts.Period == "" && opts.Start == "" && opts.End == "" {
+		return fmt.Errorf("either the --period flag or the --start and --end flags are required")
+	}
+	if opts.Period != "" && (opts.Start != "" || opts.End != "") {
+		return fmt.Errorf("the --period flag is mutually exclusive to the --start and --end flags")
+	}
+	if (opts.Start != "" && opts.End == "") || (opts.Start == "" && opts.End != "") {
+		return fmt.Errorf("the --start and --end flags need to be used together")
+	}
+	return nil
 }

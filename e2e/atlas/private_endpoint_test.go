@@ -324,8 +324,8 @@ var regionsGCP = []string{
 	"SOUTH_AMERICA_EAST_1",
 	"WESTERN_US",
 	"US_WEST_2",
-	"US-WEST_3",
-	"US-WEST_4",
+	"US_WEST_3",
+	"US_WEST_4",
 	"EASTERN_ASIA_PACIFIC",
 	"ASIA_EAST_2",
 	"NORTHEASTERN_ASIA_PACIFIC",
@@ -350,7 +350,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsGPC")
 
-	n, err := e2e.RandInt(int64(len(regionsAWS)))
+	n, err := e2e.RandInt(int64(len(regionsGCP)))
 	require.NoError(t, err)
 
 	region := regionsGCP[n.Int64()]
@@ -381,6 +381,42 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		}
 	})
 
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"watch",
+			id,
+			"--projectId",
+			g.projectID)
+		cmd.Env = os.Environ()
+
+		_, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err)
+	})
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"describe",
+			id,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		var r atlas.PrivateEndpointConnection
+		if err = json.Unmarshal(resp, &r); a.NoError(err) {
+			a.Equal(id, r.ID)
+		}
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -399,6 +435,43 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
 		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"delete",
+			id,
+			"--force",
+			"--projectId",
+			g.projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			privateEndpointsEntity,
+			gcpEntity,
+			"watch",
+			id,
+			"--projectId",
+			g.projectID)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		a := assert.New(t)
+		// We expect a 404 error once the private endpoint has been completely deleted
+		a.Error(err)
+		a.Contains(string(resp), "404")
 	})
 }
 

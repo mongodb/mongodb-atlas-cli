@@ -12,7 +12,9 @@ mongocli atlas privateEndpoints gcp watch
    :depth: 1
    :class: singlecol
 
-Watch for a specific GCP private endpoint to be available.
+Watch the specified GCP private endpoint to detect changes in the endpoint's state.
+
+This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. Once the endpoint reaches the expected state, the command prints "GCP Private endpoint changes completed." If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails. You can interrupt the command's polling at any time with CTRL-C.
 
 Syntax
 ------

@@ -62,7 +62,12 @@ func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <privateEndpointId>",
-		Short: "Watch for a specific GCP private endpoint to be available.",
+		Short: "Watch the specified GCP private endpoint to detect changes in the endpoint's state.",
+		Long: "This command checks the endpoint's state periodically until the endpoint reaches " +
+			"an AVAILABLE or FAILED state. Once the endpoint reaches the expected state, the " +
+			"command prints \"GCP Private endpoint changes completed.\" If you run the command " +
+			"in the terminal, it blocks the terminal session until the resource becomes " +
+			"available or fails. You can interrupt the command's polling at any time with CTRL-C.",
 		Annotations: map[string]string{
 			"args":                  "privateEndpointId",
 			"requiredArgs":          "privateEndpointId",

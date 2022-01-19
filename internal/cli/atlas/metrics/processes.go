@@ -69,7 +69,7 @@ func ProcessBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.MetricsOpts.ValidatePeriodStartEnd,
+				opts.ValidatePeriodStartEnd,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
 			)

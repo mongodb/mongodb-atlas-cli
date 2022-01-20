@@ -29,8 +29,8 @@ import (
 )
 
 const (
-	maxRetryAttempts = 3
-	sleepSeconds     = 20
+	maxRetryAttempts   = 3
+	sleepTimeInSeconds = 30
 )
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
@@ -75,16 +75,25 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Logf("projectName=%s", g.projectName)
 
 	g.t.Cleanup(func() {
-		for i := 1; i <= maxRetryAttempts; i++ {
-			if e := deleteProject(g.projectID); e != nil {
-				g.t.Errorf("%d/%d attempts- trying again in %d seconds: unexpected error while deleting the project '%s': %v", i, maxRetryAttempts, sleepSeconds, g.projectID, e)
-				time.Sleep(20 * time.Second)
-			} else {
-				g.t.Logf("project %s successfully deleted", g.projectID)
-				break
-			}
-		}
+		g.deleteProjectWithRetry()
 	})
+}
+
+func (g *atlasE2ETestGenerator) deleteProjectWithRetry() {
+	var attempts int
+	for attempts = 1; attempts <= maxRetryAttempts; attempts++ {
+		if e := deleteProject(g.projectID); e != nil {
+			g.t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project '%s': %v", attempts, maxRetryAttempts, sleepTimeInSeconds, g.projectID, e)
+			time.Sleep(sleepTimeInSeconds * time.Second)
+		} else {
+			g.t.Logf("project %s successfully deleted", g.projectID)
+			break
+		}
+	}
+
+	if attempts > maxRetryAttempts {
+		g.t.Errorf("we could not delete the project '%s' (projectId: %s)", g.projectName, g.projectID)
+	}
 }
 
 // generateCluster generates a new cluster and also registers it's deletion on test cleanup.

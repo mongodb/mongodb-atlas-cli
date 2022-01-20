@@ -70,9 +70,12 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Logf("projectName=%s", g.projectName)
 
 	g.t.Cleanup(func() {
-		time.Sleep(15 * time.Second)
 		if e := deleteProject(g.projectID); e != nil {
-			g.t.Errorf("unexpected error: %v", e)
+			g.t.Errorf("unexpected error while deleting the project '%s' (trying again in 20 seconds): %v", g.projectID, e)
+			time.Sleep(20 * time.Second)
+			if e := deleteProject(g.projectID); e != nil {
+				g.t.Errorf("unexpected error: %v", e)
+			}
 		}
 	})
 }

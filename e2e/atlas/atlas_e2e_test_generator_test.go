@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -69,6 +70,7 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Logf("projectName=%s", g.projectName)
 
 	g.t.Cleanup(func() {
+		time.Sleep(10 * time.Second)
 		if e := deleteProject(g.projectID); e != nil {
 			g.t.Errorf("unexpected error: %v", e)
 		}

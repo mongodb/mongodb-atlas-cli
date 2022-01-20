@@ -86,13 +86,13 @@ func (g *atlasE2ETestGenerator) deleteProjectWithRetry() {
 			g.t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project '%s': %v", attempts, maxRetryAttempts, sleepTimeInSeconds, g.projectID, e)
 			time.Sleep(sleepTimeInSeconds * time.Second)
 		} else {
-			g.t.Logf("project %s successfully deleted", g.projectID)
+			g.t.Logf("project '%s' successfully deleted", g.projectID)
 			break
 		}
 	}
 
 	if attempts > maxRetryAttempts {
-		g.t.Errorf("we could not delete the project '%s' (projectId: %s)", g.projectName, g.projectID)
+		g.t.Errorf("we could not delete the project '%s' (projectId: '%s')", g.projectName, g.projectID)
 	}
 }
 

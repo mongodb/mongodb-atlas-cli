@@ -28,6 +28,11 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+const (
+	maxRetryAttempts = 3
+	sleepSeconds     = 20
+)
+
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
 	projectID    string
@@ -70,11 +75,13 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Logf("projectName=%s", g.projectName)
 
 	g.t.Cleanup(func() {
-		if e := deleteProject(g.projectID); e != nil {
-			g.t.Errorf("unexpected error while deleting the project '%s' (trying again in 20 seconds): %v", g.projectID, e)
-			time.Sleep(20 * time.Second)
+		for i := 1; i <= maxRetryAttempts; i++ {
 			if e := deleteProject(g.projectID); e != nil {
-				g.t.Errorf("unexpected error: %v", e)
+				g.t.Errorf("%d/%d attempts- trying again in %d seconds: unexpected error while deleting the project '%s': %v", i, maxRetryAttempts, sleepSeconds, g.projectID, e)
+				time.Sleep(20 * time.Second)
+			} else {
+				g.t.Logf("project %s successfully deleted", g.projectID)
+				break
 			}
 		}
 	})

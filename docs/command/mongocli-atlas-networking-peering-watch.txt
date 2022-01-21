@@ -14,6 +14,11 @@ mongocli atlas networking peering watch
 
 Watch for a peering connection to be available.
 
+This command checks the peering connection's status periodically until it becomes available. 
+Once it reaches the expected state, the command prints "Network peering changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource is available.
+You can interrupt the command's polling at any time with CTRL-C.
+
 Syntax
 ------
 

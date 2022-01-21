@@ -73,7 +73,11 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch <ID>",
 		Short: "Watch for a peering connection to be available.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the peering connection's status periodically until it becomes available. 
+Once it reaches the expected state, the command prints "Network peering changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource is available.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

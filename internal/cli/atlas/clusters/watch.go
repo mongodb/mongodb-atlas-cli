@@ -63,7 +63,11 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch <clusterName>",
 		Short: "Watch for a cluster to be available.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the cluster's status periodically until it reaches an IDLE state. 
+Once the cluster reaches the expected state, the command prints "Cluster available."
+If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to watch.",

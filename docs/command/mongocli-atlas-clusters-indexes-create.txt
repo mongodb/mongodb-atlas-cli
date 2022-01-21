@@ -67,7 +67,7 @@ Options
    * - --key
      - strings
      - true
-     - Index keys. Should be formatted as field:type.
+     - Field to be indexed and the type of index in the following format: field:type.
    * - --projectId
      - string
      - false

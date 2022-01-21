@@ -40,7 +40,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var succesDeleteTemplate = "Private endpoint '%s' deleted\n"
+var successDeleteTemplate = "Private endpoint '%s' deleted\n"
 var failDeleteTemplate = "Private endpoint not deleted"
 
 func (opts *DeleteOpts) Run() error {
@@ -50,7 +50,7 @@ func (opts *DeleteOpts) Run() error {
 // mongocli atlas privateEndpoints gcp delete <privateEndpointId> [--force][--projectId projectId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts(succesDeleteTemplate, failDeleteTemplate),
+		DeleteOpts: cli.NewDeleteOpts(successDeleteTemplate, failDeleteTemplate),
 	}
 	cmd := &cobra.Command{
 		Use:     "delete <privateEndpointId>",

@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	maxRetryAttempts   = 4
+	maxRetryAttempts   = 10
 	sleepTimeInSeconds = 30
 )
 

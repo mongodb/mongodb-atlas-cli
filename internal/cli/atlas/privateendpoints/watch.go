@@ -58,7 +58,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas cluster(s) watch <name> [--projectId projectId].
+// mongocli atlas privateEndpoint(s) watch <name> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
@@ -76,6 +76,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 				opts.InitOutput(cmd.OutOrStdout(), "\nPrivate endpoint changes completed.\n"),
 			)
 		},
+		Example: `$ mongocli atlas privateEndpoint watch vpce-abcdefg0123456789`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()

@@ -67,7 +67,8 @@ func WatchBuilder() *cobra.Command {
 Once the cluster reaches the expected state, the command prints "Cluster available."
 If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Args: require.ExactArgs(1),
+		Example: `$ mongocli atlas cluster watch clusterNameSample`,
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":            "clusterName",
 			"clusterNameDesc": "Name of the cluster to watch.",

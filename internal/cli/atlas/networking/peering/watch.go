@@ -77,7 +77,8 @@ func WatchBuilder() *cobra.Command {
 Once it reaches the expected state, the command prints "Network peering changes completed."
 If you run the command in the terminal, it blocks the terminal session until the resource is available.
 You can interrupt the command's polling at any time with CTRL-C.`,
-		Args: require.ExactArgs(1),
+		Example: `$ mongocli atlas networking peering watch peeringConnectionSampleId`,
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

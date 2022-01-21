@@ -68,7 +68,7 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch",
 		Short: "Watch for automation changes to be completed.",
-		Long: `This command checks the automation change's status periodically until they are completed. 
+		Long: `This command checks the automation goal version periodically until it's reached.
 Once the expected status is reached, the command prints "Changes deployed successfully."
 If you run the command in the terminal, it blocks the terminal session until the changes are completed.
 You can interrupt the command's polling at any time with CTRL-C.`,

@@ -193,7 +193,7 @@ const (
 	Dynamic                                  = "Indicates whether the index uses dynamic or static mappings."
 	SearchFields                             = "Static field specifications."
 	RSName                                   = "The replica set that the index is built on."
-	Key                                      = "Index keys. Should be formatted as field:type."
+	Key                                      = "Field to be indexed and the type of index in the following format: field:type."
 	LogTypes                                 = "Array of strings specifying the types of logs to collect."
 	SizeRequestedPerFileBytes                = "Size for each log file in bytes."
 	LogRedacted                              = "If set to true, emails, hostnames, IP addresses, and namespaces in API responses involving this job are replaced with random string values."

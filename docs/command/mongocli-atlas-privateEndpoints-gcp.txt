@@ -49,11 +49,19 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-atlas-privateEndpoints-gcp-create` - Create a new GCP private endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-delete` - Delete a GCP private endpoint for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-describe` - Return a specific GCP private endpoint for your project.
 * :ref:`mongocli-atlas-privateEndpoints-gcp-list` - List GCP private endpoints for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-watch` - Watch the specified GCP private endpoint to detect changes in the endpoint's state.
 
 
 .. toctree::
    :titlesonly:
 
+   create </command/mongocli-atlas-privateEndpoints-gcp-create>
+   delete </command/mongocli-atlas-privateEndpoints-gcp-delete>
+   describe </command/mongocli-atlas-privateEndpoints-gcp-describe>
    list </command/mongocli-atlas-privateEndpoints-gcp-list>
+   watch </command/mongocli-atlas-privateEndpoints-gcp-watch>
 

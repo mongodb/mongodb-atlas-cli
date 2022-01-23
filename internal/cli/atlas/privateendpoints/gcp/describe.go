@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package gcp
 
 import (
 	"context"
@@ -26,15 +26,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ProcessOpts struct {
+var describeTemplate = `ID	REGION	STATUS	ERROR
+{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}
+`
+
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.MetricsOpts
-	hostID string
-	store  store.HostMeasurementLister
+	id    string
+	store store.PrivateEndpointDescriber
 }
 
-func (opts *ProcessOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -42,14 +45,9 @@ func (opts *ProcessOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
-{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
-{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
-`
+func (opts *DescribeOpts) Run() error {
+	r, err := opts.store.PrivateEndpoint(opts.ConfigProjectID(), provider, opts.id)
 
-func (opts *ProcessOpts) Run() error {
-	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.HostMeasurements(opts.ConfigProjectID(), opts.hostID, listOpts)
 	if err != nil {
 		return err
 	}
@@ -57,33 +55,32 @@ func (opts *ProcessOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId].
-func ProcessBuilder() *cobra.Command {
-	opts := &ProcessOpts{}
+// mongocli atlas privateEndpoint(s)|privateendpoint(s) gcp describe|get <ID> [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
+	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "process <ID>",
-		Short:   "Get measurements for a given host.",
-		Aliases: []string{"processes"},
+		Use:     "describe <privateEndpointId>",
+		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
+		Short:   "Return a specific GCP private endpoint for your project.",
+		Annotations: map[string]string{
+			"args":                  "privateEndpointId",
+			"requiredArgs":          "privateEndpointId",
+			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
+		},
+		Example: `$ mongocli atlas privateEndpoint gcp describe vpce-abcdefg0123456789`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidatePeriodStartEnd,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.Granularity, flag.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

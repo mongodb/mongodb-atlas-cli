@@ -19,7 +19,23 @@ Syntax
 
 .. code-block::
 
-   mongocli ops-manager clusters indexes create [name] [options]
+   mongocli ops-manager clusters indexes create [indexName] [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - indexName
+     - string
+     - false
+     - Name of the index to create.
 
 Options
 -------
@@ -67,7 +83,7 @@ Options
    * - --key
      - strings
      - true
-     - Index keys. Should be formatted as field:type.
+     - Field to be indexed and the type of index in the following format: field:type.
    * - --locale
      - string
      - false
@@ -112,4 +128,16 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   The following example creates an index named bedrooms_1 on the listings collection of the realestate database on the replica set repl1. 
+   The command uses the default profile.
+
+   mongocli om clusters indexes create bedrooms_1 \
+     --collectionName listings --db realestate --key bedrooms:1 \
+     --rsName repl1
 

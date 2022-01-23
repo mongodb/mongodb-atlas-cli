@@ -142,15 +142,39 @@ func (opts *IndexesCreateOpts) indexKeys() ([][]string, error) {
 	return propertiesList, nil
 }
 
-// mongocli cloud-manager cluster(s) index(es) create [name]  --rsName rsName --dbName dbName [--key field:type] --projectId projectId
-// --locale locale --caseFirst caseFirst --alternate alternate --maxVariable maxVariable --strength strength --caseLevel caseLevel --numericOrdering numericOrdering
-// --normalization normalization --backwards backwards --unique unique --sparse sparse --background background.
+// IndexesCreateBuilder mongocli cloud-manager cluster(s) index(es) create [name]
+// --rsName rsName
+// --dbName dbName
+// [--key field:type]
+// [--projectId projectId]
+// --locale locale
+// --caseFirst caseFirst
+// --alternate alternate
+// --maxVariable maxVariable
+// --strength strength
+// --caseLevel caseLevel
+// --numericOrdering numericOrdering
+// --normalization normalization
+// --backwards backwards
+// --unique unique
+// --sparse sparse
+// --background background.
 func IndexesCreateBuilder() *cobra.Command {
 	opts := &IndexesCreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create [name]",
+		Use:   "create [indexName]",
 		Short: "Create a rolling index for your MongoDB cluster.",
 		Args:  require.MaximumNArgs(1),
+		Annotations: map[string]string{
+			"args":          "indexName",
+			"indexNameDesc": "Name of the index to create.",
+		},
+		Example: `  The following example creates an index named bedrooms_1 on the listings collection of the realestate database on the replica set repl1. 
+  The command uses the default profile.
+
+  mongocli om clusters indexes create bedrooms_1 \
+    --collectionName listings --db realestate --key bedrooms:1 \
+    --rsName repl1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

@@ -234,16 +234,6 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         command: make setupgolangcilint
-  "install gon":
-    - command: shell.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongocli/bin
-        script: |
-          set -Eeou pipefail
-
-          curl -sL https://github.com/mitchellh/gon/releases/download/v${gon_ver}/gon_macos.zip -o gon.zip
-          unzip gon.zip
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -253,7 +243,18 @@ functions:
           set -Eeou pipefail
 
           curl -sfL https://github.com/goreleaser/goreleaser/releases/download/v${gorelaser_ver}/goreleaser_Darwin_all.tar.gz | tar zx
-
+  "install macos notarization service":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        include_expansions_in_env:
+          - notary_service_url
+        script: |
+          set -Eeou pipefail
+          curl "${notary_service_url}" --output macos-notary.zip
+          unzip -u macos-notary.zip
+          chmod 755 ./darwin_amd64/macnotary
   "install snyk":
     - command: shell.exec
       type: setup
@@ -286,20 +287,6 @@ functions:
           set -Eeou pipefail
 
           curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
-  "set up gon":
-    - command: subprocess.exec
-      type: test
-      params:
-        add_to_path:
-          - ${go_bin}
-        include_expansions_in_env:
-          - ac_username
-          - ac_password
-        working_dir: src/github.com/mongodb/mongocli
-        env:
-          <<: *go_options
-        silent: true
-        binary: build/package/set-up-gon.sh
   "check license header":
     - command: subprocess.exec
       type: test
@@ -329,30 +316,22 @@ functions:
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli
-        silent: true
+        include_expansions_in_env:
+          - notary_service_key_id
+          - notary_service_secret
+          - notary_service_url
         script: |
-          set -o errexit
-
-          cat <<EOF_BUILD_SH > ~/mongocli_package.sh
-          #! /usr/bin/env bash
-
-          cd $(pwd)
+          set -Eeou pipefail
 
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
+          export NOTARY_SERVICE_URL=${notary_service_url}
+          export MACOS_NOTARY_KEY=${notary_service_key_id}
+          export MACOS_NOTARY_SECRET=${notary_service_secret}
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
-          EOF_BUILD_SH
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -Eeou pipefail
-          # notarization and signing can only happen in a session with access to the GUI, so we use ssh to it
-          ssh -v -p 2222 localhost "bash ~/mongocli_package.sh"
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -1332,8 +1311,7 @@ tasks:
       - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install gon"
-      - func: "set up gon"
+      - func: "install macos notarization service"
       - func: "package"
       - func: "rename pkg"
         vars:
@@ -1436,8 +1414,7 @@ tasks:
       - func: "clone"
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install gon"
-      - func: "set up gon"
+      - func: "install macos notarization service"
       - command: subprocess.exec
         type: test
         params:

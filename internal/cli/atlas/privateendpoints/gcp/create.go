@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package gcp
 
 import (
 	"context"
@@ -24,17 +24,17 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-type ProcessOpts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.MetricsOpts
-	hostID string
-	store  store.HostMeasurementLister
+	store  store.PrivateEndpointCreator
+	region string
 }
 
-func (opts *ProcessOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -42,14 +42,12 @@ func (opts *ProcessOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}} {{if .DataPoints}}
-{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
-{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
-`
+var createTemplate = "GCP private endpoint '{{.ID}}' created.\n"
 
-func (opts *ProcessOpts) Run() error {
-	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.HostMeasurements(opts.ConfigProjectID(), opts.hostID, listOpts)
+func (opts *CreateOpts) Run() error {
+	createRequest := opts.newPrivateEndpointConnection()
+
+	r, err := opts.store.CreatePrivateEndpoint(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -57,36 +55,39 @@ func (opts *ProcessOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli om|cm metric(s) process(es) <ID> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId].
-func ProcessBuilder() *cobra.Command {
-	opts := &ProcessOpts{}
+func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnection {
+	createRequest := &mongodbatlas.PrivateEndpointConnection{
+		Region:       opts.region,
+		ProviderName: provider,
+	}
+	return createRequest
+}
+
+// mongocli atlas privateEndpoints gcp create --region region [--projectId projectId].
+func CreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "process <ID>",
-		Short:   "Get measurements for a given host.",
-		Aliases: []string{"processes"},
-		Args:    require.ExactArgs(1),
+		Use:     "create",
+		Short:   "Create a new GCP private endpoint for your project.",
+		Args:    require.NoArgs,
+		Example: `$ mongocli atlas privateEndpoints gcp create --region CENTRAL_US`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidatePeriodStartEnd,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.hostID = args[0]
 			return opts.Run()
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.Granularity, flag.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.Type, nil, usage.MeasurementType)
+	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	_ = cmd.MarkFlagRequired(flag.Region)
 
 	return cmd
 }

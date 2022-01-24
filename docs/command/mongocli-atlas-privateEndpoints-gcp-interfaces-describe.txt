@@ -21,6 +21,22 @@ Syntax
 
    mongocli atlas privateEndpoints gcp interfaces describe <endpointGroupId> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - endpointGroupId
+     - string
+     - true
+     - Unique identifier for the endpoint group.
+
 Options
 -------
 
@@ -64,4 +80,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas privateEndpoints gcp interfaces describe endpoint-1 --endpointServiceId 61eaca605af86411903de1dd
 

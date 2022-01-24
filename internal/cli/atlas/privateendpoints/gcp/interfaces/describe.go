@@ -64,6 +64,12 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return a specific GCP private endpoint interface for your project.",
+		Annotations: map[string]string{
+			"args":                "endpointGroupId",
+			"requiredArgs":        "endpointGroupId",
+			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+		},
+		Example: `$ mongocli atlas privateEndpoints gcp interfaces describe endpoint-1 --endpointServiceId 61eaca605af86411903de1dd`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointGroupID = args[0]
 			return opts.PreRunE(

@@ -59,15 +59,18 @@ func (opts *WatchOpts) Run() error {
 }
 
 // WatchBuilder
-//	mongocli atlas cluster(s) onlineArchive watch <archiveId>
-//	--clusterName=<name>
-//	[--projectId projectId].
+//	mongocli atlas cluster(s) onlineArchive watch <archiveId> --clusterName=<name>	[--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <archiveId>",
 		Short: "Watch for an archive to be available.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the archive's status periodically until it reaches a state different from PENDING or PAUSING. 
+Once the archive reaches the expected status, the command prints "Online archive available."
+If you run the command in the terminal, it blocks the terminal session until the resource status changes to the expected status.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Example: `$ mongocli atlas cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample`,
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":          "archiveId",
 			"archiveIdDesc": "Unique identifier of the online archive to watch.",

@@ -63,8 +63,13 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch <instanceName>",
 		Short: "Monitor the status of serverless instance.",
-		Long:  "Your API Key must have the Project Read Only role to successfully call this resource.",
-		Args:  require.ExactArgs(1),
+		Long: `Your API Key must have the Project Read Only role to successfully call this resource.
+This command checks the serverless instance's state periodically until the instance reaches an IDLE state. 
+Once the instance reaches the expected state, the command prints "Instance available."
+If you run the command in the terminal, it blocks the terminal session until the resource becomes idle.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Example: `$ mongocli atlas serverless watch instanceNameSample`,
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":             "instanceName",
 			"instanceNameDesc": "Name of the instance to watch.",

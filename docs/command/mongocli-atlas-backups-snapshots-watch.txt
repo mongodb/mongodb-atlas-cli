@@ -14,6 +14,11 @@ mongocli atlas backups snapshots watch
 
 Watch for a snapshot to be available.
 
+This command checks the snapshot's status periodically until it reaches a completed or failed status. 
+Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+You can interrupt the command's polling at any time with CTRL-C.
+
 Syntax
 ------
 
@@ -76,4 +81,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas snapshot watch snapshotIdSample --clusterName clusterNameSample
 

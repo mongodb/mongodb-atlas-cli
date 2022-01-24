@@ -64,7 +64,12 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch <ID>",
 		Short: "Watch for an LDAP configuration request to complete.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the LDAP configuration's status periodically until it reaches a SUCCESS or FAILED status. 
+Once the LDAP configuration reaches the expected status, the command prints "LDAP Configuration request completed."
+If you run the command in the terminal, it blocks the terminal session until the resource status succeeds or fails.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Example: `$ mongocli atlas security ldap status watch requestIdSample`,
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -64,7 +64,12 @@ func WatchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch <snapshotId>",
 		Short: "Watch for a snapshot to be available.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the snapshot's status periodically until it reaches a completed or failed status. 
+Once the snapshot reaches the expected status, the command prints "Snapshot changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource status completes or fails.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Example: `$ mongocli atlas snapshot watch snapshotIdSample --clusterName clusterNameSample`,
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":           "snapshotId",
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",

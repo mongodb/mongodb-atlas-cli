@@ -14,6 +14,11 @@ mongocli atlas clusters watch
 
 Watch for a cluster to be available.
 
+This command checks the cluster's status periodically until it reaches an IDLE state. 
+Once the cluster reaches the expected state, the command prints "Cluster available."
+If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
+You can interrupt the command's polling at any time with CTRL-C.
+
 Syntax
 ------
 
@@ -72,4 +77,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas cluster watch clusterNameSample
 

@@ -57,13 +57,18 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas cluster(s) watch <name> [--projectId projectId].
+// mongocli atlas privateEndpoint(s) azure watch <name> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{
 		Use:   "watch <name>",
 		Short: "Watch for a specific Azure Private Endpoint to be available.",
-		Args:  require.ExactArgs(1),
+		Long: `This command checks the endpoint's state periodically until the endpoint reaches an AVAILABLE or FAILED state. 
+Once the endpoint reaches the expected state, the command prints "Private endpoint changes completed."
+If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
+You can interrupt the command's polling at any time with CTRL-C.`,
+		Example: `$ mongocli atlas privateEndpoint azure watch vpce-abcdefg0123456789`,
+		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -51,7 +51,7 @@ Options
    * - --region
      - string
      - false
-     - Indicates which API URL to use, either US or EU. The integration service will use US by default. (default "US")
+     - Indicates which API URL to use, either US or EU. The integration service will use US by default. This value defaults to "US".
 
 Inherited Options
 -----------------

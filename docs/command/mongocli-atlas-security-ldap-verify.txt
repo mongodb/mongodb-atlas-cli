@@ -63,7 +63,7 @@ Options
    * - --port
      - int
      - false
-     - Port to which the LDAP server listens to for client connections. (default 636)
+     - Port to which the LDAP server listens to for client connections. This value defaults to 636
    * - --projectId
      - string
      - false

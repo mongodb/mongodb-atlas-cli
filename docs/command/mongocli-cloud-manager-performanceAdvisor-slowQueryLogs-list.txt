@@ -54,7 +54,7 @@ Options
    * - --nLog
      - int
      - false
-     - Maximum number of log lines to return. (default 20000)
+     - Maximum number of log lines to return. This value defaults to 20000
    * - --namespaces
      - string
      - false

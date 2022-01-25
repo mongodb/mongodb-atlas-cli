@@ -51,7 +51,7 @@ Options
    * - --authDB
      - string
      - false
-     - Authentication database name. (default "admin")
+     - Authentication database name. This value defaults to "admin"
    * - -h, --help
      - 
      - false

@@ -39,7 +39,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page. (default 100)
+     - Number of items per page. This value defaults to 100
    * - --orgId
      - string
      - false
@@ -51,7 +51,7 @@ Options
    * - --page
      - int
      - false
-     - Page number. (default 1)
+     - Page number. This value defaults to 1
 
 Inherited Options
 -----------------

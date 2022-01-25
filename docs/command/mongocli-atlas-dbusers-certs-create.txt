@@ -39,7 +39,7 @@ Options
    * - --monthsUntilExpiration
      - int
      - false
-     - Number of months that the certificate is valid for. (default 3)
+     - Number of months that the certificate is valid for. This value defaults to 3
    * - -o, --output
      - string
      - false

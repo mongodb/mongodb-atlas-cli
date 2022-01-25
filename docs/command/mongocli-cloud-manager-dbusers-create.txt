@@ -35,7 +35,7 @@ Options
    * - --authDB
      - string
      - false
-     - Authentication database name. This value defaults to "admin"
+     - Authentication database name. This value defaults to "admin".
    * - -h, --help
      - 
      - false
@@ -43,7 +43,7 @@ Options
    * - --mechanisms
      - strings
      - false
-     - Authentication mechanism. Valid values are SCRAM-SHA-1 or SCRAM-SHA-256. This value defaults to [SCRAM-SHA-1]
+     - Authentication mechanism. Valid values are SCRAM-SHA-1 or SCRAM-SHA-256. This value defaults to [SCRAM-SHA-1].
    * - -p, --password
      - string
      - false

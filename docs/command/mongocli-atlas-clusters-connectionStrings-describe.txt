@@ -63,7 +63,7 @@ Options
    * - --type
      - string
      - false
-     - When set to 'private', retrieves the connection string for the network peering endpoint. This value defaults to "standard"
+     - When set to 'private', retrieves the connection string for the network peering endpoint. This value defaults to "standard".
 
 Inherited Options
 -----------------

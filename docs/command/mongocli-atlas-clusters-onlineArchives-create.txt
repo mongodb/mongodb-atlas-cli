@@ -51,7 +51,7 @@ Options
    * - --dateFormat
      - string
      - false
-     - Date format for the date field. Valid values are ISODATE, EPOCH_SECONDS, EPOCH_MILLIS, or EPOCH_NANOSECONDS. This value defaults to "ISODATE"
+     - Date format for the date field. Valid values are ISODATE, EPOCH_SECONDS, EPOCH_MILLIS, or EPOCH_NANOSECONDS. This value defaults to "ISODATE".
    * - --db
      - string
      - true

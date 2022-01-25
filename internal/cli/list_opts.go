@@ -16,6 +16,11 @@ package cli
 
 import "go.mongodb.org/atlas/mongodbatlas"
 
+const (
+	DefaultPage      = 1
+	DefaultPageLimit = 100
+)
+
 type ListOpts struct {
 	PageNum      int
 	ItemsPerPage int

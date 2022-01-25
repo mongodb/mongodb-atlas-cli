@@ -27,13 +27,9 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const (
-	listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .}}
 {{.ID}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
-	pageDefault  = 1
-	limitDefault = 100
-)
 
 type ListOpts struct {
 	cli.GlobalOpts
@@ -86,8 +82,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, pageDefault, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, limitDefault, usage.Limit)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

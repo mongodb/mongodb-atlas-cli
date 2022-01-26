@@ -30,7 +30,6 @@ type DeleteOpts struct {
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	privateEndpointServiceID string
-	privateEndpointGroupID   string
 	store                    store.InterfaceEndpointDeleter
 }
 
@@ -43,7 +42,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointGroupID)
+	return opts.Delete(opts.store.DeleteInterfaceEndpoint, opts.ConfigProjectID(), provider, opts.privateEndpointServiceID)
 }
 
 // mongocli atlas privateEndpoint(s) gcp interface(s) delete <endpointGroupId> --endpointServiceId endpointServiceId [--projectId projectId].
@@ -54,8 +53,14 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <endpointGroupId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete a specific GCP private endpoint interface for your project.",
 		Args:    require.ExactArgs(1),
+		Short:   "Delete a specific GCP private endpoint interface for your project.",
+		Annotations: map[string]string{
+			"args":                "endpointGroupId",
+			"requiredArgs":        "endpointGroupId",
+			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+		},
+		Example: `$ mongocli atlas privateEndpoints gcp interfaces delete endpoint-1 --endpointServiceId 61eaca605af86411903de1dd`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
@@ -67,13 +72,9 @@ func DeleteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
-
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
-
 	return cmd
 }

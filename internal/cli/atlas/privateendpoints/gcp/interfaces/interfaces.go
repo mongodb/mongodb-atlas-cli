@@ -28,8 +28,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas GCP private endpoint interfaces.",
 	}
-	cmd.AddCommand(DescribeBuilder())
-	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(DescribeBuilder(), DeleteBuilder())
 
 	return cmd
 }

@@ -41,7 +41,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per page.
+     - Number of items per page. This value defaults to 100.
    * - -o, --output
      - string
      - false
@@ -49,7 +49,7 @@ Options
    * - --page
      - int
      - false
-     - Page number.
+     - Page number. This value defaults to 1.
    * - --projectId
      - string
      - false

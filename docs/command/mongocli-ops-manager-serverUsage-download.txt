@@ -43,7 +43,7 @@ Options
    * - --format
      - string
      - false
-     - Compression format of the resulting report. Valid values are ZIP, TAR, or .GZ. (default "tar.gz")
+     - Compression format of the resulting report. Valid values are ZIP, TAR, or .GZ. This value defaults to "tar.gz".
    * - -h, --help
      - 
      - false

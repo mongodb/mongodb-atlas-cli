@@ -76,7 +76,7 @@ fix-lint: ## Fix linting errors
 	golangci-lint run --fix --timeout 5m
 
 .PHONY: check
-check: scan test fix-lint ## Run tests and linters
+check: test scan fix-lint ## Run tests and linters
 
 .PHONY: addcopy
 addcopy:

@@ -219,6 +219,12 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           golangci-lint run --timeout 5m0s --out-format junit-xml > lint-tests.xml
+  "scan":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: make scan
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -234,6 +240,12 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         command: make setupgolangcilint
+  "install gokart":
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongocli
+        command: make setupgokart
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -485,6 +497,12 @@ tasks:
       - func: "clone"
       - func: "install golangci-lint"
       - func: "lint"
+  - name: scan
+    tags: ["code_health"]
+    commands:
+      - func: "clone"
+      - func: "install gokart"
+      - func: "scan"
   - name: snyk_scan
     tags: ["code_health"]
     commands:

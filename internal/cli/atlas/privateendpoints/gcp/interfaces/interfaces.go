@@ -29,6 +29,7 @@ func Builder() *cobra.Command {
 		Short:   "Manage Atlas GCP private endpoint interfaces.",
 	}
 	cmd.AddCommand(DeleteBuilder())
+	cmd.AddCommand(DescribeBuilder())
 
 	return cmd
 }

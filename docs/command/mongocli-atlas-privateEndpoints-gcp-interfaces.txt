@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-privateEndpoints-gcp-interfaces-delete` - Delete a specific GCP private endpoint interface for your project.
+* :ref:`mongocli-atlas-privateEndpoints-gcp-interfaces-describe` - Return a specific GCP private endpoint interface for your project.
 
 
 .. toctree::
    :titlesonly:
 
    delete </command/mongocli-atlas-privateEndpoints-gcp-interfaces-delete>
+   describe </command/mongocli-atlas-privateEndpoints-gcp-interfaces-describe>
 

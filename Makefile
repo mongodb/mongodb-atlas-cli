@@ -29,6 +29,11 @@ setupgolangcilint:  ## Install golangci-lint
 	@echo "==> Installing golangci-lint..."
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_VERSION)
 
+.PHONY: setupgokart
+setupgokart:  ## Install gokart
+	@echo "==> Installing gokart..."
+	go install github.com/praetorian-inc/gokart@latest
+
 .PHONY: deps
 deps:  ## Download go module dependencies
 	@echo "==> Installing go.mod dependencies..."
@@ -36,7 +41,7 @@ deps:  ## Download go module dependencies
 	go mod tidy
 
 .PHONY: setup
-setup: deps setupgolangcilint ## Set up dev env
+setup: deps setupgolangcilint setupgokart ## Set up dev env
 	@echo "==> Installing dev tools..."
 	go install github.com/google/addlicense@latest
 	go install github.com/golang/mock/mockgen@latest
@@ -60,13 +65,18 @@ lint: ## Run linter
 	@echo "==> Linting all packages..."
 	golangci-lint run --timeout 5m
 
+.PHONY: scan
+scan: ## Run static code analysis
+	@echo "==> Scanning the code..."
+	gokart scan . -v -g
+
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors
 	@echo "==> Fixing lint errors"
 	golangci-lint run --fix --timeout 5m
 
 .PHONY: check
-check: test fix-lint ## Run tests and linters
+check: scan test fix-lint ## Run tests and linters
 
 .PHONY: addcopy
 addcopy:

@@ -200,6 +200,7 @@ const (
 	CIDR                                     = "cidr"                            // CIDR flag
 	PrivateEndpointID                        = "privateEndpointId"               // PrivateEndpointID flag
 	EndpointServiceID                        = "endpointServiceId"               // EndpointServiceId flag
+	EndpointGroupName                        = "endpointGroupName"               // EndpointGroupName flag
 	PrivateEndpointIPAddress                 = "privateEndpointIpAddress"        // PrivateEndpointIPAddress flag
 	Retention                                = "retention"                       // Retention flag
 	AtlasCIDRBlock                           = "atlasCidrBlock"                  // AtlasCIDRBlock flag

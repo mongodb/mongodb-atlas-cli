@@ -15,6 +15,7 @@
 package gcp
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/atlas/privateendpoints/gcp/interfaces"
 	"github.com/spf13/cobra"
 )
 
@@ -31,6 +32,7 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		DescribeBuilder(),
 		WatchBuilder(),
+		interfaces.Builder(),
 	)
 
 	return cmd

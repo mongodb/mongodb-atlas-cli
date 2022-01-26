@@ -1,0 +1,71 @@
+.. _mongocli-atlas-privateEndpoints-gcp-interfaces-create:
+
+=====================================================
+mongocli atlas privateEndpoints gcp interfaces create
+=====================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Create a GCP private endpoint interface.
+
+Syntax
+------
+
+.. code-block::
+
+   mongocli atlas privateEndpoints gcp interfaces create <atlasPrivateEndpointId> [options]
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --endpointGroupName
+     - string
+     - true
+     - Unique identifier of the endpoint group. The endpoint group encompasses all of the endpoints that you created in Google Cloud.
+   * - --gcpProjectId
+     - string
+     - true
+     - Unique identifier of the GCP project in which the network peer resides.
+   * - -h, --help
+     - 
+     - false
+     - help for create
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+   * - --projectId
+     - string
+     - false
+     - Project ID to use. Overrides the settings in the configuration file or environment variable.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+

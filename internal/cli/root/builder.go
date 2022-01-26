@@ -27,7 +27,6 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
-	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
@@ -94,7 +93,6 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
-		auth.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

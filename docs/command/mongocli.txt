@@ -49,7 +49,6 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas` - Atlas operations.
-* :ref:`mongocli-auth` - Authenticate me.
 * :ref:`mongocli-cloud-manager` - MongoDB Cloud Manager operations.
 * :ref:`mongocli-completion` - Generate the autocompletion script for the specified shell
 * :ref:`mongocli-config` - Configure a profile to store access settings for your MongoDB deployment.
@@ -61,7 +60,6 @@ Related Commands
    :titlesonly:
 
    atlas </command/mongocli-atlas>
-   auth </command/mongocli-auth>
    cloud-manager </command/mongocli-cloud-manager>
    completion </command/mongocli-completion>
    config </command/mongocli-config>

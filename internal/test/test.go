@@ -30,11 +30,11 @@ func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags 
 		t.Errorf("Sub command count mismatch. Expected %d, got %d. Check the CmdValidator for your command.\n", len(subject.Commands()), nSubCommands)
 	}
 	if len(flags) == 0 {
-		a.False(subject.HasAvailableFlags())
+		a.False(subject.HasAvailableFlags(), "expected command to not have flags but it does")
 		return
 	}
-	a.True(subject.HasAvailableFlags())
+	a.True(subject.HasAvailableFlags(), "expected command to have flag but has none")
 	for _, f := range flags {
-		a.NotNil(subject.Flags().Lookup(f))
+		a.NotNilf(subject.Flags().Lookup(f), "command has no flag: %s", f)
 	}
 }

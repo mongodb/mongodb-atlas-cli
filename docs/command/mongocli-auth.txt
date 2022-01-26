@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-auth-login` - Let me in.
+* :ref:`mongocli-auth-login` - Authenticate with Atlas
 
 
 .. toctree::

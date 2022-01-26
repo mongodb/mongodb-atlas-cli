@@ -19,8 +19,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/store"
-
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/oauth"
@@ -30,16 +28,11 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,ProjectOrgsLister
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *auth.DeviceCode) (*auth.Token, *atlas.Response, error)
-}
-
-type ProjectOrgsLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
 type loginOpts struct {
@@ -54,7 +47,6 @@ type loginOpts struct {
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
-	store          ProjectOrgsLister
 	flow           Authenticator
 }
 
@@ -62,14 +54,6 @@ func (opts *loginOpts) initFlow() func() error {
 	return func() error {
 		var err error
 		opts.flow, err = oauth.FlowWithConfig(config.Default())
-		return err
-	}
-}
-
-func (opts *loginOpts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }
@@ -125,7 +109,6 @@ Your code will expire after %.0f minutes.
 		return err
 	}
 	fmt.Printf(`Successfully logged in`)
-	// jsonwriter.Print(os.Stdout, accessToken)
 	return nil
 }
 
@@ -135,7 +118,7 @@ func LoginBuilder() *cobra.Command {
 		Use:   "login",
 		Short: "Authenticate with Atlas",
 		Example: `  To start the interactive setup
-mongocli auth login
+  $ mongocli auth login
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.initFlow()()

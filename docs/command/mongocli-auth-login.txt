@@ -12,7 +12,7 @@ mongocli auth login
    :depth: 1
    :class: singlecol
 
-Let me in.
+Authenticate with Atlas
 
 Syntax
 ------
@@ -32,10 +32,22 @@ Options
      - Type
      - Required
      - Description
+   * - --cm
+     - 
+     - false
+     - Loging to Cloud Manager.
+   * - --gov
+     - 
+     - false
+     - Loging to Atlas for Government.
    * - -h, --help
      - 
      - false
      - help for login
+   * - --noBrowser
+     - 
+     - false
+     - Don't try to open a browser session.
 
 Inherited Options
 -----------------
@@ -52,6 +64,15 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   To start the interactive setup
+   $ mongocli auth login
+
 
 
 .. toctree::

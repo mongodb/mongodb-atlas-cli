@@ -245,7 +245,10 @@ functions:
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
-        command: make setupgokart
+        script: |
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+          make setupgokart
   "install goreleaser":
     - command: shell.exec
       type: setup

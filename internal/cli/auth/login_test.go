@@ -18,6 +18,7 @@
 package auth
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -48,11 +49,13 @@ func TestLoginBuilder(t *testing.T) {
 
 func Test_loginOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAuthenticator(ctrl)
+	mockFlow := mocks.NewMockAuthenticator(ctrl)
+	mockConfig := mocks.NewMockSetSaver(ctrl)
 	defer ctrl.Finish()
 
 	opts := &loginOpts{
-		flow:      mockStore,
+		flow:      mockFlow,
+		config:    mockConfig,
 		OutWriter: os.NewFile(0, os.DevNull),
 		noBrowser: true,
 	}
@@ -63,7 +66,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		ExpiresIn:       300,
 		Interval:        10,
 	}
-	mockStore.
+	mockFlow.
 		EXPECT().
 		RequestCode(gomock.Any()).
 		Return(expectedCode, nil, nil).
@@ -77,11 +80,16 @@ func Test_loginOpts_Run(t *testing.T) {
 		TokenType:    "Bearer",
 		ExpiresIn:    3600,
 	}
-	mockStore.
+	mockFlow.
 		EXPECT().
 		PollToken(gomock.Any(), expectedCode).
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	require.NoError(t, opts.Run())
+	mockConfig.EXPECT().Set("service", gomock.Any()).Times(0)
+	mockConfig.EXPECT().Set("auth_token", "asdf").Times(1)
+	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
+	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	require.NoError(t, opts.Run(context.TODO()))
 }

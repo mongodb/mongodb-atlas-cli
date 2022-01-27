@@ -39,43 +39,45 @@ type Authenticator interface {
 
 type loginOpts struct {
 	OutWriter      io.Writer
-	Service        string
 	AuthToken      string
 	RefreshToken   string
 	OpsManagerURL  string
 	ProjectID      string
 	OrgID          string
 	MongoShellPath string
-	Output         string
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
+	config         config.SetSaver
 	flow           Authenticator
 }
 
-func (opts *loginOpts) initFlow() func() error {
-	return func() error {
-		var err error
-		opts.flow, err = oauth.FlowWithConfig(config.Default())
-		return err
-	}
+func (opts *loginOpts) initFlow() error {
+	var err error
+	opts.flow, err = oauth.FlowWithConfig(config.Default())
+	return err
 }
 
 func (opts *loginOpts) SetUpAccess() {
-	config.SetService(opts.Service)
+	if opts.isGov {
+		opts.config.Set("service", config.CloudGovService)
+	} else if opts.isCloudManager {
+		opts.config.Set("service", config.CloudManagerService)
+	}
+
 	if opts.AuthToken != "" {
-		config.SetAuthToken(opts.AuthToken)
+		opts.config.Set("auth_token", opts.AuthToken)
 	}
 	if opts.RefreshToken != "" {
-		config.SetRefreshToken(opts.RefreshToken)
+		opts.config.Set("refresh_token", opts.RefreshToken)
 	}
 	if opts.OpsManagerURL != "" {
-		config.SetOpsManagerURL(opts.OpsManagerURL)
+		opts.config.Set("ops_manager_url", opts.OpsManagerURL)
 	}
 }
 
-func (opts *loginOpts) Run() error {
-	code, _, err := opts.flow.RequestCode(context.TODO())
+func (opts *loginOpts) Run(ctx context.Context) error {
+	code, _, err := opts.flow.RequestCode(ctx)
 	if err != nil {
 		return err
 	}
@@ -96,22 +98,22 @@ Your code will expire after %.0f minutes.
 		codeDuration.Minutes(),
 	)
 	if !opts.noBrowser {
-		if errBrowser := browser.OpenFile(code.VerificationURI); errBrowser != nil {
+		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
 	}
 
-	accessToken, _, err := opts.flow.PollToken(context.TODO(), code)
+	accessToken, _, err := opts.flow.PollToken(ctx, code)
 	if err != nil {
 		return err
 	}
 	opts.AuthToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
 	opts.SetUpAccess()
-	if err := config.Save(); err != nil {
+	if err := opts.config.Save(); err != nil {
 		return err
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, `Successfully logged in`)
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in\n")
 	return nil
 }
 
@@ -124,10 +126,12 @@ func LoginBuilder() *cobra.Command {
   $ mongocli auth login
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.initFlow()()
+			opts.OutWriter = cmd.OutOrStdout()
+			opts.config = config.Default()
+			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 		Annotations: map[string]string{
 			"toc": "true",

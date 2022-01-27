@@ -12,7 +12,7 @@ mongocli atlas metrics disks describe
    :depth: 1
    :class: singlecol
 
-Describe disks or disk partition metrics for a given host partition.
+Describe disk partition metrics for a disk partition on a specified host
 
 Syntax
 ------
@@ -39,7 +39,7 @@ Arguments
    * - diskName
      - string
      - true
-     - Label that identifies the disk or partition from which you want to retrieve measurements.
+     - Label that identifies the disk or partition from which you want to retrieve metrics.
 
 Options
 -------

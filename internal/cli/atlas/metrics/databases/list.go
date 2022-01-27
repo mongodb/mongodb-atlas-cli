@@ -63,7 +63,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <hostname:port>",
-		Short:   "List available databases for a given host.",
+		Short:   "List available databases or database metrics for a given host.",
 		Aliases: []string{"ls"},
 		Annotations: map[string]string{
 			"args":              "hostname:port",

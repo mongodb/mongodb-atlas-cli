@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "List available databases or databases metrics for a given host.",
+		Short:   "List available databases or database metrics for a given host.",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

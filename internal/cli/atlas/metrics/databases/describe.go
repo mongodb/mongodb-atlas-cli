@@ -71,7 +71,7 @@ func DescribeBuilder() *cobra.Command {
 			"args":              "hostname:port,databaseName",
 			"requiredArgs":      "hostname:port,databaseName",
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
-			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve measurements.",
+			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve metrics.",
 		},
 		Example: `This example retrieves database metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017" 
   $ mongocli atlas metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,

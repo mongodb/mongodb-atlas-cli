@@ -35,7 +35,7 @@ Arguments
    * - hostname:port
      - string
      - true
-     - Hostname and port number of the machine running the Atlas MongoDB process.
+     - Hostname and port number of the instance running the Atlas MongoDB process.
 
 Options
 -------

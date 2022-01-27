@@ -69,7 +69,7 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"args":              "hostname:port",
 			"requiredArgs":      "hostname:port",
-			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		Example: `This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
   $ mongocli atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,

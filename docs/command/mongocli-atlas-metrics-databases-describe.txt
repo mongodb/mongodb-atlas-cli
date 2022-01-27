@@ -39,7 +39,7 @@ Arguments
    * - databaseName
      - string
      - true
-     - Label that identifies the database from which you want to retrieve measurements.
+     - Label that identifies the database from which you want to retrieve metrics.
 
 Options
 -------

@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-metrics-disks-describe` - Describe disks or disk partition metrics for a given host partition.
+* :ref:`mongocli-atlas-metrics-disks-describe` - Describe disk partition metrics for a disk partition on a specified host
 * :ref:`mongocli-atlas-metrics-disks-list` - List available disks or disk partitions for a given host.
 
 

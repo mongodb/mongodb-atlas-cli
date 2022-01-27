@@ -12,7 +12,7 @@ mongocli atlas metrics databases list
    :depth: 1
    :class: singlecol
 
-List available databases for a given host.
+List available databases or database metrics for a given host.
 
 Syntax
 ------

@@ -12,7 +12,7 @@ mongocli atlas metrics
    :depth: 1
    :class: singlecol
 
-Get metrics on the state of the MongoDB process.
+Get metrics on the MongoDB process.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-metrics-databases` - List available databases or databases metrics for a given host.
+* :ref:`mongocli-atlas-metrics-databases` - List available databases or database metrics for a given host.
 * :ref:`mongocli-atlas-metrics-disks` - List available disks or disks metrics for a given host.
 * :ref:`mongocli-atlas-metrics-processes` - Get MongoDB process metrics for a given host.
 

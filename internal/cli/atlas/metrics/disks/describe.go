@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package disks
 
 import (
 	"context"
@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DisksDescribeOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.MetricsOpts
@@ -36,7 +36,7 @@ type DisksDescribeOpts struct {
 	store store.ProcessDiskMeasurementsLister
 }
 
-func (opts *DisksDescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,7 +44,7 @@ func (opts *DisksDescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DisksDescribeOpts) Run() error {
+func (opts *DescribeOpts) Run() error {
 	listOpts := opts.NewProcessMetricsListOptions()
 	r, err := opts.store.ProcessDiskMeasurements(opts.ConfigProjectID(), opts.host, opts.port, opts.name, listOpts)
 	if err != nil {
@@ -59,14 +59,24 @@ var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurement
 {{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `
 
-// mcli atlas metric(s) disk(s) describe <host:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
-func DisksDescribeBuilder() *cobra.Command {
+// mcli atlas metric(s) disk(s) describe <host:port> <diskName> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
 	const argsN = 2
-	opts := &DisksDescribeOpts{}
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <hostname:port> <name>",
+		Use:   "describe <hostname:port> <diskName>",
 		Short: "Describe disks measurements for a given host partition.",
 		Args:  require.ExactArgs(argsN),
+		Annotations: map[string]string{
+			"arg1":              "hostname:port",
+			"requiredArg1":      "hostname:port",
+			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
+			"arg2":              "diskName",
+			"requiredArg2":      "diskName",
+			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve measurements.",
+		},
+		Example: `
+  $ mongocli atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 Cluster0 --granularity PT1M --period P1DT12H`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -77,7 +87,7 @@ func DisksDescribeBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			opts.host, opts.port, err = getHostnameAndPort(args[0])
+			opts.host, opts.port, err = opts.GetHostnameAndPort(args[0])
 			if err != nil {
 				return err
 			}

@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas metrics databases describe <hostId> <name> [options]
+   mongocli atlas metrics databases describe <host:port> <databaseName> [options]
 
 Options
 -------
@@ -88,4 +88,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   $ mongocli atlas metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 Cluster0 --granularity PT1M --period P1DT12H
 

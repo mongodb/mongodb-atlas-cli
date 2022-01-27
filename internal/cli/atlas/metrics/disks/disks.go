@@ -12,23 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package disks
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-func DatabasesBuilder() *cobra.Command {
-	const use = "databases"
+func Builder() *cobra.Command {
+	const use = "disks"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "List available databases or databases measurements for a given host.",
+		Short:   "List available disks or disks measurements for a given host.",
 	}
+
 	cmd.AddCommand(
-		DatabasesListBuilder(),
-		DatabasesDescribeBuilder(),
+		ListBuilder(),
+		DescribeBuilder(),
 	)
 
 	return cmd

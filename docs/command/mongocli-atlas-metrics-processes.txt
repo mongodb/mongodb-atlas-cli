@@ -21,6 +21,22 @@ Syntax
 
    mongocli atlas metrics processes <hostname:port> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - hostname:port
+     - string
+     - true
+     - Hostname and port number of the machine running the Atlas MongoDB process.
+
 Options
 -------
 
@@ -88,4 +104,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   $ mongocli atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

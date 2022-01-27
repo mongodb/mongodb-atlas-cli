@@ -18,6 +18,7 @@
 package auth
 
 import (
+	"os"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -52,6 +53,7 @@ func Test_loginOpts_Run(t *testing.T) {
 
 	opts := &loginOpts{
 		flow:      mockStore,
+		OutWriter: os.NewFile(0, os.DevNull),
 		noBrowser: true,
 	}
 	expectedCode := &auth.DeviceCode{
@@ -80,5 +82,6 @@ func Test_loginOpts_Run(t *testing.T) {
 		PollToken(gomock.Any(), expectedCode).
 		Return(expectedToken, nil, nil).
 		Times(1)
+
 	require.NoError(t, opts.Run())
 }

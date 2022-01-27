@@ -17,6 +17,8 @@ package auth
 import (
 	"context"
 	"fmt"
+	"io"
+	"os"
 	"time"
 
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -36,6 +38,7 @@ type Authenticator interface {
 }
 
 type loginOpts struct {
+	OutWriter      io.Writer
 	Service        string
 	AuthToken      string
 	RefreshToken   string
@@ -78,7 +81,7 @@ func (opts *loginOpts) Run() error {
 	}
 
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
-	fmt.Printf(`
+	_, _ = fmt.Fprintf(opts.OutWriter, `
 Here is your one-time code: %s-%s
 
 Sign in with your browser and enter the code.
@@ -94,7 +97,7 @@ Your code will expire after %.0f minutes.
 	)
 	if !opts.noBrowser {
 		if errBrowser := browser.OpenFile(code.VerificationURI); errBrowser != nil {
-			fmt.Printf("There was an issue opening your browser\n")
+			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
 	}
 
@@ -108,7 +111,7 @@ Your code will expire after %.0f minutes.
 	if err := config.Save(); err != nil {
 		return err
 	}
-	fmt.Printf(`Successfully logged in`)
+	_, _ = fmt.Fprintf(opts.OutWriter, `Successfully logged in`)
 	return nil
 }
 

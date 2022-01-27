@@ -68,11 +68,9 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Describe disks measurements for a given host partition.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
-			"arg1":              "hostname:port",
-			"requiredArg1":      "hostname:port",
+			"args":              "hostname:port,diskName",
+			"requiredArgs":      "hostname:port,diskName",
 			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
-			"arg2":              "diskName",
-			"requiredArg2":      "diskName",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve measurements.",
 		},
 		Example: `

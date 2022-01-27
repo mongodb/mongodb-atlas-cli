@@ -68,11 +68,9 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Describe database measurements for a given host database.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
-			"arg1":              "hostname:port",
-			"requiredArg1":      "hostname:port",
+			"args":              "hostname:port,databaseName",
+			"requiredArgs":      "hostname:port,databaseName",
 			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
-			"arg2":              "databaseName",
-			"requiredArg2":      "databaseName",
 			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve measurements.",
 		},
 		Example: `

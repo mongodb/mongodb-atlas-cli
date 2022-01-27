@@ -21,6 +21,26 @@ Syntax
 
    mongocli atlas metrics databases describe <host:port> <databaseName> [options]
 
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - hostname:port
+     - string
+     - true
+     - Hostname and port number of the machine running the Atlas MongoDB process.
+   * - databaseName
+     - string
+     - true
+     - Label that identifies the database from which you want to retrieve measurements.
+
 Options
 -------
 

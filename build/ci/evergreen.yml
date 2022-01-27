@@ -223,6 +223,8 @@ functions:
     - command: shell.exec
       type: test
       params:
+        env:
+          <<: *go_options
         working_dir: src/github.com/mongodb/mongocli
         command: make scan
   "install gotestsum":
@@ -245,13 +247,9 @@ functions:
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongocli
-        script: |
-          set -Eeou pipefail
-          
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          make setupgokart
+        env:
+          <<: *go_options
+        command: make setupgokart
   "install goreleaser":
     - command: shell.exec
       type: setup

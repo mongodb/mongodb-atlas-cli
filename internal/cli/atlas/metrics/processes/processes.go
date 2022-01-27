@@ -83,7 +83,7 @@ func Builder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			opts.host, opts.port, err = opts.GetHostnameAndPort(args[0])
+			opts.host, opts.port, err = cli.GetHostnameAndPort(args[0])
 			if err != nil {
 				return err
 			}

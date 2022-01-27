@@ -92,8 +92,7 @@ func TestMetricsOpts_ValidatePeriodStartEnd(t *testing.T) {
 
 func TestGetHostNameAndPort(t *testing.T) {
 	t.Run("valid parameter", func(t *testing.T) {
-		opts := &MetricsOpts{}
-		host, port, err := opts.GetHostnameAndPort("test:2000")
+		host, port, err := GetHostnameAndPort("test:2000")
 		if err != nil {
 			t.Fatalf("getHostnameAndPort unexpecteted err: %#v\n", err)
 		}
@@ -105,15 +104,13 @@ func TestGetHostNameAndPort(t *testing.T) {
 		}
 	})
 	t.Run("incomplete format", func(t *testing.T) {
-		opts := &MetricsOpts{}
-		_, _, err := opts.GetHostnameAndPort("test")
+		_, _, err := GetHostnameAndPort("test")
 		if err == nil {
 			t.Fatal("getHostnameAndPort should return an error\n")
 		}
 	})
 	t.Run("incomplete format", func(t *testing.T) {
-		opts := &MetricsOpts{}
-		_, _, err := opts.GetHostnameAndPort(":test")
+		_, _, err := GetHostnameAndPort(":test")
 		if err == nil {
 			t.Fatal("getHostnameAndPort should return an error\n")
 		}

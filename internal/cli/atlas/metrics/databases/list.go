@@ -82,7 +82,7 @@ func ListBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			if opts.host, opts.port, err = opts.GetHostnameAndPort(args[0]); err != nil {
+			if opts.host, opts.port, err = cli.GetHostnameAndPort(args[0]); err != nil {
 				return err
 			}
 

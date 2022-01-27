@@ -61,7 +61,7 @@ func (opts *MetricsOpts) ValidatePeriodStartEnd() error {
 }
 
 // GetHostnameAndPort return the hostname and the port starting from the string hostname:port.
-func (opts *MetricsOpts) GetHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
+func GetHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
 	const hostnameParts = 2
 	host := strings.Split(hostInfo, ":")
 	if len(host) != hostnameParts {

@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	privateEndpointServiceID string
-	privateEndpointID        string
+	privateEndpointGroupID   string
 	store                    store.InterfaceEndpointDescriber
 }
 
@@ -42,12 +42,12 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	STATUS	ERROR
-{{.InterfaceEndpointID}}	{{.AWSConnectionStatus}}	{{.ErrorMessage}}
+var describeTemplate = `ENDPOINT	STATUS	DELETE REQUESTED
+{{.EndpointGroupName}}	{{.Status}}	{{.DeleteRequested}}
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointID)
+	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointGroupID)
 
 	if err != nil {
 		return err
@@ -56,16 +56,22 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) aws interface(s) describe <endpointId> --endpointServiceID endpointServiceID [--projectId projectId].
+// mongocli atlas privateEndpoint(s) gcp interface(s) describe <endpointGroupId> --endpointServiceId endpointServiceId [--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <endpointId>",
+		Use:     "describe <endpointGroupId>",
 		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Return a specific AWS private endpoint interface for your project.",
+		Short:   "Return a specific GCP private endpoint interface for your project.",
+		Annotations: map[string]string{
+			"args":                "endpointGroupId",
+			"requiredArgs":        "endpointGroupId",
+			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
+		},
+		Example: `$ mongocli atlas privateEndpoints gcp interfaces describe endpoint-1 --endpointServiceId 61eaca605af86411903de1dd`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.privateEndpointID = args[0]
+			opts.privateEndpointGroupID = args[0]
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),

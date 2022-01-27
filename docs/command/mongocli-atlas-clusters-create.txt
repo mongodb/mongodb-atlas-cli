@@ -64,7 +64,7 @@ Options
    * - --diskSizeGB
      - float
      - false
-     - Capacity, in gigabytes, of the host's root volume. (default 2)
+     - Capacity, in gigabytes, of the host's root volume. This value defaults to 2.
    * - -f, --file
      - string
      - false
@@ -80,7 +80,7 @@ Options
    * - -m, --members
      - int
      - false
-     - Number of members in the replica set. (default 3)
+     - Number of members in the replica set. This value defaults to 3.
    * - -o, --output
      - string
      - false
@@ -100,15 +100,15 @@ Options
    * - -s, --shards
      - int
      - false
-     - Number of shards in the cluster. (default 1)
+     - Number of shards in the cluster. This value defaults to 1.
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster. (default "M2")
+     - Tier for each data-bearing server in the cluster. This value defaults to "M2".
    * - --type
      - string
      - false
-     - Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED. (default "REPLICASET")
+     - Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED. This value defaults to "REPLICASET".
 
 Inherited Options
 -----------------

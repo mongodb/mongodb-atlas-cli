@@ -71,7 +71,7 @@ Options
    * - --type
      - string
      - false
-     - Type of access list entry. Valid values are cidrBlock, ipAddress, or awsSecurityGroup. (default "ipAddress")
+     - Type of access list entry. Valid values are cidrBlock, ipAddress, or awsSecurityGroup. This value defaults to "ipAddress".
 
 Inherited Options
 -----------------

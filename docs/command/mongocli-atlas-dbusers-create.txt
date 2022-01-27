@@ -35,7 +35,7 @@ Options
    * - --awsIAMType
      - string
      - false
-     - AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE. (default "NONE")
+     - AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE. This value defaults to "NONE".
    * - --deleteAfter
      - string
      - false
@@ -47,7 +47,7 @@ Options
    * - --ldapType
      - string
      - false
-     - LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP. (default "NONE")
+     - LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP. This value defaults to "NONE".
    * - -o, --output
      - string
      - false
@@ -75,7 +75,7 @@ Options
    * - --x509Type
      - string
      - false
-     - X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER. (default "NONE")
+     - X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER. This value defaults to "NONE".
 
 Inherited Options
 -----------------

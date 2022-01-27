@@ -63,7 +63,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <hostname:port>",
-		Short:   "List available disks for a given host.",
+		Short:   "List available disks or disk partitions for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
@@ -71,7 +71,7 @@ func ListBuilder() *cobra.Command {
 			"requiredArgs":      "hostname:port",
 			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
 		},
-		Example: `
+		Example: `This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
   $ mongocli atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

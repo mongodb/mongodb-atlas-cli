@@ -68,9 +68,9 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"args":              "hostname:port",
 			"requiredArgs":      "hostname:port",
-			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
-		Example: `
+		Example: `This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
   $ mongocli atlas metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

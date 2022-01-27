@@ -35,7 +35,7 @@ Arguments
    * - hostname:port
      - string
      - true
-     - Hostname and port number of the machine running the Atlas MongoDB process.
+     - Hostname and port number of the instance running the Atlas MongoDB process.
 
 Options
 -------
@@ -90,6 +90,6 @@ Examples
 
 .. code-block::
 
-
+ This example lists the available databases for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
    $ mongocli atlas metrics database ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

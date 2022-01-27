@@ -12,7 +12,7 @@ mongocli atlas metrics disks
    :depth: 1
    :class: singlecol
 
-List available disks or disks measurements for a given host.
+List available disks or disks metrics for a given host.
 
 Options
 -------
@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-metrics-disks-describe` - Describe disks measurements for a given host partition.
-* :ref:`mongocli-atlas-metrics-disks-list` - List available disks for a given host.
+* :ref:`mongocli-atlas-metrics-disks-describe` - Describe disks or disk partition metrics for a given host partition.
+* :ref:`mongocli-atlas-metrics-disks-list` - List available disks or disk partitions for a given host.
 
 
 .. toctree::

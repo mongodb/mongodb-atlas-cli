@@ -12,7 +12,7 @@ mongocli atlas metrics processes
    :depth: 1
    :class: singlecol
 
-Get measurements for a given host.
+Get MongoDB process metrics for a given host.
 
 Syntax
 ------
@@ -35,7 +35,7 @@ Arguments
    * - hostname:port
      - string
      - true
-     - Hostname and port number of the machine running the Atlas MongoDB process.
+     - Hostname and port number of the instance running the Atlas MongoDB process.
 
 Options
 -------

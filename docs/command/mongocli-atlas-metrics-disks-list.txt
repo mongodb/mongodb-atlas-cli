@@ -12,7 +12,7 @@ mongocli atlas metrics disks list
    :depth: 1
    :class: singlecol
 
-List available disks for a given host.
+List available disks or disk partitions for a given host.
 
 Syntax
 ------
@@ -90,6 +90,6 @@ Examples
 
 .. code-block::
 
-
+ This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
    $ mongocli atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
 

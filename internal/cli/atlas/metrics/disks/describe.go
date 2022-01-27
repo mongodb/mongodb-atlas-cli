@@ -65,16 +65,16 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostname:port> <diskName>",
-		Short: "Describe disks measurements for a given host partition.",
+		Short: "Describe disks or disk partition metrics for a given host partition.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
 			"args":              "hostname:port,diskName",
 			"requiredArgs":      "hostname:port,diskName",
-			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"diskNameDesc":      "Label that identifies the disk or partition from which you want to retrieve measurements.",
 		},
-		Example: `
-  $ mongocli atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 Cluster0 --granularity PT1M --period P1DT12H`,
+		Example: `This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+  $ mongocli atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -12,7 +12,7 @@ mongocli atlas metrics databases
    :depth: 1
    :class: singlecol
 
-List available databases or databases measurements for a given host.
+List available databases or databases metrics for a given host.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas-metrics-databases-describe` - Describe database measurements for a given host database.
+* :ref:`mongocli-atlas-metrics-databases-describe` - Describe database metrics for a database on a specific host.
 * :ref:`mongocli-atlas-metrics-databases-list` - List available databases for a given host.
 
 

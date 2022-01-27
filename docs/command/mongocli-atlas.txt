@@ -64,7 +64,7 @@ Related Commands
 * :ref:`mongocli-atlas-liveMigrations` - Manage a Live Migration to Atlas for your organization.
 * :ref:`mongocli-atlas-logs` - Download host logs for your project.
 * :ref:`mongocli-atlas-maintenanceWindows` - Manage Atlas maintenance windows.
-* :ref:`mongocli-atlas-metrics` - Get measurements on the state of the MongoDB process.
+* :ref:`mongocli-atlas-metrics` - Get metrics on the state of the MongoDB process.
 * :ref:`mongocli-atlas-networking` - Networking operations.
 * :ref:`mongocli-atlas-performanceAdvisor` - Performance Advisor operations.
 * :ref:`mongocli-atlas-privateEndpoints` - Manage Atlas private endpoints.

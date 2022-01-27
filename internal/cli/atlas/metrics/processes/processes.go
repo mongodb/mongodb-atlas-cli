@@ -63,13 +63,13 @@ func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{
 		Use:     "processes <hostname:port>",
-		Short:   "Get measurements for a given host.",
+		Short:   "Get MongoDB process metrics for a given host.",
 		Aliases: []string{"process"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"args":              "hostname:port",
 			"requiredArgs":      "hostname:port",
-			"hostname:portDesc": "Hostname and port number of the machine running the Atlas MongoDB process.",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 		},
 		Example: `
   $ mongocli atlas metrics process atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,

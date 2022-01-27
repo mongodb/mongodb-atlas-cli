@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package store
 
 import (
@@ -54,7 +55,7 @@ type AgentAPIKeyDeleter interface {
 func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType)
+		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType, nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

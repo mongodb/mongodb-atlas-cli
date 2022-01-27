@@ -246,8 +246,11 @@ functions:
       params:
         working_dir: src/github.com/mongodb/mongocli
         script: |
+          set -Eeou pipefail
+          
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
+
           make setupgokart
   "install goreleaser":
     - command: shell.exec

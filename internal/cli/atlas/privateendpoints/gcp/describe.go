@@ -26,8 +26,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	REGION	STATUS	ERROR
-{{.ID}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}
+var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupNames}}{{range .EndpointGroupNames}}
+{{$.ID}}	{{.}}	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}{{else}}
+{{$.ID}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}
 `
 
 type DescribeOpts struct {

@@ -235,7 +235,6 @@ const (
 	LiveMigrationID                          = "Unique 24-hexadecimal digit string that identifies the live migration job."
 	PrivateEndpointID                        = "Unique identifier of the AWS PrivateLink connection."
 	EndpointServiceID                        = "Unique identifier of the private endpoint service for which you want to retrieve a private endpoint."
-	EndpointGroupName                        = "Unique identifier of the endpoint group. The endpoint group encompasses all of the endpoints that you created in Google Cloud."
 	PrivateEndpointIDAzure                   = "Unique identifier of the Azure private endpoint resource."
 	PrivateEndpointIPAddressAzure            = "Private IP address of the private endpoint network interface you created in your Azure VNet."
 	AccountID                                = "Account ID of the owner of the peer VPC."

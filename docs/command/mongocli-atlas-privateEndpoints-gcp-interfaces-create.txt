@@ -19,7 +19,23 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas privateEndpoints gcp interfaces create <atlasPrivateEndpointId> [options]
+   mongocli atlas privateEndpoints gcp interfaces create <endpointGroupId> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - endpointGroupId
+     - string
+     - true
+     - Unique identifier for the endpoint group.
 
 Options
 -------
@@ -32,10 +48,14 @@ Options
      - Type
      - Required
      - Description
-   * - --endpointGroupName
+   * - --endpointServiceId
      - string
      - true
-     - Unique identifier of the endpoint group. The endpoint group encompasses all of the endpoints that you created in Google Cloud.
+     - Unique identifier of the private endpoint service for which you want to retrieve a private endpoint.
+   * - --endpoints
+     - strings
+     - false
+     - IP address access list entries that are associated with the link-token.
    * - --gcpProjectId
      - string
      - true
@@ -68,4 +88,11 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ $ mongocli atlas privateEndpoints gcp interfaces create endpoint-1 --endpointServiceId 61eaca605af86411903de1dd --gcpProjectId mcli-private-endpoints --endpoints endpoint-1-0@10.142.0.2,endpoint-1-1@10.142.0.3,endpoint-1-2@10.142.0.4,endpoint-1-3@10.142.0.5,endpoint-1-4@10.142.0.6,endpoint-1-5@10.142.0.7
 

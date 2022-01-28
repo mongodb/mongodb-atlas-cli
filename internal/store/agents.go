@@ -18,13 +18,14 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongocli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter,AgentGlobalVersionsLister,AgentProjectVersionsLister
 
 type AgentLister interface {
-	Agents(string, string) (*opsmngr.Agents, error)
+	Agents(string, string, *atlas.ListOptions) (*opsmngr.Agents, error)
 }
 
 type AgentGlobalVersionsLister interface {
@@ -52,10 +53,10 @@ type AgentAPIKeyDeleter interface {
 }
 
 // Agents encapsulates the logic to manage different cloud providers.
-func (s *Store) Agents(projectID, agentType string) (*opsmngr.Agents, error) {
+func (s *Store) Agents(projectID, agentType string, opts *atlas.ListOptions) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType, nil)
+		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

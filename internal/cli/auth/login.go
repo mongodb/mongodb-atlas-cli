@@ -84,9 +84,9 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
-Here is your one-time code: %s-%s
+First, copy your one-time code: %s-%s
 
-Sign in with your browser and enter the code.
+Next, sign with your browser and enter the code.
 
 Or go to %s
 
@@ -121,7 +121,7 @@ func LoginBuilder() *cobra.Command {
 	opts := &loginOpts{}
 	cmd := &cobra.Command{
 		Use:   "login",
-		Short: "Authenticate with Atlas",
+		Short: "Authenticate with MongoDB Atlas",
 		Example: `  To start the interactive setup
   $ mongocli auth login
 `,
@@ -133,14 +133,11 @@ func LoginBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
-		Annotations: map[string]string{
-			"toc": "true",
-		},
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Loging to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Loging to Cloud Manager.")
+	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
 
 	return cmd
@@ -149,7 +146,7 @@ func LoginBuilder() *cobra.Command {
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth",
-		Short: "Authenticate me.",
+		Short: "Manage the CLI's authentication state.",
 		Annotations: map[string]string{
 			"toc": "true",
 		},

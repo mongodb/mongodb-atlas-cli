@@ -20,10 +20,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
@@ -47,6 +49,8 @@ const (
 	service                      = "service"
 	publicAPIKey                 = "public_api_key"
 	privateAPIKey                = "private_api_key"
+	authToken                    = "auth_token"
+	refreshToken                 = "refresh_token"
 	opsManagerURL                = "ops_manager_url"
 	baseURL                      = "base_url"
 	opsManagerCACertificate      = "ops_manager_ca_certificate"
@@ -57,6 +61,8 @@ const (
 	configPerm                   = 0600
 	skipUpdateCheck              = "skip_update_check"
 )
+
+var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 type Setter interface {
 	Set(string, interface{})
@@ -249,6 +255,30 @@ func (p *Profile) PrivateAPIKey() string {
 func SetPrivateAPIKey(v string) { p.SetPrivateAPIKey(v) }
 func (p *Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
+}
+
+// AuthToken get configured public api key.
+func AuthToken() string { return p.AuthToken() }
+func (p *Profile) AuthToken() string {
+	return p.GetString(authToken)
+}
+
+// SetAuthToken set configured publicAPIKey.
+func SetAuthToken(v string) { p.SetAuthToken(v) }
+func (p *Profile) SetAuthToken(v string) {
+	p.Set(authToken, v)
+}
+
+// RefreshToken get configured private api key.
+func RefreshToken() string { return p.RefreshToken() }
+func (p *Profile) RefreshToken() string {
+	return p.GetString(refreshToken)
+}
+
+// SetRefreshToken set configured private api key.
+func SetRefreshToken(v string) { p.SetRefreshToken(v) }
+func (p *Profile) SetRefreshToken(v string) {
+	p.Set(refreshToken, v)
 }
 
 // OpsManagerURL get configured ops manager base url.

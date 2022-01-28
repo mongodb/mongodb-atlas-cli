@@ -121,7 +121,7 @@ func LoginBuilder() *cobra.Command {
 	opts := &loginOpts{}
 	cmd := &cobra.Command{
 		Use:   "login",
-		Short: "Authenticate with MongoDB Atlas",
+		Short: "Authenticate with MongoDB Atlas.",
 		Example: `  To start the interactive setup:
   $ mongocli auth login
 `,

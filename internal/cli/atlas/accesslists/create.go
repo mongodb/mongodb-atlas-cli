@@ -99,8 +99,6 @@ func getIPAddress() string {
 func validateCurrentIPFlag(opts *CreateOpts, cmd *cobra.Command, args []string) (bool, error) {
 	needsArg := true
 	hasArgs := len(args) > 0
-	fmt.Println(args)
-	fmt.Println(len(args))
 
 	if opts.entryType == ipAddress && !hasArgs {
 		needsArg = false

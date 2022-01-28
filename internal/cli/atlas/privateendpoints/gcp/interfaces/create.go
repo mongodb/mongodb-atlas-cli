@@ -36,7 +36,7 @@ type CreateOpts struct {
 	privateEndpointServiceID string
 	privateEndpointGroupID   string
 	gcpProjectID             string
-	endpoints                []string
+	Endpoints                []string
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -48,7 +48,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) validateEndpoints() error {
-	for _, endpoint := range opts.endpoints {
+	for _, endpoint := range opts.Endpoints {
 		index := strings.Index(endpoint, "@")
 		if index < 1 || index >= len(endpoint)-1 {
 			return fmt.Errorf("invalid endpoint: %s\nRequired format is: <endpointName>@<ipAddress>, eg: foo@127.0.0.1", endpoint)
@@ -58,8 +58,8 @@ func (opts *CreateOpts) validateEndpoints() error {
 }
 
 func (opts *CreateOpts) parseEndpoints() []*atlas.GCPEndpoint {
-	endpoints := make([]*atlas.GCPEndpoint, len(opts.endpoints))
-	for i, endpoint := range opts.endpoints {
+	endpoints := make([]*atlas.GCPEndpoint, len(opts.Endpoints))
+	for i, endpoint := range opts.Endpoints {
 		s := strings.Split(endpoint, "@")
 		endpoints[i] = &atlas.GCPEndpoint{
 			EndpointName: s[0],
@@ -117,7 +117,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 	cmd.Flags().StringVar(&opts.gcpProjectID, flag.GCPProjectID, "", usage.GCPProjectID)
-	cmd.Flags().StringSliceVar(&opts.endpoints, flag.Endpoint, []string{}, usage.Endpoint)
+	cmd.Flags().StringSliceVar(&opts.Endpoints, flag.Endpoint, []string{}, usage.Endpoint)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)

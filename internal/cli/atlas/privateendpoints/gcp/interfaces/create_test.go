@@ -58,3 +58,50 @@ func TestCreateBuilder(t *testing.T) {
 		[]string{flag.Output, flag.ProjectID, flag.EndpointServiceID},
 	)
 }
+
+func TestCreateOpts_ValidateEndpoints(t *testing.T) {
+	tests := []struct {
+		name     string
+		endpoint string
+		wantErr  bool
+	}{
+		{
+			name:     "correct",
+			endpoint: "foo@127.0.0.1",
+			wantErr:  false,
+		},
+		{
+			name:     "only endpoint name",
+			endpoint: "foo",
+			wantErr:  true,
+		},
+		{
+			name:     "only IP address",
+			endpoint: "127.0.0.1",
+			wantErr:  true,
+		},
+		{
+			name:     "no endpoint name",
+			endpoint: "@127.0.0.1",
+			wantErr:  true,
+		},
+		{
+			name:     "no IP address",
+			endpoint: "foo@",
+			wantErr:  true,
+		},
+	}
+	for _, tt := range tests {
+		endpoints := make([]string, 1)
+		endpoints[0] = tt.endpoint
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &CreateOpts{
+				Endpoints: endpoints,
+			}
+			if err := opts.validateEndpoints(); (err != nil) != wantErr {
+				t.Errorf("ValidateEndpoints() error = %v, wantErr %v", err, wantErr)
+			}
+		})
+	}
+}

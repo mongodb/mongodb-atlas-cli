@@ -58,3 +58,65 @@ func TestCreateBuilder(t *testing.T) {
 		[]string{flag.ProjectID, flag.Output, flag.Type, flag.Comment, flag.DeleteAfter},
 	)
 }
+
+func TestValidateCurrentIPFlagNoFlagNoIP(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	defer ctrl.Finish()
+
+	createOpts := &CreateOpts{
+		entryType: ipAddress,
+		store:     mockStore,
+	}
+
+	if _, err := ValidateCurrentIPFlag(createOpts, CreateBuilder(), []string{}); err == nil {
+		t.Fatalf("Error expected for empty args and no current ip flag.")
+	}
+}
+
+func TestValidateCurrentIPFlagWithFlagWithIP(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	defer ctrl.Finish()
+
+	createOpts := &CreateOpts{
+		entryType: ipAddress,
+		store:     mockStore,
+		currentIP: true,
+	}
+
+	if _, err := ValidateCurrentIPFlag(createOpts, CreateBuilder(), []string{"37.228.254.100"}); err == nil {
+		t.Fatalf("Error expected for args and current ip flag in the same command.")
+	}
+}
+
+func TestValidateCurrentIPFlagWithFlagNoIP(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	defer ctrl.Finish()
+
+	createOpts := &CreateOpts{
+		entryType: ipAddress,
+		store:     mockStore,
+		currentIP: true,
+	}
+
+	if _, err := ValidateCurrentIPFlag(createOpts, CreateBuilder(), []string{}); err != nil {
+		t.Fatalf("Error not expected for no args and current ip flag in the same command.")
+	}
+}
+
+func TestValidateCurrentIPFlagNoFlagWithIP(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	defer ctrl.Finish()
+
+	createOpts := &CreateOpts{
+		entryType: ipAddress,
+		store:     mockStore,
+	}
+
+	if _, err := ValidateCurrentIPFlag(createOpts, CreateBuilder(), []string{"37.228.254.100"}); err != nil {
+		t.Fatalf("Error not expected for args and no current ip flag in the same command.")
+	}
+}

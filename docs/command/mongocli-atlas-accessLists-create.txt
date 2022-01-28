@@ -52,6 +52,10 @@ Options
      - string
      - false
      - Optional description or comment for the entry.
+   * - --currentIp
+     - 
+     - false
+     - Flag that indicates whether to use the IP Address from the host that is currently executing the command.
    * - --deleteAfter
      - string
      - false
@@ -88,4 +92,15 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+   
+ 		  Create IP address access list with the current IP address. Entry is not needed in this case.
+ 		  $ mongocli atlas accessList create --currentIP
+ 		  $ mongocli atlas accessList create --type ipAddress --currentIP
+ 		
 

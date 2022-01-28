@@ -137,4 +137,24 @@ func TestAccessList(t *testing.T) {
 		}
 		a.True(found)
 	})
+
+	t.Run("Create Delete After with CurrentIp", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"create",
+			"--currentIp",
+			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
+			"--comment=test",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var entries *mongodbatlas.ProjectIPAccessLists
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
+
+		a.NotEmpty(entries.Results)
+	})
 }

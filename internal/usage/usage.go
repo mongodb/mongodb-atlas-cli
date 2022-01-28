@@ -237,7 +237,7 @@ const (
 	EndpointServiceID                        = "Unique identifier of the private endpoint service for which you want to retrieve a private endpoint."
 	PrivateEndpointIDAzure                   = "Unique identifier of the Azure private endpoint resource."
 	PrivateEndpointIPAddressAzure            = "Private IP address of the private endpoint network interface you created in your Azure VNet."
-	Endpoint                                 = "List of GCP endpoints in the group, of form: endpointName1@ipAddress1,...,endpointNameN@ipAddressN"
+	Endpoint                                 = "List of GCP endpoints in the group separated by commas, such as: endpointName1@ipAddress1,...,endpointNameN@ipAddressN"
 	AccountID                                = "Account ID of the owner of the peer VPC."
 	NewRelicAccountID                        = "Unique identifier of your New Relic account."
 	LicenceKey                               = "Your License Key."

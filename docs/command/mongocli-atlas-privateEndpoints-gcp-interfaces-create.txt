@@ -51,7 +51,7 @@ Options
    * - --endpoint
      - strings
      - false
-     - List of GCP endpoints in the group, of form: endpointName1@ipAddress1,...,endpointNameN@ipAddressN
+     - List of GCP endpoints in the group separated by commas, such as: endpointName1@ipAddress1,...,endpointNameN@ipAddressN
    * - --endpointServiceId
      - string
      - true

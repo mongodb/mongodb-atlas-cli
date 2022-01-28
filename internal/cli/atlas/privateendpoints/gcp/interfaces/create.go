@@ -16,6 +16,7 @@ package interfaces
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -44,6 +45,16 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
+}
+
+func (opts *CreateOpts) validateEndpoints() error {
+	for _, endpoint := range opts.endpoints {
+		index := strings.Index(endpoint, "@")
+		if index < 1 || index >= len(endpoint)-1 {
+			return fmt.Errorf("invalid endpoint: %s\nRequired format is: <endpointName>@<ipAddress>, eg: foo@127.0.0.1", endpoint)
+		}
+	}
+	return nil
 }
 
 func (opts *CreateOpts) parseEndpoints() []*atlas.GCPEndpoint {
@@ -93,6 +104,7 @@ func CreateBuilder() *cobra.Command {
 		Example: `$ mongocli atlas privateEndpoints gcp interfaces create endpoint-1 --endpointServiceId 61eaca605af86411903de1dd --gcpProjectId mcli-private-endpoints --endpoint endpoint-0@10.142.0.2,endpoint-1@10.142.0.3,endpoint-2@10.142.0.4,endpoint-3@10.142.0.5,endpoint-4@10.142.0.6,endpoint-5@10.142.0.7`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
+				opts.validateEndpoints,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),

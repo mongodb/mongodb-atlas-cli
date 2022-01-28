@@ -78,8 +78,7 @@ func (opts *CreateOpts) newInterfaceEndpointConnection() *atlas.InterfaceEndpoin
 	}
 }
 
-// TODO: Better way to indicate --endpoints list?
-// mongocli atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoints <list> [--projectId projectId].
+// mongocli atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoint endpointName1@ipAddress1,...,endpointNameN@ipAddressN [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -92,7 +91,7 @@ func CreateBuilder() *cobra.Command {
 			"requiredArgs":        "endpointGroupId",
 			"endpointGroupIdDesc": "Unique identifier for the endpoint group.",
 		},
-		Example: `$ mongocli atlas privateEndpoints gcp interfaces create endpoint-1 --endpointServiceId 61eaca605af86411903de1dd --gcpProjectId mcli-private-endpoints --endpoints endpoint-1-0@10.142.0.2,endpoint-1-1@10.142.0.3,endpoint-1-2@10.142.0.4,endpoint-1-3@10.142.0.5,endpoint-1-4@10.142.0.6,endpoint-1-5@10.142.0.7`,
+		Example: `$ mongocli atlas privateEndpoints gcp interfaces create endpoint-1 --endpointServiceId 61eaca605af86411903de1dd --gcpProjectId mcli-private-endpoints --endpoint endpoint-0@10.142.0.2,endpoint-1@10.142.0.3,endpoint-2@10.142.0.4,endpoint-3@10.142.0.5,endpoint-4@10.142.0.6,endpoint-5@10.142.0.7`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -107,7 +106,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 	cmd.Flags().StringVar(&opts.gcpProjectID, flag.GCPProjectID, "", usage.GCPProjectID)
-	cmd.Flags().StringSliceVar(&opts.endpoints, flag.Endpoints, []string{}, usage.LinkTokenAccessListCIDREntries)
+	cmd.Flags().StringSliceVar(&opts.endpoints, flag.Endpoint, []string{}, usage.LinkTokenAccessListCIDREntries)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)

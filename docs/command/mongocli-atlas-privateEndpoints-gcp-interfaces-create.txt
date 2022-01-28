@@ -51,7 +51,7 @@ Options
    * - --endpoint
      - strings
      - false
-     - IP address access list entries that are associated with the link-token.
+     - List of GCP endpoints in the group, of form: endpointName1@ipAddress1,...,endpointNameN@ipAddressN
    * - --endpointServiceId
      - string
      - true

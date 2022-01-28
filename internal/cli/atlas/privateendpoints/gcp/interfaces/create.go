@@ -18,8 +18,6 @@ import (
 	"context"
 	"strings"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -27,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type CreateOpts struct {
@@ -106,7 +105,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
 	cmd.Flags().StringVar(&opts.gcpProjectID, flag.GCPProjectID, "", usage.GCPProjectID)
-	cmd.Flags().StringSliceVar(&opts.endpoints, flag.Endpoint, []string{}, usage.LinkTokenAccessListCIDREntries)
+	cmd.Flags().StringSliceVar(&opts.endpoints, flag.Endpoint, []string{}, usage.Endpoint)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)

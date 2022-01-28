@@ -69,7 +69,7 @@ func TestValidateCurrentIPFlagNoFlagNoIP(t *testing.T) {
 		store:     mockStore,
 	}
 
-	if _, err := validateCurrentIPFlag(createOpts, CreateBuilder(), []string{}); err == nil {
+	if err := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); err == nil {
 		t.Fatalf("Error expected for empty args and no current ip flag.")
 	}
 }
@@ -85,7 +85,7 @@ func TestValidateCurrentIPFlagWithFlagWithIP(t *testing.T) {
 		currentIP: true,
 	}
 
-	if _, err := validateCurrentIPFlag(createOpts, CreateBuilder(), []string{"37.228.254.100"}); err == nil {
+	if err := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{"37.228.254.100"}); err == nil {
 		t.Fatalf("Error expected for args and current ip flag in the same command.")
 	}
 }
@@ -101,7 +101,7 @@ func TestValidateCurrentIPFlagWithFlagNoIP(t *testing.T) {
 		currentIP: true,
 	}
 
-	if _, err := validateCurrentIPFlag(createOpts, CreateBuilder(), []string{}); err != nil {
+	if err := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); err != nil {
 		t.Fatalf("Error not expected for no args and current ip flag in the same command.")
 	}
 }
@@ -116,7 +116,7 @@ func TestValidateCurrentIPFlagNoFlagWithIP(t *testing.T) {
 		store:     mockStore,
 	}
 
-	if _, err := validateCurrentIPFlag(createOpts, CreateBuilder(), []string{"37.228.254.100"}); err != nil {
+	if err := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{"37.228.254.100"}); err != nil {
 		t.Fatalf("Error not expected for args and no current ip flag in the same command.")
 	}
 }

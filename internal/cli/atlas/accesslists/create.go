@@ -18,8 +18,6 @@ import (
 	"context"
 	"fmt"
 
-	"os"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -35,9 +33,7 @@ const (
 	ipAddress                = "ipAddress"
 	awsSecurityGroup         = "awsSecurityGroup"
 	createTemplate           = "Created new IP access list.\n"
-	defaultEntryType         = "ipAddress"
-	currentIPAddressNotFound = `We could not find your public IP address. 
-	Please providing the desired IP address for this command.`
+	currentIPAddressNotFound = `not able to find your public IP address. Please providing the desired IP address for this command`
 )
 
 type CreateOpts struct {
@@ -87,43 +83,44 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	return []*atlas.ProjectIPAccessList{entry}
 }
 
-func getIPAddress() string {
+func iPAddress() (string, error) {
 	if publicIP := store.IPAddress(); publicIP != "" {
-		return publicIP
+		return publicIP, nil
 	}
 
-	_, _ = fmt.Fprintln(os.Stderr, currentIPAddressNotFound)
-	return ""
+	err := fmt.Errorf(currentIPAddressNotFound)
+	return "", err
 }
 
-func validateCurrentIPFlag(opts *CreateOpts, cmd *cobra.Command, args []string) (bool, error) {
-	needsArg := true
-	hasArgs := len(args) > 0
+func needsArg(opts *CreateOpts) bool {
+	// Unless currentIP flag is enabled and type is ip address, args are required.
+	return !(opts.entryType == ipAddress && opts.currentIP)
+}
 
-	if opts.entryType == ipAddress && !hasArgs {
-		needsArg = false
+func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string) func() error {
+	if !needsArg(opts) && len(args) > 0 {
+		return func() error {
+			return fmt.Errorf(
+				"please either provide <entry> or use %s to use current IP Address.\n\nUsage: %s",
+				flag.CurrentIP,
+				cmd.UseLine(),
+			)
+		}
 	}
 
-	if !needsArg && (!opts.currentIP && !hasArgs) || (opts.currentIP && hasArgs) {
-		return needsArg, fmt.Errorf(
-			"please either provide <entry> or use %s to use current IP Address.\n\nUsage: %s",
-			flag.CurrentIP,
-			cmd.UseLine(),
-		)
+	if needsArg(opts) && len(args) == 0 {
+		return func() error {
+			return fmt.Errorf(
+				"%q with entry type %s requires at least %d argument received %d\n\nUsage:  %s",
+				cmd.CommandPath(),
+				opts.entryType,
+				1,
+				len(args),
+				cmd.UseLine(),
+			)
+		}
 	}
-
-	if needsArg && len(args) == 0 {
-		return needsArg, fmt.Errorf(
-			"%q with entry type %s requires at least %d argument received %d\n\nUsage:  %s",
-			cmd.CommandPath(),
-			opts.entryType,
-			1,
-			len(args),
-			cmd.UseLine(),
-		)
-	}
-
-	return needsArg, nil
+	return nil
 }
 
 // mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId].
@@ -143,28 +140,30 @@ func CreateBuilder() *cobra.Command {
 		  $ mongocli atlas accessList create --type ipAddress --currentIP
 		`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			_, err := validateCurrentIPFlag(opts, cmd, args)
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
-				func() error { return err },
+				opts.validateCurrentIPFlag(cmd, args),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			needsArg, _ := validateCurrentIPFlag(opts, cmd, args)
-
-			if needsArg {
-				opts.entry = args[0]
+			var err error
+			if len(args) == 0 {
+				opts.entry, err = iPAddress()
 			} else {
-				opts.entry = getIPAddress()
+				opts.entry, err = args[0], nil
+			}
+
+			if err != nil {
+				return err
 			}
 
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.entryType, flag.Type, defaultEntryType, usage.AccessListType)
+	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.AccessListType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.AccessListsDeleteAfter)
 	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)

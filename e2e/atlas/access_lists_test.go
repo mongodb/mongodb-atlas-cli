@@ -36,6 +36,7 @@ func TestAccessList(t *testing.T) {
 	req.NoError(err)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)
+	currentIPEntry := ""
 
 	cliPath, err := e2e.Bin()
 	req.NoError(err)
@@ -138,7 +139,22 @@ func TestAccessList(t *testing.T) {
 		a.True(found)
 	})
 
-	t.Run("Create Delete with CurrentIp", func(t *testing.T) {
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"delete",
+			entry,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Create with CurrentIp", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			accessListEntity,
@@ -156,15 +172,22 @@ func TestAccessList(t *testing.T) {
 
 		a.NotEmpty(entries.Results)
 
-		cmd = exec.Command(cliPath,
+		for i := range entries.Results {
+			if currentIPEntry = entries.Results[i].IPAddress; currentIPEntry != entry {
+				break
+			}
+		}
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
 			atlasEntity,
 			accessListEntity,
 			"delete",
-			entry,
+			currentIPEntry,
 			"--force")
-
 		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
+		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)

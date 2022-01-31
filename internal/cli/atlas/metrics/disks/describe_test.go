@@ -15,13 +15,15 @@
 //go:build unit
 // +build unit
 
-package metrics
+package disks
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,7 +34,7 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 
 	expected := &mongodbatlas.ProcessDiskMeasurements{}
 
-	listOpts := &DisksDescribeOpts{
+	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",
 		port:  27017,
 		name:  "test",
@@ -48,4 +50,15 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribeBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DescribeBuilder(),
+		0,
+		[]string{
+			flag.Page, flag.Limit, flag.Granularity, flag.Period, flag.Start,
+			flag.End, flag.Type, flag.ProjectID, flag.Output},
+	)
 }

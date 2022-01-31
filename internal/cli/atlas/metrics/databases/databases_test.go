@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+//go:build unit
+// +build unit
+
+package databases
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func DatabasesBuilder() *cobra.Command {
-	const use = "databases"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "List available databases or databases measurements for a given host.",
-	}
-	cmd.AddCommand(
-		DatabasesListBuilder(),
-		DatabasesDescribeBuilder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
 	)
-
-	return cmd
 }

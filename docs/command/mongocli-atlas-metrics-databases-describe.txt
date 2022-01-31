@@ -12,14 +12,36 @@ mongocli atlas metrics databases describe
    :depth: 1
    :class: singlecol
 
-Describe database measurements for a given host database.
+Describe database metrics for a database on a specific host.
+
+To retrieve the hostname and port needed for this command, run mongocli atlas process list.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas metrics databases describe <hostId> <name> [options]
+   mongocli atlas metrics databases describe <host:port> <databaseName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - hostname:port
+     - string
+     - true
+     - Hostname and port number of the instance running the Atlas MongoDB process.
+   * - databaseName
+     - string
+     - true
+     - Label that identifies the database from which you want to retrieve metrics.
 
 Options
 -------
@@ -88,4 +110,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ This example retrieves database metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017" 
+   $ mongocli atlas metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H
 

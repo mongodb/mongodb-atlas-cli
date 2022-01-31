@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package disks
 
 import (
 	"context"
@@ -26,16 +26,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DisksListsOpts struct {
+type ListsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
+	cli.MetricsOpts
 	host  string
 	port  int
 	store store.ProcessDisksLister
 }
 
-func (opts *DisksListsOpts) initStore(ctx context.Context) func() error {
+func (opts *ListsOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,7 +44,7 @@ func (opts *DisksListsOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DisksListsOpts) Run() error {
+func (opts *ListsOpts) Run() error {
 	listOpts := opts.NewListOptions()
 	r, err := opts.store.ProcessDisks(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
 	if err != nil {
@@ -57,14 +58,22 @@ var listTemplate = `{{range .Results}}
 {{.PartitionName}}{{end}}
 `
 
-// mongocli atlas metric(s) process(es) disks lists <hostname:port>.
-func DisksListBuilder() *cobra.Command {
-	opts := &DisksListsOpts{}
+// mongocli atlas metric(s) disks lists <hostname:port>.
+func ListBuilder() *cobra.Command {
+	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <hostname:port>",
-		Short:   "List available disks for a given host.",
+		Long:    `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
+		Short:   "List available disks or disk partitions for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
+		Annotations: map[string]string{
+			"args":              "hostname:port",
+			"requiredArgs":      "hostname:port",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+		},
+		Example: `This example lists the available disks for the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+  $ mongocli atlas metrics disk ls atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -74,7 +83,7 @@ func DisksListBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			opts.host, opts.port, err = getHostnameAndPort(args[0])
+			opts.host, opts.port, err = cli.GetHostnameAndPort(args[0])
 			if err != nil {
 				return err
 			}

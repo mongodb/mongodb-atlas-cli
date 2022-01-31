@@ -141,7 +141,7 @@ func CreateBuilder() *cobra.Command {
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
 		Example: `  Create IP address access list with the current IP address. Entry is not needed in this case.
-		  $ mongocli atlas accessList create --currentIP
+  $ mongocli atlas accessList create --currentIP
 		`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli atlas accessLists create <entry> [options]
+   mongocli atlas accessLists create [entry] [options]
 
 Arguments
 ---------
@@ -98,8 +98,7 @@ Examples
 
 .. code-block::
 
-   
- 		  Create IP address access list with the current IP address. Entry is not needed in this case.
+   Create IP address access list with the current IP address. Entry is not needed in this case.
  		  $ mongocli atlas accessList create --currentIP
  		  $ mongocli atlas accessList create --type ipAddress --currentIP
  		

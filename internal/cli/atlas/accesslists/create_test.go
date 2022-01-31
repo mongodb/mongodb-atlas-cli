@@ -59,112 +59,118 @@ func TestCreateBuilder(t *testing.T) {
 	)
 }
 
-func TestValidateCurrentIPFlagNoFlagNoIP(t *testing.T) {
+func TestValidateCurrentIPFlag(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
 	defer ctrl.Finish()
 
-	createOpts := &CreateOpts{
-		entryType: ipAddress,
-		store:     mockStore,
+	tests := []struct {
+		name         string
+		args         []string
+		currentIP    bool
+		resourceType string
+		wantErr      bool
+	}{
+		{
+			"no args no currentIP ipAddress",
+			[]string{},
+			false,
+			ipAddress,
+			true,
+		},
+		{
+			"no args no currentIP cidrBlock",
+			[]string{},
+			false,
+			cidrBlock,
+			true,
+		},
+		{
+			"no args no currentIP awsSecurityGroup",
+			[]string{},
+			false,
+			awsSecurityGroup,
+			true,
+		},
+		{
+			"with args with currentIP ipAddress",
+			[]string{"37.228.254.100"},
+			true,
+			ipAddress,
+			true,
+		},
+		{
+			"with args with currentIP cidrBlock",
+			[]string{"37.228.254.100"},
+			true,
+			cidrBlock,
+			true,
+		},
+		{
+			"with args with currentIP awsSecurityGroup",
+			[]string{"37.228.254.100"},
+			true,
+			awsSecurityGroup,
+			true,
+		},
+		{
+			"with args no currentIP ipAddress",
+			[]string{"37.228.254.100"},
+			false,
+			ipAddress,
+			false,
+		},
+		{
+			"with args no currentIP cidrBlock",
+			[]string{"37.228.254.100"},
+			false,
+			cidrBlock,
+			false,
+		},
+		{
+			"with args no currentIP awsSecurityGroup",
+			[]string{"37.228.254.100"},
+			false,
+			awsSecurityGroup,
+			false,
+		},
+		{
+			"no args with currentIP ipAddress",
+			[]string{},
+			true,
+			ipAddress,
+			false,
+		},
+		{
+			"no args with currentIP cidrBlock",
+			[]string{},
+			true,
+			cidrBlock,
+			true,
+		},
+		{
+			"no args with currentIP awsSecurityGroup",
+			[]string{},
+			true,
+			awsSecurityGroup,
+			true,
+		},
 	}
 
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); errF() == nil {
-		t.Fatalf("Error expected for empty args and no current ip flag.")
-	}
-}
+	for _, tt := range tests {
+		args := tt.args
+		wantErr := tt.wantErr
 
-func TestValidateCurrentIPFlagWithFlagWithIP(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
+		createOpts := &CreateOpts{
+			entryType: tt.resourceType,
+			store:     mockStore,
+			currentIP: tt.currentIP,
+		}
 
-	createOpts := &CreateOpts{
-		entryType: ipAddress,
-		store:     mockStore,
-		currentIP: true,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{"37.228.254.100"}); errF() == nil {
-		t.Fatalf("Error expected for args and current ip flag in the same command.")
-	}
-}
-
-func TestValidateCurrentIPFlagWithFlagNoIP(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
-
-	createOpts := &CreateOpts{
-		entryType: ipAddress,
-		store:     mockStore,
-		currentIP: true,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); errF() != nil {
-		t.Fatalf("Error not expected for no args and current ip flag in the same command.")
-	}
-}
-
-func TestValidateCurrentIPFlagNoFlagWithIP(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
-
-	createOpts := &CreateOpts{
-		entryType: ipAddress,
-		store:     mockStore,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{"37.228.254.100"}); errF() != nil {
-		t.Fatalf("Error not expected for args and no current ip flag in the same command.")
-	}
-}
-
-func TestValidateCurrentIPFlagWithFlagNoIPWithCIDR(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
-
-	createOpts := &CreateOpts{
-		entryType: cidrBlock,
-		store:     mockStore,
-		currentIP: true,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); errF() == nil {
-		t.Fatalf("Error expected for CIDR with no args current ip flag in the same command.")
-	}
-}
-
-func TestValidateCurrentIPFlagWithFlagNoIPWithAWSSecurityGroup(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
-
-	createOpts := &CreateOpts{
-		entryType: awsSecurityGroup,
-		store:     mockStore,
-		currentIP: true,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{}); errF() == nil {
-		t.Fatalf("Error expected for awsSecurityGroup with no args current ip flag in the same command.")
-	}
-}
-
-func TestValidateCurrentIPFlagWithFlagWithIPWithAWSSecurityGroup(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
-	defer ctrl.Finish()
-
-	createOpts := &CreateOpts{
-		entryType: awsSecurityGroup,
-		store:     mockStore,
-		currentIP: true,
-	}
-
-	if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), []string{"37.228.254.100"}); errF() == nil {
-		t.Fatalf("Error expected for awsSecurityGroup with no args current ip flag in the same command.")
+		t.Run(tt.name, func(t *testing.T) {
+			if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), args); (errF() == nil) == wantErr {
+				t.Errorf("Error = %v, wantErr %v", errF(), wantErr)
+			}
+		})
 	}
 }

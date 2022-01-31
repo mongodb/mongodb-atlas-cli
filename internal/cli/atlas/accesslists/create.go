@@ -83,12 +83,12 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	return []*atlas.ProjectIPAccessList{entry}
 }
 
-func iPAddress() (string, error) {
+func IPAddress() (string, error) {
 	if publicIP := store.IPAddress(); publicIP != "" {
 		return publicIP, nil
 	}
 
-	return "", errors.New("not able to find your public IP address. Please providing the desired IP address for this command")
+	return "", errors.New("not able to find your public IP address. Specify the public IP address for this command")
 }
 
 func (opts *CreateOpts) needsArg() bool {
@@ -154,7 +154,7 @@ func CreateBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
 			if len(args) == 0 {
-				opts.entry, err = iPAddress()
+				opts.entry, err = IPAddress()
 			} else {
 				opts.entry, err = args[0], nil
 			}

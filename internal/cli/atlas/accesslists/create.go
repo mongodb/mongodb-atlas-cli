@@ -120,7 +120,7 @@ func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string)
 			)
 		}
 	}
-	return nil
+	return func() error { return nil }
 }
 
 // mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId].

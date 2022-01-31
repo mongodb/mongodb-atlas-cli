@@ -142,7 +142,6 @@ func CreateBuilder() *cobra.Command {
 		},
 		Example: `  Create IP address access list with the current IP address. Entry is not needed in this case.
 		  $ mongocli atlas accessList create --currentIP
-		  $ mongocli atlas accessList create --type ipAddress --currentIP
 		`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

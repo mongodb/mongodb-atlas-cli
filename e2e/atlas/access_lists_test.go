@@ -138,13 +138,12 @@ func TestAccessList(t *testing.T) {
 		a.True(found)
 	})
 
-	t.Run("Create Delete After with CurrentIp", func(t *testing.T) {
+	t.Run("Create Delete with CurrentIp", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
 			accessListEntity,
 			"create",
 			"--currentIp",
-			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
 			"--comment=test",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -156,5 +155,19 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		a.NotEmpty(entries.Results)
+
+		cmd = exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"delete",
+			entry,
+			"--force")
+
+		cmd.Env = os.Environ()
+		resp, err = cmd.CombinedOutput()
+		req.NoError(err)
+
+		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
+		a.Equal(expected, string(resp))
 	})
 }

@@ -63,6 +63,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{
 		Use:     "list <hostname:port>",
+		Long:    `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
 		Short:   "List available disks or disk partitions for a given host.",
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),

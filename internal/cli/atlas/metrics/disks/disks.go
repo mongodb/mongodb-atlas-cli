@@ -24,7 +24,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "List available disks or disks metrics for a given host.",
+		Short:   "List available disks or disk metrics for a given host.",
 	}
 
 	cmd.AddCommand(

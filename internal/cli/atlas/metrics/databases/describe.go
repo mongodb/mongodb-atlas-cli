@@ -65,6 +65,7 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <host:port> <databaseName>",
+		Long:  `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
 		Short: "Describe database metrics for a database on a specific host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{

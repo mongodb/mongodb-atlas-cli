@@ -65,7 +65,8 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <hostname:port> <diskName>",
-		Short: "Describe disk partition metrics for a disk partition on a specified host",
+		Long:  `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
+		Short: "Describe disk partition metrics for a disk partition on a specified host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
 			"args":              "hostname:port,diskName",

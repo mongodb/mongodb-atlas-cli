@@ -12,7 +12,9 @@ mongocli atlas metrics disks describe
    :depth: 1
    :class: singlecol
 
-Describe disk partition metrics for a disk partition on a specified host
+Describe disk partition metrics for a disk partition on a specified host.
+
+To retrieve the hostname and port needed for this command, run mongocli atlas process list.
 
 Syntax
 ------

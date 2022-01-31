@@ -23,17 +23,13 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"runtime"
 	"time"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/version"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
-
-var userAgent = fmt.Sprintf("%s/%s (%s;%s)", config.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 const (
 	yes                       = "yes"
@@ -218,7 +214,7 @@ func WithContext(ctx context.Context) Option {
 
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient(client *http.Client) error {
-	opts := []atlas.ClientOpt{atlas.SetUserAgent(userAgent)}
+	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
@@ -232,7 +228,7 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 
 // setOpsManagerClient sets the internal client to use an Ops Manager client and methods.
 func (s *Store) setOpsManagerClient(client *http.Client) error {
-	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(userAgent)}
+	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(config.UserAgent)}
 	if s.baseURL != "" {
 		opts = append(opts, opsmngr.SetBaseURL(s.baseURL))
 	}
@@ -269,7 +265,7 @@ type ServiceGetter interface {
 	OpsManagerURL() string
 }
 
-// Config an interface of the methods needed to set up a Store.
+// AuthenticatedConfig an interface of the methods needed to set up a Store.
 type AuthenticatedConfig interface {
 	CredentialsGetter
 	TransportConfigGetter
@@ -291,7 +287,7 @@ func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	return Options(options...)
 }
 
-func baseURLOption(c AuthenticatedConfig) Option {
+func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
 	} else if c.Service() == config.CloudGovService {
@@ -301,7 +297,7 @@ func baseURLOption(c AuthenticatedConfig) Option {
 }
 
 // UnauthenticatedPreset is the default Option when connecting to the public API without authentication.
-func UnauthenticatedPreset(c AuthenticatedConfig) Option {
+func UnauthenticatedPreset(c BasicConfig) Option {
 	options := []Option{Service(c.Service())}
 	if option := baseURLOption(c); option != nil {
 		options = append(options, option)

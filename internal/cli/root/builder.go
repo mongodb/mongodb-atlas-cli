@@ -43,7 +43,7 @@ type BuilderOpts struct {
 	store version.ReleaseVersionDescriber
 }
 
-// rootBuilder conditionally adds children commands as needed.
+// Builder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
 // this can be slow to timeout on environments with limited internet access (Ops Manager).
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {

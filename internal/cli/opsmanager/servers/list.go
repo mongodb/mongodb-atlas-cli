@@ -50,8 +50,7 @@ var listTemplate = `HOSTNAME	STATE{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.Agents(opts.ConfigProjectID(), agentType, listOpts)
+	r, err := opts.store.Agents(opts.ConfigProjectID(), agentType, opts.NewListOptions())
 	if err != nil {
 		return err
 	}

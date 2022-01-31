@@ -49,8 +49,7 @@ var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
-	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType, listOpts)
+	r, err := opts.store.Agents(opts.ConfigProjectID(), opts.agentType, opts.NewListOptions())
 	if err != nil {
 		return err
 	}

@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -35,18 +36,18 @@ func (m *MockAgentLister) EXPECT() *MockAgentListerMockRecorder {
 }
 
 // Agents mocks base method.
-func (m *MockAgentLister) Agents(arg0, arg1 string) (*opsmngr.Agents, error) {
+func (m *MockAgentLister) Agents(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*opsmngr.Agents, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Agents", arg0, arg1)
+	ret := m.ctrl.Call(m, "Agents", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*opsmngr.Agents)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Agents indicates an expected call of Agents.
-func (mr *MockAgentListerMockRecorder) Agents(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockAgentListerMockRecorder) Agents(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Agents", reflect.TypeOf((*MockAgentLister)(nil).Agents), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Agents", reflect.TypeOf((*MockAgentLister)(nil).Agents), arg0, arg1, arg2)
 }
 
 // MockAgentUpgrader is a mock of AgentUpgrader interface.

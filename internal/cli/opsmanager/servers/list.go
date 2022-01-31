@@ -33,6 +33,7 @@ const (
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.ListOpts
 	store store.AgentLister
 }
 
@@ -49,7 +50,7 @@ var listTemplate = `HOSTNAME	STATE{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.Agents(opts.ConfigProjectID(), agentType)
+	r, err := opts.store.Agents(opts.ConfigProjectID(), agentType, opts.NewListOptions())
 	if err != nil {
 		return err
 	}
@@ -76,6 +77,9 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

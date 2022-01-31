@@ -22,7 +22,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -42,11 +44,20 @@ func TestAgentsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Agents(listOpts.ProjectID, listOpts.agentType).
+		Agents(listOpts.ProjectID, listOpts.agentType, listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
 	config.SetService(config.OpsManagerService)
 
 	assert.NoError(t, listOpts.Run())
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+	)
 }

@@ -43,3 +43,17 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 	}
 	return prompt
 }
+
+func NewOrgSelect(options []string) survey.Prompt {
+	return &survey.Select{
+		Message: "Choose a default organization:",
+		Options: options,
+	}
+}
+
+func NewProjectSelect(options []string) survey.Prompt {
+	return &survey.Select{
+		Message: "Choose a default project:",
+		Options: options,
+	}
+}

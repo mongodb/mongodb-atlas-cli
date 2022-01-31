@@ -16,21 +16,25 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/oauth"
+	"github.com/mongodb/mongocli/internal/prompt"
+	"github.com/mongodb/mongocli/internal/store"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,ProjectOrgsLister
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -50,11 +54,26 @@ type loginOpts struct {
 	noBrowser      bool
 	config         config.SetSaver
 	flow           Authenticator
+	store          ProjectOrgsLister
+}
+
+type ProjectOrgsLister interface {
+	Projects(*atlas.ListOptions) (interface{}, error)
+	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
 func (opts *loginOpts) initFlow() error {
 	var err error
 	opts.flow, err = oauth.FlowWithConfig(config.Default())
+	return err
+}
+
+func (opts *loginOpts) initStore(ctx context.Context) error {
+	if opts.store != nil {
+		return nil
+	}
+	var err error
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 	return err
 }
 
@@ -110,11 +129,53 @@ Your code will expire after %.0f minutes.
 	opts.AuthToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
 	opts.SetUpAccess()
-	if err := opts.config.Save(); err != nil {
+	if err := opts.initStore(ctx); err != nil {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in\n")
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+	if err := opts.askOrg(); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+const (
+	nameIDFormat = "%s (%s)"
+)
+
+func (opts *loginOpts) askOrg() error {
+	oMap, oSlice, err := opts.orgs()
+	var orgID string
+	if err != nil || len(oSlice) == 0 {
+		return errors.New("no orgs")
+	}
+
+	p := prompt.NewOrgSelect(oSlice)
+	if err := survey.AskOne(p, &orgID); err != nil {
+		return err
+	}
+	opts.OrgID = oMap[orgID]
+	return nil
+}
+
+func (opts *loginOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
+	orgs, err := opts.store.Organizations(nil)
+	if err != nil {
+		fmt.Printf("there was a problem fetching orgs: %s\n", err)
+		return nil, nil, err
+	}
+	oMap = make(map[string]string, len(orgs.Results))
+	oSlice = make([]string, len(orgs.Results))
+	for i, o := range orgs.Results {
+		d := fmt.Sprintf(nameIDFormat, o.Name, o.ID)
+		oMap[d] = o.ID
+		oSlice[i] = d
+	}
+	return oMap, oSlice, nil
 }
 
 func LoginBuilder() *cobra.Command {

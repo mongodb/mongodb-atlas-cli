@@ -27,6 +27,7 @@ import (
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongocli/internal/config"
+	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -54,6 +55,7 @@ type Store struct {
 	skipVerify    bool
 	username      string
 	password      string
+	token         string
 	client        interface{}
 	ctx           context.Context
 }
@@ -109,17 +111,34 @@ func customCATransport(ca []byte) *http.Transport {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username == "" || s.password == "" {
-		client := http.DefaultClient
-		client.Transport = httpTransport
-		return client, nil
+	if s.username == "" || s.password == "" || s.token == "" {
+		return &http.Client{Transport: httpTransport}, nil
 	}
-	t := &digest.Transport{
-		Username: s.username,
-		Password: s.password,
+	if s.username != "" || s.password != "" {
+		t := &digest.Transport{
+			Username: s.username,
+			Password: s.password,
+		}
+		t.Transport = httpTransport
+		return t.Client()
 	}
-	t.Transport = httpTransport
-	return t.Client()
+	token := atlasauth.Token{AccessToken: s.token}
+	tr := &Transport{
+		token: token,
+		base:  httpTransport,
+	}
+
+	return &http.Client{Transport: tr}, nil
+}
+
+type Transport struct {
+	token atlasauth.Token
+	base  http.RoundTripper
+}
+
+func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	tr.token.SetAuthHeader(req)
+	return tr.base.RoundTrip(req)
 }
 
 func (s *Store) transport() (*http.Transport, error) {
@@ -193,6 +212,7 @@ func SkipVerify() Option {
 type CredentialsGetter interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
+	AuthToken() string
 }
 
 // WithAuthentication sets the store credentials.
@@ -200,6 +220,7 @@ func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
 		s.password = c.PrivateAPIKey()
+		s.token = c.AuthToken()
 		return nil
 	}
 }

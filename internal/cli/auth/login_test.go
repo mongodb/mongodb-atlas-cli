@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestBuilder(t *testing.T) {
@@ -51,11 +52,13 @@ func Test_loginOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockAuthenticator(ctrl)
 	mockConfig := mocks.NewMockSetSaver(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	defer ctrl.Finish()
 
 	opts := &loginOpts{
 		flow:      mockFlow,
 		config:    mockConfig,
+		store:     mockStore,
 		OutWriter: os.NewFile(0, os.DevNull),
 		noBrowser: true,
 	}
@@ -91,5 +94,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	expectedOrgs := &atlas.Organizations{}
+	mockStore.EXPECT().Organizations(nil).Return(expectedOrgs, nil).Times(1)
 	require.NoError(t, opts.Run(context.TODO()))
 }

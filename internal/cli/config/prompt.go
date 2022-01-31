@@ -37,25 +37,11 @@ func newOrgIDInput() survey.Prompt {
 	}
 }
 
-func newOrgSelect(options []string) survey.Prompt {
-	return &survey.Select{
-		Message: "Choose a default organization:",
-		Options: options,
-	}
-}
-
 func newProjectIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Project ID:",
 		Help:    "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it.",
 		Default: config.ProjectID(),
-	}
-}
-
-func newProjectSelect(options []string) survey.Prompt {
-	return &survey.Select{
-		Message: "Choose a default project:",
-		Options: options,
 	}
 }
 

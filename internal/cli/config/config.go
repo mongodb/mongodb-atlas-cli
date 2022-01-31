@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -51,12 +52,10 @@ type configOpts struct {
 	store          ProjectOrgsLister
 }
 
-func (opts *configOpts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
+func (opts *configOpts) initStore(ctx context.Context) error {
+	var err error
+	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+	return err
 }
 
 func (opts *configOpts) IsCloud() bool {
@@ -119,7 +118,7 @@ Enter [?] on any option to get help.
 	}
 	opts.SetUpAccess()
 
-	if err := opts.initStore(ctx)(); err != nil {
+	if err := opts.initStore(ctx); err != nil {
 		return err
 	}
 
@@ -164,12 +163,12 @@ func (opts *configOpts) askProject() error {
 	pMap, pSlice, err := opts.projects()
 	var projectID string
 	if err != nil || len(pSlice) == 0 {
-		prompt := newProjectIDInput()
-		return survey.AskOne(prompt, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
+		p := newProjectIDInput()
+		return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
-	prompt := newProjectSelect(pSlice)
-	if err := survey.AskOne(prompt, &projectID); err != nil {
+	p := prompt.NewProjectSelect(pSlice)
+	if err := survey.AskOne(p, &projectID); err != nil {
 		return err
 	}
 	opts.ProjectID = pMap[projectID]
@@ -200,12 +199,12 @@ func (opts *configOpts) askOrg() error {
 	oMap, oSlice, err := opts.orgs()
 	var orgID string
 	if err != nil || len(oSlice) == 0 {
-		prompt := newOrgIDInput()
-		return survey.AskOne(prompt, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+		p := newOrgIDInput()
+		return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
-	prompt := newOrgSelect(oSlice)
-	if err := survey.AskOne(prompt, &orgID); err != nil {
+	p := prompt.NewOrgSelect(oSlice)
+	if err := survey.AskOne(p, &orgID); err != nil {
 		return err
 	}
 	opts.OrgID = oMap[orgID]

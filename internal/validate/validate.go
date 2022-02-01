@@ -97,15 +97,18 @@ var ErrMissingCredentials = errors.New("missing credentials")
 
 // Credentials validates public and private API keys have been set.
 func Credentials() error {
-	if config.PrivateAPIKey() == "" || config.PublicAPIKey() == "" {
-		return fmt.Errorf(
-			"%w\n\nTo set credentials, run: %s %s",
-			ErrMissingCredentials,
-			config.ToolName,
-			"config",
-		)
+	if config.AuthToken() != "" {
+		return nil
 	}
-	return nil
+	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
+		return nil
+	}
+	return fmt.Errorf(
+		"%w\n\nTo set credentials, run: %s %s",
+		ErrMissingCredentials,
+		config.ToolName,
+		"config",
+	)
 }
 
 func FlagInSlice(value, flag string, validValues []string) error {

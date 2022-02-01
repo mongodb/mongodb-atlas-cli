@@ -144,20 +144,26 @@ func TestObjectID(t *testing.T) {
 
 func TestCredentials(t *testing.T) {
 	t.Run("no credentials", func(t *testing.T) {
-		err := Credentials()
-		if err == nil {
+		if err := Credentials(); err == nil {
 			t.Fatal("Credentials() expected an error\n")
 		}
 	})
-	t.Run("with credentials", func(t *testing.T) {
+	t.Run("with api key credentials", func(t *testing.T) {
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()
 		t.Setenv("PUBLIC_API_KEY", "test")
 		t.Setenv("PRIVATE_API_KEY", "test")
-
-		err := Credentials()
-		if err != nil {
+		if err := Credentials(); err != nil {
+			t.Fatalf("Credentials() unexpected error %v\n", err)
+		}
+	})
+	t.Run("with auth token credentials", func(t *testing.T) {
+		// this function depends on the global config (globals are bad I know)
+		// the easiest way we have to test it is via ENV vars
+		viper.AutomaticEnv()
+		t.Setenv("AUTH_TOKEN", "test")
+		if err := Credentials(); err != nil {
 			t.Fatalf("Credentials() unexpected error %v\n", err)
 		}
 	})

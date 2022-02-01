@@ -392,7 +392,7 @@ func (p *Profile) Map() map[string]string {
 		profileSettings[mongoShellPath] = p.MongoShellPath()
 	}
 	for k, v := range settings {
-		if k == privateAPIKey || k == publicAPIKey {
+		if k == privateAPIKey || k == publicAPIKey || k == authToken || k == refreshToken {
 			profileSettings[k] = "redacted"
 		} else {
 			profileSettings[k] = v

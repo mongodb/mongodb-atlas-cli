@@ -171,12 +171,8 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		a.NotEmpty(entries.Results)
-
-		for i := range entries.Results {
-			if currentIPEntry = entries.Results[i].IPAddress; currentIPEntry != entry {
-				break
-			}
-		}
+		a.Len(entries.Results, 1)
+		a.Equal(currentIPEntry, entries.Results[0].IPAddress)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -190,7 +186,7 @@ func TestAccessList(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
 
-		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
+		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)
 		a.Equal(expected, string(resp))
 	})
 }

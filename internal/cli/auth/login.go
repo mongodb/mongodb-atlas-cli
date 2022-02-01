@@ -207,7 +207,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.noProfile, "loginOnly", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkHidden("noProfile")
+	_ = cmd.Flags().MarkHidden("loginOnly")
 	return cmd
 }
 

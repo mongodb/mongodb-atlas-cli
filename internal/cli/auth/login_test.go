@@ -18,13 +18,14 @@
 package auth
 
 import (
+	"bytes"
 	"context"
-	"os"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -54,14 +55,16 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig := mocks.NewMockSetSaver(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	defer ctrl.Finish()
+	buf := new(bytes.Buffer)
 
 	opts := &loginOpts{
 		flow:      mockFlow,
 		config:    mockConfig,
-		store:     mockStore,
-		OutWriter: os.NewFile(0, os.DevNull),
+		OutWriter: buf,
 		noBrowser: true,
+		noProfile: true,
 	}
+	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",
 		VerificationURI: "http://localhost",
@@ -89,12 +92,24 @@ func Test_loginOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", gomock.Any()).Times(0)
+	mockConfig.EXPECT().Set("service", "cloud").Times(1)
 	mockConfig.EXPECT().Set("auth_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 	expectedOrgs := &atlas.Organizations{}
-	mockStore.EXPECT().Organizations(nil).Return(expectedOrgs, nil).Times(1)
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
+	expectedProjects := &atlas.Projects{}
+	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
 	require.NoError(t, opts.Run(context.TODO()))
+	assert.Equal(t, `
+First, copy your one-time code: 1234-5678
+
+Next, sign with your browser and enter the code.
+
+Or go to http://localhost
+
+Your code will expire after 5 minutes.
+Successfully logged in.
+`, buf.String())
 }

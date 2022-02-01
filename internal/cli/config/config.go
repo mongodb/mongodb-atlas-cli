@@ -19,51 +19,21 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/prompt"
-	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
-
-const (
-	nameIDFormat = "%s (%s)"
-)
-
-type ProjectOrgsLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
-}
 
 type configOpts struct {
-	Service        string
-	PublicAPIKey   string
-	PrivateAPIKey  string
-	OpsManagerURL  string
-	ProjectID      string
-	OrgID          string
-	MongoShellPath string
-	Output         string
-	store          ProjectOrgsLister
-}
-
-func (opts *configOpts) initStore(ctx context.Context) error {
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-	return err
-}
-
-func (opts *configOpts) IsCloud() bool {
-	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
-}
-
-func (opts *configOpts) IsOpsManager() bool {
-	return opts.Service == config.OpsManagerService
+	cli.DefaultOpts
+	PublicAPIKey  string
+	PrivateAPIKey string
+	OpsManagerURL string
 }
 
 func (opts *configOpts) SetUpAccess() {
@@ -76,30 +46,6 @@ func (opts *configOpts) SetUpAccess() {
 	}
 	if opts.OpsManagerURL != "" {
 		config.SetOpsManagerURL(opts.OpsManagerURL)
-	}
-}
-
-func (opts *configOpts) SetUpProject() {
-	if opts.ProjectID != "" {
-		config.SetProjectID(opts.ProjectID)
-	}
-}
-
-func (opts *configOpts) SetUpOrg() {
-	if opts.OrgID != "" {
-		config.SetOrgID(opts.OrgID)
-	}
-}
-
-func (opts *configOpts) setUpMongoSHPath() {
-	if opts.MongoShellPath != "" {
-		config.SetMongoShellPath(opts.MongoShellPath)
-	}
-}
-
-func (opts *configOpts) setUpOutput() {
-	if opts.Output != plaintextFormat {
-		config.SetOutput(opts.Output)
 	}
 }
 
@@ -118,7 +64,7 @@ Enter [?] on any option to get help.
 	}
 	opts.SetUpAccess()
 
-	if err := opts.initStore(ctx); err != nil {
+	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 
@@ -138,12 +84,11 @@ Enter [?] on any option to get help.
 	opts.SetUpProject()
 	opts.SetUpOrg()
 
-	q2 := defaultQuestions(opts.IsCloud())
-	if err := survey.Ask(q2, opts); err != nil {
+	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
 		return err
 	}
-	opts.setUpOutput()
-	opts.setUpMongoSHPath()
+	opts.SetUpOutput()
+	opts.SetUpMongoSHPath()
 
 	if err := config.Save(); err != nil {
 		return err
@@ -160,7 +105,7 @@ Enter [?] on any option to get help.
 // askProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID.
 func (opts *configOpts) askProject() error {
-	pMap, pSlice, err := opts.projects()
+	pMap, pSlice, err := opts.Projects()
 	var projectID string
 	if err != nil || len(pSlice) == 0 {
 		p := newProjectIDInput()
@@ -175,28 +120,10 @@ func (opts *configOpts) askProject() error {
 	return nil
 }
 
-// projects fetches projects and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config.
-func (opts *configOpts) projects() (pMap map[string]string, pSlice []string, err error) {
-	projects, err := opts.store.Projects(nil)
-	if err != nil {
-		fmt.Printf("there was a problem fetching projects: %s\n", err)
-		return nil, nil, err
-	}
-	if opts.IsCloud() {
-		pMap, pSlice = atlasProjects(projects.(*atlas.Projects).Results)
-	} else {
-		pMap, pSlice = omProjects(projects.(*opsmngr.Projects).Results)
-	}
-	return pMap, pSlice, nil
-}
-
 // askOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
 func (opts *configOpts) askOrg() error {
-	oMap, oSlice, err := opts.orgs()
+	oMap, oSlice, err := opts.Orgs()
 	var orgID string
 	if err != nil || len(oSlice) == 0 {
 		p := newOrgIDInput()
@@ -209,26 +136,6 @@ func (opts *configOpts) askOrg() error {
 	}
 	opts.OrgID = oMap[orgID]
 	return nil
-}
-
-// orgs fetches organizations and returns then as a slice of the format `nameIDFormat`,
-// and a map such as `map[nameIDFormat]=ID`.
-// This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config.
-func (opts *configOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
-	orgs, err := opts.store.Organizations(nil)
-	if err != nil {
-		fmt.Printf("there was a problem fetching orgs: %s\n", err)
-		return nil, nil, err
-	}
-	oMap = make(map[string]string, len(orgs.Results))
-	oSlice = make([]string, len(orgs.Results))
-	for i, o := range orgs.Results {
-		d := fmt.Sprintf(nameIDFormat, o.Name, o.ID)
-		oMap[d] = o.ID
-		oSlice[i] = d
-	}
-	return oMap, oSlice, nil
 }
 
 func Builder() *cobra.Command {
@@ -273,28 +180,4 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 	)
 
 	return cmd
-}
-
-// atlasProjects transform []*atlas.Project to a map[string]string and []string.
-func atlasProjects(projects []*atlas.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
-	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
-	}
-	return pMap, pSlice
-}
-
-// omProjects transform []*opsmngr.Project to a map[string]string and []string.
-func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []string) {
-	pMap = make(map[string]string, len(projects))
-	pSlice = make([]string, len(projects))
-	for i, p := range projects {
-		d := fmt.Sprintf(nameIDFormat, p.Name, p.ID)
-		pMap[d] = p.ID
-		pSlice[i] = d
-	}
-	return pMap, pSlice
 }

@@ -29,10 +29,11 @@ import (
 )
 
 const (
-	jsonFormat     = "json"
-	jsonPath       = "json-path"
-	goTemplate     = "go-template"
-	goTemplateFile = "go-template-file"
+	jsonFormat      = "json"
+	plaintextFormat = "plaintext"
+	jsonPath        = "json-path"
+	goTemplate      = "go-template"
+	goTemplateFile  = "go-template-file"
 )
 
 var templateFormats = []string{goTemplate, goTemplateFile, jsonPath}

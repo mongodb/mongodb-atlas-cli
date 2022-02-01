@@ -23,18 +23,19 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
 	"github.com/mongodb/mongocli/internal/prompt"
-	"github.com/mongodb/mongocli/internal/store"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,ProjectOrgsLister
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
@@ -42,24 +43,16 @@ type Authenticator interface {
 }
 
 type loginOpts struct {
+	cli.DefaultOpts
 	OutWriter      io.Writer
 	AuthToken      string
 	RefreshToken   string
-	OpsManagerURL  string
-	ProjectID      string
-	OrgID          string
-	MongoShellPath string
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
+	noProfile      bool
 	config         config.SetSaver
 	flow           Authenticator
-	store          ProjectOrgsLister
-}
-
-type ProjectOrgsLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
 func (opts *loginOpts) initFlow() error {
@@ -68,21 +61,16 @@ func (opts *loginOpts) initFlow() error {
 	return err
 }
 
-func (opts *loginOpts) initStore(ctx context.Context) error {
-	if opts.store != nil {
-		return nil
-	}
-	var err error
-	opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-	return err
-}
-
 func (opts *loginOpts) SetUpAccess() {
-	if opts.isGov {
-		opts.config.Set("service", config.CloudGovService)
-	} else if opts.isCloudManager {
-		opts.config.Set("service", config.CloudManagerService)
+	switch {
+	case opts.isGov:
+		opts.Service = config.CloudGovService
+	case opts.isCloudManager:
+		opts.Service = config.CloudManagerService
+	default:
+		opts.Service = config.CloudService
 	}
+	opts.config.Set("service", opts.Service)
 
 	if opts.AuthToken != "" {
 		opts.config.Set("auth_token", opts.AuthToken)
@@ -129,26 +117,42 @@ Your code will expire after %.0f minutes.
 	opts.AuthToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
 	opts.SetUpAccess()
-	if err := opts.initStore(ctx); err != nil {
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in.\n")
+	if opts.noProfile {
+		return opts.config.Save()
+	}
+	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in\n")
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Press Enter to continue your profile configuration")
+	_, _ = fmt.Scanln()
 	if err := opts.askOrg(); err != nil {
 		return err
 	}
+	if err := opts.askProject(); err != nil {
+		return err
+	}
 
+	opts.SetUpProject()
+	opts.SetUpOrg()
+	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
+		return err
+	}
+	opts.SetUpOutput()
+	opts.SetUpMongoSHPath()
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
+	if config.Name() != config.DefaultProfile {
+		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
 	return nil
 }
 
-const (
-	nameIDFormat = "%s (%s)"
-)
-
 func (opts *loginOpts) askOrg() error {
-	oMap, oSlice, err := opts.orgs()
+	oMap, oSlice, err := opts.Orgs()
 	var orgID string
 	if err != nil || len(oSlice) == 0 {
 		return errors.New("no orgs")
@@ -162,20 +166,19 @@ func (opts *loginOpts) askOrg() error {
 	return nil
 }
 
-func (opts *loginOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
-	orgs, err := opts.store.Organizations(nil)
-	if err != nil {
-		fmt.Printf("there was a problem fetching orgs: %s\n", err)
-		return nil, nil, err
+func (opts *loginOpts) askProject() error {
+	pMap, pSlice, err := opts.Projects()
+	var projectID string
+	if err != nil || len(pSlice) == 0 {
+		return errors.New("no projects")
 	}
-	oMap = make(map[string]string, len(orgs.Results))
-	oSlice = make([]string, len(orgs.Results))
-	for i, o := range orgs.Results {
-		d := fmt.Sprintf(nameIDFormat, o.Name, o.ID)
-		oMap[d] = o.ID
-		oSlice[i] = d
+
+	p := prompt.NewProjectSelect(pSlice)
+	if err := survey.AskOne(p, &projectID); err != nil {
+		return err
 	}
-	return oMap, oSlice, nil
+	opts.ProjectID = pMap[projectID]
+	return nil
 }
 
 func LoginBuilder() *cobra.Command {
@@ -189,6 +192,9 @@ func LoginBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
+			if config.OpsManagerURL() != "" {
+				opts.OpsManagerURL = config.OpsManagerURL()
+			}
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -200,7 +206,8 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-
+	cmd.Flags().BoolVar(&opts.noProfile, "loginOnly", false, "Skip profile configuration.")
+	_ = cmd.Flags().MarkHidden("noProfile")
 	return cmd
 }
 

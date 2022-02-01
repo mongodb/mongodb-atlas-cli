@@ -36,6 +36,7 @@ We're here to help! This is simply a reminder of what we are going to look for b
 - [ ] I have addressed the @mongodb/docs-cloud-team comments (if appropriate)
 - [ ] I have updated [e2e/E2E-TESTS.md](e2e/E2E-TESTS.md) (if an e2e test has been added)
 - [ ] I have run `make fmt` and formatted my code
+- [ ] I have added Examples and Annotations for the command I created/edited (if applicable)
 
 ## Further comments
 

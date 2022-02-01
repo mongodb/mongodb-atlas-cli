@@ -35,7 +35,7 @@ type ProjectOrgsLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
 }
 
-type DefaultOpts struct {
+type DefaultSetterOpts struct {
 	Service        string
 	OpsManagerURL  string
 	ProjectID      string
@@ -45,17 +45,17 @@ type DefaultOpts struct {
 	Store          ProjectOrgsLister
 }
 
-func (opts *DefaultOpts) InitStore(ctx context.Context) error {
+func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 	var err error
 	opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 	return err
 }
 
-func (opts *DefaultOpts) IsCloud() bool {
+func (opts *DefaultSetterOpts) IsCloud() bool {
 	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
 }
 
-func (opts *DefaultOpts) IsOpsManager() bool {
+func (opts *DefaultSetterOpts) IsOpsManager() bool {
 	return opts.Service == config.OpsManagerService
 }
 
@@ -63,7 +63,7 @@ func (opts *DefaultOpts) IsOpsManager() bool {
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
 // and we want them to get the ID mapping to store on the config.
-func (opts *DefaultOpts) Projects() (pMap map[string]string, pSlice []string, err error) {
+func (opts *DefaultSetterOpts) Projects() (pMap map[string]string, pSlice []string, err error) {
 	projects, err := opts.Store.Projects(nil)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "there was a problem fetching projects: %s\n", err)
@@ -81,7 +81,7 @@ func (opts *DefaultOpts) Projects() (pMap map[string]string, pSlice []string, er
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
 // and we want them to get the ID mapping to store on the config.
-func (opts *DefaultOpts) Orgs() (oMap map[string]string, oSlice []string, err error) {
+func (opts *DefaultSetterOpts) Orgs() (oMap map[string]string, oSlice []string, err error) {
 	includeDeleted := false
 	orgs, err := opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted})
 	if orgs.TotalCount > len(orgs.Results) {
@@ -101,25 +101,25 @@ func (opts *DefaultOpts) Orgs() (oMap map[string]string, oSlice []string, err er
 	return oMap, oSlice, nil
 }
 
-func (opts *DefaultOpts) SetUpProject() {
+func (opts *DefaultSetterOpts) SetUpProject() {
 	if opts.ProjectID != "" {
 		config.SetProjectID(opts.ProjectID)
 	}
 }
 
-func (opts *DefaultOpts) SetUpOrg() {
+func (opts *DefaultSetterOpts) SetUpOrg() {
 	if opts.OrgID != "" {
 		config.SetOrgID(opts.OrgID)
 	}
 }
 
-func (opts *DefaultOpts) SetUpMongoSHPath() {
+func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 	if opts.MongoShellPath != "" {
 		config.SetMongoShellPath(opts.MongoShellPath)
 	}
 }
 
-func (opts *DefaultOpts) SetUpOutput() {
+func (opts *DefaultSetterOpts) SetUpOutput() {
 	if opts.Output != plaintextFormat {
 		config.SetOutput(opts.Output)
 	}
@@ -151,7 +151,7 @@ func omProjects(projects []*opsmngr.Project) (pMap map[string]string, pSlice []s
 	return pMap, pSlice
 }
 
-func (opts *DefaultOpts) DefaultQuestions() []*survey.Question {
+func (opts *DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name: "output",

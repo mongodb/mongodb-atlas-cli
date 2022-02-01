@@ -30,7 +30,7 @@ import (
 )
 
 type configOpts struct {
-	cli.DefaultOpts
+	cli.DefaultSetterOpts
 	PublicAPIKey  string
 	PrivateAPIKey string
 	OpsManagerURL string

@@ -43,7 +43,7 @@ type Authenticator interface {
 }
 
 type loginOpts struct {
-	cli.DefaultOpts
+	cli.DefaultSetterOpts
 	OutWriter      io.Writer
 	AuthToken      string
 	RefreshToken   string

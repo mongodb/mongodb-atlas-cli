@@ -89,3 +89,53 @@ func TestMetricsOpts_ValidatePeriodStartEnd(t *testing.T) {
 		})
 	}
 }
+
+func TestGetHostNameAndPort(t *testing.T) {
+	tests := []struct {
+		name      string
+		input     string
+		wantError bool
+		wantHost  string
+		wantPort  int
+	}{
+		{
+			name:      "valid parameter",
+			input:     "test:2000",
+			wantHost:  "test",
+			wantPort:  2000,
+			wantError: false,
+		},
+		{
+			name:      "incomplete format - host",
+			input:     "test",
+			wantError: true,
+		},
+		{
+			name:      "incomplete format - port number",
+			input:     ":test",
+			wantError: true,
+		},
+	}
+	for _, tt := range tests {
+		wantError := tt.wantError
+		input := tt.input
+		wantHost := tt.wantHost
+		wantPort := tt.wantPort
+		t.Run(tt.name, func(t *testing.T) {
+			host, port, err := GetHostnameAndPort(input)
+			if (err != nil) != wantError {
+				t.Errorf("GetHostnameAndPort() error = %v, wantErr %v", err, wantError)
+			}
+
+			if !wantError {
+				if host != wantHost {
+					t.Errorf("Expected '%s', got '%s'", wantHost, host)
+				}
+
+				if port != wantPort {
+					t.Errorf("Expected '%d', got '%d'", wantPort, port)
+				}
+			}
+		})
+	}
+}

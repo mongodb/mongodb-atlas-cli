@@ -12,14 +12,36 @@ mongocli atlas metrics disks describe
    :depth: 1
    :class: singlecol
 
-Describe disks measurements for a given host partition.
+Describe disk partition metrics for a disk partition on a specified host.
+
+To retrieve the hostname and port needed for this command, run mongocli atlas process list.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli atlas metrics disks describe <hostname:port> <name> [options]
+   mongocli atlas metrics disks describe <hostname:port> <diskName> [options]
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - hostname:port
+     - string
+     - true
+     - Hostname and port number of the instance running the Atlas MongoDB process.
+   * - diskName
+     - string
+     - true
+     - Label that identifies the disk or partition from which you want to retrieve metrics.
 
 Options
 -------
@@ -88,4 +110,12 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ This example retrieves disks metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017"
+   $ mongocli atlas metrics disk describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H
 

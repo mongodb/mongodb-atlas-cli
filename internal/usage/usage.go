@@ -306,4 +306,5 @@ const (
 	LiveMigrationSourcePassword              = "Password that authenticates the username to the source Cloud Manager or Ops Manager cluster. Omit this value if --sourceManagedAuthentication is passed."
 	LiveMigrationDropCollections             = "Flag that indicates whether this process should drop existing collections from the destination (Atlas) cluster given in --destinationClusterName before starting the migration of data from the source cluster."
 	LiveMigrationValidationID                = "Unique 24-hexadecimal digit string that identifies the validation job."
+	CurrentIP                                = "Flag that indicates whether to use the IP Address from the host that is currently executing the command. Only applicable for type ipAddress entries. To learn more, see: https://docs.mongodb.com/mongocli/master/command/mongocli-atlas-accessLists-create/."
 )

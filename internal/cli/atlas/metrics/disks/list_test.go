@@ -11,28 +11,29 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build unit
 // +build unit
 
-package metrics
+package disks
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func TestDatabasesListsOpts_Run(t *testing.T) {
+func TestDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
+	mockStore := mocks.NewMockProcessDisksLister(ctrl)
 	defer ctrl.Finish()
 
-	expected := &mongodbatlas.ProcessDatabasesResponse{}
+	expected := &mongodbatlas.ProcessDisksResponse{}
 
-	listOpts := &DatabasesListsOpts{
+	listOpts := &ListsOpts{
 		host:  "hard-00-00.mongodb.net",
 		port:  27017,
 		store: mockStore,
@@ -40,11 +41,20 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 
 	opts := listOpts.NewListOptions()
 	mockStore.
-		EXPECT().ProcessDatabases(listOpts.ProjectID, listOpts.host, listOpts.port, opts).
+		EXPECT().ProcessDisks(listOpts.ProjectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.Page, flag.Limit, flag.ProjectID, flag.Output},
+	)
 }

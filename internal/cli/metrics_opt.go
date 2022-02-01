@@ -16,6 +16,8 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/flag"
 
@@ -56,4 +58,20 @@ func (opts *MetricsOpts) ValidatePeriodStartEnd() error {
 		return fmt.Errorf("the --%s and --%s flags need to be used together", flag.Start, flag.End)
 	}
 	return nil
+}
+
+// GetHostnameAndPort return the hostname and the port starting from the string hostname:port.
+func GetHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
+	const hostnameParts = 2
+	host := strings.Split(hostInfo, ":")
+	if len(host) != hostnameParts {
+		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
+	}
+
+	port, err = strconv.Atoi(host[1])
+	if err != nil {
+		return "", 0, fmt.Errorf("invalid port number, got %s", host[1])
+	}
+
+	return host[0], port, nil
 }

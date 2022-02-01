@@ -16,6 +16,8 @@ package accesslists
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -41,6 +43,7 @@ type CreateOpts struct {
 	entryType   string
 	comment     string
 	deleteAfter string
+	currentIP   bool
 	store       store.ProjectIPAccessListCreator
 }
 
@@ -80,26 +83,84 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {
 	return []*atlas.ProjectIPAccessList{entry}
 }
 
+func IPAddress() (string, error) {
+	if publicIP := store.IPAddress(); publicIP != "" {
+		return publicIP, nil
+	}
+
+	return "", errors.New("not able to find your public IP address. Specify the public IP address for this command")
+}
+
+func (opts *CreateOpts) needsArg() bool {
+	// Unless currentIP flag is enabled and type is ip address, args are required.
+	return !(opts.entryType == ipAddress && opts.currentIP)
+}
+
+func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string) func() error {
+	return func() error {
+		if !opts.needsArg() && len(args) > 0 {
+			return fmt.Errorf(
+				"please either provide [entry] or use %s to use current IP Address.\n\nUsage: %s",
+				flag.CurrentIP,
+				cmd.UseLine(),
+			)
+		}
+
+		if opts.needsArg() && len(args) == 0 {
+			return fmt.Errorf(
+				"%q with entry type %s requires at least 1 argument, received %d\n\nUsage:  %s",
+				cmd.CommandPath(),
+				opts.entryType,
+				len(args),
+				cmd.UseLine(),
+			)
+		}
+
+		if opts.entryType != ipAddress && opts.currentIP {
+			return fmt.Errorf("%q with entry type %s does not support %s flag.\n\n Usage: %s",
+				cmd.CommandPath(),
+				opts.entryType,
+				flag.CurrentIP,
+				cmd.UseLine(),
+			)
+		}
+		return nil
+	}
+}
+
 // mongocli atlas accessList(s) create <entry> --type cidrBlock|ipAddress|awsSecurityGroup [--comment comment] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <entry>",
+		Use:   "create [entry]",
 		Short: "Create an IP access list for your project.",
-		Args:  require.ExactArgs(1),
+		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"args":      "entry",
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID of the access list entry to create.",
 		},
+		Example: `  Create IP address access list with the current IP address. Entry is not needed in this case.
+  $ mongocli atlas accessList create --currentIP
+		`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.validateCurrentIPFlag(cmd, args),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts.entry = args[0]
+			var err error
+			if len(args) == 0 {
+				opts.entry, err = IPAddress()
+			} else {
+				opts.entry, err = args[0], nil
+			}
+
+			if err != nil {
+				return err
+			}
 
 			return opts.Run()
 		},
@@ -108,6 +169,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.entryType, flag.Type, ipAddress, usage.AccessListType)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.AccessListsDeleteAfter)
+	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

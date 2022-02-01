@@ -15,11 +15,10 @@
 package metrics
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/cli/atlas/metrics/databases"
+	"github.com/mongodb/mongocli/internal/cli/atlas/metrics/disks"
+	"github.com/mongodb/mongocli/internal/cli/atlas/metrics/processes"
 
 	"github.com/spf13/cobra"
 )
@@ -29,29 +28,13 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use, "measurements", "measurement"),
-		Short:   "Get measurements on the state of the MongoDB process.",
+		Short:   "Get metrics on the MongoDB process.",
 	}
 	cmd.AddCommand(
-		ProcessBuilder(),
-		DisksBuilder(),
-		DatabasesBuilder(),
+		processes.Builder(),
+		disks.Builder(),
+		databases.Builder(),
 	)
 
 	return cmd
-}
-
-// getHostnameAndPort return the hostname and the port starting from the string hostname:port.
-func getHostnameAndPort(hostInfo string) (hostname string, port int, err error) {
-	const hostnameParts = 2
-	host := strings.Split(hostInfo, ":")
-	if len(host) != hostnameParts {
-		return "", 0, fmt.Errorf("expected hostname:port, got %s", host)
-	}
-
-	port, err = strconv.Atoi(host[1])
-	if err != nil {
-		return "", 0, fmt.Errorf("invalid port number, got %s", host[1])
-	}
-
-	return host[0], port, nil
 }

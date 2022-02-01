@@ -268,4 +268,5 @@ const (
 	LiveMigrationValidationID                = "validationId"                    // LiveMigrationDropCollections flag
 	LinkToken                                = "linkToken"                       // LinkToken flag
 	WithoutDefaultAlertSettings              = "withoutDefaultAlertSettings"     // WithoutDefaultAlertSettings flag
+	CurrentIP                                = "currentIp"                       // CurrentIP flag
 )

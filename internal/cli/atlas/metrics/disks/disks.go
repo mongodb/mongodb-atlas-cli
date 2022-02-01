@@ -11,22 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build unit
-// +build unit
 
-package metrics
+package disks
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/spf13/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		3,
-		[]string{},
+func Builder() *cobra.Command {
+	const use = "disks"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "List available disks or disk metrics for a given host.",
+	}
+
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
 	)
+
+	return cmd
 }

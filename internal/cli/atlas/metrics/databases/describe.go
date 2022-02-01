@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package databases
 
 import (
 	"context"
@@ -26,17 +26,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DisksDescribeOpts struct {
+type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.MetricsOpts
 	host  string
 	port  int
 	name  string
-	store store.ProcessDiskMeasurementsLister
+	store store.ProcessDatabaseMeasurementsLister
 }
 
-func (opts *DisksDescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -44,9 +44,14 @@ func (opts *DisksDescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DisksDescribeOpts) Run() error {
+var databasesMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurements.Measurements}}  {{if .DataPoints}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
+`
+
+func (opts *DescribeOpts) Run() error {
 	listOpts := opts.NewProcessMetricsListOptions()
-	r, err := opts.store.ProcessDiskMeasurements(opts.ConfigProjectID(), opts.host, opts.port, opts.name, listOpts)
+	r, err := opts.store.ProcessDatabaseMeasurements(opts.ConfigProjectID(), opts.host, opts.port, opts.name, listOpts)
 	if err != nil {
 		return err
 	}
@@ -54,34 +59,39 @@ func (opts *DisksDescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-var diskMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .ProcessMeasurements.Measurements}}  {{if .DataPoints}}
-{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
-{{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
-`
-
-// mcli atlas metric(s) disk(s) describe <host:port> <name> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
-func DisksDescribeBuilder() *cobra.Command {
+// mcli atlas metric(s) database(s) describe <host:port> <databaseName> --granularity g --period p --start start --end end [--type type] [--projectId projectId].
+func DescribeBuilder() *cobra.Command {
 	const argsN = 2
-	opts := &DisksDescribeOpts{}
+	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe <hostname:port> <name>",
-		Short: "Describe disks measurements for a given host partition.",
+		Use:   "describe <host:port> <databaseName>",
+		Long:  `To retrieve the hostname and port needed for this command, run mongocli atlas process list.`,
+		Short: "Describe database metrics for a database on a specific host.",
 		Args:  require.ExactArgs(argsN),
+		Annotations: map[string]string{
+			"args":              "hostname:port,databaseName",
+			"requiredArgs":      "hostname:port,databaseName",
+			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
+			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve metrics.",
+		},
+		Example: `This example retrieves database metrics for the database "testDB" in the host "atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017" 
+  $ mongocli atlas metrics database describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidatePeriodStartEnd,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), diskMetricTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), databasesMetricTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
-			opts.host, opts.port, err = getHostnameAndPort(args[0])
+			opts.host, opts.port, err = cli.GetHostnameAndPort(args[0])
 			if err != nil {
 				return err
 			}
 			opts.name = args[1]
+
 			return opts.Run()
 		},
 	}

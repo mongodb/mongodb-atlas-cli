@@ -36,6 +36,7 @@ func TestAccessList(t *testing.T) {
 	req.NoError(err)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)
+	currentIPEntry := ""
 
 	cliPath, err := e2e.Bin()
 	req.NoError(err)
@@ -136,5 +137,57 @@ func TestAccessList(t *testing.T) {
 			}
 		}
 		a.True(found)
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"delete",
+			entry,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
+		a.Equal(expected, string(resp))
+	})
+
+	t.Run("Create with CurrentIp", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"create",
+			"--currentIp",
+			"--comment=test",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		var entries *mongodbatlas.ProjectIPAccessLists
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
+
+		a.NotEmpty(entries.Results)
+		a.Len(entries.Results, 1)
+
+		currentIPEntry = entries.Results[0].IPAddress
+	})
+
+	t.Run("Delete", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			atlasEntity,
+			accessListEntity,
+			"delete",
+			currentIPEntry,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err)
+
+		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)
+		a.Equal(expected, string(resp))
 	})
 }

@@ -108,10 +108,9 @@ func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string)
 
 		if opts.needsArg() && len(args) == 0 {
 			return fmt.Errorf(
-				"%q with entry type %s requires at least %d argument received %d\n\nUsage:  %s",
+				"%q with entry type %s requires at least 1 argument, received %d\n\nUsage:  %s",
 				cmd.CommandPath(),
 				opts.entryType,
-				1,
 				len(args),
 				cmd.UseLine(),
 			)

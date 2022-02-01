@@ -30,6 +30,10 @@ type auth struct {
 	token    string
 }
 
+func (a auth) RefreshToken() string {
+	return a.token
+}
+
 func (a auth) AuthToken() string {
 	return a.token
 }

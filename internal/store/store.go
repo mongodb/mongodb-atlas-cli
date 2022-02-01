@@ -55,7 +55,8 @@ type Store struct {
 	skipVerify    bool
 	username      string
 	password      string
-	token         string
+	accessToken   string
+	refreshToken  string
 	client        interface{}
 	ctx           context.Context
 }
@@ -111,10 +112,10 @@ func customCATransport(ca []byte) *http.Transport {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username == "" || s.password == "" || s.token == "" {
+	if s.username == "" && s.password == "" && s.accessToken == "" {
 		return &http.Client{Transport: httpTransport}, nil
 	}
-	if s.username != "" || s.password != "" {
+	if s.username != "" && s.password != "" {
 		t := &digest.Transport{
 			Username: s.username,
 			Password: s.password,
@@ -122,7 +123,7 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		t.Transport = httpTransport
 		return t.Client()
 	}
-	token := atlasauth.Token{AccessToken: s.token}
+	token := atlasauth.Token{AccessToken: s.accessToken, RefreshToken: s.refreshToken}
 	tr := &Transport{
 		token: token,
 		base:  httpTransport,
@@ -213,6 +214,7 @@ type CredentialsGetter interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
 	AuthToken() string
+	RefreshToken() string
 }
 
 // WithAuthentication sets the store credentials.
@@ -220,7 +222,8 @@ func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
 		s.password = c.PrivateAPIKey()
-		s.token = c.AuthToken()
+		s.accessToken = c.AuthToken()
+		s.refreshToken = c.RefreshToken()
 		return nil
 	}
 }

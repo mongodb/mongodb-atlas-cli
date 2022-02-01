@@ -172,7 +172,8 @@ func TestAccessList(t *testing.T) {
 
 		a.NotEmpty(entries.Results)
 		a.Len(entries.Results, 1)
-		a.Equal(currentIPEntry, entries.Results[0].IPAddress)
+
+		currentIPEntry = entries.Results[0].IPAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {

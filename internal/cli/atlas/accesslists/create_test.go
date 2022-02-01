@@ -168,8 +168,8 @@ func TestValidateCurrentIPFlag(t *testing.T) {
 		}
 
 		t.Run(tt.name, func(t *testing.T) {
-			if errF := createOpts.validateCurrentIPFlag(CreateBuilder(), args); (errF() == nil) == wantErr {
-				t.Errorf("Error = %v, wantErr %v", errF(), wantErr)
+			if err := createOpts.validateCurrentIPFlag(CreateBuilder(), args); (err() == nil) == wantErr {
+				t.Errorf("Error = %v, wantErr %v", err(), wantErr)
 			}
 		})
 	}

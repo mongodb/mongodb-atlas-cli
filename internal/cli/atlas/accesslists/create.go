@@ -116,7 +116,7 @@ func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string)
 			)
 		}
 
-		if opts.needsArg() && opts.currentIP {
+		if opts.entryType != ipAddress && opts.currentIP {
 			return fmt.Errorf("%q with entry type %s does not support %s flag.\n\n Usage: %s",
 				cmd.CommandPath(),
 				opts.entryType,

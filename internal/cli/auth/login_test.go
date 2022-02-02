@@ -62,7 +62,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		config:    mockConfig,
 		OutWriter: buf,
 		noBrowser: true,
-		noProfile: true,
+		loginOnly: true,
 	}
 	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
@@ -72,9 +72,10 @@ func Test_loginOpts_Run(t *testing.T) {
 		ExpiresIn:       300,
 		Interval:        10,
 	}
+	ctx := context.TODO()
 	mockFlow.
 		EXPECT().
-		RequestCode(gomock.Any()).
+		RequestCode(ctx).
 		Return(expectedCode, nil, nil).
 		Times(1)
 
@@ -88,7 +89,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	}
 	mockFlow.
 		EXPECT().
-		PollToken(gomock.Any(), expectedCode).
+		PollToken(ctx, expectedCode).
 		Return(expectedToken, nil, nil).
 		Times(1)
 
@@ -101,7 +102,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
 	expectedProjects := &atlas.Projects{}
 	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
-	require.NoError(t, opts.Run(context.TODO()))
+	require.NoError(t, opts.Run(ctx))
 	assert.Equal(t, `
 First, copy your one-time code: 1234-5678
 

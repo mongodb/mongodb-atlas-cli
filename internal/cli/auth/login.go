@@ -50,7 +50,7 @@ type loginOpts struct {
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
-	noProfile      bool
+	loginOnly      bool
 	config         config.SetSaver
 	flow           Authenticator
 }
@@ -84,6 +84,45 @@ func (opts *loginOpts) SetUpAccess() {
 }
 
 func (opts *loginOpts) Run(ctx context.Context) error {
+	if err := opts.oauthFlow(ctx); err != nil {
+		return err
+	}
+	opts.SetUpAccess()
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in.\n")
+	if opts.loginOnly {
+		return opts.config.Save()
+	}
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
+	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
+	_, _ = fmt.Scanln()
+	if err := opts.askOrg(); err != nil {
+		return err
+	}
+	opts.SetUpOrg()
+	if err := opts.askProject(); err != nil {
+		return err
+	}
+	opts.SetUpProject()
+
+	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
+		return err
+	}
+	opts.SetUpOutput()
+	opts.SetUpMongoSHPath()
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
+	if config.Name() != config.DefaultProfile {
+		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	return nil
+}
+
+func (opts *loginOpts) oauthFlow(ctx context.Context) error {
 	code, _, err := opts.flow.RequestCode(ctx)
 	if err != nil {
 		return err
@@ -116,38 +155,6 @@ Your code will expire after %.0f minutes.
 	}
 	opts.AuthToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
-	opts.SetUpAccess()
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in.\n")
-	if opts.noProfile {
-		return opts.config.Save()
-	}
-	if err := opts.InitStore(ctx); err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Press Enter to continue your profile configuration")
-	_, _ = fmt.Scanln()
-	if err := opts.askOrg(); err != nil {
-		return err
-	}
-	if err := opts.askProject(); err != nil {
-		return err
-	}
-
-	opts.SetUpProject()
-	opts.SetUpOrg()
-	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
-		return err
-	}
-	opts.SetUpOutput()
-	opts.SetUpMongoSHPath()
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
-	if config.Name() != config.DefaultProfile {
-		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
 	return nil
 }
 
@@ -206,7 +213,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.noProfile, "loginOnly", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.loginOnly, "loginOnly", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkHidden("loginOnly")
 	return cmd
 }

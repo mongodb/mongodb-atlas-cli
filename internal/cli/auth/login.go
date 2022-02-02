@@ -228,6 +228,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		LoginBuilder(),
+		LogoutBuilder(),
 	)
 
 	return cmd

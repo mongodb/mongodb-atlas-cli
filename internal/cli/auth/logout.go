@@ -81,7 +81,7 @@ func LogoutBuilder() *cobra.Command {
 			if config.RefreshToken() == "" {
 				return errors.New("not logged in")
 			}
-			if err := opts.PromptWithMessage("Are you sure you want to log out"); err != nil {
+			if err := opts.PromptWithMessage("Are you sure you want to log out?"); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

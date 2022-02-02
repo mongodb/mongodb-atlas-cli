@@ -27,6 +27,15 @@ import (
 type auth struct {
 	username string
 	password string
+	token    string
+}
+
+func (a auth) RefreshToken() string {
+	return a.token
+}
+
+func (a auth) AuthToken() string {
+	return a.token
 }
 
 func (a auth) PublicAPIKey() string {

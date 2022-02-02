@@ -24,6 +24,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -34,7 +35,7 @@ func TestLogoutBuilder(t *testing.T) {
 		t,
 		LogoutBuilder(),
 		0,
-		[]string{},
+		[]string{flag.Force},
 	)
 }
 

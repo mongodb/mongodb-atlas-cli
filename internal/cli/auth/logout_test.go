@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -48,6 +49,9 @@ func Test_logoutOpts_Run(t *testing.T) {
 		OutWriter: buf,
 		config:    mockConfig,
 		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
 	}
 	ctx := context.TODO()
 	mockFlow.

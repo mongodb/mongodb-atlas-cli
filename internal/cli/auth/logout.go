@@ -16,13 +16,15 @@ package auth
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"io"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
+	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -51,22 +53,17 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
-	_, err := opts.flow.Revoke(ctx, config.RefreshToken(), "refresh_token")
-	if err != nil {
+	// revoking a refresh token revokes the access token
+	if _, err := opts.flow.Revoke(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 		return err
 	}
 
-	if err := opts.Delete(opts.config.Delete); err != nil {
-		return err
-	}
-
-	_, _ = fmt.Fprintln(opts.OutWriter, "Successfully logged out.")
-	return nil
+	return opts.Delete(opts.config.Delete)
 }
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out\n", "Project not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out\n", " "),
 	}
 
 	cmd := &cobra.Command{
@@ -81,6 +78,9 @@ func LogoutBuilder() *cobra.Command {
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if config.RefreshToken() == "" {
+				return errors.New("not logged in")
+			}
 			if err := opts.PromptWithMessage("Are you sure you want to log out"); err != nil {
 				return err
 			}
@@ -88,6 +88,8 @@ func LogoutBuilder() *cobra.Command {
 		},
 		Args: require.NoArgs,
 	}
+
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	return cmd
 }

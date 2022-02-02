@@ -71,8 +71,11 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf(opts.SuccessMessage(), opts.Entry)
+	if opts.Entry == "" {
+		fmt.Print(opts.SuccessMessage())
+	} else {
+		fmt.Printf(opts.SuccessMessage(), opts.Entry)
+	}
 
 	return nil
 }

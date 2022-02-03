@@ -25,5 +25,5 @@ func Test_whoOpts_Run(t *testing.T) {
 		account:   "test",
 	}
 	require.NoError(t, opts.Run())
-	assert.Equal(t, "Logged in as test", buf.String())
+	assert.Equal(t, "Logged in as test\n", buf.String())
 }

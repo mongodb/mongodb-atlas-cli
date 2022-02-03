@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -35,11 +36,16 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *auth.DeviceCode) (*auth.Token, *atlas.Response, error)
+}
+
+type LoginConfig interface {
+	config.SetSaver
+	Access() (*jwt.Token, jwt.RegisteredClaims, error)
 }
 
 type loginOpts struct {
@@ -51,7 +57,7 @@ type loginOpts struct {
 	isCloudManager bool
 	noBrowser      bool
 	loginOnly      bool
-	config         config.SetSaver
+	config         LoginConfig
 	flow           Authenticator
 }
 
@@ -88,7 +94,11 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	opts.SetUpAccess()
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in.\n")
+	_, c, err := opts.config.Access()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", c.Subject)
 	if opts.loginOnly {
 		return opts.config.Save()
 	}
@@ -228,6 +238,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		LoginBuilder(),
+		WhoAmIBuilder(),
 		LogoutBuilder(),
 	)
 

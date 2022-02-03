@@ -8,6 +8,7 @@ bin/**
 dist/**
 # mac notarization service
 darwin_amd64/**
+macos-notary.zip
 
 # Test binary, built with `go test -c`
 *.test

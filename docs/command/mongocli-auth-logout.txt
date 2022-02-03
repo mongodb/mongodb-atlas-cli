@@ -12,7 +12,7 @@ mongocli auth logout
    :depth: 1
    :class: singlecol
 
-Log out the CLI.
+Log out of the CLI.
 
 Syntax
 ------

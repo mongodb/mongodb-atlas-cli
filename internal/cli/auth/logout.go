@@ -68,7 +68,7 @@ func LogoutBuilder() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "logout",
-		Short: "Log out the CLI.",
+		Short: "Log out of the CLI.",
 		Example: `  To log out from the CLI:
   $ mongocli auth logout
 `,

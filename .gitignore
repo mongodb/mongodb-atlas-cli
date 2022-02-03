@@ -6,6 +6,8 @@
 *.dylib
 bin/**
 dist/**
+# mac notarization service
+darwin_amd64/**
 
 # Test binary, built with `go test -c`
 *.test

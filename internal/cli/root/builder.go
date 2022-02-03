@@ -27,6 +27,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
+	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/iam"
@@ -89,10 +90,22 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	if !hasArgs || search.StringInSlice(shouldIncludeAtlas, argsWithoutProg[0]) {
 		rootCmd.AddCommand(atlas.Builder())
 	}
+	// hidden shortcuts
+	loginCmd := auth.LoginBuilder()
+	loginCmd.Hidden = true
+	logoutCmd := auth.LogoutBuilder()
+	logoutCmd.Hidden = true
+	whoCmd := auth.WhoAmIBuilder()
+	whoCmd.Hidden = true
+
 	rootCmd.AddCommand(
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
+		auth.Builder(),
+		loginCmd,
+		logoutCmd,
+		whoCmd,
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

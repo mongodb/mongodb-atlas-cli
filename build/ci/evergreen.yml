@@ -247,7 +247,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb
         include_expansions_in_env:
           - notary_service_url
         script: |

@@ -264,7 +264,8 @@ func (p *Profile) AuthToken() string {
 	return p.GetString(authToken)
 }
 
-// Access will return a jwt.Token and jwt.Standard claims, this method is not safe to verify the token is valid.
+// Access will return a jwt.Token and jwt.RegisteredClaims.
+// This method won't verify the token signature, it's only safe to use to get the token claims.
 func Access() (*jwt.Token, jwt.RegisteredClaims, error) { return p.Access() }
 func (p *Profile) Access() (*jwt.Token, jwt.RegisteredClaims, error) {
 	c := jwt.RegisteredClaims{}

@@ -401,8 +401,8 @@ go.etcd.io/etcd/api/v3 v3.5.1/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQc
 go.etcd.io/etcd/client/pkg/v3 v3.5.1/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.1/go.mod h1:pMEacxZW7o8pg4CrFE7pquyCJJzZvkvdD2RibOCCCGs=
 go.mongodb.org/atlas v0.14.0/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
-go.mongodb.org/atlas v0.14.1-0.20220126105350-5816bca2f88c h1:K3Q2ggsg1XtJuurBbJspNRzmkPtIZl5lD1oICR6lW28=
-go.mongodb.org/atlas v0.14.1-0.20220126105350-5816bca2f88c/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
+go.mongodb.org/atlas v0.14.1-0.20220202080947-4a7d97e77246 h1:BkSHgSH3o6KawlMdsnR+XpZ/pCDbWK5secDmcUmytL0=
+go.mongodb.org/atlas v0.14.1-0.20220202080947-4a7d97e77246/go.mod h1:lQhRHIxc6jQHEK3/q9WLu/SdBkPj2fQYhjLGUF6Z3U8=
 go.mongodb.org/ops-manager v0.34.0 h1:d8TgpJpPFeVLr+6HrAbbbYnKkdk+2JW6E20OBdgqXg8=
 go.mongodb.org/ops-manager v0.34.0/go.mod h1:85LPPdME1TFJ/Eau/IgOmy37YWGw1p/S8PBSME8ukXs=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

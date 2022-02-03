@@ -54,6 +54,8 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 
 	var err error
 	switch f := d.(type) {
+	case func() error:
+		err = f()
 	case func(string) error:
 		err = f(opts.Entry)
 	case func(string, string) error:
@@ -69,8 +71,11 @@ func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf(opts.SuccessMessage(), opts.Entry)
+	if opts.Entry == "" {
+		fmt.Print(opts.SuccessMessage())
+	} else {
+		fmt.Printf(opts.SuccessMessage(), opts.Entry)
+	}
 
 	return nil
 }
@@ -91,7 +96,11 @@ func (opts *DeleteOpts) PromptWithMessage(message string) error {
 		return nil
 	}
 
-	p := prompt.NewConfirm(fmt.Sprintf(message, opts.Entry))
+	m := message
+	if opts.Entry != "" {
+		m = fmt.Sprintf(message, opts.Entry)
+	}
+	p := prompt.NewConfirm(m)
 	return survey.AskOne(p, &opts.Confirm)
 }
 

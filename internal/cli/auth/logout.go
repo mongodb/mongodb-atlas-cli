@@ -63,7 +63,7 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out\n", " "),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of account %s\n", " "),
 	}
 
 	cmd := &cobra.Command{
@@ -81,7 +81,12 @@ func LogoutBuilder() *cobra.Command {
 			if config.RefreshToken() == "" {
 				return errors.New("not logged in")
 			}
-			if err := opts.PromptWithMessage("Are you sure you want to log out?"); err != nil {
+			_, c, err := config.Access()
+			if err != nil {
+				return err
+			}
+			opts.Entry = c.Subject
+			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

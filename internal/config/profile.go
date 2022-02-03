@@ -24,6 +24,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/pelletier/go-toml"
@@ -261,6 +262,16 @@ func (p *Profile) SetPrivateAPIKey(v string) {
 func AuthToken() string { return p.AuthToken() }
 func (p *Profile) AuthToken() string {
 	return p.GetString(authToken)
+}
+
+// Access will return a jwt.Token and jwt.RegisteredClaims.
+// This method won't verify the token signature, it's only safe to use to get the token claims.
+func Access() (*jwt.Token, jwt.RegisteredClaims, error) { return p.Access() }
+func (p *Profile) Access() (*jwt.Token, jwt.RegisteredClaims, error) {
+	c := jwt.RegisteredClaims{}
+	// ParseUnverified is ok here, only want to make sure is a JWT and to get the claims for a Subject
+	token, _, err := new(jwt.Parser).ParseUnverified(p.AuthToken(), &c)
+	return token, c, err
 }
 
 // SetAuthToken set configured publicAPIKey.

@@ -30,6 +30,9 @@ import (
 )
 
 func TestAccessList(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("accessList")
+
 	n, err := e2e.RandInt(255)
 	a := assert.New(t)
 	req := require.New(t)
@@ -48,6 +51,10 @@ func TestAccessList(t *testing.T) {
 			"create",
 			entry,
 			"--comment=test",
+			"--projectId",
+			g.projectID,
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -73,6 +80,8 @@ func TestAccessList(t *testing.T) {
 			atlasEntity,
 			accessListEntity,
 			"ls",
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -88,6 +97,8 @@ func TestAccessList(t *testing.T) {
 			accessListEntity,
 			"describe",
 			entry,
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -103,6 +114,8 @@ func TestAccessList(t *testing.T) {
 			accessListEntity,
 			"delete",
 			entry,
+			"--projectId",
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -120,6 +133,8 @@ func TestAccessList(t *testing.T) {
 			entry,
 			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
 			"--comment=test",
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -145,6 +160,8 @@ func TestAccessList(t *testing.T) {
 			accessListEntity,
 			"delete",
 			entry,
+			"--projectId",
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -161,6 +178,8 @@ func TestAccessList(t *testing.T) {
 			"create",
 			"--currentIp",
 			"--comment=test",
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -182,6 +201,8 @@ func TestAccessList(t *testing.T) {
 			accessListEntity,
 			"delete",
 			currentIPEntry,
+			"--projectId",
+			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

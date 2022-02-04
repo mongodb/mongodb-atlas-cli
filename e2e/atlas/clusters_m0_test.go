@@ -52,7 +52,6 @@ func TestClustersM0Flags(t *testing.T) {
 			"--region", "US_EAST_1",
 			"--members=3",
 			"--tier", tierM0,
-			"--mdbVersion", e2eMDBVer,
 			"--provider", e2eClusterProvider,
 			"--projectId", g.projectID,
 			"-o=json")
@@ -64,7 +63,7 @@ func TestClustersM0Flags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, e2eMDBVer, 0.5)
+		ensureCluster(t, cluster, clusterName, e2eMDBVer50, 0.5)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

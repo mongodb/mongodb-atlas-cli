@@ -78,7 +78,7 @@ const (
 	e2eClusterTier     = "M30"
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
-	e2eMDBVer50          = "5.0"
+	e2eMDBVer50        = "5.0"
 )
 
 func deployClusterForProject(projectID string) (string, error) {

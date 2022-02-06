@@ -44,7 +44,6 @@ func TestClustersM0Flags(t *testing.T) {
 	req.NoError(err)
 
 	mongoDBMajorVersion, err := MongoDBMajorVersion()
-	fmt.Print(mongoDBMajorVersion)
 	req.NoError(err)
 
 	t.Run("Create", func(t *testing.T) {

@@ -16,14 +16,14 @@
 package atlas_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"os/exec"
 	"testing"
-
-	"golang.org/x/net/context"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
@@ -80,7 +80,6 @@ const (
 	e2eClusterTier     = "M30"
 	e2eClusterProvider = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer          = "4.4"
-	e2eMDBVer50        = "5.0"
 )
 
 func deployClusterForProject(projectID string) (string, error) {
@@ -244,19 +243,12 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 }
 
 func MongoDBMajorVersion() (string, error) {
-	// req, err := http.NewRequest(http.MethodGet, "api/private/unauth/nds/defaultMongoDBMajorVersion", nil)
-	// if err !=  nil{
-	//	return "", err
-	// }
-	//
 	atlasClient := mongodbatlas.NewClient(nil)
+	atlasClient.BaseURL, _ = url.Parse("https://cloud-dev.mongodb.com/")
 	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.TODO())
-	fmt.Print(version)
 	if err != nil {
 		return "", err
 	}
-	// root := new(bytes.Buffer)
-	// resp, err := client.Do(nil, req, root)
 
 	return version, nil
 }

@@ -23,6 +23,8 @@ import (
 	"os/exec"
 	"testing"
 
+	"golang.org/x/net/context"
+
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -239,6 +241,24 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 		return prefixedName[:64], nil
 	}
 	return prefixedName, nil
+}
+
+func MongoDBMajorVersion() (string, error) {
+	// req, err := http.NewRequest(http.MethodGet, "api/private/unauth/nds/defaultMongoDBMajorVersion", nil)
+	// if err !=  nil{
+	//	return "", err
+	// }
+	//
+	atlasClient := mongodbatlas.NewClient(nil)
+	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.TODO())
+	fmt.Print(version)
+	if err != nil {
+		return "", err
+	}
+	// root := new(bytes.Buffer)
+	// resp, err := client.Do(nil, req, root)
+
+	return version, nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {

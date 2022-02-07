@@ -16,9 +16,11 @@
 package atlas_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"os/exec"
 	"testing"
@@ -238,6 +240,22 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 		return prefixedName[:64], nil
 	}
 	return prefixedName, nil
+}
+
+func MongoDBMajorVersion() (string, error) {
+	atlasClient := mongodbatlas.NewClient(nil)
+	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")
+	baseURL, err := url.Parse(atlasURL)
+	if err != nil {
+		return "", err
+	}
+	atlasClient.BaseURL = baseURL
+	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.Background())
+	if err != nil {
+		return "", err
+	}
+
+	return version, nil
 }
 
 func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPartyIntegrations) bool {

@@ -43,6 +43,9 @@ func TestClustersM0Flags(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
+	mongoDBMajorVersion, err := MongoDBMajorVersion()
+	req.NoError(err)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			atlasEntity,
@@ -63,7 +66,7 @@ func TestClustersM0Flags(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, e2eMDBVer, 0.5)
+		ensureCluster(t, cluster, clusterName, mongoDBMajorVersion, 0.5)
 	})
 
 	t.Run("Watch", func(t *testing.T) {

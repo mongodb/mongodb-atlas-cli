@@ -244,7 +244,8 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
-	atlasClient.BaseURL, _ = url.Parse("https://cloud-dev.mongodb.com/")
+	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")
+	atlasClient.BaseURL, _ = url.Parse(atlasURL)
 	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.TODO())
 	if err != nil {
 		return "", err

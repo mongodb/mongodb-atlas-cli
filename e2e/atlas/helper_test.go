@@ -245,8 +245,11 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
 	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")
+	if atlasURL == "" {
+		return "", fmt.Errorf("the env variable %s is not set", "MCLI_OPS_MANAGER_URL")
+	}
 	atlasClient.BaseURL, _ = url.Parse(atlasURL)
-	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.TODO())
+	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.Background())
 	if err != nil {
 		return "", err
 	}

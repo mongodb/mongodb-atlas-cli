@@ -73,7 +73,6 @@ const (
 	tierM30                      = "M30"
 	diskSizeGB40                 = "40"
 	diskSizeGB30                 = "30"
-	mcliOpsManagerURL            = "https://cloud-dev.mongodb.com/"
 )
 
 // Cluster settings.
@@ -246,10 +245,11 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
 	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")
-	if atlasURL != mcliOpsManagerURL {
-		return "", fmt.Errorf("the env variable %s was %s but it must be %s", "MCLI_OPS_MANAGER_URL", atlasURL, mcliOpsManagerURL)
+	baseURL, err := url.Parse(atlasURL)
+	if err != nil {
+		return "", err
 	}
-	atlasClient.BaseURL, _ = url.Parse(atlasURL)
+	atlasClient.BaseURL = baseURL
 	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.Background())
 	if err != nil {
 		return "", err

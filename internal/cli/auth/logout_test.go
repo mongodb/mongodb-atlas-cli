@@ -57,7 +57,7 @@ func Test_logoutOpts_Run(t *testing.T) {
 	ctx := context.TODO()
 	mockFlow.
 		EXPECT().
-		Revoke(ctx, gomock.Any(), gomock.Any()).
+		RevokeToken(ctx, gomock.Any(), gomock.Any()).
 		Return(nil, nil).
 		Times(1)
 	mockConfig.

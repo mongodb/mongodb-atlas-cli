@@ -43,7 +43,7 @@ type ConfigDeleter interface {
 }
 
 type Revoker interface {
-	Revoke(context.Context, string, string) (*atlas.Response, error)
+	RevokeToken(context.Context, string, string) (*atlas.Response, error)
 }
 
 func (opts *logoutOpts) initFlow() error {
@@ -54,7 +54,7 @@ func (opts *logoutOpts) initFlow() error {
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
 	// revoking a refresh token revokes the access token
-	if _, err := opts.flow.Revoke(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 		return err
 	}
 
@@ -81,11 +81,11 @@ func LogoutBuilder() *cobra.Command {
 			if config.RefreshToken() == "" {
 				return errors.New("not logged in")
 			}
-			_, c, err := config.Access()
+			s, err := config.AccessTokenSubject()
 			if err != nil {
 				return err
 			}
-			opts.Entry = c.Subject
+			opts.Entry = s
 			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil {
 				return err
 			}

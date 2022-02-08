@@ -55,8 +55,7 @@ type Store struct {
 	skipVerify    bool
 	username      string
 	password      string
-	accessToken   string
-	refreshToken  string
+	accessToken   *atlasauth.Token
 	client        interface{}
 	ctx           context.Context
 }
@@ -112,7 +111,7 @@ func customCATransport(ca []byte) *http.Transport {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username == "" && s.password == "" && s.accessToken == "" {
+	if s.username == "" && s.password == "" && s.accessToken == nil {
 		return &http.Client{Transport: httpTransport}, nil
 	}
 	if s.username != "" && s.password != "" {
@@ -123,9 +122,8 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		t.Transport = httpTransport
 		return t.Client()
 	}
-	token := atlasauth.Token{AccessToken: s.accessToken, RefreshToken: s.refreshToken}
 	tr := &Transport{
-		token: token,
+		token: s.accessToken,
 		base:  httpTransport,
 	}
 
@@ -133,7 +131,7 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 }
 
 type Transport struct {
-	token atlasauth.Token
+	token *atlasauth.Token
 	base  http.RoundTripper
 }
 
@@ -213,8 +211,7 @@ func SkipVerify() Option {
 type CredentialsGetter interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
-	AuthToken() string
-	RefreshToken() string
+	Token() (*atlasauth.Token, error)
 }
 
 // WithAuthentication sets the store credentials.
@@ -222,8 +219,11 @@ func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
 		s.password = c.PrivateAPIKey()
-		s.accessToken = c.AuthToken()
-		s.refreshToken = c.RefreshToken()
+		t, err := c.Token()
+		if err != nil {
+			return err
+		}
+		s.accessToken = t
 		return nil
 	}
 }
@@ -296,11 +296,6 @@ type AuthenticatedConfig interface {
 	ServiceGetter
 }
 
-type BasicConfig interface {
-	TransportConfigGetter
-	ServiceGetter
-}
-
 // AuthenticatedPreset is the default Option when connecting to the public API with authentication.
 func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	options := []Option{Service(c.Service()), WithAuthentication(c)}
@@ -318,6 +313,11 @@ func baseURLOption(c ServiceGetter) Option {
 		return WithBaseURL(cloudGovServiceURL)
 	}
 	return nil
+}
+
+type BasicConfig interface {
+	TransportConfigGetter
+	ServiceGetter
 }
 
 // UnauthenticatedPreset is the default Option when connecting to the public API without authentication.

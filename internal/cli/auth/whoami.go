@@ -48,14 +48,14 @@ func WhoAmIBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if config.AuthToken() == "" {
+			if config.AccessToken() == "" {
 				return errors.New("not logged in")
 			}
-			_, c, err := config.Access()
+			s, err := config.AccessTokenSubject()
 			if err != nil {
 				return err
 			}
-			opts.account = c.Subject
+			opts.account = s
 
 			return opts.Run()
 		},

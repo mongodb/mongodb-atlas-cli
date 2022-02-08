@@ -162,7 +162,8 @@ func TestCredentials(t *testing.T) {
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()
-		t.Setenv("AUTH_TOKEN", "test")
+		t.Setenv("ACCESS_TOKEN", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
+		t.Setenv("REFRESH_TOKEN", "test")
 		if err := Credentials(); err != nil {
 			t.Fatalf("Credentials() unexpected error %v\n", err)
 		}
@@ -223,7 +224,7 @@ func TestOptionalURL(t *testing.T) {
 	}{
 		{
 			name:    "valid",
-			val:     "http://test.com/",
+			val:     "https://test.com/",
 			wantErr: false,
 		},
 		{

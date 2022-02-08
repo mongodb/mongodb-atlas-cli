@@ -12,7 +12,7 @@ mongocli atlas
    :depth: 1
    :class: singlecol
 
-Atlas operations.
+MongoDB Atlas operations.
 
 Options
 -------

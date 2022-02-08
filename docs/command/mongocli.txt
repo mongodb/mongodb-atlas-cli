@@ -48,13 +48,13 @@ Examples
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas` - Atlas operations.
+* :ref:`mongocli-atlas` - MongoDB Atlas operations.
 * :ref:`mongocli-auth` - Manage the CLI's authentication state.
 * :ref:`mongocli-cloud-manager` - MongoDB Cloud Manager operations.
 * :ref:`mongocli-completion` - Generate the autocompletion script for the specified shell
 * :ref:`mongocli-config` - Configure a profile to store access settings for your MongoDB deployment.
 * :ref:`mongocli-iam` - Organization and projects operations.
-* :ref:`mongocli-ops-manager` - Ops Manager operations.
+* :ref:`mongocli-ops-manager` - MongoDB Ops Manager operations.
 
 
 .. toctree::

@@ -22,7 +22,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
@@ -98,7 +97,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("auth_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
-	mockConfig.EXPECT().Access().Return(nil, jwt.RegisteredClaims{Subject: "test@10gen.com"}, nil).Times(1)
+	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 	expectedOrgs := &atlas.Organizations{}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)

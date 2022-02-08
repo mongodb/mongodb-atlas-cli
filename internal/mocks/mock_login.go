@@ -8,7 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 
-	jwt "github.com/golang-jwt/jwt/v4"
 	gomock "github.com/golang/mock/gomock"
 	auth "go.mongodb.org/atlas/auth"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
@@ -92,20 +91,19 @@ func (m *MockLoginConfig) EXPECT() *MockLoginConfigMockRecorder {
 	return m.recorder
 }
 
-// Access mocks base method.
-func (m *MockLoginConfig) Access() (*jwt.Token, jwt.RegisteredClaims, error) {
+// AccessTokenSubject mocks base method.
+func (m *MockLoginConfig) AccessTokenSubject() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Access")
-	ret0, _ := ret[0].(*jwt.Token)
-	ret1, _ := ret[1].(jwt.RegisteredClaims)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret := m.ctrl.Call(m, "AccessTokenSubject")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Access indicates an expected call of Access.
-func (mr *MockLoginConfigMockRecorder) Access() *gomock.Call {
+// AccessTokenSubject indicates an expected call of AccessTokenSubject.
+func (mr *MockLoginConfigMockRecorder) AccessTokenSubject() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Access", reflect.TypeOf((*MockLoginConfig)(nil).Access))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessTokenSubject", reflect.TypeOf((*MockLoginConfig)(nil).AccessTokenSubject))
 }
 
 // Save mocks base method.

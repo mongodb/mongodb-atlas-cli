@@ -35,19 +35,19 @@ func (m *MockRevoker) EXPECT() *MockRevokerMockRecorder {
 	return m.recorder
 }
 
-// Revoke mocks base method.
-func (m *MockRevoker) Revoke(arg0 context.Context, arg1, arg2 string) (*mongodbatlas.Response, error) {
+// RevokeToken mocks base method.
+func (m *MockRevoker) RevokeToken(arg0 context.Context, arg1, arg2 string) (*mongodbatlas.Response, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Revoke", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "RevokeToken", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*mongodbatlas.Response)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Revoke indicates an expected call of Revoke.
-func (mr *MockRevokerMockRecorder) Revoke(arg0, arg1, arg2 interface{}) *gomock.Call {
+// RevokeToken indicates an expected call of RevokeToken.
+func (mr *MockRevokerMockRecorder) RevokeToken(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Revoke", reflect.TypeOf((*MockRevoker)(nil).Revoke), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeToken", reflect.TypeOf((*MockRevoker)(nil).RevokeToken), arg0, arg1, arg2)
 }
 
 // MockConfigDeleter is a mock of ConfigDeleter interface.

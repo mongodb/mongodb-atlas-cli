@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/config"
+	atlasauth "go.mongodb.org/atlas/auth"
 )
 
 type auth struct {
@@ -30,11 +31,11 @@ type auth struct {
 	token    string
 }
 
-func (a auth) RefreshToken() string {
-	return a.token
+func (a auth) Token() (*atlasauth.Token, error) {
+	return nil, nil
 }
 
-func (a auth) AuthToken() string {
+func (a auth) RefreshToken() string {
 	return a.token
 }
 

@@ -23,6 +23,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/search"
@@ -30,6 +31,7 @@ import (
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
+	"go.mongodb.org/atlas/auth"
 )
 
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
@@ -50,7 +52,7 @@ const (
 	service                      = "service"
 	publicAPIKey                 = "public_api_key"
 	privateAPIKey                = "private_api_key"
-	authToken                    = "auth_token"
+	accessToken                  = "access_token"
 	refreshToken                 = "refresh_token"
 	opsManagerURL                = "ops_manager_url"
 	baseURL                      = "base_url"
@@ -258,38 +260,69 @@ func (p *Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
 }
 
-// AuthToken get configured public api key.
-func AuthToken() string { return p.AuthToken() }
-func (p *Profile) AuthToken() string {
-	return p.GetString(authToken)
+// AccessToken get configured access token.
+func AccessToken() string { return p.AccessToken() }
+func (p *Profile) AccessToken() string {
+	return p.GetString(accessToken)
 }
 
-// Access will return a jwt.Token and jwt.RegisteredClaims.
-// This method won't verify the token signature, it's only safe to use to get the token claims.
-func Access() (*jwt.Token, jwt.RegisteredClaims, error) { return p.Access() }
-func (p *Profile) Access() (*jwt.Token, jwt.RegisteredClaims, error) {
-	c := jwt.RegisteredClaims{}
-	// ParseUnverified is ok here, only want to make sure is a JWT and to get the claims for a Subject
-	token, _, err := new(jwt.Parser).ParseUnverified(p.AuthToken(), &c)
-	return token, c, err
+// SetAccessToken set configured access token.
+func SetAccessToken(v string) { p.SetAccessToken(v) }
+func (p *Profile) SetAccessToken(v string) {
+	p.Set(accessToken, v)
 }
 
-// SetAuthToken set configured publicAPIKey.
-func SetAuthToken(v string) { p.SetAuthToken(v) }
-func (p *Profile) SetAuthToken(v string) {
-	p.Set(authToken, v)
-}
-
-// RefreshToken get configured private api key.
+// RefreshToken get configured refresh token.
 func RefreshToken() string { return p.RefreshToken() }
 func (p *Profile) RefreshToken() string {
 	return p.GetString(refreshToken)
 }
 
-// SetRefreshToken set configured private api key.
+// SetRefreshToken set configured refresh token.
 func SetRefreshToken(v string) { p.SetRefreshToken(v) }
 func (p *Profile) SetRefreshToken(v string) {
 	p.Set(refreshToken, v)
+}
+
+// Token gets configured auth.Token.
+func Token() (*auth.Token, error) { return p.Token() }
+func (p *Profile) Token() (*auth.Token, error) {
+	if p.AccessToken() == "" || p.RefreshToken() == "" {
+		return nil, nil
+	}
+	c, err := p.tokenClaims()
+	if err != nil {
+		return nil, err
+	}
+	var e time.Time
+	if c.ExpiresAt != nil {
+		e = c.ExpiresAt.Time
+	}
+	t := &auth.Token{
+		AccessToken:  p.AccessToken(),
+		RefreshToken: p.RefreshToken(),
+		TokenType:    "Bearer",
+		Expiry:       e,
+	}
+	return t, nil
+}
+
+// AccessTokenSubject will return the encoded subject in a JWT.
+// This method won't verify the token signature, it's only safe to use to get the token claims.
+func AccessTokenSubject() (string, error) { return p.AccessTokenSubject() }
+func (p *Profile) AccessTokenSubject() (string, error) {
+	c, err := p.tokenClaims()
+	if err != nil {
+		return "", err
+	}
+	return c.Subject, err
+}
+
+func (p *Profile) tokenClaims() (jwt.RegisteredClaims, error) {
+	c := jwt.RegisteredClaims{}
+	// ParseUnverified is ok here, only want to make sure is a JWT and to get the claims for a Subject
+	_, _, err := new(jwt.Parser).ParseUnverified(p.AccessToken(), &c)
+	return c, err
 }
 
 // OpsManagerURL get configured ops manager base url.
@@ -403,7 +436,7 @@ func (p *Profile) Map() map[string]string {
 		profileSettings[mongoShellPath] = p.MongoShellPath()
 	}
 	for k, v := range settings {
-		if k == privateAPIKey || k == publicAPIKey || k == authToken || k == refreshToken {
+		if k == privateAPIKey || k == publicAPIKey || k == accessToken || k == refreshToken {
 			profileSettings[k] = "redacted"
 		} else {
 			profileSettings[k] = v

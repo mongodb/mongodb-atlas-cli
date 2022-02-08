@@ -23,7 +23,6 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -45,7 +44,7 @@ type Authenticator interface {
 
 type LoginConfig interface {
 	config.SetSaver
-	Access() (*jwt.Token, jwt.RegisteredClaims, error)
+	AccessTokenSubject() (string, error)
 }
 
 type loginOpts struct {
@@ -94,11 +93,11 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	opts.SetUpAccess()
-	_, c, err := opts.config.Access()
+	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", c.Subject)
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 	if opts.loginOnly {
 		return opts.config.Save()
 	}

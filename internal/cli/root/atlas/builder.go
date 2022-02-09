@@ -60,7 +60,7 @@ import (
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
-		Use:     config.AtlasToolName,
+		Use:     "atlas",
 		Short:   "CLI tool to manage MongoDB Atlas",
 		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.AtlasToolName),
 		Example: `

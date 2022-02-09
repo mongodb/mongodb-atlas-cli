@@ -1,23 +1,34 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-SOURCE_FILES?=./cmd/mongocli
-BINARY_NAME=mongocli
-
-DESTINATION=./bin/$(BINARY_NAME)
-INSTALL_PATH="${GOPATH}/bin/$(BINARY_NAME)"
 
 GOLANGCI_VERSION=v1.43.0
 COVERAGE=coverage.out
+
+
+MCLI_SOURCE_FILES?=./cmd/mongocli
+MCLI_BINARY_NAME=mongocli
 MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
+MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
+INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
+
+
+ATLAS_SOURCE_FILES?=./cmd/atlas
+ATLAS_BINARY_NAME=atlascli
+ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
+
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/toolname.ToolName=$(MCLI_BINARY_NAME)
+ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/toolname.ToolName=$(ATLAS_BINARY_NAME)
+
+
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
 UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
-E2E_BINARY?=../../bin/${BINARY_NAME}
+E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 E2E_TIMEOUT?=60m
 
 export PATH := ./bin:$(PATH)
@@ -84,13 +95,18 @@ gen-docs: ## Generate docs for commands
 
 .PHONY: build
 build: ## Generate a binary in ./bin
-	@echo "==> Building $(BINARY_NAME) binary"
-	go build -ldflags "$(LINKER_FLAGS)" -o $(DESTINATION) $(SOURCE_FILES)
+	@echo "==> Building $(MCLI_BINARY_NAME) binary"
+	go build -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
+
+.PHONY: build-atlascli
+build-atlascli: ## Generate a binary in ./bin
+	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
+	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging
-	@echo "==> Building $(BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" -o $(DESTINATION) $(SOURCE_FILES)
+	@echo "==> Building $(MCLI_BINARY_NAME) binary for debugging"
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
@@ -110,8 +126,8 @@ unit-test: ## Run unit-tests
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
-	@echo "==> Installing $(BINARY_NAME) to $(INSTALL_PATH)"
-	go install -ldflags "$(LINKER_FLAGS)" $(SOURCE_FILES)
+	@echo "==> Installing $(MCLI_BINARY_NAME) to $(INSTALL_PATH)"
+	go install -ldflags "$(MCLI_LINKER_FLAGS)" $(MCLI_SOURCE_FILES)
 	@echo "==> Done..."
 
 .PHONY: list

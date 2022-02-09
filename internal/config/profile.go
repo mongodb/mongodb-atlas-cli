@@ -25,6 +25,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/version"
@@ -37,8 +39,6 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
 const (
-	ToolName                     = "mongocli"      // ToolName of the CLI
-	AtlasToolName                = "atlascli"      // AtlasToolName of the atlas CLI
 	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
@@ -66,7 +66,7 @@ const (
 	skipUpdateCheck              = "skip_update_check"
 )
 
-var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", toolname.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 type Setter interface {
 	Set(string, interface{})
@@ -491,7 +491,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, ToolName+".toml")
+	return filepath.Join(p.configDir, toolname.ToolName+".toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -532,7 +532,7 @@ func (p *Profile) Rename(newProfileName string) error {
 func Load() error { return p.Load(true) }
 func (p *Profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
-	viper.SetConfigName(ToolName)
+	viper.SetConfigName(toolname.ToolName)
 	viper.SetConfigPermissions(configPerm)
 	viper.AddConfigPath(p.configDir)
 	viper.SetFs(p.fs)

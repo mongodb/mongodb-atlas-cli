@@ -22,6 +22,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -127,7 +129,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", toolname.ToolName)
 	return nil
 }
 

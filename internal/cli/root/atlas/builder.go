@@ -18,6 +18,9 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+	"github.com/mongodb/mongocli/internal/validate"
+
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
@@ -57,12 +60,12 @@ import (
 )
 
 // Builder conditionally adds children commands as needed.
-func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
+func Builder(profile *string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     "atlas",
 		Short:   "CLI tool to manage MongoDB Atlas",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.AtlasToolName),
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", toolname.ToolName),
 		Example: `
   Display the help menu for the config command
   $ atlas config --help`,
@@ -70,13 +73,19 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		Annotations: map[string]string{
 			"toc": "true",
 		},
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if config.Service() == "" {
+				config.SetService(config.CloudService)
+			}
+
+			if cmd.Name() == "quickstart" { // quickstart has its own check
+				return nil
+			}
+
+			return validate.Credentials()
+		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
-	hasArgs := len(argsWithoutProg) != 0
-
-	if hasArgs && (argsWithoutProg[0] == "--version" || argsWithoutProg[0] == "-v") {
-		return rootCmd
-	}
 
 	// hidden shortcuts
 	loginCmd := auth.LoginBuilder()
@@ -138,7 +147,7 @@ Go version: %s
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
-		config.AtlasToolName,
+		toolname.ToolName,
 		version.Version,
 		version.GitCommit,
 		runtime.Version(),

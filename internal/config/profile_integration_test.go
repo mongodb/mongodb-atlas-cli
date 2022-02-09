@@ -21,6 +21,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -90,6 +92,7 @@ func profileWithFullDescription() *Profile {
 }
 
 func TestProfile_Get_FullProfile(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithFullDescription()
 	a := assert.New(t)
 	a.NoError(profile.Load(false))
@@ -106,6 +109,7 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 }
 
 func TestProfile_Get_Default(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneDefaultUserOneNonDefault()
 	a := assert.New(t)
 	a.NoError(profile.Load(false))
@@ -115,6 +119,7 @@ func TestProfile_Get_Default(t *testing.T) {
 }
 
 func TestProfile_Get_NonDefault(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneNonDefaultUser()
 	profile.SetName(atlasProfile)
 
@@ -131,6 +136,7 @@ func TestProfile_Get_NonDefault(t *testing.T) {
 }
 
 func TestProfile_Delete_NonDefault(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneDefaultUserOneNonDefault()
 
 	a := assert.New(t)
@@ -147,6 +153,7 @@ func TestProfile_Delete_NonDefault(t *testing.T) {
 }
 
 func TestProfile_Rename(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
@@ -165,6 +172,7 @@ func TestProfile_Rename(t *testing.T) {
 }
 
 func TestProfile_Rename_OverwriteExisting(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
@@ -184,6 +192,7 @@ func TestProfile_Rename_OverwriteExisting(t *testing.T) {
 }
 
 func TestProfile_Set(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	profile := profileWithOneDefaultUserOneNonDefault()
 	a := assert.New(t)
 	a.NoError(profile.Load(false))

@@ -23,6 +23,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
 )
@@ -106,7 +108,7 @@ func Credentials() error {
 	return fmt.Errorf(
 		"%w\n\nTo set credentials, run: %s %s",
 		ErrMissingCredentials,
-		config.ToolName,
+		toolname.ToolName,
 		"config",
 	)
 }

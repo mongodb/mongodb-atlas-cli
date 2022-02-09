@@ -24,6 +24,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/toolname"
+
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
@@ -50,9 +52,9 @@ type BuilderOpts struct {
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
-		Use:     config.ToolName,
+		Use:     toolname.ToolName,
 		Short:   "CLI tool to manage your MongoDB Cloud",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", toolname.ToolName),
 		Example: `
   Display the help menu for the config command
   $ mongocli config --help`,
@@ -123,7 +125,7 @@ Go version: %s
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
-		config.ToolName,
+		toolname.ToolName,
 		version.Version,
 		version.GitCommit,
 		runtime.Version(),
@@ -185,7 +187,7 @@ func isHomebrew() bool {
 }
 
 func homebrewFormulaPath() (string, error) {
-	formula := config.ToolName
+	formula := toolname.ToolName
 	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
 	if err != nil {
 		return "", err
@@ -238,7 +240,7 @@ A new version of %s is available '%s'!
 
 To disable this alert, run "mongocli config set skip_update_check true".
 `
-		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion, upgradeInstructions)
+		_, err = fmt.Fprintf(w, newVersionTemplate, toolname.ToolName, latestVersion, upgradeInstructions)
 		return err
 	}
 	return nil

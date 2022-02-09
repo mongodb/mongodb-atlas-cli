@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/prompt"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
@@ -56,7 +57,7 @@ All values are optional and you can use environment variables (MCLI_*) instead.
 
 Enter [?] on any option to get help.
 
-`, config.ToolName)
+`, toolname.ToolName)
 
 	q := accessQuestions(opts.IsOpsManager())
 	if err := survey.Ask(q, opts); err != nil {
@@ -98,7 +99,7 @@ Enter [?] on any option to get help.
 	if config.Name() != config.DefaultProfile {
 		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", toolname.ToolName)
 	return nil
 }
 

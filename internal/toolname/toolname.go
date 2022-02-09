@@ -11,23 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build unit
-// +build unit
 
-package atlas
+package toolname
 
-import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
-)
-
-func TestBuilder(t *testing.T) {
-	var profile string
-	test.CmdValidator(
-		t,
-		Builder(&profile),
-		34,
-		[]string{},
-	)
-}
+// ToolName: Name of the CLI.
+var ToolName string

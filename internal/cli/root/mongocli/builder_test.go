@@ -25,6 +25,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
@@ -123,6 +124,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
+	toolname.ToolName = "mongocli"
 	tests := []struct {
 		currentVersion string
 		latestVersion  *version.ReleaseInformation
@@ -175,11 +177,11 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 			want := ""
 			if tt.wantPrint {
 				want = fmt.Sprintf(`
-A new version of mongocli is available '%v'!
+A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
 
 To disable this alert, run "mongocli config set skip_update_check true".
-`, tt.latestVersion.Version)
+`, toolname.ToolName, tt.latestVersion.Version)
 			}
 
 			if got := bufOut.String(); got != want {

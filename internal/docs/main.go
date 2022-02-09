@@ -42,7 +42,9 @@ func main() {
 	}
 
 	mongocliBuilder := mongocli.Builder(&profile, []string{})
-
+	mongocliBuilder.Use="mongocli"
+	mongocliBuilder.Long="Use mongocli command help for information on a specific command"
+	
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464
 	_, _ = mongocliBuilder.ExecuteC()

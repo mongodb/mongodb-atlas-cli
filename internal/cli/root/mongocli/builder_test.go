@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build unit
 // +build unit
 
@@ -25,10 +24,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
-const toolName="mongocli"
 func TestBuilder(t *testing.T) {
 	type args struct {
 		argsWithoutProg []string
@@ -124,7 +123,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
-	toolname.ToolName = toolName
+	toolname.ToolName = "mongocli"
 	tests := []struct {
 		currentVersion string
 		latestVersion  *version.ReleaseInformation

@@ -14,5 +14,5 @@
 
 package toolname
 
-// ToolName: Name of the CLI.
+// ToolName of the CLI.
 var ToolName string

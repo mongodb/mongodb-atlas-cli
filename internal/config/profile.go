@@ -25,10 +25,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/toolname"
-
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"

@@ -24,8 +24,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/toolname"
-
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
@@ -37,6 +35,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"

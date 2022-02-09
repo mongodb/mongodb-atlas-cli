@@ -23,10 +23,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/toolname"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/toolname"
 )
 
 const minPasswordLength = 10

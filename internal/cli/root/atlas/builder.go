@@ -18,9 +18,6 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/mongodb/mongocli/internal/toolname"
-	"github.com/mongodb/mongocli/internal/validate"
-
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
@@ -54,7 +51,9 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )

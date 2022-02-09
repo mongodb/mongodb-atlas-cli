@@ -22,8 +22,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/toolname"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -31,6 +29,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
 	"github.com/mongodb/mongocli/internal/prompt"
+	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"

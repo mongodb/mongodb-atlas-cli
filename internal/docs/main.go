@@ -41,15 +41,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mongocli := mongocli.Builder(&profile, []string{})
+	mongocliBuilder := mongocli.Builder(&profile, []string{})
 
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464
-	_, _ = mongocli.ExecuteC()
+	_, _ = mongocliBuilder.ExecuteC()
 
-	setDisableAutoGenTag(mongocli)
+	setDisableAutoGenTag(mongocliBuilder)
 
-	if err := cobra2snooty.GenTreeDocs(mongocli, "./docs/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

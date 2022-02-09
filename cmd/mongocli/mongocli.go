@@ -19,7 +19,7 @@ import (
 	"log"
 	"os"
 
-	rootBuilder "github.com/mongodb/mongocli/internal/cli/root/mongocli"
+	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ var (
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(ctx context.Context) {
-	rootCmd := rootBuilder.Builder(&profile, os.Args[1:])
+	rootCmd := mongocli.Builder(&profile, os.Args[1:])
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}

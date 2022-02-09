@@ -48,7 +48,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: []string{"om"},
-		Short:   "Ops Manager operations.",
+		Short:   "MongoDB Ops Manager operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			config.SetService(config.OpsManagerService)
 			// do not validate to create an owner

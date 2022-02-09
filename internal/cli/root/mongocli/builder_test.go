@@ -25,10 +25,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
+const toolName="mongocli"
 func TestBuilder(t *testing.T) {
 	type args struct {
 		argsWithoutProg []string
@@ -124,7 +124,7 @@ func TestBuilder(t *testing.T) {
 }
 
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
-	toolname.ToolName = "mongocli"
+	toolname.ToolName = toolName
 	tests := []struct {
 		currentVersion string
 		latestVersion  *version.ReleaseInformation

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import (
 	"log"
 	"os"
 
-	rootBuilder "github.com/mongodb/mongocli/internal/cli/root/mongocli"
+	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ var (
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(ctx context.Context) {
-	rootCmd := rootBuilder.Builder(&profile, os.Args[1:])
+	rootCmd := atlas.Builder(&profile, os.Args[1:])
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}

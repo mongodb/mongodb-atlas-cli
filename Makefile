@@ -14,7 +14,7 @@ INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
 
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
-ATLAS_BINARY_NAME=atlascli
+ATLAS_BINARY_NAME=atlas
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}

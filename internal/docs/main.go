@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
-	"github.com/mongodb/mongocli/internal/cli/root"
+	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mongocli := root.Builder(&profile, []string{})
+	mongocli := mongocli.Builder(&profile, []string{})
 
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464

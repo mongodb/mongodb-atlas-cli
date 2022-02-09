@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package root
+package mongocli
 
 import (
 	"bytes"

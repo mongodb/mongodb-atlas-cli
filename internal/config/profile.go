@@ -38,6 +38,7 @@ import (
 
 const (
 	ToolName                     = "mongocli"      // ToolName of the CLI
+	AtlasToolName                = "atlas"         // AtlasToolName of the atlas CLI
 	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API

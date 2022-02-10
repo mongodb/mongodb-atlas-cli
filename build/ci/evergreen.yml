@@ -41,7 +41,7 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
-        command: make build
+        command: make build-all
   "build mongocli":
     - command: subprocess.exec
       type: test

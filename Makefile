@@ -95,7 +95,10 @@ gen-docs: ## Generate docs for commands
 	go run ./internal/docs/main.go
 
 .PHONY: build
-build: build-mongocli build-atlascli ## Generate a binary for both CLIs
+build: build-mongocli ## Generate a binary for mongocli
+
+.PHONY: build-all
+build-all: build-mongocli build-atlascli ## Generate a binary for both CLIs
 
 build-mongocli: ## Generate a mongocli binary in ./bin
 	@echo "==> Building $(MCLI_BINARY_NAME) binary"

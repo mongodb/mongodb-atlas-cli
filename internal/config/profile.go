@@ -617,7 +617,8 @@ func (p *Profile) readMongoCLIConfig() string {
 		return ""
 	}
 
-	if exists, err := afero.DirExists(p.fs, configDir); !exists || err != nil {
+	exists, err := afero.DirExists(p.fs, configDir)
+	if err != nil || !exists {
 		return ""
 	}
 

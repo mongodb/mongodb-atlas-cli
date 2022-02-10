@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
-	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
+	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/spf13/cobra"
 )
 
@@ -31,25 +31,25 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func main() {
-	if err := os.RemoveAll("./docs/command"); err != nil {
+	if err := os.RemoveAll("./docs/atlascli/command"); err != nil {
 		log.Fatal(err)
 	}
 
 	var profile string
 	const docsPermissions = 0766
-	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
+	if err := os.MkdirAll("./docs/atlascli/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
-	mongocliBuilder := mongocli.Builder(&profile, []string{})
+	atlasBuilder := atlas.Builder(&profile)
 
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464
-	_, _ = mongocliBuilder.ExecuteC()
+	_, _ = atlasBuilder.ExecuteC()
 
-	setDisableAutoGenTag(mongocliBuilder)
+	setDisableAutoGenTag(atlasBuilder)
 
-	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/atlascli/command"); err != nil {
 		log.Fatal(err)
 	}
 }

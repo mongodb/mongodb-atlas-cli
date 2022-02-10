@@ -16,6 +16,7 @@ package prompt
 
 import (
 	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
@@ -105,7 +106,7 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 	return prompt
 }
 
-// NewOrgSelect create a prompt to choice the organization
+// NewOrgSelect create a prompt to choice the organization.
 func NewOrgSelect(options []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default organization:",
@@ -113,7 +114,7 @@ func NewOrgSelect(options []string) survey.Prompt {
 	}
 }
 
-// NewProjectSelect create a prompt to choice the project
+// NewProjectSelect create a prompt to choice the project.
 func NewProjectSelect(options []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Choose a default project:",

@@ -37,7 +37,7 @@ type initOpts struct {
 
 func (opts *initOpts) SetUpAccess() {
 	opts.Service = config.CloudService
-	if opts.gov{
+	if opts.gov {
 		opts.Service = config.CloudGovService
 	}
 

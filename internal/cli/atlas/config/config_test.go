@@ -14,12 +14,12 @@
 //go:build unit
 // +build unit
 
-
 package config
 
 import (
-	"github.com/mongodb/mongocli/internal/test"
 	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

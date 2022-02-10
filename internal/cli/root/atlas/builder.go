@@ -83,6 +83,10 @@ func Builder(profile *string) *cobra.Command {
 				return nil
 			}
 
+			if findCommand(cmd, "config") { // user wants to set credentials
+				return nil
+			}
+
 			return validate.Credentials()
 		},
 	}
@@ -155,4 +159,18 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
+}
+
+func findCommand(cobraCmd *cobra.Command, toFind string) bool {
+	cmd := cobraCmd
+	for {
+		if cmd == nil {
+			return false
+		}
+
+		if cmd.Name() == toFind {
+			return true
+		}
+		cmd = cmd.Parent()
+	}
 }

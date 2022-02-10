@@ -37,7 +37,6 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
 const (
-	ToolName                     = "mongocli"      // ToolName of the CLI
 	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
@@ -65,6 +64,7 @@ const (
 	skipUpdateCheck              = "skip_update_check"
 )
 
+var ToolName = "mongocli"
 var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 type Setter interface {

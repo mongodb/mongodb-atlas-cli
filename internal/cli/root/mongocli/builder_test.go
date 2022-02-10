@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Copyright 2021 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,11 +14,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-//go:build unit
-// +build unit
-
-package root
+package mongocli
 
 import (
 	"bytes"
@@ -24,6 +23,7 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
 )
@@ -175,11 +175,11 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 			want := ""
 			if tt.wantPrint {
 				want = fmt.Sprintf(`
-A new version of mongocli is available '%v'!
+A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
 
 To disable this alert, run "mongocli config set skip_update_check true".
-`, tt.latestVersion.Version)
+`, config.ToolName, tt.latestVersion.Version)
 			}
 
 			if got := bufOut.String(); got != want {

@@ -53,6 +53,10 @@ Enter [?] on any option to get help.
 
 `, atlas)
 
+	q := prompt.AccessQuestions(false)
+	if err := survey.Ask(q, opts); err != nil {
+		return err
+	}
 	opts.SetUpAccess()
 
 	if err := opts.InitStore(ctx); err != nil {

@@ -42,9 +42,6 @@ func (opts *initOpts) SetUpAccess() {
 	}
 
 	opts.SetUpServiceAndKeys()
-	if opts.OpsManagerURL != "" {
-		config.SetOpsManagerURL(opts.OpsManagerURL)
-	}
 }
 
 func (opts *initOpts) Run(ctx context.Context) error {
@@ -99,7 +96,7 @@ Enter [?] on any option to get help.
 func InitBuilder() *cobra.Command {
 	opts := &initOpts{}
 	cmd := &cobra.Command{
-		Use:   "config",
+		Use:   "init",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
 		Example: `
   To configure the tool to work with Atlas

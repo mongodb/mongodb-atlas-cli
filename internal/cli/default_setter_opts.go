@@ -84,7 +84,7 @@ func (opts *DefaultSetterOpts) Projects() (pMap map[string]string, pSlice []stri
 func (opts *DefaultSetterOpts) Orgs() (oMap map[string]string, oSlice []string, err error) {
 	includeDeleted := false
 	orgs, err := opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted})
-	if orgs.TotalCount > len(orgs.Results) {
+	if orgs != nil && orgs.TotalCount > len(orgs.Results) {
 		orgs, err = opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, ListOptions: atlas.ListOptions{ItemsPerPage: orgs.TotalCount}})
 	}
 	if err != nil {

@@ -41,7 +41,27 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
-        command: make build
+        command: make build-all
+  "build mongocli":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        command: make build-mongocli
+  "build atlascli":
+    - command: subprocess.exec
+      type: test
+      params:
+        add_to_path:
+          - ${go_bin}
+        working_dir: src/github.com/mongodb/mongocli
+        env:
+          <<: *go_options
+        command: make build-atlascli
   "unit-test":
     - command: subprocess.exec
       type: test
@@ -1086,7 +1106,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "set-up cloud manager"
@@ -1108,7 +1128,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "set-up cloud manager"
@@ -1127,7 +1147,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1147,7 +1167,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1167,7 +1187,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1188,7 +1208,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1208,7 +1228,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1228,7 +1248,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1248,7 +1268,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -1269,7 +1289,7 @@ tasks:
     commands:
       - func: "clone"
       - func: "install gotestsum"
-      - func: "build"
+      - func: "build mongocli"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"

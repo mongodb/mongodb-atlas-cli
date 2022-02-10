@@ -10,12 +10,13 @@ MCLI_BINARY_NAME=mongocli
 MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
-INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
+MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
 
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
+ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME)
@@ -94,19 +95,30 @@ gen-docs: ## Generate docs for commands
 	go run ./internal/docs/main.go
 
 .PHONY: build
-build: ## Generate a binary in ./bin
+build: build-mongocli ## Generate a binary for mongocli
+
+.PHONY: build-all
+build-all: build-mongocli build-atlascli ## Generate a binary for both CLIs
+
+build-mongocli: ## Generate a mongocli binary in ./bin
 	@echo "==> Building $(MCLI_BINARY_NAME) binary"
 	go build -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
 
 .PHONY: build-atlascli
-build-atlascli: ## Generate a binary in ./bin
+build-atlascli: ## Generate a atlascli binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
 	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
-build-debug: ## Generate a binary in ./bin for debugging
+build-debug: build-mongocli-debug build-atlascli-debug ## Generate binaries in ./bin for debugging both CLIs
+
+build-mongocli-debug: ## Generate a binary in ./bin for debugging mongocli
 	@echo "==> Building $(MCLI_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
+
+build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
+	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
@@ -125,9 +137,16 @@ unit-test: ## Run unit-tests
 	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./internal...
 
 .PHONY: install
-install: ## Install a binary in $GOPATH/bin
-	@echo "==> Installing $(MCLI_BINARY_NAME) to $(INSTALL_PATH)"
+install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs
+
+install-mongocli: ## Install mongocli binary in $GOPATH/bin
+	@echo "==> Installing $(MCLI_BINARY_NAME) to $(MCLI_INSTALL_PATH)"
 	go install -ldflags "$(MCLI_LINKER_FLAGS)" $(MCLI_SOURCE_FILES)
+	@echo "==> Done..."
+
+install-atlascli: ## Install atlascli binary in $GOPATH/bin
+	@echo "==> Installing $(ATLAS_BINARY_NAME) to $(ATLAS_INSTALL_PATH)"
+	go install -ldflags "$(ATLAS_LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)
 	@echo "==> Done..."
 
 .PHONY: list

@@ -17,6 +17,7 @@ package atlas
 import (
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -83,7 +84,11 @@ func Builder(profile *string) *cobra.Command {
 				return nil
 			}
 
-			if findCommand(cmd, "config") { // user wants to set credentials
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+				return nil
+			}
+
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
 				return nil
 			}
 
@@ -159,18 +164,4 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
-}
-
-func findCommand(cobraCmd *cobra.Command, toFind string) bool {
-	cmd := cobraCmd
-	for {
-		if cmd == nil {
-			return false
-		}
-
-		if cmd.Name() == toFind {
-			return true
-		}
-		cmd = cmd.Parent()
-	}
 }

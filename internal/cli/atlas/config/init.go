@@ -112,9 +112,6 @@ func InitBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
-		Annotations: map[string]string{
-			"toc": "true",
-		},
 		Args: require.NoArgs,
 	}
 	cmd.Flags().BoolVar(&opts.gov, flag.Gov, false, usage.Gov)

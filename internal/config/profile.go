@@ -17,6 +17,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -62,9 +63,10 @@ const (
 	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm                   = 0600
 	skipUpdateCheck              = "skip_update_check"
+	mongoCLI                     = "mongocli"
 )
 
-var ToolName = "mongocli"
+var ToolName = mongoCLI
 var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 type Setter interface {
@@ -151,7 +153,7 @@ func Exists(name string) bool {
 }
 
 func newProfile() *Profile {
-	configDir, err := configHome()
+	configDir, err := configHome(ToolName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -546,7 +548,11 @@ func (p *Profile) Load(readEnvironmentVars bool) error {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		// ignore if it doesn't exists
+		// we use mongocli.toml to generate atlasCLI config
+		if p.copyMongoCLIConfig() {
+			return nil
+		}
+		// ignore if it doesn't exist
 		var e viper.ConfigFileNotFoundError
 		if errors.As(err, &e) {
 			return nil
@@ -573,7 +579,58 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-func configHome() (string, error) {
+func (p *Profile) copyMongoCLIConfig() bool {
+	if ToolName == mongoCLI {
+		return false
+	}
+
+	oldConfigPath := p.readMongoCLIConfig()
+	if oldConfigPath == "" {
+		return false
+	}
+
+	in, err := os.Open(oldConfigPath)
+	if err != nil {
+		return false
+	}
+	defer in.Close()
+
+	newConfigPath := fmt.Sprintf("%s/%s", p.configDir, p.Filename())
+	out, err := os.Create(newConfigPath)
+	if err != nil {
+		return false
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return false
+	}
+
+	_, _ = fmt.Fprintf(os.Stderr, "we have found mongocli.toml at %s, we have used it to create %s", oldConfigPath, newConfigPath)
+	return true
+}
+
+func (p *Profile) readMongoCLIConfig() string {
+	configDir, err := configHome(mongoCLI)
+	if err != nil {
+		return ""
+	}
+
+	if exists, err := afero.DirExists(p.fs, configDir); !exists || err != nil {
+		return ""
+	}
+
+	configPath := fmt.Sprintf("%s/%s", configDir, p.Filename())
+	_, err = p.fs.Stat(configPath)
+	if err != nil {
+		return ""
+	}
+
+	return configPath
+}
+
+func configHome(toolName string) (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
@@ -583,5 +640,10 @@ func configHome() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/.config", home), nil
+	configHome := fmt.Sprintf("%s/.config/%s", home, ToolName)
+	if toolName == mongoCLI {
+		return fmt.Sprintf("%s/.config", home), nil
+	}
+
+	return configHome, nil
 }

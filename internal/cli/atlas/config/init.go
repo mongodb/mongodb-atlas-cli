@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,31 +28,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type opts struct {
+const atlas = "atlas"
+
+type initOpts struct {
 	cli.ConfigOpts
-	OpsManagerURL string
+	gov bool
 }
 
-func (opts *opts) SetUpAccess() {
+func (opts *initOpts) SetUpAccess() {
+	opts.Service = config.CloudService
+	if opts.gov{
+		opts.Service = config.CloudGovService
+	}
+
 	opts.SetUpServiceAndKeys()
 	if opts.OpsManagerURL != "" {
 		config.SetOpsManagerURL(opts.OpsManagerURL)
 	}
 }
 
-func (opts *opts) Run(ctx context.Context) error {
+func (opts *initOpts) Run(ctx context.Context) error {
 	fmt.Printf(`You are configuring a profile for %s.
 
-All values are optional and you can use environment variables (MCLI_*) instead.
+All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
 
 Enter [?] on any option to get help.
 
-`, config.ToolName)
+`, atlas)
 
-	q := prompt.AccessQuestions(opts.IsOpsManager())
-	if err := survey.Ask(q, opts); err != nil {
-		return err
-	}
 	opts.SetUpAccess()
 
 	if err := opts.InitStore(ctx); err != nil {
@@ -67,7 +70,7 @@ Enter [?] on any option to get help.
 			return err
 		}
 	} else {
-		q = prompt.TenantQuestions()
+		q := prompt.TenantQuestions()
 		if err := survey.Ask(q, opts); err != nil {
 			return err
 		}
@@ -89,33 +92,21 @@ Enter [?] on any option to get help.
 	if config.Name() != config.DefaultProfile {
 		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", atlas)
 	return nil
 }
 
-func Builder() *cobra.Command {
-	opts := &opts{}
+func InitBuilder() *cobra.Command {
+	opts := &initOpts{}
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
-		Long: `Configure settings in a user profile.
-All settings are optional. You can specify settings individually by running: 
-$ mongocli config set --help 
-
-You can also use environment variables (MCLI_*) when running the tool.
-To find out more, see the documentation: https://docs.mongodb.com/mongocli/stable/configure/environment-variables/.`,
 		Example: `
   To configure the tool to work with Atlas
-  $ mongocli config
+  $ atlas config init
 
   To configure the tool to work with Atlas for Government
-  $ mongocli config --service cloudgov
-  
-  To configure the tool to work with Cloud Manager
-  $ mongocli config --service cloud-manager
-
-  To configure the tool to work with Ops Manager
-  $ mongocli config --service ops-manager
+  $ atlas config init --gov
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
@@ -125,14 +116,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		},
 		Args: require.NoArgs,
 	}
-	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
-	cmd.AddCommand(
-		SetBuilder(),
-		ListBuilder(),
-		DescribeBuilder(),
-		RenameBuilder(),
-		DeleteBuilder(),
-	)
+	cmd.Flags().BoolVar(&opts.gov, flag.Gov, false, usage.Gov)
 
 	return cmd
 }

@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	atlasConfig "github.com/mongodb/mongocli/internal/cli/atlas/config"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
@@ -40,7 +41,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongocli/internal/cli/auth"
-	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
@@ -97,7 +97,7 @@ func Builder(profile *string) *cobra.Command {
 	whoCmd.Hidden = true
 
 	rootCmd.AddCommand(
-		cliconfig.Builder(),
+		atlasConfig.Builder(),
 		auth.Builder(),
 		quickstart.Builder(),
 		projects.Builder(),

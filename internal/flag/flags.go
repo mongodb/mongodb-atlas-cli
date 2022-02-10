@@ -269,4 +269,5 @@ const (
 	LinkToken                                = "linkToken"                       // LinkToken flag
 	WithoutDefaultAlertSettings              = "withoutDefaultAlertSettings"     // WithoutDefaultAlertSettings flag
 	CurrentIP                                = "currentIp"                       // CurrentIP flag
+	Gov                                      = "gov"                             // Gov flag
 )

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package config
+package prompt
 
 import (
+	"fmt"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/validate"
 )
 
-func newOMURLInput() survey.Prompt {
+func NewOMURLInput() survey.Prompt {
 	return &survey.Input{
 		Message: "URL to Access Ops Manager:",
 		Help:    "FQDN and port number of the Ops Manager Application.",
@@ -28,7 +30,7 @@ func newOMURLInput() survey.Prompt {
 	}
 }
 
-func newOrgIDInput() survey.Prompt {
+func NewOrgIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Org ID:",
 		Help:    "ID of an existing organization that your API keys have access to. If you don't enter an ID, you must use --orgId for every command that requires it.",
@@ -36,7 +38,7 @@ func newOrgIDInput() survey.Prompt {
 	}
 }
 
-func newProjectIDInput() survey.Prompt {
+func NewProjectIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Project ID:",
 		Help:    "ID of an existing project that your API keys have access to. If you don't enter an ID, you must use --projectId for every command that requires it.",
@@ -44,7 +46,7 @@ func newProjectIDInput() survey.Prompt {
 	}
 }
 
-func accessQuestions(isOM bool) []*survey.Question {
+func AccessQuestions(isOM bool) []*survey.Question {
 	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
 	if isOM {
 		helpLink = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
@@ -71,7 +73,7 @@ func accessQuestions(isOM bool) []*survey.Question {
 		omQuestions := []*survey.Question{
 			{
 				Name:     "opsManagerURL",
-				Prompt:   newOMURLInput(),
+				Prompt:   NewOMURLInput(),
 				Validate: validate.OptionalURL,
 			},
 		}
@@ -80,18 +82,42 @@ func accessQuestions(isOM bool) []*survey.Question {
 	return q
 }
 
-func tenantQuestions() []*survey.Question {
+func TenantQuestions() []*survey.Question {
 	q := []*survey.Question{
 		{
 			Name:     "projectId",
-			Prompt:   newProjectIDInput(),
+			Prompt:   NewProjectIDInput(),
 			Validate: validate.OptionalObjectID,
 		},
 		{
 			Name:     "orgId",
-			Prompt:   newOrgIDInput(),
+			Prompt:   NewOrgIDInput(),
 			Validate: validate.OptionalObjectID,
 		},
 	}
 	return q
+}
+
+// NewProfileReplaceConfirm creates a prompt to confirm if an existing profile should be replaced.
+func NewProfileReplaceConfirm(entry string) survey.Prompt {
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("There is already a profile called %s.\nDo you want to replace it?", entry),
+	}
+	return prompt
+}
+
+// NewOrgSelect create a prompt to choice the organization.
+func NewOrgSelect(options []string) survey.Prompt {
+	return &survey.Select{
+		Message: "Choose a default organization:",
+		Options: options,
+	}
+}
+
+// NewProjectSelect create a prompt to choice the project.
+func NewProjectSelect(options []string) survey.Prompt {
+	return &survey.Select{
+		Message: "Choose a default project:",
+		Options: options,
+	}
 }

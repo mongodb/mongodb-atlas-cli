@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,27 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//go:build unit
+// +build unit
 
-package prompt
+package config
 
 import (
-	"fmt"
+	"testing"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted.
-func NewDeleteConfirm(entry string) survey.Prompt {
-	prompt := &survey.Confirm{
-		Message: fmt.Sprintf("Are you sure you want to delete: %s", entry),
-	}
-	return prompt
-}
-
-// NewConfirm creates a prompt to confirm if the entry should be deleted.
-func NewConfirm(message string) survey.Prompt {
-	prompt := &survey.Confirm{
-		Message: message,
-	}
-	return prompt
+func TestInitBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		InitBuilder(),
+		0,
+		[]string{flag.Gov},
+	)
 }

@@ -17,6 +17,7 @@ package atlas
 import (
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -24,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongocli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongocli/internal/cli/atlas/clusters"
+	atlasConfig "github.com/mongodb/mongocli/internal/cli/atlas/config"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongocli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongocli/internal/cli/atlas/datalake"
@@ -40,7 +42,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongocli/internal/cli/auth"
-	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
@@ -83,6 +84,14 @@ func Builder(profile *string) *cobra.Command {
 				return nil
 			}
 
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+				return nil
+			}
+
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
+				return nil
+			}
+
 			return validate.Credentials()
 		},
 	}
@@ -97,7 +106,7 @@ func Builder(profile *string) *cobra.Command {
 	whoCmd.Hidden = true
 
 	rootCmd.AddCommand(
-		cliconfig.Builder(),
+		atlasConfig.Builder(),
 		auth.Builder(),
 		quickstart.Builder(),
 		projects.Builder(),

@@ -103,10 +103,15 @@ func Credentials() error {
 	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
 		return nil
 	}
+
+	toolName := config.ToolName
+	if toolName == "atlascli" {
+		toolName = "atlas"
+	}
 	return fmt.Errorf(
 		"%w\n\nTo set credentials, run: %s %s",
 		ErrMissingCredentials,
-		config.ToolName,
+		toolName,
 		"config",
 	)
 }

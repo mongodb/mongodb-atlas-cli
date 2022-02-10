@@ -27,7 +27,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
@@ -65,7 +64,8 @@ const (
 	skipUpdateCheck              = "skip_update_check"
 )
 
-var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", toolname.ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+var ToolName = "mongocli"
+var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 
 type Setter interface {
 	Set(string, interface{})
@@ -490,7 +490,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, toolname.ToolName+".toml")
+	return filepath.Join(p.configDir, ToolName+".toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -531,7 +531,7 @@ func (p *Profile) Rename(newProfileName string) error {
 func Load() error { return p.Load(true) }
 func (p *Profile) Load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
-	viper.SetConfigName(toolname.ToolName)
+	viper.SetConfigName(ToolName)
 	viper.SetConfigPermissions(configPerm)
 	viper.AddConfigPath(p.configDir)
 	viper.SetFs(p.fs)

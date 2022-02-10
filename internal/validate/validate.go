@@ -25,7 +25,6 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/toolname"
 )
 
 const minPasswordLength = 10
@@ -107,7 +106,7 @@ func Credentials() error {
 	return fmt.Errorf(
 		"%w\n\nTo set credentials, run: %s %s",
 		ErrMissingCredentials,
-		toolname.ToolName,
+		config.ToolName,
 		"config",
 	)
 }

@@ -51,20 +51,22 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
 
+const atlas = "atlas"
+
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
-		Use:     toolname.ToolName,
+		Use:     atlas,
+		Aliases: []string{config.ToolName},
 		Short:   "CLI tool to manage MongoDB Atlas",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", toolname.ToolName),
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", atlas),
 		Example: `
   Display the help menu for the config command
   $ atlas config --help`,
@@ -146,7 +148,7 @@ Go version: %s
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
-		toolname.ToolName,
+		config.ToolName,
 		version.Version,
 		version.GitCommit,
 		runtime.Version(),

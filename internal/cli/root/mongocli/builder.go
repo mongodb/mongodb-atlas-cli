@@ -35,7 +35,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/toolname"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
@@ -51,9 +50,9 @@ type BuilderOpts struct {
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Version: version.Version,
-		Use:     toolname.ToolName,
+		Use:     config.ToolName,
 		Short:   "CLI tool to manage your MongoDB Cloud",
-		Long:    fmt.Sprintf("Use %s command help for information on a specific command", toolname.ToolName),
+		Long:    fmt.Sprintf("Use %s command help for information on a specific command", config.ToolName),
 		Example: `
   Display the help menu for the config command
   $ mongocli config --help`,
@@ -124,7 +123,7 @@ Go version: %s
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
-		toolname.ToolName,
+		config.ToolName,
 		version.Version,
 		version.GitCommit,
 		runtime.Version(),
@@ -186,7 +185,7 @@ func isHomebrew() bool {
 }
 
 func homebrewFormulaPath() (string, error) {
-	formula := toolname.ToolName
+	formula := config.ToolName
 	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
 	if err != nil {
 		return "", err
@@ -239,7 +238,7 @@ A new version of %s is available '%s'!
 
 To disable this alert, run "mongocli config set skip_update_check true".
 `
-		_, err = fmt.Fprintf(w, newVersionTemplate, toolname.ToolName, latestVersion, upgradeInstructions)
+		_, err = fmt.Fprintf(w, newVersionTemplate, config.ToolName, latestVersion, upgradeInstructions)
 		return err
 	}
 	return nil

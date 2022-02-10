@@ -18,8 +18,8 @@ ATLAS_BINARY_NAME=atlas
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
-MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/toolname.ToolName=$(MCLI_BINARY_NAME)
-ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/toolname.ToolName=$(ATLAS_BINARY_NAME)
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME)
+ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli
 
 
 DEBUG_FLAGS=all=-N -l

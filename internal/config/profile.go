@@ -62,6 +62,7 @@ const (
 	output                       = "output"
 	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm                   = 0600
+	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
 	mongoCLI                     = "mongocli"
 )
@@ -550,7 +551,7 @@ func (p *Profile) Load(readEnvironmentVars bool) error {
 	if err := viper.ReadInConfig(); err != nil {
 		// we use mongocli.toml to generate atlasCLI config
 		if p.copyMongoCLIConfig() {
-			return nil
+			return p.Load(false)
 		}
 		// ignore if it doesn't exist
 		var e viper.ConfigFileNotFoundError
@@ -570,7 +571,6 @@ func (p *Profile) Save() error {
 		return err
 	}
 	if !exists {
-		const defaultPermissions = 0700
 		if err := p.fs.MkdirAll(p.configDir, defaultPermissions); err != nil {
 			return err
 		}
@@ -595,7 +595,11 @@ func (p *Profile) copyMongoCLIConfig() bool {
 	}
 	defer in.Close()
 
-	newConfigPath := fmt.Sprintf("%s/%s", p.configDir, p.Filename())
+	newConfigPath := p.Filename()
+	if err = p.fs.MkdirAll(p.configDir, defaultPermissions); err != nil {
+		return false
+	}
+
 	out, err := os.Create(newConfigPath)
 	if err != nil {
 		return false
@@ -607,7 +611,9 @@ func (p *Profile) copyMongoCLIConfig() bool {
 		return false
 	}
 
-	_, _ = fmt.Fprintf(os.Stderr, "we have found mongocli.toml at %s, we have used it to create %s", oldConfigPath, newConfigPath)
+	_, _ = fmt.Fprintf(os.Stderr, `we have used %s to generate %s
+
+`, oldConfigPath, newConfigPath)
 	return true
 }
 
@@ -622,7 +628,7 @@ func (p *Profile) readMongoCLIConfig() string {
 		return ""
 	}
 
-	configPath := fmt.Sprintf("%s/%s", configDir, p.Filename())
+	configPath := fmt.Sprintf("%s/mongocli.toml", configDir)
 	_, err = p.fs.Stat(configPath)
 	if err != nil {
 		return ""

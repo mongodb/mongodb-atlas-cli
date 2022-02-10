@@ -12,7 +12,7 @@ mongocli ops-manager
    :depth: 1
    :class: singlecol
 
-Ops Manager operations.
+MongoDB Ops Manager operations.
 
 Options
 -------

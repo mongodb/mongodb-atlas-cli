@@ -15,6 +15,7 @@
 package atlas
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
@@ -48,10 +49,17 @@ const (
 )
 
 func Builder() *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
 		Use:   Use,
-		Short: "Atlas operations.",
+		Short: "MongoDB Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.InitFlow(); err != nil {
+				return err
+			}
+			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+				return err
+			}
 			if config.Service() == "" {
 				config.SetService(config.CloudService)
 			}

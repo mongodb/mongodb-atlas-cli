@@ -15,6 +15,7 @@
 package iam
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
@@ -27,9 +28,16 @@ import (
 )
 
 func Builder() *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
 		Use: "iam",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.InitFlow(); err != nil {
+				return err
+			}
+			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+				return err
+			}
 			if config.Service() == "" {
 				config.SetService(config.CloudService)
 			}

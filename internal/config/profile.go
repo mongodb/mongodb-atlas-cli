@@ -603,10 +603,9 @@ func configHome(toolName string) (string, error) {
 		return "", err
 	}
 
-	configHome := fmt.Sprintf("%s/.config/%s", home, ToolName)
 	if toolName == mongoCLI {
 		return fmt.Sprintf("%s/.config", home), nil
 	}
 
-	return configHome, nil
+	return fmt.Sprintf("%s/.config/%s", home, ToolName), nil
 }

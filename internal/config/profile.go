@@ -160,7 +160,7 @@ func Exists(name string) bool {
 }
 
 func newProfile() *Profile {
-	configDir, err := mongoCLIConfigHome()
+	configDir, err := MongoCLIConfigHome()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -173,7 +173,7 @@ func newProfile() *Profile {
 }
 
 func newAtlasProfile() *Profile {
-	configDir, err := atlasCLIConfigHome()
+	configDir, err := AtlasCLIConfigHome()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -597,8 +597,7 @@ func (p *Profile) Save() error {
 }
 
 // MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
-func MongoCLIConfigHome() (string, error) { return mongoCLIConfigHome() }
-func mongoCLIConfigHome() (string, error) {
+func MongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
@@ -613,8 +612,7 @@ func mongoCLIConfigHome() (string, error) {
 }
 
 // AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
-func AtlasCLIConfigHome() (string, error) { return atlasCLIConfigHome() }
-func atlasCLIConfigHome() (string, error) {
+func AtlasCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}

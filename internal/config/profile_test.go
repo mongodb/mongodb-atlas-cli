@@ -59,7 +59,6 @@ func TestConfig_AtlasCLIConfigHome(t *testing.T) {
 		}
 	})
 	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		ToolName = "atlascli"
 		home, err := AtlasCLIConfigHome()
 		if err != nil {
 			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)

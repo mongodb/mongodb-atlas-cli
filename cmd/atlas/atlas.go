@@ -46,7 +46,8 @@ func Execute(ctx context.Context) {
 func initConfig() {
 	if err := config.Load(); err != nil {
 		// we use mongocli.toml to generate atlasCLI config
-		if !createConfigFromMongoCLIConfig(err) {
+		var e viper.ConfigFileNotFoundError
+		if !errors.As(err, &e) || !createConfigFromMongoCLIConfig() { // search mongoCLI config only if atlasCLI config doesn't exist
 			printError(err)
 		} else if err := config.Load(); err != nil {
 			printError(err)
@@ -63,14 +64,8 @@ func initConfig() {
 }
 
 // createConfigFromMongoCLIConfig creates atlasCLI config file from mongoCLI config file.
-func createConfigFromMongoCLIConfig(err error) bool {
-	// search mongoCLI config only if atlasCLI config doesn't exist
-	var e viper.ConfigFileNotFoundError
-	if !errors.As(err, &e) {
-		return false
-	}
-
-	mongoCLIConfigPath := config.ReadMongoCLIConfig()
+func createConfigFromMongoCLIConfig() bool {
+	mongoCLIConfigPath := mongoCLIConfigPath()
 	if mongoCLIConfigPath == "" {
 		return false
 	}
@@ -128,6 +123,21 @@ func printError(err error) {
 	if !errors.As(err, &e) {
 		log.Fatalf("Error loading config: %v", err)
 	}
+}
+
+func mongoCLIConfigPath() string {
+	configDir, err := config.ConfigurationHomePath("mongocli")
+	if err != nil {
+		return ""
+	}
+
+	configPath := fmt.Sprintf("%s/mongocli.toml", configDir)
+	_, err = os.Stat(configPath)
+	if err != nil {
+		return ""
+	}
+
+	return configPath
 }
 
 func main() {

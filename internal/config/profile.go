@@ -569,28 +569,6 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-// ReadMongoCLIConfig retrieves mongoCLI configuration.
-func ReadMongoCLIConfig() string { return p.readMongoCLIConfig() }
-func (p *Profile) readMongoCLIConfig() string {
-	configDir, err := configHome(mongoCLI)
-	if err != nil {
-		return ""
-	}
-
-	exists, err := afero.DirExists(p.fs, configDir)
-	if err != nil || !exists {
-		return ""
-	}
-
-	configPath := fmt.Sprintf("%s/mongocli.toml", configDir)
-	_, err = p.fs.Stat(configPath)
-	if err != nil {
-		return ""
-	}
-
-	return configPath
-}
-
 // ConfigurationHomePath retrieves configHome path based on the toolName.
 func ConfigurationHomePath(toolName string) (string, error) { return configHome(toolName) }
 func configHome(toolName string) (string, error) {

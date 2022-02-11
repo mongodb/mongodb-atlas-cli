@@ -22,12 +22,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/spf13/viper"
-
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (

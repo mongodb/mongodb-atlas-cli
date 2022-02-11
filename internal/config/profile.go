@@ -624,5 +624,5 @@ func atlasCLIConfigHome() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s/.config/%s", home, "atlascli"), nil
+	return fmt.Sprintf("%s/.config/%s", home, ToolName), nil
 }

@@ -116,7 +116,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

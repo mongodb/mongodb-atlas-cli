@@ -42,7 +42,7 @@ func Execute(ctx context.Context) {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if err := config.Load(); err != nil {
+	if err := config.LoadMongoCLIConfig(); err != nil {
 		// ignore if config doesn't exist
 		var e viper.ConfigFileNotFoundError
 		if !errors.As(err, &e) {

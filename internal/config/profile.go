@@ -125,10 +125,14 @@ func IsTrue(s string) bool {
 	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
 }
 
-var p = newProfile()
+var defaultProfile = newProfile()
+var atlasProfile = newAtlasProfile()
 
 func Default() *Profile {
-	return p
+	if ToolName == mongoCLI {
+		return defaultProfile
+	}
+	return atlasProfile
 }
 
 // List returns the names of available profiles.
@@ -152,7 +156,7 @@ func Exists(name string) bool {
 }
 
 func newProfile() *Profile {
-	configDir, err := configHome(ToolName)
+	configDir, err := mongoCLIConfigHome()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -164,17 +168,30 @@ func newProfile() *Profile {
 	return np
 }
 
-func Name() string { return p.Name() }
+func newAtlasProfile() *Profile {
+	configDir, err := atlasCLIConfigHome()
+	if err != nil {
+		log.Fatal(err)
+	}
+	np := &Profile{
+		name:      DefaultProfile,
+		configDir: configDir,
+		fs:        afero.NewOsFs(),
+	}
+	return np
+}
+
+func Name() string { return Default().Name() }
 func (p *Profile) Name() string {
 	return p.name
 }
 
-func SetName(name string) { p.SetName(name) }
+func SetName(name string) { Default().SetName(name) }
 func (p *Profile) SetName(name string) {
 	p.name = strings.ToLower(name)
 }
 
-func Set(name string, value interface{}) { p.Set(name, value) }
+func Set(name string, value interface{}) { Default().Set(name, value) }
 func (p *Profile) Set(name string, value interface{}) {
 	settings := viper.GetStringMap(p.Name())
 	settings[name] = value
@@ -186,7 +203,7 @@ func (p *Profile) SetGlobal(name string, value interface{}) {
 	SetGlobal(name, value)
 }
 
-func Get(name string) interface{} { return p.Get(name) }
+func Get(name string) interface{} { return Default().Get(name) }
 func (p *Profile) Get(name string) interface{} {
 	if viper.IsSet(name) && viper.Get(name) != "" {
 		return viper.Get(name)
@@ -195,7 +212,7 @@ func (p *Profile) Get(name string) interface{} {
 	return settings[name]
 }
 
-func GetString(name string) string { return p.GetString(name) }
+func GetString(name string) string { return Default().GetString(name) }
 func (p *Profile) GetString(name string) string {
 	value := p.Get(name)
 	if value == nil {
@@ -204,7 +221,7 @@ func (p *Profile) GetString(name string) string {
 	return value.(string)
 }
 
-func GetBool(name string) bool { return p.GetBool(name) }
+func GetBool(name string) bool { return Default().GetBool(name) }
 func (p *Profile) GetBool(name string) bool {
 	value := p.Get(name)
 	switch v := value.(type) {
@@ -218,7 +235,7 @@ func (p *Profile) GetBool(name string) bool {
 }
 
 // Service get configured service.
-func Service() string { return p.Service() }
+func Service() string { return Default().Service() }
 func (p *Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
@@ -228,65 +245,66 @@ func (p *Profile) Service() string {
 }
 
 func IsCloud() bool {
-	return p.Service() == "" || p.Service() == CloudService || p.Service() == CloudGovService
+	profile := Default()
+	return profile.Service() == "" || profile.Service() == CloudService || profile.Service() == CloudGovService
 }
 
 // SetService set configured service.
-func SetService(v string) { p.SetService(v) }
+func SetService(v string) { Default().SetService(v) }
 func (p *Profile) SetService(v string) {
 	p.Set(service, v)
 }
 
 // PublicAPIKey get configured public api key.
-func PublicAPIKey() string { return p.PublicAPIKey() }
+func PublicAPIKey() string { return Default().PublicAPIKey() }
 func (p *Profile) PublicAPIKey() string {
 	return p.GetString(publicAPIKey)
 }
 
 // SetPublicAPIKey set configured publicAPIKey.
-func SetPublicAPIKey(v string) { p.SetPublicAPIKey(v) }
+func SetPublicAPIKey(v string) { Default().SetPublicAPIKey(v) }
 func (p *Profile) SetPublicAPIKey(v string) {
 	p.Set(publicAPIKey, v)
 }
 
 // PrivateAPIKey get configured private api key.
-func PrivateAPIKey() string { return p.PrivateAPIKey() }
+func PrivateAPIKey() string { return Default().PrivateAPIKey() }
 func (p *Profile) PrivateAPIKey() string {
 	return p.GetString(privateAPIKey)
 }
 
 // SetPrivateAPIKey set configured private api key.
-func SetPrivateAPIKey(v string) { p.SetPrivateAPIKey(v) }
+func SetPrivateAPIKey(v string) { Default().SetPrivateAPIKey(v) }
 func (p *Profile) SetPrivateAPIKey(v string) {
 	p.Set(privateAPIKey, v)
 }
 
 // AccessToken get configured access token.
-func AccessToken() string { return p.AccessToken() }
+func AccessToken() string { return Default().AccessToken() }
 func (p *Profile) AccessToken() string {
 	return p.GetString(accessToken)
 }
 
 // SetAccessToken set configured access token.
-func SetAccessToken(v string) { p.SetAccessToken(v) }
+func SetAccessToken(v string) { Default().SetAccessToken(v) }
 func (p *Profile) SetAccessToken(v string) {
 	p.Set(accessToken, v)
 }
 
 // RefreshToken get configured refresh token.
-func RefreshToken() string { return p.RefreshToken() }
+func RefreshToken() string { return Default().RefreshToken() }
 func (p *Profile) RefreshToken() string {
 	return p.GetString(refreshToken)
 }
 
 // SetRefreshToken set configured refresh token.
-func SetRefreshToken(v string) { p.SetRefreshToken(v) }
+func SetRefreshToken(v string) { Default().SetRefreshToken(v) }
 func (p *Profile) SetRefreshToken(v string) {
 	p.Set(refreshToken, v)
 }
 
 // Token gets configured auth.Token.
-func Token() (*auth.Token, error) { return p.Token() }
+func Token() (*auth.Token, error) { return Default().Token() }
 func (p *Profile) Token() (*auth.Token, error) {
 	if p.AccessToken() == "" || p.RefreshToken() == "" {
 		return nil, nil
@@ -310,7 +328,7 @@ func (p *Profile) Token() (*auth.Token, error) {
 
 // AccessTokenSubject will return the encoded subject in a JWT.
 // This method won't verify the token signature, it's only safe to use to get the token claims.
-func AccessTokenSubject() (string, error) { return p.AccessTokenSubject() }
+func AccessTokenSubject() (string, error) { return Default().AccessTokenSubject() }
 func (p *Profile) AccessTokenSubject() (string, error) {
 	c, err := p.tokenClaims()
 	if err != nil {
@@ -327,98 +345,98 @@ func (p *Profile) tokenClaims() (jwt.RegisteredClaims, error) {
 }
 
 // OpsManagerURL get configured ops manager base url.
-func OpsManagerURL() string { return p.OpsManagerURL() }
+func OpsManagerURL() string { return Default().OpsManagerURL() }
 func (p *Profile) OpsManagerURL() string {
 	return p.GetString(opsManagerURL)
 }
 
 // SetOpsManagerURL set configured ops manager base url.
-func SetOpsManagerURL(v string) { p.SetOpsManagerURL(v) }
+func SetOpsManagerURL(v string) { Default().SetOpsManagerURL(v) }
 func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(opsManagerURL, v)
 }
 
 // OpsManagerCACertificate get configured ops manager CA certificate location.
-func OpsManagerCACertificate() string { return p.OpsManagerCACertificate() }
+func OpsManagerCACertificate() string { return Default().OpsManagerCACertificate() }
 func (p *Profile) OpsManagerCACertificate() string {
 	return p.GetString(opsManagerCACertificate)
 }
 
 // OpsManagerSkipVerify get configured if transport should skip CA verification.
-func OpsManagerSkipVerify() string { return p.OpsManagerSkipVerify() }
+func OpsManagerSkipVerify() string { return Default().OpsManagerSkipVerify() }
 func (p *Profile) OpsManagerSkipVerify() string {
 	return p.GetString(opsManagerSkipVerify)
 }
 
 // OpsManagerVersionManifestURL get configured ops manager version manifest base url.
-func OpsManagerVersionManifestURL() string { return p.OpsManagerVersionManifestURL() }
+func OpsManagerVersionManifestURL() string { return Default().OpsManagerVersionManifestURL() }
 func (p *Profile) OpsManagerVersionManifestURL() string {
 	return p.GetString(opsManagerVersionManifestURL)
 }
 
 // ProjectID get configured project ID.
-func ProjectID() string { return p.ProjectID() }
+func ProjectID() string { return Default().ProjectID() }
 func (p *Profile) ProjectID() string {
 	return p.GetString(projectID)
 }
 
 // SetProjectID sets the global project ID.
-func SetProjectID(v string) { p.SetProjectID(v) }
+func SetProjectID(v string) { Default().SetProjectID(v) }
 func (p *Profile) SetProjectID(v string) {
 	p.Set(projectID, v)
 }
 
 // OrgID get configured organization ID.
-func OrgID() string { return p.OrgID() }
+func OrgID() string { return Default().OrgID() }
 func (p *Profile) OrgID() string {
 	return p.GetString(orgID)
 }
 
 // SetOrgID sets the global organization ID.
-func SetOrgID(v string) { p.SetOrgID(v) }
+func SetOrgID(v string) { Default().SetOrgID(v) }
 func (p *Profile) SetOrgID(v string) {
 	p.Set(orgID, v)
 }
 
 // MongoShellPath get the configured MongoDB Shell path.
-func MongoShellPath() string { return p.MongoShellPath() }
+func MongoShellPath() string { return Default().MongoShellPath() }
 func (p *Profile) MongoShellPath() string {
 	return p.GetString(mongoShellPath)
 }
 
 // SetMongoShellPath sets the global MongoDB Shell path.
-func SetMongoShellPath(v string) { p.SetMongoShellPath(v) }
+func SetMongoShellPath(v string) { Default().SetMongoShellPath(v) }
 func (p *Profile) SetMongoShellPath(v string) {
 	SetGlobal(mongoShellPath, v)
 }
 
 // SkipUpdateCheck get the global skip update check.
-func SkipUpdateCheck() bool { return p.SkipUpdateCheck() }
+func SkipUpdateCheck() bool { return Default().SkipUpdateCheck() }
 func (p *Profile) SkipUpdateCheck() bool {
 	return p.GetBool(skipUpdateCheck)
 }
 
 // SetSkipUpdateCheck sets the global skip update check.
-func SetSkipUpdateCheck(v bool) { p.SetSkipUpdateCheck(v) }
+func SetSkipUpdateCheck(v bool) { Default().SetSkipUpdateCheck(v) }
 func (p *Profile) SetSkipUpdateCheck(v bool) {
 	SetGlobal(skipUpdateCheck, v)
 }
 
 // Output get configured output format.
-func Output() string { return p.Output() }
+func Output() string { return Default().Output() }
 func (p *Profile) Output() string {
 	return p.GetString(output)
 }
 
 // SetOutput sets the global output format.
-func SetOutput(v string) { p.SetOutput(v) }
+func SetOutput(v string) { Default().SetOutput(v) }
 func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
 }
 
 // IsAccessSet return true if API keys have been set up.
 // For Ops Manager we also check for the base URL.
-func IsAccessSet() bool { return p.IsAccessSet() }
+func IsAccessSet() bool { return Default().IsAccessSet() }
 func (p *Profile) IsAccessSet() bool {
 	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != ""
 	if p.Service() == OpsManagerService {
@@ -429,7 +447,7 @@ func (p *Profile) IsAccessSet() bool {
 }
 
 // Map returns a map describing the configuration.
-func Map() map[string]string { return p.Map() }
+func Map() map[string]string { return Default().Map() }
 func (p *Profile) Map() map[string]string {
 	settings := viper.GetStringMapString(p.Name())
 	profileSettings := make(map[string]string, len(settings)+1)
@@ -448,7 +466,7 @@ func (p *Profile) Map() map[string]string {
 }
 
 // SortedKeys returns the properties of the Profile sorted.
-func SortedKeys() []string { return p.SortedKeys() }
+func SortedKeys() []string { return Default().SortedKeys() }
 func (p *Profile) SortedKeys() []string {
 	config := p.Map()
 	keys := make([]string, 0, len(config))
@@ -461,7 +479,7 @@ func (p *Profile) SortedKeys() []string {
 
 // Delete deletes an existing configuration. The profiles are reloaded afterwards, as
 // this edits the file directly.
-func Delete() error { return p.Delete() }
+func Delete() error { return Default().Delete() }
 func (p *Profile) Delete() error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
@@ -495,7 +513,7 @@ func (p *Profile) Filename() string {
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
-func Rename(newProfileName string) error { return p.Rename(newProfileName) }
+func Rename(newProfileName string) error { return Default().Rename(newProfileName) }
 func (p *Profile) Rename(newProfileName string) error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
@@ -528,18 +546,23 @@ func (p *Profile) Rename(newProfileName string) error {
 	return nil
 }
 
-// Load loads the configuration from disk.
-func Load() error { return p.Load(true) }
-func (p *Profile) Load(readEnvironmentVars bool) error {
+func LoadAtlasCLIConfig() error { return Default().LoadAtlasCLIConfig(true) }
+func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
+	viper.SetConfigName("config")
+	return p.load(readEnvironmentVars)
+}
+
+func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
+func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
+	viper.SetConfigName(ToolName)
+	return p.load(readEnvironmentVars)
+}
+
+func (p *Profile) load(readEnvironmentVars bool) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigPermissions(configPerm)
 	viper.AddConfigPath(p.configDir)
 	viper.SetFs(p.fs)
-	viper.SetConfigName("config")
-
-	if ToolName == mongoCLI {
-		viper.SetConfigName(ToolName)
-	}
 
 	if readEnvironmentVars {
 		viper.SetEnvPrefix(EnvPrefix)
@@ -554,7 +577,7 @@ func (p *Profile) Load(readEnvironmentVars bool) error {
 }
 
 // Save the configuration to disk.
-func Save() error { return p.Save() }
+func Save() error { return Default().Save() }
 func (p *Profile) Save() error {
 	exists, err := afero.DirExists(p.fs, p.configDir)
 	if err != nil {
@@ -569,21 +592,33 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-// ConfigurationHomePath retrieves configHome path based on the toolName.
-func ConfigurationHomePath(toolName string) (string, error) { return configHome(toolName) }
-func configHome(toolName string) (string, error) {
+// MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
+func MongoCLIConfigHome() (string, error) { return mongoCLIConfigHome() }
+func mongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
+
 	home, err := os.UserHomeDir()
 
 	if err != nil {
 		return "", err
 	}
 
-	if toolName == mongoCLI {
-		return fmt.Sprintf("%s/.config", home), nil
+	return fmt.Sprintf("%s/.config", home), nil
+}
+
+// AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
+func AtlasCLIConfigHome() (string, error) { return atlasCLIConfigHome() }
+func atlasCLIConfigHome() (string, error) {
+	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
+		return home, nil
 	}
 
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
 	return fmt.Sprintf("%s/.config/%s", home, ToolName), nil
 }

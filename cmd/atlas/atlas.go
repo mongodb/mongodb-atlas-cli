@@ -44,12 +44,12 @@ func Execute(ctx context.Context) {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if err := config.Load(); err != nil {
+	if err := config.LoadAtlasCLIConfig(); err != nil {
 		// we use mongocli.toml to generate atlasCLI config
 		var e viper.ConfigFileNotFoundError
 		if !errors.As(err, &e) || !createConfigFromMongoCLIConfig() { // search mongoCLI config only if atlasCLI config doesn't exist
 			printError(err)
-		} else if err := config.Load(); err != nil {
+		} else if err := config.LoadAtlasCLIConfig(); err != nil {
 			printError(err)
 		}
 	}
@@ -90,7 +90,7 @@ func copyConfig(oldConfigPath string) string {
 	}
 	defer in.Close()
 
-	configHomePath, err := config.ConfigurationHomePath(config.ToolName)
+	configHomePath, err := config.AtlasCLIConfigHome()
 	if err != nil {
 		return ""
 	}
@@ -126,7 +126,7 @@ func printError(err error) {
 }
 
 func mongoCLIConfigPath() string {
-	configDir, err := config.ConfigurationHomePath("mongocli")
+	configDir, err := config.MongoCLIConfigHome()
 	if err != nil {
 		return ""
 	}

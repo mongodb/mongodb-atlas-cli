@@ -16,8 +16,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"os"
+
+	"github.com/spf13/viper"
 
 	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,7 +44,11 @@ func Execute(ctx context.Context) {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if err := config.Load(); err != nil {
-		log.Fatalf("Error loading config: %v", err)
+		// ignore if config doesn't exist
+		var e viper.ConfigFileNotFoundError
+		if !errors.As(err, &e) {
+			log.Fatalf("Error loading config: %v", err)
+		}
 	}
 
 	if profile != "" {

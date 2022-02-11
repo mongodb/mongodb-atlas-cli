@@ -16,8 +16,13 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"io"
 	"log"
 	"os"
+
+	"github.com/spf13/viper"
 
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/mongodb/mongocli/internal/config"
@@ -41,7 +46,12 @@ func Execute(ctx context.Context) {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if err := config.Load(); err != nil {
-		log.Fatalf("Error loading config: %v", err)
+		// we use mongocli.toml to generate atlasCLI config
+		if !createConfigFromMongoCLIConfig(err) {
+			printError(err)
+		} else if err := config.Load(); err != nil {
+			printError(err)
+		}
 	}
 
 	if profile != "" {
@@ -50,6 +60,74 @@ func initConfig() {
 		config.SetName(profile)
 	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
 		config.SetName(availableProfiles[0])
+	}
+}
+
+// createConfigFromMongoCLIConfig creates atlasCLI config file from mongoCLI config file.
+func createConfigFromMongoCLIConfig(err error) bool {
+	// search mongoCLI config only if atlasCLI config doesn't exist
+	var e viper.ConfigFileNotFoundError
+	if !errors.As(err, &e) {
+		return false
+	}
+
+	mongoCLIConfigPath := config.ReadMongoCLIConfig()
+	if mongoCLIConfigPath == "" {
+		return false
+	}
+
+	atlasCLIConfigPath := copyConfig(mongoCLIConfigPath)
+	if atlasCLIConfigPath == "" {
+		return false
+	}
+
+	_, _ = fmt.Fprintf(os.Stderr, `we have used %s to generate %s
+
+`, mongoCLIConfigPath, atlasCLIConfigPath)
+
+	return true
+}
+
+// copyConfig copies config in oldConfigPath to the correct config location.
+func copyConfig(oldConfigPath string) string {
+	in, err := os.Open(oldConfigPath)
+	if err != nil {
+		return ""
+	}
+	defer in.Close()
+
+	configHomePath, err := config.ConfigurationHomePath(config.ToolName)
+	if err != nil {
+		return ""
+	}
+
+	_, err = os.Stat(configHomePath) // check if the dir is already there
+	if err != nil {
+		defaultPermissions := 0700
+		if err = os.Mkdir(configHomePath, os.FileMode(defaultPermissions)); err != nil {
+			return ""
+		}
+	}
+
+	newConfigPath := fmt.Sprintf("%s/%s", configHomePath, "config.toml")
+	out, err := os.Create(newConfigPath)
+	if err != nil {
+		return ""
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return ""
+	}
+
+	return newConfigPath
+}
+
+func printError(err error) {
+	var e viper.ConfigFileNotFoundError
+	if !errors.As(err, &e) {
+		log.Fatalf("Error loading config: %v", err)
 	}
 }
 

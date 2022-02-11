@@ -33,7 +33,7 @@ func TestClustersFile(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersFile")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -47,7 +47,6 @@ func TestClustersFile(t *testing.T) {
 
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterFileName,
@@ -67,7 +66,6 @@ func TestClustersFile(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			"--projectId", g.projectID,
@@ -83,7 +81,6 @@ func TestClustersFile(t *testing.T) {
 
 	t.Run("Update via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"update",
 			clusterFileName,
@@ -102,7 +99,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -114,7 +111,6 @@ func TestClustersFile(t *testing.T) {
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			clusterFileName,

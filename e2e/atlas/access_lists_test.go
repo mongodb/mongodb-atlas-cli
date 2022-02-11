@@ -41,12 +41,11 @@ func TestAccessList(t *testing.T) {
 	entry := fmt.Sprintf("192.168.0.%d", n)
 	currentIPEntry := ""
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
 	t.Run("Create Forever", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"create",
 			entry,
@@ -77,7 +76,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"ls",
 			"--projectId",
@@ -93,7 +91,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"describe",
 			entry,
@@ -110,7 +107,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"delete",
 			entry,
@@ -127,7 +123,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Create Delete After", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"create",
 			entry,
@@ -156,7 +151,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"delete",
 			entry,
@@ -173,7 +167,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Create with CurrentIp", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"create",
 			"--currentIp",
@@ -197,7 +190,6 @@ func TestAccessList(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessListEntity,
 			"delete",
 			currentIPEntry,

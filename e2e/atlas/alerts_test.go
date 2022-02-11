@@ -35,14 +35,13 @@ const (
 func TestAlerts(t *testing.T) {
 	var alertID string
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// This test should be run before all other tests to grab an alert ID for all other tests
 	t.Run("List with no status", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"list",
 			"-o=json",
@@ -62,7 +61,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("List with status OPEN", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"list",
 			"--status",
@@ -77,7 +75,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("List with status CLOSED", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"list",
 			"--status",
@@ -93,7 +90,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"describe",
 			alertID,
@@ -115,7 +111,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("Acknowledge", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"ack",
 			alertID,
@@ -136,7 +131,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"ack",
 			alertID,
@@ -156,7 +150,6 @@ func TestAlerts(t *testing.T) {
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			"unack",
 			alertID,

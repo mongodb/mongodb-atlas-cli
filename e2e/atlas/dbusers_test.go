@@ -45,14 +45,13 @@ func TestDBUserWithFlags(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -68,7 +67,6 @@ func TestDBUserWithFlags(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"ls",
 			"-o=json")
@@ -93,7 +91,6 @@ func TestDBUserWithFlags(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"update",
 			username,
@@ -109,7 +106,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		testDeleteUser(t, cliPath, atlasEntity, dbusersEntity, username)
+		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})
 }
 
@@ -126,7 +123,6 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -148,7 +144,6 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"update",
 			username,
@@ -162,7 +157,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		testDeleteUser(t, cliPath, atlasEntity, dbusersEntity, username)
+		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})
 }
 
@@ -201,7 +196,6 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 	t.Helper()
 
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		dbusersEntity,
 		"describe",
 		username,
@@ -249,11 +243,10 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	a.Equal(user.Scopes[0].Type, clusterType)
 }
 
-func testDeleteUser(t *testing.T, cliPath, atlasEntity, dbusersEntity, username string) {
+func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 	t.Helper()
 
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		dbusersEntity,
 		"delete",
 		username,

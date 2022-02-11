@@ -33,7 +33,7 @@ func TestMetrics(t *testing.T) {
 	hostname, err := g.getHostnameAndPort()
 	require.NoError(t, err)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("processes", func(t *testing.T) {
@@ -52,7 +52,6 @@ func TestMetrics(t *testing.T) {
 func process(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		metricsEntity,
 		"processes",
 		hostname,
@@ -88,7 +87,6 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("databases list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			metricsEntity,
 			"databases",
 			"list",
@@ -117,7 +115,6 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 
 	t.Run("databases describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			metricsEntity,
 			"databases",
 			"describe",
@@ -154,7 +151,6 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
 	t.Run("disks list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			metricsEntity,
 			"disks",
 			"list",
@@ -180,7 +176,6 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 
 	t.Run("disks describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			metricsEntity,
 			"disks",
 			"describe",

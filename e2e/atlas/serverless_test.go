@@ -32,7 +32,7 @@ func TestServerless(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("serverless")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -41,7 +41,6 @@ func TestServerless(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"create",
 			clusterName,
@@ -64,7 +63,6 @@ func TestServerless(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"watch",
 			"--projectId", g.projectID,
@@ -80,7 +78,6 @@ func TestServerless(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"ls",
 			"--projectId", g.projectID,
@@ -99,7 +96,6 @@ func TestServerless(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"describe",
 			clusterName,
@@ -120,7 +116,6 @@ func TestServerless(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"delete",
 			clusterName,
@@ -137,7 +132,6 @@ func TestServerless(t *testing.T) {
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			serverlessEntity,
 			"watch",
 			clusterName,

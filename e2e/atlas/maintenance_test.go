@@ -31,12 +31,11 @@ func TestMaintenanceWindows(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("maintenance")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			maintenanceEntity,
 			"update",
 			"--dayOfWeek",
@@ -57,7 +56,6 @@ func TestMaintenanceWindows(t *testing.T) {
 
 	t.Run("describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			maintenanceEntity,
 			"describe",
 			"-o",
@@ -79,7 +77,6 @@ func TestMaintenanceWindows(t *testing.T) {
 
 	t.Run("clear", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			maintenanceEntity,
 			"clear",
 			"--force",

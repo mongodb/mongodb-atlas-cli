@@ -189,7 +189,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 		g.t.Errorf("unexpected error: project must be generated")
 	}
 
-	resp, err := g.runCommand(atlasEntity,
+	resp, err := g.runCommand(
 		processesEntity,
 		"list",
 		"--projectId",
@@ -219,7 +219,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	g.t.Helper()
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return nil, err
 	}

@@ -34,7 +34,7 @@ func TestLogs(t *testing.T) {
 	hostname, err := g.getHostname()
 	require.NoError(t, err)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	logTypes := []string{
 		"mongodb.gz",
@@ -63,7 +63,6 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 	filepath := dir + logFile
 
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		logsEntity,
 		"download",
 		hostname,
@@ -86,7 +85,6 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		logsEntity,
 		"download",
 		hostname,

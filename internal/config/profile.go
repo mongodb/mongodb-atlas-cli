@@ -126,13 +126,17 @@ func IsTrue(s string) bool {
 }
 
 var defaultProfile = newProfile()
-var atlasProfile = newAtlasProfile()
+var atlasCLIProfile = newAtlasProfile()
 
 func Default() *Profile {
 	if ToolName == mongoCLI {
 		return defaultProfile
 	}
-	return atlasProfile
+	return atlasCLIProfile
+}
+
+func AtlasCLIDefault() *Profile {
+	return atlasCLIProfile
 }
 
 // List returns the names of available profiles.

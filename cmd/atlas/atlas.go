@@ -112,11 +112,6 @@ func mongoCLIConfigPath() string {
 	}
 
 	configPath := fmt.Sprintf("%s/mongocli.toml", configDir)
-	_, err = os.Stat(configPath)
-	if err != nil {
-		return ""
-	}
-
 	return configPath
 }
 

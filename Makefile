@@ -11,6 +11,7 @@ MCLI_VERSION?=$(shell git describe --always --tags)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
+MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
@@ -21,7 +22,7 @@ ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME)
 ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli
-
+ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l
 
@@ -29,12 +30,12 @@ TEST_CMD?=go test
 UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
-E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 E2E_TIMEOUT?=60m
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
-export E2E_BINARY
+export MCLI_E2E_BINARY
+export ATLAS_E2E_BINARY
 
 .PHONY: setupgolangcilint
 setupgolangcilint:  ## Install golangci-lint
@@ -121,7 +122,7 @@ build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build ## Run E2E tests
+e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./e2e...

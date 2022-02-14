@@ -32,7 +32,7 @@ func TestShardedCluster(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("shardedClusters")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
@@ -45,7 +45,6 @@ func TestShardedCluster(t *testing.T) {
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"create",
 			shardedClusterName,
@@ -72,7 +71,7 @@ func TestShardedCluster(t *testing.T) {
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -83,7 +82,6 @@ func TestShardedCluster(t *testing.T) {
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			shardedClusterName,

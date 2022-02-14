@@ -31,12 +31,11 @@ func TestCustomDNS(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("customDNS")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("Enable", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDNSEntity,
 			awsEntity,
 			"enable",
@@ -57,7 +56,6 @@ func TestCustomDNS(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDNSEntity,
 			awsEntity,
 			"describe",
@@ -78,7 +76,6 @@ func TestCustomDNS(t *testing.T) {
 
 	t.Run("Disable", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDNSEntity,
 			awsEntity,
 			"disable",

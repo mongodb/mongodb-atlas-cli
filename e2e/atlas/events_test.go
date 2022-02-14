@@ -27,13 +27,12 @@ import (
 )
 
 func TestEvents(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	t.Run("List Project Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			eventsEntity,
 			projectEntity,
 			"list",
@@ -58,7 +57,6 @@ func TestEvents(t *testing.T) {
 
 	t.Run("List Organization Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			eventsEntity,
 			orgEntity,
 			"list",

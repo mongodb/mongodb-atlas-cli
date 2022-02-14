@@ -32,7 +32,7 @@ func TestClustersFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersFlags")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -44,7 +44,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -69,7 +68,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -85,7 +83,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Load Sample Data", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"loadSampleData",
 			clusterName,
@@ -105,7 +102,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"ls",
 			"--projectId", g.projectID,
@@ -124,7 +120,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"describe",
 			clusterName,
@@ -144,7 +139,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Describe Connection String", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"cs",
 			"describe",
@@ -166,7 +160,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Create Rolling Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"indexes",
 			"create",
@@ -183,7 +176,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"update",
 			clusterName,
@@ -203,7 +195,7 @@ func TestClustersFlags(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err)
@@ -215,7 +207,6 @@ func TestClustersFlags(t *testing.T) {
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			clusterName,

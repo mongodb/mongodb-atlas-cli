@@ -41,12 +41,11 @@ func TestDBRoles(t *testing.T) {
 
 	roleName := fmt.Sprintf("role-%v", n)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"create",
 			roleName,
@@ -71,7 +70,6 @@ func TestDBRoles(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"ls",
 			"-o=json")
@@ -87,7 +85,6 @@ func TestDBRoles(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"describe",
 			roleName,
@@ -109,7 +106,6 @@ func TestDBRoles(t *testing.T) {
 
 	t.Run("Update with append", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"update",
 			roleName,
@@ -136,7 +132,6 @@ func TestDBRoles(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"update",
 			roleName,
@@ -157,7 +152,6 @@ func TestDBRoles(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			customDBRoleEntity,
 			"delete",
 			roleName,

@@ -39,13 +39,12 @@ func TestLDAPWithFlags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var requestID string
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -68,7 +67,6 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -85,7 +83,6 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	t.Run("Get Status", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -108,7 +105,6 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	t.Run("Save", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"save",
@@ -134,7 +130,6 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	t.Run("Get", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"get",
@@ -162,14 +157,13 @@ func TestLDAPWithStdin(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var requestID string
 
 	t.Run("Verify", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"verify",
@@ -193,7 +187,6 @@ func TestLDAPWithStdin(t *testing.T) {
 
 	t.Run("Save", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			securityEntity,
 			ldapEntity,
 			"save",
@@ -227,7 +220,6 @@ func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		securityEntity,
 		ldapEntity,
 		"delete",

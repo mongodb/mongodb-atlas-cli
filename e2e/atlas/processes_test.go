@@ -30,7 +30,7 @@ func TestProcesses(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("processes")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -38,7 +38,6 @@ func TestProcesses(t *testing.T) {
 
 	t.Run("list", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			processesEntity,
 			"list",
 			"--projectId", g.projectID,

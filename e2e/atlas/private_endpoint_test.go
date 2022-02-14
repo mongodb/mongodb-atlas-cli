@@ -45,7 +45,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	n, err := e2e.RandInt(int64(len(regionsAWS)))
 	require.NoError(t, err)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	region := regionsAWS[n.Int64()]
@@ -53,7 +53,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"create",
@@ -75,7 +74,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"watch",
@@ -90,7 +88,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"describe",
@@ -110,7 +107,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"ls",
@@ -130,7 +126,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"delete",
@@ -149,7 +144,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			awsEntity,
 			"watch",
@@ -180,7 +174,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	n, err := e2e.RandInt(int64(len(regionsAzure)))
 	require.NoError(t, err)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	region := regionsAzure[n.Int64()]
@@ -188,7 +182,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"create",
@@ -212,7 +205,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"watch",
@@ -228,7 +220,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"describe",
@@ -248,7 +239,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"ls",
@@ -268,7 +258,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"delete",
@@ -287,7 +276,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			azureEntity,
 			"watch",
@@ -328,13 +316,12 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	region := regionsGCP[n.Int64()]
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"create",
@@ -356,7 +343,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"watch",
@@ -372,7 +358,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"describe",
@@ -392,7 +377,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"ls",
@@ -412,7 +396,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"delete",
@@ -431,7 +414,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			gcpEntity,
 			"watch",
@@ -452,12 +434,11 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("regionalizedPrivateEndpointsSettings")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"enable",
@@ -473,7 +454,6 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 
 	t.Run("Disable regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"disable",
@@ -489,7 +469,6 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 
 	t.Run("Get regionalized private endpoint setting", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			regionalModeEntity,
 			"get",

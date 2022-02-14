@@ -36,13 +36,12 @@ func TestDBUserCerts(t *testing.T) {
 	}
 	username := fmt.Sprintf("user%v", n)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	t.Run("Create DBUser", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"create",
 			"atlasAdmin",
@@ -65,7 +64,6 @@ func TestDBUserCerts(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			certsEntity,
 			"create",
@@ -87,7 +85,6 @@ func TestDBUserCerts(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			certsEntity,
 			"list",
@@ -111,7 +108,6 @@ func TestDBUserCerts(t *testing.T) {
 
 	t.Run("Delete User", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			dbusersEntity,
 			"delete",
 			username,

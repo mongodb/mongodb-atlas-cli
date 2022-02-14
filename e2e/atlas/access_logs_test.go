@@ -35,12 +35,11 @@ func TestAccessLogs(t *testing.T) {
 	h, err := g.getHostname()
 	req.NoError(err)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
 	t.Run("List by clusterName", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessLogsEntity,
 			"ls",
 			"--clusterName", g.clusterName,
@@ -56,7 +55,6 @@ func TestAccessLogs(t *testing.T) {
 
 	t.Run("List by hostname", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			accessLogsEntity,
 			"ls",
 			"--hostname", h,

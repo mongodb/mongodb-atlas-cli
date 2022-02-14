@@ -29,7 +29,7 @@ import (
 )
 
 func TestDataLakes(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
@@ -46,7 +46,6 @@ func TestDataLakes(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			datalakeEntity,
 			"create",
 			dataLakeName,
@@ -69,7 +68,6 @@ func TestDataLakes(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			datalakeEntity,
 			"describe",
 			dataLakeName,
@@ -88,7 +86,6 @@ func TestDataLakes(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			datalakeEntity,
 			"ls",
 			"-o=json")
@@ -106,7 +103,6 @@ func TestDataLakes(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		const updateRegion = "VIRGINIA_USA"
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			datalakeEntity,
 			"update",
 			dataLakeName,
@@ -126,7 +122,6 @@ func TestDataLakes(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			datalakeEntity,
 			"delete",
 			dataLakeName,

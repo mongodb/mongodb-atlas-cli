@@ -32,7 +32,7 @@ func TestOnlineArchives(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("onlineArchives")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -74,7 +74,6 @@ func TestOnlineArchives(t *testing.T) {
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"rm",
@@ -95,7 +94,6 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"start",
@@ -116,7 +114,6 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"pause",
@@ -139,7 +136,6 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 	const expireAfterDays = float64(4)
 	expireAfterDaysStr := fmt.Sprintf("%.0f", expireAfterDays)
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"update",
@@ -164,7 +160,6 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"describe",
@@ -189,7 +184,6 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"list",
@@ -213,7 +207,6 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 	t.Helper()
 	const dbName = "test"
 	cmd := exec.Command(cliPath,
-		atlasEntity,
 		clustersEntity,
 		onlineArchiveEntity,
 		"create",

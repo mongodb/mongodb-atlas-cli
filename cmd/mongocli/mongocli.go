@@ -40,7 +40,7 @@ func Execute(ctx context.Context) {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if err := config.Load(); err != nil {
+	if err := config.LoadMongoCLIConfig(); err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
 

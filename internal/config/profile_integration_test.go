@@ -26,8 +26,8 @@ import (
 )
 
 const (
-	atlasProfile   = "atlas"
 	newProfileName = "newProfileName"
+	atlas          = "atlas"
 )
 
 func testProfile(profileContents string) *Profile {
@@ -92,7 +92,7 @@ func profileWithFullDescription() *Profile {
 func TestProfile_Get_FullProfile(t *testing.T) {
 	profile := profileWithFullDescription()
 	a := assert.New(t)
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 
 	desc := profile.Map()
 	a.Equal("default", profile.Name())
@@ -108,7 +108,7 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 func TestProfile_Get_Default(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	a := assert.New(t)
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 	desc := profile.Map()
 	a.Equal(DefaultProfile, profile.Name())
 	a.Len(desc, 4)
@@ -116,15 +116,15 @@ func TestProfile_Get_Default(t *testing.T) {
 
 func TestProfile_Get_NonDefault(t *testing.T) {
 	profile := profileWithOneNonDefaultUser()
-	profile.SetName(atlasProfile)
+	profile.SetName(atlas)
 
 	a := assert.New(t)
 
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 
 	desc := profile.Map()
 
-	a.Equal(atlasProfile, profile.Name(), "expected atlas Profile to be described")
+	a.Equal(atlas, profile.Name(), "expected atlas Profile to be described")
 	a.Len(desc, 3)
 	a.Equal("5cac6a2179358edabd12b572", profile.OrgID(), "project id should match")
 	a.Empty(profile.ProjectID(), "project id should not be set")
@@ -135,12 +135,12 @@ func TestProfile_Delete_NonDefault(t *testing.T) {
 
 	a := assert.New(t)
 
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 
-	profile.SetName(atlasProfile)
+	profile.SetName(atlas)
 
 	if a.NoError(profile.Delete()) {
-		a.NoError(profile.Load(false))
+		a.NoError(profile.LoadMongoCLIConfig(false))
 		desc := profile.Map()
 		a.Len(desc, 0, "Profile should have no properties")
 	}
@@ -151,10 +151,10 @@ func TestProfile_Rename(t *testing.T) {
 	profile.SetName(DefaultProfile)
 
 	a := assert.New(t)
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
 	if a.NoError(profile.Rename(newProfileName)) {
-		a.NoError(profile.Load(false))
+		a.NoError(profile.LoadMongoCLIConfig(false))
 		profile.SetName(DefaultProfile)
 		a.Empty(profile.Map())
 		profile.SetName(newProfileName)
@@ -169,12 +169,12 @@ func TestProfile_Rename_OverwriteExisting(t *testing.T) {
 	profile.SetName(DefaultProfile)
 
 	a := assert.New(t)
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
 
-	if a.NoError(profile.Rename(atlasProfile)) {
-		a.NoError(profile.Load(false))
-		profile.SetName(atlasProfile)
+	if a.NoError(profile.Rename(atlas)) {
+		a.NoError(profile.LoadMongoCLIConfig(false))
+		profile.SetName(atlas)
 
 		descriptionAfterRename := profile.Map()
 
@@ -186,7 +186,7 @@ func TestProfile_Rename_OverwriteExisting(t *testing.T) {
 func TestProfile_Set(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	a := assert.New(t)
-	a.NoError(profile.Load(false))
+	a.NoError(profile.LoadMongoCLIConfig(false))
 
 	profile.SetName(DefaultProfile)
 

@@ -80,7 +80,8 @@ func createConfigFromMongoCLIConfig() {
 	}
 	defer in.Close()
 
-	_, _ = fmt.Fprintf(os.Stderr, "AtlasCLI has found an existing MongoCLI configuration file, copying its content to: %s", atlasConfigPath)
+	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has found an existing MongoCLI configuration file, copying its content to: %s
+`, atlasConfigPath)
 	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
 	if err != nil {
 		defaultPermissions := 0700

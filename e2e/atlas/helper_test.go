@@ -31,7 +31,6 @@ import (
 )
 
 const (
-	atlasEntity                  = "atlas"
 	eventsEntity                 = "events"
 	clustersEntity               = "clusters"
 	processesEntity              = "processes"
@@ -45,7 +44,6 @@ const (
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
 	onlineArchiveEntity          = "onlineArchives"
-	iamEntity                    = "iam"
 	projectEntity                = "project"
 	orgEntity                    = "org"
 	maintenanceEntity            = "maintenanceWindows"
@@ -83,7 +81,7 @@ const (
 )
 
 func deployClusterForProject(projectID string) (string, error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
@@ -96,7 +94,6 @@ func deployClusterForProject(projectID string) (string, error) {
 		return "", err
 	}
 	args := []string{
-		atlasEntity,
 		clustersEntity,
 		"create",
 		clusterName,
@@ -116,7 +113,6 @@ func deployClusterForProject(projectID string) (string, error) {
 	}
 
 	watchArgs := []string{
-		atlasEntity,
 		clustersEntity,
 		"watch",
 		clusterName,
@@ -133,12 +129,11 @@ func deployClusterForProject(projectID string) (string, error) {
 }
 
 func deleteClusterForProject(projectID, clusterName string) error {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	args := []string{
-		atlasEntity,
 		clustersEntity,
 		"delete",
 		clusterName,
@@ -154,7 +149,6 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	}
 
 	watchArgs := []string{
-		atlasEntity,
 		clustersEntity,
 		"watch",
 		clusterName,
@@ -171,12 +165,11 @@ func deleteClusterForProject(projectID, clusterName string) error {
 }
 
 func newAvailableRegion(projectID, tier, provider string) (string, error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
 	args := []string{
-		atlasEntity,
 		clustersEntity,
 		"availableRegions",
 		"ls",
@@ -269,12 +262,11 @@ func integrationExists(name string, thirdPartyIntegrations mongodbatlas.ThirdPar
 }
 
 func createProject(projectName string) (string, error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", fmt.Errorf("%w: invalid bin", err)
 	}
 	args := []string{
-		iamEntity,
 		projectEntity,
 		"create",
 		projectName,
@@ -299,12 +291,11 @@ func createProject(projectName string) (string, error) {
 }
 
 func deleteProject(projectID string) error {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		projectEntity,
 		"delete",
 		projectID,

@@ -32,7 +32,7 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("dataLakePrivateEndpointsAWS")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(int64(8000))
@@ -41,7 +41,6 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -64,7 +63,6 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -85,7 +83,6 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,
@@ -106,7 +103,6 @@ func TestDataLakePrivateEndpointsAWS(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			privateEndpointsEntity,
 			datalakeEntity,
 			awsEntity,

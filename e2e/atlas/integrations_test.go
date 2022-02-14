@@ -46,12 +46,11 @@ func TestIntegrations(t *testing.T) {
 	require.NoError(t, err)
 	key := "51c0ef87e9951c3e147accf0e12" + n.String()
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	t.Run("Create DATADOG", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			datadogEntity,
@@ -74,7 +73,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create FLOWDOCK", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			flowdockEntity,
@@ -101,7 +99,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create NEW_RELIC", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			newRelicEntity,
@@ -130,7 +127,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create OPSGENIE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			opsGenieEntity,
@@ -153,7 +149,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create PAGER_DUTY", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			pagerDutyEntity,
@@ -176,7 +171,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create VICTOR_OPS", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			victorOpsEntity,
@@ -201,7 +195,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Create WEBHOOK", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"create",
 			webhookEntity,
@@ -226,7 +219,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"ls",
 			"--projectId",
@@ -245,7 +237,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"describe",
 			datadogEntity,
@@ -265,7 +256,6 @@ func TestIntegrations(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			integrationsEntity,
 			"delete",
 			datadogEntity,

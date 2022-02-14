@@ -38,13 +38,12 @@ const (
 func TestAlertConfig(t *testing.T) {
 	var alertID string
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			configEntity,
 			"create",
@@ -82,7 +81,6 @@ func TestAlertConfig(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			configEntity,
 			"ls",
@@ -94,7 +92,6 @@ func TestAlertConfig(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			configEntity,
 			"update",
@@ -126,7 +123,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, atlasEntity, alertsEntity, configEntity, "delete", alertID, "--force")
+		cmd := exec.Command(cliPath, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
@@ -135,7 +132,6 @@ func TestAlertConfig(t *testing.T) {
 
 	t.Run("List Matcher Fields", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			alertsEntity,
 			configEntity,
 			"fields",

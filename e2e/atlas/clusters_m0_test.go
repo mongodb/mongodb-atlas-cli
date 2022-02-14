@@ -36,7 +36,7 @@ func TestClustersM0Flags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersM0")
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -48,7 +48,6 @@ func TestClustersM0Flags(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"create",
 			clusterName,
@@ -71,7 +70,6 @@ func TestClustersM0Flags(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			clusterName,
@@ -87,7 +85,6 @@ func TestClustersM0Flags(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"describe",
 			clusterName,
@@ -108,7 +105,6 @@ func TestClustersM0Flags(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"delete",
 			clusterName,
@@ -126,7 +122,6 @@ func TestClustersM0Flags(t *testing.T) {
 
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			clustersEntity,
 			"watch",
 			clusterName,

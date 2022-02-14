@@ -25,14 +25,13 @@ import (
 )
 
 func TestLinkToken(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
 	// Cleanup, do a delete in case a token already exists from another run of the test
 	t.Logf("Removing link-tokens from previous/parallel test runs...")
 	deleteCleanup := exec.Command(cliPath,
-		atlasEntity,
 		liveMigrationsEntity,
 		"link",
 		"delete",
@@ -45,7 +44,6 @@ func TestLinkToken(t *testing.T) {
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			liveMigrationsEntity,
 			"link",
 			"create",
@@ -59,7 +57,6 @@ func TestLinkToken(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			atlasEntity,
 			liveMigrationsEntity,
 			"link",
 			"delete",

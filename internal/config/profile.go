@@ -37,7 +37,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
 const (
-	MCLIEnvPrefix                = "MCLI"          // MCLIEnvPrefix prefix for MongoCLI ENV variables
+	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
 	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
@@ -558,7 +558,7 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 	viper.SetConfigName("config")
 
 	if hasMongoCLIEnvVars() {
-		viper.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MCLIEnvPrefix))
+		viper.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
 	}
 
 	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
@@ -567,13 +567,13 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
 	viper.SetConfigName(ToolName)
-	return p.load(readEnvironmentVars, MCLIEnvPrefix)
+	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
 
 func hasMongoCLIEnvVars() bool {
 	envVars := os.Environ()
 	for _, v := range envVars {
-		if strings.HasPrefix(v, MCLIEnvPrefix) {
+		if strings.HasPrefix(v, MongoCLIEnvPrefix) {
 			return true
 		}
 	}

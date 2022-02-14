@@ -37,7 +37,8 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongocli/internal/config SetSaver
 
 const (
-	EnvPrefix                    = "mcli"          // EnvPrefix prefix for ENV variables
+	MCLIEnvPrefix                = "MCLI"          // MCLIEnvPrefix prefix for MongoCLI ENV variables
+	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudService                 = "cloud"         // CloudService setting when using Atlas API
 	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
@@ -245,6 +246,7 @@ func (p *Profile) Service() string {
 	if viper.IsSet(service) {
 		return viper.GetString(service)
 	}
+
 	settings := viper.GetStringMapString(p.Name())
 	return settings[service]
 }
@@ -554,23 +556,39 @@ func (p *Profile) Rename(newProfileName string) error {
 func LoadAtlasCLIConfig() error { return Default().LoadAtlasCLIConfig(true) }
 func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 	viper.SetConfigName("config")
-	return p.load(readEnvironmentVars)
+
+	if hasMongoCLIEnvVars() {
+		viper.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MCLIEnvPrefix))
+	}
+
+	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
 }
 
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
 	viper.SetConfigName(ToolName)
-	return p.load(readEnvironmentVars)
+	return p.load(readEnvironmentVars, MCLIEnvPrefix)
 }
 
-func (p *Profile) load(readEnvironmentVars bool) error {
+func hasMongoCLIEnvVars() bool {
+	envVars := os.Environ()
+	for _, v := range envVars {
+		if strings.HasPrefix(v, MCLIEnvPrefix) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
 	viper.SetConfigType(configType)
 	viper.SetConfigPermissions(configPerm)
 	viper.AddConfigPath(p.configDir)
 	viper.SetFs(p.fs)
 
 	if readEnvironmentVars {
-		viper.SetEnvPrefix(EnvPrefix)
+		viper.SetEnvPrefix(envPrefix)
 		viper.AutomaticEnv()
 	}
 

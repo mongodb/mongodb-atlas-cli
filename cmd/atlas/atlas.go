@@ -16,7 +16,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -26,7 +25,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -45,13 +43,7 @@ func Execute(ctx context.Context) {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if err := config.LoadAtlasCLIConfig(); err != nil {
-		// we use mongocli.toml to generate atlasCLI config
-		var e viper.ConfigFileNotFoundError
-		if !errors.As(err, &e) || !createConfigFromMongoCLIConfig() { // search mongoCLI config only if atlasCLI config doesn't exist
-			printError(err)
-		} else if err := config.LoadAtlasCLIConfig(); err != nil {
-			printError(err)
-		}
+		log.Fatalf("Error loading config: %v", err)
 	}
 
 	if profile != "" {
@@ -63,66 +55,53 @@ func initConfig() {
 	}
 }
 
-// createConfigFromMongoCLIConfig creates atlasCLI config file from mongoCLI config file.
-func createConfigFromMongoCLIConfig() bool {
+// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli.toml.
+func createConfigFromMongoCLIConfig() {
+	atlasConfigHomePath, err := config.AtlasCLIConfigHome()
+	if err != nil {
+		return
+	}
+
+	atlasConfigPath := fmt.Sprintf("%s/%s", atlasConfigHomePath, "config.toml")
+	f, err := os.Open(atlasConfigPath) // if config.toml is already there, exit
+	if err == nil {
+		return
+	}
+	defer f.Close()
+
 	mongoCLIConfigPath := mongoCLIConfigPath()
 	if mongoCLIConfigPath == "" {
-		return false
+		return
 	}
 
-	atlasCLIConfigPath := copyConfig(mongoCLIConfigPath)
-	if atlasCLIConfigPath == "" {
-		return false
-	}
-
-	_, _ = fmt.Fprintf(os.Stderr, `we have used %s to generate %s
-
-`, mongoCLIConfigPath, atlasCLIConfigPath)
-
-	return true
-}
-
-// copyConfig copies config in oldConfigPath to the correct config location.
-func copyConfig(oldConfigPath string) string {
-	in, err := os.Open(oldConfigPath)
+	in, err := os.Open(mongoCLIConfigPath)
 	if err != nil {
-		return ""
+		return
 	}
 	defer in.Close()
 
-	configHomePath, err := config.AtlasCLIConfigHome()
-	if err != nil {
-		return ""
-	}
-
-	_, err = os.Stat(configHomePath) // check if the dir is already there
+	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
 	if err != nil {
 		defaultPermissions := 0700
-		if err = os.Mkdir(configHomePath, os.FileMode(defaultPermissions)); err != nil {
-			return ""
+		if err = os.Mkdir(atlasConfigHomePath, os.FileMode(defaultPermissions)); err != nil {
+			return
 		}
 	}
 
-	newConfigPath := fmt.Sprintf("%s/%s", configHomePath, "config.toml")
-	out, err := os.Create(newConfigPath)
+	out, err := os.Create(atlasConfigPath)
 	if err != nil {
-		return ""
+		return
 	}
 	defer out.Close()
 
 	_, err = io.Copy(out, in)
 	if err != nil {
-		return ""
+		log.Printf("we cannot create %s from your %s: %v", atlasConfigPath, mongoCLIConfigPath, err)
 	}
 
-	return newConfigPath
-}
+	_, _ = fmt.Fprintf(os.Stderr, `we have used %s to generate %s
 
-func printError(err error) {
-	var e viper.ConfigFileNotFoundError
-	if !errors.As(err, &e) {
-		log.Fatalf("Error loading config: %v", err)
-	}
+`, mongoCLIConfigPath, atlasConfigPath)
 }
 
 func mongoCLIConfigPath() string {
@@ -142,7 +121,7 @@ func mongoCLIConfigPath() string {
 
 func main() {
 	cobra.EnableCommandSorting = false
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
 
 	Execute(context.Background())
 }

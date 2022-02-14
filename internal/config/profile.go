@@ -15,6 +15,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -577,7 +578,15 @@ func (p *Profile) load(readEnvironmentVars bool) error {
 	viper.RegisterAlias(baseURL, opsManagerURL)
 
 	// If a config file is found, read it in.
-	return viper.ReadInConfig()
+	if err := viper.ReadInConfig(); err != nil {
+		// ignore if it doesn't exists
+		var e viper.ConfigFileNotFoundError
+		if errors.As(err, &e) {
+			return nil
+		}
+		return err
+	}
+	return nil
 }
 
 // Save the configuration to disk.

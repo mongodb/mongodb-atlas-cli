@@ -69,8 +69,10 @@ const (
 )
 
 var (
-	ToolName  = mongoCLI
-	UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+	ToolName        = mongoCLI
+	UserAgent       = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+	defaultProfile  = newProfile()
+	atlasCLIProfile = newAtlasProfile()
 )
 
 func BinName() string {
@@ -136,9 +138,6 @@ func GlobalProperties() []string {
 func IsTrue(s string) bool {
 	return search.StringInSlice([]string{"true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES"}, s)
 }
-
-var defaultProfile = newProfile()
-var atlasCLIProfile = newAtlasProfile()
 
 func Default() *Profile {
 	if ToolName == mongoCLI {

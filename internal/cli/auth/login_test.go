@@ -94,7 +94,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		Times(1)
 
 	mockConfig.EXPECT().Set("service", "cloud").Times(1)
-	mockConfig.EXPECT().Set("auth_token", "asdf").Times(1)
+	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)

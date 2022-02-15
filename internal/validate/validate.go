@@ -104,15 +104,15 @@ func Credentials() error {
 		return nil
 	}
 
-	toolName := config.ToolName
-	if toolName == "atlascli" {
-		toolName = "atlas"
+	configCMD := "config"
+	if config.BinName() == "atlas" {
+		configCMD += "init"
 	}
 	return fmt.Errorf(
 		"%w\n\nTo set credentials, run: %s %s",
 		ErrMissingCredentials,
-		toolName,
-		"config",
+		config.BinName(),
+		configCMD,
 	)
 }
 

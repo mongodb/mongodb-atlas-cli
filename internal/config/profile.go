@@ -65,10 +65,18 @@ const (
 	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
 	mongoCLI                     = "mongocli"
+	atlasCLI                     = "atlascli"
 )
 
 var ToolName = mongoCLI
 var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+
+func BinName() string {
+	if ToolName == atlasCLI {
+		return "atlas"
+	}
+	return ToolName
+}
 
 type Setter interface {
 	Set(string, interface{})

@@ -16,6 +16,8 @@ package cli
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/oauth"
@@ -37,6 +39,8 @@ func (opts *RefresherOpts) InitFlow() error {
 	return err
 }
 
+var ErrInvalidRefreshToken = errors.New("session expired")
+
 func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	current, err := config.Token()
 	if current == nil {
@@ -47,6 +51,14 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	}
 	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
 	if err != nil {
+		var target *atlas.ErrorResponse
+		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
+			return fmt.Errorf(
+				"%w\n\nTo login, run: %s %s",
+				ErrInvalidRefreshToken,
+				config.BinName(),
+				"auth login")
+		}
 		return err
 	}
 	config.SetAccessToken(t.AccessToken)

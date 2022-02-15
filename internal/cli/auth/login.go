@@ -50,7 +50,7 @@ type LoginConfig interface {
 type loginOpts struct {
 	cli.DefaultSetterOpts
 	OutWriter      io.Writer
-	AuthToken      string
+	AccessToken    string
 	RefreshToken   string
 	isGov          bool
 	isCloudManager bool
@@ -77,8 +77,8 @@ func (opts *loginOpts) SetUpAccess() {
 	}
 	opts.config.Set("service", opts.Service)
 
-	if opts.AuthToken != "" {
-		opts.config.Set("auth_token", opts.AuthToken)
+	if opts.AccessToken != "" {
+		opts.config.Set("access_token", opts.AccessToken)
 	}
 	if opts.RefreshToken != "" {
 		opts.config.Set("refresh_token", opts.RefreshToken)
@@ -162,7 +162,7 @@ Your code will expire after %.0f minutes.
 	if err != nil {
 		return err
 	}
-	opts.AuthToken = accessToken.AccessToken
+	opts.AccessToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
 	return nil
 }

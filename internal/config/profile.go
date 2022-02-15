@@ -52,9 +52,9 @@ const (
 	service                      = "service"
 	publicAPIKey                 = "public_api_key"
 	privateAPIKey                = "private_api_key"
-	accessToken                  = "access_token"
-	refreshToken                 = "refresh_token"
-	opsManagerURL                = "ops_manager_url"
+	AccessTokenField             = "access_token"
+	RefreshTokenField            = "refresh_token"
+	OpsManagerURLField           = "ops_manager_url"
 	baseURL                      = "base_url"
 	opsManagerCACertificate      = "ops_manager_ca_certificate"
 	opsManagerSkipVerify         = "ops_manager_skip_verify"
@@ -68,8 +68,10 @@ const (
 	atlasCLI                     = "atlascli"
 )
 
-var ToolName = mongoCLI
-var UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+var (
+	ToolName  = mongoCLI
+	UserAgent = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
+)
 
 func BinName() string {
 	if ToolName == atlasCLI {
@@ -110,7 +112,7 @@ func Properties() []string {
 		publicAPIKey,
 		privateAPIKey,
 		output,
-		opsManagerURL,
+		OpsManagerURLField,
 		baseURL,
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
@@ -297,25 +299,25 @@ func (p *Profile) SetPrivateAPIKey(v string) {
 // AccessToken get configured access token.
 func AccessToken() string { return Default().AccessToken() }
 func (p *Profile) AccessToken() string {
-	return p.GetString(accessToken)
+	return p.GetString(AccessTokenField)
 }
 
 // SetAccessToken set configured access token.
 func SetAccessToken(v string) { Default().SetAccessToken(v) }
 func (p *Profile) SetAccessToken(v string) {
-	p.Set(accessToken, v)
+	p.Set(AccessTokenField, v)
 }
 
 // RefreshToken get configured refresh token.
 func RefreshToken() string { return Default().RefreshToken() }
 func (p *Profile) RefreshToken() string {
-	return p.GetString(refreshToken)
+	return p.GetString(RefreshTokenField)
 }
 
 // SetRefreshToken set configured refresh token.
 func SetRefreshToken(v string) { Default().SetRefreshToken(v) }
 func (p *Profile) SetRefreshToken(v string) {
-	p.Set(refreshToken, v)
+	p.Set(RefreshTokenField, v)
 }
 
 // Token gets configured auth.Token.
@@ -362,13 +364,13 @@ func (p *Profile) tokenClaims() (jwt.RegisteredClaims, error) {
 // OpsManagerURL get configured ops manager base url.
 func OpsManagerURL() string { return Default().OpsManagerURL() }
 func (p *Profile) OpsManagerURL() string {
-	return p.GetString(opsManagerURL)
+	return p.GetString(OpsManagerURLField)
 }
 
 // SetOpsManagerURL set configured ops manager base url.
 func SetOpsManagerURL(v string) { Default().SetOpsManagerURL(v) }
 func (p *Profile) SetOpsManagerURL(v string) {
-	p.Set(opsManagerURL, v)
+	p.Set(OpsManagerURLField, v)
 }
 
 // OpsManagerCACertificate get configured ops manager CA certificate location.
@@ -470,7 +472,7 @@ func (p *Profile) Map() map[string]string {
 		profileSettings[mongoShellPath] = p.MongoShellPath()
 	}
 	for k, v := range settings {
-		if k == privateAPIKey || k == publicAPIKey || k == accessToken || k == refreshToken {
+		if k == privateAPIKey || k == publicAPIKey || k == AccessTokenField || k == RefreshTokenField {
 			profileSettings[k] = "redacted"
 		} else {
 			profileSettings[k] = v
@@ -601,7 +603,7 @@ func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
 	}
 
 	// aliases only work for a config file, this won't work for env variables
-	viper.RegisterAlias(baseURL, opsManagerURL)
+	viper.RegisterAlias(baseURL, OpsManagerURLField)
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {

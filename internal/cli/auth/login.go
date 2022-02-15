@@ -78,13 +78,13 @@ func (opts *loginOpts) SetUpAccess() {
 	opts.config.Set("service", opts.Service)
 
 	if opts.AccessToken != "" {
-		opts.config.Set("access_token", opts.AccessToken)
+		opts.config.Set(config.AccessTokenField, opts.AccessToken)
 	}
 	if opts.RefreshToken != "" {
-		opts.config.Set("refresh_token", opts.RefreshToken)
+		opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
 	}
 	if opts.OpsManagerURL != "" {
-		opts.config.Set("ops_manager_url", opts.OpsManagerURL)
+		opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
 	}
 }
 

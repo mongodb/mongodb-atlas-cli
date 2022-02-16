@@ -8,7 +8,7 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.18.1
 	github.com/go-test/deep v1.0.8
-	github.com/golang-jwt/jwt/v4 v4.2.0
+	github.com/golang-jwt/jwt/v4 v4.3.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v38 v38.1.0
 	github.com/mattn/go-isatty v0.0.14
@@ -23,7 +23,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.15.0
-	go.mongodb.org/ops-manager v0.37.0
+	go.mongodb.org/ops-manager v0.36.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 

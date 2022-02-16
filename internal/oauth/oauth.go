@@ -48,16 +48,27 @@ var defaultTransport = &http.Transport{
 type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
+	ClientID() string
 }
 
-const clientID = "0oadn4hoajpzxeSEy357"
+const (
+	ClientID    = "0oabtxactgS3gHIR0297" // ClientID for production
+	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
+)
 
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
 	client.Transport = defaultTransport
+	id := ClientID
+	if c.Service() == config.CloudGovService {
+		id = GovClientID
+	}
+	if c.ClientID() != "" {
+		id = c.ClientID()
+	}
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),
-		auth.SetClientID(clientID),
+		auth.SetClientID(id),
 		auth.SetScopes([]string{"openid", "profile", "offline_access"}),
 	}
 	if configURL := c.OpsManagerURL(); configURL != "" {

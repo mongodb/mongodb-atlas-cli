@@ -23,13 +23,13 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version ReleaseVersionDescriber
 
-type ReleaseVersionDescriber interface {
-	LatestVersion() (*ReleaseInformation, error)
-}
+const (
+	maxPageSize = 100
+	maxWaitTime = 1 * time.Second
+)
 
-type ReleaseInformation struct {
-	Version     string
-	PublishedAt time.Time
+type ReleaseVersionDescriber interface {
+	AllVersions() ([]*github.RepositoryRelease, error)
 }
 
 func NewReleaseVersionDescriber() ReleaseVersionDescriber {
@@ -40,15 +40,35 @@ type releaseVersionFetcher struct {
 	ctx context.Context
 }
 
-// LatestVersion encapsulates the logic to manage different cloud providers.
-func (s *releaseVersionFetcher) LatestVersion() (*ReleaseInformation, error) {
-	client := github.NewClient(nil)
-	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
-	if err != nil {
-		return nil, err
+// NVersions retrieves the first n versions returned by Github list releases endpoint.
+func (s *releaseVersionFetcher) NVersions(n int) ([]*github.RepositoryRelease, error) {
+	var releases []*github.RepositoryRelease
+	var page = 1
+	var pageSize = maxPageSize
+
+	if n <= maxPageSize {
+		pageSize = n
 	}
-	return &ReleaseInformation{
-		Version:     release.GetTagName(),
-		PublishedAt: release.PublishedAt.Time,
-	}, nil
+
+	startTime := time.Now()
+	client := github.NewClient(nil)
+
+	for {
+		slice, _, err := client.Repositories.ListReleases(s.ctx, owner, mongoCLI, &github.ListOptions{PerPage: pageSize, Page: page})
+		releases = append(releases, slice...)
+
+		if err != nil {
+			return releases, err
+		}
+
+		if len(slice) < pageSize || startTime.Add(maxWaitTime).After(time.Now()) {
+			return releases, nil
+		}
+		page++
+	}
+}
+
+// NVersions retrieves all versions returned by Github list releases endpoint.
+func (s *releaseVersionFetcher) AllVersions() ([]*github.RepositoryRelease, error) {
+	return s.NVersions(maxPageSize)
 }

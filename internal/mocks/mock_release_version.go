@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	version "github.com/mongodb/mongocli/internal/version"
+	github "github.com/google/go-github/v38/github"
 )
 
 // MockReleaseVersionDescriber is a mock of ReleaseVersionDescriber interface.
@@ -34,17 +34,17 @@ func (m *MockReleaseVersionDescriber) EXPECT() *MockReleaseVersionDescriberMockR
 	return m.recorder
 }
 
-// LatestVersion mocks base method.
-func (m *MockReleaseVersionDescriber) LatestVersion() (*version.ReleaseInformation, error) {
+// AllVersions mocks base method.
+func (m *MockReleaseVersionDescriber) AllVersions() ([]*github.RepositoryRelease, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LatestVersion")
-	ret0, _ := ret[0].(*version.ReleaseInformation)
+	ret := m.ctrl.Call(m, "AllVersions")
+	ret0, _ := ret[0].([]*github.RepositoryRelease)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// LatestVersion indicates an expected call of LatestVersion.
-func (mr *MockReleaseVersionDescriberMockRecorder) LatestVersion() *gomock.Call {
+// AllVersions indicates an expected call of AllVersions.
+func (mr *MockReleaseVersionDescriberMockRecorder) AllVersions() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestVersion", reflect.TypeOf((*MockReleaseVersionDescriber)(nil).LatestVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllVersions", reflect.TypeOf((*MockReleaseVersionDescriber)(nil).AllVersions))
 }

@@ -22,7 +22,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/golang/mock/gomock"
+	"github.com/google/go-github/v38/github"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
@@ -148,10 +150,22 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.latestVersion), func(t *testing.T) {
 			prevVersion := version.Version
+			f := false
 			version.Version = tt.currentVersion
 			defer func() {
 				version.Version = prevVersion
 			}()
+
+			releases := []*github.RepositoryRelease{
+				{
+					TagName:    &tt.latestVersion.Version,
+					Draft:      &f,
+					Prerelease: &f,
+				},
+			}
+
+			currVer, _ := semver.NewVersion(tt.currentVersion)
+			*currVer, _ = currVer.SetPrerelease("")
 
 			ctrl := gomock.NewController(t)
 			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
@@ -159,15 +173,22 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 
 			mockStore.
 				EXPECT().
-				LatestVersion().
-				Return(tt.latestVersion, nil).
+				AllVersions().
+				Return(releases, nil).
 				Times(1)
 
 			bufOut := new(bytes.Buffer)
 			opts := &BuilderOpts{
-				store: mockStore,
+				store: version.NewLatestVersionFinder(mockStore),
 			}
-			err := opts.printNewVersionAvailable(bufOut)
+
+			err := opts.store.PrintNewVersionAvailable(
+				bufOut,
+				tt.currentVersion,
+				config.ToolName,
+				config.BinName(),
+			)
+
 			if err != nil {
 				t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
 			}

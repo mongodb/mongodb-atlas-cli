@@ -19,6 +19,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
@@ -60,6 +61,10 @@ import (
 
 const atlas = "atlas"
 
+type BuilderOpts struct {
+	store version.LatestVersionFinder
+}
+
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
 	rootCmd := &cobra.Command{
@@ -78,6 +83,16 @@ func Builder(profile *string) *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.Service() == "" {
 				config.SetService(config.CloudService)
+			}
+
+			w := cmd.ErrOrStderr()
+
+			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
+				opts := &BuilderOpts{
+					store: version.NewLatestVersionFinder(version.NewReleaseVersionDescriber()),
+				}
+
+				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
 			}
 
 			if cmd.Name() == "quickstart" { // quickstart has its own check

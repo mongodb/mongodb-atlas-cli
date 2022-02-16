@@ -54,6 +54,7 @@ const (
 	privateAPIKey                = "private_api_key"
 	AccessTokenField             = "access_token"
 	RefreshTokenField            = "refresh_token"
+	clientID                     = "client_id"
 	OpsManagerURLField           = "ops_manager_url"
 	baseURL                      = "base_url"
 	opsManagerCACertificate      = "ops_manager_ca_certificate"
@@ -120,6 +121,8 @@ func Properties() []string {
 		opsManagerSkipVerify,
 		mongoShellPath,
 		skipUpdateCheck,
+		AccessTokenField,
+		RefreshTokenField,
 	}
 }
 
@@ -448,6 +451,12 @@ func (p *Profile) Output() string {
 func SetOutput(v string) { Default().SetOutput(v) }
 func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
+}
+
+// ClientID get configured output format.
+func ClientID() string { return Default().ClientID() }
+func (p *Profile) ClientID() string {
+	return p.GetString(clientID)
 }
 
 // IsAccessSet return true if API keys have been set up.

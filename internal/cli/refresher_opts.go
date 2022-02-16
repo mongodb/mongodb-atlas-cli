@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/oauth"
-	"go.mongodb.org/atlas/auth"
+	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,7 +30,7 @@ type RefresherOpts struct {
 }
 
 type Refresher interface {
-	RefreshToken(context.Context, string) (*auth.Token, *atlas.Response, error)
+	RefreshToken(context.Context, string) (*atlasauth.Token, *atlas.Response, error)
 }
 
 func (opts *RefresherOpts) InitFlow() error {

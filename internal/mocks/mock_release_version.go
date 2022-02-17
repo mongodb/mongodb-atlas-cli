@@ -34,17 +34,17 @@ func (m *MockReleaseVersionDescriber) EXPECT() *MockReleaseVersionDescriberMockR
 	return m.recorder
 }
 
-// AllVersions mocks base method.
-func (m *MockReleaseVersionDescriber) AllVersions() ([]*github.RepositoryRelease, error) {
+// LatestWithCriteria mocks base method.
+func (m *MockReleaseVersionDescriber) LatestWithCriteria(arg0 int, arg1 func(string, string) bool, arg2 string) (*github.RepositoryRelease, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllVersions")
-	ret0, _ := ret[0].([]*github.RepositoryRelease)
+	ret := m.ctrl.Call(m, "LatestWithCriteria", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*github.RepositoryRelease)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// AllVersions indicates an expected call of AllVersions.
-func (mr *MockReleaseVersionDescriberMockRecorder) AllVersions() *gomock.Call {
+// LatestWithCriteria indicates an expected call of LatestWithCriteria.
+func (mr *MockReleaseVersionDescriberMockRecorder) LatestWithCriteria(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllVersions", reflect.TypeOf((*MockReleaseVersionDescriber)(nil).AllVersions))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestWithCriteria", reflect.TypeOf((*MockReleaseVersionDescriber)(nil).LatestWithCriteria), arg0, arg1, arg2)
 }

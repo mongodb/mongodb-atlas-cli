@@ -21,7 +21,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
 	"strings"
 	"time"
 
@@ -29,8 +28,13 @@ import (
 	"github.com/google/go-github/v38/github"
 )
 
+const (
+	minPageSize = 5
+)
+
 type LatestVersionFinder interface {
 	PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error
+	IsValidTagForTool(tag, tool string) bool
 }
 
 func NewLatestVersionFinder(re ReleaseVersionDescriber) LatestVersionFinder {
@@ -49,43 +53,31 @@ func (s *latestReleaseVersionFinder) versionFromTag(release *github.RepositoryRe
 	return release.GetTagName()
 }
 
-func (s *latestReleaseVersionFinder) skipTag(tag, tool string) bool {
+func (s *latestReleaseVersionFinder) IsValidTagForTool(tag, tool string) bool {
 	if tool == mongoCLI {
-		return strings.Contains(tag, atlasCLI)
+		return !strings.Contains(tag, atlasCLI)
 	}
-	return !strings.Contains(tag, tool)
+	return strings.Contains(tag, tool)
 }
 
 func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *ReleaseInformation, error) {
-	releases, err := s.r.AllVersions()
+	release, err := s.r.LatestWithCriteria(minPageSize, s.IsValidTagForTool, toolName)
+
+	if err != nil || release == nil {
+		return false, nil, err
+	}
+
+	v, err := semver.NewVersion(s.versionFromTag(release, toolName))
 
 	if err != nil {
 		return false, nil, err
 	}
-	// sort by created at
-	sort.Slice(releases, func(i, j int) bool {
-		return releases[i].GetCreatedAt().After(releases[j].GetCreatedAt().Time)
-	})
 
-	for i := 0; i < len(releases); i++ {
-		release := releases[i]
-		// filter out drafts, pre-releases and releases that do not belong to the tool
-		if release.GetDraft() || release.GetPrerelease() || s.skipTag(release.GetTagName(), toolName) {
-			continue
-		}
-
-		v, err := semver.NewVersion(s.versionFromTag(releases[i], toolName))
-
-		if err != nil {
-			return false, nil, err
-		}
-
-		if currentVersion.Compare(v) < 0 {
-			return true, &ReleaseInformation{
-				Version:     v.Original(),
-				PublishedAt: release.GetPublishedAt().Time,
-			}, nil
-		}
+	if currentVersion.Compare(v) < 0 {
+		return true, &ReleaseInformation{
+			Version:     v.Original(),
+			PublishedAt: release.GetPublishedAt().Time,
+		}, nil
 	}
 	return false, nil, nil
 }

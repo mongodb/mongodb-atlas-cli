@@ -19,8 +19,8 @@ package mongocli
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"testing"
-	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/golang/mock/gomock"
@@ -125,44 +125,45 @@ func TestBuilder(t *testing.T) {
 }
 
 func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
+	f := false
+	v2 := "v2.0.0"
+	v2WithCLI := "mongocli/v2.2.0"
+
 	tests := []struct {
 		currentVersion string
-		latestVersion  *version.ReleaseInformation
+		version        string
 		wantPrint      bool
+		release        *github.RepositoryRelease
 	}{
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  &version.ReleaseInformation{Version: "v2.0.0", PublishedAt: time.Now()},
 			wantPrint:      true,
+			release:        &github.RepositoryRelease{TagName: &v2, Prerelease: &f, Draft: &f},
 		},
 		{
 			currentVersion: "v1.0.0",
-			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
-			wantPrint:      false,
+			wantPrint:      true,
+			release:        &github.RepositoryRelease{TagName: &v2WithCLI, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion: "v1.0.0-123",
-			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
+			currentVersion: "v3.0.0",
 			wantPrint:      false,
+			release:        &github.RepositoryRelease{TagName: &v2, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion: "v3.0.0-123",
+			wantPrint:      false,
+			release:        &github.RepositoryRelease{TagName: &v2, Prerelease: &f, Draft: &f},
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.latestVersion), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release), func(t *testing.T) {
 			prevVersion := version.Version
-			f := false
 			version.Version = tt.currentVersion
 			defer func() {
 				version.Version = prevVersion
 			}()
-
-			releases := []*github.RepositoryRelease{
-				{
-					TagName:    &tt.latestVersion.Version,
-					Draft:      &f,
-					Prerelease: &f,
-				},
-			}
 
 			currVer, _ := semver.NewVersion(tt.currentVersion)
 			*currVer, _ = currVer.SetPrerelease("")
@@ -173,8 +174,8 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 
 			mockStore.
 				EXPECT().
-				AllVersions().
-				Return(releases, nil).
+				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
+				Return(tt.release, nil).
 				Times(1)
 
 			bufOut := new(bytes.Buffer)
@@ -200,11 +201,38 @@ A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
 
 To disable this alert, run "mongocli config set skip_update_check true".
-`, config.ToolName, tt.latestVersion.Version)
+`, config.ToolName, strings.ReplaceAll(tt.release.GetTagName(), "mongocli/", ""))
 			}
 
 			if got := bufOut.String(); got != want {
 				t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
+			}
+		})
+	}
+}
+
+func TestOutputOpts_testIsValidTag(t *testing.T) {
+	tests := []struct {
+		tag     string
+		isValid bool
+	}{
+		{"mongocli/v1.0.0", true},
+		{"v2.0.0", true},
+		{"atlascli/v1.0.0", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("%v_%v", tt.tag, tt.isValid), func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
+			defer ctrl.Finish()
+
+			opts := &BuilderOpts{
+				store: version.NewLatestVersionFinder(mockStore),
+			}
+
+			if result := opts.store.IsValidTagForTool(tt.tag, "mongocli"); result != tt.isValid {
+				t.Errorf("got = %v, want %v", result, tt.isValid)
 			}
 		})
 	}

@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"runtime"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
@@ -55,6 +56,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			a := time.Now()
 			w := cmd.ErrOrStderr()
 			if shouldSkipPrintNewVersion(w) {
 				return
@@ -64,6 +66,9 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			}
 
 			_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
+			b := time.Now()
+			fmt.Print("MongoCLI E2E time taken for release check: ")
+			fmt.Print(b.Sub(a))
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

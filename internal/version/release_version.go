@@ -24,12 +24,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version ReleaseVersionDescriber
 
 const (
-	maxPageSize = 100
-	maxWaitTime = 1 * time.Second
+	maxWaitTime = 500 * time.Millisecond
 )
 
 type ReleaseVersionDescriber interface {
-	AllVersions() ([]*github.RepositoryRelease, error)
+	LatestWithCriteria(n int, matchCriteria func(tag string, tool string) bool, toolName string) (*github.RepositoryRelease, error)
 }
 
 func NewReleaseVersionDescriber() ReleaseVersionDescriber {
@@ -40,35 +39,30 @@ type releaseVersionFetcher struct {
 	ctx context.Context
 }
 
-// NVersions retrieves the first n versions returned by Github list releases endpoint.
-func (s *releaseVersionFetcher) NVersions(n int) ([]*github.RepositoryRelease, error) {
-	var releases []*github.RepositoryRelease
+// LatestWithCriteria retrieves the first release version that matches the criteria. We assume that ListReleases returns releases sorted by created_at value.
+func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria func(tag string, tool string) bool, toolName string) (*github.RepositoryRelease, error) {
 	var page = 1
-	var pageSize = maxPageSize
-
-	if n <= maxPageSize {
-		pageSize = n
-	}
+	var pageSize = n
 
 	startTime := time.Now()
 	client := github.NewClient(nil)
 
 	for {
-		slice, _, err := client.Repositories.ListReleases(s.ctx, owner, mongoCLI, &github.ListOptions{PerPage: pageSize, Page: page})
-		releases = append(releases, slice...)
-
+		releases, _, err := client.Repositories.ListReleases(s.ctx, owner, mongoCLI, &github.ListOptions{PerPage: pageSize, Page: page})
 		if err != nil {
-			return releases, err
+			return nil, err
 		}
-
-		if len(slice) < pageSize || startTime.Add(maxWaitTime).After(time.Now()) {
-			return releases, nil
+		// Returns as soon as criteria is matched
+		for i := 0; i < len(releases); i++ {
+			release := releases[i]
+			if !release.GetDraft() && !release.GetPrerelease() && matchCriteria(release.GetTagName(), toolName) {
+				return release, nil
+			}
+		}
+		// Reached the end of the pages or timed out
+		if len(releases) < pageSize || time.Now().After(startTime.Add(maxWaitTime)) {
+			return nil, nil
 		}
 		page++
 	}
-}
-
-// NVersions retrieves all versions returned by Github list releases endpoint.
-func (s *releaseVersionFetcher) AllVersions() ([]*github.RepositoryRelease, error) {
-	return s.NVersions(maxPageSize)
 }

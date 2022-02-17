@@ -102,7 +102,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		cloudmanager.Builder(),
 		opsmanager.Builder(),
 		iam.Builder(),
-		auth.Builder(),
+		// auth.Builder(),
 		loginCmd,
 		logoutCmd,
 		whoCmd,

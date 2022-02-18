@@ -17,7 +17,6 @@
 package latest
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"strings"
@@ -30,77 +29,70 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 )
 
-func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
+func TestOutputOpts_HasNewVersionAvailable(t *testing.T) {
 	f := false
 	atlasV := "atlascli/v2.0.0"
 	mcliV := "mongocli/v2.0.0"
 	mcliOldV := "v2.0.0"
 
 	tests := []struct {
-		tool           string
-		currentVersion string
-		version        string
-		wantPrint      bool
-		release        *github.RepositoryRelease
+		tool             string
+		currentVersion   string
+		version          string
+		expectNewVersion bool
+		release          *github.RepositoryRelease
 	}{
 		{
-			tool:           "atlascli",
-			currentVersion: "v1.0.0",
-			wantPrint:      true,
-			release:        &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			tool:             "atlascli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "atlascli",
-			currentVersion: "v3.0.0",
-			wantPrint:      false,
-			release:        &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			tool:             "atlascli",
+			currentVersion:   "v3.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "atlascli",
-			currentVersion: "v3.0.0-123",
-			wantPrint:      false,
-			release:        &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			tool:             "atlascli",
+			currentVersion:   "v3.0.0-123",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "mongocli",
-			currentVersion: "v1.0.0",
-			wantPrint:      true,
-			release:        &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+			tool:             "mongocli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "mongocli",
-			currentVersion: "v1.0.0",
-			wantPrint:      true,
-			release:        &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+			tool:             "mongocli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "mongocli",
-			currentVersion: "v3.0.0",
-			wantPrint:      false,
-			release:        &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+			tool:             "mongocli",
+			currentVersion:   "v3.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:           "mongocli",
-			currentVersion: "v3.0.0-123",
-			wantPrint:      false,
-			release:        &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+			tool:             "mongocli",
+			currentVersion:   "v3.0.0-123",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			prevVersion := version.Version
 			version.Version = tt.currentVersion
 			defer func() {
 				version.Version = prevVersion
 			}()
-
-			var bin string
-			if tt.tool == "atlascli" {
-				bin = "atlas"
-			} else {
-				bin = tt.tool
-			}
 
 			currVer, _ := semver.NewVersion(tt.currentVersion)
 			*currVer, _ = currVer.SetPrerelease("")
@@ -115,31 +107,20 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 				Return(tt.release, nil).
 				Times(1)
 
-			bufOut := new(bytes.Buffer)
-
-			err := NewVersionFinder(context.Background(), mockStore).PrintNewVersionAvailable(
-				bufOut,
+			versionAvailable, newV, err := NewVersionFinder(context.Background(), mockStore).HasNewVersionAvailable(
 				tt.currentVersion,
 				tt.tool,
-				bin,
 			)
 
 			if err != nil {
-				t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
+				t.Errorf("HasNewVersionAvailable() unexpected error: %v", err)
 			}
 
-			want := ""
-			if tt.wantPrint {
-				want = fmt.Sprintf(`
-A new version of %s is available '%v'!
-To upgrade, see: https://dochub.mongodb.org/core/%s-install.
+			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
 
-To disable this alert, run "%s config set skip_update_check true".
-`, tt.tool, strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", ""), tt.tool, bin)
-			}
-
-			if got := bufOut.String(); got != want {
-				t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
+			if versionAvailable && (!tt.expectNewVersion || newV != expectedV) {
+				t.Errorf("want: versionAvailable=%v and newV=%v got: versionAvailable=%v and newV=%v.",
+					tt.expectNewVersion, expectedV, versionAvailable, newV)
 			}
 		})
 	}

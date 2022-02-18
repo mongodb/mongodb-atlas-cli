@@ -16,25 +16,17 @@ package latest
 
 import (
 	"context"
-	"fmt"
-	"io"
-	"os"
-	"os/exec"
-	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
-const (
-	minPageSize = 5
-)
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version VersionFinder
 
 type VersionFinder interface {
-	PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error
+	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)
 }
 
 func NewVersionFinder(ctx context.Context, re version.ReleaseVersionDescriber) VersionFinder {
@@ -47,8 +39,8 @@ type latestReleaseVersionFinder struct {
 }
 
 func versionFromTag(release *github.RepositoryRelease, toolName string) string {
-	if strings.Contains(release.GetTagName(), toolName) {
-		return strings.ReplaceAll(release.GetTagName(), toolName+"/", "")
+	if prefix := toolName + "/"; strings.HasPrefix(release.GetTagName(), prefix) {
+		return strings.ReplaceAll(release.GetTagName(), prefix, "")
 	}
 	return release.GetTagName()
 }
@@ -82,56 +74,7 @@ func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 	return false, nil, nil
 }
 
-func isAtLeast24HoursPast(t time.Time) bool {
-	return !t.IsZero() && time.Since(t) >= time.Hour*24
-}
-
-func isHomebrew(tool string) bool {
-	brewFormulaPath, err := homebrewFormulaPath(tool)
-	if err != nil {
-		return false
-	}
-
-	executablePath, err := executableCurrentPath()
-	if err != nil {
-		return false
-	}
-
-	return strings.HasPrefix(executablePath, brewFormulaPath)
-}
-
-func homebrewFormulaPath(tool string) (string, error) {
-	formula := tool
-	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
-	if err != nil {
-		return "", err
-	}
-
-	brewFormulaPath := strings.TrimSpace(string(brewFormulaPathBytes))
-
-	brewFormulaPath, err = filepath.EvalSymlinks(brewFormulaPath)
-	if err != nil {
-		return "", err
-	}
-
-	return brewFormulaPath, nil
-}
-
-func executableCurrentPath() (string, error) {
-	executablePath, err := os.Executable()
-	if err != nil {
-		return "", err
-	}
-
-	executablePath, err = filepath.EvalSymlinks(executablePath)
-	if err != nil {
-		return "", err
-	}
-
-	return executablePath, nil
-}
-
-func (s *latestReleaseVersionFinder) hasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error) {
+func (s *latestReleaseVersionFinder) HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error) {
 	if v == "" {
 		return false, "", nil
 	}
@@ -157,30 +100,4 @@ func (s *latestReleaseVersionFinder) hasNewVersionAvailable(v, tool string) (new
 	}
 
 	return false, "", nil
-}
-
-func (s *latestReleaseVersionFinder) PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error {
-	newVersionAvailable, latestVersion, err := s.hasNewVersionAvailable(v, tool)
-
-	if err != nil {
-		return err
-	}
-	if newVersionAvailable {
-		var upgradeInstructions string
-		if isHomebrew(tool) {
-			upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, bin)
-		} else {
-			upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, tool)
-		}
-
-		newVersionTemplate := `
-A new version of %s is available '%s'!
-%s
-
-To disable this alert, run "%s config set skip_update_check true".
-`
-		_, err = fmt.Fprintf(w, newVersionTemplate, tool, latestVersion, upgradeInstructions, bin)
-		return err
-	}
-	return nil
 }

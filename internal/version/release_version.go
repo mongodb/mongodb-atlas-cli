@@ -27,10 +27,10 @@ const (
 	maxWaitTime = 500 * time.Millisecond
 )
 
-type CriteriaType func(tag string, tool string) bool
+type Criteria func(tag string, tool string) bool
 
 type ReleaseVersionDescriber interface {
-	LatestWithCriteria(n int, matchCriteria CriteriaType, toolName string) (*github.RepositoryRelease, error)
+	LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error)
 }
 
 func NewReleaseVersionDescriber() ReleaseVersionDescriber {
@@ -42,7 +42,7 @@ type releaseVersionFetcher struct {
 }
 
 // LatestWithCriteria retrieves the first release version that matches the criteria. We assume that ListReleases returns releases sorted by created_at value.
-func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria CriteriaType, toolName string) (*github.RepositoryRelease, error) {
+func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error) {
 	var pageSize = n
 
 	startTime := time.Now()

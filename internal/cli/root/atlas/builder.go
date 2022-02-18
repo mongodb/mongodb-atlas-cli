@@ -64,7 +64,7 @@ import (
 const atlas = "atlas"
 
 type BuilderOpts struct {
-	store latest.VersionFinder
+	store latest.Printer
 }
 
 // Builder conditionally adds children commands as needed.
@@ -91,7 +91,7 @@ func Builder(profile *string) *cobra.Command {
 
 			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
 				opts := &BuilderOpts{
-					store: latest.NewVersionFinder(context.Background(), version.NewReleaseVersionDescriber()),
+					store: latest.NewPrinter(context.Background()),
 				}
 
 				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())

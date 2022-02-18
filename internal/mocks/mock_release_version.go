@@ -36,7 +36,7 @@ func (m *MockReleaseVersionDescriber) EXPECT() *MockReleaseVersionDescriberMockR
 }
 
 // LatestWithCriteria mocks base method.
-func (m *MockReleaseVersionDescriber) LatestWithCriteria(arg0 int, arg1 version.CriteriaType, arg2 string) (*github.RepositoryRelease, error) {
+func (m *MockReleaseVersionDescriber) LatestWithCriteria(arg0 int, arg1 version.Criteria, arg2 string) (*github.RepositoryRelease, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LatestWithCriteria", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*github.RepositoryRelease)

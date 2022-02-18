@@ -15,6 +15,7 @@
 package atlas
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"strings"
@@ -53,6 +54,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/latest"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
@@ -62,7 +64,7 @@ import (
 const atlas = "atlas"
 
 type BuilderOpts struct {
-	store version.LatestVersionFinder
+	store latest.VersionFinder
 }
 
 // Builder conditionally adds children commands as needed.
@@ -89,7 +91,7 @@ func Builder(profile *string) *cobra.Command {
 
 			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
 				opts := &BuilderOpts{
-					store: version.NewLatestVersionFinder(version.NewReleaseVersionDescriber()),
+					store: latest.NewVersionFinder(context.Background(), version.NewReleaseVersionDescriber()),
 				}
 
 				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())

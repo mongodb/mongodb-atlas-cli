@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package version
+package latest
 
 import (
 	"context"
@@ -25,56 +25,56 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/google/go-github/v38/github"
+	"github.com/google/go-github/v42/github"
+	"github.com/mongodb/mongocli/internal/version"
 )
 
 const (
 	minPageSize = 5
 )
 
-type LatestVersionFinder interface {
+type VersionFinder interface {
 	PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error
-	IsValidTagForTool(tag, tool string) bool
 }
 
-func NewLatestVersionFinder(re ReleaseVersionDescriber) LatestVersionFinder {
-	return &latestReleaseVersionFinder{ctx: context.Background(), r: re}
+func NewVersionFinder(ctx context.Context, re version.ReleaseVersionDescriber) VersionFinder {
+	return &latestReleaseVersionFinder{c: ctx, r: re}
 }
 
 type latestReleaseVersionFinder struct {
-	ctx context.Context
-	r   ReleaseVersionDescriber
+	c context.Context
+	r version.ReleaseVersionDescriber
 }
 
-func (s *latestReleaseVersionFinder) versionFromTag(release *github.RepositoryRelease, toolName string) (version string) {
+func versionFromTag(release *github.RepositoryRelease, toolName string) string {
 	if strings.Contains(release.GetTagName(), toolName) {
 		return strings.ReplaceAll(release.GetTagName(), toolName+"/", "")
 	}
 	return release.GetTagName()
 }
 
-func (s *latestReleaseVersionFinder) IsValidTagForTool(tag, tool string) bool {
-	if tool == mongoCLI {
-		return !strings.Contains(tag, atlasCLI)
+func isValidTagForTool(tag, tool string) bool {
+	if tool == version.MongoCLI {
+		return !strings.Contains(tag, version.AtlasCLI)
 	}
 	return strings.Contains(tag, tool)
 }
 
-func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *ReleaseInformation, error) {
-	release, err := s.r.LatestWithCriteria(minPageSize, s.IsValidTagForTool, toolName)
+func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *version.ReleaseInformation, error) {
+	release, err := s.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
 
 	if err != nil || release == nil {
 		return false, nil, err
 	}
 
-	v, err := semver.NewVersion(s.versionFromTag(release, toolName))
+	v, err := semver.NewVersion(versionFromTag(release, toolName))
 
 	if err != nil {
 		return false, nil, err
 	}
 
 	if currentVersion.Compare(v) < 0 {
-		return true, &ReleaseInformation{
+		return true, &version.ReleaseInformation{
 			Version:     v.Original(),
 			PublishedAt: release.GetPublishedAt().Time,
 		}, nil
@@ -131,11 +131,11 @@ func executableCurrentPath() (string, error) {
 	return executablePath, nil
 }
 
-func (s *latestReleaseVersionFinder) HasNewVersionAvailable(version, tool string) (newVersionAvailable bool, newVersion string, err error) {
-	if version == "" {
+func (s *latestReleaseVersionFinder) hasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error) {
+	if v == "" {
 		return false, "", nil
 	}
-	svCurrentVersion, err := semver.NewVersion(version)
+	svCurrentVersion, err := semver.NewVersion(v)
 	if err != nil {
 		return false, "", err
 	}
@@ -160,7 +160,7 @@ func (s *latestReleaseVersionFinder) HasNewVersionAvailable(version, tool string
 }
 
 func (s *latestReleaseVersionFinder) PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error {
-	newVersionAvailable, latestVersion, err := s.HasNewVersionAvailable(v, tool)
+	newVersionAvailable, latestVersion, err := s.hasNewVersionAvailable(v, tool)
 
 	if err != nil {
 		return err

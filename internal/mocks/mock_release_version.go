@@ -8,7 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	github "github.com/google/go-github/v38/github"
+	github "github.com/google/go-github/v42/github"
+	version "github.com/mongodb/mongocli/internal/version"
 )
 
 // MockReleaseVersionDescriber is a mock of ReleaseVersionDescriber interface.
@@ -35,7 +36,7 @@ func (m *MockReleaseVersionDescriber) EXPECT() *MockReleaseVersionDescriberMockR
 }
 
 // LatestWithCriteria mocks base method.
-func (m *MockReleaseVersionDescriber) LatestWithCriteria(arg0 int, arg1 func(string, string) bool, arg2 string) (*github.RepositoryRelease, error) {
+func (m *MockReleaseVersionDescriber) LatestWithCriteria(arg0 int, arg1 version.CriteriaType, arg2 string) (*github.RepositoryRelease, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LatestWithCriteria", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*github.RepositoryRelease)

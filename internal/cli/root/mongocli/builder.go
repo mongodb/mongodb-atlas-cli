@@ -15,6 +15,7 @@
 package mongocli
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"runtime"
@@ -28,6 +29,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/latest"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
@@ -35,7 +37,7 @@ import (
 )
 
 type BuilderOpts struct {
-	store version.LatestVersionFinder
+	store latest.VersionFinder
 }
 
 // Builder conditionally adds children commands as needed.
@@ -60,7 +62,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 				return
 			}
 			opts := &BuilderOpts{
-				store: version.NewLatestVersionFinder(version.NewReleaseVersionDescriber()),
+				store: latest.NewVersionFinder(context.Background(), version.NewReleaseVersionDescriber()),
 			}
 
 			_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())

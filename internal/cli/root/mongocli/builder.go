@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/latest"
+	"github.com/mongodb/mongocli/internal/latestrelease"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
@@ -37,7 +37,7 @@ import (
 )
 
 type BuilderOpts struct {
-	store latest.Printer
+	store latestrelease.Printer
 }
 
 // Builder conditionally adds children commands as needed.
@@ -62,7 +62,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 				return
 			}
 			opts := &BuilderOpts{
-				store: latest.NewPrinter(context.Background()),
+				store: latestrelease.NewPrinter(context.Background()),
 			}
 
 			_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())

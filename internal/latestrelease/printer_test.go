@@ -14,7 +14,7 @@
 //go:build unit
 // +build unit
 
-package latest
+package latestrelease
 
 import (
 	"bytes"

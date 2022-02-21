@@ -86,6 +86,9 @@ func (opts *loginOpts) SetUpAccess() {
 	if opts.OpsManagerURL != "" {
 		opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
 	}
+	if config.ClientID() != "" {
+		opts.config.Set(config.ClientIDField, config.ClientID())
+	}
 }
 
 func (opts *loginOpts) Run(ctx context.Context) error {

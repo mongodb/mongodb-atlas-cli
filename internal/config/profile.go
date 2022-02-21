@@ -54,7 +54,7 @@ const (
 	privateAPIKey                = "private_api_key"
 	AccessTokenField             = "access_token"
 	RefreshTokenField            = "refresh_token"
-	clientID                     = "client_id"
+	ClientIDField                = "client_id"
 	OpsManagerURLField           = "ops_manager_url"
 	baseURL                      = "base_url"
 	opsManagerCACertificate      = "ops_manager_ca_certificate"
@@ -456,7 +456,7 @@ func (p *Profile) SetOutput(v string) {
 // ClientID get configured output format.
 func ClientID() string { return Default().ClientID() }
 func (p *Profile) ClientID() string {
-	return p.GetString(clientID)
+	return p.GetString(ClientIDField)
 }
 
 // IsAccessSet return true if API keys have been set up.

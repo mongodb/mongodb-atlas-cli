@@ -59,8 +59,12 @@ func NewPlatform(tool, version, arch, system, distro string, formats []string) *
 		}
 	}
 
+	title := "Atlas CLI"
+	if tool == "mongocli" {
+		title = "MongoDB CLI"
+	}
 	p.Packages = Package{
-		Title: "MongoDB CLI",
+		Title: title,
 		Links: links,
 	}
 	return p

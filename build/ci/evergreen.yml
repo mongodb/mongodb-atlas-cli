@@ -389,6 +389,7 @@ functions:
           - unstable
           - latest_deb
           - latest_rpm
+          - package_name
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
@@ -429,7 +430,7 @@ functions:
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
-          go run ../internal/release/main.go "$VERSION"
+          go run "${release_file_path}" "$VERSION"
   "upload dist":
     - command: s3.put
       params:
@@ -1366,6 +1367,7 @@ tasks:
           unstable: -unstable
           latest_deb: ~latest
           latest_rpm: .latest
+          package_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -1401,6 +1403,7 @@ tasks:
           unstable: -unstable
           latest_deb: ~latest
           latest_rpm: .latest
+          package_name: mongodb-atlas
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -1415,7 +1418,7 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
         vars:
-          release_file_path: ../internal/release/atlascli/main.go
+          release_file_path: ../internal/release/atlas/main.go
       - func: "upload dist"
   - name: pkg_test_docker_ubuntu1804
     tags: ["smoke-test"]

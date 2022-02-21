@@ -13,9 +13,9 @@ builds:
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]
-    hooks:
-      # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
-      post: ./build/package/mac_notarize.sh
+#    hooks:
+#      # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
+#      post: ./build/package/mac_notarize.sh
   - <<: *build_defaults
     id: linux
     goos: [linux]
@@ -26,6 +26,7 @@ builds:
     goarch: [amd64]
 archives:
 - id: linux
+  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -38,11 +39,13 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
+  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
+  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false

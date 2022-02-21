@@ -28,7 +28,8 @@ import (
 )
 
 const (
-	minPageSize = 5
+	minPageSize       = 5
+	atlasToolFullName = "mongodb-atlas"
 )
 
 type Printer interface {
@@ -91,6 +92,13 @@ func executableCurrentPath() (string, error) {
 	return filepath.EvalSymlinks(executablePath)
 }
 
+func homebrewCommand(tool string) string {
+	if strings.Contains(tool, "atlas") {
+		return atlasToolFullName
+	}
+	return tool
+}
+
 func (p *printer) PrintNewVersionAvailable(w io.Writer, v, tool, bin string) error {
 	newVersionAvailable, latestVersion, err := p.finder.HasNewVersionAvailable(v, tool)
 
@@ -100,7 +108,7 @@ func (p *printer) PrintNewVersionAvailable(w io.Writer, v, tool, bin string) err
 	if newVersionAvailable {
 		var upgradeInstructions string
 		if isHomebrew(tool) {
-			upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, bin)
+			upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrewCommand(tool))
 		} else {
 			upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, tool)
 		}

@@ -17,15 +17,7 @@
 package mongocli
 
 import (
-	"bytes"
-	"fmt"
 	"testing"
-	"time"
-
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/version"
 )
 
 func TestBuilder(t *testing.T) {
@@ -117,73 +109,6 @@ func TestBuilder(t *testing.T) {
 			got := Builder(&profile, args.argsWithoutProg)
 			if len(got.Commands()) != want {
 				t.Fatalf("got=%d, want=%d", len(got.Commands()), want)
-			}
-		})
-	}
-}
-
-func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
-	tests := []struct {
-		currentVersion string
-		latestVersion  *version.ReleaseInformation
-		wantPrint      bool
-	}{
-		{
-			currentVersion: "v1.0.0",
-			latestVersion:  &version.ReleaseInformation{Version: "v2.0.0", PublishedAt: time.Now()},
-			wantPrint:      true,
-		},
-		{
-			currentVersion: "v1.0.0",
-			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
-			wantPrint:      false,
-		},
-		{
-			currentVersion: "v1.0.0-123",
-			latestVersion:  &version.ReleaseInformation{Version: "v1.0.0", PublishedAt: time.Now()},
-			wantPrint:      false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.latestVersion), func(t *testing.T) {
-			prevVersion := version.Version
-			version.Version = tt.currentVersion
-			defer func() {
-				version.Version = prevVersion
-			}()
-
-			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
-			defer ctrl.Finish()
-
-			mockStore.
-				EXPECT().
-				LatestVersion().
-				Return(tt.latestVersion, nil).
-				Times(1)
-
-			bufOut := new(bytes.Buffer)
-			opts := &BuilderOpts{
-				store: mockStore,
-			}
-			err := opts.printNewVersionAvailable(bufOut)
-			if err != nil {
-				t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
-			}
-
-			want := ""
-			if tt.wantPrint {
-				want = fmt.Sprintf(`
-A new version of %s is available '%v'!
-To upgrade, see: https://dochub.mongodb.org/core/mongocli-install.
-
-To disable this alert, run "mongocli config set skip_update_check true".
-`, config.ToolName, tt.latestVersion.Version)
-			}
-
-			if got := bufOut.String(); got != want {
-				t.Errorf("printNewVersionAvailable() got = %v, want %v", got, want)
 			}
 		})
 	}

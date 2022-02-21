@@ -14,8 +14,22 @@
 
 package version
 
+import "time"
+
+const (
+	MongoCLI = "mongocli"
+	AtlasCLI = "atlascli"
+	owner    = "mongodb"
+)
+
 // Version for CLI.
 var Version string
 
 // GitCommit git sha of the build.
 var GitCommit string
+
+// ReleaseInformation Release information.
+type ReleaseInformation struct {
+	Version     string
+	PublishedAt time.Time
+}

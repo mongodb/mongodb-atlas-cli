@@ -18,18 +18,19 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/go-github/v38/github"
+	"github.com/google/go-github/v42/github"
 )
 
 //go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version ReleaseVersionDescriber
 
-type ReleaseVersionDescriber interface {
-	LatestVersion() (*ReleaseInformation, error)
-}
+const (
+	maxWaitTime = 500 * time.Millisecond
+)
 
-type ReleaseInformation struct {
-	Version     string
-	PublishedAt time.Time
+type Criteria func(tag string, tool string) bool
+
+type ReleaseVersionDescriber interface {
+	LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error)
 }
 
 func NewReleaseVersionDescriber() ReleaseVersionDescriber {
@@ -40,15 +41,36 @@ type releaseVersionFetcher struct {
 	ctx context.Context
 }
 
-// LatestVersion encapsulates the logic to manage different cloud providers.
-func (s *releaseVersionFetcher) LatestVersion() (*ReleaseInformation, error) {
+// LatestWithCriteria retrieves the first release version that matches the criteria. We assume that ListReleases returns releases sorted by created_at value.
+func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error) {
+	var pageSize = n
+
+	startTime := time.Now()
 	client := github.NewClient(nil)
-	release, _, err := client.Repositories.GetLatestRelease(s.ctx, "mongodb", "mongocli")
-	if err != nil {
-		return nil, err
+
+	opt := &github.ListOptions{PerPage: pageSize}
+
+	if matchCriteria == nil {
+		matchCriteria = func(tag, tool string) bool {
+			return true
+		}
 	}
-	return &ReleaseInformation{
-		Version:     release.GetTagName(),
-		PublishedAt: release.PublishedAt.Time,
-	}, nil
+
+	for {
+		releases, resp, err := client.Repositories.ListReleases(s.ctx, owner, MongoCLI, opt)
+		if err != nil {
+			return nil, err
+		}
+		// Returns as soon as criteria is matched
+		for _, release := range releases {
+			if matchCriteria(release.GetTagName(), toolName) && !release.GetPrerelease() {
+				return release, nil
+			}
+		}
+		// Reached the end of the pages or timed out
+		if resp.NextPage == 0 || time.Now().After(startTime.Add(maxWaitTime)) {
+			return nil, nil
+		}
+		opt.Page = resp.NextPage
+	}
 }

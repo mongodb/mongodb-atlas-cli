@@ -15,10 +15,12 @@
 package atlas
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"strings"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslogs"
@@ -52,6 +54,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/latestrelease"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
@@ -59,6 +62,10 @@ import (
 )
 
 const atlas = "atlas"
+
+type BuilderOpts struct {
+	store latestrelease.Printer
+}
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
@@ -93,6 +100,17 @@ func Builder(profile *string) *cobra.Command {
 			}
 
 			return validate.Credentials()
+		},
+		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			w := cmd.ErrOrStderr()
+
+			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
+				opts := &BuilderOpts{
+					store: latestrelease.NewPrinter(context.Background()),
+				}
+
+				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
+			}
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

@@ -430,7 +430,7 @@ functions:
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
-          go run "${release_file_path}" "$VERSION"
+          go run ../internal/release/main.go "$VERSION" "$PACKAGE_NAME"
   "upload dist":
     - command: s3.put
       params:
@@ -1382,7 +1382,7 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
         vars:
-          release_file_path: ../internal/release/mongocli/main.go
+          FEED_FILE_NAME: mongocli.json
       - func: "upload dist"
   - name: package_atlascli_goreleaser
     tags: [ "packaging" ]
@@ -1418,7 +1418,7 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
         vars:
-          release_file_path: ../internal/release/atlas/main.go
+          FEED_FILE_NAME: mongodb-atlas.json
       - func: "upload dist"
   - name: pkg_test_docker_ubuntu1804
     tags: ["smoke-test"]
@@ -1528,7 +1528,7 @@ tasks:
             - "*.rpm"
       - func: "generate download archive json"
         vars:
-          release_file_path: ../internal/release/mongocli/main.go
+          FEED_FILE_NAME: mongocli.json
       - func: "upload dist"
       - command: s3.put
         params:

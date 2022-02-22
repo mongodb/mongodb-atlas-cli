@@ -26,7 +26,7 @@ builds:
     goarch: [amd64]
 archives:
 - id: linux
-  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -39,13 +39,13 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
-  name_template: "mongodb-atlas_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false
@@ -76,6 +76,6 @@ changelog:
     - '^build(deps):'
 release:
   prerelease: true
-  name_template: "Atlas CLI {{.Version}}"
+  name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi

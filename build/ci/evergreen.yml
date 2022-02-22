@@ -430,7 +430,7 @@ functions:
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
-          go run ../internal/release/main.go "$VERSION" "$PACKAGE_NAME"
+          go run ../internal/release/main.go "$VERSION" "FEED_FILE_NAME"
   "upload dist":
     - command: s3.put
       params:

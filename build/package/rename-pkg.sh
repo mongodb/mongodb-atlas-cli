@@ -34,8 +34,8 @@ if [[ "${package_name:?}" == mongocli ]]; then
   mv "yum/$FILENAME.rpm" "yum/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 else
   cp "$FILENAME.deb" apt/
-  mv "apt/$FILENAME.deb" "apt/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+  mv "apt/$FILENAME.deb" "apt/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
   cp "$FILENAME.rpm" yum/
-  mv "yum/$FILENAME.rpm" "yum/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+  mv "yum/$FILENAME.rpm" "yum/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
 fi
 

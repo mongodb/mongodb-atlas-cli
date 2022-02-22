@@ -35,7 +35,7 @@ WIX_MANIFEST_FILE="./wix/mongocli.json"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
   SOURCE_FILES=./cmd/atlas
-  PACKAGE_NAME=mongodb-atlas_${VERSION}_windows_x86_64.msi
+  PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
   OUTPUT=./bin/atlas.exe
   LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
   WIX_MANIFEST_FILE="./wix/atlascli.json"

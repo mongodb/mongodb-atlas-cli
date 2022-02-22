@@ -1403,7 +1403,7 @@ tasks:
           unstable: -unstable
           latest_deb: ~latest
           latest_rpm: .latest
-          package_name: mongodb-atlas
+          package_name: mongodb-atlas-cli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz

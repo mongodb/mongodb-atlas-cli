@@ -1833,18 +1833,18 @@ tasks:
           distro: debian10
           ext: deb
   ################################################################
-  # Stable Publish
+  # Stable Publish - MongoCLI
   # RPM Distros
-  - name: push_rhel62_enterprise_stable
+  - name: push_mongocli_rhel62_enterprise_stable
     <<: &default_push_stable_def
       git_tag_only: true
       stepback: false
-      tags: ["push_stable"]
+      tags: ["push_mongocli_stable"]
       depends_on:
         - name: compile
           variant: "code_health"
         - name: release_mongocli
-          variant: "release_github"
+          variant: "release_mongocli_github"
     commands:
       - func: "clone"
       - func: "install curator"
@@ -1853,7 +1853,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
-  - name: push_rhel62_org_stable
+  - name: push_mongocli_rhel62_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1863,7 +1863,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
-  - name: push_rhel70_enterprise_stable
+  - name: push_mongocli_rhel70_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1873,7 +1873,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
-  - name: push_rhel70_org_stable
+  - name: push_mongocli_rhel70_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1883,7 +1883,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
-  - name: push_rhel80_enterprise_stable
+  - name: push_mongocli_rhel80_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1893,7 +1893,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
-  - name: push_rhel80_org_stable
+  - name: push_mongocli_rhel80_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1903,7 +1903,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
-  - name: push_amazon2_enterprise_stable
+  - name: push_mongocli_amazon2_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1913,7 +1913,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
-  - name: push_amazon2_org_44
+  - name: push_mongocli_amazon2_org_44
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1924,7 +1924,7 @@ tasks:
           distro: amazon2
           ext: rpm
   # DEB Distros
-  - name: push_ubuntu1804_enterprise_stable
+  - name: push_mongocli_ubuntu1804_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1934,7 +1934,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
-  - name: push_ubuntu1804_org_stable
+  - name: push_mongocli_ubuntu1804_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1944,7 +1944,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
-  - name: push_ubuntu2004_enterprise_stable
+  - name: push_mongocli_ubuntu2004_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1954,7 +1954,7 @@ tasks:
           edition: enterprise
           distro: ubuntu2004
           ext: deb
-  - name: push_ubuntu2004_org_stable
+  - name: push_mongocli_ubuntu2004_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1964,7 +1964,7 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
-  - name: push_debian81_org_stable
+  - name: push_mongocli_debian81_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1974,7 +1974,7 @@ tasks:
           edition: org
           distro: debian81
           ext: deb
-  - name: push_debian92_enterprise_stable
+  - name: push_mongocli_debian92_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1984,7 +1984,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
-  - name: push_debian92_org_stable
+  - name: push_mongocli_debian92_org_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -1994,7 +1994,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
-  - name: push_debian10_enterprise_stable
+  - name: push_mongocli_debian10_enterprise_stable
     <<: *default_push_stable_def
     commands:
       - func: "clone"
@@ -2004,8 +2004,190 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
-  - name: push_debian10_org_stable
+  - name: push_mongocli_debian10_org_stable
     <<: *default_push_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian10
+          ext: deb
+  ################################################################
+  # Stable Publish - AtlasCLI
+  # RPM Distros
+  - name: push_atlascli_rhel62_enterprise_stable
+    <<: &default_push_atlascli_stable_def
+      git_tag_only: true
+      stepback: false
+      tags: [ "push_atlascli_stable" ]
+      depends_on:
+        - name: compile
+          variant: "code_health"
+        - name: release_atlascli
+          variant: "atlascli_release_github"
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel70
+          ext: rpm
+  - name: push_atlascli_rhel62_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_atlascli_rhel70_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel70
+          ext: rpm
+  - name: push_atlascli_rhel70_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel70
+          ext: rpm
+  - name: push_atlascli_rhel80_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: rhel80
+          ext: rpm
+  - name: push_atlascli_rhel80_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: rhel80
+          ext: rpm
+  - name: push_atlascli_amazon2_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: amazon2
+          ext: rpm
+  - name: push_atlascli_amazon2_org_44
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: amazon2
+          ext: rpm
+  # DEB Distros
+  - name: push_atlascli_ubuntu1804_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu1804
+          ext: deb
+  - name: push_atlascli_ubuntu1804_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu1804
+          ext: deb
+  - name: push_atlascli_ubuntu2004_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: ubuntu2004
+          ext: deb
+  - name: push_atlascli_ubuntu2004_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: ubuntu2004
+          ext: deb
+  - name: push_atlascli_debian81_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian81
+          ext: deb
+  - name: push_atlascli_debian92_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian92
+          ext: deb
+  - name: push_atlascli_debian92_org_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: org
+          distro: debian92
+          ext: deb
+  - name: push_atlascli_debian10_enterprise_stable
+    <<: *default_push_atlascli_stable_def
+    commands:
+      - func: "clone"
+      - func: "install curator"
+      - func: "push"
+        vars:
+          edition: enterprise
+          distro: debian10
+          ext: deb
+  - name: push_atlascli_debian10_org_stable
+    <<: *default_push_atlascli_stable_def
     commands:
       - func: "clone"
       - func: "install curator"
@@ -2159,7 +2341,7 @@ buildvariants:
       go_bin: "c:\\golang\\go1.17/bin"
     tasks:
       - name: release_mongocli_msi
-  - name: release_github
+  - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
       - macos-1014-codesign
@@ -2186,30 +2368,57 @@ buildvariants:
       go_bin: "c:\\golang\\go1.17/bin"
     tasks:
       - name: release_atlascli_msi
-  - name: release_publish_42
-    display_name: "Publish yum/apt 4.2"
+  - name: release_mongocli_publish_42
+    display_name: "Publish MongoCLI yum/apt 4.2"
     run_on:
       - rhel70-small
     expansions:
       server_version: "4.2.3"
       notary_key_name: "server-4.2"
     tasks:
-      - name: .push_stable
-  - name: release_publish_44
-    display_name: "Publish yum/apt 4.4"
+      - name: .push_mongocli_stable
+  - name: release_mongocli_publish_44
+    display_name: "Publish MongoCLI yum/apt 4.4"
     run_on:
       - rhel70-small
     expansions:
       server_version: "4.4.3"
       notary_key_name: "server-4.4"
     tasks:
-      - name: .push_stable
-  - name: release_publish_50
-    display_name: "Publish yum/apt 5.0"
+      - name: .push_mongocli_stable
+  - name: release_mongocli_publish_50
+    display_name: "Publish MongoCLI yum/apt 5.0"
     run_on:
       - rhel70-small
     expansions:
       server_version: "5.0.0"
       notary_key_name: "server-5.0"
     tasks:
-      - name: .push_stable
+      - name: .push_mongocli_stable
+  - name: atlascli_release_publish_42
+    display_name: "Publish AtlasCLI yum/apt 4.2"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "4.2.3"
+      notary_key_name: "server-4.2"
+    tasks:
+      - name: .push_atlascli_stable
+  - name: atlascli_release_publish_44
+    display_name: "Publish AtlasCLI yum/apt 4.4"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "4.4.3"
+      notary_key_name: "server-4.4"
+    tasks:
+      - name: .push_atlascli_stable
+  - name: atlascli_release_publish_50
+    display_name: "Publish AtlasCLI yum/apt 5.0"
+    run_on:
+      - rhel70-small
+    expansions:
+      server_version: "5.0.0"
+      notary_key_name: "server-5.0"
+    tasks:
+      - name: .push_atlascli_stable

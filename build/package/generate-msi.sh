@@ -23,13 +23,27 @@ export CGO_ENABLED
 
 go-msi check-env
 
-SOURCE_FILES=./cmd/mongocli
 
 VERSION=$(git describe | cut -d "v" -f 2)
 COMMIT=$(git log -n1 --format=format:"%H")
 
-env GOOS=windows GOARCH=amd64 go build \
-  -ldflags "-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${COMMIT}" \
-  -o ./bin/mongocli.exe "${SOURCE_FILES}"
+SOURCE_FILES=./cmd/mongocli
+PACKAGE_NAME=mongocli_${VERSION}_windows_x86_64.msi
+OUTPUT=./bin/mongocli.exe
+LINKER_FLAGS="-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${COMMIT}"
+WIX_MANIFEST_FILE="./wix/mongocli.json"
 
-go-msi make --msi "dist/mongocli_${VERSION}_windows_x86_64.msi" --version "${VERSION}"
+if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+  SOURCE_FILES=./cmd/atlas
+  PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
+  OUTPUT=./bin/atlas.exe
+  LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
+  WIX_MANIFEST_FILE="./wix/atlascli.json"
+else
+   LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
+fi
+
+env GOOS=windows GOARCH=amd64 go build \
+  -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
+
+go-msi make --path "${WIX_MANIFEST_FILE}"  --msi "dist/${PACKAGE_NAME}" --version "${VERSION}"

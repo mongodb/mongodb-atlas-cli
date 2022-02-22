@@ -17,6 +17,11 @@ set -Eeou pipefail
 
 VERSION=$(git describe | cut -d "v" -f 2)
 
+PACKAGE_NAME=mongocli_"${VERSION}"_windows_x86_64.msi
+if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+  PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
+fi
+
 pushd bin
 
-curl https://fastdl.mongodb.org/mongocli/mongocli_"${VERSION}"_windows_x86_64.msi --output mongocli_"${VERSION}"_windows_x86_64.msi
+curl https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}" --output "${PACKAGE_NAME}"

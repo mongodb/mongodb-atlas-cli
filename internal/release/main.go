@@ -18,8 +18,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
+
+const mongocli = "mongocli"
 
 type DownloadArchive struct {
 	PreviousReleasesLink string     `json:"previous_releases_link"`
@@ -48,7 +51,7 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func newPlatform(version, arch, system, distro string, formats []string) *Platform {
+func newPlatform(tool, version, arch, system, distro string, formats []string) *Platform {
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
@@ -56,13 +59,17 @@ func newPlatform(version, arch, system, distro string, formats []string) *Platfo
 	links := make([]Link, len(formats))
 	for i, f := range formats {
 		links[i] = Link{
-			DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/mongocli_%s_%s_%s.%s", version, system, arch, f),
+			DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/%s_%s_%s_%s.%s", tool, version, system, arch, f),
 			Name:         f,
 		}
 	}
 
+	title := "MongoDB Atlas CLI"
+	if tool == mongocli {
+		title = "MongoDB CLI"
+	}
 	p.Packages = Package{
-		Title: "MongoDB CLI",
+		Title: title,
 		Links: links,
 	}
 	return p
@@ -70,7 +77,7 @@ func newPlatform(version, arch, system, distro string, formats []string) *Platfo
 
 func main() {
 	version := os.Args[1]
-	feedFilename := "mongocli.json"
+	feedFilename := os.Args[2]
 	fmt.Printf("Generating JSON: %s\n", feedFilename)
 	err := generateFile(feedFilename, version)
 
@@ -83,6 +90,10 @@ func main() {
 }
 
 func generateFile(name, version string) error {
+	packageName := mongocli
+	if strings.Contains(name, "atlas") {
+		packageName = "mongodb-atlas-cli"
+	}
 	feedFile, err := os.Create(name)
 	if err != nil {
 		return err
@@ -96,12 +107,12 @@ func generateFile(name, version string) error {
 		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
 		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
 		Platform: []Platform{
-			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
-			*newPlatform(version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
-			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
-			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
-			*newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
-			*newPlatform(version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
+			*newPlatform(packageName, version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
+			*newPlatform(packageName, version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
+			*newPlatform(packageName, version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
 		},
 	}
 	jsonEncoder := json.NewEncoder(feedFile)

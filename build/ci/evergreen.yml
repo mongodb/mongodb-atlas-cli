@@ -377,6 +377,7 @@ functions:
           - workdir
         env:
           <<: *go_options
+          TOOL_NAME: ${TOOL_NAME}
         command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
@@ -388,6 +389,7 @@ functions:
           - unstable
           - latest_deb
           - latest_rpm
+          - package_name
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
@@ -428,7 +430,7 @@ functions:
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
-          go run ../internal/release/main.go "$VERSION"
+          go run ../internal/release/main.go "$VERSION" "FEED_FILE_NAME"
   "upload dist":
     - command: s3.put
       params:
@@ -1300,7 +1302,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: om50,remote,sharded
-  - name: package_msi
+  - name: package_mongocli_msi
     tags: ["packaging"]
     depends_on:
       - name: compile
@@ -1310,6 +1312,8 @@ tasks:
       - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
+        vars:
+          TOOL_NAME: mongocli
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -1321,7 +1325,30 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
-  - name: package_goreleaser
+  - name: package_atlascli_msi
+    tags: [ "packaging" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install go-msi"
+      - func: "generate msi"
+        vars:
+          TOOL_NAME: atlascli
+      - func: "uninstall go-msi"
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.msi
+          remote_file: ${project}/dist/${revision}_${created_at}/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+  - name: package_mongocli_goreleaser
     tags: ["packaging"]
     depends_on:
       - name: compile
@@ -1333,11 +1360,14 @@ tasks:
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "package"
+        vars:
+          goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --snapshot -p 1
       - func: "rename pkg"
         vars:
           unstable: -unstable
           latest_deb: ~latest
           latest_rpm: .latest
+          package_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -1351,11 +1381,49 @@ tasks:
           include:
             - "*.rpm"
       - func: "generate download archive json"
+        vars:
+          FEED_FILE_NAME: mongocli.json
+      - func: "upload dist"
+  - name: package_atlascli_goreleaser
+    tags: [ "packaging" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "generate notices"
+      - func: "install goreleaser"
+      - func: "install macos notarization service"
+      - func: "package"
+        vars:
+          goreleaser_cmd: goreleaser --config .atlascli.goreleaser.yml --rm-dist --snapshot -p 1
+      - func: "rename pkg"
+        vars:
+          unstable: -unstable
+          latest_deb: ~latest
+          latest_rpm: .latest
+          package_name: mongodb-atlas-cli
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/apt
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          source_dir: src/github.com/mongodb/mongocli/dist/yum
+          include:
+            - "*.rpm"
+      - func: "generate download archive json"
+        vars:
+          FEED_FILE_NAME: mongodb-atlas.json
       - func: "upload dist"
   - name: pkg_test_docker_ubuntu1804
     tags: ["smoke-test"]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1365,7 +1433,7 @@ tasks:
   - name: pkg_test_docker_ubuntu2004
     tags: ["smoke-test"]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1375,7 +1443,7 @@ tasks:
   - name: pkg_test_docker_debian9
     tags: [ "smoke-test" ]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1385,7 +1453,7 @@ tasks:
   - name: pkg_test_docker_debian10
     tags: [ "smoke-test" ]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1395,7 +1463,7 @@ tasks:
   - name: pkg_test_docker_amazon2
     tags: [ "smoke-test" ]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1405,7 +1473,7 @@ tasks:
   - name: pkg_test_docker_centos7
     tags: [ "smoke-test" ]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1415,7 +1483,7 @@ tasks:
   - name: pkg_test_docker_centos8
     tags: [ "smoke-test" ]
     depends_on:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
         variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1442,8 +1510,10 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --rm-dist --release-notes CHANGELOG.md -p 1
+          goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
+        vars:
+          package_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/deb.tgz
@@ -1457,6 +1527,8 @@ tasks:
           include:
             - "*.rpm"
       - func: "generate download archive json"
+        vars:
+          FEED_FILE_NAME: mongocli.json
       - func: "upload dist"
       - command: s3.put
         params:
@@ -1485,6 +1557,8 @@ tasks:
       - func: "clone"
       - func: "install go-msi"
       - func: "generate msi"
+        vars:
+          TOOL_NAME: mongocli
       - func: "uninstall go-msi"
       - func: "upload dist"
       - command: s3.put
@@ -1511,7 +1585,7 @@ tasks:
       depends_on:
         - name: compile
           variant: "code_health"
-        - name: package_goreleaser
+        - name: package_mongocli_goreleaser
           variant: "goreleaser_snapshot"
     commands:
       - func: "clone"
@@ -1954,7 +2028,8 @@ buildvariants:
       go_root: "c:\\golang\\go1.17"
       go_bin: "c:\\golang\\go1.17/bin"
     tasks:
-      - name: package_msi
+      - name: package_mongocli_msi
+      - name: package_atlascli_msi
   - name: goreleaser_snapshot
     display_name: "Packaging (goreleaser)"
     run_on:
@@ -1964,7 +2039,8 @@ buildvariants:
       go_bin: "/opt/golang/go1.17/bin"
       server_version: "4.4.0-rc3"
     tasks:
-      - name: package_goreleaser
+      - name: package_mongocli_goreleaser
+      - name: package_atlascli_goreleaser
   - name: publish_snapshot
     display_name: "Publish yum/apt main"
     run_on:

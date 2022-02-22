@@ -51,7 +51,7 @@ archives:
   wrap_in_directory: false
   format: zip
 nfpms:
-- package_name: mongodb-atlas
+- package_name: mongodb-atlas-cli
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>

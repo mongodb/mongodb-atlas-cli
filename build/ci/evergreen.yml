@@ -1490,7 +1490,7 @@ tasks:
       - func: "docker build"
         vars:
           image: centos8-rpm
-  - name: release
+  - name: release_mongocli
     stepback: false
     git_tag_only: true
     depends_on:
@@ -1843,7 +1843,7 @@ tasks:
       depends_on:
         - name: compile
           variant: "code_health"
-        - name: release
+        - name: release_mongocli
           variant: "release_github"
     commands:
       - func: "clone"
@@ -2167,7 +2167,7 @@ buildvariants:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
     tasks:
-      - name: release
+      - name: release_mongocli
   - name: atlascli_release_github
     display_name: "Release AtlasCLI (goreleaser)"
     run_on:

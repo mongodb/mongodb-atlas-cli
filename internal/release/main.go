@@ -51,7 +51,7 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func NewPlatform(tool, version, arch, system, distro string, formats []string) *Platform {
+func newPlatform(tool, version, arch, system, distro string, formats []string) *Platform {
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
@@ -107,12 +107,12 @@ func generateFile(name, version string) error {
 		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
 		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
 		Platform: []Platform{
-			*NewPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
-			*NewPlatform(packageName, version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
-			*NewPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
-			*NewPlatform(packageName, version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
-			*NewPlatform(packageName, version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
-			*NewPlatform(packageName, version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 6, 7, 8 / SUSE 12 + 15 / Amazon Linux", []string{"rpm"}),
+			*newPlatform(packageName, version, "x86_64", "windows", "Microsoft Windows", []string{"zip", "msi"}),
+			*newPlatform(packageName, version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
+			*newPlatform(packageName, version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
 		},
 	}
 	jsonEncoder := json.NewEncoder(feedFile)

@@ -19,7 +19,7 @@ if [[ -n "${STAGED_GO_FILES}" ]]; then
     git add docs
 fi
 
-STAGED_EVG_FILES=$(git diff --cached --name-only | grep "evergreen.yml$")
+STAGED_EVG_FILES=$(git diff --cached --name-only | grep -e "evergreen.yml$" -e "release.yml$")
 
 for FILE in ${STAGED_EVG_FILES}
 do

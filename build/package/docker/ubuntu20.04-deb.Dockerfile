@@ -1,8 +1,7 @@
 FROM ubuntu:20.04
 
-ARG revision
-ARG created_at
-ARG version
+ARG url
+ARG entrypoint
 
 RUN set -eux; \
 	apt-get update; \
@@ -15,14 +14,12 @@ RUN set -eux; \
 	fi; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV MCLI_URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision}_${created_at}/mongocli_${version}-next_linux_x86_64.deb
-
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
-    --output mongocli.deb \
-    ${MCLI_URL}; \
-    dpkg -i mongocli.deb;
+    --output ${entrypoint}.deb \
+    ${url}; \
+    dpkg -i ${entrypoint}.deb;
 
-RUN mongocli --version
+RUN ${entrypoint} --version
 
-ENTRYPOINT [ "mongocli" ]
+ENTRYPOINT [ "${entrypoint}" ]

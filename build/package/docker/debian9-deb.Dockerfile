@@ -1,8 +1,7 @@
 FROM debian:9-slim
 
-ARG revision
-ARG created_at
-ARG version
+ARG url
+ARG entrypoint
 
 RUN set -eux; \
 	apt-get update; \
@@ -15,14 +14,12 @@ RUN set -eux; \
 	fi; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision}_${created_at}/mongodb-atlas-cli_${version}-next_linux_x86_64.deb
-
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
-    --output atlas.deb \
-    ${URL}; \
-    dpkg -i atlas.deb;
+    --output ${entrypoint}.deb \
+    ${url}; \
+    dpkg -i ${entrypoint}.deb;
 
-RUN atlas --version
+RUN ${entrypoint} --version
 
-ENTRYPOINT [ "atlas" ]
+ENTRYPOINT [ "${entrypoint}" ]

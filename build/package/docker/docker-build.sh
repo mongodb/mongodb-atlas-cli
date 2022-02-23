@@ -23,4 +23,4 @@ docker build \
   --build-arg created_at="${created_at-}" \
   --build-arg version="${VERSION}" \
   -t "${tool_name-}-${image-}" \
-  -f "${tool_name-}-{image-}.Dockerfile" .
+  -f "${tool_name-}-${image-}.Dockerfile" .

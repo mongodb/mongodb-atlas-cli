@@ -184,23 +184,21 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: "Create a MongoDB cluster for your project.",
-		Long: `You can create MongoDB clusters using this command.
-The quickest way to get started is to specify a name for your cluster and cloud provider and region to deploy.
-This will create a 3 member replica set with the latest available MongoDB server version available.
-Some of the cluster configuration options are available via flags, but for full control of your deployment you can provide a config file.`,
+		Short: "Create one cluster in the specified project.",
+		Long: `To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
+For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.`,
 		Example: `  
-  Deploy a 3 member replica set in AWS:
-  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 4.2 --diskSizeGB 10
+  Deploy a three-member replica set in AWS:
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AWS --region US_EAST_1 --members 3 --tier M10 --mdbVersion 5.0 --diskSizeGB 10
 
-  Deploy a 3 member replica set in AZURE:
-  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+  Deploy a three-member replica set in AZURE:
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider AZURE --region US_EAST_2 --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
   
-  Deploy a 3 member replica set in GCP:
-  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 4.2 --diskSizeGB 10
+  Deploy a three-member replica set in GCP:
+  $ mongocli atlas cluster create <clusterName> --projectId <projectId> --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
 
-  Deploy a cluster from a config file:
-  $ mongocli atlas cluster create --projectId <projectId> --file <path/to/cluster.json>
+  Deploy a cluster or a multi-cloud cluster from a JSON configuration file:
+  $ mongocli atlas cluster create --projectId <projectId> --file <path/to/file.json>
 `,
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -225,7 +223,7 @@ Some of the cluster configuration options are available via flags, but for full 
 		},
 		Annotations: map[string]string{
 			"args":            "clusterName",
-			"clusterNameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphen.",
+			"clusterNameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
 		},
 	}
 

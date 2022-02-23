@@ -1,8 +1,8 @@
-FROM ubuntu:20.04
+FROM debian:9-slim
 
 ARG revision
 ARG created_at
-ARG mcli_version
+ARG version
 
 RUN set -eux; \
 	apt-get update; \
@@ -15,14 +15,14 @@ RUN set -eux; \
 	fi; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV MCLI_URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision}_${created_at}/mongocli_${mcli_version}-next_linux_x86_64.deb
+ENV URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision}_${created_at}/mongodb-atlas-cli_${version}-next_linux_x86_64.deb
 
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
-    --output mongocli.deb \
-    ${MCLI_URL}; \
-    dpkg -i mongocli.deb;
+    --output atlas.deb \
+    ${URL}; \
+    dpkg -i atlas.deb;
 
-RUN mongocli --version
+RUN atlas --version
 
-ENTRYPOINT [ "mongocli" ]
+ENTRYPOINT [ "atlas" ]

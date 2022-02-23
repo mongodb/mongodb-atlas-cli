@@ -434,16 +434,16 @@ tasks:
           image: centos8-rpm
           tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu1804
-      tags: [ "smoke-test" ]
-      depends_on:
-        - name: package_atlascli_goreleaser
-          variant: "goreleaser_snapshot"
-      commands:
-        - func: "clone"
-        - func: "docker build"
-          vars:
-            image: ubuntu18.04-deb
-            tool_name: atlascli
+    tags: [ "smoke-test" ]
+    depends_on:
+      - name: package_atlascli_goreleaser
+        variant: "goreleaser_snapshot"
+    commands:
+      - func: "clone"
+      - func: "docker build"
+        vars:
+          image: ubuntu18.04-deb
+          tool_name: atlascli
   - name: pkg_test_atlascli_docker_ubuntu2004
     tags: [ "smoke-test" ]
     depends_on:

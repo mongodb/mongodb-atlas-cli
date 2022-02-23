@@ -277,20 +277,10 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           ./bin/snyk test --org=cloud
-  "docker build":
-    - command: subprocess.exec
-      type: test
+  post:
+    - command: attach.xunit_results
       params:
-        include_expansions_in_env:
-          - revision
-          - created_at
-          - image
-        working_dir: src/github.com/mongodb/mongocli/build/package
-        binary: ./docker-build.sh
-post:
-  - command: attach.xunit_results
-    params:
-      files: ["src/github.com/mongodb/mongocli/*.xml"]
+        files: ["src/github.com/mongodb/mongocli/*.xml"]
 
 tasks:
   - name: compile
@@ -1205,17 +1195,6 @@ buildvariants:
       go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: ".ops-manager-50"
-  - name: pkg_smoke_tests_docker
-    display_name: "Post packaging smoke tests (Docker)"
-    run_on: ubuntu1804-small
-    tasks:
-      - name: pkg_test_docker_amazon2
-      - name: pkg_test_docker_centos7
-      - name: pkg_test_docker_centos8
-      - name: pkg_test_docker_ubuntu1804
-      - name: pkg_test_docker_ubuntu2004
-      - name: pkg_test_docker_debian9
-      - name: pkg_test_docker_debian10
 
 include:
   - filename: build/ci/release.yml

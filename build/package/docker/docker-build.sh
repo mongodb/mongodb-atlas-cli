@@ -16,11 +16,23 @@
 
 set -Eeou pipefail
 
-MCLI_VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
+VERSION=$(git describe --abbrev=0 | cut -d "v" -f 2)
+
+FILE_EXT=deb
+if [[ "${image-}" =~ "rpm" ]]; then
+  FILE_EXT=rpm
+fi
+
+
+URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongocli_${VERSION}-next_linux_x86_64.${FILE_EXT}
+ENTRYPOINT=mongocli
+if [[ "${tool_name:?}" == atlascli ]]; then
+  URL=https://mongodb-mongocli-build.s3.amazonaws.com/mongocli-master/dist/${revision-}_${created_at-}/mongodb-atlas-cli_${VERSION}-next_linux_x86_64.${FILE_EXT}
+  ENTRYPOINT=atlas
+fi
 
 docker build \
-  --build-arg revision="${revision-}" \
-  --build-arg created_at="${created_at-}" \
-  --build-arg mcli_version="${MCLI_VERSION}" \
-  -t "mongocli-${image-}" \
+  --build-arg url="${URL-}" \
+  --build-arg entrypoint="${ENTRYPOINT-}" \
+  -t "${tool_name-}-${image-}" \
   -f "${image-}.Dockerfile" .

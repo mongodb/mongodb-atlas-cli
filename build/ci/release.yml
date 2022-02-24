@@ -12,7 +12,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sfL https://github.com/goreleaser/goreleaser/releases/download/v${gorelaser_ver}/goreleaser_Darwin_all.tar.gz | tar zx
+          curl -sfL ${goreleaser_pro_tar_gz} | tar zx
   "install macos notarization service":
     - command: shell.exec
       type: setup
@@ -67,6 +67,7 @@ functions:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
+          - goreleaser_key
         script: |
           set -Eeou pipefail
 
@@ -76,6 +77,8 @@ functions:
           export NOTARY_SERVICE_URL=${notary_service_url}
           export MACOS_NOTARY_KEY=${notary_service_key_id}
           export MACOS_NOTARY_SECRET=${notary_service_secret}
+          export GORELEASER_KEY=${goreleaser_key}
+          export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
@@ -575,23 +578,23 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
-      - func: "upload dist"
-      - command: s3.put
-        params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
-          remote_file: mongocli/
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
+#      - func: "upload dist" # WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
+#      - command: s3.put
+#        params:
+#          aws_key: ${download_center_aws_key}
+#          aws_secret: ${download_center_aws_secret}
+#          local_files_include_filter:
+#            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+#            - src/github.com/mongodb/mongocli/dist/*.zip
+#            - src/github.com/mongodb/mongocli/dist/*.deb
+#            - src/github.com/mongodb/mongocli/dist/*.rpm
+#            - src/github.com/mongodb/mongocli/dist/*.tgz
+#            - src/github.com/mongodb/mongocli/dist/*.json
+#          remote_file: mongocli/
+#          bucket: downloads.mongodb.org
+#          permissions: public-read
+#          content_type: ${content_type|application/x-gzip}
+#          display_name: downloads-center-
       - func: "send slack notification"
         vars:
           TOOL_NAME: atlascli

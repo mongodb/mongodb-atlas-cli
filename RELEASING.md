@@ -16,7 +16,7 @@ To generate a new stable release you can run:
 ./scripts/release.sh atlascli/v1.0.0
 ```
 
-**Note:** Please use the `atlascli/vX.Y.Z` or `mongocli/vX.Y.Z` format for the new version 
+**Note:** Please use the `atlascli/vX.Y.Z` or `mongocli/vX.Y.Z` format for the version to release 
 
 This will do the following things:
 1. Tag a new version, ie: `git tag -a -s atlascli/v1.0.0 -m "atlascli/v1.0.0"`

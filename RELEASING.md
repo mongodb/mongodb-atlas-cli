@@ -13,13 +13,13 @@ these tasks run on master and can be patched at any time.
 To generate a new stable release you can run:
 
 ```bash
-./scripts/release.sh 1.0.0
+./scripts/release.sh atlascli/v1.0.0
 ```
 
-**Note:** Please omit the `v` from the version to release 
+**Note:** Please use the `atlascli/vX.Y.Z` or `mongocli/vX.Y.Z` format for the version to release 
 
 This will do the following things:
-1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
-2. Publish the new tag, ie `git push origin v1.0.0`
-3. The [evergreen](build/ci/evergreen.yml) release task will run after a tag event from master.
+1. Tag a new version, ie: `git tag -a -s atlascli/v1.0.0 -m "atlascli/v1.0.0"`
+2. Publish the new tag, ie `git push origin atlascli/v1.0.0`
+3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
 4. If everything goes smoothly the release will be published in the [releases page](https://github.com/mongodb/mongocli/releases), and [download center](https://www.mongodb.com/try/download/mongocli).

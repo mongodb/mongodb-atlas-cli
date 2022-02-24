@@ -36,4 +36,4 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 git tag -a -s "${VERSION}" -m "${VERSION}"
-git push origin "v${VERSION}"
+git push origin "${VERSION}"

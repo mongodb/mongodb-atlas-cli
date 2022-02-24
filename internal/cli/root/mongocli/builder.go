@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
+	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
 	"github.com/mongodb/mongocli/internal/cli/iam"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
@@ -83,6 +84,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		"-h",
 		"completion",
 		"__complete",
+		"fig-autocomplete",
 	}
 	if !hasArgs || search.StringInSlice(shouldIncludeAtlas, argsWithoutProg[0]) {
 		rootCmd.AddCommand(atlas.Builder())
@@ -103,6 +105,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		loginCmd,
 		logoutCmd,
 		whoCmd,
+		figautocomplete.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

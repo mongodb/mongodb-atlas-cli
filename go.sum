@@ -392,6 +392,8 @@ github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69
 github.com/tangzero/inflector v1.0.0 h1:933dvPwRUUOAl98hyeeXuzFix3HwDt5j+45lleu8oh0=
 github.com/tangzero/inflector v1.0.0/go.mod h1:OknKjAyDPCDzcWt0yOh2I7hqTukEdyyApcX3/KOhuXc=
 github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926/go.mod h1:9ESjWnEqriFuLhtthL60Sar/7RFoluCcXsuvEwTV5KM=
+github.com/withfig/autocomplete-tools/packages/cobra v1.0.0 h1:Iony+KgSS0MJCb4Ed7GBYZnWtVcVeq3a70e3HS93c1Y=
+github.com/withfig/autocomplete-tools/packages/cobra v1.0.0/go.mod h1:RoXh7+7qknOXL65uTzdzE1mPxqcPwS7FLCE9K5GfmKo=
 github.com/xdg-go/stringprep v1.0.2 h1:6iq84/ryjjeRmMJwxutI51F2GIPlP5BfTvXHeYjyhBc=
 github.com/xdg-go/stringprep v1.0.2/go.mod h1:8F9zXuvzgwmyT5DUm4GUfZGDdT3W+LCvS6+da4O5kxM=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

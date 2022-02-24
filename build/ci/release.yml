@@ -12,7 +12,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sfL https://github.com/goreleaser/goreleaser/releases/download/v${gorelaser_ver}/goreleaser_Darwin_all.tar.gz | tar zx
+          curl -sfL ${goreleaser_pro_tar_gz} | tar zx
   "install macos notarization service":
     - command: shell.exec
       type: setup
@@ -67,6 +67,7 @@ functions:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
+          - goreleaser_key
         script: |
           set -Eeou pipefail
 
@@ -76,6 +77,8 @@ functions:
           export NOTARY_SERVICE_URL=${notary_service_url}
           export MACOS_NOTARY_KEY=${notary_service_key_id}
           export MACOS_NOTARY_SECRET=${notary_service_secret}
+          export GORELEASER_KEY=${goreleaser_key}
+          export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
@@ -543,7 +546,7 @@ tasks:
       - name: compile
         variant: "code_health"
       - name: release_atlascli_msi
-        variant: "atlascli_release_msi"
+        variant: "release_atlascli_msi"
     commands:
       - func: "clone"
       - func: "generate notices"
@@ -575,23 +578,23 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
-      - func: "upload dist"
-      - command: s3.put
-        params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
-          remote_file: mongocli/
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
+#      - func: "upload dist" TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
+#      - command: s3.put
+#        params:
+#          aws_key: ${download_center_aws_key}
+#          aws_secret: ${download_center_aws_secret}
+#          local_files_include_filter:
+#            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+#            - src/github.com/mongodb/mongocli/dist/*.zip
+#            - src/github.com/mongodb/mongocli/dist/*.deb
+#            - src/github.com/mongodb/mongocli/dist/*.rpm
+#            - src/github.com/mongodb/mongocli/dist/*.tgz
+#            - src/github.com/mongodb/mongocli/dist/*.json
+#          remote_file: mongocli/
+#          bucket: downloads.mongodb.org
+#          permissions: public-read
+#          content_type: ${content_type|application/x-gzip}
+#          display_name: downloads-center-
       - func: "send slack notification"
         vars:
           TOOL_NAME: atlascli
@@ -1188,7 +1191,7 @@ tasks:
         - name: compile
           variant: "code_health"
         - name: release_atlascli
-          variant: "atlascli_release_github"
+          variant: "release_atlascli_github"
     commands:
       - func: "clone"
       - func: "install curator"
@@ -1411,7 +1414,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: release_mongocli
-  - name: atlascli_release_github
+  - name: release_atlascli_github
     display_name: "Release AtlasCLI (goreleaser)"
     run_on:
       - macos-1014-codesign
@@ -1420,7 +1423,7 @@ buildvariants:
       go_bin: "/opt/golang/go1.17/bin"
     tasks:
       - name: release_atlascli
-  - name: atlascli_release_msi
+  - name: release_atlascli_msi
     display_name: "Release AtlasCLI (go-msi)"
     run_on:
       - windows-vsCurrent-small
@@ -1456,7 +1459,7 @@ buildvariants:
       notary_key_name: "server-5.0"
     tasks:
       - name: .push_mongocli_stable
-  - name: atlascli_release_publish_42
+  - name: release_atlascli_publish_42
     display_name: "Publish AtlasCLI yum/apt 4.2"
     run_on:
       - rhel70-small
@@ -1465,7 +1468,7 @@ buildvariants:
       notary_key_name: "server-4.2"
     tasks:
       - name: .push_atlascli_stable
-  - name: atlascli_release_publish_44
+  - name: release_atlascli_publish_44
     display_name: "Publish AtlasCLI yum/apt 4.4"
     run_on:
       - rhel70-small
@@ -1474,7 +1477,7 @@ buildvariants:
       notary_key_name: "server-4.4"
     tasks:
       - name: .push_atlascli_stable
-  - name: atlascli_release_publish_50
+  - name: release_atlascli_publish_50
     display_name: "Publish AtlasCLI yum/apt 5.0"
     run_on:
       - rhel70-small

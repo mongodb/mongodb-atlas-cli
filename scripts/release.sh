@@ -20,20 +20,20 @@ set -euo pipefail
 VERSION="${1-}"
 
 if [[ -z "${VERSION}" ]]; then
-    echo "Please provide a version"
+    echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
     exit 1
 fi
 
-if [[ "${VERSION}" == v* ]]; then
-    echo "Please omit the 'v' when using this script"
+if [[ "${VERSION}" != mongocli/v* ]] && [[ "${VERSION}" != atlascli/v* ]]; then
+    echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
     exit 1
 fi
 
-read -p "Are you sure to release v${VERSION}? " -n 1 -r
+read -p "Are you sure to release ${VERSION}? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-git tag -a -s "v${VERSION}" -m "v${VERSION}"
+git tag -a -s "${VERSION}" -m "${VERSION}"
 git push origin "v${VERSION}"

@@ -278,13 +278,13 @@ tasks:
           package_name: mongocli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/mongocli-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
@@ -314,13 +314,13 @@ tasks:
           package_name: mongodb-atlas-cli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/atlascli-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"

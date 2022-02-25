@@ -213,7 +213,7 @@ tasks:
   - name: package_mongocli_msi
     tags: ["packaging"]
     depends_on:
-      - name: compile
+      - name: compile_mongocli
         variant: "code_health"
         patch_optional: true
     commands:
@@ -236,7 +236,7 @@ tasks:
   - name: package_atlascli_msi
     tags: [ "packaging" ]
     depends_on:
-      - name: compile
+      - name: compile_atlascli
         variant: "code_health"
         patch_optional: true
     commands:
@@ -259,7 +259,7 @@ tasks:
   - name: package_mongocli_goreleaser
     tags: ["packaging"]
     depends_on:
-      - name: compile
+      - name: compile_mongocli
         variant: "code_health"
         patch_optional: true
     commands:
@@ -295,7 +295,7 @@ tasks:
   - name: package_atlascli_goreleaser
     tags: [ "packaging" ]
     depends_on:
-      - name: compile
+      - name: compile_atlascli
         variant: "code_health"
         patch_optional: true
     commands:
@@ -486,7 +486,7 @@ tasks:
     stepback: false
     git_tag_only: true
     depends_on:
-      - name: compile
+      - name: compile_mongocli
         variant: "code_health"
       - name: release_mongocli_msi
         variant: "release_mongocli_msi"
@@ -545,7 +545,7 @@ tasks:
     stepback: false
     git_tag_only: true
     depends_on:
-      - name: compile
+      - name: compile_atlascli
         variant: "code_health"
       - name: release_atlascli_msi
         variant: "release_atlascli_msi"
@@ -604,7 +604,7 @@ tasks:
     stepback: false
     git_tag_only: true
     depends_on:
-      - name: compile
+      - name: compile_mongocli
         variant: "code_health"
     commands:
       - func: "clone"
@@ -629,7 +629,7 @@ tasks:
     stepback: false
     git_tag_only: true
     depends_on:
-      - name: compile
+      - name: compile_atlascli
         variant: "code_health"
     commands:
       - func: "clone"
@@ -662,7 +662,7 @@ tasks:
       stepback: false
       tags: ["push"]
       depends_on:
-        - name: compile
+        - name: compile_atlascli
           variant: "code_health"
         - name: package_atlascli_goreleaser
           variant: "goreleaser_snapshot"
@@ -836,7 +836,7 @@ tasks:
       stepback: false
       tags: ["push"]
       depends_on:
-        - name: compile
+        - name: compile_mongocli
           variant: "code_health"
         - name: package_mongocli_goreleaser
           variant: "goreleaser_snapshot"
@@ -1008,7 +1008,7 @@ tasks:
       stepback: false
       tags: ["push_mongocli_stable"]
       depends_on:
-        - name: compile
+        - name: compile_mongocli
           variant: "code_health"
         - name: release_mongocli
           variant: "release_mongocli_github"
@@ -1190,7 +1190,7 @@ tasks:
       stepback: false
       tags: [ "push_atlascli_stable" ]
       depends_on:
-        - name: compile
+        - name: compile_atlascli
           variant: "code_health"
         - name: release_atlascli
           variant: "release_atlascli_github"

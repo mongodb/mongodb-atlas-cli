@@ -142,6 +142,8 @@ functions:
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
+        include_expansions_in_env:
+          - FEED_FILE_NAME
         script: |
           set -Eeou pipefail
 
@@ -150,7 +152,7 @@ functions:
 
           VERSION=$(git describe | cut -d "v" -f 2)
 
-          go run ../internal/release/main.go "$VERSION" "FEED_FILE_NAME"
+          go run ../internal/release/main.go "${VERSION}" "${FEED_FILE_NAME}"
   "upload dist":
     - command: s3.put
       params:

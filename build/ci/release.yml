@@ -188,6 +188,7 @@ functions:
           - signing_auth_token_44
           - signing_auth_token_46
           - signing_auth_token_50
+          - tool_name
         add_to_path:
           - ./bin
         working_dir: src/github.com/mongodb/mongocli
@@ -508,13 +509,13 @@ tasks:
           package_name: mongocli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/mongocli-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
@@ -567,13 +568,13 @@ tasks:
           package_name: mongodb-atlas-cli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/atlascli-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
@@ -674,6 +675,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel62_org
     <<: *default_atlascli_push_def
     commands:
@@ -684,6 +686,7 @@ tasks:
           edition: org
           distro: rhel62
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel70_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -694,6 +697,7 @@ tasks:
           edition: enterprise
           distro: rhel62
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel70_org
     <<: *default_atlascli_push_def
     commands:
@@ -704,6 +708,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel80_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -714,6 +719,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel80_org
     <<: *default_atlascli_push_def
     commands:
@@ -724,6 +730,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -734,6 +741,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_org
     <<: *default_atlascli_push_def
     commands:
@@ -744,6 +752,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          tool_name: atlascli
   # DEB Distros
   - name: push_atlascli_ubuntu1804_enterprise
     <<: *default_atlascli_push_def
@@ -755,6 +764,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu1804_org
     <<: *default_atlascli_push_def
     commands:
@@ -765,6 +775,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu2004_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -775,6 +786,7 @@ tasks:
           edition: enterprise
           distro: ubuntu2004
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu2004_org
     <<: *default_atlascli_push_def
     commands:
@@ -785,6 +797,7 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian92_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -795,6 +808,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian92_org
     <<: *default_atlascli_push_def
     commands:
@@ -805,6 +819,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian10_enterprise
     <<: *default_atlascli_push_def
     commands:
@@ -815,6 +830,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian10_org
     <<: *default_atlascli_push_def
     commands:
@@ -825,6 +841,7 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          tool_name: atlascli
   ################################################################
   # Unstable Publish - MongoCLI
   # RPM Distros
@@ -848,6 +865,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel62_org
     <<: *default_push_def
     commands:
@@ -858,6 +876,7 @@ tasks:
           edition: org
           distro: rhel62
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel70_enterprise
     <<: *default_push_def
     commands:
@@ -868,6 +887,7 @@ tasks:
           edition: enterprise
           distro: rhel62
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel70_org
     <<: *default_push_def
     commands:
@@ -878,6 +898,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel80_enterprise
     <<: *default_push_def
     commands:
@@ -888,6 +909,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel80_org
     <<: *default_push_def
     commands:
@@ -898,6 +920,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_enterprise
     <<: *default_push_def
     commands:
@@ -908,6 +931,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_org
     <<: *default_push_def
     commands:
@@ -918,6 +942,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          tool_name: mongocli
   # DEB Distros
   - name: push_mongocli_ubuntu1804_enterprise
     <<: *default_push_def
@@ -929,6 +954,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu1804_org
     <<: *default_push_def
     commands:
@@ -939,6 +965,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu2004_enterprise
     <<: *default_push_def
     commands:
@@ -949,6 +976,7 @@ tasks:
           edition: enterprise
           distro: ubuntu2004
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu2004_org
     <<: *default_push_def
     commands:
@@ -959,6 +987,7 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian92_enterprise
     <<: *default_push_def
     commands:
@@ -969,6 +998,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian92_org
     <<: *default_push_def
     commands:
@@ -979,6 +1009,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian10_enterprise
     <<: *default_push_def
     commands:
@@ -989,6 +1020,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian10_org
     <<: *default_push_def
     commands:
@@ -999,6 +1031,7 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          tool_name: mongocli
   ################################################################
   # Stable Publish - MongoCLI
   # RPM Distros
@@ -1020,6 +1053,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel62_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1030,6 +1064,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel70_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1040,6 +1075,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel70_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1050,6 +1086,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel80_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1060,6 +1097,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_rhel80_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1070,6 +1108,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1080,6 +1119,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          tool_name: mongocli
   - name: push_mongocli_amazon2_org_44
     <<: *default_push_stable_def
     commands:
@@ -1090,6 +1130,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          tool_name: mongocli
   # DEB Distros
   - name: push_mongocli_ubuntu1804_enterprise_stable
     <<: *default_push_stable_def
@@ -1101,6 +1142,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu1804_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1111,6 +1153,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu2004_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1121,6 +1164,7 @@ tasks:
           edition: enterprise
           distro: ubuntu2004
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_ubuntu2004_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1131,6 +1175,7 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian81_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1141,6 +1186,7 @@ tasks:
           edition: org
           distro: debian81
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian92_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1151,6 +1197,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian92_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1161,6 +1208,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian10_enterprise_stable
     <<: *default_push_stable_def
     commands:
@@ -1171,6 +1219,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          tool_name: mongocli
   - name: push_mongocli_debian10_org_stable
     <<: *default_push_stable_def
     commands:
@@ -1181,6 +1230,7 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          tool_name: mongocli
   ################################################################
   # Stable Publish - AtlasCLI
   # RPM Distros
@@ -1202,6 +1252,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel62_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1212,6 +1263,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel70_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1222,6 +1274,7 @@ tasks:
           edition: enterprise
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel70_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1232,6 +1285,7 @@ tasks:
           edition: org
           distro: rhel70
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel80_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1242,6 +1296,7 @@ tasks:
           edition: enterprise
           distro: rhel80
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_rhel80_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1252,6 +1307,7 @@ tasks:
           edition: org
           distro: rhel80
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1262,6 +1318,7 @@ tasks:
           edition: enterprise
           distro: amazon2
           ext: rpm
+          tool_name: atlascli
   - name: push_atlascli_amazon2_org_44
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1272,6 +1329,7 @@ tasks:
           edition: org
           distro: amazon2
           ext: rpm
+          tool_name: atlascli
   # DEB Distros
   - name: push_atlascli_ubuntu1804_enterprise_stable
     <<: *default_push_atlascli_stable_def
@@ -1283,6 +1341,7 @@ tasks:
           edition: enterprise
           distro: ubuntu1804
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu1804_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1293,6 +1352,7 @@ tasks:
           edition: org
           distro: ubuntu1804
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu2004_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1303,6 +1363,7 @@ tasks:
           edition: enterprise
           distro: ubuntu2004
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_ubuntu2004_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1313,6 +1374,7 @@ tasks:
           edition: org
           distro: ubuntu2004
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian81_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1323,6 +1385,7 @@ tasks:
           edition: org
           distro: debian81
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian92_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1333,6 +1396,7 @@ tasks:
           edition: enterprise
           distro: debian92
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian92_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1343,6 +1407,7 @@ tasks:
           edition: org
           distro: debian92
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian10_enterprise_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1353,6 +1418,7 @@ tasks:
           edition: enterprise
           distro: debian10
           ext: deb
+          tool_name: atlascli
   - name: push_atlascli_debian10_org_stable
     <<: *default_push_atlascli_stable_def
     commands:
@@ -1363,6 +1429,7 @@ tasks:
           edition: org
           distro: debian10
           ext: deb
+          tool_name: atlascli
 
 buildvariants:
   - name: go_msi_snapshot

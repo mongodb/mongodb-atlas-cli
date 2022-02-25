@@ -288,6 +288,16 @@ tasks:
     commands:
       - func: "clone"
       - func: "build"
+  - name: compile_mongocli
+    tags: [ "code_health" ]
+    commands:
+      - func: "clone"
+      - func: "build mongocli"
+  - name: compile_atlascli
+    tags: [ "code_health" ]
+    commands:
+      - func: "clone"
+      - func: "build atlascli"
   - name: unit_test
     tags: ["code_health"]
     commands:

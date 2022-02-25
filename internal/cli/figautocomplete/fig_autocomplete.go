@@ -19,9 +19,11 @@ import (
 	genFigSpec "github.com/withfig/autocomplete-tools/packages/cobra"
 )
 
+const CmdUse = "fig-autocomplete"
+
 func Builder() *cobra.Command {
 	opts := genFigSpec.Opts{
-		Use: "fig-autocomplete",
+		Use: CmdUse,
 	}
 	// command hidden by default
 	cmd := genFigSpec.NewCmdGenFigSpec(opts)

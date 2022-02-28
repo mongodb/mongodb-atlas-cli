@@ -70,10 +70,10 @@ make install
 Run `mongocli help` for a list of available commands
 or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
-### Configuring `mongocli` with Atlas
+### Configuring MongoCLI with Atlas
 To use `mongocli` with Atlas you'll need to run `mongocli auth login` and follow the prompted steps on your terminal.
 
-### Configuring `mongocli` with Ops Manager and Cloud Manager
+### Configuring MongoCLI with Ops Manager and Cloud Manager
 
 #### Getting API Keys (Ops manager / Cloud Manager)
 To use `mongocli` you'll need to get API keys, to get them follow the documentation

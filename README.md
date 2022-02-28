@@ -1,3 +1,6 @@
+## MongoDB CLI
+
+
 <p align="center">
   <img width="80" height="80" src="https://raw.github.com/mongodb/mongocli/master/mongocli.svg" alt="MongoDB CLI Logo">
 </p>
@@ -104,10 +107,65 @@ To get specific instructions for your preferred shell run:
 mongocli completion <bash|zsh|fish|powershell> --help
 ```
 
+## Atlas CLI (Pre-Release)
+![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
+![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
+
+The MongoDB Atlas CLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
+
+## Installing
+
+Atlas CLI is currently in the pre-release phase, so it should not be used in production environment. 
+
+### Pre-built Binaries
+
+Download the appropriate version for your platform from [Atlas CLI releases](https://github.com/mongodb/mongocli/releases).
+Once downloaded, the binary can be run from anywhere.
+You don't need to install it into a global location.
+This works well for shared hosts and other systems where you don't have a privileged account.
+
+Ideally, you should place this binary somewhere in your `PATH` for easy use.
+`/usr/local/bin` is the most probable location.
+
+### Build From Source
+
+#### Prerequisite Tools
+- [Git](https://git-scm.com/)
+- [Go (at least Go 1.17)](https://golang.org/dl/)
+
+#### Fetch Source
+
+```bash
+git clone https://github.com/mongodb/mongocli.git
+cd mongocli
+```
+
+#### Build
+
+To build `Atlas CLI`, run:
+
+```bash
+make build-atlascli
+```
+
+The resulting `atlas` binary is placed in `./bin`.
+
+#### Install
+
+To install the `atlas` binary in `$GOPATH/bin`, run:
+
+```bash
+make install-atlascli
+```
+
+**Note:** running `make build-atlascli` is not needed when running `make install-atlascli`.
+
+
+
 ## Contributing
 
 See our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
 ## License
 
-MongoDB CLI is released under the Apache 2.0 license. See [LICENSE](LICENSE)
+MongoDB CLI and Atlas CLI are released under the Apache 2.0 license. See [LICENSE](LICENSE)

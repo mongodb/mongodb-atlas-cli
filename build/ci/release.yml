@@ -498,6 +498,8 @@ tasks:
       - func: "install macos notarization service"
       - command: subprocess.exec
         type: test
+        env:
+          TOOL_NAME: mongocli
         params:
           working_dir: src/github.com/mongodb/mongocli
           binary: build/package/download-msi.sh
@@ -557,6 +559,8 @@ tasks:
       - func: "install macos notarization service"
       - command: subprocess.exec
         type: test
+        env:
+          TOOL_NAME: atlascli
         params:
           working_dir: src/github.com/mongodb/mongocli
           binary: build/package/download-msi.sh

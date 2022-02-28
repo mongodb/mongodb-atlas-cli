@@ -1,11 +1,5 @@
 ## MongoDB CLI
 
-
-<p align="center">
-  <img width="80" height="80" src="https://raw.github.com/mongodb/mongocli/master/mongocli.svg" alt="MongoDB CLI Logo">
-</p>
-
-
 ![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
 ![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
 
@@ -76,16 +70,19 @@ make install
 Run `mongocli help` for a list of available commands
 or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
-### Getting API Keys
+### Configuring `mongocli` with Atlas
+To use `mongocli` with Atlas you'll just need to run `mongocli auth login` and follow the prompted steps on your terminal.
 
-To use `mongocli` you'll need to get API keys, to get them follow the documentation 
-appropriate for the service you're using, 
+### Configuring `mongocli` with Ops Manager and Cloud Manager
+
+#### Getting API Keys (Ops manager / Cloud Manager)
+To use `mongocli` you'll need to get API keys, to get them follow the documentation
+appropriate for the service you're using,
 [Atlas](https://docs.atlas.mongodb.com/configure-api-access/),
 [Ops Manager](https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/),
 or [Cloud Manager](https://docs.cloudmanager.mongodb.com/tutorial/manage-programmatic-api-keys/)
 
-### Configuring `mongocli`
-
+#### Set up your credentials
 Run `mongocli config` to set up your credentials, 
 this is optional, you can use [env variables](https://docs.mongodb.com/mongocli/stable/configure/environment-variables/) instead.
 
@@ -160,6 +157,14 @@ make install-atlascli
 
 **Note:** running `make build-atlascli` is not needed when running `make install-atlascli`.
 
+
+## Usage
+
+Run `atlas help` for a list of available commands
+or check our online documentation for more details.
+
+### Configuring `Atlas CLI`
+To use `Atlas CLI` you'll just need to run `atlas auth login` and follow the prompted steps on your terminal.
 
 
 ## Contributing

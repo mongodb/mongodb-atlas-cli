@@ -71,7 +71,7 @@ Run `mongocli help` for a list of available commands
 or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
 ### Configuring `mongocli` with Atlas
-To use `mongocli` with Atlas you'll just need to run `mongocli auth login` and follow the prompted steps on your terminal.
+To use `mongocli` with Atlas you'll need to run `mongocli auth login` and follow the prompted steps on your terminal.
 
 ### Configuring `mongocli` with Ops Manager and Cloud Manager
 
@@ -104,19 +104,19 @@ To get specific instructions for your preferred shell run:
 mongocli completion <bash|zsh|fish|powershell> --help
 ```
 
-## Atlas CLI (Pre-Release)
+## AtlasCLI (Pre-Release)
 ![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
 ![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
 
-The MongoDB Atlas CLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
+The MongoDB AtlasCLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
 
 ## Installing
 
-Atlas CLI is currently in the pre-release phase, so it should not be used in production environment. 
+AtlasCLI is currently in the pre-release phase, so it should not be used in production environment. 
 
 ### Pre-built Binaries
 
-Download the appropriate version for your platform from [Atlas CLI releases](https://github.com/mongodb/mongocli/releases).
+Download the appropriate version for your platform from [AtlasCLI releases](https://github.com/mongodb/mongocli/releases).
 Once downloaded, the binary can be run from anywhere.
 You don't need to install it into a global location.
 This works well for shared hosts and other systems where you don't have a privileged account.
@@ -139,7 +139,7 @@ cd mongocli
 
 #### Build
 
-To build `Atlas CLI`, run:
+To build `atlascli`, run:
 
 ```bash
 make build-atlascli
@@ -163,8 +163,8 @@ make install-atlascli
 Run `atlas help` for a list of available commands
 or check our online documentation for more details.
 
-### Configuring `Atlas CLI`
-To use `Atlas CLI` you'll just need to run `atlas auth login` and follow the prompted steps on your terminal.
+### Configuring AtlasCLI
+To use AtlasCLI you'll need to run `atlas auth login` and follow the prompted steps on your terminal.
 
 
 ## Contributing

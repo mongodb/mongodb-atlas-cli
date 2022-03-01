@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/flag"
-
 	"github.com/spf13/cobra"
 )
 

@@ -62,7 +62,7 @@ func isAtLeast24HoursPast(t time.Time) bool {
 
 func isHomebrew(tool string, store Store) bool {
 	executablePath, brewFormulaPath, err := store.LoadBrewPath(tool)
-	if executablePath != "" && brewFormulaPath != "" && err != nil {
+	if executablePath != "" && brewFormulaPath != "" && err == nil {
 		return strings.HasPrefix(executablePath, brewFormulaPath)
 	}
 

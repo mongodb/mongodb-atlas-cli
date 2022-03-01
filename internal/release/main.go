@@ -20,9 +20,17 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/spf13/cobra"
 )
 
 const mongocli = "mongocli"
+
+type Opts struct {
+	fileName string
+	version  string
+}
 
 type DownloadArchive struct {
 	PreviousReleasesLink string     `json:"previous_releases_link"`
@@ -51,7 +59,7 @@ type Link struct {
 	Name         string `json:"name"`
 }
 
-func newPlatform(tool, version, arch, system, distro string, formats []string) *Platform {
+func newPlatform(packageName, version, arch, system, distro string, formats []string) *Platform {
 	p := &Platform{}
 	p.Arch = arch
 	p.OS = distro
@@ -59,13 +67,13 @@ func newPlatform(tool, version, arch, system, distro string, formats []string) *
 	links := make([]Link, len(formats))
 	for i, f := range formats {
 		links[i] = Link{
-			DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/%s_%s_%s_%s.%s", tool, version, system, arch, f),
+			DownloadLink: fmt.Sprintf("https://fastdl.mongodb.org/mongocli/%s_%s_%s_%s.%s", packageName, version, system, arch, f),
 			Name:         f,
 		}
 	}
 
 	title := "MongoDB Atlas CLI"
-	if tool == mongocli {
+	if packageName == mongocli {
 		title = "MongoDB CLI"
 	}
 	p.Packages = Package{
@@ -76,17 +84,11 @@ func newPlatform(tool, version, arch, system, distro string, formats []string) *
 }
 
 func main() {
-	version := os.Args[1]
-	feedFilename := os.Args[2]
-	fmt.Printf("Generating JSON: %s\n", feedFilename)
-	err := generateFile(feedFilename, version)
-
-	if err != nil {
+	cmd := Builder()
+	if err := cmd.Execute(); err != nil {
 		fmt.Printf("error encoding file: %v\n", err)
-
 		os.Exit(1)
 	}
-	fmt.Printf("File %s has been generated\n", feedFilename)
 }
 
 func generateFile(name, version string) error {
@@ -118,4 +120,29 @@ func generateFile(name, version string) error {
 	jsonEncoder := json.NewEncoder(feedFile)
 	jsonEncoder.SetIndent("", "  ")
 	return jsonEncoder.Encode(downloadArchive)
+}
+
+func Builder() *cobra.Command {
+	opts := Opts{}
+	cmd := &cobra.Command{
+		Use:   "main",
+		Short: "Generate the download center json file",
+		Example: `
+  Generate the download center json file for mongocli
+  $ main --version 1.23.0 --file mongocli.json`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			fmt.Printf("Generating JSON: %s\n", opts.fileName)
+			return generateFile(opts.fileName, opts.version)
+		},
+		PostRun: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("File %s has been generated\n", opts.fileName)
+		},
+	}
+
+	cmd.Flags().StringVar(&opts.version, flag.Version, "", "release version.")
+	cmd.Flags().StringVar(&opts.fileName, flag.File, "mongocli.json", "file name of the download center json file.")
+
+	_ = cmd.MarkFlagFilename(flag.File)
+	_ = cmd.MarkFlagRequired(flag.Version)
+	return cmd
 }

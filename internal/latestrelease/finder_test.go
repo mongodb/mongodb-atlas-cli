@@ -98,25 +98,38 @@ func TestOutputOpts_HasNewVersionAvailable(t *testing.T) {
 			*currVer, _ = currVer.SetPrerelease("")
 
 			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockStore := mocks.NewMockStore(ctrl)
 			defer ctrl.Finish()
 
 			mockStore.
+				EXPECT().
+				LoadLatestVersion(gomock.Any()).
+				Return("", nil).
+				Times(1)
+
+			if tt.expectNewVersion {
+				mockStore.EXPECT().SaveLatestVersion(gomock.Any(), gomock.Any()).Return(nil)
+				mockStore.EXPECT().LoadBrewPath(tt.tool).Return("", "", nil)
+				mockStore.EXPECT().SaveBrewPath(tt.tool, gomock.Any(), gomock.Any()).Return(nil)
+			}
+
+			mockDescriber.
 				EXPECT().
 				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
 				Times(1)
 
-			versionAvailable, newV, err := NewVersionFinder(context.Background(), mockStore).HasNewVersionAvailable(
+			versionAvailable, newV, err := NewVersionFinderWithStore(context.Background(), mockDescriber, mockStore).HasNewVersionAvailable(
 				tt.currentVersion,
 				tt.tool,
 			)
 
+			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
+
 			if err != nil {
 				t.Errorf("HasNewVersionAvailable() unexpected error: %v", err)
 			}
-
-			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
 
 			if versionAvailable && (!tt.expectNewVersion || newV != expectedV) {
 				t.Errorf("want: versionAvailable=%v and newV=%v got: versionAvailable=%v and newV=%v.",

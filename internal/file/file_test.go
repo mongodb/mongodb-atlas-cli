@@ -18,15 +18,25 @@
 package file_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/spf13/afero"
+	"gopkg.in/yaml.v2"
 )
 
-func TestLoad(t *testing.T) {
-	t.Run("file does not exists", func(t *testing.T) {
+const (
+	noExtFileName  = "test"
+	txtFileName    = "test.txt"
+	jsonFileName   = "test.json"
+	yamlFileName   = "test.yaml"
+	unsupportedMsg = "unsupported file type: txt"
+)
+
+func TestFile(t *testing.T) {
+	t.Run("load file does not exists", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		filename := "test.xml"
 		err := file.Load(appFS, filename, nil)
@@ -34,27 +44,27 @@ func TestLoad(t *testing.T) {
 			t.Errorf("Load() unexpected error: %v", err)
 		}
 	})
-	t.Run("file with no ext", func(t *testing.T) {
+	t.Run("load file with no ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test"
+		filename := noExtFileName
 		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
 		err := file.Load(appFS, filename, nil)
 		if err == nil || err.Error() != fmt.Sprintf("filename: %s requires valid extension", filename) {
 			t.Errorf("Load() unexpected error: %v", err)
 		}
 	})
-	t.Run("file with invalid ext", func(t *testing.T) {
+	t.Run("load file with invalid ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test.test"
+		filename := txtFileName
 		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
 		err := file.Load(appFS, filename, nil)
-		if err == nil || err.Error() != "unsupported file type: test" {
+		if err == nil || err.Error() != unsupportedMsg {
 			t.Errorf("Load() unexpected error: %v", err)
 		}
 	})
-	t.Run("valid json file", func(t *testing.T) {
+	t.Run("load valid json file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test.json"
+		filename := jsonFileName
 		_ = afero.WriteFile(appFS, filename, []byte("{}"), 0600)
 		out := new(map[string]interface{})
 		err := file.Load(appFS, filename, out)
@@ -62,14 +72,63 @@ func TestLoad(t *testing.T) {
 			t.Fatalf("Load() unexpected error: %v", err)
 		}
 	})
-	t.Run("valid yaml file", func(t *testing.T) {
+	t.Run("load valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		filename := "test.yaml"
+		filename := yamlFileName
 		_ = afero.WriteFile(appFS, filename, []byte(""), 0600)
 		out := new(map[string]interface{})
 		err := file.Load(appFS, filename, out)
 		if err != nil {
 			t.Fatalf("Load() unexpected error: %v", err)
+		}
+	})
+	t.Run("save file with no ext", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		filename := "test"
+		err := file.Save(appFS, filename, nil)
+		if err == nil || err.Error() != "filename: test requires valid extension" {
+			t.Errorf("Save() unexpected error: %v", err)
+		}
+	})
+	t.Run("save file with wrong ext", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		filename := txtFileName
+		err := file.Save(appFS, filename, nil)
+		if err == nil || err.Error() != unsupportedMsg {
+			t.Errorf("Save() unexpected error: %v", err)
+		}
+	})
+	t.Run("save valid json file", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		filename := jsonFileName
+
+		b := []byte(`{"Name":"MongoDB","Age":100,"Children":["mongocli", "atlascli"]}`)
+		j, _ := json.Marshal(b)
+
+		err := file.Save(appFS, filename, j)
+		if err != nil {
+			t.Fatalf("Save() unexpected error: %v", err)
+		}
+	})
+	t.Run("save valid yaml file", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		filename := yamlFileName
+
+		type Test struct {
+			name string
+			age  int
+		}
+
+		tYaml := Test{
+			name: "MongoDB",
+			age:  100,
+		}
+
+		yamlData, _ := yaml.Marshal(&tYaml)
+
+		err := file.Save(appFS, filename, yamlData)
+		if err != nil {
+			t.Fatalf("Save() unexpected error: %v", err)
 		}
 	})
 }

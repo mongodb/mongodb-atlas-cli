@@ -106,10 +106,23 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 			*currVer, _ = currVer.SetPrerelease("")
 
 			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockStore := mocks.NewMockStore(ctrl)
 			defer ctrl.Finish()
 
 			mockStore.
+				EXPECT().
+				LoadLatestVersion(gomock.Any()).
+				Return("", nil).
+				Times(1)
+
+			if tt.wantPrint {
+				mockStore.EXPECT().SaveLatestVersion(gomock.Any(), gomock.Any()).Return(nil)
+				mockStore.EXPECT().LoadBrewPath(tt.tool).Return("", "", nil)
+				mockStore.EXPECT().SaveBrewPath(tt.tool, gomock.Any(), gomock.Any()).Return(nil)
+			}
+
+			mockDescriber.
 				EXPECT().
 				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
@@ -117,7 +130,7 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 
 			bufOut := new(bytes.Buffer)
 			ctx := context.Background()
-			finder := NewVersionFinder(context.Background(), mockStore)
+			finder := NewVersionFinderWithStore(context.Background(), mockDescriber, mockStore)
 
 			err := NewPrinterWithFinder(ctx, finder).PrintNewVersionAvailable(
 				bufOut,

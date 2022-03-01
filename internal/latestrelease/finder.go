@@ -21,21 +21,25 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
-
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version VersionFinder
 
 type VersionFinder interface {
 	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)
 }
 
 func NewVersionFinder(ctx context.Context, re version.ReleaseVersionDescriber) VersionFinder {
-	return &latestReleaseVersionFinder{c: ctx, r: re}
+	return &latestReleaseVersionFinder{c: ctx, r: re, s: NewStore(afero.NewOsFs())}
+}
+
+func NewVersionFinderWithStore(ctx context.Context, re version.ReleaseVersionDescriber, store Store) VersionFinder {
+	return &latestReleaseVersionFinder{c: ctx, r: re, s: store}
 }
 
 type latestReleaseVersionFinder struct {
 	c context.Context
 	r version.ReleaseVersionDescriber
+	s Store
 }
 
 func versionFromTag(release *github.RepositoryRelease, toolName string) string {
@@ -52,15 +56,14 @@ func isValidTagForTool(tag, tool string) bool {
 	return strings.Contains(tag, tool)
 }
 
-func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *version.ReleaseInformation, error) {
-	release, err := s.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
+func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *version.ReleaseInformation, error) {
+	release, err := f.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
 
 	if err != nil || release == nil {
 		return false, nil, err
 	}
 
 	v, err := semver.NewVersion(versionFromTag(release, toolName))
-
 	if err != nil {
 		return false, nil, err
 	}
@@ -74,11 +77,31 @@ func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 	return false, nil, nil
 }
 
-func (s *latestReleaseVersionFinder) HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error) {
-	if v == "" {
+func (f *latestReleaseVersionFinder) storedLatestVersionAvailable(tool string, currentVersion *semver.Version) (needRefresh bool, foundVersion string, err error) {
+	latestVersionStored, _ := f.s.LoadLatestVersion(tool)
+	// no valid store version, need to fetch from GitHub
+	if latestVersionStored == "" {
+		return true, "", nil
+	}
+	// retrieved an invalid version, need to fetch from GitHub
+	v, err := semver.NewVersion(latestVersionStored)
+	if err != nil {
+		return true, "", err
+	}
+	// found a valid store higher latest version, no need to refresh
+	if currentVersion.Compare(v) < 0 {
+		return false, v.Original(), nil
+	}
+	// found a lower or equal latest version, no need to refresh
+	return false, "", nil
+}
+
+func (f *latestReleaseVersionFinder) HasNewVersionAvailable(currentV, tool string) (newVersionAvailable bool, newVersion string, err error) {
+	if currentV == "" {
 		return false, "", nil
 	}
-	svCurrentVersion, err := semver.NewVersion(v)
+
+	svCurrentVersion, err := semver.NewVersion(currentV)
 	if err != nil {
 		return false, "", err
 	}
@@ -90,12 +113,18 @@ func (s *latestReleaseVersionFinder) HasNewVersionAvailable(v, tool string) (new
 		}
 	}
 
-	newVersionAvailable, newV, err := s.searchLatestVersionPerTool(svCurrentVersion, tool)
+	needRefresh, storedLatestVersion, err := f.storedLatestVersionAvailable(tool, svCurrentVersion)
+	if !needRefresh {
+		return storedLatestVersion != "", storedLatestVersion, err
+	}
+
+	newVersionAvailable, newV, err := f.searchLatestVersionPerTool(svCurrentVersion, tool)
 	if err != nil {
 		return false, "", err
 	}
 
-	if newVersionAvailable && (!isHomebrew(tool) || isAtLeast24HoursPast(newV.PublishedAt)) {
+	if newVersionAvailable && (!isHomebrew(tool, f.s) || isAtLeast24HoursPast(newV.PublishedAt)) {
+		_ = f.s.SaveLatestVersion(tool, newV.Version)
 		return newVersionAvailable, newV.Version, nil
 	}
 

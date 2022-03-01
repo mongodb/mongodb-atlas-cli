@@ -25,11 +25,13 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
 
 const (
 	minPageSize       = 5
 	atlasToolFullName = "mongodb-atlas"
+	atlasBinaryName   = "atlas"
 )
 
 type Printer interface {
@@ -37,38 +39,56 @@ type Printer interface {
 }
 
 func NewPrinter(ctx context.Context) Printer {
-	return &printer{c: ctx, finder: NewVersionFinder(ctx, version.NewReleaseVersionDescriber())}
+	return &printer{
+		c:      ctx,
+		finder: NewVersionFinder(ctx, version.NewReleaseVersionDescriber()),
+		store:  NewStore(afero.NewOsFs()),
+	}
 }
 
 func NewPrinterWithFinder(ctx context.Context, f VersionFinder) Printer {
-	return &printer{c: ctx, finder: f}
+	return &printer{c: ctx, finder: f, store: NewStore(afero.NewOsFs())}
 }
 
 type printer struct {
 	c      context.Context
 	finder VersionFinder
+	store  Store
 }
 
 func isAtLeast24HoursPast(t time.Time) bool {
 	return !t.IsZero() && time.Since(t) >= time.Hour*24
 }
 
-func isHomebrew(tool string) bool {
-	brewFormulaPath, err := homebrewFormulaPath(tool)
+func isHomebrew(tool string, store Store) bool {
+	executablePath, brewFormulaPath, err := store.LoadBrewPath(tool)
+	if executablePath != "" && brewFormulaPath != "" && err != nil {
+		return strings.HasPrefix(executablePath, brewFormulaPath)
+	}
+
+	executablePath, err = executableCurrentPath()
 	if err != nil {
+		_ = store.SaveBrewPath(tool, executablePath, brewFormulaPath)
 		return false
 	}
 
-	executablePath, err := executableCurrentPath()
+	brewFormulaPath, err = homebrewFormulaPath(tool)
 	if err != nil {
+		_ = store.SaveBrewPath(tool, executablePath, brewFormulaPath)
 		return false
 	}
 
+	_ = store.SaveBrewPath(tool, executablePath, brewFormulaPath)
 	return strings.HasPrefix(executablePath, brewFormulaPath)
 }
 
 func homebrewFormulaPath(tool string) (string, error) {
 	formula := tool
+
+	if tool == version.AtlasCLI {
+		formula = atlasBinaryName
+	}
+
 	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
 	if err != nil {
 		return "", err
@@ -93,7 +113,7 @@ func executableCurrentPath() (string, error) {
 }
 
 func homebrewCommand(tool string) string {
-	if strings.Contains(tool, "atlas") {
+	if strings.Contains(tool, atlasBinaryName) {
 		return atlasToolFullName
 	}
 	return tool
@@ -107,7 +127,7 @@ func (p *printer) PrintNewVersionAvailable(w io.Writer, v, tool, bin string) err
 	}
 	if newVersionAvailable {
 		var upgradeInstructions string
-		if isHomebrew(tool) {
+		if isHomebrew(tool, p.store) {
 			upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrewCommand(tool))
 		} else {
 			upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, tool)

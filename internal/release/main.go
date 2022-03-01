@@ -129,7 +129,7 @@ func Builder() *cobra.Command {
 		Short: "Generate the download center json file",
 		Example: `
   Generate the download center json file for mongocli
-  $ main --version 1.23.0`,
+  $ main --version 1.23.0 --file mongocli.json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Printf("Generating JSON: %s\n", opts.fileName)
 			return generateFile(opts.fileName, opts.version)
@@ -142,6 +142,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.version, flag.Version, "", "release version.")
 	cmd.Flags().StringVar(&opts.fileName, flag.File, "mongocli.json", "file name of the download center json file.")
 
-	_ = cmd.MarkFlagFilename(flag.Version)
+	_ = cmd.MarkFlagFilename(flag.File)
+	_ = cmd.MarkFlagRequired(flag.Version)
 	return cmd
 }

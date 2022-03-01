@@ -270,4 +270,5 @@ const (
 	WithoutDefaultAlertSettings              = "withoutDefaultAlertSettings"     // WithoutDefaultAlertSettings flag
 	CurrentIP                                = "currentIp"                       // CurrentIP flag
 	Gov                                      = "gov"                             // Gov flag
+	Version                                  = "version"                         // Version flag
 )

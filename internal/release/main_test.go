@@ -20,6 +20,8 @@ package main
 import (
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/mongodb/mongocli/internal/test"
 )
 
@@ -28,6 +30,6 @@ func TestBuilder(t *testing.T) {
 		t,
 		Builder(),
 		0,
-		[]string{"version", "fileName"},
+		[]string{flag.Version, flag.File},
 	)
 }

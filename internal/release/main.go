@@ -21,6 +21,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/flag"
+
 	"github.com/spf13/cobra"
 )
 
@@ -138,8 +140,8 @@ func Builder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.version, "version", "", "release version.")
-	cmd.Flags().StringVar(&opts.fileName, "fileName", "mongocli.json", "file name of the download center json file.")
+	cmd.Flags().StringVar(&opts.version, flag.Version, "", "release version.")
+	cmd.Flags().StringVar(&opts.fileName, flag.File, "mongocli.json", "file name of the download center json file.")
 
 	_ = cmd.MarkFlagFilename("version")
 	return cmd

@@ -175,7 +175,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	cmd.Env = os.Environ()
 
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 
 	var user mongodbatlas.DatabaseUser
 	if err := json.Unmarshal(resp, &user); err != nil {
@@ -202,10 +202,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 
 	var user mongodbatlas.DatabaseUser
 	if err := json.Unmarshal(resp, &user); err != nil {
@@ -221,10 +218,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 
 	var user mongodbatlas.DatabaseUser
 	if err := json.Unmarshal(resp, &user); err != nil {
@@ -255,10 +249,7 @@ func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 		"admin")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 
 	expected := fmt.Sprintf("DB user '%s' deleted\n", username)
 	assert.Equal(t, expected, string(resp))

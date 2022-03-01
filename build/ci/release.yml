@@ -151,9 +151,7 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
 
-          export VERSION=$(git describe | cut -d "v" -f 2)
-
-          go run ../internal/release/main.go "${VERSION}" "${FEED_FILE_NAME}"
+          go run ../internal/release/main.go --version "$(git describe | cut -d "v" -f 2)" --fileName "${FEED_FILE_NAME}"
   "upload dist":
     - command: s3.put
       params:

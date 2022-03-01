@@ -140,5 +140,7 @@ func Builder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.version, "version", "", "release version.")
 	cmd.Flags().StringVar(&opts.fileName, "fileName", "mongocli.json", "file name of the download center json file.")
+
+	_ = cmd.MarkFlagFilename("version")
 	return cmd
 }

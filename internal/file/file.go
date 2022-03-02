@@ -17,7 +17,6 @@ package file
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/mongodb/mongocli/internal/search"
@@ -62,9 +61,6 @@ func Load(fs afero.Fs, filename string, out interface{}) error {
 		return err
 	}
 
-	if !search.StringInSlice(supportedExts, configType) {
-		return fmt.Errorf("unsupported file type: %s", configType)
-	}
 	file, err := afero.ReadFile(fs, filename)
 	if err != nil {
 		return err
@@ -94,10 +90,6 @@ func Save(fs afero.Fs, filePath string, data interface{}) error {
 		return err
 	}
 
-	if !search.StringInSlice(supportedExts, configType) {
-		return fmt.Errorf("unsupported file type: %s", configType)
-	}
-
 	switch configType {
 	case yamlName, ymlName:
 		content, err = yaml.Marshal(data)
@@ -111,7 +103,7 @@ func Save(fs afero.Fs, filePath string, data interface{}) error {
 		}
 	}
 
-	err = os.MkdirAll(filepath.Dir(filePath), configPermission)
+	err = fs.MkdirAll(filepath.Dir(filePath), configPermission)
 	if err != nil {
 		return err
 	}

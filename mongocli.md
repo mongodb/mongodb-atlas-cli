@@ -1,7 +1,4 @@
-## MongoDB CLI
-
-![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
-![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
+# MongoDB CLI
 
 The MongoDB CLI is a modern command line interface that enables you to manage your MongoDB services from the terminal.
 

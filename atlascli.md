@@ -1,6 +1,4 @@
-## AtlasCLI (Pre-Release)
-![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
-![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
+# AtlasCLI (Pre-Release)
 
 The MongoDB AtlasCLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
 
@@ -55,4 +53,14 @@ To get a list of available commands, run `atlas help`
 or check our online documentation for more details.
 
 ### Configuring AtlasCLI
-To use `atlascli` with Atlas, open your terminal, run `atlas auth login`, and follow the prompted steps.
+To use `atlascli`, open your terminal, run `atlas auth login`, and follow the prompted steps.
+
+### Shell Completions
+
+If you install via [homebrew](#hombrew-on-macos) no additional actions are needed.
+
+To get specific instructions for your preferred shell, run:
+
+```bash
+atlas completion <bash|zsh|fish|powershell> --help
+```

@@ -91,9 +91,15 @@ gen-mocks: ## Generate mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
-gen-docs: ## Generate docs for commands
-	@echo "==> Generating docs"
-	go run ./internal/docs/main.go
+gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
+
+gen-docs-mongocli: ## Generate docs for mongocli commands
+	@echo "==> Generating docs for mongocli"
+	go run ./internal/docs/mongocli/main.go
+
+gen-docs-atlascli: ## Generate docs for atlascli commands
+	@echo "==> Generating docs for atlascli"
+	go run ./internal/docs/atlascli/main.go
 
 .PHONY: build
 build: build-mongocli ## Generate a binary for mongocli

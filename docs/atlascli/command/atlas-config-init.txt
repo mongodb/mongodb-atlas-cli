@@ -1,8 +1,8 @@
-.. _mongocli-config-set:
+.. _atlas-config-init:
 
-===================
-mongocli config set
-===================
+=================
+atlas config init
+=================
 
 .. default-domain:: mongodb
 
@@ -12,17 +12,14 @@ mongocli config set
    :depth: 1
    :class: singlecol
 
-Configure specific properties of a profile.
-
-Configure specific properties of the profile.
-Available properties include: [project_id org_id service public_api_key private_api_key output ops_manager_url base_url ops_manager_ca_certificate ops_manager_skip_verify mongosh_path skip_update_check access_token refresh_token].
+Configure a profile to store access settings for your MongoDB deployment.
 
 Syntax
 ------
 
 .. code-block::
 
-   mongocli config set <property> <value> [options]
+   atlas config init [options]
 
 Options
 -------
@@ -35,10 +32,14 @@ Options
      - Type
      - Required
      - Description
+   * - --gov
+     - 
+     - false
+     - Create a default profile for atlas for gov
    * - -h, --help
      - 
      - false
-     - help for set
+     - help for init
 
 Inherited Options
 -----------------
@@ -55,4 +56,17 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   To configure the tool to work with Atlas
+   $ atlas config init
+
+   To configure the tool to work with Atlas for Government
+   $ atlas config init --gov
+
 

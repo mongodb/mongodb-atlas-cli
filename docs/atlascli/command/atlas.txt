@@ -56,7 +56,7 @@ Related Commands
 * :ref:`atlas-cloudProviders` - Manage unified IAM role access in Atlas.
 * :ref:`atlas-clusters` - Manage clusters for your project.
 * :ref:`atlas-completion` - Generate the autocompletion script for the specified shell
-* :ref:`atlas-config` - Configure a profile to store access settings for your MongoDB deployment.
+* :ref:`atlas-config` - Manage your profile to store access settings for your MongoDB deployment.
 * :ref:`atlas-customDbRoles` - Manage custom database roles for your project.
 * :ref:`atlas-customDns` - Manage DNS configuration of Atlas project’s clusters deployed to AWS.
 * :ref:`atlas-dataLakes` - Manage Atlas Data Lakes for your project.

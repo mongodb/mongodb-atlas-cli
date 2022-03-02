@@ -3,7 +3,7 @@
 ![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
 ![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
 
-The MongoDB Atlas CLI repository contains [AtlasCLI](https://github.com/mongodb/mongocli/atlascli.md) and [MongoCLI](https://github.com/mongodb/mongocli/mongocli.md) which are modern command line interfaces that enable you to manage your MongoDB services from the terminal.
+The MongoDB Atlas CLI repository contains [AtlasCLI](https://github.com/mongodb/mongocli/tree/CLOUDP-112242/atlascli.md) and [MongoCLI](https://github.com/mongodb/mongocli/blob/CLOUDP-112242/mongocli.md) which are modern command line interfaces that enable you to manage your MongoDB services from the terminal.
 
 Use simple, one-line commands to interact with MongoDB Atlas, Cloud Manager, or Ops Manager, and to automate management tasks for your deployments.
 

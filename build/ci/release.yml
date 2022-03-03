@@ -78,7 +78,7 @@ functions:
           export MACOS_NOTARY_KEY=${notary_service_key_id}
           export MACOS_NOTARY_SECRET=${notary_service_secret}
           export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT=$(git tag --list "${tool_name}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
+          export VERSION_GIT=$(git tag --list "${tool_name}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
@@ -145,13 +145,14 @@ functions:
         working_dir: src/github.com/mongodb/mongocli/dist
         include_expansions_in_env:
           - FEED_FILE_NAME
+          - TOOL_NAME
         script: |
           set -Eeou pipefail
 
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
-
-          go run ../internal/release/main.go --version "$(git describe | cut -d "v" -f 2)" --file "${FEED_FILE_NAME}"
+          export VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+          go run ../internal/release/main.go --version "${VERSION}" --file "${FEED_FILE_NAME}"
   "upload dist":
     - command: s3.put
       params:
@@ -271,6 +272,7 @@ tasks:
         vars:
           package_name: ${package_name}
           FEED_FILE_NAME: "${package_name}.json"
+          TOOL_NAME: ${tool_name}
       - func: "upload dist"
   - name: pkg_test_mongocli_docker_ubuntu1804
     tags: ["smoke-test"]
@@ -457,6 +459,7 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongocli.json
+          TOOL_NAME: mongocli
       - func: "upload dist"
       - command: s3.put
         params:
@@ -519,6 +522,7 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
+          TOOL_NAME: atlascli
 #      - func: "upload dist" TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
 #      - command: s3.put
 #        params:

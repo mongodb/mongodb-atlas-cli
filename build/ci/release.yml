@@ -152,7 +152,7 @@ functions:
           - TOOL_NAME
         env:
           <<: *go_options
-        binary: build/package/generate-download-archive.sh
+        binary: build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
       params:

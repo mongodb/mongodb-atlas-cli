@@ -143,7 +143,7 @@ functions:
           - TOOL_NAME
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist

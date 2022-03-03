@@ -13,14 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -vx
+set -Eeou pipefail
 
 
 export PATH="./bin:${go_bin:?}:$PATH"
 
 VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
 
-if [[ -z "${VERSION:?}" ]]; then
+if [[ -z "${VERSION}" ]]; then
     VERSION=$(git describe | cut -d "v" -f 2)
 fi
 

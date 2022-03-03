@@ -151,8 +151,8 @@ functions:
 
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
-          export VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
-          go run ../internal/release/main.go --version "${VERSION}" --file "${FEED_FILE_NAME}"
+
+          go run ../internal/release/main.go --file "${FEED_FILE_NAME}" --version "$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
   "upload dist":
     - command: s3.put
       params:

@@ -14,7 +14,7 @@ builds:
       binary: bin/mongocli
       main: ./cmd/mongocli/mongocli.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
+        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{ .Env.VERSION_GIT }} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]
@@ -78,6 +78,6 @@ changelog:
     - '^build(deps):'
 release:
   prerelease: auto
-  name_template: "MongoDB CLI {{.Version}}"
+  name_template: "MongoDB CLI {{ .Env.VERSION_GIT }}"
   extra_files:
     - glob: ./bin/*.msi

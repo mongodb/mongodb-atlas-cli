@@ -68,10 +68,23 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - tool_name
-        env:
-          <<: *go_options
-        binary: build/package/package.sh
+        script: |
+          set -Eeou pipefail
+          export GOROOT="${go_root}"
+          export PATH="./bin:${go_bin}:$PATH"
+          export GITHUB_TOKEN=${github_token}
+          export NOTARY_SERVICE_URL=${notary_service_url}
+          export MACOS_NOTARY_KEY=${notary_service_key_id}
+          export MACOS_NOTARY_SECRET=${notary_service_secret}
+          export GORELEASER_KEY=${goreleaser_key}
+          export VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+
+          if [[ -z "${VERSION_GIT}" ]]; then
+             export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
+          fi
+
+          # avoid race conditions on the notarization step by using `-p 1`
+          ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -112,8 +125,6 @@ functions:
           - package_name
           - tool_name
         working_dir: src/github.com/mongodb/mongocli
-        env:
-          <<: *go_options
         binary: build/package/rename-pkg.sh
   "send slack notification":
     - command: subprocess.exec

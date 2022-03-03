@@ -17,13 +17,14 @@
 set -Eeou pipefail
 
 
-VERSION=$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)
-if [[ -z "${VERSION:?}" ]]; then
-    VERSION=$(git describe | cut -d "v" -f 2)
+VERSION="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+if [[ -z "${VERSION}" ]]; then
+    VERSION="$(git describe --abbrev=0 | cut -d "v" -f 2)"
 fi
 
 FILENAME="${package_name-}"_"${VERSION}"_linux_x86_64
 if [[ "${unstable-}" == "-unstable" ]]; then
+  VERSION="${VERSION}-next"
   FILENAME="${package_name-}_${VERSION}-next_linux_x86_64"
 fi
 

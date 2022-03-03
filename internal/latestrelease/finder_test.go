@@ -45,9 +45,7 @@ func TestOutputOpts_NewVersionAvailable(t *testing.T) {
 			mockStore := mocks.NewMockStore(ctrl)
 			defer ctrl.Finish()
 
-			if tt.expectNewVersion {
-				mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
-			}
+			mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
 
 			mockDescriber.
 				EXPECT().

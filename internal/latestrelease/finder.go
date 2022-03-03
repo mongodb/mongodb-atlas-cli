@@ -68,7 +68,6 @@ func isAtLeast24HoursPast(t time.Time) bool {
 
 func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version) (bool, *version.ReleaseInformation, error) {
 	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
-
 	if err != nil || release == nil {
 		return false, nil, err
 	}
@@ -84,6 +83,8 @@ func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 			PublishedAt: release.GetPublishedAt().Time,
 		}, nil
 	}
+
+	_ = f.store.SaveLatestVersion(v.Original())
 	return false, nil, nil
 }
 

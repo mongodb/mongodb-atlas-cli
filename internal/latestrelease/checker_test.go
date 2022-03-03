@@ -60,9 +60,7 @@ func TestOutputOpts_CheckAvailable(t *testing.T) {
 				Return("", nil).
 				Times(1)
 
-			if tt.expectNewVersion {
-				mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
-			}
+			mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
 
 			mockDescriber.
 				EXPECT().

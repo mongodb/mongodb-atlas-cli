@@ -45,6 +45,9 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 			t.Errorf("MongoCLIConfigHome() = %s; want '%s/.config/mongocli'", home, osHome)
 		}
 	})
+}
+
+func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
 	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {
 		home, err := OldMongoCLIConfigHome()
 		t.Setenv("XDG_CONFIG_HOME", "")

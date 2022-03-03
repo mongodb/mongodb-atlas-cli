@@ -66,7 +66,7 @@ func TestFile(t *testing.T) {
 	})
 	t.Run("load brewpath atlascli", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "mongocli")
+		s := NewPathStore(appFS, "atlascli")
 
 		path, _ := file.Path("atlascli", brewFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
@@ -78,7 +78,7 @@ func TestFile(t *testing.T) {
 	})
 	t.Run("load brewpath atlascli is empty", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "mongocli")
+		s := NewPathStore(appFS, "atlascli")
 
 		_, _, err := s.LoadBrewPath()
 		if err == nil {

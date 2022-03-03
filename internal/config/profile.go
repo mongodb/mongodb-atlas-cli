@@ -630,7 +630,7 @@ func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
 
 func (p *Profile) copyOldConfig(readEnvironmentVars bool, envPrefix string) error {
 	oldConfigHome, err := OldMongoCLIConfigHome()
-	if err != nil {
+	if oldConfigHome == p.configDir || err != nil {
 		return err
 	}
 

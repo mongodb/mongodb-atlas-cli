@@ -78,7 +78,7 @@ functions:
           export MACOS_NOTARY_KEY=${notary_service_key_id}
           export MACOS_NOTARY_SECRET=${notary_service_secret}
           export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
+          export VERSION_GIT=$(git tag --list "${tool_name}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2 | awk '{print $1"-next"}')
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
@@ -246,6 +246,7 @@ tasks:
       - func: "install macos notarization service"
       - func: "package"
         vars:
+          tool_name: ${tool_name}
           goreleaser_file: ${goreleaser_file}
           goreleaser_cmd: goreleaser --config "${goreleaser_file}" --rm-dist --snapshot -p 1
       - func: "rename pkg"
@@ -436,6 +437,7 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
+          tool_name: "mongocli"
           goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
         vars:
@@ -497,6 +499,7 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
+          tool_name: "atlascli"
           goreleaser_cmd: goreleaser --config .atlascli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
         vars:
@@ -1240,6 +1243,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".mongocli.goreleaser.yml"
       package_name: "mongocli"
+      tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
   - name: goreleaser_atlascli_snapshot
@@ -1252,6 +1256,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
+      tool_name: "atlascli"
     tasks:
       - name: package_goreleaser
   - name: publish_snapshot

@@ -41,7 +41,7 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 		}
 		osHome, _ := os.UserHomeDir()
 		if home != osHome+"/.config/mongocli" {
-			t.Errorf("MongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
+			t.Errorf("MongoCLIConfigHome() = %s; want '%s/.config/mongocli'", home, osHome)
 		}
 	})
 	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {

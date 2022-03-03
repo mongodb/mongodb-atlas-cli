@@ -68,20 +68,10 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-          export GITHUB_TOKEN=${github_token}
-          export NOTARY_SERVICE_URL=${notary_service_url}
-          export MACOS_NOTARY_KEY=${notary_service_key_id}
-          export MACOS_NOTARY_SECRET=${notary_service_secret}
-          export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT=$(git tag --list "${tool_name}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)
-
-          # avoid race conditions on the notarization step by using `-p 1`
-          ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
+          - tool_name
+        env:
+          <<: *go_options
+        binary: build/package/package.sh
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -120,6 +110,7 @@ functions:
           - latest_deb
           - latest_rpm
           - package_name
+          - tool_name
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
@@ -146,13 +137,9 @@ functions:
         include_expansions_in_env:
           - FEED_FILE_NAME
           - TOOL_NAME
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          go run ../internal/release/main.go --file "${FEED_FILE_NAME}" --version "$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+        env:
+          <<: *go_options
+        binary: build/package/generate-download-archive.sh
   "upload dist":
     - command: s3.put
       params:
@@ -256,6 +243,7 @@ tasks:
           latest_deb: ~latest
           latest_rpm: .latest
           package_name: ${package_name}
+          tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
@@ -444,6 +432,7 @@ tasks:
       - func: "rename pkg"
         vars:
           package_name: mongocli
+          tool_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
@@ -507,6 +496,7 @@ tasks:
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
+          tool_name: atlascli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz

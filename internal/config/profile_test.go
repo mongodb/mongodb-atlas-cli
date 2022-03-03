@@ -40,8 +40,29 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
 		}
 		osHome, _ := os.UserHomeDir()
-		if home != osHome+"/.config" {
+		if home != osHome+"/.config/mongocli" {
 			t.Errorf("MongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
+		}
+	})
+	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {
+		home, err := OldMongoCLIConfigHome()
+		if err != nil {
+			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
+		}
+		osHome, _ := os.UserHomeDir()
+		if home != osHome+"/.config" {
+			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
+		}
+	})
+	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
+		const xdgHome = "my_config"
+		t.Setenv("XDG_CONFIG_HOME", xdgHome)
+		_, err := OldMongoCLIConfigHome()
+		if err == nil {
+			t.Fatalf("OldMongoCLIConfigHome() expected error: not applicable")
+		}
+		if err.Error() != "not applicable" {
+			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s'", "not applicable", err)
 		}
 	})
 }

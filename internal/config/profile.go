@@ -618,11 +618,36 @@ func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
 		// ignore if it doesn't exists
 		var e viper.ConfigFileNotFoundError
 		if errors.As(err, &e) {
+			if envPrefix == MongoCLIEnvPrefix {
+				_ = p.copyOldConfig(readEnvironmentVars, envPrefix)
+			}
 			return nil
 		}
 		return err
 	}
 	return nil
+}
+
+func (p *Profile) copyOldConfig(readEnvironmentVars bool, envPrefix string) error {
+	oldConfigHome, err := OldMongoCLIConfigHome()
+	if err != nil {
+		return err
+	}
+
+	p.configDir = oldConfigHome
+	err = p.load(readEnvironmentVars, envPrefix)
+	if err != nil {
+		p.configDir, _ = MongoCLIConfigHome()
+		return err
+	}
+
+	p.configDir, _ = MongoCLIConfigHome()
+	err = p.Save()
+	if err != nil {
+		return err
+	}
+
+	return p.fs.Remove(fmt.Sprintf("%s/mongocli.toml", oldConfigHome))
 }
 
 // Save the configuration to disk.
@@ -641,6 +666,20 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
+// OldMongoCLIConfigHome retrieves configHome path based used by mongoCLI.
+func OldMongoCLIConfigHome() (string, error) {
+	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
+		return "", errors.New("not applicable")
+	}
+
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/.config", home), nil
+}
+
 // MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
 func MongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
@@ -648,12 +687,11 @@ func MongoCLIConfigHome() (string, error) {
 	}
 
 	home, err := os.UserHomeDir()
-
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/.config", home), nil
+	return fmt.Sprintf("%s/.config/mongocli", home), nil
 }
 
 // AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.

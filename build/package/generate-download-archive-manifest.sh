@@ -15,9 +15,6 @@
 # limitations under the License.
 set -Eeou pipefail
 
-
-export PATH="./bin:${go_bin:?}:$PATH"
-
 VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
 
 if [[ -z "${VERSION}" ]]; then

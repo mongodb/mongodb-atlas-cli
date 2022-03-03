@@ -15,7 +15,6 @@
 package atlas
 
 import (
-	"context"
 	"fmt"
 	"runtime"
 	"strings"
@@ -63,10 +62,6 @@ import (
 
 const atlas = "atlas"
 
-type BuilderOpts struct {
-	store latestrelease.Printer
-}
-
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
 	rootCmd := &cobra.Command{
@@ -105,11 +100,9 @@ func Builder(profile *string) *cobra.Command {
 			w := cmd.ErrOrStderr()
 
 			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
-				opts := &BuilderOpts{
-					store: latestrelease.NewPrinter(context.Background()),
-				}
-
-				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
+				printer := latestrelease.NewPrinter(w, config.ToolName, config.BinName())
+				checker := latestrelease.NewChecker(version.Version, config.ToolName, printer)
+				_ = checker.CheckAvailable()
 			}
 		},
 	}

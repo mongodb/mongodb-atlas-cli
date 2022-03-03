@@ -15,52 +15,46 @@
 package latestrelease
 
 import (
-	"bytes"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
-	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 )
 
 //go:generate mockgen -destination=../mocks/mock_version_store.go -package=mocks github.com/mongodb/mongocli/internal/latestrelease Store
 
-type State struct {
+const (
+	stateFileSubPath = "/rstate.yaml"
+)
+
+type state struct {
 	CheckedForUpdateAt   time.Time `yaml:"checked_for_update_at"`
 	LatestReleaseVersion string    `yaml:"latest_release"`
 }
 
-type BrewPath struct {
-	CheckedPathAt  time.Time `yaml:"checked_path_at"`
-	ExecutablePath string    `yaml:"path"`
-	HomePath       string    `yaml:"home_path"`
-}
-
 type Store interface {
-	LoadLatestVersion(tool string) (string, error)
-	SaveLatestVersion(tool, ver string) error
-	LoadBrewPath(tool string) (string, string, error)
-	SaveBrewPath(tool, execPath, homePath string) error
+	LoadLatestVersion() (string, error)
+	SaveLatestVersion(ver string) error
 }
 
-func NewStore(fileSystem afero.Fs) Store {
-	return &store{fs: fileSystem}
+func NewStore(fileSystem afero.Fs, t string) Store {
+	return &store{fs: fileSystem, tool: t}
 }
 
 type store struct {
-	fs afero.Fs
+	fs   afero.Fs
+	tool string
 }
 
-const (
-	stateFileSubPath = "/rstate.yaml"
-	brewFileSubPath  = "/brew.yaml"
-)
-
 // LoadLatestVersion will load the latest checked version if it was retrieved in the last 24 hours.
-func (opts *store) LoadLatestVersion(tool string) (string, error) {
-	latestReleaseState := new(State)
-	err := opts.loadWithFileName(stateFileSubPath, tool, latestReleaseState)
+func (s *store) LoadLatestVersion() (string, error) {
+	latestReleaseState := new(state)
+	filePath, err := file.Path(s.tool, stateFileSubPath)
+	if err != nil {
+		return "", err
+	}
+
+	err = file.Load(s.fs, filePath, latestReleaseState)
 	if err != nil {
 		return "", err
 	}
@@ -72,72 +66,13 @@ func (opts *store) LoadLatestVersion(tool string) (string, error) {
 }
 
 // SaveLatestVersion will save the latest retrieved version and date it was retrieved.
-func (opts *store) SaveLatestVersion(tool, ver string) error {
-	data := State{CheckedForUpdateAt: time.Now(), LatestReleaseVersion: ver}
-	return opts.saveWithFileName(stateFileSubPath, tool, data)
-}
+func (s *store) SaveLatestVersion(ver string) error {
+	data := state{CheckedForUpdateAt: time.Now(), LatestReleaseVersion: ver}
 
-// LoadBrewPath will load the latest calculated brew path.
-func (opts *store) LoadBrewPath(tool string) (execPath, homePath string, err error) {
-	path := new(BrewPath)
-	err = opts.loadWithFileName(brewFileSubPath, tool, path)
-	if err != nil {
-		return "", "", err
-	}
-
-	if path != nil && time.Since(path.CheckedPathAt).Hours() < 24 {
-		return path.ExecutablePath, path.HomePath, nil
-	}
-	return "", "", nil
-}
-
-// SaveBrewPath will save the latest calculated brew path.
-func (opts *store) SaveBrewPath(tool, execPath, homePath string) error {
-	data := BrewPath{CheckedPathAt: time.Now(), ExecutablePath: execPath, HomePath: homePath}
-	return opts.saveWithFileName(brewFileSubPath, tool, data)
-}
-
-func (opts *store) loadWithFileName(fileName, tool string, data interface{}) error {
-	filePath, err := filePath(tool, fileName)
+	filePath, err := file.Path(s.tool, stateFileSubPath)
 	if err != nil {
 		return err
 	}
 
-	err = file.Load(opts.fs, filePath, data)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (opts *store) saveWithFileName(fileName, tool string, data interface{}) error {
-	filePath, err := filePath(tool, fileName)
-	if err != nil {
-		return err
-	}
-
-	err = file.Save(opts.fs, filePath, data)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func filePath(tool, fileName string) (string, error) {
-	var path bytes.Buffer
-	var home string
-	var err error
-
-	if tool == version.AtlasCLI {
-		home, err = config.AtlasCLIConfigHome()
-	} else {
-		home, err = config.MongoCLIConfigHome()
-	}
-	if err != nil {
-		return "", err
-	}
-
-	path.WriteString(home)
-	path.WriteString(fileName)
-	return path.String(), nil
+	return file.Save(s.fs, filePath, data)
 }

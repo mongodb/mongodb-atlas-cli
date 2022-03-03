@@ -33,61 +33,31 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
-// LoadBrewPath mocks base method.
-func (m *MockStore) LoadBrewPath(arg0 string) (string, string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadBrewPath", arg0)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// LoadBrewPath indicates an expected call of LoadBrewPath.
-func (mr *MockStoreMockRecorder) LoadBrewPath(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadBrewPath", reflect.TypeOf((*MockStore)(nil).LoadBrewPath), arg0)
-}
-
 // LoadLatestVersion mocks base method.
-func (m *MockStore) LoadLatestVersion(arg0 string) (string, error) {
+func (m *MockStore) LoadLatestVersion() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadLatestVersion", arg0)
+	ret := m.ctrl.Call(m, "LoadLatestVersion")
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // LoadLatestVersion indicates an expected call of LoadLatestVersion.
-func (mr *MockStoreMockRecorder) LoadLatestVersion(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) LoadLatestVersion() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadLatestVersion", reflect.TypeOf((*MockStore)(nil).LoadLatestVersion), arg0)
-}
-
-// SaveBrewPath mocks base method.
-func (m *MockStore) SaveBrewPath(arg0, arg1, arg2 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveBrewPath", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SaveBrewPath indicates an expected call of SaveBrewPath.
-func (mr *MockStoreMockRecorder) SaveBrewPath(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveBrewPath", reflect.TypeOf((*MockStore)(nil).SaveBrewPath), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadLatestVersion", reflect.TypeOf((*MockStore)(nil).LoadLatestVersion))
 }
 
 // SaveLatestVersion mocks base method.
-func (m *MockStore) SaveLatestVersion(arg0, arg1 string) error {
+func (m *MockStore) SaveLatestVersion(arg0 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveLatestVersion", arg0, arg1)
+	ret := m.ctrl.Call(m, "SaveLatestVersion", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SaveLatestVersion indicates an expected call of SaveLatestVersion.
-func (mr *MockStoreMockRecorder) SaveLatestVersion(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) SaveLatestVersion(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveLatestVersion", reflect.TypeOf((*MockStore)(nil).SaveLatestVersion), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveLatestVersion", reflect.TypeOf((*MockStore)(nil).SaveLatestVersion), arg0)
 }

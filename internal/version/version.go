@@ -17,9 +17,10 @@ package version
 import "time"
 
 const (
-	MongoCLI = "mongocli"
-	AtlasCLI = "atlascli"
-	owner    = "mongodb"
+	MongoCLI    = "mongocli"
+	AtlasCLI    = "atlascli"
+	AtlasBinary = "atlas"
+	owner       = "mongodb"
 )
 
 // Version for CLI.

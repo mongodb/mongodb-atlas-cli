@@ -15,31 +15,37 @@
 package latestrelease
 
 import (
-	"context"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/version"
-	"github.com/spf13/afero"
+)
+
+const (
+	minPageSize = 5
 )
 
 type VersionFinder interface {
-	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)
+	NewVersionAvailable(isHomebrew bool) (newVersion string, err error)
+	StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error)
 }
 
-func NewVersionFinder(ctx context.Context, re version.ReleaseVersionDescriber) VersionFinder {
-	return &latestReleaseVersionFinder{c: ctx, r: re, s: NewStore(afero.NewOsFs())}
-}
-
-func NewVersionFinderWithStore(ctx context.Context, re version.ReleaseVersionDescriber, store Store) VersionFinder {
-	return &latestReleaseVersionFinder{c: ctx, r: re, s: store}
+func NewVersionFinder(d version.ReleaseVersionDescriber, s Store, t, c string) VersionFinder {
+	return &latestReleaseVersionFinder{
+		describer:      d,
+		store:          s,
+		tool:           t,
+		currentVersion: c,
+	}
 }
 
 type latestReleaseVersionFinder struct {
-	c context.Context
-	r version.ReleaseVersionDescriber
-	s Store
+	describer      version.ReleaseVersionDescriber
+	store          Store
+	tool           string
+	currentVersion string
 }
 
 func versionFromTag(release *github.RepositoryRelease, toolName string) string {
@@ -56,14 +62,18 @@ func isValidTagForTool(tag, tool string) bool {
 	return strings.Contains(tag, tool)
 }
 
-func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *version.ReleaseInformation, error) {
-	release, err := f.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
+}
+
+func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version) (bool, *version.ReleaseInformation, error) {
+	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 
 	if err != nil || release == nil {
 		return false, nil, err
 	}
 
-	v, err := semver.NewVersion(versionFromTag(release, toolName))
+	v, err := semver.NewVersion(versionFromTag(release, f.tool))
 	if err != nil {
 		return false, nil, err
 	}
@@ -77,18 +87,19 @@ func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 	return false, nil, nil
 }
 
-func (f *latestReleaseVersionFinder) storedLatestVersionAvailable(tool string, currentVersion *semver.Version) (needRefresh bool, foundVersion string, err error) {
-	latestVersionStored, _ := f.s.LoadLatestVersion(tool)
-	// no valid store version, need to fetch from GitHub
-	if latestVersionStored == "" {
-		return true, "", nil
-	}
-	// retrieved an invalid version, need to fetch from GitHub
+func (f *latestReleaseVersionFinder) StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error) {
+	latestVersionStored, _ := f.store.LoadLatestVersion()
 	v, err := semver.NewVersion(latestVersionStored)
+	// if empty or invalid, fetch from GitHub
 	if err != nil {
 		return true, "", err
 	}
 	// found a valid store higher latest version, no need to refresh
+	currentVersion, err := semver.NewVersion(f.currentVersion)
+	if err != nil {
+		return false, "", err
+	}
+
 	if currentVersion.Compare(v) < 0 {
 		return false, v.Original(), nil
 	}
@@ -96,37 +107,32 @@ func (f *latestReleaseVersionFinder) storedLatestVersionAvailable(tool string, c
 	return false, "", nil
 }
 
-func (f *latestReleaseVersionFinder) HasNewVersionAvailable(currentV, tool string) (newVersionAvailable bool, newVersion string, err error) {
-	if currentV == "" {
-		return false, "", nil
+func (f *latestReleaseVersionFinder) NewVersionAvailable(isHomebrew bool) (newVersion string, err error) {
+	if f.currentVersion == "" {
+		return "", nil
 	}
 
-	svCurrentVersion, err := semver.NewVersion(currentV)
+	svCurrentVersion, err := semver.NewVersion(f.currentVersion)
 	if err != nil {
-		return false, "", err
+		return "", err
 	}
 
 	if svCurrentVersion.Prerelease() != "" { // ignoring prerelease for code changes against master
 		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
 		if err != nil {
-			return false, "", err
+			return "", err
 		}
 	}
 
-	needRefresh, storedLatestVersion, err := f.storedLatestVersionAvailable(tool, svCurrentVersion)
-	if !needRefresh {
-		return storedLatestVersion != "", storedLatestVersion, err
-	}
-
-	newVersionAvailable, newV, err := f.searchLatestVersionPerTool(svCurrentVersion, tool)
+	newVersionAvailable, newV, err := f.searchLatestVersionPerTool(svCurrentVersion)
 	if err != nil {
-		return false, "", err
+		return "", err
 	}
 
-	if newVersionAvailable && (!isHomebrew(tool, f.s) || isAtLeast24HoursPast(newV.PublishedAt)) {
-		_ = f.s.SaveLatestVersion(tool, newV.Version)
-		return newVersionAvailable, newV.Version, nil
+	if newVersionAvailable && (!isHomebrew || isAtLeast24HoursPast(newV.PublishedAt)) {
+		_ = f.store.SaveLatestVersion(newV.Version)
+		return newV.Version, nil
 	}
 
-	return false, "", nil
+	return "", nil
 }

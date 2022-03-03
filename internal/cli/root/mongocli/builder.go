@@ -15,7 +15,6 @@
 package mongocli
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"runtime"
@@ -35,10 +34,6 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/cobra"
 )
-
-type BuilderOpts struct {
-	store latestrelease.Printer
-}
 
 // Builder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
@@ -61,11 +56,10 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			if shouldSkipPrintNewVersion(w) {
 				return
 			}
-			opts := &BuilderOpts{
-				store: latestrelease.NewPrinter(context.Background()),
-			}
 
-			_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
+			printer := latestrelease.NewPrinter(w, config.ToolName, config.BinName())
+			checker := latestrelease.NewChecker(version.Version, config.ToolName, printer)
+			_ = checker.CheckAvailable()
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

@@ -22,16 +22,17 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
 
-func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
+func TestOutputOpts_CheckAvailable(t *testing.T) {
 	tests := TestCases()
 	for _, tt := range tests {
-		if !tt.expectNewVersion {
-			continue
-		}
-		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			prevVersion := version.Version
 			version.Version = tt.currentVersion
 			defer func() {
@@ -39,25 +40,50 @@ func TestOutputOpts_printNewVersionAvailable(t *testing.T) {
 			}()
 
 			var bin string
-			if tt.tool == "atlascli" {
-				bin = "atlas"
+			if tt.tool == version.AtlasCLI {
+				bin = version.AtlasBinary
 			} else {
 				bin = tt.tool
 			}
 
-			bufOut := new(bytes.Buffer)
-			v := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
-			err := NewPrinter(bufOut, tt.tool, bin).PrintNewVersionAvailable(
-				v,
-				"",
-			)
+			currVer, _ := semver.NewVersion(tt.currentVersion)
+			*currVer, _ = currVer.SetPrerelease("")
 
+			ctrl := gomock.NewController(t)
+			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockStore := mocks.NewMockStore(ctrl)
+			defer ctrl.Finish()
+
+			mockStore.
+				EXPECT().
+				LoadLatestVersion().
+				Return("", nil).
+				Times(1)
+
+			if tt.expectNewVersion {
+				mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
+			}
+
+			mockDescriber.
+				EXPECT().
+				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
+				Return(tt.release, nil).
+				Times(1)
+
+			bufOut := new(bytes.Buffer)
+
+			printer := NewPrinter(bufOut, tt.tool, bin)
+			finder := NewVersionFinder(mockDescriber, mockStore, tt.tool, tt.currentVersion)
+			checker := newCheckerForTest(tt.currentVersion, tt.tool, printer, finder, afero.NewMemMapFs())
+
+			err := checker.CheckAvailable()
 			if err != nil {
-				t.Errorf("printNewVersionAvailable() unexpected error: %v", err)
+				t.Errorf("NewVersionAvailable() unexpected error: %v", err)
 			}
 
 			want := ""
 			if tt.expectNewVersion {
+				v := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
 				want = fmt.Sprintf(`
 A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/%s-install.

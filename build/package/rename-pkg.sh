@@ -25,7 +25,7 @@ fi
 FILENAME="${package_name-}"_"${VERSION}"_linux_x86_64
 if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"
-  FILENAME="${package_name-}_${VERSION}-next_linux_x86_64"
+  FILENAME="${package_name-}_${VERSION}_linux_x86_64"
 fi
 
 cd dist

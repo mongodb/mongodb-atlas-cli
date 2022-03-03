@@ -67,7 +67,7 @@ nfpms:
 checksum:
   name_template: checksums.txt
 snapshot:
-  name_template: "{{ .Env.VERSION_GIT }}-next"
+  name_template: "{{ .Env.VERSION_GIT }}"
 changelog:
   sort: asc
   filters:

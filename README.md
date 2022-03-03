@@ -15,4 +15,4 @@ See our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
 ## License
 
-MongoDB CLI and Atlas CLI are released under the Apache 2.0 license. See [LICENSE](LICENSE)
+MongoCLI and AtlasCLI are released under the Apache 2.0 license. See [LICENSE](LICENSE)

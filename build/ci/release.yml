@@ -562,7 +562,7 @@ tasks:
           TOOL_NAME: ${tool_name}
       - func: "uninstall go-msi"
       - func: "upload dist"
-      - command: s3.put
+      - command: s3.put # TODO: we have to update the s3 bucket name to be ${tool_name} - CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
         params:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
@@ -573,32 +573,6 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
-  - name: release_atlascli_msi
-    stepback: false
-    git_tag_only: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-    commands:
-      - func: "clone"
-      - func: "install go-msi"
-      - func: "generate msi"
-        vars:
-          TOOL_NAME: ${tool_name}
-      - func: "uninstall go-msi"
-      - func: "upload dist"
-#      - command: s3.put // TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
-#        params:
-#          aws_key: ${download_center_aws_key}
-#          aws_secret: ${download_center_aws_secret}
-#          local_files_include_filter:
-#            - src/github.com/mongodb/mongocli/dist/*.msi
-#          remote_file: mongocli/
-#          bucket: downloads.mongodb.org
-#          permissions: public-read
-#          content_type: ${content_type|application/x-gzip}
-#          display_name: downloads-center-
-
   ################################################################
   # Unstable Publish - AtlasCLI
   # RPM Distros
@@ -1342,7 +1316,7 @@ buildvariants:
       go_bin: "c:\\golang\\go1.17/bin"
       tool_name: "atlascli"
     tasks:
-      - name: release_atlascli_msi
+      - name: release_msi
   - name: release_mongocli_publish_42
     display_name: "Publish MongoCLI yum/apt 4.2"
     run_on:

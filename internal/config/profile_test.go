@@ -35,8 +35,8 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 		}
 	})
 	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		home, err := MongoCLIConfigHome()
 		t.Setenv("XDG_CONFIG_HOME", "")
+		home, err := MongoCLIConfigHome()
 		if err != nil {
 			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
 		}
@@ -60,8 +60,8 @@ func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
 		}
 	})
 	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {
-		home, err := OldMongoCLIConfigHome()
 		t.Setenv("XDG_CONFIG_HOME", "")
+		home, err := OldMongoCLIConfigHome()
 		if err != nil {
 			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
 		}

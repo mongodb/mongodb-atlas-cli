@@ -50,7 +50,7 @@ make install-atlascli
 ## Usage
 
 To get a list of available commands, run `atlas help`
-or check our online documentation for more details.
+or check our documentation for more details.
 
 ### Configuring Atlas CLI
 To use `atlascli`, open your terminal, run `atlas auth login`, and follow the prompted steps.

@@ -4,7 +4,7 @@ The MongoDB CLI is a modern command line interface that enables you to manage yo
 
 ![mongocli-atlas-quickstart](https://user-images.githubusercontent.com/461027/126986233-0dd5c82a-2c75-4887-ab66-eb018c59e093.gif)
 
-Use simple, one-line commands to interact with MongoDB Atlas, Cloud Manager, or Ops Manager, and to automate management tasks for your deployments.
+Use simple, one-line commands to interact with MongoDB Atlas, Cloud Manager, or Ops Manager, and automate management tasks for your deployments.
 
 ## Documentation
 
@@ -60,7 +60,7 @@ make install
 ## Usage
 
 To get a list of available commands, run `mongocli help`
-or check our [online documentation](https://docs.mongodb.com/mongocli/master/) for more details.
+or check our [documentation](https://docs.mongodb.com/mongocli/master/) for more details.
 
 ### Configuring MongoCLI with Atlas
 To use `mongocli` with Atlas, open your terminal, run `mongocli auth login`, and follow the prompted steps.

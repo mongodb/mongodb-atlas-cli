@@ -55,7 +55,7 @@ func initConfig() {
 	}
 }
 
-// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli.toml.
+// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
 func createConfigFromMongoCLIConfig() {
 	atlasConfigHomePath, err := config.AtlasCLIConfigHome()
 	if err != nil {

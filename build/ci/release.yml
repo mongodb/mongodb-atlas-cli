@@ -243,7 +243,6 @@ tasks:
         vars:
           unstable: -unstable
           tool_name: ${tool_name}
-          goreleaser_file: ${goreleaser_file}
           goreleaser_config: ${goreleaser_file}
       - func: "rename pkg"
         vars:
@@ -435,7 +434,6 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          unstable: -unstable
           tool_name: "mongocli"
           goreleaser_config: .mongocli.goreleaser.yml
       - func: "rename pkg"

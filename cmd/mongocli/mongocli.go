@@ -16,6 +16,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -38,6 +40,59 @@ func Execute(ctx context.Context) {
 	}
 }
 
+func updateMongoCLIConfigPath() {
+	mongoCLIConfigHome, err := config.MongoCLIConfigHome()
+	if err != nil {
+		return
+	}
+
+	mongoCLIConfigPath := fmt.Sprintf("%s/%s", mongoCLIConfigHome, "config.toml")
+	f, err := os.Open(mongoCLIConfigPath) // if config.toml is already there, exit
+	if err == nil {
+		return
+	}
+	defer f.Close()
+
+	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome()
+	if err != nil {
+		return
+	}
+
+	oldMongoCLIConfigPath := fmt.Sprintf("%s/%s", oldMongoCLIConfigHome, "mongocli.toml")
+	in, err := os.Open(oldMongoCLIConfigPath)
+	if err != nil {
+		return
+	}
+	defer in.Close()
+
+	_, _ = fmt.Fprintf(os.Stderr, `MongoCLI uses a new config path. Copying mongocli.toml content to: %s
+`, mongoCLIConfigPath)
+
+	_, err = os.Stat(oldMongoCLIConfigHome) // check if the dir is already there
+	if err != nil {
+		defaultPermissions := 0700
+		if err = os.Mkdir(mongoCLIConfigHome, os.FileMode(defaultPermissions)); err != nil {
+			return
+		}
+	}
+
+	out, err := os.Create(mongoCLIConfigPath)
+	if err != nil {
+		return
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		log.Printf("There was an error generating %s: %v", mongoCLIConfigPath, err)
+		return
+	}
+	defer os.Remove(oldMongoCLIConfigPath)
+
+	_, _ = fmt.Fprintf(os.Stderr, `MongoCLI configuration moved to: %s
+`, mongoCLIConfigPath)
+}
+
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if err := config.LoadMongoCLIConfig(); err != nil {
@@ -55,7 +110,7 @@ func initConfig() {
 
 func main() {
 	cobra.EnableCommandSorting = false
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(updateMongoCLIConfigPath, initConfig)
 
 	Execute(context.Background())
 }

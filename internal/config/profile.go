@@ -534,7 +534,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, ToolName+".toml")
+	return filepath.Join(p.configDir, "config.toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -584,7 +584,7 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
-	viper.SetConfigName(ToolName)
+	viper.SetConfigName("config")
 	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
 
@@ -618,36 +618,11 @@ func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
 		// ignore if it doesn't exists
 		var e viper.ConfigFileNotFoundError
 		if errors.As(err, &e) {
-			if envPrefix == MongoCLIEnvPrefix {
-				_ = p.copyOldConfig(readEnvironmentVars, envPrefix)
-			}
 			return nil
 		}
 		return err
 	}
 	return nil
-}
-
-func (p *Profile) copyOldConfig(readEnvironmentVars bool, envPrefix string) error {
-	oldConfigHome, err := OldMongoCLIConfigHome()
-	if oldConfigHome == p.configDir || err != nil {
-		return err
-	}
-
-	p.configDir = oldConfigHome
-	err = p.load(readEnvironmentVars, envPrefix)
-	if err != nil {
-		p.configDir, _ = MongoCLIConfigHome()
-		return err
-	}
-
-	p.configDir, _ = MongoCLIConfigHome()
-	err = p.Save()
-	if err != nil {
-		return err
-	}
-
-	return p.fs.Remove(fmt.Sprintf("%s/mongocli.toml", oldConfigHome))
 }
 
 // Save the configuration to disk.
@@ -667,6 +642,7 @@ func (p *Profile) Save() error {
 }
 
 // OldMongoCLIConfigHome retrieves configHome path based used by mongoCLI.
+// Deprecated: MongoCLI versions below v1.24.0 use this path.
 func OldMongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return "", errors.New("not applicable")

@@ -99,6 +99,7 @@ func createConfigFromMongoCLIConfig() {
 	_, err = io.Copy(out, in)
 	if err != nil {
 		log.Printf("There was an error generating %s: %v", atlasConfigPath, err)
+		return
 	}
 
 	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has copied your MongoCLI configuration to: %s

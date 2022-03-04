@@ -14,7 +14,7 @@ builds:
       binary: bin/atlas
       main: ./cmd/atlas/atlas.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{ .Version }} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
+        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]
@@ -81,6 +81,6 @@ changelog:
     - '^build(deps):'
 release:
   prerelease: true
-  name_template: "MongoDB Atlas CLI {{ .Version }}"
+  name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi

@@ -53,7 +53,7 @@ func newCheckerForTest(cv, t string, p Printer, f VersionFinder, fs afero.Fs) Ch
 }
 
 func (c *checker) latestVersion() (isHomebrew bool, latestVersion string, err error) {
-	releaseStore := NewStore(c.filesystem, c.tool)
+	releaseStore := NewLoaderSaver(c.filesystem, c.tool)
 
 	if c.finder == nil {
 		c.finder = NewVersionFinder(
@@ -69,7 +69,7 @@ func (c *checker) latestVersion() (isHomebrew bool, latestVersion string, err er
 		return false, "", err
 	}
 
-	brewStore := homebrew.NewPathStore(c.filesystem, c.tool)
+	brewStore := homebrew.NewLoaderSaver(c.filesystem, c.tool)
 	isHomebrew = homebrew.IsHomebrew(c.tool, brewStore)
 
 	if !needRefresh {

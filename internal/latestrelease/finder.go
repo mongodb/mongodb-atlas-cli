@@ -31,7 +31,7 @@ type VersionFinder interface {
 	StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error)
 }
 
-func NewVersionFinder(d version.ReleaseVersionDescriber, s Store, t, c string) VersionFinder {
+func NewVersionFinder(d version.ReleaseVersionDescriber, s LoaderSaver, t, c string) VersionFinder {
 	return &latestReleaseVersionFinder{
 		describer:      d,
 		store:          s,
@@ -42,7 +42,7 @@ func NewVersionFinder(d version.ReleaseVersionDescriber, s Store, t, c string) V
 
 type latestReleaseVersionFinder struct {
 	describer      version.ReleaseVersionDescriber
-	store          Store
+	store          LoaderSaver
 	tool           string
 	currentVersion string
 }

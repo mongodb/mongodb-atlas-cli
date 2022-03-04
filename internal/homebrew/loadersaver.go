@@ -29,16 +29,16 @@ type brewPath struct {
 	HomePath       string    `yaml:"home_path"`
 }
 
-type PathStore interface {
+type LoaderSaver interface {
 	LoadBrewPath() (string, string, error)
 	SaveBrewPath(execPath, homePath string) error
 }
 
-func NewPathStore(fileSystem afero.Fs, t string) PathStore {
-	return &pathStore{fs: fileSystem, tool: t}
+func NewLoaderSaver(fileSystem afero.Fs, t string) LoaderSaver {
+	return &loaderSaver{fs: fileSystem, tool: t}
 }
 
-type pathStore struct {
+type loaderSaver struct {
 	fs   afero.Fs
 	tool string
 }
@@ -48,7 +48,7 @@ const (
 )
 
 // LoadBrewPath will load the latest calculated brew path.
-func (s *pathStore) LoadBrewPath() (execPath, homePath string, err error) {
+func (s *loaderSaver) LoadBrewPath() (execPath, homePath string, err error) {
 	path := new(brewPath)
 
 	filePath, err := file.Path(s.tool, brewFileSubPath)
@@ -68,7 +68,7 @@ func (s *pathStore) LoadBrewPath() (execPath, homePath string, err error) {
 }
 
 // SaveBrewPath will save the latest calculated brew path.
-func (s *pathStore) SaveBrewPath(execPath, homePath string) error {
+func (s *loaderSaver) SaveBrewPath(execPath, homePath string) error {
 	data := brewPath{CheckedPathAt: time.Now(), ExecutablePath: execPath, HomePath: homePath}
 
 	filePath, err := file.Path(s.tool, brewFileSubPath)

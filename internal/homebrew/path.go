@@ -36,7 +36,7 @@ func Command(tool string) string {
 }
 
 // IsHomebrew checks if the cli was installed with homebrew.
-func IsHomebrew(tool string, store PathStore) bool {
+func IsHomebrew(tool string, store LoaderSaver) bool {
 	executablePath, brewFormulaPath, err := store.LoadBrewPath()
 	// If one of the values was not found previously it is still a valid case - rely on the file.
 	if (executablePath != "" || brewFormulaPath != "") && err == nil {

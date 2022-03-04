@@ -32,22 +32,22 @@ type state struct {
 	LatestReleaseVersion string    `yaml:"latest_release"`
 }
 
-type Store interface {
+type LoaderSaver interface {
 	LoadLatestVersion() (string, error)
 	SaveLatestVersion(ver string) error
 }
 
-func NewStore(fileSystem afero.Fs, t string) Store {
-	return &store{fs: fileSystem, tool: t}
+func NewLoaderSaver(fileSystem afero.Fs, t string) LoaderSaver {
+	return &loaderSaver{fs: fileSystem, tool: t}
 }
 
-type store struct {
+type loaderSaver struct {
 	fs   afero.Fs
 	tool string
 }
 
 // LoadLatestVersion will load the latest checked version if it was retrieved in the last 24 hours.
-func (s *store) LoadLatestVersion() (string, error) {
+func (s *loaderSaver) LoadLatestVersion() (string, error) {
 	latestReleaseState := new(state)
 	filePath, err := file.Path(s.tool, stateFileSubPath)
 	if err != nil {
@@ -66,7 +66,7 @@ func (s *store) LoadLatestVersion() (string, error) {
 }
 
 // SaveLatestVersion will save the latest retrieved version and date it was retrieved.
-func (s *store) SaveLatestVersion(ver string) error {
+func (s *loaderSaver) SaveLatestVersion(ver string) error {
 	data := state{CheckedForUpdateAt: time.Now(), LatestReleaseVersion: ver}
 
 	filePath, err := file.Path(s.tool, stateFileSubPath)

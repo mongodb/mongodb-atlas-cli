@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package homebrew
+package latestrelease
 
 import (
 	"testing"
@@ -25,62 +25,62 @@ import (
 )
 
 func TestFile(t *testing.T) {
-	t.Run("save brewpath mcli", func(t *testing.T) {
+	t.Run("save latest version mcli", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "mongocli")
+		s := NewLoaderSaver(appFS, "mongocli")
 
-		err := s.SaveBrewPath("a/b/c", "d/e/f")
+		err := s.SaveLatestVersion("1.2.3")
 		if err != nil {
 			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
 		}
 	})
-	t.Run("load brewpath mcli", func(t *testing.T) {
+	t.Run("load latest version mcli", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "mongocli")
+		s := NewLoaderSaver(appFS, "mongocli")
 
-		path, _ := file.Path("mongocli", brewFileSubPath)
+		path, _ := file.Path("mongocli", stateFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
-		p1, p2, err := s.LoadBrewPath()
-		if err != nil || p1 != "" || p2 != "" {
+		v, err := s.LoadLatestVersion()
+		if err != nil || v != "" {
 			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
 		}
 	})
-	t.Run("load brewpath mcli is empty", func(t *testing.T) {
+	t.Run("load latest version mongocli empty", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "mongocli")
+		s := NewLoaderSaver(appFS, "mongocli")
 
-		_, _, err := s.LoadBrewPath()
+		_, err := s.LoadLatestVersion()
 		if err == nil {
 			t.Errorf("LoadLatestVersion() expected error: file not found")
 		}
 	})
-	t.Run("save brewpath atlascli", func(t *testing.T) {
+	t.Run("save latest version atlascli", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "atlascli")
+		s := NewLoaderSaver(appFS, "atlascli")
 
-		err := s.SaveBrewPath("a/b/c", "d/e/f")
+		err := s.SaveLatestVersion("1.2.3")
 		if err != nil {
 			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
 		}
 	})
-	t.Run("load brewpath atlascli", func(t *testing.T) {
+	t.Run("load latest version atlascli", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "atlascli")
+		s := NewLoaderSaver(appFS, "atlascli")
 
-		path, _ := file.Path("atlascli", brewFileSubPath)
+		path, _ := file.Path("atlascli", stateFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
-		p1, p2, err := s.LoadBrewPath()
-		if err != nil || p1 != "" || p2 != "" {
+		v, err := s.LoadLatestVersion()
+		if err != nil || v != "" {
 			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
 		}
 	})
-	t.Run("load brewpath atlascli is empty", func(t *testing.T) {
+	t.Run("load latest version atlascli empty", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
-		s := NewPathStore(appFS, "atlascli")
+		s := NewLoaderSaver(appFS, "atlascli")
 
-		_, _, err := s.LoadBrewPath()
+		_, err := s.LoadLatestVersion()
 		if err == nil {
 			t.Errorf("LoadLatestVersion() expected error: file not found")
 		}

@@ -1118,7 +1118,7 @@ buildvariants:
   - name: code_health
     display_name: "Code Health"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1127,7 +1127,7 @@ buildvariants:
   - name: e2e_generic
     display_name: "E2E Tests Generic"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1136,7 +1136,7 @@ buildvariants:
   - name: e2e_atlas_clusters
     display_name: "E2E Atlas Cluster Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1145,7 +1145,7 @@ buildvariants:
   - name: e2e_atlas_gov_clusters
     display_name: "E2E Atlas Gov Cluster Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1154,7 +1154,7 @@ buildvariants:
   - name: e2e_atlas_networking
     display_name: "E2E Atlas Networking Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1163,7 +1163,7 @@ buildvariants:
   - name: e2e_atlas_live_migrations
     display_name: "E2E Atlas Live Migrations Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1172,7 +1172,7 @@ buildvariants:
   - name: e2e_atlas_datalake
     display_name: "E2E Atlas Datalake Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1181,7 +1181,7 @@ buildvariants:
   - name: e2e_cloud_manager_remote
     display_name: "E2E Cloud Manager Remote Host Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1190,7 +1190,7 @@ buildvariants:
   - name: e2e_ops_manager_44
     display_name: "E2E Ops Manager 4.4 Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1199,7 +1199,7 @@ buildvariants:
   - name: e2e_ops_manager_50
     display_name: "E2E Ops Manager 5.0 Tests"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"

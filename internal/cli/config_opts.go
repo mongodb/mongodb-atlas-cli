@@ -21,13 +21,13 @@ import (
 	"github.com/mongodb/mongocli/internal/validate"
 )
 
-type ConfigOpts struct {
+type DigestConfigOpts struct {
 	DefaultSetterOpts
 	PublicAPIKey  string
 	PrivateAPIKey string
 }
 
-func (opts *ConfigOpts) SetUpServiceAndKeys() {
+func (opts *DigestConfigOpts) SetUpServiceAndKeys() {
 	config.SetService(opts.Service)
 	if opts.PublicAPIKey != "" {
 		config.SetPublicAPIKey(opts.PublicAPIKey)
@@ -37,17 +37,24 @@ func (opts *ConfigOpts) SetUpServiceAndKeys() {
 	}
 }
 
+func (opts *DigestConfigOpts) SetUpDigestAccess() {
+	opts.SetUpServiceAndKeys()
+	if opts.OpsManagerURL != "" {
+		config.SetOpsManagerURL(opts.OpsManagerURL)
+	}
+}
+
 // AskProject will try to construct a select based on fetched projects.
 // If it fails or there are no projects to show we fallback to ask for project by ID.
-func (opts *ConfigOpts) AskProject() error {
+func (opts *DigestConfigOpts) AskProject() error {
 	pMap, pSlice, err := opts.Projects()
-	var projectID string
 	if err != nil || len(pSlice) == 0 {
 		p := prompt.NewProjectIDInput()
 		return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
 	p := prompt.NewProjectSelect(pSlice)
+	var projectID string
 	if err := survey.AskOne(p, &projectID); err != nil {
 		return err
 	}
@@ -57,15 +64,15 @@ func (opts *ConfigOpts) AskProject() error {
 
 // AskOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fallback to ask for org by ID.
-func (opts *ConfigOpts) AskOrg() error {
+func (opts *DigestConfigOpts) AskOrg() error {
 	oMap, oSlice, err := opts.Orgs()
-	var orgID string
 	if err != nil || len(oSlice) == 0 {
 		p := prompt.NewOrgIDInput()
 		return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 	}
 
 	p := prompt.NewOrgSelect(oSlice)
+	var orgID string
 	if err := survey.AskOne(p, &orgID); err != nil {
 		return err
 	}

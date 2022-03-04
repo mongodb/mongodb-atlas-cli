@@ -29,19 +29,11 @@ import (
 )
 
 type opts struct {
-	cli.ConfigOpts
-	OpsManagerURL string
-}
-
-func (opts *opts) SetUpAccess() {
-	opts.SetUpServiceAndKeys()
-	if opts.OpsManagerURL != "" {
-		config.SetOpsManagerURL(opts.OpsManagerURL)
-	}
+	cli.DigestConfigOpts
 }
 
 func (opts *opts) Run(ctx context.Context) error {
-	fmt.Printf(`You are configuring a profile for %s.
+	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MCLI_*) instead.
 
@@ -53,7 +45,7 @@ Enter [?] on any option to get help.
 	if err := survey.Ask(q, opts); err != nil {
 		return err
 	}
-	opts.SetUpAccess()
+	opts.SetUpDigestAccess()
 
 	if err := opts.InitStore(ctx); err != nil {
 		return err
@@ -85,16 +77,16 @@ Enter [?] on any option to get help.
 		return err
 	}
 
-	fmt.Printf("\nYour profile is now configured.\n")
+	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
-		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
 	return nil
 }
 
 func Builder() *cobra.Command {
-	opts := &opts{}
+	opt := &opts{}
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure a profile to store access settings for your MongoDB deployment.",
@@ -117,15 +109,18 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
   To configure the tool to work with Ops Manager
   $ mongocli config --service ops-manager
 `,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			opt.OutWriter = cmd.OutOrStdout()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opt.Run(cmd.Context())
 		},
 		Annotations: map[string]string{
 			"toc": "true",
 		},
 		Args: require.NoArgs,
 	}
-	cmd.Flags().StringVar(&opts.Service, flag.Service, config.CloudService, usage.Service)
+	cmd.Flags().StringVar(&opt.Service, flag.Service, config.CloudService, usage.Service)
 	cmd.AddCommand(
 		SetBuilder(),
 		ListBuilder(),

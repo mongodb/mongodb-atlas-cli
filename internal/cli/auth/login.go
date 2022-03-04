@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"time"
 
@@ -49,7 +48,6 @@ type LoginConfig interface {
 
 type loginOpts struct {
 	cli.DefaultSetterOpts
-	OutWriter      io.Writer
 	AccessToken    string
 	RefreshToken   string
 	isGov          bool
@@ -66,7 +64,7 @@ func (opts *loginOpts) initFlow() error {
 	return err
 }
 
-func (opts *loginOpts) SetUpAccess() {
+func (opts *loginOpts) SetOAuthUpAccess() {
 	switch {
 	case opts.isGov:
 		opts.Service = config.CloudGovService
@@ -95,7 +93,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
-	opts.SetUpAccess()
+	opts.SetOAuthUpAccess()
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
@@ -172,12 +170,12 @@ Your code will expire after %.0f minutes.
 
 func (opts *loginOpts) askOrg() error {
 	oMap, oSlice, err := opts.Orgs()
-	var orgID string
 	if err != nil || len(oSlice) == 0 {
 		return errors.New("no orgs")
 	}
 
 	p := prompt.NewOrgSelect(oSlice)
+	var orgID string
 	if err := survey.AskOne(p, &orgID); err != nil {
 		return err
 	}
@@ -187,12 +185,12 @@ func (opts *loginOpts) askOrg() error {
 
 func (opts *loginOpts) askProject() error {
 	pMap, pSlice, err := opts.Projects()
-	var projectID string
 	if err != nil || len(pSlice) == 0 {
 		return errors.New("no projects")
 	}
 
 	p := prompt.NewProjectSelect(pSlice)
+	var projectID string
 	if err := survey.AskOne(p, &projectID); err != nil {
 		return err
 	}

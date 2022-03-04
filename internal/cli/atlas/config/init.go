@@ -31,7 +31,7 @@ import (
 const atlas = "atlas"
 
 type initOpts struct {
-	cli.ConfigOpts
+	cli.DigestConfigOpts
 	gov bool
 }
 
@@ -109,6 +109,10 @@ func InitBuilder() *cobra.Command {
   To configure the tool to work with Atlas for Government
   $ atlas config init --gov
 `,
+
+		PreRun: func(cmd *cobra.Command, args []string) {
+			opts.OutWriter = cmd.OutOrStdout()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},

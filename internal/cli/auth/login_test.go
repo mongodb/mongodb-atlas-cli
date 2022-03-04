@@ -60,10 +60,10 @@ func Test_loginOpts_Run(t *testing.T) {
 	opts := &loginOpts{
 		flow:      mockFlow,
 		config:    mockConfig,
-		OutWriter: buf,
 		noBrowser: true,
 		loginOnly: true,
 	}
+	opts.OutWriter = buf
 	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",

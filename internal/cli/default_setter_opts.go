@@ -17,6 +17,7 @@ package cli
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -43,6 +44,7 @@ type DefaultSetterOpts struct {
 	MongoShellPath string
 	Output         string
 	Store          ProjectOrgsLister
+	OutWriter      io.Writer
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {

@@ -11,23 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build unit
-// +build unit
 
-package atlas
+package figautocomplete
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/cobra"
+	genFigSpec "github.com/withfig/autocomplete-tools/packages/cobra"
 )
 
-func TestBuilder(t *testing.T) {
-	var profile string
-	test.CmdValidator(
-		t,
-		Builder(&profile),
-		35,
-		[]string{},
-	)
+const CmdUse = "fig-autocomplete"
+
+func Builder() *cobra.Command {
+	opts := genFigSpec.Opts{
+		Use: CmdUse,
+	}
+	// command hidden by default
+	cmd := genFigSpec.NewCmdGenFigSpec(opts)
+	cmd.Aliases = []string{}
+	return cmd
 }

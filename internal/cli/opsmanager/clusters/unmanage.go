@@ -74,11 +74,10 @@ func UnmanageBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("", "Cluster not deleted\""),
 	}
 	cmd := &cobra.Command{
-		Use:     "unmanage <name>",
-		Aliases: []string{"rm"},
-		Short:   "Stop managing a cluster via automation.",
-		Long:    "This commands only removes entries from the automation config but does not actually remove a cluster.",
-		Args:    require.ExactArgs(1),
+		Use:   "unmanage <name>",
+		Short: "Stop managing a cluster via automation.",
+		Long:  "This commands only removes entries from the automation config but does not actually remove a cluster.",
+		Args:  require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

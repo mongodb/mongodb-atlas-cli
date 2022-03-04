@@ -111,7 +111,7 @@ Flags are a way to modify the command, also may be called "options". Flags alway
 
 #### Documentation Requirements
 
-f you are adding a brand new command, or updating a command that has no doc annotations, please define the following doc structures for the command. For more information on all command structs, see [Cobra](https://pkg.go.dev/github.com/spf13/cobra#Command).
+If you are adding a brand new command, or updating a command that has no doc annotations, please define the following doc structures for the command. For more information on all command structs, see [Cobra](https://pkg.go.dev/github.com/spf13/cobra#Command).
 - Add `Use` - (Required) Shows the command and arguments if applicable. Will show up in 'help' output.
 - Add `Short` - (Required) Briefly describes the command. Will show up in 'help' output.
 - Add `Example` - (Required) Example of how to use the command. Will show up in 'help' output.

@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	const use = "slowOperationThreshold"
 	cmd := &cobra.Command{
 		Use:     use,
-		Aliases: []string{use, "slowOT", "sot", "slowMS"},
+		Aliases: []string{"slowOT", "sot", "slowMS"},
 		Short:   "Enable or disable management of the slow operation threshold for your cluster.",
 	}
 	cmd.AddCommand(

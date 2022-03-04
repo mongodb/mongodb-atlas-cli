@@ -26,7 +26,7 @@ type Checker interface {
 
 func NewChecker(cv, t string, p Printer) Checker {
 	return &checker{
-		currentVersion: cv,
+		currentVersion: versionFromTag(cv, t),
 		tool:           t,
 		printer:        p,
 		finder:         nil,
@@ -44,7 +44,7 @@ type checker struct {
 
 func newCheckerForTest(cv, t string, p Printer, f VersionFinder, fs afero.Fs) Checker {
 	return &checker{
-		currentVersion: cv,
+		currentVersion: versionFromTag(cv, t),
 		tool:           t,
 		printer:        p,
 		finder:         f,

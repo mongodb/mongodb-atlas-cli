@@ -21,7 +21,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
@@ -31,15 +30,6 @@ func TestOutputOpts_NewVersionAvailable(t *testing.T) {
 	tests := TestCases()
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
-			prevVersion := version.Version
-			version.Version = tt.currentVersion
-			defer func() {
-				version.Version = prevVersion
-			}()
-
-			currVer, _ := semver.NewVersion(tt.currentVersion)
-			*currVer, _ = currVer.SetPrerelease("")
-
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
 			mockStore := mocks.NewMockStore(ctrl)

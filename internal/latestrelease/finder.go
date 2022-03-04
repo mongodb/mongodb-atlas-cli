@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
@@ -37,7 +36,7 @@ func NewVersionFinder(d version.ReleaseVersionDescriber, s Store, t, c string) V
 		describer:      d,
 		store:          s,
 		tool:           t,
-		currentVersion: c,
+		currentVersion: versionFromTag(c, t),
 	}
 }
 
@@ -48,11 +47,11 @@ type latestReleaseVersionFinder struct {
 	currentVersion string
 }
 
-func versionFromTag(release *github.RepositoryRelease, toolName string) string {
-	if prefix := toolName + "/"; strings.HasPrefix(release.GetTagName(), prefix) {
-		return strings.ReplaceAll(release.GetTagName(), prefix, "")
+func versionFromTag(ver, toolName string) string {
+	if prefix := toolName + "/"; strings.HasPrefix(ver, prefix) {
+		return strings.ReplaceAll(ver, prefix, "")
 	}
-	return release.GetTagName()
+	return ver
 }
 
 func isValidTagForTool(tag, tool string) bool {
@@ -72,7 +71,7 @@ func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 		return false, nil, err
 	}
 
-	v, err := semver.NewVersion(versionFromTag(release, f.tool))
+	v, err := semver.NewVersion(versionFromTag(release.GetTagName(), f.tool))
 	if err != nil {
 		return false, nil, err
 	}
@@ -95,7 +94,7 @@ func (f *latestReleaseVersionFinder) StoredLatestVersionAvailable() (needRefresh
 	if err != nil {
 		return true, "", err
 	}
-	// found a valid store higher latest version, no need to refresh
+	// found a valid version that is higher than latest version, no need to refresh
 	currentVersion, err := semver.NewVersion(f.currentVersion)
 	if err != nil {
 		return false, "", err
@@ -113,6 +112,7 @@ func (f *latestReleaseVersionFinder) NewVersionAvailable(isHomebrew bool) (newVe
 		return "", nil
 	}
 
+	f.currentVersion = versionFromTag(f.currentVersion, f.tool)
 	svCurrentVersion, err := semver.NewVersion(f.currentVersion)
 	if err != nil {
 		return "", err

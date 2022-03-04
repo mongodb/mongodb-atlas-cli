@@ -562,7 +562,7 @@ tasks:
           TOOL_NAME: ${tool_name}
       - func: "uninstall go-msi"
       - func: "upload dist"
-      - command: s3.put # TODO: we have to update the s3 bucket name to be ${tool_name} - CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
+      - command: s3.put
         params:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}

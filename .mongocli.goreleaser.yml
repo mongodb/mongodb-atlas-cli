@@ -31,6 +31,7 @@ builds:
     goarch: [amd64]
 archives:
 - id: linux
+  name_template: "mongocli_{{ .Env.VERSION_GIT }}_{{ .Os }}_{{ .Arch }}"
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -43,11 +44,13 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
+  name_template: "mongocli_{{ .Env.VERSION_GIT }}_{{ .Os }}_{{ .Arch }}"
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
+  name_template: "mongocli_{{ .Env.VERSION_GIT }}_{{ .Os }}_{{ .Arch }}"
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false

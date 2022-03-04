@@ -70,7 +70,6 @@ functions:
           - goreleaser_key
         script: |
           set -Eeou pipefail
-
           export GOROOT="${go_root}"
           export PATH="./bin:${go_bin}:$PATH"
           export GITHUB_TOKEN=${github_token}
@@ -78,7 +77,11 @@ functions:
           export MACOS_NOTARY_KEY=${notary_service_key_id}
           export MACOS_NOTARY_SECRET=${notary_service_secret}
           export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
+          export VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+
+          if [[ -z "${VERSION_GIT}" ]]; then
+             export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
+          fi
 
           # avoid race conditions on the notarization step by using `-p 1`
           ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
@@ -120,6 +123,7 @@ functions:
           - latest_deb
           - latest_rpm
           - package_name
+          - tool_name
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
@@ -139,19 +143,18 @@ functions:
           - TOOL_NAME
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         include_expansions_in_env:
           - FEED_FILE_NAME
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          go run ../internal/release/main.go --version "$(git describe | cut -d "v" -f 2)" --file "${FEED_FILE_NAME}"
+          - TOOL_NAME
+        add_to_path:
+          - ${go_bin}
+        env:
+          <<: *go_options
+        binary: ../build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
       params:
@@ -246,6 +249,7 @@ tasks:
       - func: "install macos notarization service"
       - func: "package"
         vars:
+          tool_name: ${tool_name}
           goreleaser_file: ${goreleaser_file}
           goreleaser_cmd: goreleaser --config "${goreleaser_file}" --rm-dist --snapshot -p 1
       - func: "rename pkg"
@@ -254,15 +258,16 @@ tasks:
           latest_deb: ~latest
           latest_rpm: .latest
           package_name: ${package_name}
+          tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/${package_name}-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/${package_name}-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
@@ -270,6 +275,7 @@ tasks:
         vars:
           package_name: ${package_name}
           FEED_FILE_NAME: "${package_name}.json"
+          TOOL_NAME: ${tool_name}
       - func: "upload dist"
   - name: pkg_test_mongocli_docker_ubuntu1804
     tags: ["smoke-test"]
@@ -436,10 +442,12 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
+          tool_name: "mongocli"
           goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
         vars:
           package_name: mongocli
+          tool_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
@@ -455,6 +463,7 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongocli.json
+          TOOL_NAME: mongocli
       - func: "upload dist"
       - command: s3.put
         params:
@@ -497,10 +506,12 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
+          tool_name: "atlascli"
           goreleaser_cmd: goreleaser --config .atlascli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
+          tool_name: atlascli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz
@@ -516,6 +527,7 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
+          TOOL_NAME: atlascli
 #      - func: "upload dist" TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
 #      - command: s3.put
 #        params:
@@ -1240,6 +1252,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".mongocli.goreleaser.yml"
       package_name: "mongocli"
+      tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
   - name: goreleaser_atlascli_snapshot
@@ -1252,6 +1265,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
+      tool_name: "atlascli"
     tasks:
       - name: package_goreleaser
   - name: publish_snapshot

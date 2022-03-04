@@ -7,7 +7,7 @@ COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=$(shell git describe --always --tags | cut -d "v" -f 2)
+MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
@@ -16,12 +16,19 @@ MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
+ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
-LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
-MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME)
-ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli
+
+ifeq ($(ATLAS_VERSION),) # use git describe if we don't have an atlascli tag
+	ATLAS_VERSION=$(shell git describe --always --tags | cut -d "v" -f 2)
+endif
+
+
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION}
+ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli -X github.com/mongodb/mongocli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l

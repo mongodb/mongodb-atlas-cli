@@ -85,7 +85,7 @@ functions:
           <<: *go_options
         command: make integration-test
   "generate html coverage":
-    - command: subprocess.exec
+    - command: shell.exec
       type: test
       params:
         add_to_path:
@@ -93,7 +93,12 @@ functions:
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
-        command: go tool cover -html=coverage.out -o coverage.html
+        script: |
+          set -Eeou pipefail
+
+          export GOROOT="${go_root}"
+          export PATH="./bin:$GOROOT/bin:$PATH"
+          go tool cover -html=coverage.out -o coverage.html  
   "upload html coverage":
     - command: s3.put
       params:

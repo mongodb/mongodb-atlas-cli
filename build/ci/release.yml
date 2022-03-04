@@ -568,12 +568,11 @@ tasks:
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongocli/dist/*.msi
-          remote_file: mongodb-atlas-cli/
+          remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
-
   ################################################################
   # Unstable Publish - AtlasCLI
   # RPM Distros

@@ -59,7 +59,7 @@ functions:
           <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli
@@ -68,23 +68,11 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-        script: |
-          set -Eeou pipefail
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-          export GITHUB_TOKEN=${github_token}
-          export NOTARY_SERVICE_URL=${notary_service_url}
-          export MACOS_NOTARY_KEY=${notary_service_key_id}
-          export MACOS_NOTARY_SECRET=${notary_service_secret}
-          export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
-
-          if [[ -z "${VERSION_GIT}" ]]; then
-             export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
-          fi
-
-          # avoid race conditions on the notarization step by using `-p 1`
-          ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
+          - tool_name
+          - goreleaser_cmd
+        env:
+          <<: *go_options
+        binary: build/package/package.sh
   "install go-msi":
     - command: subprocess.exec
       type: setup

@@ -25,7 +25,7 @@ Download the appropriate version for your platform from [mongocli releases](http
 After you download the library, you can run it from anywhere and don't need to install it into a global location.
 This works well for shared hosts and other systems where you don't have a privileged account.
 
-Ideally, you should place this binary somewhere in your `PATH` for ease of use. 
+You can place this binary somewhere in your `PATH` for ease of use.
 `/usr/local/bin` is the most probable location.
 
 ### Build From Source

@@ -6,7 +6,7 @@ The MongoDB Atlas CLI is a modern command line interface that enables you to man
 
 ## Installing
 
-Atlas CLI is currently in the pre-release phase, do not use it in the production environment.
+Atlas CLI is currently in the pre-release phase. Do not use it in a production environment.
 
 ### Pre-built Binaries
 
@@ -14,7 +14,7 @@ Download the appropriate version for your platform from [Atlas CLI releases](htt
 After you download the library, you can run it from anywhere and don't need to install it into a global location.
 This works well for shared hosts and other systems where you don't have a privileged account.
 
-Ideally, you should place this binary somewhere in your `PATH` for ease of use.
+You can place this binary somewhere in your `PATH` for ease of use.
 `/usr/local/bin` is the most probable location.
 
 ### Build From Source

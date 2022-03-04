@@ -62,6 +62,8 @@ functions:
     - command: subprocess.exec
       type: test
       params:
+        add_to_path:
+          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         include_expansions_in_env:
           - notary_service_key_id
@@ -69,7 +71,9 @@ functions:
           - notary_service_url
           - goreleaser_key
           - tool_name
-          - goreleaser_cmd
+          - goreleaser_config
+          - github_token
+          - unstable
         env:
           <<: *go_options
         binary: build/package/package.sh
@@ -237,9 +241,10 @@ tasks:
       - func: "install macos notarization service"
       - func: "package"
         vars:
+          unstable: -unstable
           tool_name: ${tool_name}
           goreleaser_file: ${goreleaser_file}
-          goreleaser_cmd: goreleaser --config "${goreleaser_file}" --rm-dist --snapshot -p 1
+          goreleaser_config: ${goreleaser_file}
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -430,8 +435,9 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
+          unstable: -unstable
           tool_name: "mongocli"
-          goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
+          goreleaser_config: .mongocli.goreleaser.yml
       - func: "rename pkg"
         vars:
           package_name: mongocli
@@ -495,7 +501,7 @@ tasks:
       - func: "package"
         vars:
           tool_name: "atlascli"
-          goreleaser_cmd: goreleaser --config .atlascli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
+          goreleaser_config: .atlascli.goreleaser.yml
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli

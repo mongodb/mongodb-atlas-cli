@@ -16,15 +16,12 @@
 
 set -Eeou pipefail
 
-
-set -Eeou pipefail
-export GOROOT="${go_root}"
-export PATH="./bin:${go_bin}:$PATH"
-export GITHUB_TOKEN=${github_token}
-export NOTARY_SERVICE_URL=${notary_service_url}
-export MACOS_NOTARY_KEY=${notary_service_key_id}
-export MACOS_NOTARY_SECRET=${notary_service_secret}
-export GORELEASER_KEY=${goreleaser_key}
+export GOROOT="${GOROOT:?}"
+export GITHUB_TOKEN=${github_token:?}
+export NOTARY_SERVICE_URL=${notary_service_url:?}
+export MACOS_NOTARY_KEY=${notary_service_key_id:?}
+export MACOS_NOTARY_SECRET=${notary_service_secret:?}
+export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
 
 echo "TEST:${VERSION_GIT}"
@@ -32,5 +29,9 @@ if [[ -z "${VERSION_GIT}" ]]; then
    export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
 fi
 
-# avoid race conditions on the notarization step by using `-p 1`
-${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
+if [[ "${unstable-}" == "-unstable" ]]; then
+  # avoid race conditions on the notarization step by using `-p 1`
+  ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --snapshot -p 1
+else
+    ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes CHANGELOG.md -p 1
+fi

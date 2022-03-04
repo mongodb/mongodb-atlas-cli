@@ -22,8 +22,3 @@ if [[ -z "${VERSION}" ]]; then
 fi
 
 go run ../internal/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
-
-
-
-
-

@@ -15,7 +15,10 @@
 
 set -Eeou pipefail
 
-VERSION=$(git describe | cut -d "v" -f 2)
+VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+if [[ -z "${VERSION}" ]]; then
+    VERSION="$(git describe --abbrev=0 | cut -d "v" -f 2)"
+fi
 
 PACKAGE_NAME=mongocli_"${VERSION}"_windows_x86_64.msi
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then

@@ -528,23 +528,23 @@ tasks:
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
           TOOL_NAME: atlascli
-#      - func: "upload dist" TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
-#      - command: s3.put
-#        params:
-#          aws_key: ${download_center_aws_key}
-#          aws_secret: ${download_center_aws_secret}
-#          local_files_include_filter:
-#            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-#            - src/github.com/mongodb/mongocli/dist/*.zip
-#            - src/github.com/mongodb/mongocli/dist/*.deb
-#            - src/github.com/mongodb/mongocli/dist/*.rpm
-#            - src/github.com/mongodb/mongocli/dist/*.tgz
-#            - src/github.com/mongodb/mongocli/dist/*.json
-#          remote_file: mongocli/
-#          bucket: downloads.mongodb.org
-#          permissions: public-read
-#          content_type: ${content_type|application/x-gzip}
-#          display_name: downloads-center-
+      - func: "upload dist"
+      - command: s3.put
+        params:
+          aws_key: ${download_center_aws_key}
+          aws_secret: ${download_center_aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
+          remote_file: mongocli/
+          bucket: downloads.mongodb.org
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
       - func: "send slack notification"
         vars:
           TOOL_NAME: atlascli

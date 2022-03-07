@@ -65,9 +65,9 @@ func createConfigFromMongoCLIConfig() {
 	atlasConfigPath := fmt.Sprintf("%s/%s", atlasConfigHomePath, "config.toml")
 	f, err := os.Open(atlasConfigPath) // if config.toml is already there, exit
 	if err == nil {
+		f.Close()
 		return
 	}
-	defer f.Close()
 
 	in, err := mongoCLIConfigFile()
 	if err != nil {
@@ -102,41 +102,27 @@ func createConfigFromMongoCLIConfig() {
 `, atlasConfigPath)
 }
 
-func mongoCLIConfigPaths() (configPath, oldConfigPath string) {
-	configPath = ""
-	oldConfigPath = ""
+func mongoCLIConfigFile() (in *os.File, err error) {
+	configPath := ""
+	configDir := ""
 
-	configDir, err := config.MongoCLIConfigHome()
-	if err == nil {
+	if configDir, err = config.MongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/config.toml", configDir)
 	}
 
-	oldConfigDir, err := config.OldMongoCLIConfigHome()
-	if err == nil {
-		oldConfigPath = fmt.Sprintf("%s/mongocli.toml", oldConfigDir)
-	}
-
-	return configPath, oldConfigPath
-}
-
-func mongoCLIConfigFile() (*os.File, error) {
-	mongoCLIConfigPath, oldMongoCLIConfigPath := mongoCLIConfigPaths()
-	if mongoCLIConfigPath == "" && oldMongoCLIConfigPath == "" {
-		return nil, nil
-	}
-
-	// Newest file is available, ignore the old one
-	in, err := os.Open(mongoCLIConfigPath)
+	// Try to open new file
+	in, err = os.Open(configPath)
 	if err == nil {
 		return in, nil
 	}
 
-	in, err = os.Open(oldMongoCLIConfigPath)
-	if err == nil {
-		return in, nil
+	// Try finding old file since new file opening failed/did not exist
+	if configDir, err = config.OldMongoCLIConfigHome(); err == nil {
+		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 
-	return nil, err
+	// Try to open old file
+	return os.Open(configPath)
 }
 
 func main() {

@@ -659,7 +659,7 @@ func OldMongoCLIConfigHome() (string, error) {
 // MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
 func MongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return home, nil
+		return fmt.Sprintf("%s/mongocli", home), nil
 	}
 
 	home, err := os.UserHomeDir()
@@ -673,7 +673,7 @@ func MongoCLIConfigHome() (string, error) {
 // AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
 func AtlasCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return home, nil
+		return fmt.Sprintf("%s/atlascli", home), nil
 	}
 
 	home, err := os.UserHomeDir()

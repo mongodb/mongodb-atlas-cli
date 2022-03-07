@@ -49,9 +49,9 @@ func updateMongoCLIConfigPath() {
 	mongoCLIConfigPath := fmt.Sprintf("%s/%s", mongoCLIConfigHome, "config.toml")
 	f, err := os.Open(mongoCLIConfigPath) // if config.toml is already there, exit
 	if err == nil {
+		f.Close()
 		return
 	}
-	defer f.Close()
 
 	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome()
 	if err != nil {
@@ -68,8 +68,8 @@ func updateMongoCLIConfigPath() {
 	_, _ = fmt.Fprintf(os.Stderr, `MongoCLI uses a new config path. Copying mongocli.toml content to: %s
 `, mongoCLIConfigPath)
 
-	_, err = os.Stat(oldMongoCLIConfigHome) // check if the dir is already there
-	if err != nil {
+	// check if new config home already exists and create if not
+	if _, err = os.Stat(mongoCLIConfigHome); err != nil {
 		defaultPermissions := 0700
 		if err = os.Mkdir(mongoCLIConfigHome, os.FileMode(defaultPermissions)); err != nil {
 			return

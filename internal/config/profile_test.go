@@ -18,6 +18,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -26,11 +27,12 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
 		const xdgHome = "my_config"
 		t.Setenv("XDG_CONFIG_HOME", xdgHome)
+		expected := fmt.Sprintf("%s/mongocli", xdgHome)
 		home, err := MongoCLIConfigHome()
 		if err != nil {
 			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
 		}
-		if home != xdgHome {
+		if home != expected {
 			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, xdgHome)
 		}
 	})
@@ -77,10 +79,11 @@ func TestConfig_AtlasCLIConfigHome(t *testing.T) {
 		const xdgHome = "my_config"
 		t.Setenv("XDG_CONFIG_HOME", xdgHome)
 		home, err := AtlasCLIConfigHome()
+		expected := fmt.Sprintf("%s/atlascli", xdgHome)
 		if err != nil {
 			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
 		}
-		if home != xdgHome {
+		if home != expected {
 			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, xdgHome)
 		}
 	})

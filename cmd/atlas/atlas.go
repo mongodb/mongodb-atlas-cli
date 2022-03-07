@@ -69,7 +69,12 @@ func createConfigFromMongoCLIConfig() {
 		return
 	}
 
-	in, err := mongoCLIConfigFile()
+	path, err := mongoCLIConfigFilePath()
+	if err != nil {
+		return
+	}
+
+	in, err := os.Open(path)
 	if err != nil {
 		return
 	}
@@ -102,7 +107,7 @@ func createConfigFromMongoCLIConfig() {
 `, atlasConfigPath)
 }
 
-func mongoCLIConfigFile() (in *os.File, err error) {
+func mongoCLIConfigFilePath() (path string, err error) {
 	configPath := ""
 	configDir := ""
 
@@ -110,19 +115,19 @@ func mongoCLIConfigFile() (in *os.File, err error) {
 		configPath = fmt.Sprintf("%s/config.toml", configDir)
 	}
 
-	// Try to open new file
-	in, err = os.Open(configPath)
-	if err == nil {
-		return in, nil
+	// Check if file exists, if any error is detected try to get older file
+	if _, err = os.Stat(configPath); err == nil {
+		return configPath, nil
 	}
 
-	// Try finding old file since new file opening failed/did not exist
 	if configDir, err = config.OldMongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 
-	// Try to open old file
-	return os.Open(configPath)
+	if _, err = os.Stat(configPath); err == nil {
+		return configPath, nil
+	}
+	return "", err
 }
 
 func main() {

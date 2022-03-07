@@ -72,6 +72,7 @@ func updateMongoCLIConfigPath() {
 	if _, err = os.Stat(mongoCLIConfigHome); err != nil {
 		defaultPermissions := 0700
 		if err = os.Mkdir(mongoCLIConfigHome, os.FileMode(defaultPermissions)); err != nil {
+			log.Printf("There was an error generating %s: %v", mongoCLIConfigHome, err)
 			return
 		}
 	}

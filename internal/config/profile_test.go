@@ -45,12 +45,12 @@ func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
 	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
 		const xdgHome = "my_config"
 		t.Setenv("XDG_CONFIG_HOME", xdgHome)
-		_, err := OldMongoCLIConfigHome()
-		if err == nil {
-			t.Fatalf("OldMongoCLIConfigHome() expected error: not applicable")
+		home, err := OldMongoCLIConfigHome()
+		if err != nil {
+			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
 		}
-		if err.Error() != "not applicable" {
-			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s'", "not applicable", err)
+		if home != xdgHome {
+			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, xdgHome)
 		}
 	})
 	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {

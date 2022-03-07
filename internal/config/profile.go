@@ -645,7 +645,7 @@ func (p *Profile) Save() error {
 // Deprecated: MongoCLI versions below v1.24.0 use this path.
 func OldMongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return "", errors.New("not applicable")
+		return home, nil
 	}
 
 	home, err := os.UserHomeDir()
@@ -669,14 +669,9 @@ func MongoCLIConfigHome() (string, error) {
 // AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
 func AtlasCLIConfigHome() (string, error) {
 	home, err := os.UserConfigDir()
-	if err == nil {
-		return fmt.Sprintf("%s/atlascli", home), nil
+	if err != nil {
+		return "", err
 	}
 
-	home, err = os.UserHomeDir()
-	if err == nil {
-		return fmt.Sprintf("%s/atlascli", home), nil
-	}
-
-	return "", err
+	return fmt.Sprintf("%s/atlascli", home), nil
 }

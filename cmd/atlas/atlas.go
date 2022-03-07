@@ -96,8 +96,7 @@ func createConfigFromMongoCLIConfig() {
 	}
 	defer out.Close()
 
-	_, err = io.Copy(out, in)
-	if err != nil {
+	if _, err = io.Copy(out, in); err != nil {
 		log.Printf("There was an error generating %s: %v", atlasConfigPath, err)
 		return
 	}
@@ -107,27 +106,24 @@ func createConfigFromMongoCLIConfig() {
 `, atlasConfigPath)
 }
 
-func mongoCLIConfigFilePath() (path string, err error) {
-	configPath := ""
-	configDir := ""
-
-	if configDir, err = config.MongoCLIConfigHome(); err == nil {
+func mongoCLIConfigFilePath() (configPath string, err error) {
+	if configDir, err := config.MongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/config.toml", configDir)
 	}
 
 	// Check if file exists, if any error is detected try to get older file
-	if _, err = os.Stat(configPath); err == nil {
+	if _, err := os.Stat(configPath); err == nil {
 		return configPath, nil
 	}
 
-	if configDir, err = config.OldMongoCLIConfigHome(); err == nil {
+	if configDir, err := config.OldMongoCLIConfigHome(); err == nil {
 		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
 	}
 
-	if _, err = os.Stat(configPath); err == nil {
-		return configPath, nil
+	if _, err := os.Stat(configPath); err != nil {
+		return "", err
 	}
-	return "", err
+	return configPath, nil
 }
 
 func main() {

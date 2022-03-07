@@ -83,8 +83,7 @@ func updateMongoCLIConfigPath() {
 	}
 	defer out.Close()
 
-	_, err = io.Copy(out, in)
-	if err != nil {
+	if _, err = io.Copy(out, in); err != nil {
 		log.Printf("There was an error generating %s: %v", mongoCLIConfigPath, err)
 		return
 	}

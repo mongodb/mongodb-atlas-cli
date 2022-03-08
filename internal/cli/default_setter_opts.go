@@ -16,13 +16,14 @@ package cli
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mongosh"
+	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/validate"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -34,6 +35,7 @@ import (
 type ProjectOrgsLister interface {
 	Projects(*atlas.ListOptions) (interface{}, error)
 	Organizations(*atlas.OrganizationsListOptions) (*atlas.Organizations, error)
+	GetOrgProjects(string, *atlas.ListOptions) (interface{}, error)
 }
 
 type DefaultSetterOpts struct {
@@ -61,21 +63,46 @@ func (opts *DefaultSetterOpts) IsOpsManager() bool {
 	return opts.Service == config.OpsManagerService
 }
 
+const resultsLimit = 100
+
+var (
+	errTooManyResults = errors.New("too many results")
+	errNoResults      = errors.New("no results")
+)
+
 // Projects fetches projects and returns then as a slice of the format `nameIDFormat`,
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
-// and we want them to get the ID mapping to store on the config.
-func (opts *DefaultSetterOpts) Projects() (pMap map[string]string, pSlice []string, err error) {
-	projects, err := opts.Store.Projects(nil)
+// and we want them to get the ID mapping to store in the config.
+func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []string, err error) {
+	var projects interface{}
+	if opts.OrgID == "" {
+		projects, err = opts.Store.Projects(nil)
+	} else {
+		projects, err = opts.Store.GetOrgProjects(opts.OrgID, nil)
+	}
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "there was a problem fetching projects: %s\n", err)
 		return nil, nil, err
 	}
-	if opts.IsCloud() {
-		pMap, pSlice = atlasProjects(projects.(*atlas.Projects).Results)
-	} else {
-		pMap, pSlice = omProjects(projects.(*opsmngr.Projects).Results)
+	switch r := projects.(type) {
+	case *atlas.Projects:
+		if r.TotalCount == 0 {
+			return nil, nil, errNoResults
+		}
+		if r.TotalCount > resultsLimit {
+			return nil, nil, errTooManyResults
+		}
+		pMap, pSlice = atlasProjects(r.Results)
+	case *opsmngr.Projects:
+		if r.TotalCount == 0 {
+			return nil, nil, errNoResults
+		}
+		if r.TotalCount > resultsLimit {
+			return nil, nil, errTooManyResults
+		}
+		pMap, pSlice = omProjects(r.Results)
 	}
+
 	return pMap, pSlice, nil
 }
 
@@ -83,15 +110,17 @@ func (opts *DefaultSetterOpts) Projects() (pMap map[string]string, pSlice []stri
 // and a map such as `map[nameIDFormat]=ID`.
 // This is necessary as we can only prompt using `nameIDFormat`
 // and we want them to get the ID mapping to store on the config.
-func (opts *DefaultSetterOpts) Orgs() (oMap map[string]string, oSlice []string, err error) {
+func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
 	includeDeleted := false
 	orgs, err := opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted})
-	if orgs != nil && orgs.TotalCount > len(orgs.Results) {
-		orgs, err = opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, ListOptions: atlas.ListOptions{ItemsPerPage: orgs.TotalCount}})
-	}
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "there was a problem fetching orgs: %s\n", err)
 		return nil, nil, err
+	}
+	if orgs.TotalCount == 0 {
+		return nil, nil, errNoResults
+	}
+	if orgs.TotalCount > resultsLimit {
+		return nil, nil, errTooManyResults
 	}
 	oMap = make(map[string]string, len(orgs.Results))
 	oSlice = make([]string, len(orgs.Results))
@@ -101,6 +130,83 @@ func (opts *DefaultSetterOpts) Orgs() (oMap map[string]string, oSlice []string, 
 		oSlice[i] = d
 	}
 	return oMap, oSlice, nil
+}
+
+// AskProject will try to construct a select based on fetched projects.
+// If it fails or there are no projects to show we fallback to ask for project by ID.
+func (opts *DefaultSetterOpts) AskProject() error {
+	pMap, pSlice, err := opts.projects()
+	if err != nil {
+		var target *atlas.ErrorResponse
+		switch {
+		case errors.Is(err, errNoResults):
+			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any project")
+		case errors.Is(err, errTooManyResults):
+			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d projects\n", resultsLimit)
+		case errors.As(err, &target):
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your projects: %s\n", target.Detail)
+		default:
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your projects: %s\n", err)
+		}
+		p := &survey.Confirm{
+			Message: "Do you want to enter the Project ID manually?",
+		}
+		manually := true
+		if err2 := survey.AskOne(p, &manually); err2 != nil {
+			return err2
+		}
+		if manually {
+			p := prompt.NewProjectIDInput()
+			return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
+		}
+		return nil
+	}
+
+	p := prompt.NewProjectSelect(pSlice)
+	var projectID string
+	if err := survey.AskOne(p, &projectID); err != nil {
+		return err
+	}
+	opts.ProjectID = pMap[projectID]
+	return nil
+}
+
+// AskOrg will try to construct a select based on fetched organizations.
+// If it fails or there are no organizations to show we fallback to ask for org by ID.
+func (opts *DefaultSetterOpts) AskOrg() error {
+	oMap, oSlice, err := opts.orgs()
+	if err != nil {
+		var target *atlas.ErrorResponse
+		switch {
+		case errors.Is(err, errNoResults):
+			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+		case errors.Is(err, errTooManyResults):
+			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d orgs\n", resultsLimit)
+		case errors.As(err, &target):
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
+		default:
+			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", err)
+		}
+		p := &survey.Confirm{
+			Message: "Do you want to enter the Org ID manually?",
+		}
+		manually := true
+		if err2 := survey.AskOne(p, &manually); err2 != nil {
+			return err2
+		}
+		if manually {
+			p := prompt.NewOrgIDInput()
+			return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+		}
+		return nil
+	}
+	p := prompt.NewOrgSelect(oSlice)
+	var orgID string
+	if err := survey.AskOne(p, &orgID); err != nil {
+		return err
+	}
+	opts.OrgID = oMap[orgID]
+	return nil
 }
 
 func (opts *DefaultSetterOpts) SetUpProject() {

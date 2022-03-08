@@ -34,6 +34,21 @@ func (m *MockProjectOrgsLister) EXPECT() *MockProjectOrgsListerMockRecorder {
 	return m.recorder
 }
 
+// GetOrgProjects mocks base method.
+func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrgProjects indicates an expected call of GetOrgProjects.
+func (mr *MockProjectOrgsListerMockRecorder) GetOrgProjects(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrgProjects", reflect.TypeOf((*MockProjectOrgsLister)(nil).GetOrgProjects), arg0, arg1)
+}
+
 // Organizations mocks base method.
 func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlas.Organizations, error) {
 	m.ctrl.T.Helper()

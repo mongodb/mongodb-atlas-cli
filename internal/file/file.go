@@ -15,15 +15,11 @@
 package file
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
-	"strings"
 
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )
@@ -39,7 +35,7 @@ const (
 var supportedExts = []string{jsonName, yamlName, ymlName}
 
 // configType gets the config type from a given file path.
-func configType(filename string) (string, error) {
+func configType(filename string, supported []string) (string, error) {
 	ext := filepath.Ext(filename)
 
 	if len(ext) <= 1 {
@@ -47,7 +43,7 @@ func configType(filename string) (string, error) {
 	}
 
 	configType := ext[1:]
-	if !search.StringInSlice(supportedExts, configType) {
+	if !search.StringInSlice(supported, configType) {
 		return "", fmt.Errorf("unsupported file type: %s", configType)
 	}
 	return configType, nil
@@ -60,7 +56,7 @@ func Load(fs afero.Fs, filename string, out interface{}) error {
 		return fmt.Errorf("file not found: %s", filename)
 	}
 
-	configType, err := configType(filename)
+	configType, err := configType(filename, supportedExts)
 	if err != nil {
 		return err
 	}
@@ -85,26 +81,17 @@ func Load(fs afero.Fs, filename string, out interface{}) error {
 }
 
 // Save saves a given data interface into a given file path
-// The file should be a valid json or yaml format.
+// The file should be a yaml format.
 func Save(fs afero.Fs, filePath string, data interface{}) error {
 	var content []byte
 
-	configType, err := configType(filePath)
-	if err != nil {
+	if _, err := configType(filePath, []string{yamlName}); err != nil {
 		return err
 	}
 
-	switch configType {
-	case yamlName, ymlName:
-		content, err = yaml.Marshal(data)
-		if err != nil {
-			return err
-		}
-	case jsonName:
-		content, err = json.Marshal(data)
-		if err != nil {
-			return err
-		}
+	content, err := yaml.Marshal(data)
+	if err != nil {
+		return err
 	}
 
 	err = fs.MkdirAll(filepath.Dir(filePath), configPermission)
@@ -112,30 +99,5 @@ func Save(fs afero.Fs, filePath string, data interface{}) error {
 		return err
 	}
 
-	err = afero.WriteFile(fs, filePath, content, filePermission)
-	return err
-}
-
-func Path(tool, fileName string) (string, error) {
-	var path bytes.Buffer
-	var home string
-	var err error
-
-	if tool == version.AtlasCLI {
-		home, err = config.AtlasCLIConfigHome()
-	} else {
-		home, err = config.MongoCLIConfigHome()
-	}
-	if err != nil {
-		return "", err
-	}
-
-	path.WriteString(home)
-	// Temporary until config home is changed
-	if !strings.Contains(home, tool) && tool == version.MongoCLI {
-		path.WriteString("/" + tool)
-	}
-
-	path.WriteString(fileName)
-	return path.String(), nil
+	return afero.WriteFile(fs, filePath, content, filePermission)
 }

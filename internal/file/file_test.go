@@ -18,7 +18,6 @@
 package file_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -96,18 +95,6 @@ func TestFile(t *testing.T) {
 		err := file.Save(appFS, filename, nil)
 		if err == nil || err.Error() != unsupportedMsg {
 			t.Errorf("Save() unexpected error: %v", err)
-		}
-	})
-	t.Run("save valid json file", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		filename := jsonFileName
-
-		b := []byte(`{"Name":"MongoDB","Age":100,"Children":["mongocli", "atlascli"]}`)
-		j, _ := json.Marshal(b)
-
-		err := file.Save(appFS, filename, j)
-		if err != nil {
-			t.Fatalf("Save() unexpected error: %v", err)
 		}
 	})
 	t.Run("save valid yaml file", func(t *testing.T) {

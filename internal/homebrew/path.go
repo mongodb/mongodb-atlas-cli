@@ -73,12 +73,7 @@ func homebrewFormulaPath(tool string) (string, error) {
 
 	brewFormulaPath := strings.TrimSpace(string(brewFormulaPathBytes))
 
-	brewFormulaPath, err = filepath.EvalSymlinks(brewFormulaPath)
-	if err != nil {
-		return "", err
-	}
-
-	return brewFormulaPath, nil
+	return filepath.EvalSymlinks(brewFormulaPath)
 }
 
 func executableCurrentPath() (string, error) {

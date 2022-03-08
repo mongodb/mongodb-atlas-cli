@@ -17,31 +17,38 @@ package decryption
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 )
 
 type AuditLogOutput struct {
-	filepath  string
-	Warningf  func(lineNb int, format string, a ...interface{})
-	Error     func(lineNb int, err error)
-	Errorf    func(lineNb int, format string, a ...interface{})
-	LogRecord func(lineNb int, logRecord interface{})
+	Warningf  func(lineNb int, format string, a ...interface{}) error
+	Error     func(lineNb int, err error) error
+	Errorf    func(lineNb int, format string, a ...interface{}) error
+	LogRecord func(lineNb int, logRecord interface{}) error
 }
 
-func buildOutput(filepath string) AuditLogOutput {
+func buildOutput(out io.Writer) AuditLogOutput {
+	writeLine := func(value []byte) error {
+		_, err := out.Write(value)
+		return err
+	}
+
 	return AuditLogOutput{
-		filepath: filepath,
-		Warningf: func(lineNb int, format string, a ...interface{}) {
-			fmt.Printf(format+"\n", a)
+		Warningf: func(lineNb int, format string, a ...interface{}) error {
+			return writeLine([]byte(fmt.Sprintf(format, a)))
 		},
-		Error: func(lineNb int, err error) {
-			fmt.Printf("%s\n", err)
+		Error: func(lineNb int, err error) error {
+			return writeLine([]byte(err.Error()))
 		},
-		Errorf: func(lineNb int, format string, a ...interface{}) {
-			fmt.Printf(format+"\n", a)
+		Errorf: func(lineNb int, format string, a ...interface{}) error {
+			return writeLine([]byte(fmt.Sprintf(format, a)))
 		},
-		LogRecord: func(lineNb int, logRecord interface{}) {
-			jsonVal, _ := json.Marshal(logRecord)
-			fmt.Printf("%s\n", jsonVal)
+		LogRecord: func(lineNb int, logRecord interface{}) error {
+			jsonVal, err := json.Marshal(logRecord)
+			if err != nil {
+				return err
+			}
+			return writeLine(jsonVal)
 		},
 	}
 }

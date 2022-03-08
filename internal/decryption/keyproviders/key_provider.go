@@ -32,12 +32,27 @@ type AWSKeyIdentifier struct {
 	Endpoint string
 }
 
+type AzureKeyIdentifier struct {
+	Environment      string
+	KeyVaultEndpoint string
+	KeyName          string
+	KeyVersion       string
+}
+
+type GCPKeyIdentifier struct {
+	ProjectID string
+	Location  string
+	KeyRing   string
+	KeyName   string
+}
+
 type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
 	Filename string
 	KMIP     *KMIPKeyIdentifier
 	AWS      *AWSKeyIdentifier
-	// todo: add GCP and Azure
+	Azure    *AzureKeyIdentifier
+	GCP      *GCPKeyIdentifier
 }
 
 func DecryptLEK(keyStore KeyStoreIdentifier, encryptedLEK, iv []byte) ([]byte, error) {

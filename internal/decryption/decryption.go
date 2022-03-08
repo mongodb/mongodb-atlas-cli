@@ -15,7 +15,7 @@
 package decryption
 
 import (
-	"os"
+	"io"
 	"strings"
 )
 
@@ -24,14 +24,14 @@ type DecryptConfig struct {
 	compressionMode CompressionMode
 }
 
-func Decrypt(filepath, outputFilepath string) error {
-	auditLogFormat, logLines, err := readAuditLogFile(filepath)
+func Decrypt(logReader io.Reader, out io.Writer) error {
+	auditLogFormat, logLines, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}
 
 	auditLogEncoding := newAuditLogEncoding(auditLogFormat)
-	output := buildOutput(outputFilepath)
+	output := buildOutput(out)
 	var decryptConfig *DecryptConfig
 	var logRecordIdx uint64
 
@@ -40,7 +40,7 @@ func Decrypt(filepath, outputFilepath string) error {
 		if len(line) > 0 {
 			logLine, err := auditLogEncoding.Parse(line)
 			if err != nil {
-				output.Errorf(lineNb, "error parsing line %d, %s", lineNb, err)
+				panicIfError(output.Errorf(lineNb, "error parsing line %d, %s", lineNb, err))
 				continue
 			}
 
@@ -48,23 +48,23 @@ func Decrypt(filepath, outputFilepath string) error {
 			case AuditHeaderRecord:
 				decryptConfig, err = processHeader(logLine)
 				if err != nil {
-					output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err)
+					panicIfError(output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err))
 				}
 				logRecordIdx = 0
 			case AuditLogRecord:
 				logRecordIdx++
 				if decryptConfig == nil {
-					output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
+					panicIfError(output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb))
 				} else {
 					decryptedLogRecord, err := processLogRecord(decryptConfig, logLine, lineNb, logRecordIdx)
 					if err != nil {
-						output.Error(lineNb, err)
+						panicIfError(output.Error(lineNb, err))
 					} else {
-						output.LogRecord(lineNb, decryptedLogRecord)
+						panicIfError(output.LogRecord(lineNb, decryptedLogRecord))
 					}
 				}
 			default:
-				output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType)
+				panicIfError(output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType))
 			}
 		}
 	}
@@ -72,11 +72,17 @@ func Decrypt(filepath, outputFilepath string) error {
 	return nil
 }
 
-func readAuditLogFile(filepath string) (AuditLogFormat, []string, error) {
+func panicIfError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func readAuditLogFile(logReader io.Reader) (AuditLogFormat, []string, error) {
 	const LineBreak = "\n"
 	auditLogFormat := BSON
 
-	data, err := os.ReadFile(filepath)
+	data, err := io.ReadAll(logReader)
 	if err != nil {
 		return auditLogFormat, nil, err
 	}

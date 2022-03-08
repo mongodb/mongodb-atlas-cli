@@ -18,6 +18,7 @@ set -euo pipefail
 
 export MCLI_SERVICE="${cloud_manager_service:?}"
 
+mkdir "${XDG_CONFIG_HOME}/mongocli"
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli/config.toml"
 skip_update_check = true
 [default]

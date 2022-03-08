@@ -75,6 +75,7 @@ echo "create project"
 AGENT_API_KEY=$(./bin/mongocli iam projects create myProj -o="go-template={{.AgentAPIKey}}")
 MCLI_PROJECT_ID=$(./bin/mongocli iam project list -o="go-template={{ (index .Results 0).ID }}")
 
+mkdir "${XDG_CONFIG_HOME}/mongocli"
 cat <<EOF > "${XDG_CONFIG_HOME}/mongocli/config.toml"
 skip_update_check = true
 [default]

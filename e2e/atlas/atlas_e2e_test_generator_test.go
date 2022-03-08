@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 	"time"
 
@@ -54,7 +53,7 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Helper()
 
 	if g.projectID != "" {
-		g.t.Errorf("unexpected error: project was already generated")
+		g.t.Fatal("unexpected error: project was already generated")
 	}
 
 	var err error
@@ -101,7 +100,7 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 	g.t.Helper()
 
 	if g.projectID == "" {
-		g.t.Errorf("unexpected error: project must be generated")
+		g.t.Fatal("unexpected error: project must be generated")
 	}
 
 	var err error
@@ -131,7 +130,7 @@ func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (strin
 	g.t.Helper()
 
 	if g.projectID == "" {
-		g.t.Errorf("unexpected error: project must be generated")
+		g.t.Fatal("unexpected error: project must be generated")
 	}
 
 	return newAvailableRegion(g.projectID, tier, provider)
@@ -141,26 +140,26 @@ func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (strin
 func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	g.t.Helper()
 
-	process, err := g.getFirstProcess()
+	p, err := g.getFirstProcess()
 	if err != nil {
 		return "", err
 	}
 
 	// The first element may not be the created cluster but that is fine since
 	// we just need one cluster up and running
-	return process.Hostname + ":" + strconv.Itoa(process.Port), nil
+	return p.ID, nil
 }
 
 // getHostname returns the hostname of first process.
 func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 	g.t.Helper()
 
-	process, err := g.getFirstProcess()
+	p, err := g.getFirstProcess()
 	if err != nil {
 		return "", err
 	}
 
-	return process.Hostname, nil
+	return p.Hostname, nil
 }
 
 // getFirstProcess returns the first process of the project.
@@ -175,7 +174,6 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*mongodbatlas.Process, error)
 	if err != nil {
 		return nil, err
 	}
-
 	g.firstProcess = processes[0]
 
 	return g.firstProcess, nil
@@ -186,7 +184,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 	g.t.Helper()
 
 	if g.projectID == "" {
-		g.t.Errorf("unexpected error: project must be generated")
+		g.t.Fatal("unexpected error: project must be generated")
 	}
 
 	resp, err := g.runCommand(
@@ -196,16 +194,13 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]*mongodbatlas.Process, error) 
 		g.projectID,
 		"-o=json",
 	)
-
 	if err != nil {
 		return nil, err
 	}
 
 	var processes []*mongodbatlas.Process
-	err = json.Unmarshal(resp, &processes)
-
-	if err != nil {
-		return nil, err
+	if err := json.Unmarshal(resp, &processes); err != nil {
+		g.t.Fatalf("unexpected error: project must be generated %s - %s", err, resp)
 	}
 
 	if len(processes) == 0 {

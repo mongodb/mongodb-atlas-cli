@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-cloud-manager-logs-keyProviders-listKeyProvider` - Lists all key provider configurations found in the encrypted log file.
+* :ref:`mongocli-cloud-manager-logs-keyProviders-list` - Lists all key provider configurations found in the encrypted log file.
 
 
 .. toctree::
    :titlesonly:
 
-   listKeyProvider </command/mongocli-cloud-manager-logs-keyProviders-listKeyProvider>
+   list </command/mongocli-cloud-manager-logs-keyProviders-list>
 

@@ -1,8 +1,8 @@
-.. _mongocli-cloud-manager-logs-keyProviders-listKeyProvider:
+.. _mongocli-cloud-manager-logs-keyProviders-list:
 
-========================================================
-mongocli cloud-manager logs keyProviders listKeyProvider
-========================================================
+=============================================
+mongocli cloud-manager logs keyProviders list
+=============================================
 
 .. default-domain:: mongodb
 
@@ -19,7 +19,7 @@ Syntax
 
 .. code-block::
 
-   mongocli cloud-manager logs keyProviders listKeyProvider [options]
+   mongocli cloud-manager logs keyProviders list [options]
 
 Options
 -------
@@ -39,7 +39,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for listKeyProvider
+     - help for list
    * - -o, --output
      - string
      - false

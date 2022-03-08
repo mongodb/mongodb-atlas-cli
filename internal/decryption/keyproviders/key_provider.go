@@ -55,10 +55,17 @@ type KeyStoreIdentifier struct {
 	GCP      *GCPKeyIdentifier
 }
 
-func DecryptLEK(keyStore KeyStoreIdentifier, encryptedLEK, iv []byte) ([]byte, error) {
+type CredentialsProvider interface {
+	GetLocalKey() (string, error)
+	GetKMIPCerts() (string, string, error)
+	// todo: add AWS, GCP and Azure
+}
+
+// DecryptLEK decrypts the Log Encryption Key used to encrypt audit logs.
+func DecryptLEK(keyStore KeyStoreIdentifier, encryptedLEK, iv []byte, credentialsProvider CredentialsProvider) ([]byte, error) {
 	switch keyStore.Provider {
 	case LocalKey:
-		return decryptWithLocalKey(keyStore.Filename, encryptedLEK, iv)
+		return decryptWithLocalKey(credentialsProvider.GetLocalKey, encryptedLEK, iv)
 	case KMIP, AWS, Azure, GCP:
 		return nil, fmt.Errorf(`KeyStoreProvider "%s" is not implemented`, keyStore.Provider)
 	default:

@@ -48,30 +48,28 @@ func (logLine *AuditLogLine) decodeLogRecord() (*EncryptedLogRecord, error) {
 }
 
 func processLogRecord(decryptConfig *DecryptConfig, logLine *AuditLogLine, lineNb int, expectedLogRecordIdx uint64) (interface{}, error) {
-	encryptedLogRecord, err := logLine.decodeLogRecord()
-	if err != nil {
-		return nil, fmt.Errorf("line %v is corrupted, %v", lineNb, err)
+	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
+	if decodeErr != nil {
+		return nil, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
 	}
 
-	err = validateLogLine(encryptedLogRecord, expectedLogRecordIdx)
-	if err != nil {
-		return nil, err
+	if validationErr := validateLogLine(encryptedLogRecord, expectedLogRecordIdx); validationErr != nil {
+		return nil, validationErr
 	}
 
-	decryptedLog, err := aesGCMDecrypt(encryptedLogRecord, decryptConfig.lek)
-	if err != nil {
-		return nil, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, err, decryptConfig.lek)
+	decryptedLog, decryptErr := aesGCMDecrypt(encryptedLogRecord, decryptConfig.lek)
+	if decryptErr != nil {
+		return nil, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, decryptErr, decryptConfig.lek)
 	}
 
-	decompressedLogRecord, err := decompress(decryptConfig.compressionMode, decryptedLog)
-	if err != nil {
-		return nil, fmt.Errorf("error decompressing line %v, %v", lineNb, err)
+	decompressedLogRecord, decompressErr := decompress(decryptConfig.compressionMode, decryptedLog)
+	if decompressErr != nil {
+		return nil, fmt.Errorf("error decompressing line %v, %v", lineNb, decompressErr)
 	}
 
 	var bsonParsedLogRecord interface{}
-	err = bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, err)
+	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
+		return nil, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, bsonErr)
 	}
 
 	return bsonParsedLogRecord, nil

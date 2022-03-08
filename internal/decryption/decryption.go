@@ -17,6 +17,8 @@ package decryption
 import (
 	"io"
 	"strings"
+
+	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
 
 type DecryptConfig struct {
@@ -24,7 +26,10 @@ type DecryptConfig struct {
 	compressionMode CompressionMode
 }
 
-func Decrypt(logReader io.Reader, out io.Writer) error {
+// Decrypt decrypts the content of an audit log file using the metadata found in the file,
+// the credentials provided by the user and the AES-GCM algorithm.
+// The decrypted audit log records are saved in the out stream.
+func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyproviders.CredentialsProvider) error {
 	auditLogFormat, logLines, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
@@ -46,7 +51,7 @@ func Decrypt(logReader io.Reader, out io.Writer) error {
 
 			switch logLine.AuditRecordType {
 			case AuditHeaderRecord:
-				decryptConfig, err = processHeader(logLine)
+				decryptConfig, err = processHeader(logLine, credentialsProvider)
 				if err != nil {
 					panicIfError(output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err))
 				}

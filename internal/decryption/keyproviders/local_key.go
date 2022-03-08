@@ -18,16 +18,15 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"os"
 )
 
-func decryptWithLocalKey(localKeyFilename string, encryptedLEK, iv []byte) ([]byte, error) {
-	encodedKEK, err := os.ReadFile(localKeyFilename)
+func decryptWithLocalKey(getLocalKeyFn func() (string, error), encryptedLEK, iv []byte) ([]byte, error) {
+	encodedKEK, err := getLocalKeyFn()
 	if err != nil {
 		return nil, err
 	}
 
-	kek, err := base64.StdEncoding.DecodeString(string(encodedKEK))
+	kek, err := base64.StdEncoding.DecodeString(encodedKEK)
 	if err != nil {
 		return nil, err
 	}

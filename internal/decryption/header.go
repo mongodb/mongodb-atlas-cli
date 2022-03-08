@@ -44,13 +44,13 @@ func validateHeader(_ *HeaderRecord) error {
 	return nil
 }
 
-func processHeader(logLine *AuditLogLine) (*DecryptConfig, error) {
+func processHeader(logLine *AuditLogLine, credentialsProvider keyproviders.CredentialsProvider) (*DecryptConfig, error) {
 	header, err := decodeHeader(logLine)
 	if err != nil {
 		return nil, err
 	}
 
-	lek, err := keyproviders.DecryptLEK(header.KeyStoreIdentifier, header.EncryptedLEK, header.IV)
+	lek, err := keyproviders.DecryptLEK(header.KeyStoreIdentifier, header.EncryptedLEK, header.IV, credentialsProvider)
 	if err != nil {
 		return nil, err
 	}

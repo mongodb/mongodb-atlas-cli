@@ -159,6 +159,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 			p := prompt.NewProjectIDInput()
 			return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 		}
+		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default project setting\n")
 		return nil
 	}
 
@@ -181,7 +182,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
 		case errors.Is(err, errTooManyResults):
-			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d orgs\n", resultsLimit)
+			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d organizations\n", resultsLimit)
 		case errors.As(err, &target):
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your organizations: %s\n", target.Detail)
 		default:
@@ -198,6 +199,7 @@ func (opts *DefaultSetterOpts) AskOrg() error {
 			p := prompt.NewOrgIDInput()
 			return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 		}
+		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
 		return nil
 	}
 	p := prompt.NewOrgSelect(oSlice)

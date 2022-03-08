@@ -45,7 +45,7 @@ func (opts *initOpts) SetUpAccess() {
 }
 
 func (opts *initOpts) Run(ctx context.Context) error {
-	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
+	fmt.Printf(`You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
 
@@ -89,11 +89,11 @@ Enter [?] on any option to get help.
 		return err
 	}
 
-	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
+	fmt.Printf("\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
-		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", atlas)
+	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", atlas)
 	return nil
 }
 

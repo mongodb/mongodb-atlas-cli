@@ -1,7 +1,9 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
+
 GOLANGCI_VERSION=v1.43.0
 COVERAGE=coverage.out
+
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
@@ -10,6 +12,7 @@ MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
 MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
+
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas

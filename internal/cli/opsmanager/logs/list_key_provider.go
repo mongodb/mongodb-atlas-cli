@@ -39,12 +39,14 @@ func (opts *KeyProviderListOpts) Run() error {
 	return opts.Print(opts.file)
 }
 
-// mongocli om logs listKeyProvider --file <encryptedLogFile>  [--projectId projectId].
+// mongocli om logs listKeyProvider --file <encryptedLogFile>.
 func ListKeyProviderBuilder() *cobra.Command {
 	opts := &KeyProviderListOpts{}
 	cmd := &cobra.Command{
 		Use:   "listKeyProvider --file <encryptedLogFile>",
 		Short: "Lists all key provider configurations found in the encrypted log file.",
+		Example: `
+  $ mongocli ops-manager listKeyProvider --file log.gz`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -59,7 +61,6 @@ func ListKeyProviderBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.file, flag.File, "", usage.EncryptedLogFile)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.File)

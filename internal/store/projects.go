@@ -83,6 +83,9 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Organizations.Projects(s.ctx, orgID, opts)
+		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
 		return result, err

@@ -26,10 +26,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Download host logs for your project.",
 	}
-	cmd.AddCommand(
-		DownloadBuilder(),
-		ListKeyProviderBuilder(),
-	)
+	cmd.AddCommand(DownloadBuilder())
 
 	return cmd
 }

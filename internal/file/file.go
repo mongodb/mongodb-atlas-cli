@@ -15,11 +15,14 @@
 package file
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
 
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )
@@ -100,4 +103,23 @@ func Save(fs afero.Fs, filePath string, data interface{}) error {
 	}
 
 	return afero.WriteFile(fs, filePath, content, filePermission)
+}
+
+func Path(tool, fileName string) (string, error) {
+	var path bytes.Buffer
+	var home string
+	var err error
+
+	if tool == version.AtlasCLI {
+		home, err = config.AtlasCLIConfigHome()
+	} else {
+		home, err = config.MongoCLIConfigHome()
+	}
+	if err != nil {
+		return "", err
+	}
+
+	path.WriteString(home)
+	path.WriteString(fileName)
+	return path.String(), nil
 }

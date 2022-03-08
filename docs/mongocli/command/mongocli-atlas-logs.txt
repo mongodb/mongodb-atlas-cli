@@ -50,12 +50,10 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-atlas-logs-download` - Download a host mongodb logs.
-* :ref:`mongocli-atlas-logs-listKeyProvider` - Lists all key provider configurations found in the encrypted log file.
 
 
 .. toctree::
    :titlesonly:
 
    download </command/mongocli-atlas-logs-download>
-   listKeyProvider </command/mongocli-atlas-logs-listKeyProvider>
 

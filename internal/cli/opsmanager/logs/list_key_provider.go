@@ -40,7 +40,7 @@ func (opts *KeyProviderListOpts) Run() error {
 }
 
 // mongocli om logs listKeyProvider --file <encryptedLogFile>.
-func ListKeyProviderBuilder() *cobra.Command {
+func KeyProvidersListBuilder() *cobra.Command {
 	opts := &KeyProviderListOpts{}
 	cmd := &cobra.Command{
 		Use:   "listKeyProvider",

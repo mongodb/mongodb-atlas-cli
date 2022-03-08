@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-ops-manager-logs-jobs` - Manage log collection jobs for your project.
+* :ref:`mongocli-ops-manager-logs-listKeyProvider` - Lists all key provider configurations found in the encrypted log file.
 
 
 .. toctree::
    :titlesonly:
 
    jobs </command/mongocli-ops-manager-logs-jobs>
+   listKeyProvider </command/mongocli-ops-manager-logs-listKeyProvider>
 

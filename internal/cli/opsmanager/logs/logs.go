@@ -25,7 +25,10 @@ func Builder() *cobra.Command {
 		Short:   "Manage log collection jobs for your project.",
 	}
 
-	cmd.AddCommand(JobsBuilder())
+	cmd.AddCommand(
+		JobsBuilder(),
+		ListKeyProviderBuilder(),
+	)
 
 	return cmd
 }

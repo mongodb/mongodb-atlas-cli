@@ -55,9 +55,10 @@ func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria
 			return true
 		}
 	}
-
+	const owner = "mongodb"
+	const project = "mongodb-atlas-cli"
 	for {
-		releases, resp, err := client.Repositories.ListReleases(s.ctx, owner, "mongodb-atlas-cli", opt)
+		releases, resp, err := client.Repositories.ListReleases(s.ctx, owner, project, opt)
 		if err != nil {
 			return nil, err
 		}

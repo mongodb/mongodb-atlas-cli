@@ -14,7 +14,7 @@ builds:
       binary: bin/atlas
       main: ./cmd/atlas/atlas.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}}
+        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongocli/internal/version.SegmentKey=${.Env.SEGMENT_KEY}
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]

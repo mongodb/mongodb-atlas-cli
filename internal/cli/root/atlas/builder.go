@@ -168,6 +168,7 @@ func Builder(profile *string) *cobra.Command {
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
 
+	fmt.Printf("This is the Segment API key: %s\n", version.SegmentKey)
 	return rootCmd
 }
 

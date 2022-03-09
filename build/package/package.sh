@@ -22,6 +22,7 @@ export NOTARY_SERVICE_URL=${notary_service_url:?}
 export MACOS_NOTARY_KEY=${notary_service_key_id:?}
 export MACOS_NOTARY_SECRET=${notary_service_secret:?}
 export GORELEASER_KEY=${goreleaser_key:?}
+export SEGMENT_KEY=${segment_key:?}
 export VERSION_GIT
 
 VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"

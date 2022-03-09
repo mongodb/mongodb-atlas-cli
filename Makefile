@@ -26,7 +26,7 @@ ifeq ($(ATLAS_VERSION),) # use git describe if we don't have an atlascli tag
 endif
 
 
-LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA} -X github.com/mongodb/mongocli/internal/version.SegmentKey=${SEGMENT_KEY}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION}
 ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli -X github.com/mongodb/mongocli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}

@@ -74,6 +74,7 @@ functions:
           - goreleaser_config
           - github_token
           - unstable
+          - segment_key
         env:
           <<: *go_options
         binary: build/package/package.sh

@@ -70,8 +70,8 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.outFileName, flag.Out, "", "", usage.OutputLogFile)
 
 	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
-	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KmipServerCAFile, "", "", usage.KmipServerCAFile)
-	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KmipClientCertificateFile, "", "", usage.KmipClientCertificateFile)
+	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)
+	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KMIPClientCertificateFile, "", "", usage.KMIPClientCertificateFile)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
@@ -80,8 +80,8 @@ func DecryptBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagFilename(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.LocalKeyFile)
-	_ = cmd.MarkFlagFilename(flag.KmipServerCAFile)
-	_ = cmd.MarkFlagFilename(flag.KmipClientCertificateFile)
+	_ = cmd.MarkFlagFilename(flag.KMIPServerCAFile)
+	_ = cmd.MarkFlagFilename(flag.KMIPClientCertificateFile)
 
 	return cmd
 }

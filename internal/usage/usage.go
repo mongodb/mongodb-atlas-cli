@@ -311,6 +311,6 @@ const (
 	EncryptedLogFile                         = "Path to the file that contains encrypted audit logs."
 	OutputLogFile                            = "Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout."
 	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (used to encrypt the Log Encryption Key)."
-	KmipServerCAFile                         = "Path to the CA file used to connect to the KMIP speaking server."
-	KmipClientCertificateFile                = "Path to the Client Cert file used to connect to the KMIP speaking server."
+	KMIPServerCAFile                         = "Path to the CA file used to connect to the KMIP speaking server."
+	KMIPClientCertificateFile                = "Path to the Client Cert file used to connect to the KMIP speaking server."
 )

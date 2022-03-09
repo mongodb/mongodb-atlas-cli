@@ -63,7 +63,7 @@ func (opts *DefaultSetterOpts) IsOpsManager() bool {
 	return opts.Service == config.OpsManagerService
 }
 
-const resultsLimit = 100
+const resultsLimit = 500
 
 var (
 	errTooManyResults = errors.New("too many results")
@@ -79,7 +79,7 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 	if opts.OrgID == "" {
 		projects, err = opts.Store.Projects(nil)
 	} else {
-		projects, err = opts.Store.GetOrgProjects(opts.OrgID, nil)
+		projects, err = opts.Store.GetOrgProjects(opts.OrgID, &atlas.ListOptions{ItemsPerPage: resultsLimit})
 	}
 	if err != nil {
 		return nil, nil, err
@@ -112,7 +112,9 @@ func (opts *DefaultSetterOpts) projects() (pMap map[string]string, pSlice []stri
 // and we want them to get the ID mapping to store on the config.
 func (opts *DefaultSetterOpts) orgs() (oMap map[string]string, oSlice []string, err error) {
 	includeDeleted := false
-	orgs, err := opts.Store.Organizations(&atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted})
+	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted}
+	pagination.ItemsPerPage = resultsLimit
+	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
 		return nil, nil, err
 	}

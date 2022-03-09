@@ -17,13 +17,14 @@ package latestrelease
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/version"
 )
 
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version VersionFinder
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/latestrelease VersionFinder
 
 type VersionFinder interface {
 	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)
@@ -45,14 +46,25 @@ func versionFromTag(release *github.RepositoryRelease, toolName string) string {
 	return release.GetTagName()
 }
 
+const (
+	mongoCLI = "mongocli"
+	atlasCLI = "atlascli"
+)
+
 func isValidTagForTool(tag, tool string) bool {
-	if tool == version.MongoCLI {
-		return !strings.Contains(tag, version.AtlasCLI)
+	if tool == mongoCLI {
+		return !strings.Contains(tag, atlasCLI)
 	}
 	return strings.Contains(tag, tool)
 }
 
-func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *version.ReleaseInformation, error) {
+// ReleaseInformation Release information.
+type ReleaseInformation struct {
+	Version     string
+	PublishedAt time.Time
+}
+
+func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *ReleaseInformation, error) {
 	release, err := s.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
 
 	if err != nil || release == nil {
@@ -66,7 +78,7 @@ func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 	}
 
 	if currentVersion.Compare(v) < 0 {
-		return true, &version.ReleaseInformation{
+		return true, &ReleaseInformation{
 			Version:     v.Original(),
 			PublishedAt: release.GetPublishedAt().Time,
 		}, nil

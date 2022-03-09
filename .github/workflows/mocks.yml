@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
 jobs:
-  docs:
+  mocks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

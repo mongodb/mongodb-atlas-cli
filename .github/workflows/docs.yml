@@ -19,9 +19,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/go/pkg/mod
-          key: ubuntu-latest-go-1.17-${{ hashFiles('**/go.sum') }}
+          key: Linux-go-1.17-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ubuntu-latest-go-1.17-
+            Linux-go-1.17-
       - name: Generate docs
         run: make gen-docs > /dev/null
       - name: Check for uncommited files

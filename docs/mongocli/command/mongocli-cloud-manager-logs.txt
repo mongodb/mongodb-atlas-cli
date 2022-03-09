@@ -49,6 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`mongocli-cloud-manager-logs-decrypt` - Decrypts a log file with the provided local key file or KMIP files.
 * :ref:`mongocli-cloud-manager-logs-jobs` - Manage log collection jobs for your project.
 * :ref:`mongocli-cloud-manager-logs-keyProviders` - Manage your key collections.
 
@@ -56,6 +57,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   decrypt </command/mongocli-cloud-manager-logs-decrypt>
    jobs </command/mongocli-cloud-manager-logs-jobs>
    keyProviders </command/mongocli-cloud-manager-logs-keyProviders>
 

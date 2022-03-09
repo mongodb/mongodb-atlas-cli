@@ -142,7 +142,7 @@ func (opts *loginOpts) oauthFlow(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 First, copy your one-time code: %s-%s
 
-Next, sign with your browser and enter the code.
+Next, sign in with your browser and enter the code.
 
 Or go to %s
 

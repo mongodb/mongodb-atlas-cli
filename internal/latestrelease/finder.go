@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 )
 
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/version VersionFinder
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/latestrelease VersionFinder
 
 type VersionFinder interface {
 	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)

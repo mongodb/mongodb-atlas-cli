@@ -1,8 +1,8 @@
-.. _mongocli-cloud-manager-logs:
+.. _mongocli-ops-manager-logs-keyProviders:
 
-===========================
-mongocli cloud-manager logs
-===========================
+======================================
+mongocli ops-manager logs keyProviders
+======================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ mongocli cloud-manager logs
    :depth: 1
    :class: singlecol
 
-Manage log collection jobs for your project.
+Manage your key collections.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for logs
+     - help for keyProviders
 
 Inherited Options
 -----------------
@@ -49,13 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-cloud-manager-logs-jobs` - Manage log collection jobs for your project.
-* :ref:`mongocli-cloud-manager-logs-keyProviders` - Manage your key collections.
+* :ref:`mongocli-ops-manager-logs-keyProviders-list` - Lists all key provider configurations found in the encrypted log file.
 
 
 .. toctree::
    :titlesonly:
 
-   jobs </command/mongocli-cloud-manager-logs-jobs>
-   keyProviders </command/mongocli-cloud-manager-logs-keyProviders>
+   list </command/mongocli-ops-manager-logs-keyProviders-list>
 

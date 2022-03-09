@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package logs
 
 import (
 	"testing"
-
-	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		2,
-		[]string{},
-	)
+func TestKeyProviderListOpts_Run(t *testing.T) {
+	listOpts := &KeyProviderListOpts{
+		file: "test",
+	}
+
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }

@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`mongocli-ops-manager-logs-jobs` - Manage log collection jobs for your project.
+* :ref:`mongocli-ops-manager-logs-keyProviders` - Manage your key collections.
 
 
 .. toctree::
    :titlesonly:
 
    jobs </command/mongocli-ops-manager-logs-jobs>
+   keyProviders </command/mongocli-ops-manager-logs-keyProviders>
 

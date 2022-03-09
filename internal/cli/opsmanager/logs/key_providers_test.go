@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import (
 	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
+func TestKeyProvidersBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		2,
+		KeyProvidersBuilder(),
+		1,
 		[]string{},
 	)
 }

@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -27,7 +26,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
-	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
@@ -107,11 +105,11 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	}
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
-	if err := opts.askOrg(); err != nil {
+	if err := opts.AskOrg(); err != nil {
 		return err
 	}
 	opts.SetUpOrg()
-	if err := opts.askProject(); err != nil {
+	if err := opts.AskProject(); err != nil {
 		return err
 	}
 	opts.SetUpProject()
@@ -165,36 +163,6 @@ Your code will expire after %.0f minutes.
 	}
 	opts.AccessToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
-	return nil
-}
-
-func (opts *loginOpts) askOrg() error {
-	oMap, oSlice, err := opts.Orgs()
-	if err != nil || len(oSlice) == 0 {
-		return errors.New("no orgs")
-	}
-
-	p := prompt.NewOrgSelect(oSlice)
-	var orgID string
-	if err := survey.AskOne(p, &orgID); err != nil {
-		return err
-	}
-	opts.OrgID = oMap[orgID]
-	return nil
-}
-
-func (opts *loginOpts) askProject() error {
-	pMap, pSlice, err := opts.Projects()
-	if err != nil || len(pSlice) == 0 {
-		return errors.New("no projects")
-	}
-
-	p := prompt.NewProjectSelect(pSlice)
-	var projectID string
-	if err := survey.AskOne(p, &projectID); err != nil {
-		return err
-	}
-	opts.ProjectID = pMap[projectID]
 	return nil
 }
 

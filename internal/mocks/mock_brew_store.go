@@ -36,7 +36,7 @@ func (m *MockPathStore) EXPECT() *MockPathStoreMockRecorder {
 // LoadBrewPath mocks base method.
 func (m *MockPathStore) LoadBrewPath() (string, string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadBrewPath")
+	ret := m.ctrl.Call(m, "Load")
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(string)
 	ret2, _ := ret[2].(error)
@@ -46,13 +46,13 @@ func (m *MockPathStore) LoadBrewPath() (string, string, error) {
 // LoadBrewPath indicates an expected call of LoadBrewPath.
 func (mr *MockPathStoreMockRecorder) LoadBrewPath() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadBrewPath", reflect.TypeOf((*MockPathStore)(nil).LoadBrewPath))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Load", reflect.TypeOf((*MockPathStore)(nil).LoadBrewPath))
 }
 
 // SaveBrewPath mocks base method.
 func (m *MockPathStore) SaveBrewPath(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveBrewPath", arg0, arg1)
+	ret := m.ctrl.Call(m, "Save", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -60,5 +60,5 @@ func (m *MockPathStore) SaveBrewPath(arg0, arg1 string) error {
 // SaveBrewPath indicates an expected call of SaveBrewPath.
 func (mr *MockPathStoreMockRecorder) SaveBrewPath(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveBrewPath", reflect.TypeOf((*MockPathStore)(nil).SaveBrewPath), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockPathStore)(nil).SaveBrewPath), arg0, arg1)
 }

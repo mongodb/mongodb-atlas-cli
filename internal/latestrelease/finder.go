@@ -27,7 +27,7 @@ const (
 )
 
 type VersionFinder interface {
-	NewVersionAvailable(isHomebrew bool) (newVersion string, err error)
+	NewVersionAvailable() (newVersion string, err error)
 	StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error)
 }
 
@@ -118,7 +118,7 @@ func (f *latestReleaseVersionFinder) StoredLatestVersionAvailable() (needRefresh
 	return false, "", nil
 }
 
-func (f *latestReleaseVersionFinder) NewVersionAvailable(isHomebrew bool) (newVersion string, err error) {
+func (f *latestReleaseVersionFinder) NewVersionAvailable() (newVersion string, err error) {
 	if f.currentVersion == "" {
 		return "", nil
 	}
@@ -141,7 +141,7 @@ func (f *latestReleaseVersionFinder) NewVersionAvailable(isHomebrew bool) (newVe
 		return "", err
 	}
 
-	if newVersionAvailable && (!isHomebrew || isAtLeast24HoursPast(newV.PublishedAt)) {
+	if newVersionAvailable {
 		_ = f.store.SaveLatestVersion(newV.Version)
 		return newV.Version, nil
 	}

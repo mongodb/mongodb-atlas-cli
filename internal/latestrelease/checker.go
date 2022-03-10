@@ -15,6 +15,7 @@
 package latestrelease
 
 import (
+	"fmt"
 	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
@@ -24,11 +25,10 @@ type Checker interface {
 	CheckAvailable() error
 }
 
-func NewChecker(cv, t string, p Printer) Checker {
+func NewChecker(cv, t string) Checker {
 	return &checker{
 		currentVersion: versionFromTag(cv, t),
 		tool:           t,
-		printer:        p,
 		finder:         nil,
 		filesystem:     afero.NewOsFs(),
 	}
@@ -37,16 +37,14 @@ func NewChecker(cv, t string, p Printer) Checker {
 type checker struct {
 	currentVersion string
 	tool           string
-	printer        Printer
 	finder         VersionFinder
 	filesystem     afero.Fs
 }
 
-func newCheckerForTest(cv, t string, p Printer, f VersionFinder, fs afero.Fs) Checker {
+func newCheckerForTest(cv, t string, f VersionFinder, fs afero.Fs) Checker {
 	return &checker{
 		currentVersion: versionFromTag(cv, t),
 		tool:           t,
-		printer:        p,
 		finder:         f,
 		filesystem:     fs,
 	}
@@ -76,7 +74,7 @@ func (c *checker) latestVersion() (isHomebrew bool, latestVersion string, err er
 		return isHomebrew, latestVersion, nil
 	}
 
-	latestVersion, err = c.finder.NewVersionAvailable(isHomebrew)
+	latestVersion, err = c.finder.NewVersionAvailable()
 
 	return isHomebrew, latestVersion, err
 }
@@ -92,8 +90,8 @@ func (c *checker) CheckAvailable() error {
 	if isHomebrew {
 		cmd = homebrew.Command(c.tool)
 	}
-
-	_ = c.printer.PrintNewVersionAvailable(latestVersion, cmd)
+	fmt.Println(cmd)
+	//_ = c.printer.PrintNewVersionAvailable(latestVersion, cmd)
 
 	return nil
 }

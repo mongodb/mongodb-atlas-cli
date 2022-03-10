@@ -16,9 +16,6 @@ package mongocli
 
 import (
 	"fmt"
-	"io"
-	"runtime"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/auth"
@@ -29,18 +26,24 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/latestrelease"
 	"github.com/mongodb/mongocli/internal/search"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"io"
+	"runtime"
 )
+
+type Notifier struct {
+}
 
 // Builder conditionally adds children commands as needed.
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
 // this can be slow to timeout on environments with limited internet access (Ops Manager).
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
-
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     config.ToolName,
@@ -58,9 +61,15 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			if shouldSkipPrintNewVersion(w) {
 				return
 			}
-			printer := latestrelease.NewPrinter(w, config.ToolName, config.BinName())
-			checker := latestrelease.NewChecker(version.Version, config.ToolName, printer)
+			c, _ := homebrew.NewChecker(afero.NewOsFs())
+			c.IsHomebrew()
+			// p := NewPrinter(w, config.ToolName, config.BinName(), c.IsHomebrew())
+			checker := latestrelease.NewChecker(version.Version, config.ToolName)
+			// shouldCheck && isLatests{
+			// print new vercions
+			//}
 			_ = checker.CheckAvailable()
+
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -105,6 +114,42 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
 
 	return rootCmd
+}
+
+type Printer interface {
+	PrintNewVersionAvailable(latestVersion, homebrewCommand string) error
+}
+
+func NewPrinter(w io.Writer, t, b string) Printer {
+	return &printer{
+		writer: w,
+		tool:   t,
+		bin:    b,
+	}
+}
+
+type printer struct {
+	writer io.Writer
+	tool   string
+	bin    string
+}
+
+func (p *printer) PrintNewVersionAvailable(latestVersion, formulaName string) error {
+	var upgradeInstructions string
+	if formulaName != "" {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, formulaName)
+	} else {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, p.tool)
+	}
+
+	newVersionTemplate := `
+A new version of %s is available '%s'!
+%s
+
+To disable this alert, run "%s config set skip_update_check true".
+`
+	_, err := fmt.Fprintf(p.writer, newVersionTemplate, p.tool, latestVersion, upgradeInstructions, p.bin)
+	return err
 }
 
 const verTemplate = `%s version: %s

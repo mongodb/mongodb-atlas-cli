@@ -18,6 +18,9 @@
 package homebrew
 
 import (
+	"fmt"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/config"
@@ -85,4 +88,30 @@ func TestFile(t *testing.T) {
 			t.Errorf("LoadLatestVersion() expected error: file not found")
 		}
 	})
+}
+
+func TestOutputOpts_testIsHomebrew(t *testing.T) {
+	tests := []struct {
+		tool string
+		isHb bool
+	}{
+		{"atlascli", false},
+		{"mongocli", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("%v_ishomebrew_%v", tt.tool, tt.isHb), func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockPathStore(ctrl)
+			defer ctrl.Finish()
+
+			mockStore.EXPECT().LoadBrewPath().Return("", "", nil)
+			mockStore.EXPECT().SaveBrewPath(gomock.Any(), gomock.Any()).Return(nil)
+
+			result := IsHomebrew(mockStore)
+			if result != tt.isHb {
+				t.Errorf("got = %v, want %v", result, tt.isHb)
+			}
+		})
+	}
 }

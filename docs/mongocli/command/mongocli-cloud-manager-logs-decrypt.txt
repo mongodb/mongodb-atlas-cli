@@ -1,0 +1,87 @@
+.. _mongocli-cloud-manager-logs-decrypt:
+
+===================================
+mongocli cloud-manager logs decrypt
+===================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Decrypts a log file with the provided local key file or KMIP files.
+
+Syntax
+------
+
+.. code-block::
+
+   mongocli cloud-manager logs decrypt [options]
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -f, --file
+     - string
+     - true
+     - Path to the file that contains encrypted audit logs.
+   * - -h, --help
+     - 
+     - false
+     - help for decrypt
+   * - --kimipServerCAFile
+     - string
+     - false
+     - Path to the CA file used to connect to the KMIP speaking server.
+   * - --kmipClientCertificateFile
+     - string
+     - false
+     - Path to the Client Cert file used to connect to the KMIP speaking server.
+   * - --localKeyFile
+     - string
+     - false
+     - Path to the file that contains the Key Encryption Key (used to encrypt the Log Encryption Key).
+   * - --out
+     - string
+     - false
+     - Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout.
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   $ mongocli ops-manager decrypt --localKey filePath --file logPath --out resultPath
+

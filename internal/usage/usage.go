@@ -308,4 +308,9 @@ const (
 	LiveMigrationValidationID                = "Unique 24-hexadecimal digit string that identifies the validation job."
 	CurrentIP                                = "Flag that indicates whether to use the IP Address from the host that is currently executing the command. Only applicable for type ipAddress entries. To learn more, see: https://docs.mongodb.com/mongocli/master/command/mongocli-atlas-accessLists-create/."
 	Gov                                      = "Create a default profile for atlas for gov"
+	EncryptedLogFile                         = "Path to the file that contains encrypted audit logs."
+	OutputLogFile                            = "Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout."
+	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (used to encrypt the Log Encryption Key)."
+	KMIPServerCAFile                         = "Path to the CA file used to connect to the KMIP speaking server."
+	KMIPClientCertificateFile                = "Path to the Client Cert file used to connect to the KMIP speaking server."
 )

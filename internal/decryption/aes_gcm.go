@@ -19,18 +19,27 @@ import (
 	"crypto/cipher"
 )
 
-func aesGCMDecrypt(log *EncryptedLogRecord, lek []byte) ([]byte, error) {
-	const GCMTagSize = 12
+// todo: rename
+type GCMInput struct {
+	Key []byte
+	IV  []byte
+	AAD []byte
+	Tag []byte
+}
 
-	cipherBlock, err := aes.NewCipher(lek)
+func (input *GCMInput) Decrypt(cipherText []byte) ([]byte, error) {
+	cipherBlock, err := aes.NewCipher(input.Key)
 	if err != nil {
 		return nil, err
 	}
 
-	gcmBlockChiper, err := cipher.NewGCMWithTagSize(cipherBlock, GCMTagSize)
+	gcmBlockChiper, err := cipher.NewGCMWithTagSize(cipherBlock, len(input.Tag))
 	if err != nil {
 		return nil, err
 	}
 
-	return gcmBlockChiper.Open(nil, log.IV, log.CipherText, log.AAD)
+	cipherTextWithTag := append([]byte{}, cipherText...)
+	cipherTextWithTag = append(cipherTextWithTag, input.Tag...)
+
+	return gcmBlockChiper.Open(nil, input.IV, cipherTextWithTag, input.AAD)
 }

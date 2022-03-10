@@ -26,6 +26,20 @@ const (
 	KMIP     KeyStoreProvider = "kmip"
 )
 
+type KMIPKeyWrapMethod string
+
+const (
+	KMIPKeyWrapMethodGet     KMIPKeyWrapMethod = "get"
+	KMIPKeyWrapMethodEncrypt KMIPKeyWrapMethod = "encrypt"
+)
+
+type KMIPKeyIdentifier struct {
+	UniqueKeyID   string
+	ServerName    string
+	Port          string
+	KeyWrapMethod KMIPKeyWrapMethod
+}
+
 type AWSKeyIdentifier struct {
 	Key      string
 	Region   string

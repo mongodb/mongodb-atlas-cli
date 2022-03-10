@@ -44,7 +44,7 @@ func validateHeader(_ *HeaderRecord) error {
 	return nil
 }
 
-func processHeader(logLine *AuditLogLine, credentialsProvider keyproviders.CredentialsProvider) (*DecryptConfig, error) {
+func processHeader(logLine *AuditLogLine, credentialsProvider keyproviders.CredentialsProvider) (*DecryptSection, error) {
 	header, err := decodeHeader(logLine)
 	if err != nil {
 		return nil, err
@@ -59,8 +59,9 @@ func processHeader(logLine *AuditLogLine, credentialsProvider keyproviders.Crede
 		return nil, err
 	}
 
-	return &DecryptConfig{
-		lek:             lek,
-		compressionMode: header.CompressionMode,
+	return &DecryptSection{
+		lek:               lek,
+		compressionMode:   header.CompressionMode,
+		processedLogLines: 0,
 	}, nil
 }

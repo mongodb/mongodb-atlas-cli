@@ -70,6 +70,7 @@ type HeaderAAD struct {
 
 type EncryptedLogRecord struct {
 	CipherText         []byte
+	Tag                []byte
 	IV                 []byte
 	AAD                []byte
 	KeyInitCount       uint32

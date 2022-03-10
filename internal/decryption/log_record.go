@@ -39,7 +39,8 @@ func (logLine *AuditLogLine) decodeLogRecord() (*EncryptedLogRecord, error) {
 	LogData := log[24:]
 
 	return &EncryptedLogRecord{
-		CipherText:         append(LogData, TagData...),
+		CipherText:         LogData,
+		Tag:                TagData,
 		AAD:                aad,
 		IV:                 append(KeyInitCountData, KeyInvocationCountData...),
 		KeyInitCount:       binary.LittleEndian.Uint32(KeyInitCountData),
@@ -47,7 +48,7 @@ func (logLine *AuditLogLine) decodeLogRecord() (*EncryptedLogRecord, error) {
 	}, nil
 }
 
-func processLogRecord(decryptConfig *DecryptConfig, logLine *AuditLogLine, lineNb int, expectedLogRecordIdx uint64) (interface{}, error) {
+func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int, expectedLogRecordIdx uint64) (interface{}, error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
 		return nil, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
@@ -57,7 +58,14 @@ func processLogRecord(decryptConfig *DecryptConfig, logLine *AuditLogLine, lineN
 		return nil, validationErr
 	}
 
-	decryptedLog, decryptErr := aesGCMDecrypt(encryptedLogRecord, decryptConfig.lek)
+	gcm := &GCMInput{
+		Key: decryptConfig.lek,
+		AAD: encryptedLogRecord.AAD,
+		IV:  encryptedLogRecord.IV,
+		Tag: encryptedLogRecord.Tag,
+	}
+	decryptedLog, decryptErr := gcm.Decrypt(encryptedLogRecord.CipherText)
+
 	if decryptErr != nil {
 		return nil, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, decryptErr, decryptConfig.lek)
 	}

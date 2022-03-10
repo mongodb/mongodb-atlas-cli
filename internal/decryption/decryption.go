@@ -21,9 +21,10 @@ import (
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
 
-type DecryptConfig struct {
-	lek             []byte
-	compressionMode CompressionMode
+type DecryptSection struct {
+	lek               []byte
+	compressionMode   CompressionMode
+	processedLogLines uint64
 }
 
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
@@ -37,50 +38,52 @@ func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyprovider
 
 	auditLogEncoding := newAuditLogEncoding(auditLogFormat)
 	output := buildOutput(out)
-	var decryptConfig *DecryptConfig
-	var logRecordIdx uint64
+	var decryptSection *DecryptSection
 
 	for idx, line := range logLines {
 		lineNb := idx + 1
-		if len(line) > 0 {
-			logLine, err := auditLogEncoding.Parse(line)
-			if err != nil {
-				panicIfError(output.Errorf(lineNb, "error parsing line %d, %s", lineNb, err))
+		logLine, err := auditLogEncoding.Parse(line)
+		if err != nil {
+			if outputErr := output.Errorf(lineNb, "error parsing line %d, %s", lineNb, err); outputErr != nil {
+				return outputErr
+			}
+			continue
+		}
+
+		switch logLine.AuditRecordType {
+		case AuditHeaderRecord:
+			if decryptSection, err = processHeader(logLine, credentialsProvider); err != nil {
+				if outputErr := output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
+					return outputErr
+				}
+			}
+		case AuditLogRecord:
+			if decryptSection == nil {
+				if outputErr := output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb); outputErr != nil {
+					return outputErr
+				}
 				continue
 			}
 
-			switch logLine.AuditRecordType {
-			case AuditHeaderRecord:
-				decryptConfig, err = processHeader(logLine, credentialsProvider)
-				if err != nil {
-					panicIfError(output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err))
+			decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb, decryptSection.processedLogLines+1)
+			decryptSection.processedLogLines++
+			if err != nil {
+				if outputErr := output.Error(lineNb, err); outputErr != nil {
+					return outputErr
 				}
-				logRecordIdx = 0
-			case AuditLogRecord:
-				logRecordIdx++
-				if decryptConfig == nil {
-					panicIfError(output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb))
-				} else {
-					decryptedLogRecord, err := processLogRecord(decryptConfig, logLine, lineNb, logRecordIdx)
-					if err != nil {
-						panicIfError(output.Error(lineNb, err))
-					} else {
-						panicIfError(output.LogRecord(lineNb, decryptedLogRecord))
-					}
+			} else {
+				if outputErr := output.LogRecord(lineNb, decryptedLogRecord); outputErr != nil {
+					return outputErr
 				}
-			default:
-				panicIfError(output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType))
+			}
+		default:
+			if outputErr := output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType); outputErr != nil {
+				return outputErr
 			}
 		}
 	}
 
 	return nil
-}
-
-func panicIfError(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
 
 func readAuditLogFile(logReader io.Reader) (AuditLogFormat, []string, error) {

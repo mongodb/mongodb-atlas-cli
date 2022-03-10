@@ -31,13 +31,6 @@ type DecryptOpts struct {
 	localKeyFileName              string
 }
 
-func (opts *DecryptOpts) initStore() func() error {
-	// Keeping for now, not sure if needed
-	return func() error {
-		return nil
-	}
-}
-
 func (opts *DecryptOpts) initFiles() func() error {
 	// Validate the provided files can be open
 	return func() error {
@@ -59,7 +52,7 @@ func DecryptBuilder() *cobra.Command {
 		Example: `
   $ mongocli ops-manager decrypt --localKey filePath --file logPath --out resultPath`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initFiles(), opts.initStore())
+			return opts.PreRunE(opts.initFiles())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

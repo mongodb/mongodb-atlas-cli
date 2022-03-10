@@ -39,7 +39,7 @@ func (opts *KeyProviderListOpts) Run() error {
 	return opts.Print(opts.file)
 }
 
-// mongocli om logs listKeyProvider --file <encryptedLogFile>.
+// atlas logs listKeyProvider --file <encryptedLogFile>.
 func KeyProvidersListBuilder() *cobra.Command {
 	opts := &KeyProviderListOpts{}
 	cmd := &cobra.Command{

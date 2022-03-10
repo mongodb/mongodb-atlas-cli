@@ -47,13 +47,6 @@ type DecryptAzureOpts struct {
 	azureSecret   string
 }
 
-func (opts *DecryptOpts) initStore() func() error {
-	// Keeping for now, not sure if needed
-	return func() error {
-		return nil
-	}
-}
-
 func (opts *DecryptOpts) initFiles() func() error {
 	// Validate the provided files can be open
 	return func() error {
@@ -73,7 +66,7 @@ func (opts *DecryptOpts) Run() error {
 	return opts.Print(opts.inFileName)
 }
 
-// mongocli om logs decrypt --file <encryptedLogFile> --out <outputLogFile>.
+// atlas logs decrypt --file <encryptedLogFile> --out <outputLogFile>.
 func DecryptBuilder() *cobra.Command {
 	opts := &DecryptOpts{}
 	cmd := &cobra.Command{
@@ -82,7 +75,7 @@ func DecryptBuilder() *cobra.Command {
 		Example: `
   $ atlascli decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initFiles(), opts.initStore(), opts.initFlags())
+			return opts.PreRunE(opts.initFiles(), opts.initFlags())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()

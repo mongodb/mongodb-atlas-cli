@@ -19,8 +19,30 @@ package logs
 
 import (
 	"testing"
+
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
+func TestDecryptBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		DecryptBuilder(),
+		0,
+		[]string{
+			flag.File,
+			flag.Out,
+			flag.AzureSecret,
+			flag.AzureClientID,
+			flag.AzureTenantID,
+			flag.AzureClientID,
+			flag.AWSSecretKey,
+			flag.AWSSecretKey,
+			flag.AWSSessionToken,
+			flag.GCPServiceAccountKey,
+		},
+	)
+}
 func TestDecrypt_Run(t *testing.T) {
 	listOpts := &DecryptOpts{
 		inFileName: "test",

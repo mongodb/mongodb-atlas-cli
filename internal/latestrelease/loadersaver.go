@@ -17,6 +17,8 @@ package latestrelease
 import (
 	"time"
 
+	"github.com/mongodb/mongocli/internal/config"
+
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/spf13/afero"
 )
@@ -49,7 +51,7 @@ type loaderSaver struct {
 // LoadLatestVersion will load the latest checked version if it was retrieved in the last 24 hours.
 func (s *loaderSaver) LoadLatestVersion() (string, error) {
 	latestReleaseState := new(state)
-	filePath, err := file.Path(s.tool, stateFileSubPath)
+	filePath, err := config.Path(stateFileSubPath)
 	if err != nil {
 		return "", err
 	}
@@ -69,7 +71,7 @@ func (s *loaderSaver) LoadLatestVersion() (string, error) {
 func (s *loaderSaver) SaveLatestVersion(ver string) error {
 	data := state{CheckedForUpdateAt: time.Now(), LatestReleaseVersion: ver}
 
-	filePath, err := file.Path(s.tool, stateFileSubPath)
+	filePath, err := config.Path(stateFileSubPath)
 	if err != nil {
 		return err
 	}

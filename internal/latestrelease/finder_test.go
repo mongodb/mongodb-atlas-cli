@@ -22,8 +22,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/version"
 )
 
 func TestOutputOpts_NewVersionAvailable(t *testing.T) {
@@ -68,22 +68,22 @@ func TestOutputOpts_StoredLatestVersionAvailable(t *testing.T) {
 		success        bool
 	}{
 		{
-			tool:           version.MongoCLI,
+			tool:           config.MongoCLI,
 			currentVersion: "v1.0.0",
 			success:        true,
 		},
 		{
-			tool:           version.MongoCLI,
+			tool:           config.MongoCLI,
 			currentVersion: "v1",
 			success:        true,
 		},
 		{
-			tool:           version.AtlasCLI,
+			tool:           config.AtlasCLI,
 			currentVersion: "v2.0.0",
 			success:        true,
 		},
 		{
-			tool:           version.AtlasCLI,
+			tool:           config.AtlasCLI,
 			currentVersion: "v2",
 			success:        false,
 		},

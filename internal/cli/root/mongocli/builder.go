@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/cloudmanager"
 	cliconfig "github.com/mongodb/mongocli/internal/cli/config"
+	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
 	"github.com/mongodb/mongocli/internal/cli/iam"
 	"github.com/mongodb/mongocli/internal/cli/opsmanager"
 	"github.com/mongodb/mongocli/internal/config"
@@ -39,6 +40,7 @@ import (
 // This is important in particular for Atlas as it dynamically sets flags for cluster creation and
 // this can be slow to timeout on environments with limited internet access (Ops Manager).
 func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
+
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     config.ToolName,
@@ -56,7 +58,6 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			if shouldSkipPrintNewVersion(w) {
 				return
 			}
-
 			printer := latestrelease.NewPrinter(w, config.ToolName, config.BinName())
 			checker := latestrelease.NewChecker(version.Version, config.ToolName, printer)
 			_ = checker.CheckAvailable()
@@ -77,6 +78,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		"-h",
 		"completion",
 		"__complete",
+		"fig-autocomplete",
 	}
 	if !hasArgs || search.StringInSlice(shouldIncludeAtlas, argsWithoutProg[0]) {
 		rootCmd.AddCommand(atlas.Builder())
@@ -97,6 +99,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		loginCmd,
 		logoutCmd,
 		whoCmd,
+		figautocomplete.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

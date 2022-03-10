@@ -54,9 +54,14 @@ func versionFromTag(ver, toolName string) string {
 	return ver
 }
 
+const (
+	mongoCLI = "mongocli"
+	atlasCLI = "atlascli"
+)
+
 func isValidTagForTool(tag, tool string) bool {
-	if tool == version.MongoCLI {
-		return !strings.Contains(tag, version.AtlasCLI)
+	if tool == mongoCLI {
+		return !strings.Contains(tag, atlasCLI)
 	}
 	return strings.Contains(tag, tool)
 }
@@ -65,7 +70,13 @@ func isAtLeast24HoursPast(t time.Time) bool {
 	return !t.IsZero() && time.Since(t) >= time.Hour*24
 }
 
-func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version) (bool, *version.ReleaseInformation, error) {
+// ReleaseInformation Release information.
+type ReleaseInformation struct {
+	Version     string
+	PublishedAt time.Time
+}
+
+func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version) (bool, *ReleaseInformation, error) {
 	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 	if err != nil || release == nil {
 		return false, nil, err
@@ -77,7 +88,7 @@ func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *
 	}
 
 	if currentVersion.Compare(v) < 0 {
-		return true, &version.ReleaseInformation{
+		return true, &ReleaseInformation{
 			Version:     v.Original(),
 			PublishedAt: release.GetPublishedAt().Time,
 		}, nil

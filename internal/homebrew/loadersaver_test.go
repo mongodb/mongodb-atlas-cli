@@ -20,7 +20,7 @@ package homebrew
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
 )
 
@@ -38,7 +38,7 @@ func TestFile(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		s := NewLoaderSaver(appFS, "mongocli")
 
-		path, _ := file.Path("mongocli", brewFileSubPath)
+		path, _ := config.Path(brewFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
 		p1, p2, err := s.LoadBrewPath()
@@ -68,7 +68,7 @@ func TestFile(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		s := NewLoaderSaver(appFS, "atlascli")
 
-		path, _ := file.Path("atlascli", brewFileSubPath)
+		path, _ := config.Path(brewFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
 		p1, p2, err := s.LoadBrewPath()

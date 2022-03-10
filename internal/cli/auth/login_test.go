@@ -60,10 +60,10 @@ func Test_loginOpts_Run(t *testing.T) {
 	opts := &loginOpts{
 		flow:      mockFlow,
 		config:    mockConfig,
-		OutWriter: buf,
 		noBrowser: true,
 		loginOnly: true,
 	}
+	opts.OutWriter = buf
 	opts.Store = mockStore
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",
@@ -107,7 +107,7 @@ func Test_loginOpts_Run(t *testing.T) {
 	assert.Equal(t, `
 First, copy your one-time code: 1234-5678
 
-Next, sign with your browser and enter the code.
+Next, sign in with your browser and enter the code.
 
 Or go to http://localhost
 

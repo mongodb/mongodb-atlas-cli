@@ -43,7 +43,7 @@ func TestOutputOpts_testIsHomebrew(t *testing.T) {
 			mockStore.EXPECT().LoadBrewPath().Return("", "", nil)
 			mockStore.EXPECT().SaveBrewPath(gomock.Any(), gomock.Any()).Return(nil)
 
-			result := IsHomebrew(tt.tool, mockStore)
+			result := IsHomebrew(mockStore)
 			if result != tt.isHb {
 				t.Errorf("got = %v, want %v", result, tt.isHb)
 			}

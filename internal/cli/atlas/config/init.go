@@ -31,7 +31,7 @@ import (
 const atlas = "atlas"
 
 type initOpts struct {
-	cli.ConfigOpts
+	cli.DigestConfigOpts
 	gov bool
 }
 
@@ -45,7 +45,7 @@ func (opts *initOpts) SetUpAccess() {
 }
 
 func (opts *initOpts) Run(ctx context.Context) error {
-	fmt.Printf(`You are configuring a profile for %s.
+	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
 
@@ -89,11 +89,11 @@ Enter [?] on any option to get help.
 		return err
 	}
 
-	fmt.Printf("\nYour profile is now configured.\n")
+	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
 	if config.Name() != config.DefaultProfile {
-		fmt.Printf("To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	fmt.Printf("You can use [%s config set] to change these settings at a later time.\n", atlas)
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", atlas)
 	return nil
 }
 
@@ -109,6 +109,10 @@ func InitBuilder() *cobra.Command {
   To configure the tool to work with Atlas for Government
   $ atlas config init --gov
 `,
+
+		PreRun: func(cmd *cobra.Command, args []string) {
+			opts.OutWriter = cmd.OutOrStdout()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},

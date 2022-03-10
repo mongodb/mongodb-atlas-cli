@@ -24,7 +24,11 @@ export CGO_ENABLED
 go-msi check-env
 
 
-VERSION=$(git describe | cut -d "v" -f 2)
+VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=committerdate | tail -1 | cut -d "v" -f 2)"
+if [[ -z "${VERSION}" ]]; then
+    VERSION="$(git describe --abbrev=0 | cut -d "v" -f 2)"
+fi
+
 COMMIT=$(git log -n1 --format=format:"%H")
 
 SOURCE_FILES=./cmd/mongocli

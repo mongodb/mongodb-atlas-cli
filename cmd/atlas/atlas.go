@@ -55,7 +55,7 @@ func initConfig() {
 	}
 }
 
-// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli.toml.
+// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
 func createConfigFromMongoCLIConfig() {
 	atlasConfigHomePath, err := config.AtlasCLIConfigHome()
 	if err != nil {
@@ -65,16 +65,16 @@ func createConfigFromMongoCLIConfig() {
 	atlasConfigPath := fmt.Sprintf("%s/%s", atlasConfigHomePath, "config.toml")
 	f, err := os.Open(atlasConfigPath) // if config.toml is already there, exit
 	if err == nil {
-		return
-	}
-	defer f.Close()
-
-	mongoCLIConfigPath := mongoCLIConfigPath()
-	if mongoCLIConfigPath == "" {
+		f.Close()
 		return
 	}
 
-	in, err := os.Open(mongoCLIConfigPath)
+	path, err := mongoCLIConfigFilePath()
+	if err != nil {
+		return
+	}
+
+	in, err := os.Open(path)
 	if err != nil {
 		return
 	}
@@ -96,9 +96,9 @@ func createConfigFromMongoCLIConfig() {
 	}
 	defer out.Close()
 
-	_, err = io.Copy(out, in)
-	if err != nil {
+	if _, err = io.Copy(out, in); err != nil {
 		log.Printf("There was an error generating %s: %v", atlasConfigPath, err)
+		return
 	}
 
 	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has copied your MongoCLI configuration to: %s
@@ -106,14 +106,24 @@ func createConfigFromMongoCLIConfig() {
 `, atlasConfigPath)
 }
 
-func mongoCLIConfigPath() string {
-	configDir, err := config.MongoCLIConfigHome()
-	if err != nil {
-		return ""
+func mongoCLIConfigFilePath() (configPath string, err error) {
+	if configDir, err := config.MongoCLIConfigHome(); err == nil {
+		configPath = fmt.Sprintf("%s/config.toml", configDir)
 	}
 
-	configPath := fmt.Sprintf("%s/mongocli.toml", configDir)
-	return configPath
+	// Check if file exists, if any error is detected try to get older file
+	if _, err := os.Stat(configPath); err == nil {
+		return configPath, nil
+	}
+
+	if configDir, err := config.OldMongoCLIConfigHome(); err == nil {
+		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
+	}
+
+	if _, err := os.Stat(configPath); err != nil {
+		return "", err
+	}
+	return configPath, nil
 }
 
 func main() {

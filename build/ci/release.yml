@@ -59,29 +59,24 @@ functions:
           <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
+        add_to_path:
+          - ${go_bin}
         working_dir: src/github.com/mongodb/mongocli
         include_expansions_in_env:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-          export GITHUB_TOKEN=${github_token}
-          export NOTARY_SERVICE_URL=${notary_service_url}
-          export MACOS_NOTARY_KEY=${notary_service_key_id}
-          export MACOS_NOTARY_SECRET=${notary_service_secret}
-          export GORELEASER_KEY=${goreleaser_key}
-          export VERSION_GIT=$(git describe --abbrev=0 | cut -d "v" -f 2)
-
-          # avoid race conditions on the notarization step by using `-p 1`
-          ${goreleaser_cmd|goreleaser --rm-dist --snapshot -p 1}
+          - tool_name
+          - goreleaser_config
+          - github_token
+          - unstable
+        env:
+          <<: *go_options
+        binary: build/package/package.sh
   "install go-msi":
     - command: subprocess.exec
       type: setup
@@ -120,6 +115,7 @@ functions:
           - latest_deb
           - latest_rpm
           - package_name
+          - tool_name
         working_dir: src/github.com/mongodb/mongocli
         env:
           <<: *go_options
@@ -139,19 +135,18 @@ functions:
           - TOOL_NAME
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
-    - command: shell.exec
+    - command: subprocess.exec
       type: test
       params:
         working_dir: src/github.com/mongodb/mongocli/dist
         include_expansions_in_env:
           - FEED_FILE_NAME
-        script: |
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:${go_bin}:$PATH"
-
-          go run ../internal/release/main.go --version "$(git describe | cut -d "v" -f 2)" --file "${FEED_FILE_NAME}"
+          - TOOL_NAME
+        add_to_path:
+          - ${go_bin}
+        env:
+          <<: *go_options
+        binary: ../build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
       params:
@@ -246,23 +241,25 @@ tasks:
       - func: "install macos notarization service"
       - func: "package"
         vars:
-          goreleaser_file: ${goreleaser_file}
-          goreleaser_cmd: goreleaser --config "${goreleaser_file}" --rm-dist --snapshot -p 1
+          unstable: -unstable
+          tool_name: ${tool_name}
+          goreleaser_config: ${goreleaser_file}
       - func: "rename pkg"
         vars:
           unstable: -unstable
           latest_deb: ~latest
           latest_rpm: .latest
           package_name: ${package_name}
+          tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
+          target: src/github.com/mongodb/mongocli/dist/${package_name}-deb.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-rpm.tgz
+          target: src/github.com/mongodb/mongocli/dist/${package_name}-rpm.tgz
           source_dir: src/github.com/mongodb/mongocli/dist/yum
           include:
             - "*.rpm"
@@ -270,6 +267,7 @@ tasks:
         vars:
           package_name: ${package_name}
           FEED_FILE_NAME: "${package_name}.json"
+          TOOL_NAME: ${tool_name}
       - func: "upload dist"
   - name: pkg_test_mongocli_docker_ubuntu1804
     tags: ["smoke-test"]
@@ -436,10 +434,12 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --config .mongocli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
+          tool_name: "mongocli"
+          goreleaser_config: .mongocli.goreleaser.yml
       - func: "rename pkg"
         vars:
           package_name: mongocli
+          tool_name: mongocli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
@@ -455,6 +455,7 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongocli.json
+          TOOL_NAME: mongocli
       - func: "upload dist"
       - command: s3.put
         params:
@@ -497,10 +498,12 @@ tasks:
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          goreleaser_cmd: goreleaser --config .atlascli.goreleaser.yml --rm-dist --release-notes CHANGELOG.md -p 1
+          tool_name: "atlascli"
+          goreleaser_config: .atlascli.goreleaser.yml
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
+          tool_name: atlascli
       - command: archive.targz_pack
         params:
           target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz
@@ -516,23 +519,24 @@ tasks:
       - func: "generate download archive json"
         vars:
           FEED_FILE_NAME: mongodb-atlas-cli.json
-#      - func: "upload dist" TODO CLOUDP-113712: WAITING FOR https://jira.mongodb.org/browse/WEBSITE-11811
-#      - command: s3.put
-#        params:
-#          aws_key: ${download_center_aws_key}
-#          aws_secret: ${download_center_aws_secret}
-#          local_files_include_filter:
-#            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-#            - src/github.com/mongodb/mongocli/dist/*.zip
-#            - src/github.com/mongodb/mongocli/dist/*.deb
-#            - src/github.com/mongodb/mongocli/dist/*.rpm
-#            - src/github.com/mongodb/mongocli/dist/*.tgz
-#            - src/github.com/mongodb/mongocli/dist/*.json
-#          remote_file: mongocli/
-#          bucket: downloads.mongodb.org
-#          permissions: public-read
-#          content_type: ${content_type|application/x-gzip}
-#          display_name: downloads-center-
+          TOOL_NAME: atlascli
+      - func: "upload dist"
+      - command: s3.put
+        params:
+          aws_key: ${download_center_aws_key}
+          aws_secret: ${download_center_aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongocli/dist/*.tar.gz
+            - src/github.com/mongodb/mongocli/dist/*.zip
+            - src/github.com/mongodb/mongocli/dist/*.deb
+            - src/github.com/mongodb/mongocli/dist/*.rpm
+            - src/github.com/mongodb/mongocli/dist/*.tgz
+            - src/github.com/mongodb/mongocli/dist/*.json
+          remote_file: mongocli/
+          bucket: downloads.mongodb.org
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
       - func: "send slack notification"
         vars:
           TOOL_NAME: atlascli
@@ -556,12 +560,11 @@ tasks:
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongocli/dist/*.msi
-          remote_file: mongodb-atlas-cli/
+          remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
-
   ################################################################
   # Unstable Publish - AtlasCLI
   # RPM Distros
@@ -1240,6 +1243,7 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".mongocli.goreleaser.yml"
       package_name: "mongocli"
+      tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
   - name: goreleaser_atlascli_snapshot
@@ -1252,12 +1256,13 @@ buildvariants:
       server_version: "4.4.0-rc3"
       goreleaser_file: ".atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
+      tool_name: "atlascli"
     tasks:
       - name: package_goreleaser
   - name: publish_snapshot
     display_name: "Publish yum/apt main"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       go_root: "/opt/golang/go1.17"
       go_bin: "/opt/golang/go1.17/bin"
@@ -1265,7 +1270,7 @@ buildvariants:
     tasks:
       - name: .push
         run_on:
-          - rhel70-small
+          - rhel80-small
   - name: release_mongocli_msi
     display_name: "Release MongoCLI (go-msi)"
     run_on:
@@ -1307,7 +1312,7 @@ buildvariants:
   - name: release_mongocli_publish_42
     display_name: "Publish MongoCLI yum/apt 4.2"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "4.2.3"
       notary_key_name: "server-4.2"
@@ -1316,7 +1321,7 @@ buildvariants:
   - name: release_mongocli_publish_44
     display_name: "Publish MongoCLI yum/apt 4.4"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "4.4.3"
       notary_key_name: "server-4.4"
@@ -1325,7 +1330,7 @@ buildvariants:
   - name: release_mongocli_publish_50
     display_name: "Publish MongoCLI yum/apt 5.0"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "5.0.0"
       notary_key_name: "server-5.0"
@@ -1334,7 +1339,7 @@ buildvariants:
   - name: release_atlascli_publish_42
     display_name: "Publish AtlasCLI yum/apt 4.2"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "4.2.3"
       notary_key_name: "server-4.2"
@@ -1343,7 +1348,7 @@ buildvariants:
   - name: release_atlascli_publish_44
     display_name: "Publish AtlasCLI yum/apt 4.4"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "4.4.3"
       notary_key_name: "server-4.4"
@@ -1352,7 +1357,7 @@ buildvariants:
   - name: release_atlascli_publish_50
     display_name: "Publish AtlasCLI yum/apt 5.0"
     run_on:
-      - rhel70-small
+      - rhel80-small
     expansions:
       server_version: "5.0.0"
       notary_key_name: "server-5.0"

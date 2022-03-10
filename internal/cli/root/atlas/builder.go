@@ -44,6 +44,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/events"
+	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
 	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
@@ -80,6 +81,10 @@ func Builder(profile *string) *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if config.Service() == "" {
 				config.SetService(config.CloudService)
+			}
+
+			if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
+				return nil
 			}
 
 			if cmd.Name() == "quickstart" { // quickstart has its own check
@@ -151,6 +156,7 @@ func Builder(profile *string) *cobra.Command {
 		loginCmd,
 		logoutCmd,
 		whoCmd,
+		figautocomplete.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)

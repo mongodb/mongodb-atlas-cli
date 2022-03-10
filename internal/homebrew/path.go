@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/version"
+	"github.com/mongodb/mongocli/internal/config"
 )
 
 const (
@@ -29,14 +29,14 @@ const (
 
 // Command get homebrew suitable command for a given tool.
 func Command(tool string) string {
-	if strings.Contains(tool, version.AtlasCLI) {
+	if strings.Contains(tool, config.AtlasCLI) {
 		return atlasToolFullName
 	}
 	return tool
 }
 
 // IsHomebrew checks if the cli was installed with homebrew.
-func IsHomebrew(tool string, store LoaderSaver) bool {
+func IsHomebrew(store LoaderSaver) bool {
 	executablePath, brewFormulaPath, err := store.LoadBrewPath()
 	// If one of the values was not found previously it is still a valid case - rely on the file.
 	if (executablePath != "" || brewFormulaPath != "") && err == nil {
@@ -49,7 +49,7 @@ func IsHomebrew(tool string, store LoaderSaver) bool {
 		return false
 	}
 
-	brewFormulaPath, err = homebrewFormulaPath(tool)
+	brewFormulaPath, err = homebrewFormulaPath()
 	if err != nil {
 		_ = store.SaveBrewPath(executablePath, brewFormulaPath)
 		return false
@@ -59,13 +59,8 @@ func IsHomebrew(tool string, store LoaderSaver) bool {
 	return strings.HasPrefix(executablePath, brewFormulaPath)
 }
 
-func homebrewFormulaPath(tool string) (string, error) {
-	formula := tool
-
-	if tool == version.AtlasCLI {
-		formula = version.AtlasBinary
-	}
-
+func homebrewFormulaPath() (string, error) {
+	formula := config.BinName()
 	brewFormulaPathBytes, err := exec.Command("brew", "--prefix", "--installed", formula).Output()
 	if err != nil {
 		return "", err

@@ -70,7 +70,7 @@ func (c *checker) latestVersion() (isHomebrew bool, latestVersion string, err er
 	}
 
 	brewStore := homebrew.NewLoaderSaver(c.filesystem, c.tool)
-	isHomebrew = homebrew.IsHomebrew(c.tool, brewStore)
+	isHomebrew = homebrew.IsHomebrew(brewStore)
 
 	if !needRefresh {
 		return isHomebrew, latestVersion, nil

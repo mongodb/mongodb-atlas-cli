@@ -18,56 +18,68 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
 
 func TestConfig_MongoCLIConfigHome(t *testing.T) {
-	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
-		const xdgHome = "my_config"
-		t.Setenv("XDG_CONFIG_HOME", xdgHome)
+	t.Run("with env set", func(t *testing.T) {
+		expHome, err := os.UserConfigDir()
+		expected := fmt.Sprintf("%s/mongocli", expHome)
+		if err != nil {
+			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
+		}
+
 		home, err := MongoCLIConfigHome()
 		if err != nil {
 			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
+		}
+		if home != expected {
+			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, expected)
+		}
+	})
+}
+
+func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
+	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
+		const xdgHome = "my_config"
+		t.Setenv("XDG_CONFIG_HOME", xdgHome)
+		home, err := OldMongoCLIConfigHome()
+		if err != nil {
+			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
 		}
 		if home != xdgHome {
 			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, xdgHome)
 		}
 	})
-	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		home, err := MongoCLIConfigHome()
+	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {
+		t.Setenv("XDG_CONFIG_HOME", "")
+		home, err := OldMongoCLIConfigHome()
 		if err != nil {
-			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
+			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
 		}
 		osHome, _ := os.UserHomeDir()
 		if home != osHome+"/.config" {
-			t.Errorf("MongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
+			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
 		}
 	})
 }
 
 func TestConfig_AtlasCLIConfigHome(t *testing.T) {
-	t.Run("with XDG_CONFIG_HOME", func(t *testing.T) {
-		const xdgHome = "my_config"
-		t.Setenv("XDG_CONFIG_HOME", xdgHome)
+	t.Run("with env set", func(t *testing.T) {
+		expHome, err := os.UserConfigDir()
+		expected := fmt.Sprintf("%s/atlascli", expHome)
+		if err != nil {
+			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
+		}
+
 		home, err := AtlasCLIConfigHome()
 		if err != nil {
 			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
 		}
-		if home != xdgHome {
-			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, xdgHome)
-		}
-	})
-	t.Run("without XDG_CONFIG_HOME", func(t *testing.T) {
-		ToolName = "atlascli"
-		t.Setenv("XDG_CONFIG_HOME", "")
-		home, err := AtlasCLIConfigHome()
-		if err != nil {
-			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
-		}
-		osHome, _ := os.UserHomeDir()
-		if home != osHome+"/.config/atlascli" {
-			t.Errorf("AtlasCLIConfigHome() = %s; want '%s/.config/atlascli'", home, osHome)
+		if home != expected {
+			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
 		}
 	})
 }

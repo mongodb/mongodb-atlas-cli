@@ -20,7 +20,7 @@ package latestrelease
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/file"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
 )
 
@@ -38,7 +38,7 @@ func TestFile(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		s := NewLoaderSaver(appFS, "mongocli")
 
-		path, _ := file.Path("mongocli", stateFileSubPath)
+		path, _ := config.Path(stateFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
 		v, err := s.LoadLatestVersion()
@@ -68,7 +68,7 @@ func TestFile(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		s := NewLoaderSaver(appFS, "atlascli")
 
-		path, _ := file.Path("atlascli", stateFileSubPath)
+		path, _ := config.Path(stateFileSubPath)
 		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
 
 		v, err := s.LoadLatestVersion()

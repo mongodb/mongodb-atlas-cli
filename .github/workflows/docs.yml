@@ -10,11 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: Linux-go-1.17-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            Linux-go-1.17-
       - name: Generate docs
         run: make gen-docs > /dev/null
       - name: Check for uncommited files

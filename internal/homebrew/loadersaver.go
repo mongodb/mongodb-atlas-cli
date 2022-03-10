@@ -17,6 +17,7 @@ package homebrew
 import (
 	"time"
 
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/spf13/afero"
 )
@@ -51,7 +52,7 @@ const (
 func (s *loaderSaver) LoadBrewPath() (execPath, homePath string, err error) {
 	path := new(brewPath)
 
-	filePath, err := file.Path(s.tool, brewFileSubPath)
+	filePath, err := config.Path(brewFileSubPath)
 	if err != nil {
 		return "", "", err
 	}
@@ -71,7 +72,7 @@ func (s *loaderSaver) LoadBrewPath() (execPath, homePath string, err error) {
 func (s *loaderSaver) SaveBrewPath(execPath, homePath string) error {
 	data := brewPath{CheckedPathAt: time.Now(), ExecutablePath: execPath, HomePath: homePath}
 
-	filePath, err := file.Path(s.tool, brewFileSubPath)
+	filePath, err := config.Path(brewFileSubPath)
 	if err != nil {
 		return err
 	}

@@ -15,6 +15,7 @@
 package config
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"log"
@@ -65,19 +66,19 @@ const (
 	configPerm                   = 0600
 	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
-	mongoCLI                     = "mongocli"
-	atlasCLI                     = "atlascli"
+	MongoCLI                     = "mongocli"
+	AtlasCLI                     = "atlascli"
 )
 
 var (
-	ToolName        = mongoCLI
+	ToolName        = MongoCLI
 	UserAgent       = fmt.Sprintf("%s/%s (%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH)
 	defaultProfile  = newProfile()
 	atlasCLIProfile = newAtlasProfile()
 )
 
 func BinName() string {
-	if ToolName == atlasCLI {
+	if ToolName == AtlasCLI {
 		return "atlas"
 	}
 	return ToolName
@@ -143,7 +144,7 @@ func IsTrue(s string) bool {
 }
 
 func Default() *Profile {
-	if ToolName == mongoCLI {
+	if ToolName == MongoCLI {
 		return defaultProfile
 	}
 	return atlasCLIProfile
@@ -534,7 +535,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, ToolName+".toml")
+	return filepath.Join(p.configDir, "config.toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -584,7 +585,7 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
-	viper.SetConfigName(ToolName)
+	viper.SetConfigName("config")
 	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
 
@@ -641,14 +642,14 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-// MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
-func MongoCLIConfigHome() (string, error) {
+// OldMongoCLIConfigHome retrieves configHome path based used by MongoCLI.
+// Deprecated: MongoCLI versions below v1.24.0 use this path.
+func OldMongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
 
 	home, err := os.UserHomeDir()
-
 	if err != nil {
 		return "", err
 	}
@@ -656,16 +657,41 @@ func MongoCLIConfigHome() (string, error) {
 	return fmt.Sprintf("%s/.config", home), nil
 }
 
-// AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
-func AtlasCLIConfigHome() (string, error) {
-	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return home, nil
-	}
-
-	home, err := os.UserHomeDir()
-
+// MongoCLIConfigHome retrieves configHome path based used by MongoCLI.
+func MongoCLIConfigHome() (string, error) {
+	home, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s/.config/%s", home, ToolName), nil
+
+	return fmt.Sprintf("%s/mongocli", home), nil
+}
+
+// AtlasCLIConfigHome retrieves configHome path based used by AtlasCLI.
+func AtlasCLIConfigHome() (string, error) {
+	home, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/atlascli", home), nil
+}
+
+func Path(fileName string) (string, error) {
+	var path bytes.Buffer
+	var home string
+	var err error
+
+	if ToolName == AtlasCLI {
+		home, err = AtlasCLIConfigHome()
+	} else {
+		home, err = MongoCLIConfigHome()
+	}
+	if err != nil {
+		return "", err
+	}
+
+	path.WriteString(home)
+	path.WriteString(fileName)
+	return path.String(), nil
 }

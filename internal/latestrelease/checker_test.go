@@ -23,8 +23,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
-	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 )
 
@@ -32,13 +32,7 @@ func TestOutputOpts_CheckAvailable(t *testing.T) {
 	tests := TestCases()
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
-			var bin string
-			if tt.tool == version.AtlasCLI {
-				bin = version.AtlasBinary
-			} else {
-				bin = tt.tool
-			}
-
+			bin := config.BinName()
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
 			mockStore := mocks.NewMockStore(ctrl)

@@ -16,9 +16,7 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"io"
 	"os"
 	"time"
 
@@ -28,7 +26,6 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/oauth"
-	"github.com/mongodb/mongocli/internal/prompt"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
@@ -49,7 +46,6 @@ type LoginConfig interface {
 
 type loginOpts struct {
 	cli.DefaultSetterOpts
-	OutWriter      io.Writer
 	AccessToken    string
 	RefreshToken   string
 	isGov          bool
@@ -66,7 +62,7 @@ func (opts *loginOpts) initFlow() error {
 	return err
 }
 
-func (opts *loginOpts) SetUpAccess() {
+func (opts *loginOpts) SetOAuthUpAccess() {
 	switch {
 	case opts.isGov:
 		opts.Service = config.CloudGovService
@@ -95,7 +91,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
-	opts.SetUpAccess()
+	opts.SetOAuthUpAccess()
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
 		return err
@@ -109,11 +105,11 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	}
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
-	if err := opts.askOrg(); err != nil {
+	if err := opts.AskOrg(); err != nil {
 		return err
 	}
 	opts.SetUpOrg()
-	if err := opts.askProject(); err != nil {
+	if err := opts.AskProject(); err != nil {
 		return err
 	}
 	opts.SetUpProject()
@@ -144,7 +140,7 @@ func (opts *loginOpts) oauthFlow(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 First, copy your one-time code: %s-%s
 
-Next, sign with your browser and enter the code.
+Next, sign in with your browser and enter the code.
 
 Or go to %s
 
@@ -167,36 +163,6 @@ Your code will expire after %.0f minutes.
 	}
 	opts.AccessToken = accessToken.AccessToken
 	opts.RefreshToken = accessToken.RefreshToken
-	return nil
-}
-
-func (opts *loginOpts) askOrg() error {
-	oMap, oSlice, err := opts.Orgs()
-	var orgID string
-	if err != nil || len(oSlice) == 0 {
-		return errors.New("no orgs")
-	}
-
-	p := prompt.NewOrgSelect(oSlice)
-	if err := survey.AskOne(p, &orgID); err != nil {
-		return err
-	}
-	opts.OrgID = oMap[orgID]
-	return nil
-}
-
-func (opts *loginOpts) askProject() error {
-	pMap, pSlice, err := opts.Projects()
-	var projectID string
-	if err != nil || len(pSlice) == 0 {
-		return errors.New("no projects")
-	}
-
-	p := prompt.NewProjectSelect(pSlice)
-	if err := survey.AskOne(p, &projectID); err != nil {
-		return err
-	}
-	opts.ProjectID = pMap[projectID]
 	return nil
 }
 

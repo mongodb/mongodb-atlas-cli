@@ -32,13 +32,17 @@ func TestDecryptBuilder(t *testing.T) {
 		[]string{
 			flag.File,
 			flag.Out,
-			flag.LocalKeyFile,
-			flag.KMIPClientCertificateFile,
-			flag.KMIPServerCAFile,
+			flag.AzureSecret,
+			flag.AzureClientID,
+			flag.AzureTenantID,
+			flag.AzureClientID,
+			flag.AWSSecretKey,
+			flag.AWSSecretKey,
+			flag.AWSSessionToken,
+			flag.GCPServiceAccountKey,
 		},
 	)
 }
-
 func TestDecrypt_Run(t *testing.T) {
 	listOpts := &DecryptOpts{
 		inFileName: "test",

@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,31 +20,23 @@ package logs
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/test"
 )
 
-func TestDecryptBuilder(t *testing.T) {
+func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DecryptBuilder(),
-		0,
-		[]string{
-			flag.File,
-			flag.Out,
-			flag.LocalKeyFile,
-			flag.KMIPClientCertificateFile,
-			flag.KMIPServerCAFile,
-		},
+		Builder(),
+		3,
+		[]string{},
 	)
 }
 
-func TestDecrypt_Run(t *testing.T) {
-	listOpts := &DecryptOpts{
-		inFileName: "test",
-	}
-
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+func TestMongoCLIBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		MongoCLIBuilder(),
+		1,
+		[]string{},
+	)
 }

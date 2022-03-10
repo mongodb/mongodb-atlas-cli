@@ -24,15 +24,38 @@ import (
 type DecryptOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	inFileName                    string
-	outFileName                   string
-	kmipServerCAFileName          string
-	kmipClientCertificateFileName string
-	localKeyFileName              string
+	inFileName  string
+	outFileName string
+	awsOpts     DecryptAWSOpts
+	gcpOpts     DecryptGCPOpts
+	azureOpts   DecryptAzureOpts
+}
+
+type DecryptAWSOpts struct {
+	awsAccessKey       string
+	awsSecretAccessKey string
+	awsSessionToken    string
+}
+
+type DecryptGCPOpts struct {
+	gcpServiceAccountKey string
+}
+
+type DecryptAzureOpts struct {
+	azureClientID string
+	azureTenantID string
+	azureSecret   string
 }
 
 func (opts *DecryptOpts) initFiles() func() error {
 	// Validate the provided files can be open
+	return func() error {
+		return nil
+	}
+}
+
+func (opts *DecryptOpts) initFlags() func() error {
+	// Validate all needed flags are set or try to retrieve right credentials.
 	return func() error {
 		return nil
 	}
@@ -43,16 +66,16 @@ func (opts *DecryptOpts) Run() error {
 	return opts.Print(opts.inFileName)
 }
 
-// mongocli om logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.
+// atlas logs decrypt --file <encryptedLogFile> --out <outputLogFile>.
 func DecryptBuilder() *cobra.Command {
 	opts := &DecryptOpts{}
 	cmd := &cobra.Command{
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
-  $ mongocli ops-manager decrypt --localKey filePath --file logPath --out resultPath`,
+  $ atlas decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initFiles())
+			return opts.PreRunE(opts.initFiles(), opts.initFlags())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -62,9 +85,15 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.inFileName, flag.File, flag.FileShort, "", usage.EncryptedLogFile)
 	cmd.Flags().StringVarP(&opts.outFileName, flag.Out, "", "", usage.OutputLogFile)
 
-	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
-	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)
-	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KMIPClientCertificateFile, "", "", usage.KMIPClientCertificateFile)
+	cmd.Flags().StringVarP(&opts.awsOpts.awsAccessKey, flag.AWSAccessKey, "", "", usage.DecryptAWSAccessKey)
+	cmd.Flags().StringVarP(&opts.awsOpts.awsSecretAccessKey, flag.AWSSecretKey, "", "", usage.DecryptAWSSecretKey)
+	cmd.Flags().StringVarP(&opts.awsOpts.awsSessionToken, flag.AWSSessionToken, "", "", usage.AWSSessionToken)
+
+	cmd.Flags().StringVarP(&opts.azureOpts.azureClientID, flag.AzureClientID, "", "", usage.AzureClientID)
+	cmd.Flags().StringVarP(&opts.azureOpts.azureTenantID, flag.AzureTenantID, "", "", usage.AzureTenantID)
+	cmd.Flags().StringVarP(&opts.azureOpts.azureSecret, flag.AzureSecret, "", "", usage.AzureSecret)
+
+	cmd.Flags().StringVarP(&opts.gcpOpts.gcpServiceAccountKey, flag.GCPServiceAccountKey, "", "", usage.GCPServiceAccountKey)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
@@ -72,9 +101,6 @@ func DecryptBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagFilename(flag.Out)
-	_ = cmd.MarkFlagFilename(flag.LocalKeyFile)
-	_ = cmd.MarkFlagFilename(flag.KMIPServerCAFile)
-	_ = cmd.MarkFlagFilename(flag.KMIPClientCertificateFile)
 
 	return cmd
 }

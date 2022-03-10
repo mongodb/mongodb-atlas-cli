@@ -12,39 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
-
 package logs
 
 import (
-	"testing"
-
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/cobra"
 )
 
-func TestDecryptBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DecryptBuilder(),
-		0,
-		[]string{
-			flag.File,
-			flag.Out,
-			flag.LocalKeyFile,
-			flag.KMIPClientCertificateFile,
-			flag.KMIPServerCAFile,
-		},
-	)
-}
-
-func TestDecrypt_Run(t *testing.T) {
-	listOpts := &DecryptOpts{
-		inFileName: "test",
+func KeyProvidersBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "keyProviders",
+		Aliases: []string{"keys"},
+		Short:   "Manage your key collections.",
 	}
 
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	cmd.AddCommand(KeyProvidersListBuilder())
+
+	return cmd
 }

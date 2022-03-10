@@ -19,7 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
+// MongoCLIBuilder is used in mongocli until atlascli is released.
+func MongoCLIBuilder() *cobra.Command {
 	const use = "logs"
 	cmd := &cobra.Command{
 		Use:     use,
@@ -27,6 +28,23 @@ func Builder() *cobra.Command {
 		Short:   "Download host logs for your project.",
 	}
 	cmd.AddCommand(DownloadBuilder())
+
+	return cmd
+}
+
+// Builder is the up-to-date builder used by atlascli.
+func Builder() *cobra.Command {
+	const use = "logs"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Download host logs for your project.",
+	}
+	cmd.AddCommand(
+		DownloadBuilder(),
+		KeyProvidersBuilder(),
+		DecryptBuilder(),
+	)
 
 	return cmd
 }

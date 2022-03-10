@@ -73,7 +73,7 @@ func DecryptBuilder() *cobra.Command {
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
-  $ atlascli decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken`,
+  $ atlas decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initFiles(), opts.initFlags())
 		},

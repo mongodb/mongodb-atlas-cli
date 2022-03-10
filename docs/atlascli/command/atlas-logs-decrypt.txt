@@ -99,5 +99,5 @@ Examples
 .. code-block::
 
 
-   $ atlascli decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken
+   $ atlas decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken
 

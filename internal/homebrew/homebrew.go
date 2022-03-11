@@ -16,7 +16,6 @@ package homebrew
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -48,7 +47,7 @@ func NewChecker(fileSystem afero.Fs) (*Checker, error) {
 	return &Checker{fs: fileSystem, path: filePath}, nil
 }
 
-func formulaName(tool string) string {
+func FormulaName(tool string) string {
 	if strings.Contains(tool, "atlas") {
 		return atlasFormulaName
 	}
@@ -63,7 +62,7 @@ func (s Checker) IsHomebrew() bool {
 		return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 	}
 
-	formula := formulaName(config.BinName())
+	formula := FormulaName(config.BinName())
 	cmdResult := new(bytes.Buffer)
 	cmd := exec.Command("brew", "--prefix", formula)
 
@@ -83,8 +82,6 @@ func (s Checker) IsHomebrew() bool {
 
 	h.FormulaPath, err = filepath.EvalSymlinks(strings.TrimSpace(cmdResult.String()))
 	if err != nil {
-		fmt.Println("formula")
-		fmt.Println(err)
 		return false
 	}
 	_ = s.save(h)

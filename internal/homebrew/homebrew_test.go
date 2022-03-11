@@ -19,98 +19,75 @@ package homebrew
 
 import (
 	"fmt"
-	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
 	"testing"
+	"time"
 
-	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
 )
 
-func TestFile(t *testing.T) {
-	t.Run("save brewpath mcli", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "mongocli")
-
-		err := s.SaveBrewPath("a/b/c", "d/e/f")
-		if err != nil {
-			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
-		}
-	})
-	t.Run("load brewpath mcli", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "mongocli")
-
-		path, _ := config.Path(brewFileSubPath)
-		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
-
-		p1, p2, err := s.LoadBrewPath()
-		if err != nil || p1 != "" || p2 != "" {
-			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
-		}
-	})
-	t.Run("load brewpath mcli is empty", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "mongocli")
-
-		_, _, err := s.LoadBrewPath()
-		if err == nil {
-			t.Errorf("LoadLatestVersion() expected error: file not found")
-		}
-	})
-	t.Run("save brewpath atlascli", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "atlascli")
-
-		err := s.SaveBrewPath("a/b/c", "d/e/f")
-		if err != nil {
-			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
-		}
-	})
-	t.Run("load brewpath atlascli", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "atlascli")
-
-		path, _ := config.Path(brewFileSubPath)
-		_ = afero.WriteFile(appFS, path, []byte(""), 0600)
-
-		p1, p2, err := s.LoadBrewPath()
-		if err != nil || p1 != "" || p2 != "" {
-			t.Errorf("LoadLatestVersion() unexpected error: %v", err)
-		}
-	})
-	t.Run("load brewpath atlascli is empty", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		s := NewLoaderSaver(appFS, "atlascli")
-
-		_, _, err := s.LoadBrewPath()
-		if err == nil {
-			t.Errorf("LoadLatestVersion() expected error: file not found")
-		}
-	})
-}
-
-func TestOutputOpts_testIsHomebrew(t *testing.T) {
+func TestChecker_IsHomebrew(t *testing.T) {
 	tests := []struct {
-		tool string
-		isHb bool
+		paths      *homebrew
+		isHomebrew bool
 	}{
-		{"atlascli", false},
-		{"mongocli", false},
+		{
+			paths: &homebrew{
+				CheckedAt:      time.Now(),
+				ExecutablePath: "/workplace/mongocli/bin/mongocli",
+				FormulaPath:    "/opt/homebrew/Cellar/mongocli/1.22.0",
+			},
+			isHomebrew: false,
+		},
+		{
+			paths: &homebrew{
+				CheckedAt:      time.Now(),
+				ExecutablePath: "",
+				FormulaPath:    "/opt/homebrew/Cellar/mongocli/1.22.0",
+			},
+			isHomebrew: false,
+		},
+		{
+			paths: &homebrew{
+				CheckedAt:      time.Now(),
+				ExecutablePath: "/workplace/mongocli/bin/mongocli",
+				FormulaPath:    "",
+			},
+			isHomebrew: false,
+		},
+		{
+			paths: &homebrew{
+				CheckedAt:      time.Now(),
+				ExecutablePath: "/workplace/mongocli/bin/mongocli",
+				FormulaPath:    ".",
+			},
+			isHomebrew: false,
+		},
+		{
+			paths: &homebrew{
+				CheckedAt:      time.Now(),
+				ExecutablePath: "/opt/homebrew/Cellar/mongocli/1.22.0/bin",
+				FormulaPath:    "/opt/homebrew/Cellar/mongocli/1.22.0",
+			},
+			isHomebrew: true,
+		},
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v_ishomebrew_%v", tt.tool, tt.isHb), func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockPathStore(ctrl)
-			defer ctrl.Finish()
+		t.Run(fmt.Sprintf("path:%v/formula:%v", tt.paths.ExecutablePath, tt.paths.FormulaPath), func(t *testing.T) {
+			appFS := afero.NewMemMapFs()
+			c, err := NewChecker(appFS)
+			if err != nil {
+				t.Errorf("NewChecker() unexpected error: %v", err)
+			}
 
-			mockStore.EXPECT().LoadBrewPath().Return("", "", nil)
-			mockStore.EXPECT().SaveBrewPath(gomock.Any(), gomock.Any()).Return(nil)
+			err = c.save(tt.paths)
+			if err != nil {
+				t.Errorf("save() unexpected error: %v", err)
+			}
 
-			result := IsHomebrew(mockStore)
-			if result != tt.isHb {
-				t.Errorf("got = %v, want %v", result, tt.isHb)
+			result := c.IsHomebrew()
+			if result != tt.isHomebrew {
+				t.Errorf("got = %v, want %v", result, tt.isHomebrew)
 			}
 		})
 	}

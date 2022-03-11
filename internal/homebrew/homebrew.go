@@ -16,6 +16,7 @@ package homebrew
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -29,9 +30,24 @@ import (
 
 //go:generate mockgen -destination=../mocks/mock_brew_store.go -package=mocks github.com/mongodb/mongocli/internal/homebrew PathStore
 
-const atlasFormulaName = "mongodb-atlas"
+const (
+	atlasFormulaName = "mongodb-atlas"
+	brewFileSubPath  = "/brew.yaml"
+)
 
-// formulaName get homebrew suitable command for a given tool.
+type Checker struct {
+	path string
+	fs   afero.Fs
+}
+
+func NewChecker(fileSystem afero.Fs) (*Checker, error) {
+	filePath, err := config.Path(brewFileSubPath)
+	if err != nil {
+		return nil, err
+	}
+	return &Checker{fs: fileSystem, path: filePath}, nil
+}
+
 func formulaName(tool string) string {
 	if strings.Contains(tool, "atlas") {
 		return atlasFormulaName
@@ -41,36 +57,38 @@ func formulaName(tool string) string {
 
 // IsHomebrew checks if the cli was installed with homebrew.
 func (s Checker) IsHomebrew() bool {
-	h, err := s.Load()
-	// If one of the values was not found previously it is still a valid case - rely on the file.
-	if (h.ExecutablePath != "" || h.FormulaPath != "") && err == nil {
+	// Load from cache
+	h, err := s.load()
+	if h != nil && h.ExecutablePath != "" && h.FormulaPath != "" && err == nil {
 		return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 	}
+
 	formula := formulaName(config.BinName())
-	buf := new(bytes.Buffer)
-	cmd := exec.Command("brew", "--prefix", "--installed", formula)
+	cmdResult := new(bytes.Buffer)
+	cmd := exec.Command("brew", "--prefix", formula)
 
-	cmd.Stdout = buf
-	if err := cmd.Start(); err != nil {
+	if err = cmd.Start(); err != nil {
 		return false
 	}
 
-	executablePath, err := executableCurrentPath()
+	h = new(homebrew)
+	h.ExecutablePath, err = executableCurrentPath()
 	if err != nil {
 		return false
 	}
-	h.ExecutablePath = executablePath
 
-	if err := cmd.Wait(); err != nil {
+	if err = cmd.Wait(); err != nil {
 		return false
 	}
-	brewFormulaPath, err := filepath.EvalSymlinks(strings.TrimSpace(buf.String()))
+
+	h.FormulaPath, err = filepath.EvalSymlinks(strings.TrimSpace(cmdResult.String()))
 	if err != nil {
+		fmt.Println("formula")
+		fmt.Println(err)
 		return false
 	}
-	h.FormulaPath = brewFormulaPath
-	_ = s.Save(h)
-	return strings.HasPrefix(executablePath, brewFormulaPath)
+	_ = s.save(h)
+	return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 }
 
 func executableCurrentPath() (string, error) {
@@ -87,32 +105,7 @@ type homebrew struct {
 	FormulaPath    string    `yaml:"formula_path"`
 }
 
-type Loader interface {
-	Load() (*homebrew, error)
-}
-
-type LoaderSaver interface {
-	Loader
-	Save(*homebrew) error
-}
-
-func NewChecker(fileSystem afero.Fs) (*Checker, error) {
-	filePath, err := config.Path(brewFileSubPath)
-	if err != nil {
-		return nil, err
-	}
-	return &Checker{fs: fileSystem, path: filePath}, nil
-}
-
-type Checker struct {
-	path string
-	fs   afero.Fs
-}
-
-const brewFileSubPath = "/brew.yaml"
-
-// Load will load the latest calculated brew path.
-func (s *Checker) Load() (*homebrew, error) {
+func (s *Checker) load() (*homebrew, error) {
 	path := new(homebrew)
 	if err := file.Load(s.fs, s.path, path); err != nil {
 		return nil, err
@@ -124,7 +117,7 @@ func (s *Checker) Load() (*homebrew, error) {
 	return nil, nil
 }
 
-// Save will save the latest calculated brew path.
-func (s *Checker) Save(h *homebrew) error {
+func (s *Checker) save(h *homebrew) error {
+	h.CheckedAt = time.Now()
 	return file.Save(s.fs, s.path, h)
 }

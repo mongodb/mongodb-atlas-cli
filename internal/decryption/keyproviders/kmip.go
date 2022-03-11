@@ -12,26 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-// +build unit
+package keyproviders
 
-package logs
+import "fmt"
 
-import (
-	"testing"
+type KMIPKeyIdentifier struct {
+	KeyStoreIdentifier
+	UniqueKeyID               string
+	ServerName                string
+	ServerPort                string
+	KeyWrapMethod             KMIPKeyWrapMethod
+	ServerCAFileName          string
+	ClientCertificateFileName string
+}
 
-	"github.com/spf13/afero"
-)
-
-func TestDecrypt_Run(t *testing.T) {
-	listOpts := &DecryptOpts{
-		inFileName: "test",
-	}
-	listOpts.Out = "decryptedAuditLog"
-	listOpts.Fs = afero.NewMemMapFs()
-	_, _ = listOpts.Fs.Create(listOpts.inFileName)
-
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+func (keyIdentifier *KMIPKeyIdentifier) DecryptKey(_, _ []byte) ([]byte, error) {
+	return nil, fmt.Errorf("%s not implemented", keyIdentifier.Provider)
 }

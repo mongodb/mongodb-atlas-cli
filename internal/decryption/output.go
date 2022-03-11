@@ -15,9 +15,10 @@
 package decryption
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AuditLogOutput struct {
@@ -28,8 +29,12 @@ type AuditLogOutput struct {
 }
 
 func buildOutput(out io.Writer) AuditLogOutput {
+	newLine := []byte{'\n'}
 	writeLine := func(value []byte) error {
-		_, err := out.Write(value)
+		if _, err := out.Write(value); err != nil {
+			return err
+		}
+		_, err := out.Write(newLine)
 		return err
 	}
 
@@ -41,10 +46,10 @@ func buildOutput(out io.Writer) AuditLogOutput {
 			return writeLine([]byte(err.Error()))
 		},
 		Errorf: func(lineNb int, format string, a ...interface{}) error {
-			return writeLine([]byte(fmt.Sprintf(format, a)))
+			return writeLine([]byte(fmt.Sprintf(format, a...)))
 		},
 		LogRecord: func(lineNb int, logRecord interface{}) error {
-			jsonVal, err := json.Marshal(logRecord)
+			jsonVal, err := bson.MarshalExtJSON(logRecord, false, false)
 			if err != nil {
 				return err
 			}

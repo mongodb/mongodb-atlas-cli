@@ -22,12 +22,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (logLine *AuditLogLine) decodeLogRecord() (*EncryptedLogRecord, error) {
-	aad, err := logLine.logAdditionalAuthData()
-	if err != nil {
-		return nil, err
-	}
-
+func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 	log, err := base64.StdEncoding.DecodeString(logLine.Log)
 	if err != nil {
 		return nil, err
@@ -38,23 +33,23 @@ func (logLine *AuditLogLine) decodeLogRecord() (*EncryptedLogRecord, error) {
 	KeyInvocationCountData := log[16:24]
 	LogData := log[24:]
 
-	return &EncryptedLogRecord{
+	return &DecodedLogRecord{
 		CipherText:         LogData,
 		Tag:                TagData,
-		AAD:                aad,
+		AAD:                logLine.logAdditionalAuthData(),
 		IV:                 append(KeyInitCountData, KeyInvocationCountData...),
 		KeyInitCount:       binary.LittleEndian.Uint32(KeyInitCountData),
 		KeyInvocationCount: binary.LittleEndian.Uint64(KeyInvocationCountData),
 	}, nil
 }
 
-func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int, expectedLogRecordIdx uint64) (interface{}, error) {
+func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (interface{}, error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
 		return nil, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
 	}
 
-	if validationErr := validateLogLine(encryptedLogRecord, expectedLogRecordIdx); validationErr != nil {
+	if validationErr := encryptedLogRecord.validate(decryptConfig.processedLogLines + 1); validationErr != nil {
 		return nil, validationErr
 	}
 
@@ -75,28 +70,27 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 		return nil, fmt.Errorf("error decompressing line %v, %v", lineNb, decompressErr)
 	}
 
-	var bsonParsedLogRecord interface{}
+	var bsonParsedLogRecord map[string]interface{}
 	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
 		return nil, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, bsonErr)
+	}
+
+	if _, ok := bsonParsedLogRecord["ts"]; !ok {
+		bsonParsedLogRecord["ts"] = logLine.TS
 	}
 
 	return bsonParsedLogRecord, nil
 }
 
-func (logLine *AuditLogLine) logAdditionalAuthData() ([]byte, error) {
+func (logLine *AuditLogLine) logAdditionalAuthData() []byte {
 	const AADByteSize = 8
 
-	timestampMs, err := logLine.UTCTimestampValue()
-	if err != nil {
-		return nil, err
-	}
-
 	additionalAuthData := make([]byte, AADByteSize)
-	binary.LittleEndian.PutUint64(additionalAuthData, timestampMs)
-	return additionalAuthData, nil
+	binary.LittleEndian.PutUint64(additionalAuthData, uint64(logLine.TS.UnixMilli()))
+	return additionalAuthData
 }
 
-func validateLogLine(encryptedLogRecord *EncryptedLogRecord, expectedLogRecordIdx uint64) error {
+func (encryptedLogRecord *DecodedLogRecord) validate(expectedLogRecordIdx uint64) error {
 	if expectedLogRecordIdx != encryptedLogRecord.KeyInvocationCount {
 		return fmt.Errorf("logRecordIdx missmatch, expected: %v, actual: %v", encryptedLogRecord.KeyInvocationCount, expectedLogRecordIdx)
 	}

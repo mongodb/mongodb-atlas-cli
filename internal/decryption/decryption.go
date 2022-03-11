@@ -17,8 +17,6 @@ package decryption
 import (
 	"io"
 	"strings"
-
-	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
 
 type DecryptSection struct {
@@ -27,10 +25,16 @@ type DecryptSection struct {
 	processedLogLines uint64
 }
 
+type KeyProviderOpts struct {
+	LocalKeyFileName              string
+	KMIPServerCAFileName          string
+	KMIPClientCertificateFileName string
+}
+
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
-func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyproviders.CredentialsProvider) error {
+func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
 	auditLogFormat, logLines, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
@@ -44,7 +48,7 @@ func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyprovider
 		lineNb := idx + 1
 		logLine, err := auditLogEncoding.Parse(line)
 		if err != nil {
-			if outputErr := output.Errorf(lineNb, "error parsing line %d, %s", lineNb, err); outputErr != nil {
+			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
 				return outputErr
 			}
 			continue
@@ -52,7 +56,7 @@ func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyprovider
 
 		switch logLine.AuditRecordType {
 		case AuditHeaderRecord:
-			if decryptSection, err = processHeader(logLine, credentialsProvider); err != nil {
+			if decryptSection, err = processHeader(logLine, opts); err != nil {
 				if outputErr := output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
 					return outputErr
 				}
@@ -65,7 +69,7 @@ func Decrypt(logReader io.Reader, out io.Writer, credentialsProvider keyprovider
 				continue
 			}
 
-			decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb, decryptSection.processedLogLines+1)
+			decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
 			decryptSection.processedLogLines++
 			if err != nil {
 				if outputErr := output.Error(lineNb, err); outputErr != nil {
@@ -96,7 +100,7 @@ func readAuditLogFile(logReader io.Reader) (AuditLogFormat, []string, error) {
 	}
 
 	const jsonStartChar = '{'
-	if data[0] == jsonStartChar {
+	if len(data) > 0 && data[0] == jsonStartChar {
 		auditLogFormat = JSON
 	}
 

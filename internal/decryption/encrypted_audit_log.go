@@ -15,11 +15,11 @@
 package decryption
 
 import (
-	"encoding/json"
-	"strconv"
+	"fmt"
 	"time"
 
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AuditRecordType string
@@ -29,38 +29,61 @@ type AuditLogEncoding struct {
 }
 
 type AuditLogLine struct {
-	UTCTimestamp struct {
-		Date struct {
-			Value string `json:"$numberLong"`
-		} `json:"$date"`
-	} `json:"ts"`
-	AuditRecordType    AuditRecordType `json:"auditRecordType,omitempty"`
-	Log                string          `json:"log,omitempty"`
-	Version            string          `json:"version,omitempty"`
-	CompressionMode    string          `json:"compressionMode,omitempty"`
+	TS                 time.Time
+	AuditRecordType    AuditRecordType
+	Version            string
+	CompressionMode    string
 	KeyStoreIdentifier struct {
-		Provider string `json:"provider"`
-		// todo: add the rest of the fields for kmip & cloud kms
-		Filename string `json:"filename,omitempty"`
-	} `json:"keyStoreIdentifier,omitempty"`
-	EncryptedKey struct {
-		Binary struct {
-			Base64  string `json:"base64"`
-			SubType string `json:"subType"`
-		} `json:"$binary"`
-	} `json:"encryptedKey,omitempty"`
-	MAC string `json:"mac,omitempty"`
+		Provider keyproviders.KeyStoreProvider
+		// localKey
+		Filename string
+		// kmip
+		UniqueKeyID    string
+		KmipServerName string
+		KmipPort       string
+		KeyWrapMethod  keyproviders.KMIPKeyWrapMethod
+		// aws
+		Key      string
+		Region   string
+		Endpoint string
+		// azure & gcp
+		KeyName string
+		// azure
+		Environment      string
+		KeyVaultEndpoint string
+		KeyVersion       string
+		// gcp
+		ProjectID string
+		Location  string
+		KeyRing   string
+	}
+	EncryptedKey []byte
+	MAC          string
+	Log          string
 }
 
-type HeaderRecord struct {
-	UTCTimestamp       uint64
-	Version            string
-	CompressionMode    CompressionMode
-	KeyStoreIdentifier keyproviders.KeyStoreIdentifier
-	EncryptedLEK       []byte
-	IV                 []byte
-	AESBlock           []byte
-	MAC                string
+func (logLine *AuditLogLine) GetKeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
+	if logLine.AuditRecordType != AuditHeaderRecord {
+		return nil, fmt.Errorf("not a valid header line")
+	}
+
+	switch logLine.KeyStoreIdentifier.Provider {
+	case keyproviders.LocalKey:
+		return &keyproviders.LocalKeyIdentifier{
+			Filename: opts.LocalKeyFileName,
+		}, nil
+	case keyproviders.KMIP:
+		return &keyproviders.KMIPKeyIdentifier{
+			UniqueKeyID:               logLine.KeyStoreIdentifier.UniqueKeyID,
+			ServerName:                logLine.KeyStoreIdentifier.KmipServerName,
+			ServerPort:                logLine.KeyStoreIdentifier.KmipPort,
+			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
+			ServerCAFileName:          opts.KMIPServerCAFileName,
+			ClientCertificateFileName: opts.KMIPClientCertificateFileName,
+		}, nil
+	default:
+		return nil, fmt.Errorf("keyProvider %s not implemented", logLine.KeyStoreIdentifier.Provider)
+	}
 }
 
 type HeaderAAD struct {
@@ -68,7 +91,7 @@ type HeaderAAD struct {
 	Version string    `json:"version"`
 }
 
-type EncryptedLogRecord struct {
+type DecodedLogRecord struct {
 	CipherText         []byte
 	Tag                []byte
 	IV                 []byte
@@ -97,18 +120,13 @@ func (encoding *AuditLogEncoding) Parse(value string) (*AuditLogLine, error) {
 	var line AuditLogLine
 
 	if encoding.format == JSON {
-		if err := json.Unmarshal([]byte(value), &line); err != nil {
+		if err := bson.UnmarshalExtJSON([]byte(value), true, &line); err != nil {
 			return nil, err
 		}
 	} else {
-		panic("not implemented for format: " + encoding.format)
+		// todo: implement BSON
+		return nil, fmt.Errorf("not implemented for format: %s", encoding.format)
 	}
 
 	return &line, nil
-}
-
-func (logLine *AuditLogLine) UTCTimestampValue() (uint64, error) {
-	const Base10 = 10
-	const TimestampBitSize = 64
-	return strconv.ParseUint(logLine.UTCTimestamp.Date.Value, Base10, TimestampBitSize)
 }

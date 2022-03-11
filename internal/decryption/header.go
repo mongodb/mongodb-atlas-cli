@@ -15,42 +15,54 @@
 package decryption
 
 import (
-	"encoding/base64"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
 
-func decodeHeader(logLine *AuditLogLine) (*HeaderRecord, error) {
-	timestamp, err := logLine.UTCTimestampValue()
+type HeaderRecord struct {
+	Timestamp       time.Time
+	Version         string
+	CompressionMode CompressionMode
+	KeyProvider     keyproviders.KeyProvider
+	EncryptedLEK    []byte
+	IV              []byte
+	AESBlock        []byte
+	MAC             string
+}
+
+func (header *HeaderRecord) GetKey() ([]byte, error) {
+	return header.KeyProvider.DecryptKey(header.EncryptedLEK, header.IV)
+}
+
+func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, error) {
+	keyProvider, err := logLine.GetKeyProvider(opts)
 	if err != nil {
 		return nil, err
 	}
-	encryptedKey, _ := base64.StdEncoding.DecodeString(logLine.EncryptedKey.Binary.Base64)
 	return &HeaderRecord{
-		UTCTimestamp:    timestamp,
+		Timestamp:       logLine.TS,
 		Version:         logLine.Version,
 		CompressionMode: CompressionMode(logLine.CompressionMode),
-		KeyStoreIdentifier: keyproviders.KeyStoreIdentifier{
-			Provider: keyproviders.LocalKey,
-			Filename: logLine.KeyStoreIdentifier.Filename,
-		},
-		IV:           encryptedKey[:16],
-		EncryptedLEK: encryptedKey[16:48],
-		AESBlock:     encryptedKey[48:],
+		KeyProvider:     keyProvider,
+		IV:              logLine.EncryptedKey[:16],
+		EncryptedLEK:    logLine.EncryptedKey[16:48],
+		AESBlock:        logLine.EncryptedKey[48:],
 	}, nil
 }
+
 func validateHeader(_ *HeaderRecord) error {
 	// todo
 	return nil
 }
 
-func processHeader(logLine *AuditLogLine, credentialsProvider keyproviders.CredentialsProvider) (*DecryptSection, error) {
-	header, err := decodeHeader(logLine)
+func processHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*DecryptSection, error) {
+	header, err := decodeHeader(logLine, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	lek, err := keyproviders.DecryptLEK(header.KeyStoreIdentifier, header.EncryptedLEK, header.IV, credentialsProvider)
+	lek, err := header.GetKey()
 	if err != nil {
 		return nil, err
 	}

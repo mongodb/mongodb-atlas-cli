@@ -5,7 +5,7 @@ COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=1.21.0 #$(shell git tag --list 'mongocli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
+MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"

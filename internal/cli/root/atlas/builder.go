@@ -16,8 +16,10 @@ package atlas
 
 import (
 	"fmt"
+	"io"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -54,14 +56,23 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/latestrelease"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
 const atlas = "atlas"
+
+type Notifier struct {
+	currentVersion string
+	finder         latestrelease.VersionFinder
+	filesystem     afero.Fs
+	writer         io.Writer
+}
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
@@ -103,12 +114,20 @@ func Builder(profile *string) *cobra.Command {
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			w := cmd.ErrOrStderr()
+			fs := afero.NewOsFs()
+			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())
 
-			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
-				printer := latestrelease.NewPrinter(w, config.ToolName, config.BinName())
-				checker := latestrelease.NewChecker(version.Version, config.ToolName, printer)
-				_ = checker.CheckAvailable()
+			notifier := &Notifier{
+				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				finder:         f,
+				filesystem:     fs,
+				writer:         w,
 			}
+
+			c, _ := homebrew.NewChecker(fs)
+			isHb := c.IsHomebrew()
+
+			notifier.notifyIfApplicable(isHb)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -181,4 +200,43 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
+}
+
+func (c *Notifier) notifyIfApplicable(isHb bool) {
+	if c.shouldCheck() {
+		release, err := c.finder.Find()
+		if err != nil || release == nil {
+			return
+		}
+		_ = c.notify(isHb, release)
+	}
+}
+func (c *Notifier) shouldCheck() bool {
+	return !config.SkipUpdateCheck() && cli.IsTerminal(c.writer)
+}
+
+func (c *Notifier) notify(isHb bool, release *latestrelease.ReleaseInformation) error {
+	if isHb && !isAtLeast24HoursPast(release.PublishedAt) {
+		return nil
+	}
+
+	var upgradeInstructions string
+	if isHb {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
+	} else {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, config.ToolName)
+	}
+
+	newVersionTemplate := `
+A new version of %s is available '%s'!
+%s
+
+To disable this alert, run "%s config set skip_update_check true".
+`
+	_, err := fmt.Fprintf(c.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
+	return err
+}
+
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
 }

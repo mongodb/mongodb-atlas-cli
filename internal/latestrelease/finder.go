@@ -19,132 +19,132 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
 
 const (
-	minPageSize = 5
+	stateFileSubPath = "/rstate.yaml"
+	minPageSize      = 5
 )
 
+// ReleaseInformation Release information.
+type ReleaseInformation struct {
+	CheckedAt   time.Time `yaml:"saved_at"`
+	PublishedAt time.Time `yaml:"released_at"`
+	Version     string    `yaml:"latest_version"`
+}
+
 type VersionFinder interface {
-	NewVersionAvailable() (newVersion string, err error)
-	StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error)
+	Find() (releaseInfo *ReleaseInformation, err error)
 }
 
-func NewVersionFinder(d version.ReleaseVersionDescriber, s LoaderSaver, t, c string) VersionFinder {
-	return &latestReleaseVersionFinder{
-		describer:      d,
-		store:          s,
-		tool:           t,
-		currentVersion: versionFromTag(c, t),
+func NewVersionFinder(fs afero.Fs, d version.ReleaseVersionDescriber) (VersionFinder, error) {
+	filePath, err := config.Path(stateFileSubPath)
+	if err != nil {
+		return nil, err
 	}
+
+	return &finder{
+		describer:      d,
+		filesystem:     fs,
+		tool:           config.ToolName,
+		currentVersion: VersionFromTag(version.Version, config.ToolName),
+		path:           filePath,
+	}, nil
 }
 
-type latestReleaseVersionFinder struct {
+type finder struct {
 	describer      version.ReleaseVersionDescriber
-	store          LoaderSaver
+	filesystem     afero.Fs
 	tool           string
 	currentVersion string
+	path           string
 }
 
-func versionFromTag(ver, toolName string) string {
+func VersionFromTag(ver, toolName string) string {
 	if prefix := toolName + "/"; strings.HasPrefix(ver, prefix) {
 		return strings.ReplaceAll(ver, prefix, "")
 	}
 	return ver
 }
 
-const (
-	mongoCLI = "mongocli"
-	atlasCLI = "atlascli"
-)
-
 func isValidTagForTool(tag, tool string) bool {
-	if tool == mongoCLI {
-		return !strings.Contains(tag, atlasCLI)
+	if tool == config.MongoCLI {
+		return !strings.Contains(tag, config.AtlasCLI)
 	}
 	return strings.Contains(tag, tool)
 }
 
-func isAtLeast24HoursPast(t time.Time) bool {
-	return !t.IsZero() && time.Since(t) >= time.Hour*24
-}
-
-// ReleaseInformation Release information.
-type ReleaseInformation struct {
-	Version     string
-	PublishedAt time.Time
-}
-
-func (f *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version) (bool, *ReleaseInformation, error) {
+func (f *finder) find() (*ReleaseInformation, error) {
 	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 	if err != nil || release == nil {
-		return false, nil, err
+		return nil, err
 	}
 
-	v, err := semver.NewVersion(versionFromTag(release.GetTagName(), f.tool))
-	if err != nil {
-		return false, nil, err
+	latestFoundRelease := &ReleaseInformation{
+		Version:     VersionFromTag(release.GetTagName(), f.tool),
+		PublishedAt: release.GetPublishedAt().Time,
+		CheckedAt:   time.Now(),
 	}
+	_ = f.save(latestFoundRelease)
 
-	if currentVersion.Compare(v) < 0 {
-		return true, &ReleaseInformation{
-			Version:     v.Original(),
-			PublishedAt: release.GetPublishedAt().Time,
-		}, nil
-	}
-
-	_ = f.store.SaveLatestVersion(v.Original())
-	return false, nil, nil
+	return latestFoundRelease, nil
 }
 
-func (f *latestReleaseVersionFinder) StoredLatestVersionAvailable() (needRefresh bool, foundVersion string, err error) {
-	latestVersionStored, _ := f.store.LoadLatestVersion()
-	v, err := semver.NewVersion(latestVersionStored)
-	// if empty or invalid, fetch from GitHub
-	if err != nil {
-		return true, "", err
-	}
-	// found a valid version that is higher than latest version, no need to refresh
-	currentVersion, err := semver.NewVersion(f.currentVersion)
-	if err != nil {
-		return false, "", err
-	}
-
-	if currentVersion.Compare(v) < 0 {
-		return false, v.Original(), nil
-	}
-	// found a lower or equal latest version, no need to refresh
-	return false, "", nil
-}
-
-func (f *latestReleaseVersionFinder) NewVersionAvailable() (newVersion string, err error) {
-	if f.currentVersion == "" {
-		return "", nil
-	}
-
-	f.currentVersion = versionFromTag(f.currentVersion, f.tool)
-	svCurrentVersion, err := semver.NewVersion(f.currentVersion)
-	if err != nil {
-		return "", err
-	}
-
-	if svCurrentVersion.Prerelease() != "" { // ignoring prerelease for code changes against master
-		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
-		if err != nil {
-			return "", err
+func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
+	if newestRelease, err := f.load(); newestRelease != nil && err == nil {
+		ver, err := semver.NewVersion(newestRelease.Version)
+		if err == nil {
+			return newestRelease, ver, nil
 		}
 	}
 
-	newVersionAvailable, newV, err := f.searchLatestVersionPerTool(svCurrentVersion)
+	newestRelease, err := f.find()
 	if err != nil {
-		return "", err
+		return nil, nil, err
 	}
 
-	if newVersionAvailable {
-		_ = f.store.SaveLatestVersion(newV.Version)
-		return newV.Version, nil
+	ver, err := semver.NewVersion(newestRelease.Version)
+	return newestRelease, ver, err
+}
+
+func (f *finder) Find() (releaseInfo *ReleaseInformation, err error) {
+	svCurrentVersion, err := semver.NewVersion(f.currentVersion)
+	if err != nil {
+		return nil, err
 	}
 
-	return "", nil
+	// ignoring prerelease for code changes against master
+	if svCurrentVersion.Prerelease() != "" {
+		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	releaseInfo, newestVersion, err := f.loadOrGet()
+	if err != nil || svCurrentVersion.Compare(newestVersion) > 0 {
+		return nil, err
+	}
+	return releaseInfo, nil
+}
+
+func (f *finder) load() (*ReleaseInformation, error) {
+	latestReleaseState := new(ReleaseInformation)
+	err := file.Load(f.filesystem, f.path, latestReleaseState)
+	if err != nil {
+		return nil, err
+	}
+
+	if latestReleaseState != nil && time.Since(latestReleaseState.CheckedAt).Hours() < 24 {
+		return latestReleaseState, nil
+	}
+	return nil, nil
+}
+
+func (f *finder) save(ver *ReleaseInformation) error {
+	return file.Save(f.filesystem, f.path, ver)
 }

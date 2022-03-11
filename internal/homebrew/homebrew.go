@@ -27,8 +27,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-//go:generate mockgen -destination=../mocks/mock_brew_store.go -package=mocks github.com/mongodb/mongocli/internal/homebrew PathStore
-
 const (
 	atlasFormulaName = "mongodb-atlas"
 	brewFileSubPath  = "/brew.yaml"

@@ -16,6 +16,10 @@ package mongocli
 
 import (
 	"fmt"
+	"io"
+	"runtime"
+	"time"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas"
 	"github.com/mongodb/mongocli/internal/cli/auth"
@@ -33,11 +37,13 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"io"
-	"runtime"
 )
 
 type Notifier struct {
+	currentVersion string
+	finder         latestrelease.VersionFinder
+	filesystem     afero.Fs
+	writer         io.Writer
 }
 
 // Builder conditionally adds children commands as needed.
@@ -58,18 +64,20 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			w := cmd.ErrOrStderr()
-			if shouldSkipPrintNewVersion(w) {
-				return
-			}
-			c, _ := homebrew.NewChecker(afero.NewOsFs())
-			c.IsHomebrew()
-			// p := NewPrinter(w, config.ToolName, config.BinName(), c.IsHomebrew())
-			checker := latestrelease.NewChecker(version.Version, config.ToolName)
-			// shouldCheck && isLatests{
-			// print new vercions
-			//}
-			_ = checker.CheckAvailable()
+			fs := afero.NewOsFs()
+			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())
 
+			notifier := &Notifier{
+				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				finder:         f,
+				filesystem:     fs,
+				writer:         w,
+			}
+
+			c, _ := homebrew.NewChecker(fs)
+			isHb := c.IsHomebrew()
+
+			notifier.notifyIfApplicable(isHb)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())
@@ -116,42 +124,6 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	return rootCmd
 }
 
-type Printer interface {
-	PrintNewVersionAvailable(latestVersion, homebrewCommand string) error
-}
-
-func NewPrinter(w io.Writer, t, b string) Printer {
-	return &printer{
-		writer: w,
-		tool:   t,
-		bin:    b,
-	}
-}
-
-type printer struct {
-	writer io.Writer
-	tool   string
-	bin    string
-}
-
-func (p *printer) PrintNewVersionAvailable(latestVersion, formulaName string) error {
-	var upgradeInstructions string
-	if formulaName != "" {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, formulaName)
-	} else {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, p.tool)
-	}
-
-	newVersionTemplate := `
-A new version of %s is available '%s'!
-%s
-
-To disable this alert, run "%s config set skip_update_check true".
-`
-	_, err := fmt.Fprintf(p.writer, newVersionTemplate, p.tool, latestVersion, upgradeInstructions, p.bin)
-	return err
-}
-
 const verTemplate = `%s version: %s
 git version: %s
 Go version: %s
@@ -171,6 +143,41 @@ func formattedVersion() string {
 		runtime.Compiler)
 }
 
-func shouldSkipPrintNewVersion(w io.Writer) bool {
-	return config.SkipUpdateCheck() || !cli.IsTerminal(w)
+func (c *Notifier) notifyIfApplicable(isHb bool) {
+	if c.shouldCheck() {
+		release, err := c.finder.Find()
+		if err != nil || release == nil {
+			return
+		}
+		_ = c.notify(isHb, release)
+	}
+}
+func (c *Notifier) shouldCheck() bool {
+	return !config.SkipUpdateCheck() && cli.IsTerminal(c.writer)
+}
+
+func (c *Notifier) notify(isHb bool, release *latestrelease.ReleaseInformation) error {
+	if isHb && !isAtLeast24HoursPast(release.PublishedAt) {
+		return nil
+	}
+
+	var upgradeInstructions string
+	if isHb {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
+	} else {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, config.ToolName)
+	}
+
+	newVersionTemplate := `
+A new version of %s is available '%s'!
+%s
+
+To disable this alert, run "%s config set skip_update_check true".
+`
+	_, err := fmt.Fprintf(c.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
+	return err
+}
+
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
 }

@@ -24,18 +24,23 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
 
-func TestOutputOpts_NewVersionAvailable(t *testing.T) {
+func TestOutputOpts_Find_NoCache(t *testing.T) {
 	tests := TestCases()
 	for _, tt := range tests {
+		config.ToolName = tt.tool
+		prevVersion := version.Version
+		version.Version = tt.currentVersion
+		defer func() {
+			version.Version = prevVersion
+		}()
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
-			mockStore := mocks.NewMockStore(ctrl)
 			defer ctrl.Finish()
-
-			mockStore.EXPECT().SaveLatestVersion(gomock.Any()).Return(nil)
 
 			mockDescriber.
 				EXPECT().
@@ -43,66 +48,21 @@ func TestOutputOpts_NewVersionAvailable(t *testing.T) {
 				Return(tt.release, nil).
 				Times(1)
 
-			finder := NewVersionFinder(mockDescriber, mockStore, tt.tool, tt.currentVersion)
-			newV, err := finder.NewVersionAvailable(false)
+			finder, err := NewVersionFinder(afero.NewMemMapFs(), mockDescriber)
+			if err != nil {
+				t.Errorf("NewVersionFinder() unexpected error: %v", err)
+			}
+
+			newV, err := finder.Find()
+			if err != nil {
+				t.Errorf("Find() unexpected error: %v", err)
+			}
 
 			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
 
-			if err != nil {
-				t.Errorf("NewVersionAvailable() unexpected error: %v", err)
-			}
-
-			if newV != "" && (!tt.expectNewVersion || newV != expectedV) {
+			if newV != nil && (!tt.expectNewVersion || newV.Version != expectedV) {
 				t.Errorf("want: versionAvailable=%v and newV=%v got: versionAvailable=%v and newV=%v.",
-					tt.expectNewVersion, expectedV, newV != "", newV)
-			}
-		})
-	}
-}
-
-func TestOutputOpts_StoredLatestVersionAvailable(t *testing.T) {
-	tests := []struct {
-		tool           string
-		currentVersion string
-		version        string
-		success        bool
-	}{
-		{
-			tool:           config.MongoCLI,
-			currentVersion: "v1.0.0",
-			success:        true,
-		},
-		{
-			tool:           config.MongoCLI,
-			currentVersion: "v1",
-			success:        true,
-		},
-		{
-			tool:           config.AtlasCLI,
-			currentVersion: "v2.0.0",
-			success:        true,
-		},
-		{
-			tool:           config.AtlasCLI,
-			currentVersion: "v2",
-			success:        false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v / should succeed: %v", tt.currentVersion, tt.success), func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
-			mockStore := mocks.NewMockStore(ctrl)
-			defer ctrl.Finish()
-
-			mockStore.EXPECT().LoadLatestVersion().Return(tt.currentVersion, nil)
-
-			finder := NewVersionFinder(mockDescriber, mockStore, tt.tool, tt.currentVersion)
-			_, _, err := finder.StoredLatestVersionAvailable()
-
-			if err != nil && tt.success {
-				t.Errorf("StoredLatestVersionAvailable() unexpected error: %v", err)
+					tt.expectNewVersion, expectedV, newV != nil, newV)
 			}
 		})
 	}

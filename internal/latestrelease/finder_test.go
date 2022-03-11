@@ -22,14 +22,87 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/google/go-github/v42/github"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 )
 
+type testCase struct {
+	tool             string
+	currentVersion   string
+	expectNewVersion bool
+	release          *github.RepositoryRelease
+}
+
+func testCases() []testCase {
+	f := false
+	atlasV := "atlascli/v2.0.0"
+	mcliV := "mongocli/v2.0.0"
+	mcliOldV := "v2.0.0"
+
+	tests := []testCase{
+		{
+			tool:             "atlascli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
+			currentVersion:   "atlascli/v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
+			currentVersion:   "v3.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
+			currentVersion:   "v3.0.0-123",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "mongocli/v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v3.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v3.0.0-123",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+		},
+	}
+	return tests
+}
+
 func TestOutputOpts_Find_NoCache(t *testing.T) {
-	tests := TestCases()
+	tests := testCases()
 	for _, tt := range tests {
 		config.ToolName = tt.tool
 		prevVersion := version.Version

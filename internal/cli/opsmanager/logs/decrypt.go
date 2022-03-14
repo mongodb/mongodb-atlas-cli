@@ -79,7 +79,7 @@ func DecryptBuilder() *cobra.Command {
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
-  $ mongocli ops-manager decrypt --localKey filePath --file logPath --out resultPath`,
+  $ mongocli ops-manager logs decrypt --localKeyFile filePath --file logPath --out resultPath`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initFiles())
 		},
@@ -98,7 +98,6 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.File)
-
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagFilename(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.LocalKeyFile)

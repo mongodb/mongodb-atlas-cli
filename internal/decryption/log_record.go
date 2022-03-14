@@ -24,7 +24,11 @@ import (
 )
 
 func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
-	log, err := base64.StdEncoding.DecodeString(logLine.Log)
+	if logLine.Log == nil {
+		return nil, fmt.Errorf("missing log")
+	}
+
+	log, err := base64.StdEncoding.DecodeString(*logLine.Log)
 	if err != nil {
 		return nil, err
 	}

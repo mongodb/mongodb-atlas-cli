@@ -71,10 +71,6 @@ func validateHeaderFields(logLine *AuditLogLine) error {
 		return fmt.Errorf("missing version")
 	}
 
-	if logLine.Version == nil {
-		return fmt.Errorf("missing version")
-	}
-
 	if logLine.CompressionMode == nil {
 		return fmt.Errorf("missing compression mode")
 	}
@@ -144,7 +140,7 @@ func (h *HeaderRecord) generateAAD() ([]byte, error) {
 }
 
 func (h *HeaderRecord) validateMAC(decryptedKey []byte) error {
-	aad, err := h.generateAAD.generateAAD()
+	aad, err := h.generateAAD()
 	if err != nil {
 		return err
 	}

@@ -28,38 +28,40 @@ type AuditLogEncoding struct {
 	format AuditLogFormat
 }
 
+type AuditLogLineKeyStoreIdentifier struct {
+	Provider *keyproviders.KeyStoreProvider
+	// localKey
+	Filename *string
+	// kmip
+	UniqueKeyID    *string
+	KmipServerName *string
+	KmipPort       *string
+	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod
+	// aws
+	Key      *string
+	Region   *string
+	Endpoint *string
+	// azure & gcp
+	KeyName *string
+	// azure
+	Environment      *string
+	KeyVaultEndpoint *string
+	KeyVersion       *string
+	// gcp
+	ProjectID *string
+	Location  *string
+	KeyRing   *string
+}
+
 type AuditLogLine struct {
 	TS                 *time.Time
 	AuditRecordType    AuditRecordType
 	Version            *string
 	CompressionMode    *string
-	KeyStoreIdentifier struct {
-		Provider *keyproviders.KeyStoreProvider
-		// localKey
-		Filename *string
-		// kmip
-		UniqueKeyID    *string
-		KmipServerName *string
-		KmipPort       *string
-		KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod
-		// aws
-		Key      *string
-		Region   *string
-		Endpoint *string
-		// azure & gcp
-		KeyName *string
-		// azure
-		Environment      *string
-		KeyVaultEndpoint *string
-		KeyVersion       *string
-		// gcp
-		ProjectID *string
-		Location  *string
-		KeyRing   *string
-	}
-	EncryptedKey []byte
-	MAC          *string
-	Log          *string
+	KeyStoreIdentifier AuditLogLineKeyStoreIdentifier
+	EncryptedKey       []byte
+	MAC                *string
+	Log                *string
 }
 
 func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {

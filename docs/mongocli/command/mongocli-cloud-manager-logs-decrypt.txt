@@ -83,5 +83,5 @@ Examples
 .. code-block::
 
 
-   $ mongocli ops-manager decrypt --localKey filePath --file logPath --out resultPath
+   $ mongocli ops-manager logs decrypt --localKeyFile filePath --file logPath --out resultPath
 

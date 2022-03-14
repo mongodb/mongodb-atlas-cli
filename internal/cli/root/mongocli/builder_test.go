@@ -134,7 +134,7 @@ func TestBuilder(t *testing.T) {
 func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 	tests := testCases()
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v/%v", tt.currentVersion, tt.release), func(t *testing.T) {
 			prevVersion := version.Version
 			version.Version = tt.currentVersion
 			defer func() {
@@ -166,7 +166,11 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 				t.Errorf("notifyIfApplicable() unexpected error:%v", err)
 			}
 
-			v := latestrelease.VersionFromTag(tt.release.GetTagName(), config.ToolName)
+			v := ""
+			if tt.release != nil {
+				v = latestrelease.VersionFromTag(tt.release.GetTagName(), config.ToolName)
+			}
+
 			want := ""
 			if tt.expectNewVersion {
 				want = fmt.Sprintf(`
@@ -220,6 +224,11 @@ func testCases() []testCase {
 			currentVersion:   "v3.0.0-123",
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion:   "v3.0.0-123",
+			expectNewVersion: false,
+			release:          nil,
 		},
 	}
 	return tests

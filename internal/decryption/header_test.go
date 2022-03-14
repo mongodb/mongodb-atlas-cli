@@ -18,11 +18,27 @@
 package decryption
 
 import (
+	"encoding/base64"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
+
+func Test_validateMAC(t *testing.T) {
+	h := HeaderRecord{
+		Timestamp: time.UnixMilli(1644232049921),
+		Version:   "0.0",
+		MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
+	}
+
+	decryptedKey, _ := base64.StdEncoding.DecodeString("pnvb++3sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
+
+	err := h.validateMAC(decryptedKey)
+	if err != nil {
+		t.Error(err)
+	}
+}
 
 func Test_validateHeaderFields(t *testing.T) {
 	ts := time.Now()

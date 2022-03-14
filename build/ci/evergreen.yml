@@ -348,8 +348,8 @@ tasks:
         params:
           script: |
             set -Eeou pipefail
-
-            cat <<EOF > mongocli.toml
+            mkdir mongocli
+            cat <<EOF > mongocli/config.toml
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"

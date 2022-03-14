@@ -534,7 +534,7 @@ func (p *Profile) Delete() error {
 }
 
 func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, ToolName+".toml")
+	return filepath.Join(p.configDir, "config.toml")
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -584,7 +584,7 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
-	viper.SetConfigName(ToolName)
+	viper.SetConfigName("config")
 	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
 
@@ -641,14 +641,14 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-// MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
-func MongoCLIConfigHome() (string, error) {
+// OldMongoCLIConfigHome retrieves configHome path based used by mongoCLI.
+// Deprecated: MongoCLI versions below v1.24.0 use this path.
+func OldMongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
 		return home, nil
 	}
 
 	home, err := os.UserHomeDir()
-
 	if err != nil {
 		return "", err
 	}
@@ -656,16 +656,22 @@ func MongoCLIConfigHome() (string, error) {
 	return fmt.Sprintf("%s/.config", home), nil
 }
 
-// AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
-func AtlasCLIConfigHome() (string, error) {
-	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return home, nil
-	}
-
-	home, err := os.UserHomeDir()
-
+// MongoCLIConfigHome retrieves configHome path based used by mongoCLI.
+func MongoCLIConfigHome() (string, error) {
+	home, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s/.config/%s", home, ToolName), nil
+
+	return fmt.Sprintf("%s/mongocli", home), nil
+}
+
+// AtlasCLIConfigHome retrieves configHome path based used by atlasCLI.
+func AtlasCLIConfigHome() (string, error) {
+	home, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s/atlascli", home), nil
 }

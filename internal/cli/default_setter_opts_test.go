@@ -83,10 +83,8 @@ func TestDefaultOpts_Projects(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		expectedProjects := &atlas.Projects{}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
-		gotPMap, gotPSlice, err := opts.Projects()
-		require.NoError(t, err)
-		assert.Empty(t, gotPMap)
-		assert.Empty(t, gotPSlice)
+		_, _, err := opts.projects()
+		require.Error(t, err)
 	})
 	t.Run("with one project", func(t *testing.T) {
 		expectedProjects := &atlas.Projects{
@@ -96,9 +94,10 @@ func TestDefaultOpts_Projects(t *testing.T) {
 					Name: "Project 1",
 				},
 			},
+			TotalCount: 1,
 		}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
-		gotPMap, gotPSlice, err := opts.Projects()
+		gotPMap, gotPSlice, err := opts.projects()
 		require.NoError(t, err)
 		assert.Equal(t, map[string]string{"Project 1 (1)": "1"}, gotPMap)
 		assert.Equal(t, []string{"Project 1 (1)"}, gotPSlice)
@@ -116,10 +115,8 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		expectedOrgs := &atlas.Organizations{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		gotOMap, gotOSlice, err := opts.Orgs()
-		require.NoError(t, err)
-		assert.Empty(t, gotOMap)
-		assert.Empty(t, gotOSlice)
+		_, _, err := opts.orgs()
+		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
 		expectedOrgs := &atlas.Organizations{
@@ -129,9 +126,10 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 					Name: "Org 1",
 				},
 			},
+			TotalCount: 1,
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		gotOMap, gotOSlice, err := opts.Orgs()
+		gotOMap, gotOSlice, err := opts.orgs()
 		require.NoError(t, err)
 		assert.Equal(t, map[string]string{"Org 1 (1)": "1"}, gotOMap)
 		assert.Equal(t, []string{"Org 1 (1)"}, gotOSlice)

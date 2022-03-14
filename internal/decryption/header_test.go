@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -101,6 +101,7 @@ func Test_validateHeaderFields(t *testing.T) {
 	ts := time.Now()
 	version := "0.0"
 	compressionMode := "none"
+	invalidCompressionMode := "foo"
 	provider := keyproviders.LocalKey
 	encryptedKey := []byte{0, 1, 2, 3}
 	mac := "mac"
@@ -213,6 +214,20 @@ func Test_validateHeaderFields(t *testing.T) {
 				},
 				EncryptedKey:    encryptedKey,
 				MAC:             &mac,
+				AuditRecordType: recordType,
+			},
+			expectErr: true,
+		},
+		{
+			input: AuditLogLine{
+				TS:              &ts,
+				Version:         &version,
+				CompressionMode: &invalidCompressionMode,
+				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
+					Provider: &provider,
+				},
+				MAC:             &mac,
+				EncryptedKey:    encryptedKey,
 				AuditRecordType: recordType,
 			},
 			expectErr: true,

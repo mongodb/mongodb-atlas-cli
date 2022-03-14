@@ -75,6 +75,11 @@ func validateHeaderFields(logLine *AuditLogLine) error {
 		return fmt.Errorf("missing compression mode")
 	}
 
+	c := CompressionMode(*logLine.CompressionMode)
+
+	if c != CompressionModeNone && c != CompressionModeZstd {
+		return fmt.Errorf("invalid compression mode")
+	}
 	if logLine.KeyStoreIdentifier.Provider == nil {
 		return fmt.Errorf("missing provider")
 	}

@@ -98,9 +98,7 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.File)
-
 	_ = cmd.MarkFlagFilename(flag.File)
-	_ = cmd.MarkFlagRequired(flag.File)
 	_ = cmd.MarkFlagFilename(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.LocalKeyFile)
 	_ = cmd.MarkFlagFilename(flag.KMIPServerCAFile)

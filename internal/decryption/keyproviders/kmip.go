@@ -16,6 +16,13 @@ package keyproviders
 
 import "fmt"
 
+type KMIPKeyWrapMethod string
+
+const (
+	KMIPKeyWrapMethodGet     KMIPKeyWrapMethod = "get"
+	KMIPKeyWrapMethodEncrypt KMIPKeyWrapMethod = "encrypt"
+)
+
 type KMIPKeyIdentifier struct {
 	KeyStoreIdentifier
 	UniqueKeyID               string

@@ -62,7 +62,7 @@ type AuditLogLine struct {
 	Log          string
 }
 
-func (logLine *AuditLogLine) GetKeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
+func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
 	if logLine.AuditRecordType != AuditHeaderRecord {
 		return nil, fmt.Errorf("not a valid header line")
 	}

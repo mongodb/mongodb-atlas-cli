@@ -31,12 +31,12 @@ type HeaderRecord struct {
 	MAC             string
 }
 
-func (header *HeaderRecord) GetKey() ([]byte, error) {
+func (header *HeaderRecord) DecryptKey() ([]byte, error) {
 	return header.KeyProvider.DecryptKey(header.EncryptedLEK, header.IV)
 }
 
 func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, error) {
-	keyProvider, err := logLine.GetKeyProvider(opts)
+	keyProvider, err := logLine.KeyProvider(opts)
 	if err != nil {
 		return nil, err
 	}
@@ -51,25 +51,18 @@ func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, e
 	}, nil
 }
 
-func validateHeader(_ *HeaderRecord) error {
-	// todo
-	return nil
-}
-
 func processHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*DecryptSection, error) {
 	header, err := decodeHeader(logLine, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	lek, err := header.GetKey()
+	lek, err := header.DecryptKey()
 	if err != nil {
 		return nil, err
 	}
 
-	if err := validateHeader(header); err != nil {
-		return nil, err
-	}
+	// todo: validate header
 
 	return &DecryptSection{
 		lek:               lek,

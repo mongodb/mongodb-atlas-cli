@@ -21,13 +21,6 @@ const (
 	KMIP     KeyStoreProvider = "kmip"
 )
 
-type KMIPKeyWrapMethod string
-
-const (
-	KMIPKeyWrapMethodGet     KMIPKeyWrapMethod = "get"
-	KMIPKeyWrapMethodEncrypt KMIPKeyWrapMethod = "encrypt"
-)
-
 type KeyProvider interface {
 	DecryptKey(encryptedLEK []byte, iv []byte) ([]byte, error)
 }

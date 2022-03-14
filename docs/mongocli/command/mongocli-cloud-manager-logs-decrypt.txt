@@ -40,14 +40,14 @@ Options
      - 
      - false
      - help for decrypt
-   * - --kimipServerCAFile
-     - string
-     - false
-     - Path to the CA file used to connect to the KMIP speaking server.
    * - --kmipClientCertificateFile
      - string
      - false
      - Path to the Client Cert file used to connect to the KMIP speaking server.
+   * - --kmipServerCAFile
+     - string
+     - false
+     - Path to the CA file used to connect to the KMIP speaking server.
    * - --localKeyFile
      - string
      - false

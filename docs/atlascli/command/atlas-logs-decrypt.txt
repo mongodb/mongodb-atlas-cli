@@ -1,0 +1,103 @@
+.. _atlas-logs-decrypt:
+
+==================
+atlas logs decrypt
+==================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Decrypts a log file with the provided local key file or KMIP files.
+
+Syntax
+------
+
+.. code-block::
+
+   atlas logs decrypt [options]
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --awsAccessKey
+     - string
+     - false
+     - AWS Access Key ID that is part of long-term credentials.
+   * - --awsSecretKey
+     - string
+     - false
+     - AWS Secret Access Key  that is part of long-term credentials.
+   * - --awsSessionToken
+     - string
+     - false
+     - AWS session token used with temporary security credentials.
+   * - --azureClientId
+     - string
+     - false
+     - Application (client) ID assigned by Azure portal - App registrations experience.
+   * - --azureSecret
+     - string
+     - false
+     - Application secret created in the Azure app registration portal.
+   * - --azureTenantId
+     - string
+     - false
+     - Tenant value in the path of the request can be used to control who can sign into the application.
+   * - -f, --file
+     - string
+     - true
+     - Path to the file that contains encrypted audit logs.
+   * - --gcpServiceAccountKey
+     - string
+     - false
+     - GCP service account key file.
+   * - -h, --help
+     - 
+     - false
+     - help for decrypt
+   * - --out
+     - string
+     - false
+     - Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout.
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+   $ atlas decrypt --file logPath --out resultPath --awsAccessKey accessKey --awsSecretKey secretKey --awsSessionToken sessionToken
+

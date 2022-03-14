@@ -29,37 +29,37 @@ type AuditLogEncoding struct {
 }
 
 type AuditLogLine struct {
-	TS                 time.Time
+	TS                 *time.Time
 	AuditRecordType    AuditRecordType
-	Version            string
-	CompressionMode    string
+	Version            *string
+	CompressionMode    *string
 	KeyStoreIdentifier struct {
-		Provider keyproviders.KeyStoreProvider
+		Provider *keyproviders.KeyStoreProvider
 		// localKey
-		Filename string
+		Filename *string
 		// kmip
-		UniqueKeyID    string
-		KmipServerName string
-		KmipPort       string
-		KeyWrapMethod  keyproviders.KMIPKeyWrapMethod
+		UniqueKeyID    *string
+		KmipServerName *string
+		KmipPort       *string
+		KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod
 		// aws
-		Key      string
-		Region   string
-		Endpoint string
+		Key      *string
+		Region   *string
+		Endpoint *string
 		// azure & gcp
-		KeyName string
+		KeyName *string
 		// azure
-		Environment      string
-		KeyVaultEndpoint string
-		KeyVersion       string
+		Environment      *string
+		KeyVaultEndpoint *string
+		KeyVersion       *string
 		// gcp
-		ProjectID string
-		Location  string
-		KeyRing   string
+		ProjectID *string
+		Location  *string
+		KeyRing   *string
 	}
 	EncryptedKey []byte
-	MAC          string
-	Log          string
+	MAC          *string
+	Log          *string
 }
 
 func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
@@ -67,22 +67,26 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		return nil, fmt.Errorf("not a valid header line")
 	}
 
-	switch logLine.KeyStoreIdentifier.Provider {
+	if logLine.KeyStoreIdentifier.Provider == nil {
+		return nil, fmt.Errorf("keyProvider not set")
+	}
+
+	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		return &keyproviders.LocalKeyIdentifier{
 			Filename: opts.LocalKeyFileName,
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
-			UniqueKeyID:               logLine.KeyStoreIdentifier.UniqueKeyID,
-			ServerName:                logLine.KeyStoreIdentifier.KmipServerName,
-			ServerPort:                logLine.KeyStoreIdentifier.KmipPort,
-			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
+			UniqueKeyID:               *logLine.KeyStoreIdentifier.UniqueKeyID,
+			ServerName:                *logLine.KeyStoreIdentifier.KmipServerName,
+			ServerPort:                *logLine.KeyStoreIdentifier.KmipPort,
+			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIPServerCAFileName,
 			ClientCertificateFileName: opts.KMIPClientCertificateFileName,
 		}, nil
 	default:
-		return nil, fmt.Errorf("keyProvider %s not implemented", logLine.KeyStoreIdentifier.Provider)
+		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)
 	}
 }
 

@@ -26,17 +26,74 @@ import (
 )
 
 func Test_validateMAC(t *testing.T) {
-	h := HeaderRecord{
-		Timestamp: time.UnixMilli(1644232049921),
-		Version:   "0.0",
-		MAC:       "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA",
+	validKey, _ := base64.StdEncoding.DecodeString("pnvb++3sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
+	invalidKey, _ := base64.StdEncoding.DecodeString("pnvb++4sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
+	validVersion := "0.0" //nolint:goconst // simple unit test
+	invalidVersion := "0.1"
+	validTimestamp := time.UnixMilli(1644232049921)
+	invalidTimestamp := time.UnixMilli(0)
+	validMAC := "qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA"
+	invalidMAC := "wrongAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+
+	testCases := []struct {
+		input       HeaderRecord
+		inputKey    []byte
+		expectedErr bool
+	}{
+		{
+			input: HeaderRecord{
+				Timestamp: validTimestamp,
+				Version:   validVersion,
+				MAC:       validMAC,
+			},
+			inputKey:    validKey,
+			expectedErr: false,
+		},
+		{
+			input: HeaderRecord{
+				Timestamp: invalidTimestamp,
+				Version:   validVersion,
+				MAC:       validMAC,
+			},
+			inputKey:    validKey,
+			expectedErr: true,
+		},
+		{
+			input: HeaderRecord{
+				Timestamp: validTimestamp,
+				Version:   invalidVersion,
+				MAC:       validMAC,
+			},
+			inputKey:    validKey,
+			expectedErr: true,
+		},
+		{
+			input: HeaderRecord{
+				Timestamp: validTimestamp,
+				Version:   validVersion,
+				MAC:       invalidMAC,
+			},
+			inputKey:    validKey,
+			expectedErr: true,
+		},
+		{
+			input: HeaderRecord{
+				Timestamp: validTimestamp,
+				Version:   validVersion,
+				MAC:       validMAC,
+			},
+			inputKey:    invalidKey,
+			expectedErr: true,
+		},
 	}
 
-	decryptedKey, _ := base64.StdEncoding.DecodeString("pnvb++3sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
-
-	err := h.validateMAC(decryptedKey)
-	if err != nil {
-		t.Error(err)
+	for _, testCase := range testCases {
+		err := testCase.input.validateMAC(testCase.inputKey)
+		if testCase.expectedErr && err == nil {
+			t.Errorf("expected: not nil got: %v", err)
+		} else if !testCase.expectedErr && err != nil {
+			t.Errorf("expected: nil got: %v", err)
+		}
 	}
 }
 
@@ -143,6 +200,19 @@ func Test_validateHeaderFields(t *testing.T) {
 				},
 				MAC:             &mac,
 				EncryptedKey:    encryptedKey,
+				AuditRecordType: recordType,
+			},
+			expectErr: true,
+		},
+		{
+			input: AuditLogLine{
+				TS:      &ts,
+				Version: &version,
+				KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
+					Provider: &provider,
+				},
+				EncryptedKey:    encryptedKey,
+				MAC:             &mac,
 				AuditRecordType: recordType,
 			},
 			expectErr: true,

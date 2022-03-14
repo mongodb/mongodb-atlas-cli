@@ -102,6 +102,7 @@ func (opts *opts) validateService() error {
 
 	if opts.Service == "opsmanager" || opts.Service == "om" {
 		opts.Service = config.OpsManagerService
+		return nil
 	}
 
 	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService && opts.Service != config.CloudGovService {

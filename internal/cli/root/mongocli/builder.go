@@ -74,10 +74,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 				writer:         w,
 			}
 
-			c, _ := homebrew.NewChecker(fs)
-			isHb := c.IsHomebrew()
-
-			if notifier.shouldCheck() {
+			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
 		},
@@ -145,16 +142,27 @@ func formattedVersion() string {
 		runtime.Compiler)
 }
 
-func (c *Notifier) shouldCheck() bool {
-	return !config.SkipUpdateCheck() && cli.IsTerminal(c.writer)
+func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {
+	shouldCheck = !config.SkipUpdateCheck() && cli.IsTerminal(n.writer)
+	isHb = false
+
+	if !shouldCheck {
+		return shouldCheck, isHb
+	}
+
+	c, _ := homebrew.NewChecker(n.filesystem)
+	isHb = c.IsHomebrew()
+
+	return shouldCheck, isHb
 }
 
-func (c *Notifier) notifyIfApplicable(isHb bool) error {
-	release, err := c.finder.Find()
+func (n *Notifier) notifyIfApplicable(isHb bool) error {
+	release, err := n.finder.Find()
 	if err != nil || release == nil {
 		return err
 	}
 
+	// homebrew is an external dependency we give them 24h to have the cli available there
 	if isHb && !isAtLeast24HoursPast(release.PublishedAt) {
 		return nil
 	}
@@ -172,7 +180,7 @@ A new version of %s is available '%s'!
 
 To disable this alert, run "%s config set skip_update_check true".
 `
-	_, err = fmt.Fprintf(c.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
+	_, err = fmt.Fprintf(n.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
 	return err
 }
 

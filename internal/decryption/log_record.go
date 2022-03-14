@@ -19,6 +19,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -53,7 +54,7 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 		return nil, validationErr
 	}
 
-	gcm := &GCMInput{
+	gcm := &aes.GCMInput{
 		Key: decryptConfig.lek,
 		AAD: encryptedLogRecord.AAD,
 		IV:  encryptedLogRecord.IV,

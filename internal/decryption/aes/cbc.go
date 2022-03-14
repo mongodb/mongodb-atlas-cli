@@ -12,34 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package decryption
+package aes
 
 import (
 	"crypto/aes"
 	"crypto/cipher"
 )
 
-// todo: rename
-type GCMInput struct {
+type CBCInput struct {
 	Key []byte
 	IV  []byte
-	AAD []byte
-	Tag []byte
 }
 
-func (input *GCMInput) Decrypt(cipherText []byte) ([]byte, error) {
+func (input *CBCInput) Decrypt(cipherText []byte) ([]byte, error) {
 	cipherBlock, err := aes.NewCipher(input.Key)
 	if err != nil {
 		return nil, err
 	}
 
-	gcmBlockChiper, err := cipher.NewGCMWithTagSize(cipherBlock, len(input.Tag))
-	if err != nil {
-		return nil, err
-	}
-
-	cipherTextWithTag := append([]byte{}, cipherText...)
-	cipherTextWithTag = append(cipherTextWithTag, input.Tag...)
-
-	return gcmBlockChiper.Open(nil, input.IV, cipherTextWithTag, input.AAD)
+	decryptedText := make([]byte, len(cipherText))
+	cipher.NewCBCDecrypter(cipherBlock, input.IV).CryptBlocks(decryptedText, cipherText)
+	return decryptedText, nil
 }

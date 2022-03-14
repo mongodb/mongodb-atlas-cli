@@ -12,34 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package keyproviders
+package aes
 
 import (
-	"encoding/base64"
-	"os"
-
-	"github.com/mongodb/mongocli/internal/decryption/aes"
+	"crypto/aes"
+	"crypto/cipher"
 )
 
-type LocalKeyIdentifier struct {
-	KeyStoreIdentifier
-	Filename string
+type GCMInput struct {
+	Key []byte
+	IV  []byte
+	AAD []byte
+	Tag []byte
 }
 
-func (keyIdentifier *LocalKeyIdentifier) DecryptKey(encryptedLEK, iv []byte) ([]byte, error) {
-	encodedKEK, err := os.ReadFile(keyIdentifier.Filename)
+func (input *GCMInput) Decrypt(cipherText []byte) ([]byte, error) {
+	cipherBlock, err := aes.NewCipher(input.Key)
 	if err != nil {
 		return nil, err
 	}
 
-	kek, err := base64.StdEncoding.DecodeString(string(encodedKEK))
+	gcmBlockChiper, err := cipher.NewGCMWithTagSize(cipherBlock, len(input.Tag))
 	if err != nil {
 		return nil, err
 	}
 
-	cbc := &aes.CBCInput{
-		Key: kek,
-		IV:  iv,
-	}
-	return cbc.Decrypt(encryptedLEK)
+	cipherTextWithTag := append([]byte{}, cipherText...)
+	cipherTextWithTag = append(cipherTextWithTag, input.Tag...)
+
+	return gcmBlockChiper.Open(nil, input.IV, cipherTextWithTag, input.AAD)
 }

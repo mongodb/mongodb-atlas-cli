@@ -132,10 +132,12 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
   
   To configure the tool to work with Cloud Manager
   $ mongocli config --service cloud-manager
+  $ mongocli config --service cloudmanager
   $ mongocli config --service cm
 
   To configure the tool to work with Ops Manager
   $ mongocli config --service ops-manager
+  $ mongocli config --service opsmanager
   $ mongocli config --service om
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

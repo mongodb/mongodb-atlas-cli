@@ -36,6 +36,7 @@ archives:
   <<: &archive_defaults
     files:
       - README.md
+      - atlascli.md
       - LICENSE
       - third_party_notices/**/*
     replacements:
@@ -80,7 +81,7 @@ changelog:
     - '^task:'
     - '^build(deps):'
 release:
-  prerelease: true
+  prerelease: auto
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi

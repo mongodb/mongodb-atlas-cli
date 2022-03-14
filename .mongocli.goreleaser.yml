@@ -35,6 +35,7 @@ archives:
   <<: &archive_defaults
     files:
       - README.md
+      - mongocli.md
       - LICENSE
       - third_party_notices/**/*
     replacements:

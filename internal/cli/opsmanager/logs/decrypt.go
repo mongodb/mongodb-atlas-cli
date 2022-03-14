@@ -15,17 +15,21 @@
 package logs
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/decryption"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
 type DecryptOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	cli.DownloaderOpts
 	inFileName                    string
-	outFileName                   string
 	kmipServerCAFileName          string
 	kmipClientCertificateFileName string
 	localKeyFileName              string
@@ -39,13 +43,38 @@ func (opts *DecryptOpts) initFiles() func() error {
 }
 
 func (opts *DecryptOpts) Run() error {
-	// Run the command. For now printing the file path.
-	return opts.Print(opts.inFileName)
+	outWriter, err := opts.NewWriteCloser()
+	if err != nil {
+		return err
+	}
+
+	inReader, err := opts.Fs.Open(opts.inFileName)
+	if err != nil {
+		return err
+	}
+
+	keyProviderOpts := decryption.KeyProviderOpts{
+		LocalKeyFileName:              opts.localKeyFileName,
+		KMIPServerCAFileName:          opts.kmipServerCAFileName,
+		KMIPClientCertificateFileName: opts.kmipClientCertificateFileName,
+	}
+
+	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil {
+		_ = opts.OnError(outWriter)
+		return err
+	}
+
+	if opts.Out != "/dev/stdout" {
+		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
+	}
+
+	return outWriter.Close()
 }
 
 // mongocli om logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.
 func DecryptBuilder() *cobra.Command {
 	opts := &DecryptOpts{}
+	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
@@ -60,7 +89,7 @@ func DecryptBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.inFileName, flag.File, flag.FileShort, "", usage.EncryptedLogFile)
-	cmd.Flags().StringVarP(&opts.outFileName, flag.Out, "", "", usage.OutputLogFile)
+	cmd.Flags().StringVarP(&opts.Out, flag.Out, "", "", usage.OutputLogFile)
 
 	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
 	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)

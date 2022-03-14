@@ -22,6 +22,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/afero"
 )
 
 func TestDecryptBuilder(t *testing.T) {
@@ -43,6 +44,9 @@ func TestDecrypt_Run(t *testing.T) {
 	listOpts := &DecryptOpts{
 		inFileName: "test",
 	}
+	listOpts.Out = "decryptedAuditLog"
+	listOpts.Fs = afero.NewMemMapFs()
+	_, _ = listOpts.Fs.Create(listOpts.inFileName)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

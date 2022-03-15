@@ -57,6 +57,12 @@ func testCases() []testCase {
 		},
 		{
 			tool:             "atlascli",
+			currentVersion:   "v2.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
 			currentVersion:   "v3.0.0",
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
@@ -71,6 +77,12 @@ func testCases() []testCase {
 			tool:             "mongocli",
 			currentVersion:   "v1.0.0",
 			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v2.0.0",
+			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
 		},
 		{

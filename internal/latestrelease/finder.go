@@ -126,7 +126,7 @@ func (f *finder) Find() (releaseInfo *ReleaseInformation, err error) {
 	}
 
 	releaseInfo, newestVersion, err := f.loadOrGet()
-	if err != nil || releaseInfo == nil || svCurrentVersion.Compare(newestVersion) > 0 {
+	if err != nil || releaseInfo == nil || svCurrentVersion.Compare(newestVersion) >= 0 {
 		return nil, err
 	}
 	return releaseInfo, nil

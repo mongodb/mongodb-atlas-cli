@@ -81,7 +81,8 @@ func DecryptBuilder() *cobra.Command {
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
-  $ mongocli ops-manager logs decrypt --localKeyFile /path/to/file.key --file /path/to/file.bson --out /path/to/file.json`,
+  $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+  $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initFiles())
 		},

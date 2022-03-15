@@ -168,8 +168,8 @@ func readAuditLogFileJSON(reader io.ReadSeeker) ([]*AuditLogLine, error) {
 		}
 		logLines = append(logLines, &logLine)
 	}
-	err := s.Err()
-	if err != nil {
+
+	if err := s.Err(); err != nil {
 		return nil, err
 	}
 	return logLines, nil

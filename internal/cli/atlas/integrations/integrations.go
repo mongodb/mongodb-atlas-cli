@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Third party integration operations.",
+		Short:   "Third party integration operations",
 	}
 	cmd.AddCommand(
 		create.Builder(),

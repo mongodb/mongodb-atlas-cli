@@ -15,11 +15,7 @@
 package decryption
 
 import (
-	"bufio"
-	"fmt"
 	"io"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type DecryptSection struct {
@@ -38,7 +34,7 @@ type KeyProviderOpts struct {
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
 func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error {
-	_, logLines, err := readAuditLogFile(logReader)
+	_, logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}
@@ -46,8 +42,17 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 	output := buildOutput(out)
 	var decryptSection *DecryptSection
 
-	for idx, logLine := range logLines {
+	idx := 0
+	for ; logLineScanner.Scan(); idx++ {
 		lineNb := idx + 1
+		logLine, err := logLineScanner.AuditLogLine()
+		if err != nil {
+			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
+				return outputErr
+			}
+			continue
+		}
+
 		switch logLine.AuditRecordType {
 		case AuditHeaderRecord:
 			if decryptSection, err = processHeader(logLine, opts); err != nil {
@@ -56,23 +61,8 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 				}
 			}
 		case AuditLogRecord:
-			if decryptSection == nil {
-				if outputErr := output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb); outputErr != nil {
-					return outputErr
-				}
-				continue
-			}
-
-			decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
-			decryptSection.processedLogLines++
-			if err != nil {
-				if outputErr := output.Error(lineNb, err); outputErr != nil {
-					return outputErr
-				}
-			} else {
-				if outputErr := output.LogRecord(lineNb, decryptedLogRecord); outputErr != nil {
-					return outputErr
-				}
+			if err := decryptAuditLogRecord(decryptSection, logLine, output, lineNb); err != nil {
+				return err
 			}
 		default:
 			if outputErr := output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType); outputErr != nil {
@@ -80,90 +70,26 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 			}
 		}
 	}
+	if err := logLineScanner.Err(); err != nil {
+		lineNb := idx + 1
+		if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
+			return outputErr
+		}
+	}
 
 	return nil
 }
 
-func peekFirstByte(reader io.ReadSeeker) (byte, error) {
-	b := make([]byte, 1)
+func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine, output AuditLogOutput, lineNb int) error {
+	if decryptSection == nil {
+		return output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
+	}
 
-	n, err := reader.Read(b)
+	decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
+	decryptSection.processedLogLines++
 	if err != nil {
-		return 0, err
+		return output.Error(lineNb, err)
 	}
 
-	if n != 1 {
-		return 0, fmt.Errorf("no bytes to read")
-	}
-
-	c, err := reader.Seek(0, io.SeekStart)
-	if err != nil {
-		return 0, err
-	}
-	if c != 0 {
-		return 0, fmt.Errorf("impossible to seek bytes")
-	}
-	return b[0], nil
-}
-
-func readAuditLogFile(reader io.ReadSeeker) (AuditLogFormat, []*AuditLogLine, error) {
-	auditLogFormat := BSON
-
-	b, err := peekFirstByte(reader)
-	if err != nil {
-		return auditLogFormat, nil, err
-	}
-
-	if b == '{' {
-		auditLogFormat = JSON
-	}
-
-	var logLines []*AuditLogLine
-
-	switch auditLogFormat {
-	case BSON:
-		logLines, err = readAuditLogFileBSON(reader)
-	case JSON:
-		logLines, err = readAuditLogFileJSON(reader)
-	}
-	return auditLogFormat, logLines, err
-}
-
-func readAuditLogFileBSON(reader io.ReadSeeker) ([]*AuditLogLine, error) {
-	var logLines []*AuditLogLine
-	for {
-		raw, err := bson.NewFromIOReader(reader)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return nil, err
-		}
-
-		var logLine AuditLogLine
-		err = bson.Unmarshal(raw, &logLine)
-		if err != nil {
-			return nil, err
-		}
-		logLines = append(logLines, &logLine)
-	}
-	return logLines, nil
-}
-
-func readAuditLogFileJSON(reader io.ReadSeeker) ([]*AuditLogLine, error) {
-	var logLines []*AuditLogLine
-	s := bufio.NewScanner(reader)
-	for s.Scan() {
-		var logLine AuditLogLine
-		err := bson.UnmarshalExtJSON(s.Bytes(), true, &logLine)
-		if err != nil {
-			return nil, err
-		}
-		logLines = append(logLines, &logLine)
-	}
-
-	if err := s.Err(); err != nil {
-		return nil, err
-	}
-	return logLines, nil
+	return output.LogRecord(lineNb, decryptedLogRecord)
 }

@@ -68,5 +68,4 @@ func TestDecrypt_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	}
-
 }

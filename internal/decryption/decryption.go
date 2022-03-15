@@ -48,13 +48,6 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 
 	for idx, logLine := range logLines {
 		lineNb := idx + 1
-		if err != nil {
-			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
-				return outputErr
-			}
-			continue
-		}
-
 		switch logLine.AuditRecordType {
 		case AuditHeaderRecord:
 			if decryptSection, err = processHeader(logLine, opts); err != nil {

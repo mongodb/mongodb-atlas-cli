@@ -226,6 +226,16 @@ func testCases() []testCase {
 			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
 		},
 		{
+			currentVersion:   "v2.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion:   "v2.0.0-123",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
+		},
+		{
 			currentVersion:   "v3.0.0-123",
 			expectNewVersion: false,
 			release:          nil,

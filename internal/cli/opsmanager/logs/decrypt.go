@@ -47,11 +47,13 @@ func (opts *DecryptOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	defer outWriter.Close()
 
 	inReader, err := opts.Fs.Open(opts.inFileName)
 	if err != nil {
 		return err
 	}
+	defer inReader.Close()
 
 	keyProviderOpts := decryption.KeyProviderOpts{
 		LocalKeyFileName:              opts.localKeyFileName,
@@ -68,7 +70,7 @@ func (opts *DecryptOpts) Run() error {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 
-	return outWriter.Close()
+	return nil
 }
 
 // mongocli om logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.

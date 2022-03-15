@@ -15,8 +15,11 @@
 package decryption
 
 import (
+	"bufio"
+	"fmt"
 	"io"
-	"strings"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type DecryptSection struct {
@@ -34,19 +37,17 @@ type KeyProviderOpts struct {
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
-func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
-	auditLogFormat, logLines, err := readAuditLogFile(logReader)
+func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error {
+	_, logLines, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}
 
-	auditLogEncoding := newAuditLogEncoding(auditLogFormat)
 	output := buildOutput(out)
 	var decryptSection *DecryptSection
 
-	for idx, line := range logLines {
+	for idx, logLine := range logLines {
 		lineNb := idx + 1
-		logLine, err := auditLogEncoding.Parse(line)
 		if err != nil {
 			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
 				return outputErr
@@ -90,19 +91,86 @@ func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
 	return nil
 }
 
-func readAuditLogFile(logReader io.Reader) (AuditLogFormat, []string, error) {
-	const LineBreak = "\n"
+func peekFirstByte(reader io.ReadSeeker) (byte, error) {
+	b := make([]byte, 1)
+
+	n, err := reader.Read(b)
+	if err != nil {
+		return 0, err
+	}
+
+	if n != 1 {
+		return 0, fmt.Errorf("no bytes to read")
+	}
+
+	c, err := reader.Seek(0, io.SeekStart)
+	if err != nil {
+		return 0, err
+	}
+	if c != 0 {
+		return 0, fmt.Errorf("impossible to seek bytes")
+	}
+	return b[0], nil
+}
+
+func readAuditLogFile(reader io.ReadSeeker) (AuditLogFormat, []*AuditLogLine, error) {
 	auditLogFormat := BSON
 
-	data, err := io.ReadAll(logReader)
+	b, err := peekFirstByte(reader)
 	if err != nil {
 		return auditLogFormat, nil, err
 	}
 
-	const jsonStartChar = '{'
-	if len(data) > 0 && data[0] == jsonStartChar {
+	if b == '{' {
 		auditLogFormat = JSON
 	}
 
-	return auditLogFormat, strings.Split(string(data), LineBreak), nil
+	var logLines []*AuditLogLine
+
+	switch auditLogFormat {
+	case BSON:
+		logLines, err = readAuditLogFileBSON(reader)
+	case JSON:
+		logLines, err = readAuditLogFileJSON(reader)
+	}
+	return auditLogFormat, logLines, err
+}
+
+func readAuditLogFileBSON(reader io.ReadSeeker) ([]*AuditLogLine, error) {
+	var logLines []*AuditLogLine
+	for {
+		raw, err := bson.NewFromIOReader(reader)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return nil, err
+		}
+
+		var logLine AuditLogLine
+		err = bson.Unmarshal(raw, &logLine)
+		if err != nil {
+			return nil, err
+		}
+		logLines = append(logLines, &logLine)
+	}
+	return logLines, nil
+}
+
+func readAuditLogFileJSON(reader io.ReadSeeker) ([]*AuditLogLine, error) {
+	var logLines []*AuditLogLine
+	s := bufio.NewScanner(reader)
+	for s.Scan() {
+		var logLine AuditLogLine
+		err := bson.UnmarshalExtJSON(s.Bytes(), true, &logLine)
+		if err != nil {
+			return nil, err
+		}
+		logLines = append(logLines, &logLine)
+	}
+	err := s.Err()
+	if err != nil {
+		return nil, err
+	}
+	return logLines, nil
 }

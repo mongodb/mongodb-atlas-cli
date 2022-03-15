@@ -42,11 +42,15 @@ func TestDecryptBuilder(t *testing.T) {
 
 func TestDecrypt_Run(t *testing.T) {
 	listOpts := &DecryptOpts{
-		inFileName: "test",
+		inFileName:       "test",
+		localKeyFileName: "localKey",
 	}
 	listOpts.Out = "decryptedAuditLog"
 	listOpts.Fs = afero.NewMemMapFs()
-	_, _ = listOpts.Fs.Create(listOpts.inFileName)
+	fileJSON := `{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"local","filename":"localKey"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}
+{"ts":{"$date":{"$numberLong":"1644232049922"}},"log":"1Lu4o8XVMM/Rg7GKAQAAAAEAAAAAAAAA/8tXQ36mEd90OaAOzCOSti7N5a2jr0B9ek48/uvyteG/zUJHyM16Hs3wMEhDqTQGBwGhWSHEqXh0/5Jbz6tXsYHhDTMr1BOsn1zaavZScx/CkO5+Hd8Vx+zeFPREtQTe1y+JngXSIroezeyV0/zF4YC4vpug+OZtrEQLNEgwT2bjaqUyaKDbmzCNetd2Ff/eFfMFzinbzKVgXAC7T4YmDuowqXommEXLIBiYh2u4VagwJKZRw5OGZjnvqwyVpSPgGqLxGKUoFigh3NgC6EuGi17VIs5BLRZOIw7+OfbPgQQiKzjCxCk="}`
+	_ = afero.WriteFile(listOpts.Fs, "test", []byte(fileJSON), 0600)
+	_ = afero.WriteFile(listOpts.Fs, "localKey", []byte("LxbM6ik6lgJjKEkugTdkRUoHCeyArNxg2xx7kGHl/io="), 0600)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

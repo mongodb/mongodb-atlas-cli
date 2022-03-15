@@ -5,7 +5,7 @@ COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
+MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
@@ -13,7 +13,7 @@ MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
-ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
+ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 

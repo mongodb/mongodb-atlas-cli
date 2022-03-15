@@ -12,7 +12,7 @@ atlas integrations
    :depth: 1
    :class: singlecol
 
-Third party integration operations
+Third party integration operations.
 
 Options
 -------

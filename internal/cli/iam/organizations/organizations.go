@@ -41,3 +41,22 @@ func Builder() *cobra.Command {
 	)
 	return cmd
 }
+
+func AtlasCLIBuilder() *cobra.Command {
+	const use = "organizations"
+	cmd := &cobra.Command{
+		Use:     use,
+		Short:   "Organization operations.",
+		Long:    "Create, list and manage your MongoDB organizations.",
+		Aliases: cli.GenerateAliases(use, "orgs", "org"),
+	}
+	cmd.AddCommand(
+		ListBuilder(),
+		DescribeBuilder(),
+		DeleteBuilder(),
+		apikeys.Builder(),
+		users.Builder(),
+		invitations.Builder(),
+	)
+	return cmd
+}

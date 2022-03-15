@@ -62,8 +62,6 @@ Related Commands
 * :ref:`atlas-dataLakes` - Manage Atlas Data Lakes for your project.
 * :ref:`atlas-dbusers` - Manage database users for your project.
 * :ref:`atlas-events` - Manage events for your organization or project.
-* :ref:`atlas-globalAccessLists` - Manage IP access list for Global API Key.
-* :ref:`atlas-globalApiKeys` - Global API Keys operations.
 * :ref:`atlas-integrations` - Third party integration operations
 * :ref:`atlas-liveMigrations` - Manage a Live Migration to Atlas for your organization.
 * :ref:`atlas-logs` - Download host logs for your project.
@@ -99,8 +97,6 @@ Related Commands
    dataLakes </command/atlas-dataLakes>
    dbusers </command/atlas-dbusers>
    events </command/atlas-events>
-   globalAccessLists </command/atlas-globalAccessLists>
-   globalApiKeys </command/atlas-globalApiKeys>
    integrations </command/atlas-integrations>
    liveMigrations </command/atlas-liveMigrations>
    logs </command/atlas-logs>

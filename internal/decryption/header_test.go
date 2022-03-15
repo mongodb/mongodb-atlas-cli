@@ -28,7 +28,7 @@ import (
 func Test_validateMAC(t *testing.T) {
 	validKey, _ := base64.StdEncoding.DecodeString("pnvb++3sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
 	invalidKey, _ := base64.StdEncoding.DecodeString("pnvb++4sbhxIJdfODOq5uIaUX8yxTuWS95VLgES30FM=")
-	validVersion := "0.0" //nolint:goconst // simple unit test
+	validVersion := "0.0"
 	invalidVersion := "0.1"
 	validTimestamp := time.UnixMilli(1644232049921)
 	invalidTimestamp := time.UnixMilli(0)

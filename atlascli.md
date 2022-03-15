@@ -1,12 +1,10 @@
-# Atlas CLI (Pre-Release)
+# Atlas CLI
 
 The MongoDB Atlas CLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
 
 ![atlascli-atlas-quickstart](https://user-images.githubusercontent.com/5663078/156184669-57c8ddce-6f0a-4e84-9311-2d996cb27942.gif)
 
 ## Installing
-
-Atlas CLI is currently in the pre-release phase. Do not use it in a production environment.
 
 ### Pre-built Binaries
 

@@ -52,7 +52,6 @@ Related Commands
 ----------------
 
 * :ref:`atlas-organizations-apiKeys` - Organization API Keys operations.
-* :ref:`atlas-organizations-create` - Create an organization.
 * :ref:`atlas-organizations-delete` - Delete an organization.
 * :ref:`atlas-organizations-describe` - Describe an organizations.
 * :ref:`atlas-organizations-invitations` - Invitation operations.
@@ -64,7 +63,6 @@ Related Commands
    :titlesonly:
 
    apiKeys </command/atlas-organizations-apiKeys>
-   create </command/atlas-organizations-create>
    delete </command/atlas-organizations-delete>
    describe </command/atlas-organizations-describe>
    invitations </command/atlas-organizations-invitations>

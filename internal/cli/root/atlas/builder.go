@@ -47,8 +47,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
 	"github.com/mongodb/mongocli/internal/cli/iam/teams"
@@ -144,9 +142,7 @@ func Builder(profile *string) *cobra.Command {
 		auth.Builder(),
 		quickstart.Builder(),
 		projects.Builder(),
-		organizations.Builder(),
-		globalapikeys.Builder(),
-		globalaccesslists.Builder(),
+		organizations.AtlasCLIBuilder(),
 		users.Builder(),
 		teams.Builder(),
 		clusters.Builder(),

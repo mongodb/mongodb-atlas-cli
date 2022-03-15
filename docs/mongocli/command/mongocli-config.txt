@@ -75,12 +75,17 @@ Examples
 
    To configure the tool to work with Atlas for Government
    $ mongocli config --service cloudgov
+   $ mongocli config --service gov
    
    To configure the tool to work with Cloud Manager
    $ mongocli config --service cloud-manager
+   $ mongocli config --service cloudmanager
+   $ mongocli config --service cm
 
    To configure the tool to work with Ops Manager
    $ mongocli config --service ops-manager
+   $ mongocli config --service opsmanager
+   $ mongocli config --service om
 
 
 Related Commands

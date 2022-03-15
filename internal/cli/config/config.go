@@ -106,7 +106,7 @@ func (opts *opts) validateService() error {
 	}
 
 	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService && opts.Service != config.CloudGovService {
-		return fmt.Errorf("the service '%s' is not supported. Please run 'mongocli config --help' to see the list of available services", opts.Service)
+		return fmt.Errorf("the '%s' service is not supported. Please run 'mongocli config --help' to see the list of available services", opts.Service)
 	}
 
 	return nil

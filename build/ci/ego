@@ -253,6 +253,7 @@ resolve_system_dependencies() {
     if [[ "${PLATFORM}" = "debian" ]] || [[ "${PLATFORM}" = "ubuntu" ]]; then # Debian/Ubuntu
         _wait_for_process_to_finish apt
         _wait_for_process_to_finish dpkg
+        apt-get update
         apt-get install -y -q --no-install-recommends openssl
 
     elif [[ "${PLATFORM}" = "rhel" ]] || [[ "${PLATFORM}" = "amazon" ]]; then # Red Hat / Amazon Linux

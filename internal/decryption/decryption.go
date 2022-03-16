@@ -24,6 +24,15 @@ type DecryptSection struct {
 	processedLogLines uint64
 }
 
+func (s *DecryptSection) zeroLEK() {
+	if s == nil {
+		return
+	}
+	for i := range s.lek {
+		s.lek[i] = 0
+	}
+}
+
 type KeyProviderOpts struct {
 	LocalKeyFileName              string
 	KMIPServerCAFileName          string
@@ -55,6 +64,7 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 
 		switch logLine.AuditRecordType {
 		case AuditHeaderRecord:
+			decryptSection.zeroLEK()
 			if decryptSection, err = processHeader(logLine, opts); err != nil {
 				if outputErr := output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
 					return outputErr
@@ -70,6 +80,7 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 			}
 		}
 	}
+	decryptSection.zeroLEK()
 	if err := logLineScanner.Err(); err != nil {
 		lineNb := idx + 1
 		if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {

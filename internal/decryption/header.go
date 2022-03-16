@@ -121,9 +121,9 @@ func processHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*DecryptSection
 	}
 
 	return &DecryptSection{
-		lek:               lek,
-		compressionMode:   header.CompressionMode,
-		processedLogLines: 0,
+		lek:                    lek,
+		compressionMode:        header.CompressionMode,
+		lastKeyInvocationCount: 0,
 	}, nil
 }
 

@@ -47,11 +47,13 @@ func (opts *DecryptOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	defer outWriter.Close()
 
 	inReader, err := opts.Fs.Open(opts.inFileName)
 	if err != nil {
 		return err
 	}
+	defer inReader.Close()
 
 	keyProviderOpts := decryption.KeyProviderOpts{
 		LocalKeyFileName:              opts.localKeyFileName,
@@ -68,7 +70,7 @@ func (opts *DecryptOpts) Run() error {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 
-	return outWriter.Close()
+	return nil
 }
 
 // mongocli om logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.
@@ -79,7 +81,8 @@ func DecryptBuilder() *cobra.Command {
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
-  $ mongocli ops-manager logs decrypt --localKeyFile filePath --file logPath --out resultPath`,
+  $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+  $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(opts.initFiles())
 		},

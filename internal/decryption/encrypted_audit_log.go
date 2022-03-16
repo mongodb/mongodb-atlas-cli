@@ -19,14 +19,10 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AuditRecordType string
 type AuditLogFormat string
-type AuditLogEncoding struct {
-	format AuditLogFormat
-}
 
 type AuditLogLineKeyStoreIdentifier struct {
 	Provider *keyproviders.KeyStoreProvider
@@ -115,24 +111,3 @@ const (
 	JSON AuditLogFormat = "JSON"
 	BSON AuditLogFormat = "BSON"
 )
-
-func newAuditLogEncoding(format AuditLogFormat) AuditLogEncoding {
-	return AuditLogEncoding{
-		format: format,
-	}
-}
-
-func (encoding *AuditLogEncoding) Parse(value string) (*AuditLogLine, error) {
-	var line AuditLogLine
-
-	if encoding.format == JSON {
-		if err := bson.UnmarshalExtJSON([]byte(value), true, &line); err != nil {
-			return nil, err
-		}
-	} else {
-		// todo: implement BSON
-		return nil, fmt.Errorf("not implemented for format: %s", encoding.format)
-	}
-
-	return &line, nil
-}

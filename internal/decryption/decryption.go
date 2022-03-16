@@ -16,7 +16,6 @@ package decryption
 
 import (
 	"io"
-	"strings"
 )
 
 type DecryptSection struct {
@@ -34,19 +33,19 @@ type KeyProviderOpts struct {
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
-func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
-	auditLogFormat, logLines, err := readAuditLogFile(logReader)
+func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error {
+	_, logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}
 
-	auditLogEncoding := newAuditLogEncoding(auditLogFormat)
 	output := buildOutput(out)
 	var decryptSection *DecryptSection
 
-	for idx, line := range logLines {
+	idx := 0
+	for ; logLineScanner.Scan(); idx++ {
 		lineNb := idx + 1
-		logLine, err := auditLogEncoding.Parse(line)
+		logLine, err := logLineScanner.AuditLogLine()
 		if err != nil {
 			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
 				return outputErr
@@ -62,23 +61,8 @@ func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
 				}
 			}
 		case AuditLogRecord:
-			if decryptSection == nil {
-				if outputErr := output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb); outputErr != nil {
-					return outputErr
-				}
-				continue
-			}
-
-			decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
-			decryptSection.processedLogLines++
-			if err != nil {
-				if outputErr := output.Error(lineNb, err); outputErr != nil {
-					return outputErr
-				}
-			} else {
-				if outputErr := output.LogRecord(lineNb, decryptedLogRecord); outputErr != nil {
-					return outputErr
-				}
+			if err := decryptAuditLogRecord(decryptSection, logLine, output, lineNb); err != nil {
+				return err
 			}
 		default:
 			if outputErr := output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType); outputErr != nil {
@@ -86,23 +70,26 @@ func Decrypt(logReader io.Reader, out io.Writer, opts KeyProviderOpts) error {
 			}
 		}
 	}
+	if err := logLineScanner.Err(); err != nil {
+		lineNb := idx + 1
+		if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
+			return outputErr
+		}
+	}
 
 	return nil
 }
 
-func readAuditLogFile(logReader io.Reader) (AuditLogFormat, []string, error) {
-	const LineBreak = "\n"
-	auditLogFormat := BSON
+func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine, output AuditLogOutput, lineNb int) error {
+	if decryptSection == nil {
+		return output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
+	}
 
-	data, err := io.ReadAll(logReader)
+	decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
+	decryptSection.processedLogLines++
 	if err != nil {
-		return auditLogFormat, nil, err
+		return output.Error(lineNb, err)
 	}
 
-	const jsonStartChar = '{'
-	if len(data) > 0 && data[0] == jsonStartChar {
-		auditLogFormat = JSON
-	}
-
-	return auditLogFormat, strings.Split(string(data), LineBreak), nil
+	return output.LogRecord(lineNb, decryptedLogRecord)
 }

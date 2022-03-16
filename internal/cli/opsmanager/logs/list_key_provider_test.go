@@ -43,7 +43,7 @@ func TestKeyProviderListOpts_Run(t *testing.T) {
 	}
 
 	expected := `local: Filename = localKey
-kmip: Unique Key ID = "uniqueKeyID" Kmip Server Name = "kmipServerName" Kmip Port = "kmipPort" Key Wrap Method = "get"
+kmip: Unique Key ID = "uniqueKeyID" KMIP Server Name = "kmipServerName" KMIP Port = "kmipPort" Key Wrap Method = "get"
 `
 	if bufOut.String() != expected {
 		t.Fatalf("Run() expected: %s got: %v", expected, bufOut.String())

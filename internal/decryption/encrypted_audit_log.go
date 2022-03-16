@@ -30,8 +30,8 @@ type AuditLogLineKeyStoreIdentifier struct {
 	Filename *string
 	// kmip
 	UniqueKeyID    *string
-	KmipServerName *string
-	KmipPort       *string
+	KMIPServerName *string
+	KMIPPort       *string
 	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod
 	// aws
 	Key      *string
@@ -77,8 +77,8 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
 			UniqueKeyID:               *logLine.KeyStoreIdentifier.UniqueKeyID,
-			ServerName:                *logLine.KeyStoreIdentifier.KmipServerName,
-			ServerPort:                *logLine.KeyStoreIdentifier.KmipPort,
+			ServerName:                *logLine.KeyStoreIdentifier.KMIPServerName,
+			ServerPort:                *logLine.KeyStoreIdentifier.KMIPPort,
 			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIPServerCAFileName,
 			ClientCertificateFileName: opts.KMIPClientCertificateFileName,

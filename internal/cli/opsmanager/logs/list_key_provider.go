@@ -16,8 +16,10 @@ package logs
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/decryption"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +27,11 @@ type KeyProviderListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	file string
+	fs   afero.Fs
 }
+
+var listTmpl = `{{ range . }}{{ .Provider }}:{{if .Filename}} Filename = {{ .Filename }}{{end}}{{if .UniqueKeyID}} Unique Key ID = "{{ .UniqueKeyID }}"{{end}}{{if .KmipServerName}} Kmip Server Name = "{{ .KmipServerName }}"{{end}}{{if .KmipPort}} Kmip Port = "{{ .KmipPort }}"{{end}}{{if .KeyWrapMethod}} Key Wrap Method = "{{ .KeyWrapMethod }}"{{end}}
+{{ end }}`
 
 func (opts *KeyProviderListOpts) initStore() func() error {
 	// Keeping for now, not sure if needed
@@ -35,13 +41,23 @@ func (opts *KeyProviderListOpts) initStore() func() error {
 }
 
 func (opts *KeyProviderListOpts) Run() error {
-	// Run the command. For now printing the file path.
-	return opts.Print(opts.file)
+	f, err := opts.fs.Open(opts.file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	logs, err := decryption.ListKeyProviders(f)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(logs)
 }
 
 // mongocli om logs listKeyProvider --file <encryptedLogFile>.
 func KeyProvidersListBuilder() *cobra.Command {
-	opts := &KeyProviderListOpts{}
+	opts := &KeyProviderListOpts{fs: afero.NewOsFs()}
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -51,7 +67,7 @@ func KeyProvidersListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initStore(),
-				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitOutput(cmd.OutOrStdout(), listTmpl),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -15,7 +15,9 @@
 package decryption
 
 import (
+	"fmt"
 	"io"
+	"os"
 )
 
 type DecryptSection struct {
@@ -89,6 +91,42 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 	}
 
 	return nil
+}
+
+func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifier, error) {
+	_, logLineScanner, err := readAuditLogFile(logReader)
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []*AuditLogLineKeyStoreIdentifier
+	idx := 0
+	for ; logLineScanner.Scan(); idx++ {
+		lineNb := idx + 1
+		logLine, err := logLineScanner.AuditLogLine()
+		if err != nil {
+			_, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err)
+			if printErr != nil {
+				return nil, printErr
+			}
+			continue
+		}
+
+		if logLine.AuditRecordType != AuditHeaderRecord {
+			continue
+		}
+
+		ret = append(ret, &logLine.KeyStoreIdentifier)
+	}
+	if err := logLineScanner.Err(); err != nil {
+		lineNb := idx + 1
+		_, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err)
+		if printErr != nil {
+			return nil, printErr
+		}
+	}
+
+	return ret, nil
 }
 
 func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine, output AuditLogOutput, lineNb int) error {

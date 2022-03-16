@@ -19,9 +19,9 @@ import (
 )
 
 type DecryptSection struct {
-	lek               []byte
-	compressionMode   CompressionMode
-	processedLogLines uint64
+	lek                    []byte
+	compressionMode        CompressionMode
+	lastKeyInvocationCount uint64
 }
 
 func (s *DecryptSection) zeroLEK() {
@@ -96,10 +96,17 @@ func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine
 		return output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
 	}
 
-	decryptedLogRecord, err := processLogRecord(decryptSection, logLine, lineNb)
-	decryptSection.processedLogLines++
+	decryptedLogRecord, keyInvocationCount, err := processLogRecord(decryptSection, logLine, lineNb)
 	if err != nil {
 		return output.Error(lineNb, err)
+	}
+
+	err = validateLogRecord(decryptSection, keyInvocationCount)
+	decryptSection.lastKeyInvocationCount = keyInvocationCount
+	if err != nil {
+		if outputErr := output.Error(lineNb, err); outputErr != nil {
+			return outputErr
+		}
 	}
 
 	return output.LogRecord(lineNb, decryptedLogRecord)

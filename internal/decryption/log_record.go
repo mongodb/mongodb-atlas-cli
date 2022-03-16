@@ -48,14 +48,10 @@ func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 	}, nil
 }
 
-func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (interface{}, error) {
+func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (bsonData interface{}, keyInvocationCount uint64, err error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
-		return nil, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
-	}
-
-	if validationErr := encryptedLogRecord.validate(decryptConfig.processedLogLines + 1); validationErr != nil {
-		return nil, validationErr
+		return nil, 0, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
 	}
 
 	gcm := &aes.GCMInput{
@@ -67,24 +63,24 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 	decryptedLog, decryptErr := gcm.Decrypt(encryptedLogRecord.CipherText)
 
 	if decryptErr != nil {
-		return nil, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, decryptErr, decryptConfig.lek)
+		return nil, 0, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, decryptErr, decryptConfig.lek)
 	}
 
 	decompressedLogRecord, decompressErr := decompress(decryptConfig.compressionMode, decryptedLog)
 	if decompressErr != nil {
-		return nil, fmt.Errorf("error decompressing line %v, %v", lineNb, decompressErr)
+		return nil, 0, fmt.Errorf("error decompressing line %v, %v", lineNb, decompressErr)
 	}
 
 	var bsonParsedLogRecord map[string]interface{}
 	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
-		return nil, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, bsonErr)
+		return nil, 0, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, bsonErr)
 	}
 
 	if _, ok := bsonParsedLogRecord["ts"]; !ok {
 		bsonParsedLogRecord["ts"] = logLine.TS
 	}
 
-	return bsonParsedLogRecord, nil
+	return bsonParsedLogRecord, encryptedLogRecord.KeyInvocationCount, nil
 }
 
 func (logLine *AuditLogLine) logAdditionalAuthData() []byte {
@@ -95,10 +91,10 @@ func (logLine *AuditLogLine) logAdditionalAuthData() []byte {
 	return additionalAuthData
 }
 
-func (encryptedLogRecord *DecodedLogRecord) validate(expectedLogRecordIdx uint64) error {
-	if expectedLogRecordIdx != encryptedLogRecord.KeyInvocationCount {
-		return fmt.Errorf("logRecordIdx missmatch, expected: %v, actual: %v", encryptedLogRecord.KeyInvocationCount, expectedLogRecordIdx)
+func validateLogRecord(decryptSection *DecryptSection, keyInvocationCount uint64) error {
+	expected := decryptSection.lastKeyInvocationCount + 1
+	if expected != keyInvocationCount {
+		return fmt.Errorf("logRecordIdx missmatch, expected: %v, actual: %v", expected, keyInvocationCount)
 	}
-
 	return nil
 }

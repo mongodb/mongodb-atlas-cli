@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
@@ -63,6 +64,11 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			// we don't run the release alert feature on the completion command
+			if strings.HasPrefix(cmd.CommandPath(), "mongocli completion") {
+				return
+			}
+
 			w := cmd.ErrOrStderr()
 			fs := afero.NewOsFs()
 			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())

@@ -111,6 +111,11 @@ func Builder(profile *string) *cobra.Command {
 			return validate.Credentials()
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			// we don't run the release alert feature on the completion command
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
+				return
+			}
+
 			w := cmd.ErrOrStderr()
 			fs := afero.NewOsFs()
 			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())

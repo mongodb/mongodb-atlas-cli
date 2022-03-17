@@ -92,19 +92,7 @@ func Builder(profile *string) *cobra.Command {
 				config.SetService(config.CloudService)
 			}
 
-			if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
-				return nil
-			}
-
-			if cmd.Name() == "quickstart" { // quickstart has its own check
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
+			if skipValidateCredentials(cmd) {
 				return nil
 			}
 
@@ -190,6 +178,30 @@ Go version: %s
    arch: %s
    compiler: %s
 `
+
+func skipValidateCredentials(cmd *cobra.Command) bool {
+	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
+		return true
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
+		return true
+	}
+
+	if cmd.Name() == "quickstart" { // quickstart has its own check
+		return true
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+		return true
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
+		return true
+	}
+
+	return false
+}
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,

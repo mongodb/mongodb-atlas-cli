@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	open                        = "OPEN"
-	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open                   = "OPEN"
+	dailyBillOverThreshold = "DAILY_BILL_OVER_THRESHOLD"
 )
 
 func TestAlerts(t *testing.T) {
@@ -44,8 +44,6 @@ func TestAlerts(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
-			"--status",
-			"OPEN",
 			"-o=json",
 		)
 
@@ -107,7 +105,7 @@ func TestAlerts(t *testing.T) {
 			a.NoError(err)
 			a.Equal(alertID, alert.ID)
 			a.Equal(open, alert.Status)
-			a.Equal(usersWithoutMultiFactorAuth, alert.EventTypeName)
+			a.Equal(dailyBillOverThreshold, alert.EventTypeName)
 		}
 	})
 

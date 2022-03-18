@@ -95,7 +95,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		if opts.loginOnly {
 			return nil
 		}
-		return opts.configureProfile()
+		return opts.configureProfile(ctx)
 	}
 
 	if err := opts.oauthFlow(ctx); err != nil {
@@ -111,14 +111,13 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return opts.config.Save()
 	}
 
+	return opts.configureProfile(ctx)
+}
+
+func (opts *loginOpts) configureProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
-
-	return opts.configureProfile()
-}
-
-func (opts *loginOpts) configureProfile() error {
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
 	if err := opts.AskOrg(); err != nil {

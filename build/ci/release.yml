@@ -1218,8 +1218,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.17"
-      go_bin: "c:\\golang\\go1.17/bin"
+      go_root: "c:\\golang\\go1.18"
+      go_bin: "c:\\golang\\go1.18/bin"
       tool_name: "mongocli"
     tasks:
       - name: package_msi
@@ -1228,8 +1228,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.17"
-      go_bin: "c:\\golang\\go1.17/bin"
+      go_root: "c:\\golang\\go1.18"
+      go_bin: "c:\\golang\\go1.18/bin"
       tool_name: "atlascli"
     tasks:
       - name: package_msi
@@ -1238,8 +1238,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
       goreleaser_file: ".mongocli.goreleaser.yml"
       package_name: "mongocli"
@@ -1251,8 +1251,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
       goreleaser_file: ".atlascli.goreleaser.yml"
       package_name: "mongodb-atlas-cli"
@@ -1264,8 +1264,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
       server_version: "4.4.0-rc3"
     tasks:
       - name: .push
@@ -1276,8 +1276,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.17"
-      go_bin: "c:\\golang\\go1.17/bin"
+      go_root: "c:\\golang\\go1.18"
+      go_bin: "c:\\golang\\go1.18/bin"
       tool_name: "mongocli"
     tasks:
       - name: release_msi
@@ -1286,8 +1286,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: release_mongocli
   - name: release_atlascli_github
@@ -1295,8 +1295,8 @@ buildvariants:
     run_on:
       - macos-1014-codesign
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: release_atlascli
   - name: release_atlascli_msi
@@ -1304,8 +1304,8 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      go_root: "c:\\golang\\go1.17"
-      go_bin: "c:\\golang\\go1.17/bin"
+      go_root: "c:\\golang\\go1.18"
+      go_bin: "c:\\golang\\go1.18/bin"
       tool_name: "atlascli"
     tasks:
       - name: release_msi

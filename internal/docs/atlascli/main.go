@@ -18,10 +18,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/config"
-
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/cobra"
 )
 

@@ -88,6 +88,16 @@ func (opts *loginOpts) SetOAuthUpAccess() {
 }
 
 func (opts *loginOpts) Run(ctx context.Context) error {
+	// Check if user has already logged in
+	if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
+		_, _ = fmt.Fprintf(opts.OutWriter, "You're already logged in as %s.\n", s)
+
+		if opts.loginOnly {
+			return nil
+		}
+		return opts.configureProfile()
+	}
+
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -100,9 +110,15 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if opts.loginOnly {
 		return opts.config.Save()
 	}
+
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
+
+	return opts.configureProfile()
+}
+
+func (opts *loginOpts) configureProfile() error {
 	_, _ = fmt.Fprint(opts.OutWriter, "Press Enter to continue your profile configuration")
 	_, _ = fmt.Scanln()
 	if err := opts.AskOrg(); err != nil {
@@ -126,7 +142,9 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
+
 	return nil
 }
 
@@ -188,11 +206,6 @@ func LoginBuilder() *cobra.Command {
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Check if user has already logged in
-			if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
-				_, _ = fmt.Fprintf(opts.OutWriter, "You're already logged in as %s.\n", s)
-				return nil
-			}
 			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,

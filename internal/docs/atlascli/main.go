@@ -18,6 +18,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/mongodb/mongocli/internal/config"
+
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/spf13/cobra"
@@ -31,6 +33,8 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func main() {
+	config.ToolName = config.AtlasCLI
+
 	if err := os.RemoveAll("./docs/atlascli/command"); err != nil {
 		log.Fatal(err)
 	}

@@ -44,6 +44,8 @@ func TestAlerts(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
+			"--status",
+			"OPEN",
 			"-o=json",
 		)
 

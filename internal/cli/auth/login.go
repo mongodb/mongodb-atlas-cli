@@ -177,22 +177,34 @@ func LoginBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
+			// Check if user has already logged in
+			if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
+				return nil
+			}
+
 			if config.OpsManagerURL() != "" {
 				opts.OpsManagerURL = config.OpsManagerURL()
 			}
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Check if user has already logged in
+			if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
+				_, _ = fmt.Fprintf(opts.OutWriter, "You're already logged in as %s.\n", s)
+				return nil
+			}
 			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}
 
+	if config.ToolName == config.MongoCLI {
+		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
+	}
+
 	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.loginOnly, "loginOnly", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkHidden("loginOnly")
 	return cmd
 }
 

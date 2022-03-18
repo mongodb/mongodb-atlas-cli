@@ -44,6 +44,10 @@ Options
      - 
      - false
      - help for login
+   * - --loginOnly
+     - 
+     - false
+     - Skip profile configuration.
    * - --noBrowser
      - 
      - false

@@ -92,7 +92,7 @@ func Builder(profile *string) *cobra.Command {
 				config.SetService(config.CloudService)
 			}
 
-			if skipValidateCredentials(cmd) {
+			if shouldCheckCredentials(cmd) {
 				return nil
 			}
 
@@ -179,7 +179,7 @@ Go version: %s
    compiler: %s
 `
 
-func skipValidateCredentials(cmd *cobra.Command) bool {
+func shouldCheckCredentials(cmd *cobra.Command) bool {
 	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
 		return true
 	}

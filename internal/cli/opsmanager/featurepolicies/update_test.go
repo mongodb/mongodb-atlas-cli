@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/spf13/afero"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -33,18 +34,71 @@ func TestUpdate_Run(t *testing.T) {
 
 	expected := &opsmngr.FeaturePolicy{}
 
-	opts := &UpdateOpts{
-		store: mockStore,
-	}
+	t.Run("flags", func(t *testing.T) {
+		opts := &UpdateOpts{
+			store: mockStore,
+		}
+		p, _ := opts.newFeatureControl()
+		mockStore.
+			EXPECT().UpdateFeatureControlPolicy(opts.ConfigProjectID(), p).
+			Return(expected, nil).
+			Times(1)
 
-	mockStore.
-		EXPECT().UpdateFeatureControlPolicy(opts.ConfigProjectID(), opts.newFeatureControl()).
-		Return(expected, nil).
-		Times(1)
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+	t.Run("file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		fileYML := `{
+    "created":"2022-03-15T15:03:32Z",
+    "externalManagementSystem": {
+        "name": "mongodb-enterprise-operator",
+        "version": ""
+    },
+    "policies": [
+        {
+            "policy": "DISABLE_SET_MONGOD_VERSION"
+        },
+        {
+            "disabledParams": [],
+            "policy": "EXTERNALLY_MANAGED_LOCK"
+        },
+        {
+            "policy": "DISABLE_AUTHENTICATION_MECHANISMS",
+            "disabledParams": []
+        },
+        {
+            "policy": "DISABLE_SET_MONGOD_CONFIG",
+            "disabledParams": [
+                "syslog.verbosity",
+                "net.tls.mode",
+                "syslog.timeStampFormat",
+                "net.tls.disabledProtocols",
+                "setParameter.suppressNoTLSPeerCertificateWarning"
+            ]
+        }
+    ]
+}`
+		fileName := "atlas_cluster_create_test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+		opts := &UpdateOpts{
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
+		}
+
+		p, _ := opts.newFeatureControl()
+		mockStore.
+			EXPECT().UpdateFeatureControlPolicy(opts.ConfigProjectID(), p).
+			Return(expected, nil).
+			Times(1)
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
 }
 
 func TestUpdateBuilder(t *testing.T) {

@@ -339,3 +339,7 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `livemigrations validation create`            |           |           |           | Y         |       |       |
 | `livemigrations create`                       |           |           |           | Y         |       |       |
 | `livemigrations cutover`                      | N         |           |           | Y         | N     | N     |
+| `completion bash`                             | Y         | Y         | Y         | Y         | Y     | Y     |
+| `completion zsh`                              | Y         | Y         | Y         | Y         | Y     | Y     |
+| `completion fish`                             | Y         | Y         | Y         | Y         | Y     | Y     |
+| `completion powershell`                       | Y         | Y         | Y         | Y         | Y     | Y     |

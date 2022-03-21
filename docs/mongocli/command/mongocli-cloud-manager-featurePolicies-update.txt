@@ -14,6 +14,8 @@ mongocli cloud-manager featurePolicies update
 
 Update feature control policies for your project.
 
+Feature Control Policies allow you to enable or disable certain MongoDB features based on your site-specific needs.
+
 Syntax
 ------
 
@@ -32,13 +34,17 @@ Options
      - Type
      - Required
      - Description
+   * - -f, --file
+     - string
+     - false
+     - File name to use, optional file with a json policy configuration.
    * - -h, --help
      - 
      - false
      - help for update
    * - --name
      - string
-     - true
+     - false
      - Identifying label for the external system that manages this Ops Manager Project.
    * - -o, --output
      - string
@@ -72,4 +78,16 @@ Inherited Options
      - string
      - false
      - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+ Disable user management for a project:
+   $ mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
+
+   Update policies from a JSON configuration file:
+   $ mongocli atlas featurePolicies update --projectId <projectId> --file <path/to/file.json>
+
 

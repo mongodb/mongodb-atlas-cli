@@ -351,7 +351,7 @@ func Builder() *cobra.Command {
 		Short: "Create and access an Atlas Cluster.",
 		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.PublicAPIKey() == "" || config.PrivateAPIKey() == "" {
+			if config.AccessToken() == "" && (config.PublicAPIKey() == "" || config.PrivateAPIKey() == "") {
 				// no profile set
 				return askAtlasAccountAndProfile()
 			}

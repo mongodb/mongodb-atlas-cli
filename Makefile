@@ -1,11 +1,11 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.43.0
+GOLANGCI_VERSION=v1.45.0
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
+MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
@@ -13,15 +13,13 @@ MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
-ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=committerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
+ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
-
 
 ifeq ($(ATLAS_VERSION),) # use git describe if we don't have an atlascli tag
 	ATLAS_VERSION=$(shell git describe --always --tags | cut -d "v" -f 2)
 endif
-
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
 MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION}
@@ -74,13 +72,11 @@ test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter
-	@echo "==> Linting all packages..."
-	golangci-lint run --timeout 5m
+	@scripts/lint.sh
 
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors
-	@echo "==> Fixing lint errors"
-	golangci-lint run --fix --timeout 5m
+	@scripts/fix-lint.sh
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters

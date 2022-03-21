@@ -15,10 +15,11 @@
 package atlas
 
 import (
-	"context"
 	"fmt"
+	"io"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -46,8 +47,6 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalaccesslists"
-	"github.com/mongodb/mongocli/internal/cli/iam/globalapikeys"
 	"github.com/mongodb/mongocli/internal/cli/iam/organizations"
 	"github.com/mongodb/mongocli/internal/cli/iam/projects"
 	"github.com/mongodb/mongocli/internal/cli/iam/teams"
@@ -55,17 +54,22 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/performanceadvisor"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/latestrelease"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
 const atlas = "atlas"
 
-type BuilderOpts struct {
-	store latestrelease.Printer
+type Notifier struct {
+	currentVersion string
+	finder         latestrelease.VersionFinder
+	filesystem     afero.Fs
+	writer         io.Writer
 }
 
 // Builder conditionally adds children commands as needed.
@@ -88,33 +92,31 @@ func Builder(profile *string) *cobra.Command {
 				config.SetService(config.CloudService)
 			}
 
-			if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
-				return nil
+			if shouldCheckCredentials(cmd) {
+				return validate.Credentials()
 			}
 
-			if cmd.Name() == "quickstart" { // quickstart has its own check
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
-				return nil
-			}
-
-			return validate.Credentials()
+			return nil
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+			// we don't run the release alert feature on the completion command
+			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
+				return
+			}
+
 			w := cmd.ErrOrStderr()
+			fs := afero.NewOsFs()
+			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())
 
-			if !config.SkipUpdateCheck() && cli.IsTerminal(w) {
-				opts := &BuilderOpts{
-					store: latestrelease.NewPrinter(context.Background()),
-				}
+			notifier := &Notifier{
+				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				finder:         f,
+				filesystem:     fs,
+				writer:         w,
+			}
 
-				_ = opts.store.PrintNewVersionAvailable(w, version.Version, config.ToolName, config.BinName())
+			if check, isHb := notifier.shouldCheck(); check {
+				_ = notifier.notifyIfApplicable(isHb)
 			}
 		},
 	}
@@ -133,9 +135,7 @@ func Builder(profile *string) *cobra.Command {
 		auth.Builder(),
 		quickstart.Builder(),
 		projects.Builder(),
-		organizations.Builder(),
-		globalapikeys.Builder(),
-		globalaccesslists.Builder(),
+		organizations.AtlasCLIBuilder(),
 		users.Builder(),
 		teams.Builder(),
 		clusters.Builder(),
@@ -179,6 +179,30 @@ Go version: %s
    compiler: %s
 `
 
+func shouldCheckCredentials(cmd *cobra.Command) bool {
+	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
+		return false
+	}
+
+	if cmd.Name() == "quickstart" { // quickstart has its own check
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
+		return false
+	}
+
+	return true
+}
+
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
 		config.ToolName,
@@ -188,4 +212,50 @@ func formattedVersion() string {
 		runtime.GOOS,
 		runtime.GOARCH,
 		runtime.Compiler)
+}
+
+func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {
+	shouldCheck = !config.SkipUpdateCheck() && cli.IsTerminal(n.writer)
+	isHb = false
+
+	if !shouldCheck {
+		return shouldCheck, isHb
+	}
+
+	c, _ := homebrew.NewChecker(n.filesystem)
+	isHb = c.IsHomebrew()
+
+	return shouldCheck, isHb
+}
+
+func (n *Notifier) notifyIfApplicable(isHb bool) error {
+	release, err := n.finder.Find()
+	if err != nil || release == nil {
+		return err
+	}
+
+	// homebrew is an external dependency we give them 24h to have the cli available there
+	if isHb && !isAtLeast24HoursPast(release.PublishedAt) {
+		return nil
+	}
+
+	var upgradeInstructions string
+	if isHb {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
+	} else {
+		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, config.ToolName)
+	}
+
+	newVersionTemplate := `
+A new version of %s is available '%s'!
+%s
+
+To disable this alert, run "%s config set skip_update_check true".
+`
+	_, err = fmt.Fprintf(n.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
+	return err
+}
+
+func isAtLeast24HoursPast(t time.Time) bool {
+	return !t.IsZero() && time.Since(t) >= time.Hour*24
 }

@@ -85,6 +85,33 @@ Enter [?] on any option to get help.
 	return nil
 }
 
+func (opts *opts) validateService() error {
+	if opts.Service == config.CloudService {
+		return nil
+	}
+
+	if opts.Service == "gov" {
+		opts.Service = config.CloudGovService
+		return nil
+	}
+
+	if opts.Service == "cloudmanager" || opts.Service == "cm" {
+		opts.Service = config.CloudManagerService
+		return nil
+	}
+
+	if opts.Service == "opsmanager" || opts.Service == "om" {
+		opts.Service = config.OpsManagerService
+		return nil
+	}
+
+	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService && opts.Service != config.CloudGovService {
+		return fmt.Errorf("the '%s' service is not supported. Please run 'mongocli config --help' to see the list of available services", opts.Service)
+	}
+
+	return nil
+}
+
 func Builder() *cobra.Command {
 	opt := &opts{}
 	cmd := &cobra.Command{
@@ -102,16 +129,23 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 
   To configure the tool to work with Atlas for Government
   $ mongocli config --service cloudgov
+  $ mongocli config --service gov
   
   To configure the tool to work with Cloud Manager
   $ mongocli config --service cloud-manager
+  $ mongocli config --service cloudmanager
+  $ mongocli config --service cm
 
   To configure the tool to work with Ops Manager
   $ mongocli config --service ops-manager
+  $ mongocli config --service opsmanager
+  $ mongocli config --service om
 `,
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opt.OutWriter = cmd.OutOrStdout()
+			return opt.validateService()
 		},
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opt.Run(cmd.Context())
 		},

@@ -17,14 +17,14 @@ require (
 	github.com/openlyinc/pointy v1.1.2
 	github.com/pelletier/go-toml v1.9.4
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
-	github.com/spf13/afero v1.8.1
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/afero v1.8.2
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.1.3
 	go.mongodb.org/atlas v0.15.0
-	go.mongodb.org/ops-manager v0.37.0
+	go.mongodb.org/ops-manager v0.38.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -47,7 +47,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	github.com/xdg-go/stringprep v1.0.2 // indirect
+	github.com/xdg-go/stringprep v1.0.3 // indirect
 	go.mongodb.org/mongo-driver v1.8.4
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect

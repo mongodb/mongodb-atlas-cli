@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright 2022 MongoDB Inc
 #
@@ -13,12 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -Eeou pipefail
 
-VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+STAGED_GO_FILES=$(git diff --name-only | grep ".go$" | grep -v "mock")
 
-if [[ -z "${VERSION}" ]]; then
-    VERSION=$(git describe | cut -d "v" -f 2)
-fi
-
-go run ../internal/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
+echo "==> Linting changed go files..."
+for FILE in ${STAGED_GO_FILES}; do
+    golangci-lint run --timeout 5m "${FILE}"
+done
+echo "==> Done..."

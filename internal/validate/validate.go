@@ -106,7 +106,7 @@ func Credentials() error {
 
 	configCMD := "config"
 	if config.BinName() == "atlas" {
-		configCMD += "init"
+		configCMD += " init"
 	}
 	return fmt.Errorf(
 		"%w\n\nTo set credentials, run: %s %s",

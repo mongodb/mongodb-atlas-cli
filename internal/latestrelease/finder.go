@@ -15,101 +15,136 @@
 package latestrelease
 
 import (
-	"context"
 	"strings"
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/google/go-github/v42/github"
+	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
-
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongocli/internal/latestrelease VersionFinder
-
-type VersionFinder interface {
-	HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error)
-}
-
-func NewVersionFinder(ctx context.Context, re version.ReleaseVersionDescriber) VersionFinder {
-	return &latestReleaseVersionFinder{c: ctx, r: re}
-}
-
-type latestReleaseVersionFinder struct {
-	c context.Context
-	r version.ReleaseVersionDescriber
-}
-
-func versionFromTag(release *github.RepositoryRelease, toolName string) string {
-	if prefix := toolName + "/"; strings.HasPrefix(release.GetTagName(), prefix) {
-		return strings.ReplaceAll(release.GetTagName(), prefix, "")
-	}
-	return release.GetTagName()
-}
 
 const (
-	mongoCLI = "mongocli"
-	atlasCLI = "atlascli"
+	stateFileSubPath = "/rstate.yaml"
+	minPageSize      = 5
 )
 
+// ReleaseInformation Release information.
+type ReleaseInformation struct {
+	CheckedAt   time.Time `yaml:"saved_at"`
+	PublishedAt time.Time `yaml:"released_at"`
+	Version     string    `yaml:"latest_version"`
+}
+
+type VersionFinder interface {
+	Find() (releaseInfo *ReleaseInformation, err error)
+}
+
+func NewVersionFinder(fs afero.Fs, d version.ReleaseVersionDescriber) (VersionFinder, error) {
+	filePath, err := config.Path(stateFileSubPath)
+	if err != nil {
+		return nil, err
+	}
+
+	return &finder{
+		describer:      d,
+		filesystem:     fs,
+		tool:           config.ToolName,
+		currentVersion: VersionFromTag(version.Version, config.ToolName),
+		path:           filePath,
+	}, nil
+}
+
+type finder struct {
+	describer      version.ReleaseVersionDescriber
+	filesystem     afero.Fs
+	tool           string
+	currentVersion string
+	path           string
+}
+
+func VersionFromTag(ver, toolName string) string {
+	if prefix := toolName + "/"; strings.HasPrefix(ver, prefix) {
+		return strings.ReplaceAll(ver, prefix, "")
+	}
+	return ver
+}
+
 func isValidTagForTool(tag, tool string) bool {
-	if tool == mongoCLI {
-		return !strings.Contains(tag, atlasCLI)
+	if tool == config.MongoCLI {
+		return !strings.Contains(tag, config.AtlasCLI)
 	}
 	return strings.Contains(tag, tool)
 }
 
-// ReleaseInformation Release information.
-type ReleaseInformation struct {
-	Version     string
-	PublishedAt time.Time
-}
-
-func (s *latestReleaseVersionFinder) searchLatestVersionPerTool(currentVersion *semver.Version, toolName string) (bool, *ReleaseInformation, error) {
-	release, err := s.r.LatestWithCriteria(minPageSize, isValidTagForTool, toolName)
-
+func (f *finder) find() (*ReleaseInformation, error) {
+	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 	if err != nil || release == nil {
-		return false, nil, err
+		return nil, err
 	}
 
-	v, err := semver.NewVersion(versionFromTag(release, toolName))
-
-	if err != nil {
-		return false, nil, err
+	latestFoundRelease := &ReleaseInformation{
+		Version:     VersionFromTag(release.GetTagName(), f.tool),
+		PublishedAt: release.GetPublishedAt().Time,
+		CheckedAt:   time.Now(),
 	}
+	_ = f.save(latestFoundRelease)
 
-	if currentVersion.Compare(v) < 0 {
-		return true, &ReleaseInformation{
-			Version:     v.Original(),
-			PublishedAt: release.GetPublishedAt().Time,
-		}, nil
-	}
-	return false, nil, nil
+	return latestFoundRelease, nil
 }
 
-func (s *latestReleaseVersionFinder) HasNewVersionAvailable(v, tool string) (newVersionAvailable bool, newVersion string, err error) {
-	if v == "" {
-		return false, "", nil
-	}
-	svCurrentVersion, err := semver.NewVersion(v)
-	if err != nil {
-		return false, "", err
-	}
-
-	if svCurrentVersion.Prerelease() != "" { // ignoring prerelease for code changes against master
-		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
-		if err != nil {
-			return false, "", err
+func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
+	if newestRelease, err := f.load(); newestRelease != nil && err == nil {
+		ver, err := semver.NewVersion(newestRelease.Version)
+		if err == nil {
+			return newestRelease, ver, nil
 		}
 	}
 
-	newVersionAvailable, newV, err := s.searchLatestVersionPerTool(svCurrentVersion, tool)
+	newestRelease, err := f.find()
+	if err != nil || newestRelease == nil {
+		return nil, nil, err
+	}
+
+	ver, err := semver.NewVersion(newestRelease.Version)
+	return newestRelease, ver, err
+}
+
+func (f *finder) Find() (releaseInfo *ReleaseInformation, err error) {
+	svCurrentVersion, err := semver.NewVersion(f.currentVersion)
 	if err != nil {
-		return false, "", err
+		return nil, err
 	}
 
-	if newVersionAvailable && (!isHomebrew(tool) || isAtLeast24HoursPast(newV.PublishedAt)) {
-		return newVersionAvailable, newV.Version, nil
+	// ignoring prerelease for code changes against master
+	if svCurrentVersion.Prerelease() != "" {
+		*svCurrentVersion, err = svCurrentVersion.SetPrerelease("")
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return false, "", nil
+	releaseInfo, newestVersion, err := f.loadOrGet()
+	if err != nil || releaseInfo == nil || svCurrentVersion.Compare(newestVersion) >= 0 {
+		return nil, err
+	}
+	return releaseInfo, nil
+}
+
+func (f *finder) load() (*ReleaseInformation, error) {
+	latestReleaseState := new(ReleaseInformation)
+	err := file.Load(f.filesystem, f.path, latestReleaseState)
+	if err != nil {
+		return nil, err
+	}
+
+	if latestReleaseState != nil && time.Since(latestReleaseState.CheckedAt).Hours() < 24 {
+		return latestReleaseState, nil
+	}
+	return nil, nil
+}
+
+func (f *finder) save(ver *ReleaseInformation) error {
+	return file.Save(f.filesystem, f.path, ver)
 }

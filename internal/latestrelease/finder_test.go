@@ -17,35 +17,48 @@
 package latestrelease
 
 import (
-	"context"
 	"fmt"
 	"strings"
 	"testing"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v42/github"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/version"
+	"github.com/spf13/afero"
 )
 
-func TestOutputOpts_HasNewVersionAvailable(t *testing.T) {
+type testCase struct {
+	tool             string
+	currentVersion   string
+	expectNewVersion bool
+	release          *github.RepositoryRelease
+}
+
+func testCases() []testCase {
 	f := false
 	atlasV := "atlascli/v2.0.0"
 	mcliV := "mongocli/v2.0.0"
 	mcliOldV := "v2.0.0"
 
-	tests := []struct {
-		tool             string
-		currentVersion   string
-		version          string
-		expectNewVersion bool
-		release          *github.RepositoryRelease
-	}{
+	tests := []testCase{
 		{
 			tool:             "atlascli",
 			currentVersion:   "v1.0.0",
 			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
+			currentVersion:   "atlascli/v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "atlascli",
+			currentVersion:   "v2.0.0",
+			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
@@ -63,6 +76,18 @@ func TestOutputOpts_HasNewVersionAvailable(t *testing.T) {
 		{
 			tool:             "mongocli",
 			currentVersion:   "v1.0.0",
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "v2.0.0",
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
+		},
+		{
+			tool:             "mongocli",
+			currentVersion:   "mongocli/v1.0.0",
 			expectNewVersion: true,
 			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
 		},
@@ -85,42 +110,44 @@ func TestOutputOpts_HasNewVersionAvailable(t *testing.T) {
 			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
 		},
 	}
+	return tests
+}
 
+func TestOutputOpts_Find_NoCache(t *testing.T) {
+	tests := testCases()
 	for _, tt := range tests {
+		config.ToolName = tt.tool
+		prevVersion := version.Version
+		version.Version = tt.currentVersion
+		t.Cleanup(func() {
+			version.Version = prevVersion
+		})
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
-			prevVersion := version.Version
-			version.Version = tt.currentVersion
-			defer func() {
-				version.Version = prevVersion
-			}()
-
-			currVer, _ := semver.NewVersion(tt.currentVersion)
-			*currVer, _ = currVer.SetPrerelease("")
-
 			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockReleaseVersionDescriber(ctrl)
+			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
 			defer ctrl.Finish()
 
-			mockStore.
+			mockDescriber.
 				EXPECT().
 				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
 				Times(1)
 
-			versionAvailable, newV, err := NewVersionFinder(context.Background(), mockStore).HasNewVersionAvailable(
-				tt.currentVersion,
-				tt.tool,
-			)
-
+			f, err := NewVersionFinder(afero.NewMemMapFs(), mockDescriber)
 			if err != nil {
-				t.Errorf("HasNewVersionAvailable() unexpected error: %v", err)
+				t.Errorf("NewVersionFinder() unexpected error: %v", err)
+			}
+
+			newV, err := f.Find()
+			if err != nil {
+				t.Errorf("Find() unexpected error: %v", err)
 			}
 
 			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
 
-			if versionAvailable && (!tt.expectNewVersion || newV != expectedV) {
+			if newV != nil && (!tt.expectNewVersion || newV.Version != expectedV) {
 				t.Errorf("want: versionAvailable=%v and newV=%v got: versionAvailable=%v and newV=%v.",
-					tt.expectNewVersion, expectedV, versionAvailable, newV)
+					tt.expectNewVersion, expectedV, newV != nil, newV)
 			}
 		})
 	}

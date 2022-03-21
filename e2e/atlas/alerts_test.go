@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	open                        = "OPEN"
-	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open                   = "OPEN"
+	dailyBillOverThreshold = "DAILY_BILL_OVER_THRESHOLD"
 )
 
 func TestAlerts(t *testing.T) {
@@ -39,11 +39,13 @@ func TestAlerts(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	// This test should be run before all other tests to grab an alert ID for all other tests
-	t.Run("List with no status", func(t *testing.T) {
+	// This test should be run before all other tests to grab an alert ID for all others tests
+	t.Run("List with status OPEN", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
+			"--status",
+			"OPEN",
 			"-o=json",
 		)
 
@@ -59,12 +61,10 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("List with status OPEN", func(t *testing.T) {
+	t.Run("List with no status", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
-			"--status",
-			"OPEN",
 			"-o=json",
 		)
 
@@ -84,7 +84,6 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		assert.NoError(t, err, string(resp))
 	})
 
@@ -105,7 +104,7 @@ func TestAlerts(t *testing.T) {
 			a.NoError(err)
 			a.Equal(alertID, alert.ID)
 			a.Equal(open, alert.Status)
-			a.Equal(usersWithoutMultiFactorAuth, alert.EventTypeName)
+			a.Equal(dailyBillOverThreshold, alert.EventTypeName)
 		}
 	})
 

@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.44.2
+GOLANGCI_VERSION=v1.45.0
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
@@ -72,13 +72,11 @@ test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter
-	@echo "==> Linting all packages..."
-	golangci-lint run --timeout 5m
+	@scripts/lint.sh
 
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors
-	@echo "==> Fixing lint errors"
-	golangci-lint run --fix --timeout 5m
+	@scripts/fix-lint.sh
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters

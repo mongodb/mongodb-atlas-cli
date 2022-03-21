@@ -44,17 +44,22 @@ func (opts *DecryptOpts) initFiles() func() error {
 	}
 }
 
+func (opts *DecryptOpts) stdOutMode() bool {
+	return opts.Out == ""
+}
+
 func (opts *DecryptOpts) Run() error {
 	var outWriter io.WriteCloser
-	if len(opts.Out) > 0 {
+
+	if opts.stdOutMode() {
+		outWriter = os.Stdout
+	} else {
 		var err error
 		outWriter, err = opts.NewWriteCloser()
 		if err != nil {
 			return err
 		}
 		defer outWriter.Close()
-	} else {
-		outWriter = os.Stdout
 	}
 
 	inReader, err := opts.Fs.Open(opts.inFileName)
@@ -70,13 +75,13 @@ func (opts *DecryptOpts) Run() error {
 	}
 
 	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil {
-		if len(opts.Out) > 0 {
+		if !opts.stdOutMode() {
 			_ = opts.OnError(outWriter)
 			return err
 		}
 	}
 
-	if len(opts.Out) > 0 {
+	if !opts.stdOutMode() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 

@@ -16,7 +16,7 @@ package decryption
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"io"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -31,7 +31,7 @@ func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 	}
 
 	if n != 1 {
-		return 0, fmt.Errorf("no bytes to read")
+		return 0, errors.New("no bytes to read")
 	}
 
 	c, err := reader.Seek(0, io.SeekStart)
@@ -39,7 +39,7 @@ func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 		return 0, err
 	}
 	if c != 0 {
-		return 0, fmt.Errorf("impossible to seek bytes")
+		return 0, errors.New("impossible to seek bytes")
 	}
 	return b[0], nil
 }

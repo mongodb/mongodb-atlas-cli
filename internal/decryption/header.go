@@ -16,7 +16,7 @@ package decryption
 
 import (
 	"encoding/base64"
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
@@ -64,36 +64,36 @@ func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, e
 
 func validateHeaderFields(logLine *AuditLogLine) error {
 	if logLine.TS == nil {
-		return fmt.Errorf("missing timestamp")
+		return errors.New("missing timestamp")
 	}
 
 	if logLine.Version == nil {
-		return fmt.Errorf("missing version")
+		return errors.New("missing version")
 	}
 
 	if logLine.CompressionMode == nil {
-		return fmt.Errorf("missing compression mode")
+		return errors.New("missing compression mode")
 	}
 
 	c := CompressionMode(*logLine.CompressionMode)
 
 	if c != CompressionModeNone && c != CompressionModeZstd {
-		return fmt.Errorf("invalid compression mode")
+		return errors.New("invalid compression mode")
 	}
 	if logLine.KeyStoreIdentifier.Provider == nil {
-		return fmt.Errorf("missing provider")
+		return errors.New("missing provider")
 	}
 
 	if logLine.EncryptedKey == nil {
-		return fmt.Errorf("missing encrypted key")
+		return errors.New("missing encrypted key")
 	}
 
 	if logLine.MAC == nil {
-		return fmt.Errorf("missing mac")
+		return errors.New("missing mac")
 	}
 
 	if logLine.AuditRecordType != AuditHeaderRecord {
-		return fmt.Errorf("incorrect header record")
+		return errors.New("incorrect header record")
 	}
 
 	return nil

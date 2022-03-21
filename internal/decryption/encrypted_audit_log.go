@@ -15,6 +15,7 @@
 package decryption
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -62,11 +63,11 @@ type AuditLogLine struct {
 
 func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
 	if logLine.AuditRecordType != AuditHeaderRecord {
-		return nil, fmt.Errorf("not a valid header line")
+		return nil, errors.New("not a valid header line")
 	}
 
 	if logLine.KeyStoreIdentifier.Provider == nil {
-		return nil, fmt.Errorf("keyProvider not set")
+		return nil, errors.New("keyProvider not set")
 	}
 
 	switch *logLine.KeyStoreIdentifier.Provider {

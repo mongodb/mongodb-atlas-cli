@@ -33,13 +33,6 @@ type KeyProviderListOpts struct {
 var listTmpl = `{{ range . }}{{ .Provider }}:{{if .Filename}} Filename = {{ .Filename }}{{end}}{{if .UniqueKeyID}} Unique Key ID = "{{ .UniqueKeyID }}"{{end}}{{if .KMIPServerName}} KMIP Server Name = "{{ .KMIPServerName }}"{{end}}{{if .KMIPPort}} KMIP Port = "{{ .KMIPPort }}"{{end}}{{if .KeyWrapMethod}} Key Wrap Method = "{{ .KeyWrapMethod }}"{{end}}
 {{ end }}`
 
-func (opts *KeyProviderListOpts) initStore() func() error {
-	// Keeping for now, not sure if needed
-	return func() error {
-		return nil
-	}
-}
-
 func (opts *KeyProviderListOpts) Run() error {
 	f, err := opts.fs.Open(opts.file)
 	if err != nil {
@@ -66,7 +59,6 @@ func KeyProvidersListBuilder() *cobra.Command {
   $ mongocli ops-manager listKeyProvider --file log.gz`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.initStore(),
 				opts.InitOutput(cmd.OutOrStdout(), listTmpl),
 			)
 		},

@@ -15,13 +15,14 @@
 package logs
 
 import (
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func KeyProvidersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "keyProviders",
-		Aliases: []string{"keys"},
+		Aliases: cli.GenerateAliases("keyProviders", "keys"),
 		Short:   "Manage your key collections.",
 	}
 

@@ -37,19 +37,12 @@ type DecryptOpts struct {
 	localKeyFileName              string
 }
 
-func (opts *DecryptOpts) initFiles() func() error {
-	// Validate the provided files can be open
-	return func() error {
-		return nil
-	}
-}
-
 func (opts *DecryptOpts) stdOutMode() bool {
 	return opts.Out == ""
 }
 
 func (opts *DecryptOpts) Run() error {
-	var outWriter io.WriteCloser
+	var outWriter io.WriteCloser = os.Stdout
 
 	if opts.stdOutMode() {
 		outWriter = os.Stdout
@@ -74,11 +67,9 @@ func (opts *DecryptOpts) Run() error {
 		KMIPClientCertificateFileName: opts.kmipClientCertificateFileName,
 	}
 
-	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil {
-		if !opts.stdOutMode() {
-			_ = opts.OnError(outWriter)
-			return err
-		}
+	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.stdOutMode() {
+		_ = opts.OnError(outWriter)
+		return err
 	}
 
 	if !opts.stdOutMode() {
@@ -98,9 +89,6 @@ func DecryptBuilder() *cobra.Command {
 		Example: `
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(opts.initFiles())
-		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

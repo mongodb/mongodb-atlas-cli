@@ -50,7 +50,7 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error
 		return err
 	}
 
-	output := buildOutput(out)
+	output := NewAuditLogOutput(out)
 	var decryptSection *DecryptSection
 
 	idx := 0

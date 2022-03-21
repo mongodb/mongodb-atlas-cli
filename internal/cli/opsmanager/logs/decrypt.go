@@ -16,6 +16,8 @@ package logs
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/decryption"
@@ -42,12 +44,23 @@ func (opts *DecryptOpts) initFiles() func() error {
 	}
 }
 
+func (opts *DecryptOpts) stdOutMode() bool {
+	return opts.Out == ""
+}
+
 func (opts *DecryptOpts) Run() error {
-	outWriter, err := opts.NewWriteCloser()
-	if err != nil {
-		return err
+	var outWriter io.WriteCloser
+
+	if opts.stdOutMode() {
+		outWriter = os.Stdout
+	} else {
+		var err error
+		outWriter, err = opts.NewWriteCloser()
+		if err != nil {
+			return err
+		}
+		defer outWriter.Close()
 	}
-	defer outWriter.Close()
 
 	inReader, err := opts.Fs.Open(opts.inFileName)
 	if err != nil {
@@ -62,11 +75,13 @@ func (opts *DecryptOpts) Run() error {
 	}
 
 	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil {
-		_ = opts.OnError(outWriter)
-		return err
+		if !opts.stdOutMode() {
+			_ = opts.OnError(outWriter)
+			return err
+		}
 	}
 
-	if opts.Out != "/dev/stdout" {
+	if !opts.stdOutMode() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 

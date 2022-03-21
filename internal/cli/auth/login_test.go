@@ -116,3 +116,42 @@ Your code will expire after 5 minutes.
 Successfully logged in as test@10gen.com.
 `, buf.String())
 }
+
+func Test_loginOpts_Run_AlreadyLoggedIn(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockAuthenticator(ctrl)
+	mockConfig := mocks.NewMockLoginConfig(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	defer ctrl.Finish()
+	buf := new(bytes.Buffer)
+
+	opts := &loginOpts{
+		flow:      mockFlow,
+		config:    mockConfig,
+		noBrowser: true,
+		loginOnly: true,
+	}
+	opts.OutWriter = buf
+	opts.Store = mockStore
+	ctx := context.TODO()
+
+	mockFlow.
+		EXPECT().
+		RequestCode(ctx).
+		Return(nil, nil, nil).
+		Times(0)
+
+	mockConfig.EXPECT().Set("service", "cloud").Times(0)
+	mockConfig.EXPECT().Set("access_token", "asdf").Times(0)
+	mockConfig.EXPECT().Set("refresh_token", "querty").Times(0)
+	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(0)
+	expectedOrgs := &atlas.Organizations{}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
+	expectedProjects := &atlas.Projects{}
+	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
+	require.NoError(t, opts.Run(ctx))
+	assert.Equal(t, `You're already logged in as test@10gen.com.
+`, buf.String())
+}

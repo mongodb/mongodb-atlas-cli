@@ -119,9 +119,9 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 		config.ToolName = tt.tool
 		prevVersion := version.Version
 		version.Version = tt.currentVersion
-		defer func() {
+		t.Cleanup(func() {
 			version.Version = prevVersion
-		}()
+		})
 		t.Run(fmt.Sprintf("%v / %v", tt.currentVersion, tt.release.GetTagName()), func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
@@ -133,12 +133,12 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 				Return(tt.release, nil).
 				Times(1)
 
-			finder, err := NewVersionFinder(afero.NewMemMapFs(), mockDescriber)
+			f, err := NewVersionFinder(afero.NewMemMapFs(), mockDescriber)
 			if err != nil {
 				t.Errorf("NewVersionFinder() unexpected error: %v", err)
 			}
 
-			newV, err := finder.Find()
+			newV, err := f.Find()
 			if err != nil {
 				t.Errorf("Find() unexpected error: %v", err)
 			}

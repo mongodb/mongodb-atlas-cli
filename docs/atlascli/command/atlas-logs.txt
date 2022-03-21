@@ -49,15 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-logs-decrypt` - Decrypts a log file with the provided local key file or KMIP files.
 * :ref:`atlas-logs-download` - Download a host mongodb logs.
-* :ref:`atlas-logs-keyProviders` - Manage your key collections.
 
 
 .. toctree::
    :titlesonly:
 
-   decrypt </command/atlas-logs-decrypt>
    download </command/atlas-logs-download>
-   keyProviders </command/atlas-logs-keyProviders>
 

@@ -93,10 +93,10 @@ func Builder(profile *string) *cobra.Command {
 			}
 
 			if shouldCheckCredentials(cmd) {
-				return nil
+				return validate.Credentials()
 			}
 
-			return validate.Credentials()
+			return nil
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			// we don't run the release alert feature on the completion command
@@ -181,26 +181,26 @@ Go version: %s
 
 func shouldCheckCredentials(cmd *cobra.Command) bool {
 	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
-		return true
+		return false
 	}
 
 	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
-		return true
+		return false
 	}
 
 	if cmd.Name() == "quickstart" { // quickstart has its own check
-		return true
+		return false
 	}
 
 	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
-		return true
+		return false
 	}
 
 	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
-		return true
+		return false
 	}
 
-	return false
+	return true
 }
 
 func formattedVersion() string {

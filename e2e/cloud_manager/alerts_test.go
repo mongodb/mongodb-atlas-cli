@@ -28,8 +28,7 @@ import (
 )
 
 const (
-	open                        = "OPEN"
-	usersWithoutMultiFactorAuth = "USERS_WITHOUT_MULTI_FACTOR_AUTH"
+	open = "OPEN"
 )
 
 func TestAlerts(t *testing.T) {
@@ -40,11 +39,13 @@ func TestAlerts(t *testing.T) {
 
 	var alertID string
 
-	t.Run("List with no status", func(t *testing.T) {
+	t.Run("List with status OPEN", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
 			"list",
+			"--status",
+			open,
 			"-o=json",
 		)
 
@@ -56,7 +57,7 @@ func TestAlerts(t *testing.T) {
 		}
 
 		var alerts mongodbatlas.AlertsResponse
-		if err = json.Unmarshal(resp, &alerts); err != nil {
+		if err := json.Unmarshal(resp, &alerts); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
@@ -94,19 +95,13 @@ func TestAlerts(t *testing.T) {
 		if alert.Status != open {
 			t.Errorf("got=%#v\nwant=%#v\n", alert.Status, open)
 		}
-
-		if alert.EventTypeName != usersWithoutMultiFactorAuth {
-			t.Errorf("got=%#v\nwant=%#v\n", alert.EventTypeName, usersWithoutMultiFactorAuth)
-		}
 	})
 
-	t.Run("List with status OPEN", func(t *testing.T) {
+	t.Run("List with no status", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			entity,
 			alertsEntity,
 			"list",
-			"--status",
-			open,
 			"-o=json",
 		)
 
@@ -118,7 +113,7 @@ func TestAlerts(t *testing.T) {
 		}
 
 		var alerts mongodbatlas.AlertsResponse
-		if err := json.Unmarshal(resp, &alerts); err != nil {
+		if err = json.Unmarshal(resp, &alerts); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 	})

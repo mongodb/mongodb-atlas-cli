@@ -28,8 +28,7 @@ import (
 )
 
 const (
-	open                   = "OPEN"
-	dailyBillOverThreshold = "DAILY_BILL_OVER_THRESHOLD"
+	open = "OPEN"
 )
 
 func TestAlerts(t *testing.T) {
@@ -104,7 +103,6 @@ func TestAlerts(t *testing.T) {
 			a.NoError(err)
 			a.Equal(alertID, alert.ID)
 			a.Equal(open, alert.Status)
-			a.Equal(dailyBillOverThreshold, alert.EventTypeName)
 		}
 	})
 

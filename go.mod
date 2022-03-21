@@ -40,7 +40,7 @@ require (
 	github.com/klauspost/compress v1.15.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
+	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
@@ -57,4 +57,15 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-require github.com/go-stack/stack v1.8.0 // indirect
+require (
+	github.com/ansel1/merry v1.5.1 // indirect
+	github.com/gemalto/flume v0.12.0 // indirect
+	github.com/gemalto/kmip-go v0.0.6-0.20210426170211-84e83580888d
+	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/google/uuid v1.1.2 // indirect
+	github.com/pkg/errors v0.9.1
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.17.0 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+)

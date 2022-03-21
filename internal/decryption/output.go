@@ -28,7 +28,7 @@ type AuditLogOutput interface {
 	LogRecord(lineNb int, logRecord interface{}) error
 }
 
-type auditLogOutputImpl struct {
+type auditLogOutputWriter struct {
 	out io.Writer
 }
 
@@ -59,12 +59,12 @@ func (e AuditLogError) Error() string {
 }
 
 func NewAuditLogOutput(out io.Writer) AuditLogOutput {
-	return &auditLogOutputImpl{
+	return &auditLogOutputWriter{
 		out: out,
 	}
 }
 
-func (l *auditLogOutputImpl) writeRecord(value interface{}) error {
+func (l *auditLogOutputWriter) writeRecord(value interface{}) error {
 	jsonVal, err := bson.MarshalExtJSON(value, false, false)
 	if err != nil {
 		return err
@@ -78,7 +78,7 @@ func (l *auditLogOutputImpl) writeRecord(value interface{}) error {
 	return err
 }
 
-func (l *auditLogOutputImpl) Warningf(lineNb int, format string, a ...interface{}) error {
+func (l *auditLogOutputWriter) Warningf(lineNb int, format string, a ...interface{}) error {
 	e := AuditLogError{
 		Level: AuditLogErrorLevelWarning,
 		Line:  lineNb,
@@ -88,7 +88,7 @@ func (l *auditLogOutputImpl) Warningf(lineNb int, format string, a ...interface{
 	return l.writeRecord(e)
 }
 
-func (l *auditLogOutputImpl) Error(lineNb int, err error) error {
+func (l *auditLogOutputWriter) Error(lineNb int, err error) error {
 	e := AuditLogError{
 		Level: AuditLogErrorLevelError,
 		Line:  lineNb,
@@ -98,10 +98,10 @@ func (l *auditLogOutputImpl) Error(lineNb int, err error) error {
 	return l.writeRecord(e)
 }
 
-func (l *auditLogOutputImpl) Errorf(lineNb int, format string, a ...interface{}) error {
+func (l *auditLogOutputWriter) Errorf(lineNb int, format string, a ...interface{}) error {
 	return l.Error(lineNb, fmt.Errorf(format, a...))
 }
 
-func (l *auditLogOutputImpl) LogRecord(_ int, logRecord interface{}) error {
+func (l *auditLogOutputWriter) LogRecord(_ int, logRecord interface{}) error {
 	return l.writeRecord(logRecord)
 }

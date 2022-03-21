@@ -272,7 +272,7 @@ const (
 	Gov                                      = "gov"                             // Gov flag
 	Version                                  = "version"                         // Version flag
 	LocalKeyFile                             = "localKeyFile"                    // LocalKeyFile flag
-	KMIPServerCAFile                         = "kmipServerCAFile"                // KMIPServerCAFile flag
+	KMIPServerCAFile                         = "kimipServerCAFile"               // KMIPServerCAFile flag
 	KMIPClientCertificateFile                = "kmipClientCertificateFile"       // KMIPClientCertificateFile flag
 	GCPServiceAccountKey                     = "gcpServiceAccountKey"            // GCPServiceAccountKey flag
 	AzureClientID                            = "azureClientId"                   // AzureClientID flag

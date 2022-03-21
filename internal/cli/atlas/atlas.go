@@ -86,7 +86,7 @@ func Builder() *cobra.Command {
 		events.Builder(),
 		metrics.Builder(),
 		performanceadvisor.Builder(),
-		logs.MongoCLIBuilder(),
+		logs.Builder(),
 		processes.Builder(),
 		privateendpoints.Builder(),
 		networking.Builder(),

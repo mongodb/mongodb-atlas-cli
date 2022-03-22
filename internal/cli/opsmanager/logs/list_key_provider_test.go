@@ -21,8 +21,22 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 	"github.com/spf13/afero"
 )
+
+func TestListKeyProviderBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		KeyProvidersListBuilder(),
+		0,
+		[]string{
+			flag.File,
+			flag.Output,
+		},
+	)
+}
 
 func TestKeyProviderListOpts_Run(t *testing.T) {
 	fileJSON := []byte(`{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"local","filename":"localKey"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}

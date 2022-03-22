@@ -93,7 +93,7 @@ func ObjectID(s string) error {
 	return nil
 }
 
-var ErrMissingCredentials = errors.New("this actions requires authentication")
+var ErrMissingCredentials = errors.New("this action requires authentication")
 
 // Credentials validates public and private API keys have been set.
 func Credentials() error {

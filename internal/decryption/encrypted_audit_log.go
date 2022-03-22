@@ -26,28 +26,28 @@ type AuditRecordType string
 type AuditLogFormat string
 
 type AuditLogLineKeyStoreIdentifier struct {
-	Provider *keyproviders.KeyStoreProvider
+	Provider *keyproviders.KeyStoreProvider `json:"provider,omitempty"`
 	// localKey
-	Filename *string
+	Filename *string `json:"filename,omitempty"`
 	// kmip
-	UniqueKeyID    *string
-	KMIPServerName *string
-	KMIPPort       *string
-	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod
+	UniqueKeyID    *string                         `json:"uniqueKeyID,omitempty"`
+	KMIPServerName *string                         `json:"kmipServerName,omitempty"`
+	KMIPPort       *string                         `json:"kmipPort,omitempty"`
+	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
 	// aws
-	Key      *string
-	Region   *string
-	Endpoint *string
+	Key      *string `json:"key,omitempty"`
+	Region   *string `json:"region,omitempty"`
+	Endpoint *string `json:"endpoint,omitempty"`
 	// azure & gcp
-	KeyName *string
+	KeyName *string `json:"keyName,omitempty"`
 	// azure
-	Environment      *string
-	KeyVaultEndpoint *string
-	KeyVersion       *string
+	Environment      *string `json:"environment,omitempty"`
+	KeyVaultEndpoint *string `json:"keyVaultEndpoint,omitempty"`
+	KeyVersion       *string `json:"keyVersion,omitempty"`
 	// gcp
-	ProjectID *string
-	Location  *string
-	KeyRing   *string
+	ProjectID *string `json:"projectId,omitempty"`
+	Location  *string `json:"location,omitempty"`
+	KeyRing   *string `json:"keyRing,omitempty"`
 }
 
 type AuditLogLine struct {

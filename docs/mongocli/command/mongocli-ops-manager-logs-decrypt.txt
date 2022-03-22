@@ -52,14 +52,10 @@ Options
      - string
      - false
      - Path to the file that contains the Key Encryption Key (used to encrypt the Log Encryption Key).
-   * - --out
+   * - -o, --out
      - string
      - false
      - Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout.
-   * - -o, --output
-     - string
-     - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
 
 Inherited Options
 -----------------
@@ -83,6 +79,8 @@ Examples
 .. code-block::
 
 
+ 	for audit logs in BSON format:
    $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+ 	for audit logs in JSON format:
    $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json
 

@@ -37,6 +37,7 @@ type DecryptOpts struct {
 	localKeyFileName              string
 }
 
+// stdOutMode returns true when the results should be printed to Stdout (--out|-o flag is not set)
 func (opts *DecryptOpts) stdOutMode() bool {
 	return opts.Out == ""
 }
@@ -87,7 +88,9 @@ func DecryptBuilder() *cobra.Command {
 		Use:   "decrypt",
 		Short: "Decrypts a log file with the provided local key file or KMIP files.",
 		Example: `
+	for audit logs in BSON format:
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+	for audit logs in JSON format:
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
@@ -95,13 +98,11 @@ func DecryptBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.inFileName, flag.File, flag.FileShort, "", usage.EncryptedLogFile)
-	cmd.Flags().StringVarP(&opts.Out, flag.Out, "", "", usage.OutputLogFile)
+	cmd.Flags().StringVarP(&opts.Out, flag.Out, flag.OutputShort, "", usage.OutputLogFile)
 
 	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
 	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)
 	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KMIPClientCertificateFile, "", "", usage.KMIPClientCertificateFile)
-
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)

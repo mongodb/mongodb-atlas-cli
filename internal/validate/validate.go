@@ -93,7 +93,7 @@ func ObjectID(s string) error {
 	return nil
 }
 
-var ErrMissingCredentials = errors.New("missing credentials")
+var ErrMissingCredentials = errors.New("this actions requires authentication")
 
 // Credentials validates public and private API keys have been set.
 func Credentials() error {
@@ -109,8 +109,9 @@ func Credentials() error {
 		configCMD += " init"
 	}
 	return fmt.Errorf(
-		"%w\n\nTo set credentials, run: %s %s",
+		"%w\n\nTo login using your Atlas username and password, run: %s auth login\nTo set credentials using API keys, run: %s %s",
 		ErrMissingCredentials,
+		config.BinName(),
 		config.BinName(),
 		configCMD,
 	)

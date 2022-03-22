@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-logs-keyProviders-list` - Lists all key provider configurations found in the encrypted log file.
+* :ref:`mongocli-ops-manager-logs-keyProviders-list` - Lists all key provider configurations found in the encrypted audit log file.
 
 
 .. toctree::

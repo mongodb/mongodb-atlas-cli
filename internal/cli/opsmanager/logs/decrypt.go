@@ -86,7 +86,7 @@ func DecryptBuilder() *cobra.Command {
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:   "decrypt",
-		Short: "Decrypts a log file with the provided local key file or KMIP files.",
+		Short: "Decrypts an audit log file with the provided local key file or with a server that supports KMIP.",
 		Example: `
 	for audit logs in BSON format:
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json

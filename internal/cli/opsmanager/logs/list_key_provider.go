@@ -54,7 +54,7 @@ func KeyProvidersListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Lists all key provider configurations found in the encrypted log file.",
+		Short:   "Lists all key provider configurations found in the encrypted audit log file.",
 		Example: `
   $ mongocli ops-manager listKeyProvider --file log.gz`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

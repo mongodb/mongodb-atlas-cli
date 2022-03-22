@@ -12,7 +12,7 @@ mongocli ops-manager logs keyProviders list
    :depth: 1
    :class: singlecol
 
-Lists all key provider configurations found in the encrypted log file.
+Lists all key provider configurations found in the encrypted audit log file.
 
 Syntax
 ------

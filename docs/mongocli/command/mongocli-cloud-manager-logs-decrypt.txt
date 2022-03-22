@@ -12,7 +12,7 @@ mongocli cloud-manager logs decrypt
    :depth: 1
    :class: singlecol
 
-Decrypts a log file with the provided local key file or KMIP files.
+Decrypts an audit log file with the provided local key file or with a server that supports KMIP.
 
 Syntax
 ------
@@ -43,19 +43,19 @@ Options
    * - --kmipClientCertificateFile
      - string
      - false
-     - Path to the Client Cert file used to connect to the KMIP speaking server.
+     - Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP).
    * - --kmipServerCAFile
      - string
      - false
-     - Path to the CA file used to connect to the KMIP speaking server.
+     - Path to the CA file used to connect to the server that supports KMIP.
    * - --localKeyFile
      - string
      - false
-     - Path to the file that contains the Key Encryption Key (used to encrypt the Log Encryption Key).
+     - Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK).
    * - -o, --out
      - string
      - false
-     - Path to the file where the decrypted audit log will be written. If not specified the default would be to write to stdout.
+     - Path to the file where MongoCLI will save the contents decrypted audit log. If not specified, MongoCLI writes the contents of the decrypted audit log to stdout.
 
 Inherited Options
 -----------------

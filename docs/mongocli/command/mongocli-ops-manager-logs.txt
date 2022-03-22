@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`mongocli-ops-manager-logs-decrypt` - Decrypts a log file with the provided local key file or KMIP files.
+* :ref:`mongocli-ops-manager-logs-decrypt` - Decrypts an audit log file with the provided local key file or with a server that supports KMIP.
 * :ref:`mongocli-ops-manager-logs-jobs` - Manage log collection jobs for your project.
 * :ref:`mongocli-ops-manager-logs-keyProviders` - Manage your key collections.
 

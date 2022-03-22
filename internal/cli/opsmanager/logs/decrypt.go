@@ -37,17 +37,14 @@ type DecryptOpts struct {
 	localKeyFileName              string
 }
 
-// stdOutMode returns true when the results should be printed to Stdout (--out|-o flag is not set)
+// stdOutMode returns true when the results should be printed to Stdout (--out|-o flag is not set).
 func (opts *DecryptOpts) stdOutMode() bool {
 	return opts.Out == ""
 }
 
 func (opts *DecryptOpts) Run() error {
 	var outWriter io.WriteCloser = os.Stdout
-
-	if opts.stdOutMode() {
-		outWriter = os.Stdout
-	} else {
+	if !opts.stdOutMode() {
 		var err error
 		outWriter, err = opts.NewWriteCloser()
 		if err != nil {

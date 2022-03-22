@@ -109,7 +109,7 @@ func Credentials() error {
 		configCMD += " init"
 	}
 	return fmt.Errorf(
-		"%w\n\nTo login using your Atlas username and password, run: %s auth login\nTo set credentials using API keys, run: %s %s",
+		"%w\n\nTo log in using your Atlas username and password, run: %s auth login\nTo set credentials using API keys, run: %s %s",
 		ErrMissingCredentials,
 		config.BinName(),
 		config.BinName(),

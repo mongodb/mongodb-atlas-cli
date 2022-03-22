@@ -3,24 +3,24 @@ module github.com/mongodb/mongocli
 go 1.17
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.3.2
+	github.com/AlecAivazis/survey/v2 v2.3.3
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.18.1
 	github.com/go-test/deep v1.0.8
-	github.com/golang-jwt/jwt/v4 v4.3.0
+	github.com/golang-jwt/jwt/v4 v4.4.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v42 v42.0.0
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mongodb-forks/digest v1.0.3
-	github.com/mongodb-labs/cobra2snooty v0.6.0
+	github.com/mongodb-labs/cobra2snooty v0.7.0
 	github.com/openlyinc/pointy v1.1.2
 	github.com/pelletier/go-toml v1.9.4
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
 	github.com/spf13/afero v1.8.2
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.1.3
 	go.mongodb.org/atlas v0.15.0

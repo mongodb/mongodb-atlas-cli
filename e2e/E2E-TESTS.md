@@ -297,6 +297,8 @@ Command                                         | E2E Atlas | E2E OM    | E2E CM
 | `logs jobs download`                          |           | N         | N         |           | Y     | Y     |
 | `logs jobs delete`                            |           | N         | N         |           | Y     | Y     |
 | `logs jobs list`                              |           | N         | N         |           | Y     | Y     |
+| `logs decrypt`                                |           |           |           |           |       |       |
+| `logs keyProvider list`                       |           |           |           |           |       |       |
 | `maintenanceWindows create`                   |           | Y         | Y         |           | Y     | Y     |
 | `maintenanceWindows delete`                   |           | Y         | Y         |           | Y     | Y     |
 | `maintenanceWindows list`                     |           | Y         | Y         |           | Y     | Y     |

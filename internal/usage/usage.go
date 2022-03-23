@@ -310,7 +310,7 @@ const (
 	CurrentIP                                = "Flag that indicates whether to use the IP Address from the host that is currently executing the command. Only applicable for type ipAddress entries. To learn more, see: https://docs.mongodb.com/mongocli/master/command/mongocli-atlas-accessLists-create/."
 	Gov                                      = "Create a default profile for atlas for gov"
 	EncryptedLogFile                         = "Path to the file that contains encrypted audit logs."
-	OutputLogFile                            = "Path to the file where MongoCLI will save the contents decrypted audit log. If not specified, MongoCLI writes the contents of the decrypted audit log to stdout."
+	OutputLogFile                            = "Path to the file where MongoCLI will save the contents of the decrypted audit log. If not specified, MongoCLI writes the contents of the decrypted audit log to stdout."
 	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK)."
 	KMIPServerCAFile                         = "Path to the CA file used to connect to the server that supports KMIP."
 	KMIPClientCertificateFile                = "Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP)."

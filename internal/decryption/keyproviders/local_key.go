@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package logs
+package keyproviders
 
 import (
-	"github.com/spf13/cobra"
+	"encoding/base64"
+	"os"
+
+	"github.com/mongodb/mongocli/internal/decryption/aes"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   "Manage log collection jobs for your project.",
+type LocalKeyIdentifier struct {
+	KeyStoreIdentifier
+	Filename string
+}
+
+func (keyIdentifier *LocalKeyIdentifier) DecryptKey(encryptedLEK, iv []byte) ([]byte, error) {
+	encodedKEK, err := os.ReadFile(keyIdentifier.Filename)
+	if err != nil {
+		return nil, err
 	}
 
-	cmd.AddCommand(
-		JobsBuilder(),
-		KeyProvidersBuilder(),
-		DecryptBuilder(),
-	)
+	kek, err := base64.StdEncoding.DecodeString(string(encodedKEK))
+	if err != nil {
+		return nil, err
+	}
 
-	return cmd
+	cbc := &aes.CBCInput{
+		Key: kek,
+		IV:  iv,
+	}
+	return cbc.Decrypt(encryptedLEK)
 }

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package logs
+package aes
 
 import (
-	"github.com/spf13/cobra"
+	"crypto/aes"
+	"crypto/cipher"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   "Manage log collection jobs for your project.",
+type CBCInput struct {
+	Key []byte
+	IV  []byte
+}
+
+func (input *CBCInput) Decrypt(cipherText []byte) ([]byte, error) {
+	cipherBlock, err := aes.NewCipher(input.Key)
+	if err != nil {
+		return nil, err
 	}
 
-	cmd.AddCommand(
-		JobsBuilder(),
-		KeyProvidersBuilder(),
-		DecryptBuilder(),
-	)
-
-	return cmd
+	decryptedText := make([]byte, len(cipherText))
+	cipher.NewCBCDecrypter(cipherBlock, input.IV).CryptBlocks(decryptedText, cipherText)
+	return decryptedText, nil
 }

@@ -1,0 +1,86 @@
+.. _mongocli-ops-manager-logs-decrypt:
+
+=================================
+mongocli ops-manager logs decrypt
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Decrypts an audit log file with the provided local key file or with a server that supports KMIP.
+
+Syntax
+------
+
+.. code-block::
+
+   mongocli ops-manager logs decrypt [options]
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -f, --file
+     - string
+     - true
+     - Path to the file that contains encrypted audit logs.
+   * - -h, --help
+     - 
+     - false
+     - help for decrypt
+   * - --kmipClientCertificateFile
+     - string
+     - false
+     - Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP).
+   * - --kmipServerCAFile
+     - string
+     - false
+     - Path to the CA file used to connect to the server that supports KMIP.
+   * - --localKeyFile
+     - string
+     - false
+     - Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK).
+   * - -o, --out
+     - string
+     - false
+     - Path to the file where MongoCLI will save the contents of the decrypted audit log. If not specified, MongoCLI writes the contents of the decrypted audit log to stdout.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Profile to use from your configuration file.
+
+Examples
+--------
+
+.. code-block::
+
+
+ 	For audit logs in BSON format:
+   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
+ 	For audit logs in JSON format:
+   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json
+

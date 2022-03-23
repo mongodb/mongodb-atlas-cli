@@ -88,10 +88,6 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.Service() == "" {
-				config.SetService(config.CloudService)
-			}
-
 			if shouldCheckCredentials(cmd) {
 				return validate.Credentials()
 			}

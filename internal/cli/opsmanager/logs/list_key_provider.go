@@ -30,7 +30,7 @@ type KeyProviderListOpts struct {
 	fs   afero.Fs
 }
 
-var listTmpl = `{{ range . }}{{ .Provider }}:{{if .Filename}} Filename = {{ .Filename }}{{end}}{{if .UniqueKeyID}} Unique Key ID = "{{ .UniqueKeyID }}"{{end}}{{if .KMIPServerName}} KMIP Server Name = "{{ .KMIPServerName }}"{{end}}{{if .KMIPPort}} KMIP Port = "{{ .KMIPPort }}"{{end}}{{if .KeyWrapMethod}} Key Wrap Method = "{{ .KeyWrapMethod }}"{{end}}
+var listTmpl = `{{ range . }}{{ .Provider }}:{{if .Filename}} Filename = {{ .Filename }}{{end}}{{if .UID}} Unique Key ID = "{{ .UID }}"{{end}}{{if .KMIPServerName}} KMIP Server Name = "{{index .KMIPServerName 0}}"{{end}}{{if .KMIPPort}} KMIP Port = "{{ .KMIPPort }}"{{end}}{{if .KeyWrapMethod}} Key Wrap Method = "{{ .KeyWrapMethod }}"{{end}}
 {{ end }}`
 
 func (opts *KeyProviderListOpts) Run() error {

@@ -30,9 +30,9 @@ type AuditLogLineKeyStoreIdentifier struct {
 	// localKey
 	Filename *string `json:"filename,omitempty"`
 	// kmip
-	UniqueKeyID    *string                         `json:"uniqueKeyID,omitempty"`
-	KMIPServerName *string                         `json:"kmipServerName,omitempty"`
-	KMIPPort       *string                         `json:"kmipPort,omitempty"`
+	UID            *string                         `json:"uniqueKeyID,omitempty"`
+	KMIPServerName []string                        `json:"kmipServerName,omitempty"`
+	KMIPPort       *int                            `json:"kmipPort,omitempty"`
 	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
 	// aws
 	Key      *string `json:"key,omitempty"`
@@ -77,8 +77,8 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
-			UniqueKeyID:               *logLine.KeyStoreIdentifier.UniqueKeyID,
-			ServerName:                *logLine.KeyStoreIdentifier.KMIPServerName,
+			UniqueKeyID:               *logLine.KeyStoreIdentifier.UID,
+			ServerName:                logLine.KeyStoreIdentifier.KMIPServerName,
 			ServerPort:                *logLine.KeyStoreIdentifier.KMIPPort,
 			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIPServerCAFileName,

@@ -24,23 +24,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type HeaderEncryptedBlock struct {
-	LEK   []byte
-	IV    []byte
-	Block []byte
-}
-
 type HeaderRecord struct {
 	Timestamp       time.Time
 	Version         string
 	CompressionMode CompressionMode
 	KeyProvider     keyproviders.KeyProvider
-	EncryptedBlock  HeaderEncryptedBlock
+	EncryptedKey    []byte
 	MAC             string
 }
 
 func (h *HeaderRecord) DecryptKey() ([]byte, error) {
-	return h.KeyProvider.DecryptKey(h.EncryptedBlock.LEK, h.EncryptedBlock.IV)
+	return h.KeyProvider.DecryptKey(h.EncryptedKey)
 }
 
 func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, error) {
@@ -53,12 +47,8 @@ func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, e
 		Version:         *logLine.Version,
 		CompressionMode: CompressionMode(*logLine.CompressionMode),
 		KeyProvider:     keyProvider,
-		EncryptedBlock: HeaderEncryptedBlock{
-			IV:    logLine.EncryptedKey[:16],
-			LEK:   logLine.EncryptedKey[16:48],
-			Block: logLine.EncryptedKey[48:],
-		},
-		MAC: *logLine.MAC,
+		EncryptedKey:    logLine.EncryptedKey,
+		MAC:             *logLine.MAC,
 	}, nil
 }
 
@@ -136,12 +126,7 @@ func (h *HeaderRecord) generateAAD() ([]byte, error) {
 		Version: h.Version,
 	}
 
-	aad, err := bson.Marshal(aadData)
-	if err != nil {
-		return nil, err
-	}
-
-	return aad, nil
+	return bson.Marshal(aadData)
 }
 
 func (h *HeaderRecord) validateMAC(decryptedKey []byte) error {

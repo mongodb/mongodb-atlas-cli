@@ -1,4 +1,18 @@
-package client
+// Copyright 2022 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package kmip
 
 import (
 	"bufio"
@@ -21,52 +35,52 @@ type Attributes struct {
 	CryptographicUsageMask kmip14.CryptographicUsageMask
 }
 
-// CreateRequestPayload used to Create symmetric key operation.
-type CreateRequestPayload struct {
+// CreateRequestV20 used to Create symmetric key operation for KMIP 2.0+ servers.
+type CreateRequestV20 struct {
 	ObjectType kmip20.ObjectType
 	Attributes Attributes
 }
 
-// CreateResponsePayload response message for create operation.
-type CreateResponsePayload struct {
+// CreateResponse response message for create operation.
+type CreateResponse struct {
 	UniqueIdentifier string
 }
 
-// GetRequestPayload used for Get request operation.
-type GetRequestPayload struct {
+// GetRequest used for Get request operation.
+type GetRequest struct {
 	UniqueIdentifier kmip20.UniqueIdentifierValue
 }
 
-// GetResponsePayload response of Get operation.
-type GetResponsePayload struct {
+// GetResponse response of Get operation.
+type GetResponse struct {
 	ObjectType       kmip14.ObjectType
 	UniqueIdentifier string
 	SymmetricKey     kmip.SymmetricKey
 	PrivateKey       kmip.PrivateKey
 }
 
-// EncryptRequestPayload used for Encrypt request operation.
-type EncryptRequestPayload struct {
+// EncryptRequest used for Encrypt request operation.
+type EncryptRequest struct {
 	UniqueIdentifier kmip20.UniqueIdentifierValue
 	Data             []byte
 }
 
-// EncryptResponsePayload response of Encrypt operation.
-type EncryptResponsePayload struct {
+// EncryptResponse response of Encrypt operation.
+type EncryptResponse struct {
 	UniqueIdentifier string
 	Data             []byte
 	IVCounterNonce   []byte
 }
 
-// DecryptRequestPayload used for Decrypt request operation.
-type DecryptRequestPayload struct {
+// DecryptRequest used for Decrypt request operation.
+type DecryptRequest struct {
 	UniqueIdentifier kmip20.UniqueIdentifierValue
 	Data             []byte
 	IVCounterNonce   []byte
 }
 
-// DecryptResponsePayload response of Decrypt operation.
-type DecryptResponsePayload struct {
+// DecryptResponse response of Decrypt operation.
+type DecryptResponse struct {
 	UniqueIdentifier string
 	Data             []byte
 }
@@ -82,11 +96,11 @@ type Version struct {
 	Minor int
 }
 
-var KmipV10 = Version{Major: 1, Minor: 0} // first KMIP version
-var KmipV12 = Version{Major: 1, Minor: 2} //nolint:gomnd // KMIP version that implemented encrypt / decrypt
-var KmipV20 = Version{Major: 2, Minor: 0} //nolint:gomnd // KMIP major version change (create operation signature changed)
+var V10 = Version{Major: 1, Minor: 0} // first KMIP version
+var V12 = Version{Major: 1, Minor: 2} //nolint:gomnd // KMIP version that implemented encrypt / decrypt
+var V20 = Version{Major: 2, Minor: 0} //nolint:gomnd // KMIP major version change (create operation signature changed)
 
-var versions = map[Version]bool{KmipV10: true, KmipV12: true, KmipV20: true}
+var versions = map[Version]bool{V10: true, V12: true, V20: true}
 
 // cipherSuites is a list of enabled TLS 1.0–1.2 cipher suites.
 var cipherSuites = []uint16{
@@ -97,8 +111,8 @@ var cipherSuites = []uint16{
 	tls.TLS_RSA_WITH_AES_128_CBC_SHA256,
 }
 
-// KMIPClient client used to communicate with a KMIP speaking server.
-type KMIPClient struct {
+// Client client used to communicate with a KMIP speaking server.
+type Client struct {
 	version       Version
 	tlsConfig     tls.Config
 	requestHeader kmip.RequestHeader
@@ -106,8 +120,8 @@ type KMIPClient struct {
 	port          int
 }
 
-// KMIPClientConfig structure used to configure a KMIP client.
-type KMIPClientConfig struct {
+// Config structure used to configure a KMIP client.
+type Config struct {
 	Version           Version
 	IP                string
 	Port              int
@@ -119,34 +133,16 @@ type KMIPClientConfig struct {
 	RootCertificate   []byte
 }
 
-// NewKmipClient creates a new KMIP client and initializes all the values required for establishing connection.
-func NewKmipClient(config *KMIPClientConfig) (*KMIPClient, error) {
-	if _, found := versions[config.Version]; !found {
-		return nil, errors.Errorf("invalid KMIP version %+v", config.Version)
-	}
-
-	if config.IP == "" {
-		return nil, errors.New("server IP is not provided")
-	}
-
-	if config.Port == 0 {
-		return nil, errors.New("server port is not provided")
-	}
-
-	if config.ClientCertificate == nil {
-		return nil, errors.New("client certificate is not provided")
-	}
-
-	if config.ClientPrivateKey == nil {
-		return nil, errors.New("client private key is not provided")
-	}
-
-	if config.RootCertificate == nil {
-		return nil, errors.New("root certificate is not provided")
+// NewClient creates a new KMIP client and initializes all the values required for establishing connection.
+func NewClient(config *Config) (*Client, error) {
+	if err := validate(config); err != nil {
+		return nil, err
 	}
 
 	rootCAs := x509.NewCertPool()
-	rootCAs.AppendCertsFromPEM(config.RootCertificate)
+	if !rootCAs.AppendCertsFromPEM(config.RootCertificate) {
+		return nil, errors.New("failed to load server's root certificate")
+	}
 
 	certificate, err := tls.X509KeyPair(config.ClientCertificate, config.ClientPrivateKey)
 	if err != nil {
@@ -158,7 +154,7 @@ func NewKmipClient(config *KMIPClientConfig) (*KMIPClient, error) {
 		hostname = config.IP
 	}
 
-	kc := &KMIPClient{
+	kc := &Client{
 		version: config.Version,
 		ip:      config.IP,
 		port:    config.Port,
@@ -195,8 +191,36 @@ func NewKmipClient(config *KMIPClientConfig) (*KMIPClient, error) {
 	return kc, nil
 }
 
+func validate(config *Config) error {
+	if _, found := versions[config.Version]; !found {
+		return errors.Errorf("invalid KMIP version %+v", config.Version)
+	}
+
+	if config.Hostname == "" && config.IP == "" {
+		return errors.New("both server hostname and IP are not provided")
+	}
+
+	if config.Port == 0 {
+		return errors.New("server port is not provided")
+	}
+
+	if config.RootCertificate == nil {
+		return errors.New("root certificate is not provided")
+	}
+
+	if config.ClientCertificate == nil {
+		return errors.New("client certificate is not provided")
+	}
+
+	if config.ClientPrivateKey == nil {
+		return errors.New("client private key is not provided")
+	}
+
+	return nil
+}
+
 // sendRequest sends a request message to KMIP server.
-func (kc *KMIPClient) sendRequest(payload interface{}, operation kmip14.Operation) (*kmip.ResponseBatchItem, *ttlv.Decoder, error) {
+func (kc *Client) sendRequest(payload interface{}, operation kmip14.Operation) (*kmip.ResponseBatchItem, *ttlv.Decoder, error) {
 	conn, err := tls.Dial("tcp", fmt.Sprintf("%s:%d", kc.ip, kc.port), &kc.tlsConfig)
 	if err != nil {
 		return nil, nil, err
@@ -231,22 +255,22 @@ func (kc *KMIPClient) sendRequest(payload interface{}, operation kmip14.Operatio
 		return nil, nil, err
 	}
 
-	var responseMessage kmip.ResponseMessage
-	err = ttlvDecoder.DecodeValue(&responseMessage, response)
+	var decodedResponse kmip.ResponseMessage
+	err = ttlvDecoder.DecodeValue(&decodedResponse, response)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if responseMessage.BatchItem[0].ResultStatus != kmip14.ResultStatusSuccess {
-		return nil, nil, errors.Errorf("KMIP request failed with reason %s", responseMessage.BatchItem[0].ResultMessage)
+	if decodedResponse.BatchItem[0].ResultStatus != kmip14.ResultStatusSuccess {
+		return nil, nil, errors.Errorf("KMIP request failed with reason %s", decodedResponse.BatchItem[0].ResultMessage)
 	}
 
-	return &responseMessage.BatchItem[0], ttlvDecoder, nil
+	return &decodedResponse.BatchItem[0], ttlvDecoder, nil
 }
 
 // GetSymmetricKey retrieves a symmetric key from KMIP server.
-func (kc *KMIPClient) GetSymmetricKey(keyID string) ([]byte, error) {
-	payload := GetRequestPayload{
+func (kc *Client) GetSymmetricKey(keyID string) ([]byte, error) {
+	payload := GetRequest{
 		UniqueIdentifier: kmip20.UniqueIdentifierValue{Text: keyID},
 	}
 
@@ -255,26 +279,26 @@ func (kc *KMIPClient) GetSymmetricKey(keyID string) ([]byte, error) {
 		return nil, errors.Wrap(err, "failed to perform get operation")
 	}
 
-	var responsePayload GetResponsePayload
-	err = decoder.DecodeValue(&responsePayload, batchItem.ResponsePayload.(ttlv.TTLV))
+	var response GetResponse
+	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode get response payload")
+		return nil, errors.Wrap(err, "failed to decode KMIP get response")
 	}
 
 	var keyValue KeyValue
-	err = decoder.DecodeValue(&keyValue, responsePayload.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
+	err = decoder.DecodeValue(&keyValue, response.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode symmetric keyblock")
+		return nil, errors.Wrap(err, "failed to decode keyblock")
 	}
 
 	return keyValue.KeyMaterial, nil
 }
 
 // CreateSymmetricKey creates a symmetric key on KMIP server.
-func (kc *KMIPClient) CreateSymmetricKey(length int32) (string, error) {
+func (kc *Client) CreateSymmetricKey(length int32) (*string, error) {
 	var payload interface{}
-	if kc.version.Major >= KmipV20.Major {
-		payload = CreateRequestPayload{
+	if kc.version.Major >= V20.Major {
+		payload = CreateRequestV20{
 			ObjectType: kmip20.ObjectTypeSymmetricKey,
 			Attributes: Attributes{
 				CryptographicAlgorithm: kmip14.CryptographicAlgorithmAES,
@@ -306,42 +330,42 @@ func (kc *KMIPClient) CreateSymmetricKey(length int32) (string, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationCreate)
 	if err != nil {
-		return "", errors.Wrap(err, "failed to perform create symmetric key operation")
+		return nil, errors.Wrap(err, "failed to perform KMIP create symmetric key operation")
 	}
 
-	var respPayload CreateResponsePayload
-	err = decoder.DecodeValue(&respPayload, batchItem.ResponsePayload.(ttlv.TTLV))
+	var response CreateResponse
+	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return "", errors.Wrap(err, "failed to decode create symmetric key response payload")
+		return nil, errors.Wrap(err, "failed to decode KMIP create symmetric key response")
 	}
 
-	return respPayload.UniqueIdentifier, nil
+	return &response.UniqueIdentifier, nil
 }
 
 // Encrypt encrypts data with an existing managed object stored by the KMIP server.
-func (kc *KMIPClient) Encrypt(keyID string, data []byte) (*EncryptResponsePayload, error) {
-	payload := EncryptRequestPayload{
+func (kc *Client) Encrypt(keyID string, data []byte) (*EncryptResponse, error) {
+	payload := EncryptRequest{
 		UniqueIdentifier: kmip20.UniqueIdentifierValue{Text: keyID},
 		Data:             data,
 	}
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationEncrypt)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform encrypt operation")
+		return nil, errors.Wrap(err, "failed to perform KMIP encrypt operation")
 	}
 
-	var respPayload EncryptResponsePayload
-	err = decoder.DecodeValue(&respPayload, batchItem.ResponsePayload.(ttlv.TTLV))
+	var response EncryptResponse
+	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode encrypt response payload")
+		return nil, errors.Wrap(err, "failed to decode KMIP encrypt response")
 	}
 
-	return &respPayload, nil
+	return &response, nil
 }
 
 // Decrypt decrypts data with an existing managed object stored by the KMIP server.
-func (kc *KMIPClient) Decrypt(keyID string, data, iv []byte) (*DecryptResponsePayload, error) {
-	payLoad := DecryptRequestPayload{
+func (kc *Client) Decrypt(keyID string, data, iv []byte) (*DecryptResponse, error) {
+	payLoad := DecryptRequest{
 		UniqueIdentifier: kmip20.UniqueIdentifierValue{Text: keyID},
 		Data:             data,
 		IVCounterNonce:   iv,
@@ -349,14 +373,14 @@ func (kc *KMIPClient) Decrypt(keyID string, data, iv []byte) (*DecryptResponsePa
 
 	batchItem, decoder, err := kc.sendRequest(payLoad, kmip14.OperationDecrypt)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform decrypt operation")
+		return nil, errors.Wrap(err, "failed to perform KMIP decrypt operation")
 	}
 
-	var respPayload DecryptResponsePayload
-	err = decoder.DecodeValue(&respPayload, batchItem.ResponsePayload.(ttlv.TTLV))
+	var response DecryptResponse
+	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode decrypt response payload")
+		return nil, errors.Wrap(err, "failed to decode KMIP decrypt response")
 	}
 
-	return &respPayload, nil
+	return &response, nil
 }

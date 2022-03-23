@@ -41,7 +41,7 @@ func TestListKeyProviderBuilder(t *testing.T) {
 func TestKeyProviderListOpts_Run(t *testing.T) {
 	fileJSON := []byte(`{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"local","filename":"localKey"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}
 {"ts":{"$date":{"$numberLong":"1644232049922"}},"log":"1Lu4o8XVMM/Rg7GKAQAAAAEAAAAAAAAA/8tXQ36mEd90OaAOzCOSti7N5a2jr0B9ek48/uvyteG/zUJHyM16Hs3wMEhDqTQGBwGhWSHEqXh0/5Jbz6tXsYHhDTMr1BOsn1zaavZScx/CkO5+Hd8Vx+zeFPREtQTe1y+JngXSIroezeyV0/zF4YC4vpug+OZtrEQLNEgwT2bjaqUyaKDbmzCNetd2Ff/eFfMFzinbzKVgXAC7T4YmDuowqXommEXLIBiYh2u4VagwJKZRw5OGZjnvqwyVpSPgGqLxGKUoFigh3NgC6EuGi17VIs5BLRZOIw7+OfbPgQQiKzjCxCk="}
-{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"kmip","uniqueKeyID":"uniqueKeyID","kmipServerName":"kmipServerName","kmipPort":"kmipPort","keyWrapMethod":"get"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}
+{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"kmip","uid":"uniqueKeyID","kmipServerName":["kmipServerName"],"kmipPort":{"$numberInt":"8081"},"keyWrapMethod":"get"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}
 {"ts":{"$date":{"$numberLong":"1644232049922"}},"log":"1Lu4o8XVMM/Rg7GKAQAAAAEAAAAAAAAA/8tXQ36mEd90OaAOzCOSti7N5a2jr0B9ek48/uvyteG/zUJHyM16Hs3wMEhDqTQGBwGhWSHEqXh0/5Jbz6tXsYHhDTMr1BOsn1zaavZScx/CkO5+Hd8Vx+zeFPREtQTe1y+JngXSIroezeyV0/zF4YC4vpug+OZtrEQLNEgwT2bjaqUyaKDbmzCNetd2Ff/eFfMFzinbzKVgXAC7T4YmDuowqXommEXLIBiYh2u4VagwJKZRw5OGZjnvqwyVpSPgGqLxGKUoFigh3NgC6EuGi17VIs5BLRZOIw7+OfbPgQQiKzjCxCk="}`)
 
 	listOpts := &KeyProviderListOpts{
@@ -57,7 +57,7 @@ func TestKeyProviderListOpts_Run(t *testing.T) {
 	}
 
 	expected := `local: Filename = localKey
-kmip: Unique Key ID = "uniqueKeyID" KMIP Server Name = "kmipServerName" KMIP Port = "kmipPort" Key Wrap Method = "get"
+kmip: Unique Key ID = "uniqueKeyID" KMIP Server Name = "kmipServerName" KMIP Port = "8081" Key Wrap Method = "get"
 `
 	if bufOut.String() != expected {
 		t.Fatalf("Run() expected: %s got: %v", expected, bufOut.String())

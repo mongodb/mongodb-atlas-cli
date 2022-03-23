@@ -22,7 +22,7 @@ const (
 )
 
 type KeyProvider interface {
-	DecryptKey(encryptedLEK []byte, iv []byte) ([]byte, error)
+	DecryptKey(encryptedLEK []byte) ([]byte, error)
 }
 
 type KeyStoreIdentifier struct {

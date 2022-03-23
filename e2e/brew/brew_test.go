@@ -25,6 +25,11 @@ import (
 	"github.com/mongodb/mongocli/e2e"
 )
 
+const (
+	profileString = "PROFILE NAME"
+	errorMessage  = "Error: this action requires authentication"
+)
+
 func TestMongoCLIConfig(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
@@ -41,7 +46,7 @@ func TestMongoCLIConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := "PROFILE NAME"
+		want := profileString
 
 		if got != want {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
@@ -56,7 +61,7 @@ func TestMongoCLIConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := "Error: this action requires authentication"
+		want := errorMessage
 
 		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
@@ -80,7 +85,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := "PROFILE NAME"
+		want := profileString
 
 		if got != want {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
@@ -95,7 +100,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := "Error: this action requires authentication"
+		want := errorMessage
 
 		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)

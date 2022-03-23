@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -48,10 +47,10 @@ func dumpToTemp(dir string, i int, suffix string) (string, error) {
 		return "", err
 	}
 
-	return outputFile, ioutil.WriteFile(outputFile, content, fs.ModePerm)
+	return outputFile, os.WriteFile(outputFile, content, fs.ModePerm)
 }
 
-func parseJson(contents []byte) ([]map[string]interface{}, error) {
+func parseJSON(contents []byte) ([]map[string]interface{}, error) {
 	res := []map[string]interface{}{}
 
 	s := bufio.NewScanner(bytes.NewReader(contents))
@@ -100,7 +99,7 @@ func TestDecrypt(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			expected, err := parseJson(expectedContents)
+			expected, err := parseJSON(expectedContents)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -119,7 +118,7 @@ func TestDecrypt(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(gotContents))
 			}
-			got, err := parseJson(gotContents)
+			got, err := parseJSON(gotContents)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -16,14 +16,17 @@
 package cloud_manager_test
 
 import (
+	"bufio"
 	"bytes"
 	"embed"
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
+	"reflect"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -46,6 +49,24 @@ func dumpToTemp(dir string, i int, suffix string) (string, error) {
 	}
 
 	return outputFile, ioutil.WriteFile(outputFile, content, fs.ModePerm)
+}
+
+func parseJson(contents []byte) ([]map[string]interface{}, error) {
+	res := []map[string]interface{}{}
+
+	s := bufio.NewScanner(bytes.NewReader(contents))
+	for s.Scan() {
+		var item map[string]interface{}
+		err := json.Unmarshal(s.Bytes(), &item)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, item)
+	}
+	if s.Err() != nil {
+		return nil, s.Err()
+	}
+	return res, nil
 }
 
 func TestDecrypt(t *testing.T) {
@@ -74,7 +95,12 @@ func TestDecrypt(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			outputFileContents, err := files.ReadFile(generateFileName("decryption", i, "output"))
+			expectedContents, err := files.ReadFile(generateFileName("decryption", i, "output"))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			expected, err := parseJson(expectedContents)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -89,14 +115,17 @@ func TestDecrypt(t *testing.T) {
 				keyFile,
 			)
 			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
-
+			gotContents, err := cmd.CombinedOutput()
 			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+				t.Fatalf("unexpected error: %v, resp: %v", err, string(gotContents))
+			}
+			got, err := parseJson(gotContents)
+			if err != nil {
+				t.Fatal(err)
 			}
 
-			if !bytes.Equal(resp, outputFileContents) {
-				t.Fatalf("decryption unexpected: expected %v, got %v", string(outputFileContents), string(resp))
+			if !reflect.DeepEqual(expected, got) {
+				t.Fatalf("decryption unexpected: expected %v, got %v", expected, got)
 			}
 		})
 	}

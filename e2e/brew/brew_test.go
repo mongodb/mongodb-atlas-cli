@@ -56,9 +56,7 @@ func TestMongoCLIConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := `Error: this action requires authentication
-To log in using your Atlas username and password, run: mongocli auth login
-To set credentials using API keys, run: mongocli config'`
+		want := "Error: this action requires authentication"
 
 		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
@@ -89,17 +87,15 @@ func TestAtlasCLIConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("iam projects ls", func(t *testing.T) {
-		cmd := exec.Command(cliPath, "iam", "projects", "ls")
+	t.Run("projects ls", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "projects", "ls")
 		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := cmd.CombinedOutput()
 		if err == nil {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := `Error: this action requires authentication
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas init config'`
+		want := "Error: this action requires authentication"
 
 		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)

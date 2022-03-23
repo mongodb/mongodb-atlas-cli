@@ -64,8 +64,8 @@ func TestKeyProviders(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		if string(resp) == "" {
-			t.Fatalf(`expected resp != "", got ""`)
+		if len(resp) == 0 {
+			t.Fatalf(`expected len(resp) > 0, got 0`)
 		}
 	})
 }

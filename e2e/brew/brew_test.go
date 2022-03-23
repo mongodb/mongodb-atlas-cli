@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongocli/e2e"
 )
 
-func TestConfig(t *testing.T) {
+func TestMongoCLIConfig(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -56,7 +56,50 @@ func TestConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := "Error: missing credentials"
+		want := `Error: this action requires authentication
+To log in using your Atlas username and password, run: mongocli auth login
+To set credentials using API keys, run: mongocli config'`
+
+		if !strings.HasPrefix(got, want) {
+			t.Errorf("want '%s'; got '%s'\n", want, got)
+		}
+	})
+}
+
+func TestAtlasCLIConfig(t *testing.T) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	tempDirEnv := fmt.Sprintf("XDG_CONFIG_HOME=%s", os.TempDir()) // make sure no config.toml is detected
+
+	t.Run("config ls", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "config", "ls")
+		cmd.Env = append(os.Environ(), tempDirEnv)
+		resp, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		got := strings.TrimSpace(string(resp))
+		want := "PROFILE NAME"
+
+		if got != want {
+			t.Errorf("want '%s'; got '%s'\n", want, got)
+		}
+	})
+
+	t.Run("iam projects ls", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "iam", "projects", "ls")
+		cmd.Env = append(os.Environ(), tempDirEnv)
+		resp, err := cmd.CombinedOutput()
+		if err == nil {
+			t.Fatalf("expected error, resp: %v", string(resp))
+		}
+		got := strings.TrimSpace(string(resp))
+		want := `Error: this action requires authentication
+To log in using your Atlas username and password, run: atlas auth login
+To set credentials using API keys, run: atlas init config'`
 
 		if !strings.HasPrefix(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)

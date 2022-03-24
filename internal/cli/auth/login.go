@@ -182,7 +182,9 @@ func LoginBuilder() *cobra.Command {
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if hasUserProgrammaticKeys() {
-				return fmt.Errorf("you have already set the programmatic keys for this profile. Run '%s auth login --profile <profile_name>' to use your username and password on a new profile", config.BinName())
+				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+
+Run '%s auth login --profile <profile_name>' to use your username and password on a new profile`, config.BinName())
 			}
 
 			opts.OutWriter = cmd.OutOrStdout()

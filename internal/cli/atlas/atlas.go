@@ -15,6 +15,8 @@
 package atlas
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -61,6 +63,7 @@ func Builder() *cobra.Command {
 				return err
 			}
 			if config.Service() == "" {
+				_, _ = fmt.Printf("service not set. MongoCLI used '%s'\n\n", config.CloudService)
 				config.SetService(config.CloudService)
 			}
 

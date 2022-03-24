@@ -78,7 +78,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
 			UniqueKeyID:               *logLine.KeyStoreIdentifier.UID,
-			ServerName:                logLine.KeyStoreIdentifier.KMIPServerName,
+			ServerNames:               logLine.KeyStoreIdentifier.KMIPServerName,
 			ServerPort:                *logLine.KeyStoreIdentifier.KMIPPort,
 			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIPServerCAFileName,

@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"github.com/mongodb/mongocli/internal/decryption/kmip"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -33,7 +34,7 @@ const (
 type KMIPKeyIdentifier struct {
 	KeyStoreIdentifier
 	UniqueKeyID               string
-	ServerName                []string
+	ServerNames               []string
 	ServerPort                int
 	KeyWrapMethod             KMIPKeyWrapMethod
 	ServerCAFileName          string
@@ -48,20 +49,46 @@ type KMIPEncryptedKey struct {
 
 // DecryptKey decrypts LEK using KMIP get or decrypt methods.
 func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
+	if len(ki.ServerNames) == 0 {
+		return nil, errors.New("server name is not provided")
+	}
+
 	kmipEncryptedKey, err := ki.decodeEncryptedKey(encryptedKey)
 	if err != nil {
 		return nil, err
 	}
 
-	kmipClient, err := ki.kmipClient()
-	if err != nil {
-		return nil, err
+	var clientError error
+	collectErr := func(err error, serverName string) {
+		if clientError == nil {
+			clientError = err
+		} else {
+			clientError = errors.Wrapf(err, "'%s': %s", serverName, err.Error())
+		}
 	}
 
-	if ki.KeyWrapMethod == KMIPKeyWrapMethodEncrypt {
-		return ki.decryptWithKeyWrapMethodEncrypt(kmipClient, kmipEncryptedKey)
+	for _, serverName := range ki.ServerNames {
+		kmipClient, err := ki.kmipClient(serverName)
+		if err != nil {
+			// init KMIP client error (invalid config), skip other KMIP servers
+			return nil, err
+		}
+
+		var key []byte
+		if ki.KeyWrapMethod == KMIPKeyWrapMethodEncrypt {
+			key, err = ki.decryptWithKeyWrapMethodEncrypt(kmipClient, kmipEncryptedKey)
+		} else {
+			key, err = ki.decryptWithKeyWrapMethodGet(kmipClient, kmipEncryptedKey)
+		}
+
+		if err == nil {
+			// key successfully decrypted, skip other KMIP servers and return decrypted key
+			return key, nil
+		}
+		collectErr(err, serverName)
 	}
-	return ki.decryptWithKeyWrapMethodGet(kmipClient, kmipEncryptedKey)
+
+	return nil, clientError
 }
 
 func (ki *KMIPKeyIdentifier) decryptWithKeyWrapMethodEncrypt(kmipClient *kmip.Client, kmipEncryptedKey *KMIPEncryptedKey) ([]byte, error) {
@@ -99,7 +126,7 @@ func (ki *KMIPKeyIdentifier) decodeEncryptedKey(encryptedKey []byte) (*KMIPEncry
 	return &kmipEncryptedKey, nil
 }
 
-func (ki *KMIPKeyIdentifier) kmipClient() (*kmip.Client, error) {
+func (ki *KMIPKeyIdentifier) kmipClient(serverName string) (*kmip.Client, error) {
 	clientCertAndKey, err := os.ReadFile(ki.ClientCertificateFileName)
 	if err != nil {
 		return nil, err
@@ -117,9 +144,8 @@ func (ki *KMIPKeyIdentifier) kmipClient() (*kmip.Client, error) {
 
 	return kmip.NewClient(&kmip.Config{
 		Version:           version,
-		IP:                ki.ServerName[0],
+		Hostname:          serverName,
 		Port:              ki.ServerPort,
-		Hostname:          ki.ServerName[0],
 		RootCertificate:   rootCA,
 		ClientPrivateKey:  clientCertAndKey,
 		ClientCertificate: clientCertAndKey,

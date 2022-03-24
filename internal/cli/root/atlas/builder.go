@@ -88,7 +88,7 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.Service() == "" {
+			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
 
@@ -178,6 +178,22 @@ Go version: %s
    arch: %s
    compiler: %s
 `
+
+func shouldSetService(cmd *cobra.Command) bool {
+	if config.Service() != "" {
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
+		return false
+	}
+
+	return true
+}
 
 func shouldCheckCredentials(cmd *cobra.Command) bool {
 	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials

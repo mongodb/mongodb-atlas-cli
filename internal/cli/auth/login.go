@@ -88,16 +88,6 @@ func (opts *loginOpts) SetOAuthUpAccess() {
 }
 
 func (opts *loginOpts) Run(ctx context.Context) error {
-	// Check if user has already logged in
-	if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
-		_, _ = fmt.Fprintf(opts.OutWriter, "You're already logged in as %s.\n", s)
-
-		if opts.loginOnly {
-			return nil
-		}
-		return opts.configureProfile(ctx)
-	}
-
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -110,11 +100,6 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if opts.loginOnly {
 		return opts.config.Save()
 	}
-
-	return opts.configureProfile(ctx)
-}
-
-func (opts *loginOpts) configureProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
@@ -183,6 +168,10 @@ Your code will expire after %.0f minutes.
 	return nil
 }
 
+func hasUserProgrammaticKeys() bool {
+	return config.PublicAPIKey() != "" || config.PrivateAPIKey() != ""
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &loginOpts{}
 	cmd := &cobra.Command{
@@ -192,13 +181,12 @@ func LoginBuilder() *cobra.Command {
   $ mongocli auth login
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.config = config.Default()
-			// Check if user has already logged in
-			if s, err := opts.config.AccessTokenSubject(); err == nil && s != "" {
-				return nil
+			if hasUserProgrammaticKeys() {
+				return fmt.Errorf("you have already set the programmatic keys for this profile. Run '%s auth login --profile <profile_name>' to use your username and password on a new profile", config.BinName())
 			}
 
+			opts.OutWriter = cmd.OutOrStdout()
+			opts.config = config.Default()
 			if config.OpsManagerURL() != "" {
 				opts.OpsManagerURL = config.OpsManagerURL()
 			}

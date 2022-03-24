@@ -74,6 +74,7 @@ type Notifier struct {
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -88,6 +89,14 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.InitFlow(); err != nil {
+				return err
+			}
+
+			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+				return err
+			}
+
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}

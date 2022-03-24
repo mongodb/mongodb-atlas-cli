@@ -286,25 +286,25 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: ~/
+        working_dir: /
         script: |
           set -Eeou pipefail
 
-          git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+          git clone https://github.com/asdf-vm/asdf.git ./.asdf
   "install python3":
     - command: shell.exec
       type: setup
       params:
-        working_dir: ~/
+        working_dir: /
         script: |
           set -Eeou pipefail
 
-           ~/.asdf/bin/asdf install python 3.8.6
+           ./.asdf/bin/asdf install python 3.8.6
   "install pykmip":
     - command: shell.exec
       type: setup
       params:
-        working_dir: ~/
+        working_dir: /
         script: |
           set -Eeou pipefail
 

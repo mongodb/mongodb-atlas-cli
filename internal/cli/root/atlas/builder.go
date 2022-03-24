@@ -132,7 +132,7 @@ func Builder(profile *string) *cobra.Command {
 
 	rootCmd.AddCommand(
 		atlasConfig.Builder(),
-		auth.Builder(),
+		auth.AtlasCLIBuilder(),
 		quickstart.Builder(),
 		projects.Builder(),
 		organizations.AtlasCLIBuilder(),

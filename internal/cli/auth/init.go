@@ -28,23 +28,11 @@ import (
 	"github.com/mongodb/mongocli/internal/oauth"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
 
-type Authenticator interface {
-	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)
-	PollToken(context.Context, *auth.DeviceCode) (*auth.Token, *atlas.Response, error)
-}
-
-type LoginConfig interface {
-	config.SetSaver
-	AccessTokenSubject() (string, error)
-}
-
-type loginOpts struct {
+type registerOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
 	RefreshToken   string
@@ -56,13 +44,13 @@ type loginOpts struct {
 	flow           Authenticator
 }
 
-func (opts *loginOpts) initFlow() error {
+func (opts *registerOpts) initFlow() error {
 	var err error
 	opts.flow, err = oauth.FlowWithConfig(config.Default())
 	return err
 }
 
-func (opts *loginOpts) SetOAuthUpAccess() {
+func (opts *registerOpts) SetOAuthUpAccess() {
 	switch {
 	case opts.isGov:
 		opts.Service = config.CloudGovService
@@ -87,7 +75,7 @@ func (opts *loginOpts) SetOAuthUpAccess() {
 	}
 }
 
-func (opts *loginOpts) Run(ctx context.Context) error {
+func (opts *registerOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -127,20 +115,26 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+
 	return nil
 }
 
-func (opts *loginOpts) oauthFlow(ctx context.Context) error {
+func (opts *registerOpts) oauthFlow(ctx context.Context) error {
 	code, _, err := opts.flow.RequestCode(ctx)
 	if err != nil {
 		return err
 	}
+	code.VerificationURI = "http://localhost:8080/account/register/createnewatlas"
 
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
-First, copy your one-time code: %s-%s
+This command will help you
+1. create and verify your MongoDB atlas account;
+2. configure your first free MongoDB database in Atlas.
 
-Next, sign in with your browser and enter the code.
+Copy your one-time code: %s-%s
+
+Next, register with your browser, verify your email and enter the code.
 
 Or go to %s
 
@@ -166,13 +160,13 @@ Your code will expire after %.0f minutes.
 	return nil
 }
 
-func LoginBuilder() *cobra.Command {
-	opts := &loginOpts{}
+func RegisterBuilder() *cobra.Command {
+	opts := &registerOpts{}
 	cmd := &cobra.Command{
-		Use:   "login",
+		Use:   "init",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: `  To start the interactive setup:
-  $ mongocli auth login
+		Example: `  To start the setup:
+  $ mongocli auth init
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
@@ -193,40 +187,5 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.loginOnly, "loginOnly", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkHidden("loginOnly")
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Manage the CLI's authentication state.",
-		Annotations: map[string]string{
-			"toc": "true",
-		},
-	}
-	cmd.AddCommand(
-		LoginBuilder(),
-		WhoAmIBuilder(),
-		LogoutBuilder(),
-	)
-
-	return cmd
-}
-
-func AtlasCLIBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Manage the CLI's authentication state.",
-		Annotations: map[string]string{
-			"toc": "true",
-		},
-	}
-	cmd.AddCommand(
-		LoginBuilder(),
-		WhoAmIBuilder(),
-		LogoutBuilder(),
-		RegisterBuilder(),
-	)
-
 	return cmd
 }

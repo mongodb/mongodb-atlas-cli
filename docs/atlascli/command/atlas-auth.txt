@@ -49,6 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-auth-init` - Authenticate with MongoDB Atlas.
 * :ref:`atlas-auth-login` - Authenticate with MongoDB Atlas.
 * :ref:`atlas-auth-logout` - Log out of the CLI.
 * :ref:`atlas-auth-whoami` - Verifies and displays information about your authentication state.
@@ -57,6 +58,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   init </command/atlas-auth-init>
    login </command/atlas-auth-login>
    logout </command/atlas-auth-logout>
    whoami </command/atlas-auth-whoami>

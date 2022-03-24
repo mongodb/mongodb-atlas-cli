@@ -51,7 +51,7 @@ type loginOpts struct {
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
-	loginOnly      bool
+	skipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -97,7 +97,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.loginOnly {
+	if opts.skipConfig {
 		return opts.config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
@@ -206,7 +206,7 @@ Run '%s auth login --profile <profile_name>' to use your username and password o
 
 	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.loginOnly, "loginOnly", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
 	return cmd
 }
 

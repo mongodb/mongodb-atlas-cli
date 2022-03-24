@@ -40,14 +40,14 @@ Options
      - 
      - false
      - help for login
-   * - --loginOnly
-     - 
-     - false
-     - Skip profile configuration.
    * - --noBrowser
      - 
      - false
      - Don't try to open a browser session.
+   * - --skipConfig
+     - 
+     - false
+     - Skip profile configuration.
 
 Inherited Options
 -----------------

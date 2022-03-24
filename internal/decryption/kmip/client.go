@@ -18,13 +18,13 @@ import (
 	"bufio"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"fmt"
 
 	kmip "github.com/gemalto/kmip-go"
 	"github.com/gemalto/kmip-go/kmip14"
 	"github.com/gemalto/kmip-go/kmip20"
 	"github.com/gemalto/kmip-go/ttlv"
-	"github.com/pkg/errors"
 )
 
 // Attributes key attributes required by Create request operation.
@@ -145,7 +145,7 @@ func NewClient(config *Config) (*Client, error) {
 
 	certificate, err := tls.X509KeyPair(config.ClientCertificate, config.ClientPrivateKey)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to load client key and certificate")
+		return nil, fmt.Errorf("failed to load client key and certificate: %s", err.Error())
 	}
 
 	hostname := config.Hostname
@@ -192,7 +192,7 @@ func NewClient(config *Config) (*Client, error) {
 
 func validate(config *Config) error {
 	if _, found := versions[config.Version]; !found {
-		return errors.Errorf("invalid KMIP version %+v", config.Version)
+		return fmt.Errorf("invalid KMIP version %+v", config.Version)
 	}
 
 	if config.Hostname == "" && config.IP == "" {
@@ -261,7 +261,7 @@ func (kc *Client) sendRequest(payload interface{}, operation kmip14.Operation) (
 	}
 
 	if decodedResponse.BatchItem[0].ResultStatus != kmip14.ResultStatusSuccess {
-		return nil, nil, errors.Errorf("KMIP request failed with reason %s", decodedResponse.BatchItem[0].ResultMessage)
+		return nil, nil, fmt.Errorf("KMIP request failed with reason %s", decodedResponse.BatchItem[0].ResultMessage)
 	}
 
 	return &decodedResponse.BatchItem[0], ttlvDecoder, nil
@@ -275,19 +275,19 @@ func (kc *Client) GetSymmetricKey(keyID string) ([]byte, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationGet)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform get operation")
+		return nil, fmt.Errorf("failed to perform get operation: %s", err.Error())
 	}
 
 	var response GetResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode KMIP get response")
+		return nil, fmt.Errorf("failed to decode KMIP get response: %s", err.Error())
 	}
 
 	var keyValue KeyValue
 	err = decoder.DecodeValue(&keyValue, response.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode keyblock")
+		return nil, fmt.Errorf("failed to decode keyblock: %s", err.Error())
 	}
 
 	return keyValue.KeyMaterial, nil
@@ -329,13 +329,13 @@ func (kc *Client) CreateSymmetricKey(length int32) (*string, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationCreate)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform KMIP create symmetric key operation")
+		return nil, fmt.Errorf("failed to perform KMIP create symmetric key operation: %s", err.Error())
 	}
 
 	var response CreateResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode KMIP create symmetric key response")
+		return nil, fmt.Errorf("failed to decode KMIP create symmetric key response: %s", err.Error())
 	}
 
 	return &response.UniqueIdentifier, nil
@@ -350,13 +350,13 @@ func (kc *Client) Encrypt(keyID string, data []byte) (*EncryptResponse, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationEncrypt)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform KMIP encrypt operation")
+		return nil, fmt.Errorf("failed to perform KMIP encrypt operation: %s", err.Error())
 	}
 
 	var response EncryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode KMIP encrypt response")
+		return nil, fmt.Errorf("failed to decode KMIP encrypt response: %s", err.Error())
 	}
 
 	return &response, nil
@@ -372,13 +372,13 @@ func (kc *Client) Decrypt(keyID string, data, iv []byte) (*DecryptResponse, erro
 
 	batchItem, decoder, err := kc.sendRequest(payLoad, kmip14.OperationDecrypt)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to perform KMIP decrypt operation")
+		return nil, fmt.Errorf("failed to perform KMIP decrypt operation: %s", err.Error())
 	}
 
 	var response DecryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode KMIP decrypt response")
+		return nil, fmt.Errorf("failed to decode KMIP decrypt response: %s", err.Error())
 	}
 
 	return &response, nil

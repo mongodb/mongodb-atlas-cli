@@ -15,11 +15,12 @@
 package keyproviders
 
 import (
+	"errors"
+	"fmt"
 	"os"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"github.com/mongodb/mongocli/internal/decryption/kmip"
-	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -63,7 +64,7 @@ func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 		if clientError == nil {
 			clientError = err
 		} else {
-			clientError = errors.Wrapf(err, "'%s': %s", serverName, err.Error())
+			clientError = fmt.Errorf("'%s': %s", serverName, err.Error())
 		}
 	}
 

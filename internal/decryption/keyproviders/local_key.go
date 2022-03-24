@@ -21,13 +21,15 @@ import (
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 )
 
+// LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).
 type LocalKeyIdentifier struct {
 	KeyStoreIdentifier
 	Filename string
 }
 
-func (keyIdentifier *LocalKeyIdentifier) DecryptKey(encryptedLEK, iv []byte) ([]byte, error) {
-	encodedKEK, err := os.ReadFile(keyIdentifier.Filename)
+// DecryptKey decrypts LEK using KMIP get or decrypt methods.
+func (ki *LocalKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
+	encodedKEK, err := os.ReadFile(ki.Filename)
 	if err != nil {
 		return nil, err
 	}
@@ -36,6 +38,9 @@ func (keyIdentifier *LocalKeyIdentifier) DecryptKey(encryptedLEK, iv []byte) ([]
 	if err != nil {
 		return nil, err
 	}
+
+	iv := encryptedKey[:16]
+	encryptedLEK := encryptedKey[16:48]
 
 	cbc := &aes.CBCInput{
 		Key: kek,

@@ -169,7 +169,7 @@ Your code will expire after %.0f minutes.
 }
 
 func hasUserProgrammaticKeys() bool {
-	return config.PublicAPIKey() != "" || config.PrivateAPIKey() != ""
+	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
 }
 
 func LoginBuilder() *cobra.Command {

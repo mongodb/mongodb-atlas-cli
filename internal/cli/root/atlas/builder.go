@@ -189,7 +189,7 @@ func shouldSetService(cmd *cobra.Command) bool {
 		return false
 	}
 
-	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
 		return false
 	}
 

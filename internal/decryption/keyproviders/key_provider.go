@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package logs
+package keyproviders
 
-import (
-	"github.com/spf13/cobra"
+type KeyStoreProvider string
+
+const (
+	LocalKey KeyStoreProvider = "local"
+	KMIP     KeyStoreProvider = "kmip"
 )
 
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   "Manage log collection jobs for your project.",
-	}
+type KeyProvider interface {
+	DecryptKey(encryptedLEK []byte, iv []byte) ([]byte, error)
+}
 
-	cmd.AddCommand(
-		JobsBuilder(),
-		KeyProvidersBuilder(),
-		DecryptBuilder(),
-	)
-
-	return cmd
+type KeyStoreIdentifier struct {
+	Provider KeyStoreProvider
 }

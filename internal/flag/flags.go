@@ -271,4 +271,7 @@ const (
 	CurrentIP                                = "currentIp"                       // CurrentIP flag
 	Gov                                      = "gov"                             // Gov flag
 	Version                                  = "version"                         // Version flag
+	LocalKeyFile                             = "localKeyFile"                    // LocalKeyFile flag
+	KMIPServerCAFile                         = "kmipServerCAFile"                // KMIPServerCAFile flag
+	KMIPClientCertificateFile                = "kmipClientCertificateFile"       // KMIPClientCertificateFile flag
 )

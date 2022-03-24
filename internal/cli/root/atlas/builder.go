@@ -17,6 +17,7 @@ package atlas
 import (
 	"fmt"
 	"io"
+	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -89,7 +90,7 @@ func Builder(profile *string) *cobra.Command {
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			if shouldSetService(cmd) {
-				_, _ = fmt.Printf("service not set. Atlas CLI used '%s'\n\n", config.CloudService)
+				_, _ = fmt.Fprintf(os.Stderr, "service not set. Atlas CLI used '%s'\n\n", config.CloudService)
 				config.SetService(config.CloudService)
 			}
 

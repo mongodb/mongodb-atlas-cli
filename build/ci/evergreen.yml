@@ -282,25 +282,7 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           ./bin/snyk test --org=cloud
-  "install asdf":
-    - command: shell.exec
-      type: setup
-      params:
-        working_dir: .
-        script: |
-          set -Eeou pipefail
-
-          git clone https://github.com/asdf-vm/asdf.git ./.asdf
-  "install python3":
-    - command: shell.exec
-      type: setup
-      params:
-        working_dir: .
-        script: |
-          set -Eeou pipefail
-          ./.asdf/bin/asdf plugin-add python
-          ./.asdf/bin/asdf install python 3.9.0
-  "install pykmip":
+  "install pykmip v1":
     - command: shell.exec
       type: setup
       params:
@@ -309,7 +291,20 @@ functions:
           set -Eeou pipefail
 
           pip3 install pykmip
+          mkdir pykmip
+
           pykmip-server
+  "install pykmip":
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - ${go_bin}
+          - ../../bin
+        working_dir: src/github.com/mongodb/mongocli/build/ci
+        binary: ./install-pykmip.sh
+        args: ["-h", "hosts.json"]
+
   post:
     - command: attach.xunit_results
       params:

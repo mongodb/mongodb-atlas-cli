@@ -299,7 +299,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-           ./.asdf/bin/asdf install python 3.8.6
+           ./.asdf/bin/asdf install python 3.9.0
   "install pykmip":
     - command: shell.exec
       type: setup

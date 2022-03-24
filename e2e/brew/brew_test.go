@@ -63,7 +63,7 @@ func TestMongoCLIConfig(t *testing.T) {
 		got := strings.TrimSpace(string(resp))
 		want := errorMessage
 
-		if !strings.HasPrefix(got, want) {
+		if !strings.Contains(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
 		}
 	})
@@ -102,7 +102,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 		got := strings.TrimSpace(string(resp))
 		want := errorMessage
 
-		if !strings.HasPrefix(got, want) {
+		if !strings.Contains(got, want) {
 			t.Errorf("want '%s'; got '%s'\n", want, got)
 		}
 	})

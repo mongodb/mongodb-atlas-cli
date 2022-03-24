@@ -16,10 +16,9 @@ package kmip
 
 import (
 	"bufio"
-	"fmt"
-
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 
 	kmip "github.com/gemalto/kmip-go"
 	"github.com/gemalto/kmip-go/kmip14"

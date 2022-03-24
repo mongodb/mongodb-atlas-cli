@@ -357,8 +357,6 @@ tasks:
       - func: "clone"
       - func: "install snyk"
       - func: "snyk scan"
-      - func: "install asdf"
-      - func: "install python3"
       - func: "install pykmip"
   - name: license_check
     tags: ["code_health"]

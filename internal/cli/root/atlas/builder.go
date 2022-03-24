@@ -89,19 +89,18 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.InitFlow(); err != nil {
-				return err
-			}
-
-			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
-				return err
-			}
-
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
 
 			if shouldCheckCredentials(cmd) {
+				if err := opts.InitFlow(); err != nil {
+					return err
+				}
+
+				if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+					return err
+				}
 				return validate.Credentials()
 			}
 

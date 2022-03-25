@@ -221,7 +221,6 @@ func RunTestWithRetry(t *testing.T, scenario testScenario) (err error) {
 			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while running the test: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, err)
 			time.Sleep(sleepTimeInSeconds * time.Second)
 		} else {
-			t.Logf("scenario was successfull")
 			break
 		}
 	}

@@ -74,6 +74,7 @@ type Notifier struct {
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -93,6 +94,13 @@ func Builder(profile *string) *cobra.Command {
 			}
 
 			if shouldCheckCredentials(cmd) {
+				if err := opts.InitFlow(); err != nil {
+					return err
+				}
+
+				if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+					return err
+				}
 				return validate.Credentials()
 			}
 

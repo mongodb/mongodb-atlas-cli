@@ -32,10 +32,6 @@ Options
      - Type
      - Required
      - Description
-   * - --cm
-     - 
-     - false
-     - Log in to Cloud Manager.
    * - --gov
      - 
      - false
@@ -48,6 +44,10 @@ Options
      - 
      - false
      - Don't try to open a browser session.
+   * - --skipConfig
+     - 
+     - false
+     - Skip profile configuration.
 
 Inherited Options
 -----------------

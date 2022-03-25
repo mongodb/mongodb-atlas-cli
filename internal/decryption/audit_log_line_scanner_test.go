@@ -102,22 +102,86 @@ func Test_readAuditLogFile(t *testing.T) {
 	for _, testCase := range testCases {
 		format, scanner, err := readAuditLogFile(bytes.NewReader(testCase.input))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 		if testCase.expectedFormat != format {
-			t.Errorf("expected: %v got: %v", testCase.expectedFormat, format)
+			t.Fatalf("expected: %v got: %v", testCase.expectedFormat, format)
 		}
 		var logs []*AuditLogLine
 		for scanner.Scan() {
 			log, err := scanner.AuditLogLine()
 			if err != nil {
-				t.Error(err)
+				t.Fatal(err)
 			}
 			logs = append(logs, log)
 		}
+		if scanner.Err() != nil {
+			t.Fatal(scanner.Err())
+		}
 
 		if !deepCompareLogLines(testCase.expectedLog, logs) {
-			t.Errorf("expected: %v got: %v", testCase.expectedLog, logs)
+			t.Fatalf("expected: %v got: %v", testCase.expectedLog, logs)
+		}
+	}
+}
+
+func Test_readAuditLogFile_corruptedBSON(t *testing.T) {
+	expectedLog := buildExpectedLog()
+
+	testCases := []struct {
+		input       string
+		expectErr   bool
+		expectedLog []*AuditLogLine
+	}{
+		{
+			input:     `GQEAAAl0cwAoM/iHfwEAAAJ2ZXJzaW9uAAQAAAAwLjAAAmNvbXByZXNzaW9uTW9kZQAFAAAAenN0ZAADa2V5U3RvcmVJZGVudGlmaWVyADAAAAACcHJvdmlkZXIABgAAAGxvY2FsAAJmaWxlbmFtZQAJAAAAbG9jYWxLZXkAAAVlbmNyeXB0ZWRLZXkAQAAAAAD0maD5Lru6ePgZ8t+Xg/GZJ2jzt7V1u1DRQyt2J3u3HtHjZeG+0megvO1JSFhCFbMid7+w1e88hWX3gz1WdeL6Ak1BQwAhAAAAT0cvVndNbHBQVTlDaERtSEFRQUFBQUFBQUFBQUFBQUEAAmF1ZGl0UmVjb3JkVHlwZQAHAAAAaGVhZGVyAABzAQAACXRzACkz+Id/AQAAAmxvZwBZAQAAMFFqd3VmWUl5ZHZOdURYVEFRQUFBQUVBQUFBQUFBQUFVWmFNa0I3eVlsbHlIRTh6RVM0QStCSzVIT0RraFdqVEJUOVlxL3Z3RzNUdjhXNGtFZ0VENDBhRE1wOExMUWJXek8vZ1RDK016R1NuSEZxZXI2RGdXOVQxYTdnNEdxTGxaQm1QOVdKaFl4TSsyeURVUlZzS3VvZ2hLbFdsb3NYVkdnZDFHUEQ3UGV4Ums4Z3l0alZlRkZ4WVRvbFBPd2JMZWVrM2ZlYU1UMXZUaGZsZmtBZWZjK1ZoVVNmeGtjdFg4Tkt2dFkxQ0xManJPeXpYRUcwT09CYWluYlhpeWJDQXlzekRDOVdkTDBDZzh3eDVrbjRMWFFIc2hGakNXQThHTUlXUThNTlU3ZG1oeDFtY0VvS0dycGRWZVAveVFOT3hTamtLRHJDMm8xUDB3WGlnT1o4elJ6L1cAAA==`,
+			expectErr: false,
+		},
+		{ // tampered first byte, doc size would be wrong 279 instead of 281
+			input:     `FwEAAAl0cwAoM/iHfwEAAAJ2ZXJzaW9uAAQAAAAwLjAAAmNvbXByZXNzaW9uTW9kZQAFAAAAenN0ZAADa2V5U3RvcmVJZGVudGlmaWVyADAAAAACcHJvdmlkZXIABgAAAGxvY2FsAAJmaWxlbmFtZQAJAAAAbG9jYWxLZXkAAAVlbmNyeXB0ZWRLZXkAQAAAAAD0maD5Lru6ePgZ8t+Xg/GZJ2jzt7V1u1DRQyt2J3u3HtHjZeG+0megvO1JSFhCFbMid7+w1e88hWX3gz1WdeL6Ak1BQwAhAAAAT0cvVndNbHBQVTlDaERtSEFRQUFBQUFBQUFBQUFBQUEAAmF1ZGl0UmVjb3JkVHlwZQAHAAAAaGVhZGVyAABzAQAACXRzACkz+Id/AQAAAmxvZwBZAQAAMFFqd3VmWUl5ZHZOdURYVEFRQUFBQUVBQUFBQUFBQUFVWmFNa0I3eVlsbHlIRTh6RVM0QStCSzVIT0RraFdqVEJUOVlxL3Z3RzNUdjhXNGtFZ0VENDBhRE1wOExMUWJXek8vZ1RDK016R1NuSEZxZXI2RGdXOVQxYTdnNEdxTGxaQm1QOVdKaFl4TSsyeURVUlZzS3VvZ2hLbFdsb3NYVkdnZDFHUEQ3UGV4Ums4Z3l0alZlRkZ4WVRvbFBPd2JMZWVrM2ZlYU1UMXZUaGZsZmtBZWZjK1ZoVVNmeGtjdFg4Tkt2dFkxQ0xManJPeXpYRUcwT09CYWluYlhpeWJDQXlzekRDOVdkTDBDZzh3eDVrbjRMWFFIc2hGakNXQThHTUlXUThNTlU3ZG1oeDFtY0VvS0dycGRWZVAveVFOT3hTamtLRHJDMm8xUDB3WGlnT1o4elJ6L1cAAA==`,
+			expectErr: true,
+		},
+		{ // tampered first byte, doc size would be wrong 283 instead of 281
+			input:     `GwEAAAl0cwAoM/iHfwEAAAJ2ZXJzaW9uAAQAAAAwLjAAAmNvbXByZXNzaW9uTW9kZQAFAAAAenN0ZAADa2V5U3RvcmVJZGVudGlmaWVyADAAAAACcHJvdmlkZXIABgAAAGxvY2FsAAJmaWxlbmFtZQAJAAAAbG9jYWxLZXkAAAVlbmNyeXB0ZWRLZXkAQAAAAAD0maD5Lru6ePgZ8t+Xg/GZJ2jzt7V1u1DRQyt2J3u3HtHjZeG+0megvO1JSFhCFbMid7+w1e88hWX3gz1WdeL6Ak1BQwAhAAAAT0cvVndNbHBQVTlDaERtSEFRQUFBQUFBQUFBQUFBQUEAAmF1ZGl0UmVjb3JkVHlwZQAHAAAAaGVhZGVyAABzAQAACXRzACkz+Id/AQAAAmxvZwBZAQAAMFFqd3VmWUl5ZHZOdURYVEFRQUFBQUVBQUFBQUFBQUFVWmFNa0I3eVlsbHlIRTh6RVM0QStCSzVIT0RraFdqVEJUOVlxL3Z3RzNUdjhXNGtFZ0VENDBhRE1wOExMUWJXek8vZ1RDK016R1NuSEZxZXI2RGdXOVQxYTdnNEdxTGxaQm1QOVdKaFl4TSsyeURVUlZzS3VvZ2hLbFdsb3NYVkdnZDFHUEQ3UGV4Ums4Z3l0alZlRkZ4WVRvbFBPd2JMZWVrM2ZlYU1UMXZUaGZsZmtBZWZjK1ZoVVNmeGtjdFg4Tkt2dFkxQ0xManJPeXpYRUcwT09CYWluYlhpeWJDQXlzekRDOVdkTDBDZzh3eDVrbjRMWFFIc2hGakNXQThHTUlXUThNTlU3ZG1oeDFtY0VvS0dycGRWZVAveVFOT3hTamtLRHJDMm8xUDB3WGlnT1o4elJ6L1cAAA==`,
+			expectErr: true,
+		},
+		{ // tampered last byte to be 1 instead of 0
+			input:     `GQEAAAl0cwAoM/iHfwEAAAJ2ZXJzaW9uAAQAAAAwLjAAAmNvbXByZXNzaW9uTW9kZQAFAAAAenN0ZAADa2V5U3RvcmVJZGVudGlmaWVyADAAAAACcHJvdmlkZXIABgAAAGxvY2FsAAJmaWxlbmFtZQAJAAAAbG9jYWxLZXkAAAVlbmNyeXB0ZWRLZXkAQAAAAAD0maD5Lru6ePgZ8t+Xg/GZJ2jzt7V1u1DRQyt2J3u3HtHjZeG+0megvO1JSFhCFbMid7+w1e88hWX3gz1WdeL6Ak1BQwAhAAAAT0cvVndNbHBQVTlDaERtSEFRQUFBQUFBQUFBQUFBQUEAAmF1ZGl0UmVjb3JkVHlwZQAHAAAAaGVhZGVyAABzAQAACXRzACkz+Id/AQAAAmxvZwBZAQAAMFFqd3VmWUl5ZHZOdURYVEFRQUFBQUVBQUFBQUFBQUFVWmFNa0I3eVlsbHlIRTh6RVM0QStCSzVIT0RraFdqVEJUOVlxL3Z3RzNUdjhXNGtFZ0VENDBhRE1wOExMUWJXek8vZ1RDK016R1NuSEZxZXI2RGdXOVQxYTdnNEdxTGxaQm1QOVdKaFl4TSsyeURVUlZzS3VvZ2hLbFdsb3NYVkdnZDFHUEQ3UGV4Ums4Z3l0alZlRkZ4WVRvbFBPd2JMZWVrM2ZlYU1UMXZUaGZsZmtBZWZjK1ZoVVNmeGtjdFg4Tkt2dFkxQ0xManJPeXpYRUcwT09CYWluYlhpeWJDQXlzekRDOVdkTDBDZzh3eDVrbjRMWFFIc2hGakNXQThHTUlXUThNTlU3ZG1oeDFtY0VvS0dycGRWZVAveVFOT3hTamtLRHJDMm8xUDB3WGlnT1o4elJ6L1cAAQ==`,
+			expectErr: true,
+		},
+		{ // tampered ts type from 0x9 UTC datetime to 0x13 decimal128
+			input:     `GQEAABN0cwAoM/iHfwEAAAJ2ZXJzaW9uAAQAAAAwLjAAAmNvbXByZXNzaW9uTW9kZQAFAAAAenN0ZAADa2V5U3RvcmVJZGVudGlmaWVyADAAAAACcHJvdmlkZXIABgAAAGxvY2FsAAJmaWxlbmFtZQAJAAAAbG9jYWxLZXkAAAVlbmNyeXB0ZWRLZXkAQAAAAAD0maD5Lru6ePgZ8t+Xg/GZJ2jzt7V1u1DRQyt2J3u3HtHjZeG+0megvO1JSFhCFbMid7+w1e88hWX3gz1WdeL6Ak1BQwAhAAAAT0cvVndNbHBQVTlDaERtSEFRQUFBQUFBQUFBQUFBQUEAAmF1ZGl0UmVjb3JkVHlwZQAHAAAAaGVhZGVyAABzAQAACXRzACkz+Id/AQAAAmxvZwBZAQAAMFFqd3VmWUl5ZHZOdURYVEFRQUFBQUVBQUFBQUFBQUFVWmFNa0I3eVlsbHlIRTh6RVM0QStCSzVIT0RraFdqVEJUOVlxL3Z3RzNUdjhXNGtFZ0VENDBhRE1wOExMUWJXek8vZ1RDK016R1NuSEZxZXI2RGdXOVQxYTdnNEdxTGxaQm1QOVdKaFl4TSsyeURVUlZzS3VvZ2hLbFdsb3NYVkdnZDFHUEQ3UGV4Ums4Z3l0alZlRkZ4WVRvbFBPd2JMZWVrM2ZlYU1UMXZUaGZsZmtBZWZjK1ZoVVNmeGtjdFg4Tkt2dFkxQ0xManJPeXpYRUcwT09CYWluYlhpeWJDQXlzekRDOVdkTDBDZzh3eDVrbjRMWFFIc2hGakNXQThHTUlXUThNTlU3ZG1oeDFtY0VvS0dycGRWZVAveVFOT3hTamtLRHJDMm8xUDB3WGlnT1o4elJ6L1cAAA==`,
+			expectErr: true,
+		},
+	}
+	for _, testCase := range testCases {
+		buf, err := base64.StdEncoding.DecodeString(testCase.input)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		format, scanner, err := readAuditLogFile(bytes.NewReader(buf))
+		if err != nil && !testCase.expectErr {
+			t.Fatal(err)
+		}
+		if format != BSON {
+			t.Errorf("expected: BSON got: %v", format)
+		}
+
+		var logs []*AuditLogLine
+		for scanner.Scan() {
+			log, err := scanner.AuditLogLine()
+			if err != nil && !testCase.expectErr {
+				t.Fatal(err)
+			}
+			logs = append(logs, log)
+		}
+		if scanner.Err() != nil && !testCase.expectErr {
+			t.Fatal(scanner.Err())
+		}
+
+		if testCase.expectErr && deepCompareLogLines(expectedLog, logs) {
+			t.Fatal("expected failure but decrypted correctly")
 		}
 	}
 }

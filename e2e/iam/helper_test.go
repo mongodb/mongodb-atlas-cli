@@ -22,6 +22,8 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"testing"
+	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
@@ -36,6 +38,8 @@ const (
 	projectsEntity         = "projects"
 	teamsEntity            = "teams"
 	invitationsEntity      = "invitations"
+	sleepTimeInSeconds     = 30
+	maxRetryAttempts       = 4
 )
 
 func createOrgAPIKey() (string, error) {
@@ -206,4 +210,25 @@ func OrgNUser(n int) (username, userID string, err error) {
 	}
 
 	return users.Results[n].Username, users.Results[n].ID, nil
+}
+
+type testScenario func() error
+
+func RunTestWithRetry(t *testing.T, scenario testScenario) (err error) {
+	var attempts int
+	for attempts = 1; attempts <= maxRetryAttempts; attempts++ {
+		if err = scenario(); err != nil {
+			t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while running the test: %v", attempts, maxRetryAttempts, sleepTimeInSeconds, err)
+			time.Sleep(sleepTimeInSeconds * time.Second)
+		} else {
+			t.Logf("scenario was successfull")
+			break
+		}
+	}
+
+	if attempts > maxRetryAttempts {
+		t.Errorf("Test failed more than %d with the error %v", maxRetryAttempts, err)
+	}
+
+	return err
 }

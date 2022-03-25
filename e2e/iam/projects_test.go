@@ -65,15 +65,17 @@ func TestProjects(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			iamEntity,
-			projectsEntity,
-			"ls",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-
-		assert.NoError(t, err, string(resp))
+		scenario := func() error {
+			cmd := exec.Command(cliPath,
+				iamEntity,
+				projectsEntity,
+				"ls",
+				"-o=json")
+			cmd.Env = os.Environ()
+			_, err := cmd.CombinedOutput()
+			return err
+		}
+		assert.NoError(t, RunTestWithRetry(t, scenario))
 	})
 
 	t.Run("Describe", func(t *testing.T) {

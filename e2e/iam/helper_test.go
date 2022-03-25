@@ -215,6 +215,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 type testScenario func() error
 
 func RunTestWithRetry(t *testing.T, scenario testScenario) (err error) {
+	t.Helper()
 	var attempts int
 	for attempts = 1; attempts <= maxRetryAttempts; attempts++ {
 		if err = scenario(); err != nil {

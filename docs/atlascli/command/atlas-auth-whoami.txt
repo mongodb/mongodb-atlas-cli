@@ -59,6 +59,6 @@ Examples
 .. code-block::
 
    See the logged account:
-   $ mongocli auth whoami
+   $ atlas auth whoami
 
 

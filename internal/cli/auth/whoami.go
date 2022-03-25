@@ -42,7 +42,7 @@ func WhoAmIBuilder() *cobra.Command {
 		Use:   "whoami",
 		Short: "Verifies and displays information about your authentication state.",
 		Example: `  See the logged account:
-  $ mongocli auth whoami
+  $ atlas auth whoami
 `,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()

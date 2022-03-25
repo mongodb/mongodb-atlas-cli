@@ -70,7 +70,7 @@ func LogoutBuilder() *cobra.Command {
 		Use:   "logout",
 		Short: "Log out of the CLI.",
 		Example: `  To log out from the CLI:
-  $ mongocli auth logout
+  $ atlas auth logout
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

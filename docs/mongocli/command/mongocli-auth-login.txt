@@ -75,6 +75,6 @@ Examples
 .. code-block::
 
    To start the interactive setup:
-   $ mongocli auth login
+   $ atlas auth login
 
 

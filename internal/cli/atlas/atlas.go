@@ -15,6 +15,9 @@
 package atlas
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -54,6 +57,7 @@ func Builder() *cobra.Command {
 		Use:   Use,
 		Short: "MongoDB Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			_, _ = fmt.Fprint(os.Stderr, "Deprecated: This command has been deprecated. Please, see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.\n\n")
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}
@@ -70,6 +74,7 @@ func Builder() *cobra.Command {
 
 			return validate.Credentials()
 		},
+		Deprecated: "This command has been deprecated. Please, see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.",
 		Annotations: map[string]string{
 			"toc": "true",
 		},

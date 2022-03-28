@@ -177,9 +177,9 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: `  To start the interactive setup:
-  $ mongocli auth login
-`,
+		Example: fmt.Sprintf(`  To start the interactive setup:
+  $ %s auth login
+`, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if hasUserProgrammaticKeys() {
 				return fmt.Errorf(`you have already set the programmatic keys for this profile. 

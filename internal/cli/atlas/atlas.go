@@ -17,8 +17,6 @@ package atlas
 import (
 	"fmt"
 	"os"
-	"runtime"
-	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -54,7 +52,6 @@ const (
 )
 
 func Builder() *cobra.Command {
-	deprecatedMessage := deprecatedMessage()
 	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
 		Use:   Use,
@@ -117,16 +114,4 @@ func updateHelpString(cmd *cobra.Command, deprecatedMessage string) {
 	for _, c := range cmd.Commands() {
 		c.SetHelpTemplate(fmt.Sprintf("%s \n%s", deprecatedMessage, c.HelpTemplate()))
 	}
-}
-
-func deprecatedMessage() string {
-	if strings.Contains(runtime.GOOS, "darwin") {
-		deprecatedMessage := `There’s a new, dedicated Atlas CLI available for Atlas users.  Install the Atlas CLI to enjoy the same capabilities and keep getting new features. Run "brew install mongodb-atlas" or visit https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but they will keep receiving support for 12 months (until April 30, 2023).
-
-`
-
-		return fmt.Sprintf("%s %s", "\u26A0", deprecatedMessage)
-	}
-
-	return "\u26A0 There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but they will keep receiving support for 12 months (until April 30, 2023).\n\n"
 }

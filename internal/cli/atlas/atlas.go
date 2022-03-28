@@ -74,7 +74,7 @@ func Builder() *cobra.Command {
 
 			return validate.Credentials()
 		},
-		Deprecated: "This command has been deprecated. Please, see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.",
+		Deprecated: "Please, see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.",
 		Annotations: map[string]string{
 			"toc": "true",
 		},

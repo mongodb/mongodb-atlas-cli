@@ -60,7 +60,7 @@ func Builder() *cobra.Command {
 		Use:   Use,
 		Short: "MongoDB Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			_, _ = fmt.Fprintf(os.Stderr, `Command "%s" is deprecated, Atlas commands for MongoCLI are now deprecated but they will keep receiving support for 12 months (until April 30, 2023).
+			_, _ = fmt.Fprintf(os.Stderr, `Command "%s" is deprecated, but it will keep receiving support for 12 months (until April 30, 2023).
 %s`, cmd.CommandPath(), deprecatedMessage)
 			if err := opts.InitFlow(); err != nil {
 				return err
@@ -78,7 +78,7 @@ func Builder() *cobra.Command {
 
 			return validate.Credentials()
 		},
-		Deprecated: fmt.Sprintf("Atlas commands for MongoCLI are now deprecated but they will keep receiving support for 12 months (until April 30, 2023).\n%s", deprecatedMessage),
+		Deprecated: fmt.Sprintf("but it will keep receiving support for 12 months (until April 30, 2023).\n%s", deprecatedMessage),
 		Annotations: map[string]string{
 			"toc": "true",
 		},

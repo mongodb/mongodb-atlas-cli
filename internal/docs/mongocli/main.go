@@ -59,6 +59,7 @@ func deprecateAtlasCommands(cmd *cobra.Command) {
 	for _, c := range cmd.Commands() {
 		if c.Use == "atlas" {
 			c.Deprecated = "yes"
+			return
 		}
 	}
 }

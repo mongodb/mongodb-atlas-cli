@@ -17,7 +17,7 @@ package atlas
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	"runtime"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -112,7 +112,7 @@ func Builder() *cobra.Command {
 }
 
 func newDeprecatedMessage() string {
-	if isMongoCLIManagedWithBrew() {
+	if runtime.GOOS != "windows" {
 		deprecatedMessage := `There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features. Run "brew install mongodb-atlas-cli" or visit https://dochub.mongodb.org/core/migrate-to-atlas-cli.
 
 `
@@ -120,14 +120,4 @@ func newDeprecatedMessage() string {
 	}
 
 	return "\u26A0 There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli.\n\n"
-}
-
-func isMongoCLIManagedWithBrew() bool {
-	cmd := exec.Command("brew", "--prefix", "mongocli")
-
-	if err := cmd.Start(); err != nil {
-		return false
-	}
-
-	return true
 }

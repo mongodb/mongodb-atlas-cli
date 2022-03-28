@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -53,7 +54,7 @@ const (
 )
 
 func Builder() *cobra.Command {
-	deprecatedMessage := newDeprecatedMessage()
+	deprecatedMessage := deprecatedMessage()
 	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
 		Use:   Use,
@@ -111,8 +112,8 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func newDeprecatedMessage() string {
-	if runtime.GOOS != "windows" {
+func deprecatedMessage() string {
+	if strings.Contains(runtime.GOOS, "darwin") {
 		deprecatedMessage := `There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features. Run "brew install mongodb-atlas-cli" or visit https://dochub.mongodb.org/core/migrate-to-atlas-cli.
 
 `

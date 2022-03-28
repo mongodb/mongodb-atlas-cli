@@ -17,6 +17,7 @@ package atlas
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
@@ -52,12 +53,14 @@ const (
 )
 
 func Builder() *cobra.Command {
+	deprecatedMessage := newDeprecatedMessage()
 	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
 		Use:   Use,
 		Short: "MongoDB Atlas operations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			_, _ = fmt.Fprint(os.Stderr, "Deprecated: This command has been deprecated. Please, see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.\n\n")
+			_, _ = fmt.Fprintf(os.Stderr, `Command "%s" is deprecated, Atlas commands for MongoCLI are now deprecated but they will keep receiving support for 12 months (until April 30, 2023).
+%s`, cmd.CommandPath(), deprecatedMessage)
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}
@@ -74,7 +77,7 @@ func Builder() *cobra.Command {
 
 			return validate.Credentials()
 		},
-		Deprecated: "see https://dochub.mongodb.org/core/migrate-to-atlas-cli to migrate to Atlas CLI.",
+		Deprecated: fmt.Sprintf("Atlas commands for MongoCLI are now deprecated but they will keep receiving support for 12 months (until April 30, 2023).\n%s", deprecatedMessage),
 		Annotations: map[string]string{
 			"toc": "true",
 		},
@@ -106,4 +109,25 @@ func Builder() *cobra.Command {
 	)
 
 	return cmd
+}
+
+func newDeprecatedMessage() string {
+	if isMongoCLIManagedWithBrew() {
+		deprecatedMessage := `There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features. Run "brew install mongodb-atlas-cli" or visit https://dochub.mongodb.org/core/migrate-to-atlas-cli.
+
+`
+		return fmt.Sprintf("%s %s", "\u26A0", deprecatedMessage)
+	}
+
+	return "\u26A0 There’s a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli.\n\n"
+}
+
+func isMongoCLIManagedWithBrew() bool {
+	cmd := exec.Command("brew", "--prefix", "mongocli")
+
+	if err := cmd.Start(); err != nil {
+		return false
+	}
+
+	return true
 }

@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// MongoCLIBuilder is to split "mongocli atlas logs" and "atlascli logs"
+// MongoCLIBuilder is to split "mongocli atlas logs" and "atlascli logs".
 func MongoCLIBuilder() *cobra.Command {
 	const use = "logs"
 	cmd := &cobra.Command{

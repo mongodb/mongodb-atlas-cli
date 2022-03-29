@@ -59,7 +59,7 @@ func (opts *DecryptOpts) Run() error {
 	}
 	defer inReader.Close()
 
-	keyProviderOpts := decryption.KeyProviderOpts{
+	keyProviderOpts := &decryption.KeyProviderOpts{
 		Local: decryption.KeyProviderLocalOpts{
 			KeyFileName: opts.localKeyFileName,
 		},

@@ -37,7 +37,7 @@ func (h *HeaderRecord) DecryptKey() ([]byte, error) {
 	return h.KeyProvider.DecryptKey(h.EncryptedKey)
 }
 
-func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, error) {
+func decodeHeader(logLine *AuditLogLine, opts *KeyProviderOpts) (*HeaderRecord, error) {
 	keyProvider, err := logLine.KeyProvider(opts)
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func validateHeaderFields(logLine *AuditLogLine) error {
 	return nil
 }
 
-func processHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*DecryptSection, error) {
+func processHeader(logLine *AuditLogLine, opts *KeyProviderOpts) (*DecryptSection, error) {
 	err := validateHeaderFields(logLine)
 	if err != nil {
 		return nil, err

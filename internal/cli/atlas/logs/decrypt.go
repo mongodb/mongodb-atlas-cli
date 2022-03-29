@@ -75,7 +75,7 @@ func (opts *DecryptOpts) Run() error {
 	}
 	defer inReader.Close()
 
-	keyProviderOpts := decryption.KeyProviderOpts{
+	keyProviderOpts := &decryption.KeyProviderOpts{
 		AWS: decryption.KeyProviderAWSOpts{
 			AccessKey:       opts.awsOpts.awsAccessKey,
 			SecretAccessKey: opts.awsOpts.awsSecretAccessKey,

@@ -15,7 +15,7 @@
 //go:build unit
 // +build unit
 
-package logs
+package decryption
 
 import (
 	"testing"

@@ -15,6 +15,7 @@
 package logs
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/decryption"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		JobsBuilder(),
-		KeyProvidersBuilder(),
+		decryption.KeyProvidersBuilder(),
 		DecryptBuilder(),
 	)
 

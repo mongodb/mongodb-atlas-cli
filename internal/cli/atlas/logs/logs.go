@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// MongoCLIBuilder is used in "mongocli atlas" to avoid adding new command to deprecated cli.
+// MongoCLIBuilder is to split "mongocli atlas logs" and "atlascli logs"
 func MongoCLIBuilder() *cobra.Command {
 	const use = "logs"
 	cmd := &cobra.Command{

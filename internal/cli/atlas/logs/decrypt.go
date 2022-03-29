@@ -53,29 +53,13 @@ type DecryptAzureOpts struct {
 	azureSecret   string
 }
 
-// stdOutMode returns true when the results should be printed to Stdout (--out|-o flag is not set).
-func (opts *DecryptOpts) stdOutMode() bool {
+// shouldPrintResultsToStdout returns true when the results should be printed to Stdout (--out|-o flag is not set).
+func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 	return opts.Out == ""
 }
 
-func (opts *DecryptOpts) Run() error {
-	var outWriter io.WriteCloser = os.Stdout
-	if !opts.stdOutMode() {
-		var err error
-		outWriter, err = opts.NewWriteCloser()
-		if err != nil {
-			return err
-		}
-		defer outWriter.Close()
-	}
-
-	inReader, err := opts.Fs.Open(opts.inFileName)
-	if err != nil {
-		return err
-	}
-	defer inReader.Close()
-
-	keyProviderOpts := &decryption.KeyProviderOpts{
+func (opts *DecryptOpts) newKeyProviderOpts() *decryption.KeyProviderOpts {
+	return &decryption.KeyProviderOpts{
 		AWS: decryption.KeyProviderAWSOpts{
 			AccessKey:       opts.awsOpts.awsAccessKey,
 			SecretAccessKey: opts.awsOpts.awsSecretAccessKey,
@@ -90,20 +74,40 @@ func (opts *DecryptOpts) Run() error {
 			TenantID: opts.azureOpts.azureTenantID,
 		},
 	}
+}
 
-	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.stdOutMode() {
+func (opts *DecryptOpts) Run() error {
+	var outWriter io.WriteCloser = os.Stdout
+	if !opts.shouldPrintResultsToStdout() {
+		var err error
+		outWriter, err = opts.NewWriteCloser()
+		if err != nil {
+			return err
+		}
+		defer outWriter.Close()
+	}
+
+	inReader, err := opts.Fs.Open(opts.inFileName)
+	if err != nil {
+		return err
+	}
+	defer inReader.Close()
+
+	keyProviderOpts := opts.newKeyProviderOpts()
+
+	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.shouldPrintResultsToStdout() {
 		_ = opts.OnError(outWriter)
 		return err
 	}
 
-	if !opts.stdOutMode() {
+	if !opts.shouldPrintResultsToStdout() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 
 	return nil
 }
 
-// mongocli om logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.
+// atlas logs decrypt --localKey <localKeyFile> --kmipServerCAFile <caFile> –-kmipClientCertificateFile <certFile> --file <encryptedLogFile> --out <outputLogFile>.
 func DecryptBuilder() *cobra.Command {
 	opts := &DecryptOpts{}
 	opts.Fs = afero.NewOsFs()

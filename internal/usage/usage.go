@@ -314,4 +314,11 @@ const (
 	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK)."
 	KMIPServerCAFile                         = "Path to the CA file used to connect to the server that supports KMIP."
 	KMIPClientCertificateFile                = "Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP)."
+	GCPServiceAccountKey                     = "GCP service account key file."
+	AzureClientID                            = "Application (client) ID assigned by Azure portal - App registrations experience."
+	AzureTenantID                            = "Tenant value in the path of the request can be used to control who can sign into the application."
+	AzureSecret                              = "Application secret created in the Azure app registration portal."
+	DecryptAWSAccessKey                      = "AWS Access Key ID that is part of long-term credentials."
+	DecryptAWSSecretKey                      = "AWS Secret Access Key  that is part of long-term credentials." //nolint:gosec // This is just a message not a credential
+	AWSSessionToken                          = "AWS session token used with temporary security credentials."   //nolint:gosec // This is just a message not a credential
 )

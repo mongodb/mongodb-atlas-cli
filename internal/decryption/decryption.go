@@ -38,6 +38,9 @@ func (s *DecryptSection) zeroLEK() {
 type KeyProviderOpts struct {
 	Local KeyProviderLocalOpts
 	KMIP  KeyProviderKMIPOpts
+	AWS   KeyProviderAWSOpts
+	GCP   KeyProviderGCPOpts
+	Azure KeyProviderAzureOpts
 }
 
 type KeyProviderLocalOpts struct {
@@ -47,6 +50,22 @@ type KeyProviderLocalOpts struct {
 type KeyProviderKMIPOpts struct {
 	ServerCAFileName          string
 	ClientCertificateFileName string
+}
+
+type KeyProviderAWSOpts struct {
+	AccessKey       string
+	SecretAccessKey string
+	SessionToken    string
+}
+
+type KeyProviderGCPOpts struct {
+	ServiceAccountKey string
+}
+
+type KeyProviderAzureOpts struct {
+	ClientID string
+	TenantID string
+	Secret   string
 }
 
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,

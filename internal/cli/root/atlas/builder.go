@@ -267,7 +267,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 	if isHb {
 		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
 	} else {
-		upgradeInstructions = fmt.Sprint(`To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli.`)
+		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli."
 	}
 
 	newVersionTemplate := `

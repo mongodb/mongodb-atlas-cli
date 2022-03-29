@@ -73,7 +73,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		return &keyproviders.LocalKeyIdentifier{
-			Filename: opts.LocalKeyFileName,
+			Filename: opts.Local.KeyFileName,
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
@@ -81,8 +81,8 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 			ServerNames:               logLine.KeyStoreIdentifier.KMIPServerName,
 			ServerPort:                *logLine.KeyStoreIdentifier.KMIPPort,
 			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
-			ServerCAFileName:          opts.KMIPServerCAFileName,
-			ClientCertificateFileName: opts.KMIPClientCertificateFileName,
+			ServerCAFileName:          opts.KMIP.ServerCAFileName,
+			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
 		}, nil
 	default:
 		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)

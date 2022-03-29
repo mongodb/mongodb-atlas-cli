@@ -36,9 +36,17 @@ func (s *DecryptSection) zeroLEK() {
 }
 
 type KeyProviderOpts struct {
-	LocalKeyFileName              string
-	KMIPServerCAFileName          string
-	KMIPClientCertificateFileName string
+	Local KeyProviderLocalOpts
+	KMIP  KeyProviderKMIPOpts
+}
+
+type KeyProviderLocalOpts struct {
+	KeyFileName string
+}
+
+type KeyProviderKMIPOpts struct {
+	ServerCAFileName          string
+	ClientCertificateFileName string
 }
 
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,

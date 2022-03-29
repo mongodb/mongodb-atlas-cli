@@ -60,9 +60,13 @@ func (opts *DecryptOpts) Run() error {
 	defer inReader.Close()
 
 	keyProviderOpts := decryption.KeyProviderOpts{
-		LocalKeyFileName:              opts.localKeyFileName,
-		KMIPServerCAFileName:          opts.kmipServerCAFileName,
-		KMIPClientCertificateFileName: opts.kmipClientCertificateFileName,
+		Local: decryption.KeyProviderLocalOpts{
+			KeyFileName: opts.localKeyFileName,
+		},
+		KMIP: decryption.KeyProviderKMIPOpts{
+			ServerCAFileName:          opts.kmipServerCAFileName,
+			ClientCertificateFileName: opts.kmipClientCertificateFileName,
+		},
 	}
 
 	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.stdOutMode() {

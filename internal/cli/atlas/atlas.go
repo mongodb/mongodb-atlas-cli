@@ -15,6 +15,9 @@
 package atlas
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -53,7 +56,9 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   Use,
 		Short: "MongoDB Atlas operations.",
+		Long:  deprecatedMessage,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			_, _ = fmt.Fprint(os.Stderr, deprecatedMessage)
 			if err := opts.InitFlow(); err != nil {
 				return err
 			}
@@ -100,5 +105,13 @@ func Builder() *cobra.Command {
 		accesslogs.Builder(),
 	)
 
+	updateHelpString(cmd, deprecatedMessage)
 	return cmd
+}
+
+// updateHelpString updates the help template to include the deprecated message.
+func updateHelpString(cmd *cobra.Command, deprecatedMessage string) {
+	for _, c := range cmd.Commands() {
+		c.SetHelpTemplate(fmt.Sprintf("%s \n%s", deprecatedMessage, c.HelpTemplate()))
+	}
 }

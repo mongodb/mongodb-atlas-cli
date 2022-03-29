@@ -35,5 +35,5 @@ if [[ "${unstable-}" == "-unstable" ]]; then
   ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --snapshot -p 1
 else
   # avoid race conditions on the notarization step by using `-p 1`
-  ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes CHANGELOG.md -p 1
+  ./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes "${changelog_file:?}" -p 1
 fi

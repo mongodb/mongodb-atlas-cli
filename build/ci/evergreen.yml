@@ -282,10 +282,10 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           ./bin/snyk test --org=cloud
-  post:
-    - command: attach.xunit_results
-      params:
-        files: ["src/github.com/mongodb/mongocli/*.xml"]
+post:
+  - command: attach.xunit_results
+    params:
+      files: ["src/github.com/mongodb/mongocli/*.xml"]
 
 tasks:
   - name: compile

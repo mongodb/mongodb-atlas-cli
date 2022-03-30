@@ -37,14 +37,14 @@ type DecryptOpts struct {
 	localKeyFileName              string
 }
 
-// stdOutMode returns true when the results should be printed to Stdout (--out|-o flag is not set).
-func (opts *DecryptOpts) stdOutMode() bool {
+// shouldPrintResultsToStdout returns true when the results should be printed to Stdout (--out|-o flag is not set).
+func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 	return opts.Out == ""
 }
 
 func (opts *DecryptOpts) Run() error {
 	var outWriter io.WriteCloser = os.Stdout
-	if !opts.stdOutMode() {
+	if !opts.shouldPrintResultsToStdout() {
 		var err error
 		outWriter, err = opts.NewWriteCloser()
 		if err != nil {
@@ -59,18 +59,22 @@ func (opts *DecryptOpts) Run() error {
 	}
 	defer inReader.Close()
 
-	keyProviderOpts := decryption.KeyProviderOpts{
-		LocalKeyFileName:              opts.localKeyFileName,
-		KMIPServerCAFileName:          opts.kmipServerCAFileName,
-		KMIPClientCertificateFileName: opts.kmipClientCertificateFileName,
+	keyProviderOpts := &decryption.KeyProviderOpts{
+		Local: decryption.KeyProviderLocalOpts{
+			KeyFileName: opts.localKeyFileName,
+		},
+		KMIP: decryption.KeyProviderKMIPOpts{
+			ServerCAFileName:          opts.kmipServerCAFileName,
+			ClientCertificateFileName: opts.kmipClientCertificateFileName,
+		},
 	}
 
-	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.stdOutMode() {
+	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.shouldPrintResultsToStdout() {
 		_ = opts.OnError(outWriter)
 		return err
 	}
 
-	if !opts.stdOutMode() {
+	if !opts.shouldPrintResultsToStdout() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 

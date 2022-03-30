@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,25 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package logs
+package decryption
 
 import (
-	"github.com/mongodb/mongocli/internal/cli/decryption"
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
+func KeyProvidersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   "Manage log collection jobs for your project.",
+		Use:     "keyProviders",
+		Aliases: cli.GenerateAliases("keyProviders", "keys"),
+		Short:   "Manage your key collections.",
 	}
 
-	cmd.AddCommand(
-		JobsBuilder(),
-		decryption.KeyProvidersBuilder(),
-		DecryptBuilder(),
-	)
+	cmd.AddCommand(KeyProvidersListBuilder())
 
 	return cmd
 }

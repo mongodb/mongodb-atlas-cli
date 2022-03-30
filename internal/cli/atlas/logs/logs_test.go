@@ -12,21 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+// +build unit
+
 package logs
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func KeyProvidersBuilder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "keyProviders",
-		Aliases: cli.GenerateAliases("keyProviders", "keys"),
-		Short:   "Manage your key collections.",
-	}
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		3,
+		[]string{},
+	)
+}
 
-	cmd.AddCommand(KeyProvidersListBuilder())
-
-	return cmd
+func TestMongoCLIBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		MongoCLIBuilder(),
+		1,
+		[]string{},
+	)
 }

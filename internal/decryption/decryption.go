@@ -36,15 +36,42 @@ func (s *DecryptSection) zeroLEK() {
 }
 
 type KeyProviderOpts struct {
-	LocalKeyFileName              string
-	KMIPServerCAFileName          string
-	KMIPClientCertificateFileName string
+	Local KeyProviderLocalOpts
+	KMIP  KeyProviderKMIPOpts
+	AWS   KeyProviderAWSOpts
+	GCP   KeyProviderGCPOpts
+	Azure KeyProviderAzureOpts
+}
+
+type KeyProviderLocalOpts struct {
+	KeyFileName string
+}
+
+type KeyProviderKMIPOpts struct {
+	ServerCAFileName          string
+	ClientCertificateFileName string
+}
+
+type KeyProviderAWSOpts struct {
+	AccessKey       string
+	SecretAccessKey string
+	SessionToken    string
+}
+
+type KeyProviderGCPOpts struct {
+	ServiceAccountKey string
+}
+
+type KeyProviderAzureOpts struct {
+	ClientID string
+	TenantID string
+	Secret   string
 }
 
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
-func Decrypt(logReader io.ReadSeeker, out io.Writer, opts KeyProviderOpts) error {
+func Decrypt(logReader io.ReadSeeker, out io.Writer, opts *KeyProviderOpts) error {
 	_, logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err

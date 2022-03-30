@@ -23,7 +23,6 @@ import (
 )
 
 type AuditRecordType string
-type AuditLogFormat string
 
 type AuditLogLineKeyStoreIdentifier struct {
 	Provider *keyproviders.KeyStoreProvider `json:"provider,omitempty"`
@@ -106,9 +105,4 @@ type DecodedLogRecord struct {
 const (
 	AuditHeaderRecord AuditRecordType = "header"
 	AuditLogRecord    AuditRecordType = ""
-)
-
-const (
-	JSON AuditLogFormat = "JSON"
-	BSON AuditLogFormat = "BSON"
 )

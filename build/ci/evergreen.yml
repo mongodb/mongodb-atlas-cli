@@ -305,6 +305,7 @@ tasks:
       - func: "build atlascli"
   - name: unit_test
     tags: ["code_health"]
+    must_have_test_results: true
     commands:
       - func: "clone"
       - func: "install gotestsum"
@@ -313,12 +314,14 @@ tasks:
       - func: "upload html coverage"
   - name: integration_test
     tags: ["code_health"]
+    must_have_test_results: true
     commands:
       - func: "clone"
       - func: "install gotestsum"
       - func: "integration-test"
   - name: lint
     tags: ["code_health"]
+    must_have_test_results: true
     commands:
       - func: "clone"
       - func: "install golangci-lint"
@@ -336,6 +339,7 @@ tasks:
       - func: "check license header"
   - name: config_e2e
     tags: ["e2e","generic"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -379,6 +383,7 @@ tasks:
   # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
     tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -397,6 +402,7 @@ tasks:
           E2E_TAGS: atlas,generic
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -416,6 +422,7 @@ tasks:
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -434,6 +441,7 @@ tasks:
           E2E_TAGS: atlas,clusters,flags
   - name: atlas_clusters_file_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -452,6 +460,7 @@ tasks:
           E2E_TAGS: atlas,clusters,file
   - name: atlas_clusters_sharded_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -470,6 +479,7 @@ tasks:
           E2E_TAGS: atlas,clusters,sharded
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -488,6 +498,7 @@ tasks:
           E2E_TAGS: atlas,clusters,m0
   - name: atlas_serverless_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -506,6 +517,7 @@ tasks:
           E2E_TAGS: atlas,serverless
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -524,6 +536,7 @@ tasks:
           E2E_TAGS: atlas,clusters,flags
   - name: atlas_gov_clusters_file_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -542,6 +555,7 @@ tasks:
           E2E_TAGS: atlas,clusters,file
   - name: atlas_gov_clusters_sharded_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -561,6 +575,7 @@ tasks:
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -580,6 +595,7 @@ tasks:
   # Logs depend on a cluster running to get logs from
   - name: atlas_logs_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -598,6 +614,7 @@ tasks:
           E2E_TAGS: atlas,logs
   - name: atlas_gov_logs_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -617,6 +634,7 @@ tasks:
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -635,6 +653,7 @@ tasks:
           E2E_TAGS: atlas,metrics
   - name: atlas_gov_metrics_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -654,6 +673,7 @@ tasks:
   # Processes depend on a cluster running
   - name: atlas_processes_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -672,6 +692,7 @@ tasks:
           E2E_TAGS: atlas,processes
   - name: atlas_gov_processes_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -691,6 +712,7 @@ tasks:
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -710,6 +732,7 @@ tasks:
   # Performance Advisor depend on a cluster
   - name: atlas_performance_advisor_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -728,6 +751,7 @@ tasks:
           E2E_TAGS: atlas,performanceAdvisor
   - name: atlas_gov_performance_advisor_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -747,6 +771,7 @@ tasks:
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
     tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -765,6 +790,7 @@ tasks:
           E2E_TAGS: atlas,search
   - name: atlas_gov_search_e2e
     tags: ["e2e","clusters","atlasgov"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -784,6 +810,7 @@ tasks:
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
     tags: ["e2e","networking","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -803,6 +830,7 @@ tasks:
   # datalake requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datalake_e2e
     tags: ["e2e","datalake","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -824,6 +852,7 @@ tasks:
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -842,6 +871,7 @@ tasks:
           E2E_TAGS: iam
   - name: atlas_gov_iam_e2e
     tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -861,6 +891,7 @@ tasks:
     # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_live_migrations_link_token_e2e
     tags: [ "e2e","atlas", "livemigrations" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -880,6 +911,7 @@ tasks:
   # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e
     tags: ["e2e","generic","cloudmanager"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -898,6 +930,7 @@ tasks:
           E2E_TAGS: iam
   - name: cloud_manager_generic_e2e
     tags: ["e2e","generic","cloudmanager"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -917,6 +950,7 @@ tasks:
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -936,6 +970,7 @@ tasks:
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -958,6 +993,7 @@ tasks:
   # Deploy ops manager and test against it
   - name: ops_manager_4_4_generic_e2e
     tags: [ "e2e","ops-manager-44" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -978,6 +1014,7 @@ tasks:
           OM_VERSION: 4.4
   - name: ops_manager_4_4_iam_e2e
     tags: [ "e2e","ops-manager-44" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -998,6 +1035,7 @@ tasks:
           OM_VERSION: 4.4
   - name: ops_manager_4_4_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-44" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1019,6 +1057,7 @@ tasks:
   # Deploy ops manager and test against it
   - name: ops_manager_4_4_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-44" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1039,6 +1078,7 @@ tasks:
           E2E_TAGS: om44,remote,sharded
   - name: ops_manager_5_0_generic_e2e
     tags: [ "e2e","ops-manager-50" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1059,6 +1099,7 @@ tasks:
           OM_VERSION: 5.0
   - name: ops_manager_5_0_iam_e2e
     tags: [ "e2e","ops-manager-50" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1079,6 +1120,7 @@ tasks:
           OM_VERSION: 5.0
   - name: ops_manager_5_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-50" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1100,6 +1142,7 @@ tasks:
   # Deploy ops manager and test against it
   - name: ops_manager_5_0_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-50" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1120,6 +1163,7 @@ tasks:
           E2E_TAGS: om50,remote,sharded
   - name: cloud_manager_decrypt_e2e
     tags: [ "e2e","generic" ]
+    must_have_test_results: true
     depends_on:
       - name: compile
         variant: "code_health"

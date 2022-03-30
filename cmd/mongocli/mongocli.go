@@ -20,6 +20,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 
 	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
 	"github.com/mongodb/mongocli/internal/config"
@@ -46,19 +47,19 @@ func updateMongoCLIConfigPath() {
 		return
 	}
 
-	mongoCLIConfigPath := fmt.Sprintf("%s/%s", mongoCLIConfigHome, "config.toml")
+	mongoCLIConfigPath := path.Join(mongoCLIConfigHome, "config.toml")
 	f, err := os.Open(mongoCLIConfigPath) // if config.toml is already there, exit
 	if err == nil {
 		f.Close()
 		return
 	}
 
-	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome()
+	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome() //nolint:staticcheck // check if old config exists
 	if err != nil {
 		return
 	}
 
-	oldMongoCLIConfigPath := fmt.Sprintf("%s/%s", oldMongoCLIConfigHome, "mongocli.toml")
+	oldMongoCLIConfigPath := path.Join(oldMongoCLIConfigHome, "mongocli.toml")
 	in, err := os.Open(oldMongoCLIConfigPath)
 	if err != nil {
 		return
@@ -84,7 +85,7 @@ func updateMongoCLIConfigPath() {
 	defer out.Close()
 
 	if _, err = io.Copy(out, in); err != nil {
-		log.Printf("There was an error generating %s: %v", mongoCLIConfigPath, err)
+		_, _ = fmt.Fprintf(os.Stderr, "There was an error generating %s: %v", mongoCLIConfigPath, err)
 		return
 	}
 	defer os.Remove(oldMongoCLIConfigPath)

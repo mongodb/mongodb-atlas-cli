@@ -93,8 +93,14 @@ func main() {
 
 func generateFile(name, version string) error {
 	packageName := mongocli
+	manualLink := fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/", version)
+	releaseNotesLink := fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version)
+	tutorialLink := "https://www.mongodb.com/docs/mongocli/stable/install/"
 	if strings.Contains(name, "atlas") {
 		packageName = "mongodb-atlas-cli"
+		manualLink = "https://dochub.mongodb.org/core/atlas-cli"
+		releaseNotesLink = "https://dochub.mongodb.org/core/atlas-cli-changelog"
+		tutorialLink = "https://dochub.mongodb.org/core/install-atlas-cli"
 	}
 	feedFile, err := os.Create(name)
 	if err != nil {
@@ -104,10 +110,10 @@ func generateFile(name, version string) error {
 	downloadArchive := &DownloadArchive{
 		ReleaseDate:          time.Now().UTC(),
 		Version:              version,
-		ManualLink:           fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/", version),
-		PreviousReleasesLink: "https://github.com/mongodb/mongocli/releases",
-		ReleaseNotesLink:     fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/release-notes/", version),
-		TutorialLink:         fmt.Sprintf("https://docs.mongodb.com/mongocli/v%s/quick-start/", version),
+		ManualLink:           manualLink,
+		PreviousReleasesLink: "https://github.com/mongodb/mongodb-atlas-cli/releases",
+		ReleaseNotesLink:     releaseNotesLink,
+		TutorialLink:         tutorialLink,
 		Platform: []Platform{
 			*newPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
 			*newPlatform(packageName, version, "x86_64", "linux", "Debian 9, 10 / Ubuntu 18.04, 20.04", []string{"deb"}),

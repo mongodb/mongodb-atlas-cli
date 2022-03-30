@@ -72,6 +72,7 @@ functions:
           - goreleaser_key
           - tool_name
           - goreleaser_config
+          - changelog_file
           - github_token
           - unstable
         env:
@@ -436,6 +437,7 @@ tasks:
         vars:
           tool_name: "mongocli"
           goreleaser_config: .mongocli.goreleaser.yml
+          changelog_file: CHANGELOG_MONGOCLI.md
       - func: "rename pkg"
         vars:
           package_name: mongocli
@@ -500,6 +502,7 @@ tasks:
         vars:
           tool_name: "atlascli"
           goreleaser_config: .atlascli.goreleaser.yml
+          changelog_file: CHANGELOG_ATLASCLI.md
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli

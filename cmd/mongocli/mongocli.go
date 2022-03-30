@@ -54,7 +54,7 @@ func updateMongoCLIConfigPath() {
 		return
 	}
 
-	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome() //nolint:staticcheck // check if old config exists
+	oldMongoCLIConfigHome, err := config.OldMongoCLIConfigHome()
 	if err != nil {
 		return
 	}

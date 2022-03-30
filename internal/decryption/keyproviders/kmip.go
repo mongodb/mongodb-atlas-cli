@@ -48,8 +48,8 @@ type KMIPEncryptedKey struct {
 	Key []byte
 }
 
-var ErrKMIPServerCAMissing error = errors.New("server CA missing")
-var ErrKMIPClientCertificateMissing error = errors.New("client certificate missing")
+var ErrKMIPServerCAMissing = errors.New("server CA missing")
+var ErrKMIPClientCertificateMissing = errors.New("client certificate missing")
 
 func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
 	if ki.ServerCAFileName == "" {

@@ -28,7 +28,7 @@ type LocalKeyIdentifier struct {
 	Filename string
 }
 
-var ErrLocalKeyCredentialMissing error = errors.New("filename missing")
+var ErrLocalKeyCredentialMissing = errors.New("filename missing")
 
 func (ki *LocalKeyIdentifier) ValidateCredentials() error {
 	if ki.Filename == "" {

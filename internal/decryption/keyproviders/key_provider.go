@@ -26,6 +26,7 @@ type KeyStoreProvider string
 const (
 	LocalKey KeyStoreProvider = "local"
 	KMIP     KeyStoreProvider = "kmip"
+	AWS      KeyStoreProvider = "aws"
 )
 
 type KeyProvider interface {

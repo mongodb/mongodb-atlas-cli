@@ -83,6 +83,15 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 			ServerCAFileName:          opts.KMIP.ServerCAFileName,
 			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
 		}, nil
+	case keyproviders.AWS:
+		return &keyproviders.AWSKeyIdentifier{
+			Key:             *logLine.KeyStoreIdentifier.Key,
+			Region:          *logLine.KeyStoreIdentifier.Region,
+			Endpoint:        *logLine.KeyStoreIdentifier.Endpoint,
+			AccessKey:       opts.AWS.AccessKey,
+			SecretAccessKey: opts.AWS.SecretAccessKey,
+			SessionToken:    opts.AWS.SessionToken,
+		}, nil
 	default:
 		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)
 	}

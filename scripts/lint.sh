@@ -18,6 +18,6 @@ STAGED_GO_FILES=$(git diff --name-only | grep ".go$" | grep -v "mock")
 
 echo "==> Linting changed go files..."
 for FILE in ${STAGED_GO_FILES}; do
-    golangci-lint run --timeout 5m "${FILE}"
+    ./bin/golangci-lint run --timeout 5m "${FILE}" -v
 done
 echo "==> Done..."

@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -160,6 +161,10 @@ Your code will expire after %.0f minutes.
 	}
 
 	accessToken, _, err := opts.flow.PollToken(ctx, code)
+	var target *atlas.ErrorResponse
+	if errors.As(err, &target) && target.ErrorCode == "DEVICE_AUTHORIZATION_EXPIRED" {
+		return errors.New("authentication timed out")
+	}
 	if err != nil {
 		return err
 	}

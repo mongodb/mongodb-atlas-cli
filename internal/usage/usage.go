@@ -104,7 +104,8 @@ const (
 	TeamRole                                 = "Project role you want to assign to the team."
 	MaxDate                                  = "Returns events whose created date is less than or equal to it."
 	MinDate                                  = "Returns events whose created date is greater than or equal to it."
-	Filename                                 = "File name to use, optional file with a json cluster configuration."
+	ClusterFilename                          = "File name to use, optional file with a json cluster configuration."
+	PoliciesFilename                         = "File name to use, optional file with a json policy configuration."
 	SearchFilename                           = "File name to use, file with a json index configuration."
 	AccessListIps                            = "IP addresses to add to the new user's access list."
 	StartDate                                = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
@@ -308,4 +309,16 @@ const (
 	LiveMigrationValidationID                = "Unique 24-hexadecimal digit string that identifies the validation job."
 	CurrentIP                                = "Flag that indicates whether to use the IP Address from the host that is currently executing the command. Only applicable for type ipAddress entries. To learn more, see: https://docs.mongodb.com/mongocli/master/command/mongocli-atlas-accessLists-create/."
 	Gov                                      = "Create a default profile for atlas for gov"
+	EncryptedLogFile                         = "Path to the file that contains encrypted audit logs."
+	OutputLogFile                            = "Path to the file where MongoCLI will save the contents of the decrypted audit log. If not specified, MongoCLI writes the contents of the decrypted audit log to stdout."
+	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK)."
+	KMIPServerCAFile                         = "Path to the CA file used to connect to the server that supports KMIP."
+	KMIPClientCertificateFile                = "Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP)."
+	GCPServiceAccountKey                     = "GCP service account key file."
+	AzureClientID                            = "Application (client) ID assigned by Azure portal - App registrations experience."
+	AzureTenantID                            = "Tenant value in the path of the request can be used to control who can sign into the application."
+	AzureSecret                              = "Application secret created in the Azure app registration portal."
+	DecryptAWSAccessKey                      = "AWS Access Key ID that is part of long-term credentials."
+	DecryptAWSSecretKey                      = "AWS Secret Access Key  that is part of long-term credentials." //nolint:gosec // This is just a message not a credential
+	AWSSessionToken                          = "AWS session token used with temporary security credentials."   //nolint:gosec // This is just a message not a credential
 )

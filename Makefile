@@ -72,13 +72,11 @@ test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter
-	@echo "==> Linting all packages..."
-	golangci-lint run --timeout 5m
+	@scripts/lint.sh
 
 .PHONY: fix-lint
 fix-lint: ## Fix linting errors
-	@echo "==> Fixing lint errors"
-	golangci-lint run --fix --timeout 5m
+	@scripts/fix-lint.sh
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters

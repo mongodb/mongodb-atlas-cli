@@ -1118,7 +1118,24 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: om50,remote,sharded
-
+  - name: cloud_manager_decrypt_e2e
+    tags: [ "e2e","generic" ]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build mongocli"
+      - func: "deploy spawn host"
+      - func: ssh-ready
+      - func: "set-up cloud manager"
+      - func: "install automation agent"
+      - func: "e2e test"
+        vars:
+          E2E_TAGS: cloudmanager,decrypt
+      - func: "clean-up cloud manager"
 buildvariants:
   - name: code_health
     display_name: "Code Health"

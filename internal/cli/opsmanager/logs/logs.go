@@ -15,6 +15,7 @@
 package logs
 
 import (
+	"github.com/mongodb/mongocli/internal/cli/decryption"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,11 @@ func Builder() *cobra.Command {
 		Short:   "Manage log collection jobs for your project.",
 	}
 
-	cmd.AddCommand(JobsBuilder())
+	cmd.AddCommand(
+		JobsBuilder(),
+		decryption.KeyProvidersBuilder(),
+		DecryptBuilder(),
+	)
 
 	return cmd
 }

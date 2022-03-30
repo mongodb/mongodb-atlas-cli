@@ -51,7 +51,7 @@ type loginOpts struct {
 	isGov          bool
 	isCloudManager bool
 	noBrowser      bool
-	loginOnly      bool
+	skipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -97,7 +97,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.loginOnly {
+	if opts.skipConfig {
 		return opts.config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
@@ -126,7 +126,9 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
 	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.BinName())
+
 	return nil
 }
 
@@ -166,15 +168,25 @@ Your code will expire after %.0f minutes.
 	return nil
 }
 
+func hasUserProgrammaticKeys() bool {
+	return config.PublicAPIKey() != "" && config.PrivateAPIKey() != ""
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &loginOpts{}
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: `  To start the interactive setup:
-  $ mongocli auth login
-`,
+		Example: fmt.Sprintf(`  To start the interactive setup:
+  $ %s auth login
+`, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if hasUserProgrammaticKeys() {
+				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+
+Run '%s auth login --profile <profile_name>' to use your username and password on a new profile`, config.BinName())
+			}
+
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
 			if config.OpsManagerURL() != "" {
@@ -188,11 +200,13 @@ func LoginBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
+	if config.ToolName == config.MongoCLI {
+		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
+	}
+
 	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.loginOnly, "loginOnly", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkHidden("loginOnly")
+	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
 	return cmd
 }
 

@@ -74,6 +74,7 @@ type Notifier struct {
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,
@@ -88,27 +89,22 @@ func Builder(profile *string) *cobra.Command {
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.Service() == "" {
+			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
 
-			if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
-				return nil
+			if shouldCheckCredentials(cmd) {
+				if err := opts.InitFlow(); err != nil {
+					return err
+				}
+
+				if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+					return err
+				}
+				return validate.Credentials()
 			}
 
-			if cmd.Name() == "quickstart" { // quickstart has its own check
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
-				return nil
-			}
-
-			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
-				return nil
-			}
-
-			return validate.Credentials()
+			return nil
 		},
 		PersistentPostRun: func(cmd *cobra.Command, args []string) {
 			// we don't run the release alert feature on the completion command
@@ -191,6 +187,46 @@ Go version: %s
    compiler: %s
 `
 
+func shouldSetService(cmd *cobra.Command) bool {
+	if config.Service() != "" {
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
+		return false
+	}
+
+	return true
+}
+
+func shouldCheckCredentials(cmd *cobra.Command) bool {
+	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
+		return false
+	}
+
+	if cmd.Name() == "quickstart" { // quickstart has its own check
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
+		return false
+	}
+
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
+		return false
+	}
+
+	return true
+}
+
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
 		config.ToolName,
@@ -231,7 +267,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 	if isHb {
 		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
 	} else {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, see: https://dochub.mongodb.org/core/%s-install.`, config.ToolName)
+		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli."
 	}
 
 	newVersionTemplate := `

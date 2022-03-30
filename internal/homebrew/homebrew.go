@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	atlasFormulaName = "mongodb-atlas"
+	atlasFormulaName = "mongodb-atlas-cli"
 	brewFileSubPath  = "/brew.yaml"
 )
 

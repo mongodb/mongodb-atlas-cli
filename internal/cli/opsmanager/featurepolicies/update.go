@@ -19,9 +19,11 @@ import (
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/file"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -35,6 +37,8 @@ type UpdateOpts struct {
 	name     string
 	systemID string
 	policy   []string
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -46,42 +50,63 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateFeatureControlPolicy(opts.ConfigProjectID(), opts.newFeatureControl())
+	p, err := opts.newFeatureControl()
+	if err != nil {
+		return err
+	}
+	r, err := opts.store.UpdateFeatureControlPolicy(opts.ConfigProjectID(), p)
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newFeatureControl() *opsmngr.FeaturePolicy {
-	return &opsmngr.FeaturePolicy{
-		ExternalManagementSystem: &opsmngr.ExternalManagementSystem{
+func (opts *UpdateOpts) newFeatureControl() (*opsmngr.FeaturePolicy, error) {
+	policy := new(opsmngr.FeaturePolicy)
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, policy); err != nil {
+			return nil, err
+		}
+	} else {
+		policy.ExternalManagementSystem = &opsmngr.ExternalManagementSystem{
 			Name:     opts.name,
 			SystemID: opts.systemID,
-		},
-		Policies: opts.newPolicies(),
+		}
+		policy.Policies = opts.newPolicies()
 	}
+	return policy, nil
 }
 
 func (opts *UpdateOpts) newPolicies() []*opsmngr.Policy {
-	var policies []*opsmngr.Policy
-	for _, value := range opts.policy {
+	policies := make([]*opsmngr.Policy, len(opts.policy))
+	for i := range opts.policy {
 		policy := &opsmngr.Policy{
-			Policy: value,
+			Policy: opts.policy[i],
 		}
-		policies = append(policies, policy)
+		policies[i] = policy
 	}
 	return policies
 }
 
-// mongocli ops-manager featurePolicy(ies) update --name name --policy policy --systemId systemId [--projectId projectId]
-
+// UpdateBuilder mongocli ops-manager featurePolicy(ies) update --name name --policy policy --systemId systemId [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+	opts := &UpdateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "update",
 		Short: "Update feature control policies for your project.",
+		Long:  "Feature Control Policies allow you to enable or disable certain MongoDB features based on your site-specific needs.",
+		Example: `Disable user management for a project:
+  $ mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
+
+  Update policies from a JSON configuration file:
+  $ mongocli atlas featurePolicies update --projectId <projectId> --file <path/to/file.json>
+`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.Name)
+			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -96,11 +121,12 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.policy, flag.Policy, []string{}, usage.Policy)
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.ExternalSystemName)
 	cmd.Flags().StringVar(&opts.systemID, flag.SystemID, "", usage.SystemID)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.PoliciesFilename)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.Name)
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	return cmd
 }

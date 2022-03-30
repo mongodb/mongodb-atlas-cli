@@ -48,6 +48,35 @@ type KMIPEncryptedKey struct {
 	Key []byte
 }
 
+var ErrKMIPServerCAMissing error = errors.New("server CA missing")
+var ErrKMIPClientCertificateMissing error = errors.New("client certificate missing")
+
+func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
+	if ki.ServerCAFileName == "" {
+		f, err := provideInput("Provide server CA filename", "")
+		if err != nil {
+			return err
+		}
+		ki.ServerCAFileName = f
+		if ki.ServerCAFileName == "" {
+			return ErrKMIPServerCAMissing
+		}
+	}
+
+	if ki.ClientCertificateFileName == "" {
+		f, err := provideInput("Provide client certificate filename", "")
+		if err != nil {
+			return err
+		}
+		ki.ClientCertificateFileName = f
+		if ki.ClientCertificateFileName == "" {
+			return ErrKMIPClientCertificateMissing
+		}
+	}
+
+	return nil
+}
+
 // DecryptKey decrypts LEK using KMIP get or decrypt methods.
 func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 	if len(ki.ServerNames) == 0 {

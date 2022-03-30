@@ -16,6 +16,7 @@ package keyproviders
 
 import (
 	"encoding/base64"
+	"errors"
 	"os"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
@@ -25,6 +26,22 @@ import (
 type LocalKeyIdentifier struct {
 	KeyStoreIdentifier
 	Filename string
+}
+
+var ErrLocalKeyCredentialMissing error = errors.New("filename missing")
+
+func (ki *LocalKeyIdentifier) ValidateCredentials() error {
+	if ki.Filename == "" {
+		f, err := provideInput("Provide key filename", "")
+		if err != nil {
+			return err
+		}
+		ki.Filename = f
+		if ki.Filename == "" {
+			return ErrLocalKeyCredentialMissing
+		}
+	}
+	return nil
 }
 
 // DecryptKey decrypts LEK using KMIP get or decrypt methods.

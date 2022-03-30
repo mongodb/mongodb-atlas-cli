@@ -88,20 +88,6 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 	}
 }
 
-type HeaderAAD struct {
-	TS      time.Time `json:"ts"`
-	Version string    `json:"version"`
-}
-
-type DecodedLogRecord struct {
-	CipherText         []byte
-	Tag                []byte
-	IV                 []byte
-	AAD                []byte
-	KeyInitCount       uint32
-	KeyInvocationCount uint64
-}
-
 const (
 	AuditHeaderRecord AuditRecordType = "header"
 	AuditLogRecord    AuditRecordType = ""

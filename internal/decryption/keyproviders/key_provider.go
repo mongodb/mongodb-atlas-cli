@@ -27,6 +27,7 @@ const (
 	LocalKey KeyStoreProvider = "local"
 	KMIP     KeyStoreProvider = "kmip"
 	AWS      KeyStoreProvider = "aws"
+	GCP      KeyStoreProvider = "gcp"
 )
 
 type KeyProvider interface {

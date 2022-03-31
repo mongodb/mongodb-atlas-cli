@@ -92,6 +92,15 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 			SecretAccessKey: opts.AWS.SecretAccessKey,
 			SessionToken:    opts.AWS.SessionToken,
 		}, nil
+	case keyproviders.GCP:
+		return &keyproviders.GCPKeyIdentifier{
+			KeyName:           *logLine.KeyStoreIdentifier.KeyName,
+			ProjectID:         *logLine.KeyStoreIdentifier.ProjectID,
+			Location:          *logLine.KeyStoreIdentifier.Location,
+			KeyRing:           *logLine.KeyStoreIdentifier.KeyRing,
+			ServiceAccountKey: opts.GCP.ServiceAccountKey,
+		}, nil
+
 	default:
 		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)
 	}

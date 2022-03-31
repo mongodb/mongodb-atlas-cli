@@ -74,6 +74,6 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 	return nil
 }
 
-func (ki *AWSKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
+func (ki *AWSKeyIdentifier) DecryptKey(_ []byte) ([]byte, error) {
 	return nil, errors.New("not implemented")
 }

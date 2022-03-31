@@ -20,6 +20,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/mongodb/mongocli/internal/config"
@@ -62,25 +63,25 @@ func createConfigFromMongoCLIConfig() {
 		return
 	}
 
-	atlasConfigPath := fmt.Sprintf("%s/%s", atlasConfigHomePath, "config.toml")
+	atlasConfigPath := path.Join(atlasConfigHomePath, "config.toml")
 	f, err := os.Open(atlasConfigPath) // if config.toml is already there, exit
 	if err == nil {
 		f.Close()
 		return
 	}
 
-	path, err := mongoCLIConfigFilePath()
+	p, err := mongoCLIConfigFilePath()
 	if err != nil {
 		return
 	}
 
-	in, err := os.Open(path)
+	in, err := os.Open(p)
 	if err != nil {
 		return
 	}
 	defer in.Close()
 
-	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has found an existing MongoCLI configuration file, copying its content to: %s
+	_, _ = fmt.Fprintf(os.Stderr, `Atlas CLI has found an existing MongoDB CLI configuration file, copying its content to: %s
 `, atlasConfigPath)
 	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
 	if err != nil {
@@ -97,7 +98,7 @@ func createConfigFromMongoCLIConfig() {
 	defer out.Close()
 
 	if _, err = io.Copy(out, in); err != nil {
-		log.Printf("There was an error generating %s: %v", atlasConfigPath, err)
+		_, _ = fmt.Fprintf(os.Stderr, "There was an error generating %s: %v", atlasConfigPath, err)
 		return
 	}
 
@@ -108,7 +109,7 @@ func createConfigFromMongoCLIConfig() {
 
 func mongoCLIConfigFilePath() (configPath string, err error) {
 	if configDir, err := config.MongoCLIConfigHome(); err == nil {
-		configPath = fmt.Sprintf("%s/config.toml", configDir)
+		configPath = path.Join(configDir, "config.toml")
 	}
 
 	// Check if file exists, if any error is detected try to get older file

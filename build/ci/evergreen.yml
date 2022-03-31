@@ -128,6 +128,8 @@ functions:
           - E2E_CLOUD_ROLE_ID
           - MCLI_OPS_MANAGER_URL
           - OM_VERSION
+          - KMIP_CA
+          - KMIP_CERT
           - revision
         working_dir: src/github.com/mongodb/mongocli
         env:
@@ -282,6 +284,20 @@ functions:
           export GOROOT="${go_root}"
           export PATH="./bin:$GOROOT/bin:$PATH"
           ./bin/snyk test --org=cloud
+  "install pykmip":
+    - command: subprocess.exec
+      type: setup
+      params:
+        add_to_path:
+          - ${go_bin}
+          - ../../bin
+        working_dir: /src/github.com/mongodb/mongocli/build/ci/kmip
+        binary: ./install.sh
+        args: ["-h", "hosts.json"]
+        env:
+          XDG_CONFIG_HOME: ${workdir}
+          KMIP_CA: ${logs_decrypt_kmip_ca}
+          KMIP_CERT: ${logs_decrypt_kmip_cert}
 post:
   - command: attach.xunit_results
     params:
@@ -1171,14 +1187,37 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "set-up cloud manager"
-      - func: "install automation agent"
       - func: "e2e test"
         vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,decrypt
-      - func: "clean-up cloud manager"
+  - name: cloud_manager_decrypt_with_kmip_e2e
+    tags: ["e2e", "generic"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "clone"
+      - func: "install gotestsum"
+      - func: "build mongocli"
+      - func: "install pykmip"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${cloud_manager_org_id}
+          MCLI_PROJECT_ID: ${cloud_manager_project_id}
+          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud-manager
+          KMIP_CA: ${logs_decrypt_kmip_ca}
+          KMIP_CERT: ${logs_decrypt_kmip_cert}
+          E2E_TAGS: cloudmanager,kmipdecrypt
 buildvariants:
   - name: code_health
     display_name: "Code Health"

@@ -28,6 +28,7 @@ const (
 	KMIP     KeyStoreProvider = "kmip"
 	AWS      KeyStoreProvider = "aws"
 	GCP      KeyStoreProvider = "gcp"
+	Azure    KeyStoreProvider = "azure"
 )
 
 type KeyProvider interface {

@@ -100,7 +100,16 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 			KeyRing:           *logLine.KeyStoreIdentifier.KeyRing,
 			ServiceAccountKey: opts.GCP.ServiceAccountKey,
 		}, nil
-
+	case keyproviders.Azure:
+		return &keyproviders.AzureKeyIdentifier{
+			KeyName:          *logLine.KeyStoreIdentifier.KeyName,
+			Environment:      *logLine.KeyStoreIdentifier.Environment,
+			KeyVaultEndpoint: *logLine.KeyStoreIdentifier.KeyVaultEndpoint,
+			KeyVersion:       *logLine.KeyStoreIdentifier.KeyVersion,
+			ClientID:         opts.Azure.ClientID,
+			TenantID:         opts.Azure.TenantID,
+			Secret:           opts.Azure.Secret,
+		}, nil
 	default:
 		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)
 	}

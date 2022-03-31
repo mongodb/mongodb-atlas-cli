@@ -64,7 +64,7 @@ func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 		if clientError == nil {
 			clientError = err
 		} else {
-			clientError = fmt.Errorf("'%s': %s", serverName, err.Error())
+			clientError = fmt.Errorf("'%s': %w", serverName, err)
 		}
 	}
 

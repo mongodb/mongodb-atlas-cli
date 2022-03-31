@@ -16,57 +16,19 @@
 package cloud_manager_test
 
 import (
-	"bufio"
-	"bytes"
 	"embed"
-	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
-	"path"
-	"reflect"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 )
 
-//go:embed decryption/*
+//go:embed decryption/localKey/*
 var files embed.FS
 
-func generateFileName(dir string, i int, suffix string) string {
-	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
-}
-
-func dumpToTemp(dir string, i int, suffix string) (string, error) {
-	inputFile := generateFileName("decryption", i, suffix)
-	outputFile := generateFileName(dir, i, suffix)
-
-	content, err := files.ReadFile(inputFile)
-	if err != nil {
-		return "", err
-	}
-
-	return outputFile, os.WriteFile(outputFile, content, fs.ModePerm)
-}
-
-func parseJSON(contents []byte) ([]map[string]interface{}, error) {
-	res := []map[string]interface{}{}
-
-	s := bufio.NewScanner(bytes.NewReader(contents))
-	for s.Scan() {
-		var item map[string]interface{}
-		err := json.Unmarshal(s.Bytes(), &item)
-		if err != nil {
-			return nil, err
-		}
-		res = append(res, item)
-	}
-	if s.Err() != nil {
-		return nil, s.Err()
-	}
-	return res, nil
-}
+const LocalKeyTestsInputDir = "decryption/localKey"
 
 func TestDecrypt(t *testing.T) {
 	cliPath, err := e2e.Bin()
@@ -77,29 +39,23 @@ func TestDecrypt(t *testing.T) {
 	tmp := t.TempDir()
 
 	t.Cleanup(func() {
-		err := os.RemoveAll(tmp)
-		if err != nil {
+		if err := os.RemoveAll(tmp); err != nil {
 			t.Fatal(err)
 		}
 	})
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := dumpToTemp(tmp, i, "input")
+			inputFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}
-			keyFile, err := dumpToTemp(tmp, i, "localKey")
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			expectedContents, err := files.ReadFile(generateFileName("decryption", i, "output"))
+			keyFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "localKey", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			expected, err := parseJSON(expectedContents)
+			expectedContents, err := files.ReadFile(e2e.GenerateFileName(LocalKeyTestsInputDir, i, "output"))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -118,13 +74,9 @@ func TestDecrypt(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(gotContents))
 			}
-			got, err := parseJSON(gotContents)
-			if err != nil {
-				t.Fatal(err)
-			}
 
-			if !reflect.DeepEqual(expected, got) {
-				t.Fatalf("decryption unexpected: expected %v, got %v", expected, got)
+			if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
+				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
 			}
 		})
 	}

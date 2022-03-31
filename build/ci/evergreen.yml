@@ -321,7 +321,6 @@ tasks:
       - func: "integration-test"
   - name: lint
     tags: ["code_health"]
-    must_have_test_results: true
     commands:
       - func: "clone"
       - func: "install golangci-lint"

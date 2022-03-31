@@ -25,8 +25,10 @@ import (
 	"github.com/mongodb/mongocli/e2e"
 )
 
-//go:embed decryption/*
+//go:embed decryption/localKey/*
 var files embed.FS
+
+const LocalKeyTestsInputDir = "decryption/localKey"
 
 func TestDecrypt(t *testing.T) {
 	cliPath, err := e2e.Bin()
@@ -44,16 +46,16 @@ func TestDecrypt(t *testing.T) {
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(files, "decryption", i, "input", tmp)
+			inputFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}
-			keyFile, err := e2e.DumpToTemp(files, "decryption", i, "localKey", tmp)
+			keyFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "localKey", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			expectedContents, err := files.ReadFile(e2e.GenerateFileName("decryption", i, "output"))
+			expectedContents, err := files.ReadFile(e2e.GenerateFileName(LocalKeyTestsInputDir, i, "output"))
 			if err != nil {
 				t.Fatal(err)
 			}

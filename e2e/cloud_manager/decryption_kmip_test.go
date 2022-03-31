@@ -28,8 +28,10 @@ import (
 	"github.com/mongodb/mongocli/e2e"
 )
 
-//go:embed decryption_kmip/*
+//go:embed decryption/kmip/*
 var filesKmip embed.FS
+
+const KmipTestsInputDir = "decryption/kmip"
 
 func decodeAndWriteToPath(encodedText, filepath string) error {
 	if encodedText == "" {
@@ -80,12 +82,12 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(filesKmip, "decryption_kmip", i, "input", tmpDir)
+			inputFile, err := e2e.DumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			expectedContents, err := filesKmip.ReadFile(e2e.GenerateFileName("decryption_kmip", i, "output"))
+			expectedContents, err := filesKmip.ReadFile(e2e.GenerateFileName(KmipTestsInputDir, i, "output"))
 			if err != nil {
 				t.Fatal(err)
 			}

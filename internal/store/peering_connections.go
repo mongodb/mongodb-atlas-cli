@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongocli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator
+//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *atlas.ContainersListOptions) ([]atlas.Peer, error)

@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 )
 
 func NewOMURLInput() survey.Prompt {

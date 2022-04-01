@@ -18,9 +18,9 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/mongosh"
-	"github.com/mongodb/mongocli/internal/usage"
-	"github.com/mongodb/mongocli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 )
 
 func newClusterNameQuestion(clusterName string) *survey.Question {

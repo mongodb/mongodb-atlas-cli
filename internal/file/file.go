@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v2"
 )

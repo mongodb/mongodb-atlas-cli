@@ -20,9 +20,9 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/search"
-	"github.com/mongodb/mongocli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

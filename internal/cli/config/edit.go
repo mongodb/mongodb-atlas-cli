@@ -17,8 +17,8 @@ package config
 import (
 	"os"
 
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	exec "golang.org/x/sys/execabs"
 )

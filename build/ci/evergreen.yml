@@ -31,14 +31,14 @@ functions:
     - command: git.get_project
       type: setup
       params:
-        directory: src/github.com/mongodb/mongocli
+        directory: src/github.com/mongodb/mongodb-atlas-cli
   "build":
     - command: subprocess.exec
       type: test
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         command: make build-all
@@ -48,7 +48,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         command: make build-mongocli
@@ -58,7 +58,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         command: make build-atlascli
@@ -68,7 +68,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
           <<: *go_options
@@ -79,7 +79,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           TEST_CMD: gotestsum --junitfile unit-tests.xml --
           <<: *go_options
@@ -90,7 +90,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         script: |
@@ -104,7 +104,7 @@ functions:
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongocli/coverage.html
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.html
         remote_file: ${project}/coverage/internal/${task_id}.html
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -131,7 +131,7 @@ functions:
           - KMIP_CA
           - KMIP_CERT
           - revision
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           MCLI_SKIP_UPDATE_CHECK: "yes"
           XDG_CONFIG_HOME: ${workdir}
@@ -146,7 +146,7 @@ functions:
         silent: true
         script: |
           set -e
-          keyfile="src/github.com/mongodb/mongocli/build/ci/ssh_id"
+          keyfile="src/github.com/mongodb/mongodb-atlas-cli/build/ci/ssh_id"
           echo '${__project_aws_ssh_key_value}' > "$keyfile"
           chmod 600 "$keyfile"
     - command: host.create
@@ -161,19 +161,19 @@ functions:
         wait: true
         timeout_seconds: 300
         num_hosts: 1
-        path: src/github.com/mongodb/mongocli/build/ci/hosts.json
+        path: src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
   ssh-ready:
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         binary: ./ssh-ready.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "install automation agent":
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         binary: ./install-agent-spawn-host.sh
         env:
           LC_AGENT_KEY: ${automation_agent_mms_api_key}
@@ -186,7 +186,7 @@ functions:
       params:
         include_expansions_in_env:
           - ARCHIVE
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         binary: ./install-ops-manager-spawn-host.sh
         args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
   "set-up ops manager":
@@ -195,7 +195,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         include_expansions_in_env:
           - ops_manager_service
         binary: ./set-up-ops-manager.sh
@@ -209,7 +209,7 @@ functions:
         add_to_path:
           - ${go_bin}
           - ../../bin
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         include_expansions_in_env:
           - cloud_manager_service
           - revision
@@ -230,7 +230,7 @@ functions:
         add_to_path:
           - ${go_bin}
           - ../../bin
-        working_dir: src/github.com/mongodb/mongocli/build/ci
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
         binary: ./clean-up-cloud-manager.sh
         args: ['-h', 'hosts.json']
         env:
@@ -239,7 +239,7 @@ functions:
     - command: shell.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         script: |
           set -Eeou pipefail
 
@@ -250,7 +250,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
 
@@ -259,13 +259,13 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         command: make setupgolangcilint
   "install snyk":
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
 
@@ -275,7 +275,7 @@ functions:
     - command: shell.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         script: |
           export SNYK_TOKEN=${snyk_token}
 
@@ -291,7 +291,7 @@ functions:
         add_to_path:
           - ${go_bin}
           - ../../bin
-        working_dir: /src/github.com/mongodb/mongocli/build/ci/kmip
+        working_dir: /src/github.com/mongodb/mongodb-atlas-cli/build/ci/kmip
         binary: ./install.sh
         args: ["-h", "hosts.json"]
         env:
@@ -301,7 +301,7 @@ functions:
 post:
   - command: attach.xunit_results
     params:
-      files: ["src/github.com/mongodb/mongocli/*.xml"]
+      files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
 
 tasks:
   - name: compile

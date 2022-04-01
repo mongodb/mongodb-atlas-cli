@@ -20,7 +20,7 @@ package search
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

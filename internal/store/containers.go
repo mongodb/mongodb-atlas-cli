@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongocli/internal/store ContainersLister,ContainersDeleter
+//go:generate mockgen -destination=../mocks/mock_containers.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ContainersLister,ContainersDeleter
 
 type ContainersLister interface {
 	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlas.Container, error)

@@ -15,8 +15,8 @@
 package cli
 
 import (
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 )
 
 var defaultMongoDBMajorVersion string

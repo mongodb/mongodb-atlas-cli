@@ -21,9 +21,9 @@ ifeq ($(ATLAS_VERSION),) # use git describe if we don't have an atlascli tag
 	ATLAS_VERSION=$(shell git describe --always --tags | cut -d "v" -f 2)
 endif
 
-LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}
-MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongocli/internal/version.Version=${MCLI_VERSION}
-ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli -X github.com/mongodb/mongocli/internal/version.Version=${ATLAS_VERSION}
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${MCLI_GIT_SHA}
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${MCLI_VERSION}
+ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l

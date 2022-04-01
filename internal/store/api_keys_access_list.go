@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongocli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyAccessListWhitelistLister,OrganizationAPIKeyAccessListWhitelistDeleter,OrganizationAPIKeyAccessListWhitelistCreator
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister,OrganizationAPIKeyWhitelistLister,OrganizationAPIKeyWhitelistDeleter,OrganizationAPIKeyWhitelistCreator,OrganizationAPIKeyAccessListWhitelistLister,OrganizationAPIKeyAccessListWhitelistDeleter,OrganizationAPIKeyAccessListWhitelistCreator
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)

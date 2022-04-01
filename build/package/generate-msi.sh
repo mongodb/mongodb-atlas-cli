@@ -34,17 +34,17 @@ COMMIT=$(git log -n1 --format=format:"%H")
 SOURCE_FILES=./cmd/mongocli
 PACKAGE_NAME=mongocli_${VERSION}_windows_x86_64.msi
 OUTPUT=./bin/mongocli.exe
-LINKER_FLAGS="-s -w -X github.com/mongodb/mongocli/internal/version.Version=${VERSION} -X github.com/mongodb/mongocli/internal/version.GitCommit=${COMMIT}"
+LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT}"
 WIX_MANIFEST_FILE="./wix/mongocli.json"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
   SOURCE_FILES=./cmd/atlas
   PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
   OUTPUT=./bin/atlas.exe
-  LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
+  LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
   WIX_MANIFEST_FILE="./wix/atlascli.json"
 else
-   LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
+   LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 fi
 
 env GOOS=windows GOARCH=amd64 go build \

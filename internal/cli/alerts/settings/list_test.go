@@ -23,7 +23,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
 func TestConfigList_Run(t *testing.T) {

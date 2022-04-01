@@ -8,7 +8,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
 
@@ -17,7 +17,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         include_expansions_in_env:
           - notary_service_url
         script: |
@@ -29,7 +29,7 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
 
@@ -42,7 +42,7 @@ functions:
           - ${go_bin}
         include_expansions_in_env:
           - workdir
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         binary: build/ci/check-licenses.sh
@@ -54,7 +54,7 @@ functions:
           - ${go_bin}
         include_expansions_in_env:
           - workdir
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         binary: build/package/generate-notices.sh
@@ -64,7 +64,7 @@ functions:
       params:
         add_to_path:
           - ${go_bin}
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         include_expansions_in_env:
           - notary_service_key_id
           - notary_service_secret
@@ -82,19 +82,19 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         command: choco install -y "go-msi" --force
   "uninstall go-msi":
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         command: choco uninstall -y "go-msi"
   "generate msi":
     - command: subprocess.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         add_to_path:
           - ${go_bin}
           - "/cygdrive/c/Program Files/go-msi"
@@ -117,7 +117,7 @@ functions:
           - latest_rpm
           - package_name
           - tool_name
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
         binary: build/package/rename-pkg.sh
@@ -125,7 +125,7 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         silent: true
         include_expansions_in_env:
           - evergreen_user
@@ -139,7 +139,7 @@ functions:
     - command: subprocess.exec
       type: test
       params:
-        working_dir: src/github.com/mongodb/mongocli/dist
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/dist
         include_expansions_in_env:
           - FEED_FILE_NAME
           - TOOL_NAME
@@ -154,13 +154,13 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-          - src/github.com/mongodb/mongocli/dist/*.tar.gz
-          - src/github.com/mongodb/mongocli/dist/*.zip
-          - src/github.com/mongodb/mongocli/dist/*.deb
-          - src/github.com/mongodb/mongocli/dist/*.rpm
-          - src/github.com/mongodb/mongocli/dist/*.tgz
-          - src/github.com/mongodb/mongocli/dist/*.json
-          - src/github.com/mongodb/mongocli/dist/*.msi
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -186,7 +186,7 @@ functions:
           - tool_name
         add_to_path:
           - ./bin
-        working_dir: src/github.com/mongodb/mongocli
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         env:
           <<: *go_options
           NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
@@ -202,7 +202,7 @@ functions:
           - created_at
           - image
           - tool_name
-        working_dir: src/github.com/mongodb/mongocli/build/package/docker
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
 
 tasks:
@@ -224,7 +224,7 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.msi
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
@@ -254,14 +254,14 @@ tasks:
           tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/${package_name}-deb.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/apt
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-deb.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/${package_name}-rpm.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/yum
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${package_name}-rpm.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
           include:
             - "*.rpm"
       - func: "generate download archive json"
@@ -429,7 +429,7 @@ tasks:
       - command: subprocess.exec
         type: test
         params:
-          working_dir: src/github.com/mongodb/mongocli
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
           env:
             TOOL_NAME: mongocli
           binary: build/package/download-msi.sh
@@ -444,14 +444,14 @@ tasks:
           tool_name: mongocli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-deb.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/apt
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/mongocli-rpm.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/yum
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
           include:
             - "*.rpm"
       - func: "generate download archive json"
@@ -464,12 +464,12 @@ tasks:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
@@ -494,7 +494,7 @@ tasks:
       - command: subprocess.exec
         type: test
         params:
-          working_dir: src/github.com/mongodb/mongocli
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
           env:
             TOOL_NAME: atlascli
           binary: build/package/download-msi.sh
@@ -509,14 +509,14 @@ tasks:
           tool_name: atlascli
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/atlascli-deb.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/apt
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-deb.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongocli/dist/atlascli-rpm.tgz
-          source_dir: src/github.com/mongodb/mongocli/dist/yum
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-rpm.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum
           include:
             - "*.rpm"
       - func: "generate download archive json"
@@ -529,12 +529,12 @@ tasks:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.tar.gz
-            - src/github.com/mongodb/mongocli/dist/*.zip
-            - src/github.com/mongodb/mongocli/dist/*.deb
-            - src/github.com/mongodb/mongocli/dist/*.rpm
-            - src/github.com/mongodb/mongocli/dist/*.tgz
-            - src/github.com/mongodb/mongocli/dist/*.json
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
@@ -562,7 +562,7 @@ tasks:
           aws_key: ${download_center_aws_key}
           aws_secret: ${download_center_aws_secret}
           local_files_include_filter:
-            - src/github.com/mongodb/mongocli/dist/*.msi
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read

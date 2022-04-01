@@ -23,8 +23,8 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongocli/e2e"
-	"github.com/mongodb/mongocli/internal/convert"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 )
 
 func TestDeployReplicaSet(t *testing.T) {

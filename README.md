@@ -1,7 +1,7 @@
 ## MongoDB Atlas CLI
 
-![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
-![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)
+![GO tests](https://github.com/mongodb/mongodb-atlas-cli/workflows/GO%20tests/badge.svg)
+![golangci-lint](https://github.com/mongodb/mongodb-atlas-cli/workflows/golangci-lint/badge.svg)
 
 The MongoDB Atlas CLI repository contains the following modern command line interfaces:
 - [Atlas CLI](atlascli.md)

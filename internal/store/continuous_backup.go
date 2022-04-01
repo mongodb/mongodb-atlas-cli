@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongocli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
+//go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
 
 type CheckpointsLister interface {
 	Checkpoints(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)

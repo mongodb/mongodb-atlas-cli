@@ -19,8 +19,8 @@ package config
 import (
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestInitBuilder(t *testing.T) {

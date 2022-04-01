@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongocli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
+//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
 
 type LiveMigrationValidationsCreator interface {
 	CreateValidation(string, *atlas.LiveMigration) (*atlas.Validation, error)

@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mongodb/mongocli/internal/decryption/aes"
-	"github.com/mongodb/mongocli/internal/decryption/kmip"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/kmip"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

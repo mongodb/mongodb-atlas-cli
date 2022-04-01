@@ -21,8 +21,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

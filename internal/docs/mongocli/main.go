@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
-	"github.com/mongodb/mongocli/internal/cli/root/mongocli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/mongocli"
 	"github.com/spf13/cobra"
 )
 

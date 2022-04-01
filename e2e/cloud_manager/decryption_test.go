@@ -22,7 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
 )
 
 //go:embed decryption/localKey/*

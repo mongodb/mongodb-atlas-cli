@@ -22,18 +22,18 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/mongodb/mongocli/internal/cli/require"
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth Authenticator,LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Authenticator,LoginConfig
 
 type Authenticator interface {
 	RequestCode(context.Context) (*auth.DeviceCode, *atlas.Response, error)

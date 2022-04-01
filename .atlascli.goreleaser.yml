@@ -14,7 +14,7 @@ builds:
       binary: bin/atlas
       main: ./cmd/atlas/atlas.go
       ldflags:
-        - -s -w -X github.com/mongodb/mongocli/internal/version.Version={{.Version}} -X github.com/mongodb/mongocli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongocli/internal/config.ToolName=atlascli
+        - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
     id: macos
     goos: [darwin]
     goarch: [amd64,arm64]

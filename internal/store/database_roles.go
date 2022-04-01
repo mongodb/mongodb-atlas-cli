@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongocli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
+//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
 	DatabaseRoles(string, *atlas.ListOptions) (*[]atlas.CustomDBRole, error)

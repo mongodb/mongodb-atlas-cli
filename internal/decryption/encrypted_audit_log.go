@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
+	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
 )
 
 type AuditRecordType string

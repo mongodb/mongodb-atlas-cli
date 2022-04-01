@@ -21,8 +21,8 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
 )
 

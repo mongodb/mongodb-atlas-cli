@@ -22,9 +22,9 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
 
-	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
 )

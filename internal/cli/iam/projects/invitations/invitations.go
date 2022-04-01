@@ -14,7 +14,7 @@
 package invitations
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
 

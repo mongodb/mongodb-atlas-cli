@@ -23,8 +23,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mongodb/mongocli/internal/config"
-	"github.com/mongodb/mongocli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 )
 
 const minPasswordLength = 10

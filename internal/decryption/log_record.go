@@ -23,6 +23,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+type DecodedLogRecord struct {
+	CipherText         []byte
+	Tag                []byte
+	IV                 []byte
+	AAD                []byte
+	KeyInitCount       uint32
+	KeyInvocationCount uint64
+}
+
 func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 	if logLine.Log == nil {
 		return nil, fmt.Errorf("missing log")

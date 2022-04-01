@@ -11,11 +11,11 @@
 The MongoDB Atlas CLI repository contains the following modern command line interfaces:
 
 
-- ![icon](https://user-images.githubusercontent.com/5663078/161282750-6d8e61fa-8a1d-4d99-b4e0-0ac214c6a951.png#gh-light-mode-only) ![icon](https://user-images.githubusercontent.com/5663078/161282964-1e4c2e7e-8ba4-4732-b1e2-e76e41b92a9c.png#gh-dark-mode-only) 
+- ![icon](https://user-images.githubusercontent.com/5663078/161287231-c1c89a79-43e7-4d53-87ea-dcb546708864.png#gh-light-mode-only) ![icon](https://user-images.githubusercontent.com/5663078/161287234-5183b35b-ec76-49ee-8161-a2859991bb8e.png#gh-dark-mode-only) 
   [MongoDB CLI](mongocli.md)
 
   
-- ![icon](https://user-images.githubusercontent.com/5663078/161283280-1e3a4c48-b7a8-4d48-b63a-3462a91b3958.png#gh-light-mode-only) ![icon](https://user-images.githubusercontent.com/5663078/161283275-bd5e89f1-86e8-41fd-9c9a-0ca4eece7e25.png#gh-dark-mode-only)
+- ![icon](https://user-images.githubusercontent.com/5663078/161286969-79ef05c2-c246-4f31-b7b5-d1a11d86e143.png#gh-light-mode-only) ![icon](https://user-images.githubusercontent.com/5663078/161287057-add82a6e-0201-45cc-8547-8e9fdd9e416a.png#gh-dark-mode-only)
 [Atlas CLI](atlascli.md)
 
 

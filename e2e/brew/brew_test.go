@@ -61,10 +61,17 @@ func TestMongoCLIConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := errorMessage
 
-		if !strings.HasPrefix(got, want) {
-			t.Errorf("want '%s'; got '%s'\n", want, got)
+		if !strings.HasPrefix(got, errorMessage) {
+			t.Errorf("want '%s'; got '%s'\n", errorMessage, got)
+		}
+	})
+
+	t.Run("help", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "help")
+		cmd.Env = append(os.Environ(), tempDirEnv)
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error, resp: %v", string(resp))
 		}
 	})
 }
@@ -100,10 +107,17 @@ func TestAtlasCLIConfig(t *testing.T) {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
 		got := strings.TrimSpace(string(resp))
-		want := errorMessage
 
-		if !strings.HasPrefix(got, want) {
-			t.Errorf("want '%s'; got '%s'\n", want, got)
+		if !strings.HasPrefix(got, errorMessage) {
+			t.Errorf("want '%s'; got '%s'\n", errorMessage, got)
+		}
+	})
+
+	t.Run("help", func(t *testing.T) {
+		cmd := exec.Command(cliPath, "help")
+		cmd.Env = append(os.Environ(), tempDirEnv)
+		if resp, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("unexpected error, resp: %v", string(resp))
 		}
 	})
 }

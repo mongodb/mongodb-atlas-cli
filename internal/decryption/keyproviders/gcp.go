@@ -17,6 +17,8 @@ package keyproviders
 import (
 	"context"
 	"errors"
+	"fmt"
+	"os"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"google.golang.org/api/option"
@@ -24,10 +26,14 @@ import (
 
 type GCPKeyIdentifier struct {
 	KeyStoreIdentifier
-	ProjectID         string
-	Location          string
-	KeyRing           string
-	KeyName           string
+
+	//Header
+	ProjectID string
+	Location  string
+	KeyRing   string
+	KeyName   string
+
+	//CLI
 	ServiceAccountKey string
 
 	client *secretmanager.Client
@@ -45,6 +51,9 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 
 	ki.client, err = secretmanager.NewClient(context.Background())
 	if err != nil {
+		fmt.Fprintf(os.Stderr, `No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
+`, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
+
 		json, err := provideInput("Provide service account key JSON filename:", "")
 		if err != nil {
 			return err

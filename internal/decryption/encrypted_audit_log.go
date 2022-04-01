@@ -72,7 +72,8 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		return &keyproviders.LocalKeyIdentifier{
-			Filename: opts.Local.KeyFileName,
+			HeaderFilename: *logLine.KeyStoreIdentifier.Filename,
+			Filename:       opts.Local.KeyFileName,
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{

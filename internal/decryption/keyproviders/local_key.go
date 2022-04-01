@@ -17,6 +17,7 @@ package keyproviders
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
@@ -25,6 +26,11 @@ import (
 // LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).
 type LocalKeyIdentifier struct {
 	KeyStoreIdentifier
+
+	//Header
+	HeaderFilename string
+
+	//CLI
 	Filename string
 }
 
@@ -32,7 +38,10 @@ var ErrLocalKeyCredentialMissing = errors.New("filename missing")
 
 func (ki *LocalKeyIdentifier) ValidateCredentials() error {
 	if ki.Filename == "" {
-		f, err := provideInput("Provide key filename", "")
+		fmt.Fprintf(os.Stderr, `No credentials found for resource: LocalKey filename="%v"
+`, ki.HeaderFilename)
+
+		f, err := provideInput("Provide key filename:", "")
 		if err != nil {
 			return err
 		}

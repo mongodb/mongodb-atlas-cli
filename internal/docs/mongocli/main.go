@@ -42,7 +42,6 @@ func main() {
 	}
 
 	mongocliBuilder := mongocli.Builder(&profile, []string{})
-	deprecateAtlasCommands(mongocliBuilder)
 
 	// init completion command indirectly
 	// See: https://github.com/spf13/cobra/issues/1464
@@ -52,14 +51,5 @@ func main() {
 
 	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/mongocli/command"); err != nil {
 		log.Fatal(err)
-	}
-}
-
-func deprecateAtlasCommands(cmd *cobra.Command) {
-	for _, c := range cmd.Commands() {
-		if c.Use == "atlas" {
-			c.Deprecated = "yes"
-			return
-		}
 	}
 }

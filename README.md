@@ -1,7 +1,7 @@
 ## MongoDB Atlas CLI
 
 <p align="center">
-  <img width="80" height="80" src="https://user-images.githubusercontent.com/5663078/161264663-6c059196-6c20-4efc-980a-6266f7017917.png" alt="CLI Logo">
+  <img src="https://user-images.githubusercontent.com/5663078/161264663-6c059196-6c20-4efc-980a-6266f7017917.png" alt="CLI Logo">
 </p>
 
 

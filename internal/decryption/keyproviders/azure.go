@@ -19,7 +19,6 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	_ "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 )
 
 type AzureKeyIdentifier struct {

@@ -1,10 +1,5 @@
 # MongoDB CLI
 
-<p align="left">
-    <img width="66" height="54" src="https://user-images.githubusercontent.com/5663078/161272948-6ffe227c-9c47-4001-b0ca-35006d90cd9e.png#gh-light-mode-only" alt="CLI Logo">
-    <img width="66" height="54" src="mdb_cli_inverse" src="https://user-images.githubusercontent.com/5663078/161272861-72704f12-2d1f-4db8-9874-c460e5f25bd3.png#gh-dark-mode-only" alt="CLI Logo">
-</p>
-
 The MongoDB CLI is a modern command line interface that enables you to manage your MongoDB services from the terminal.
 
 ![mongocli-atlas-quickstart](https://user-images.githubusercontent.com/461027/126986233-0dd5c82a-2c75-4887-ab66-eb018c59e093.gif)

@@ -1,6 +1,6 @@
 # Atlas CLI
 
-<p align="center">
+<p align="left">
     <img width="66" height="54" src="https://user-images.githubusercontent.com/5663078/161264663-6c059196-6c20-4efc-980a-6266f7017917.png#gh-light-mode-only" alt="CLI Logo">
     <img width="66" height="54" src="https://user-images.githubusercontent.com/5663078/161268959-797863f3-f8c7-479b-b40d-4eab662de658.png#gh-dark-mode-only" alt="CLI Logo">
 </p>

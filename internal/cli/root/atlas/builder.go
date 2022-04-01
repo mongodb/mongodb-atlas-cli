@@ -205,6 +205,7 @@ func shouldSetService(cmd *cobra.Command) bool {
 
 func shouldCheckCredentials(cmd *cobra.Command) bool {
 	searchByName := []string{
+		"__complete",
 		"help",
 		"quickstart",
 		figautocomplete.CmdUse,

@@ -145,7 +145,7 @@ func NewClient(config *Config) (*Client, error) {
 
 	certificate, err := tls.X509KeyPair(config.ClientCertificate, config.ClientPrivateKey)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load client key and certificate: %s", err.Error())
+		return nil, fmt.Errorf("failed to load client key and certificate: %w", err)
 	}
 
 	hostname := config.Hostname
@@ -165,11 +165,12 @@ func NewClient(config *Config) (*Client, error) {
 			BatchCount: 1,
 		},
 		tlsConfig: tls.Config{
-			ServerName:   hostname,
-			CipherSuites: cipherSuites,
-			RootCAs:      rootCAs,
-			Certificates: []tls.Certificate{certificate},
-			MinVersion:   tls.VersionTLS12,
+			ServerName:         hostname,
+			CipherSuites:       cipherSuites,
+			RootCAs:            rootCAs,
+			Certificates:       []tls.Certificate{certificate},
+			MinVersion:         tls.VersionTLS12,
+			InsecureSkipVerify: false,
 		},
 	}
 
@@ -275,19 +276,19 @@ func (kc *Client) GetSymmetricKey(keyID string) ([]byte, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationGet)
 	if err != nil {
-		return nil, fmt.Errorf("failed to perform get operation: %s", err.Error())
+		return nil, fmt.Errorf("failed to perform get operation: %w", err)
 	}
 
 	var response GetResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode KMIP get response: %s", err.Error())
+		return nil, fmt.Errorf("failed to decode KMIP get response: %w", err)
 	}
 
 	var keyValue KeyValue
 	err = decoder.DecodeValue(&keyValue, response.SymmetricKey.KeyBlock.KeyValue.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode keyblock: %s", err.Error())
+		return nil, fmt.Errorf("failed to decode keyblock: %w", err)
 	}
 
 	return keyValue.KeyMaterial, nil
@@ -329,13 +330,13 @@ func (kc *Client) CreateSymmetricKey(length int32) (*string, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationCreate)
 	if err != nil {
-		return nil, fmt.Errorf("failed to perform KMIP create symmetric key operation: %s", err.Error())
+		return nil, fmt.Errorf("failed to perform KMIP create symmetric key operation: %w", err)
 	}
 
 	var response CreateResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode KMIP create symmetric key response: %s", err.Error())
+		return nil, fmt.Errorf("failed to decode KMIP create symmetric key response: %w", err)
 	}
 
 	return &response.UniqueIdentifier, nil
@@ -350,13 +351,13 @@ func (kc *Client) Encrypt(keyID string, data []byte) (*EncryptResponse, error) {
 
 	batchItem, decoder, err := kc.sendRequest(payload, kmip14.OperationEncrypt)
 	if err != nil {
-		return nil, fmt.Errorf("failed to perform KMIP encrypt operation: %s", err.Error())
+		return nil, fmt.Errorf("failed to perform KMIP encrypt operation: %w", err)
 	}
 
 	var response EncryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode KMIP encrypt response: %s", err.Error())
+		return nil, fmt.Errorf("failed to decode KMIP encrypt response: %w", err)
 	}
 
 	return &response, nil
@@ -372,13 +373,13 @@ func (kc *Client) Decrypt(keyID string, data, iv []byte) (*DecryptResponse, erro
 
 	batchItem, decoder, err := kc.sendRequest(payLoad, kmip14.OperationDecrypt)
 	if err != nil {
-		return nil, fmt.Errorf("failed to perform KMIP decrypt operation: %s", err.Error())
+		return nil, fmt.Errorf("failed to perform KMIP decrypt operation: %w", err)
 	}
 
 	var response DecryptResponse
 	err = decoder.DecodeValue(&response, batchItem.ResponsePayload.(ttlv.TTLV))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode KMIP decrypt response: %s", err.Error())
+		return nil, fmt.Errorf("failed to decode KMIP decrypt response: %w", err)
 	}
 
 	return &response, nil

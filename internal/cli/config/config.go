@@ -161,6 +161,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		DescribeBuilder(),
 		RenameBuilder(),
 		DeleteBuilder(),
+		EditBuilder(),
 	)
 
 	return cmd

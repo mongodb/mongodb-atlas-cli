@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -538,6 +539,10 @@ func (p *Profile) Filename() string {
 	return filepath.Join(p.configDir, "config.toml")
 }
 
+func Filename() string {
+	return Default().Filename()
+}
+
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
 func Rename(newProfileName string) error { return Default().Rename(newProfileName) }
 func (p *Profile) Rename(newProfileName string) error {
@@ -643,6 +648,7 @@ func (p *Profile) Save() error {
 }
 
 // OldMongoCLIConfigHome retrieves configHome path based used by MongoCLI.
+//
 // Deprecated: MongoCLI versions below v1.24.0 use this path.
 func OldMongoCLIConfigHome() (string, error) {
 	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
@@ -654,7 +660,7 @@ func OldMongoCLIConfigHome() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/.config", home), nil
+	return path.Join(home, ".config"), nil
 }
 
 // MongoCLIConfigHome retrieves configHome path based used by MongoCLI.
@@ -664,7 +670,7 @@ func MongoCLIConfigHome() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/mongocli", home), nil
+	return path.Join(home, "mongocli"), nil
 }
 
 // AtlasCLIConfigHome retrieves configHome path based used by AtlasCLI.
@@ -674,24 +680,24 @@ func AtlasCLIConfigHome() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/atlascli", home), nil
+	return path.Join(home, "atlascli"), nil
 }
 
-func Path(fileName string) (string, error) {
-	var path bytes.Buffer
-	var home string
+func Path(f string) (string, error) {
+	var p bytes.Buffer
+	var h string
 	var err error
 
 	if ToolName == AtlasCLI {
-		home, err = AtlasCLIConfigHome()
+		h, err = AtlasCLIConfigHome()
 	} else {
-		home, err = MongoCLIConfigHome()
+		h, err = MongoCLIConfigHome()
 	}
 	if err != nil {
 		return "", err
 	}
 
-	path.WriteString(home)
-	path.WriteString(fileName)
-	return path.String(), nil
+	p.WriteString(h)
+	p.WriteString(f)
+	return p.String(), nil
 }

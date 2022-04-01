@@ -27,13 +27,13 @@ import (
 type GCPKeyIdentifier struct {
 	KeyStoreIdentifier
 
-	//Header
+	// Header
 	ProjectID string
 	Location  string
 	KeyRing   string
 	KeyName   string
 
-	//CLI
+	// CLI
 	ServiceAccountKey string
 
 	client *secretmanager.Client

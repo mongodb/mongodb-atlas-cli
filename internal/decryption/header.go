@@ -34,7 +34,6 @@ type HeaderRecord struct {
 }
 
 func (h *HeaderRecord) DecryptKey() ([]byte, error) {
-
 	if err := h.KeyProvider.ValidateCredentials(); err != nil {
 		return nil, err
 	}

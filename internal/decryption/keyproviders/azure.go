@@ -26,13 +26,13 @@ import (
 type AzureKeyIdentifier struct {
 	KeyStoreIdentifier
 
-	//Header
+	// Header
 	KeyName          string
 	Environment      string
 	KeyVaultEndpoint string
 	KeyVersion       string
 
-	//CLI
+	// CLI
 	ClientID string
 	TenantID string
 	Secret   string

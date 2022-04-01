@@ -36,13 +36,13 @@ const (
 type KMIPKeyIdentifier struct {
 	KeyStoreIdentifier
 
-	//Header
+	// Header
 	UniqueKeyID   string
 	ServerNames   []string
 	ServerPort    int
 	KeyWrapMethod KMIPKeyWrapMethod
 
-	//CLI
+	// CLI
 	ServerCAFileName          string
 	ClientCertificateFileName string
 }

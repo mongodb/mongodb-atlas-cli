@@ -27,10 +27,10 @@ import (
 type LocalKeyIdentifier struct {
 	KeyStoreIdentifier
 
-	//Header
+	// Header
 	HeaderFilename string
 
-	//CLI
+	// CLI
 	Filename string
 }
 

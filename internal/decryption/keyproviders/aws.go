@@ -24,12 +24,12 @@ import (
 
 type AWSKeyIdentifier struct {
 	KeyStoreIdentifier
-	//Header
+	// Header
 	Key      string
 	Region   string
 	Endpoint string
 
-	//CLI
+	// CLI
 	AccessKey       string
 	SecretAccessKey string
 	SessionToken    string

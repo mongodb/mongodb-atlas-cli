@@ -1,11 +1,10 @@
 ## MongoDB Atlas CLI
 
 <p align="center">
-    <picture align="center">
-        <source srcset="https://user-images.githubusercontent.com/5663078/161268959-797863f3-f8c7-479b-b40d-4eab662de658.png" media="(prefers-color-scheme: dark)">
-        <img src="https://user-images.githubusercontent.com/5663078/161264663-6c059196-6c20-4efc-980a-6266f7017917.png">
-    </picture>
+  <img src="https://user-images.githubusercontent.com/5663078/161264663-6c059196-6c20-4efc-980a-6266f7017917.png" alt="CLI Logo">
 </p>
+
+
 
 ![GO tests](https://github.com/mongodb/mongocli/workflows/GO%20tests/badge.svg)
 ![golangci-lint](https://github.com/mongodb/mongocli/workflows/golangci-lint/badge.svg)

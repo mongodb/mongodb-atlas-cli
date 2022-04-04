@@ -23,7 +23,6 @@ import (
 )
 
 type AuditRecordType string
-type AuditLogFormat string
 
 type AuditLogLineKeyStoreIdentifier struct {
 	Provider *keyproviders.KeyStoreProvider `json:"provider,omitempty"`
@@ -73,7 +72,8 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		return &keyproviders.LocalKeyIdentifier{
-			Filename: opts.Local.KeyFileName,
+			HeaderFilename: *logLine.KeyStoreIdentifier.Filename,
+			Filename:       opts.Local.KeyFileName,
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
@@ -84,31 +84,39 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 			ServerCAFileName:          opts.KMIP.ServerCAFileName,
 			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
 		}, nil
+	case keyproviders.AWS:
+		return &keyproviders.AWSKeyIdentifier{
+			Key:             *logLine.KeyStoreIdentifier.Key,
+			Region:          *logLine.KeyStoreIdentifier.Region,
+			Endpoint:        *logLine.KeyStoreIdentifier.Endpoint,
+			AccessKey:       opts.AWS.AccessKey,
+			SecretAccessKey: opts.AWS.SecretAccessKey,
+			SessionToken:    opts.AWS.SessionToken,
+		}, nil
+	case keyproviders.GCP:
+		return &keyproviders.GCPKeyIdentifier{
+			KeyName:           *logLine.KeyStoreIdentifier.KeyName,
+			ProjectID:         *logLine.KeyStoreIdentifier.ProjectID,
+			Location:          *logLine.KeyStoreIdentifier.Location,
+			KeyRing:           *logLine.KeyStoreIdentifier.KeyRing,
+			ServiceAccountKey: opts.GCP.ServiceAccountKey,
+		}, nil
+	case keyproviders.Azure:
+		return &keyproviders.AzureKeyIdentifier{
+			KeyName:          *logLine.KeyStoreIdentifier.KeyName,
+			Environment:      *logLine.KeyStoreIdentifier.Environment,
+			KeyVaultEndpoint: *logLine.KeyStoreIdentifier.KeyVaultEndpoint,
+			KeyVersion:       *logLine.KeyStoreIdentifier.KeyVersion,
+			ClientID:         opts.Azure.ClientID,
+			TenantID:         opts.Azure.TenantID,
+			Secret:           opts.Azure.Secret,
+		}, nil
 	default:
 		return nil, fmt.Errorf("keyProvider %s not implemented", *logLine.KeyStoreIdentifier.Provider)
 	}
 }
 
-type HeaderAAD struct {
-	TS      time.Time `json:"ts"`
-	Version string    `json:"version"`
-}
-
-type DecodedLogRecord struct {
-	CipherText         []byte
-	Tag                []byte
-	IV                 []byte
-	AAD                []byte
-	KeyInitCount       uint32
-	KeyInvocationCount uint64
-}
-
 const (
 	AuditHeaderRecord AuditRecordType = "header"
 	AuditLogRecord    AuditRecordType = ""
-)
-
-const (
-	JSON AuditLogFormat = "JSON"
-	BSON AuditLogFormat = "BSON"
 )

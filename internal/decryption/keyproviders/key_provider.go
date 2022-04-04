@@ -14,17 +14,45 @@
 
 package keyproviders
 
+import (
+	"os"
+	"strings"
+
+	"github.com/AlecAivazis/survey/v2"
+)
+
 type KeyStoreProvider string
 
 const (
 	LocalKey KeyStoreProvider = "local"
 	KMIP     KeyStoreProvider = "kmip"
+	AWS      KeyStoreProvider = "aws"
+	GCP      KeyStoreProvider = "gcp"
+	Azure    KeyStoreProvider = "azure"
 )
 
 type KeyProvider interface {
+	ValidateCredentials() error
 	DecryptKey(encryptedLEK []byte) ([]byte, error)
 }
 
 type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
+}
+
+func provideInput(prompt, defaultInput string) (string, error) {
+	if strings.TrimSpace(strings.ToLower(os.Getenv("CI"))) == "true" {
+		return defaultInput, nil
+	}
+
+	var input string
+	err := survey.AskOne(&survey.Input{
+		Message: prompt,
+		Default: defaultInput,
+	}, &input)
+	if err != nil {
+		return "", err
+	}
+
+	return input, nil
 }

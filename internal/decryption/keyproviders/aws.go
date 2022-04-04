@@ -15,11 +15,13 @@
 package keyproviders
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/kms"
 )
 
 type AWSKeyIdentifier struct {
@@ -81,6 +83,21 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 	return nil
 }
 
-func (ki *AWSKeyIdentifier) DecryptKey(_ []byte) ([]byte, error) {
-	return nil, errors.New("not implemented")
+// DecryptKey attempts to decrypt the encrypted key using AWS KMS
+func (ki *AWSKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
+	creds := credentials.NewStaticCredentials(ki.AccessKey, ki.SecretAccessKey, ki.SessionToken)
+	config := aws.NewConfig().WithCredentials(creds).WithRegion(ki.Region).WithEndpoint(ki.Endpoint)
+	session, err := session.NewSession(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize AWS KMS Service %w", err)
+	}
+	service := kms.New(session, config)
+
+	input := (&kms.DecryptInput{}).SetCiphertextBlob(encryptedKey)
+	output, err := service.Decrypt(input)
+	if err != nil {
+		return nil, fmt.Errorf("unable to decrypt data key with AWS KMS %w", err)
+	}
+
+	return output.Plaintext, nil
 }

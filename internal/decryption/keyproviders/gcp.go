@@ -58,7 +58,8 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 		fmt.Fprintf(os.Stderr, `No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
 
-		json, err := provideInput("Provide service account key JSON filename:", "")
+		var json string
+		json, err = provideInput("Provide service account key JSON filename:", "")
 		if err != nil {
 			return err
 		}

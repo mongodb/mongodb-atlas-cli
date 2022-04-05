@@ -1195,49 +1195,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,decrypt,localkey
-  - name: cloud_manager_decrypt_with_kmip_e2e
-    tags: ["e2e", "generic"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "install pykmip"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
-          KMIP_CA: ${logs_decrypt_kmip_ca}
-          KMIP_CERT: ${logs_decrypt_kmip_cert}
-          E2E_TAGS: cloudmanager,kmip,decrypt
-  - name: cloud_manager_decrypt_with_gcp_e2e
-    tags: ["e2e", "generic"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
-          GCP_CREDENTIALS: ${gcp_credentials}
-          E2E_TAGS: cloudmanager,gcp,decrypt
+          E2E_TAGS: cloudmanager,decrypt
 buildvariants:
   - name: code_health
     display_name: "Code Health"

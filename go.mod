@@ -58,7 +58,7 @@ require (
 
 require (
 	cloud.google.com/go/kms v1.4.0
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.22.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.23.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.13.2
 	github.com/ansel1/merry v1.5.1 // indirect
 	github.com/aws/aws-sdk-go v1.43.32

@@ -17,7 +17,9 @@
 set -euo pipefail
 
 # shellcheck disable=SC1091
-source project.sh
+if [[ -f project.sh ]]; then
+  source project.sh
+fi
 
 if [[ "$MUST_CLEANUP_CM" == "true" ]]; then
   echo "cleaning up cloud manager project $MCLI_PROJECT_ID"

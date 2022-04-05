@@ -82,12 +82,12 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
+			inputFile, err := dumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			expectedContents, err := filesKmip.ReadFile(e2e.GenerateFileName(KmipTestsInputDir, i, "output"))
+			expectedContents, err := filesKmip.ReadFile(generateFileName(KmipTestsInputDir, i, "output"))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -110,7 +110,7 @@ func TestDecryptWithKMIP(t *testing.T) {
 				t.Fatalf("unexpected error: %v, resp: %s", err, string(gotContents))
 			}
 
-			if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
+			if equal, err := logsAreEqual(expectedContents, gotContents); !equal {
 				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
 			}
 		})

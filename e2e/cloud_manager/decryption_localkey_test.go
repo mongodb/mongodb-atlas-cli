@@ -40,7 +40,7 @@ func TestDecrypt(t *testing.T) {
 	tmp := t.TempDir()
 
 	keyFile := path.Join(tmp, "localKey")
-	err = e2e.DumpToTempFile(files, path.Join(LocalKeyTestsInputDir, "localKey"), keyFile)
+	err = dumpToTempFile(files, path.Join(LocalKeyTestsInputDir, "localKey"), keyFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,12 +53,12 @@ func TestDecrypt(t *testing.T) {
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
+			inputFile, err := dumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			expectedContents, err := files.ReadFile(e2e.GenerateFileName(LocalKeyTestsInputDir, i, "output"))
+			expectedContents, err := files.ReadFile(generateFileName(LocalKeyTestsInputDir, i, "output"))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -78,7 +78,7 @@ func TestDecrypt(t *testing.T) {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(gotContents))
 			}
 
-			if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
+			if equal, err := logsAreEqual(expectedContents, gotContents); !equal {
 				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
 			}
 		})

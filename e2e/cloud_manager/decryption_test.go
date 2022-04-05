@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package e2e
+package cloud_manager_test
 
 import (
 	"bufio"
@@ -26,15 +26,15 @@ import (
 	"reflect"
 )
 
-func GenerateFileName(dir string, i int, suffix string) string {
+func generateFileName(dir string, i int, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
 }
 
-func DumpToTemp(files embed.FS, srcDir string, i int, suffix, destDir string) (string, error) {
-	inputFile := GenerateFileName(srcDir, i, suffix)
-	outputFile := GenerateFileName(destDir, i, suffix)
+func dumpToTemp(files embed.FS, srcDir string, i int, suffix, destDir string) (string, error) {
+	inputFile := generateFileName(srcDir, i, suffix)
+	outputFile := generateFileName(destDir, i, suffix)
 
-	err := DumpToTempFile(files, inputFile, outputFile)
+	err := dumpToTempFile(files, inputFile, outputFile)
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +42,7 @@ func DumpToTemp(files embed.FS, srcDir string, i int, suffix, destDir string) (s
 	return outputFile, nil
 }
 
-func DumpToTempFile(files embed.FS, srcFile, destFile string) error {
+func dumpToTempFile(files embed.FS, srcFile, destFile string) error {
 	content, err := files.ReadFile(srcFile)
 	if err != nil {
 		return err
@@ -51,7 +51,7 @@ func DumpToTempFile(files embed.FS, srcFile, destFile string) error {
 	return os.WriteFile(destFile, content, fs.ModePerm)
 }
 
-func ParseJSON(contents []byte) ([]map[string]interface{}, error) {
+func parseJSON(contents []byte) ([]map[string]interface{}, error) {
 	res := []map[string]interface{}{}
 
 	s := bufio.NewScanner(bytes.NewReader(contents))
@@ -69,13 +69,13 @@ func ParseJSON(contents []byte) ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func LogsAreEqual(expected, got []byte) (bool, error) {
-	expectedLines, err := ParseJSON(expected)
+func logsAreEqual(expected, got []byte) (bool, error) {
+	expectedLines, err := parseJSON(expected)
 	if err != nil {
 		return false, err
 	}
 
-	gotLines, err := ParseJSON(got)
+	gotLines, err := parseJSON(got)
 	if err != nil {
 		return false, err
 	}

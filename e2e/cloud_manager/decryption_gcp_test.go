@@ -59,12 +59,12 @@ func TestDecryptWithGCP(t *testing.T) {
 
 	i := 1
 	t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-		inputFile, err := e2e.DumpToTemp(filesGCP, GCPTestsInputDir, i, "input", tmpDir)
+		inputFile, err := dumpToTemp(filesGCP, GCPTestsInputDir, i, "input", tmpDir)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		expectedContents, err := filesGCP.ReadFile(e2e.GenerateFileName(GCPTestsInputDir, i, "output"))
+		expectedContents, err := filesGCP.ReadFile(generateFileName(GCPTestsInputDir, i, "output"))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -83,7 +83,7 @@ func TestDecryptWithGCP(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %s", err, string(gotContents))
 		}
 
-		if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
+		if equal, err := logsAreEqual(expectedContents, gotContents); !equal {
 			t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
 		}
 	})

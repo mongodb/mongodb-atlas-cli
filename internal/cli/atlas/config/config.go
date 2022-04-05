@@ -43,6 +43,7 @@ To find out more, see the documentation: https://dochub.mongodb.org/core/atlas-c
 		config.DescribeBuilder(),
 		config.RenameBuilder(),
 		config.DeleteBuilder(),
+		config.EditBuilder(),
 	)
 
 	return cmd

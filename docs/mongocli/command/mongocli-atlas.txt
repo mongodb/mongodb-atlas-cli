@@ -14,10 +14,6 @@ mongocli atlas
 
 MongoDB Atlas operations.
 
-⚠ There's a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but you can keep using them for 12 months (until April 30, 2023).
-
-
-
 Options
 -------
 

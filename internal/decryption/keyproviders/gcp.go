@@ -16,13 +16,17 @@ package keyproviders
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"hash/crc32"
 	"os"
 
-	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	kms "cloud.google.com/go/kms/apiv1"
 	"google.golang.org/api/option"
+	kmspb "google.golang.org/genproto/googleapis/cloud/kms/v1"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
+
+var ErrDataCorruptedInTransit = fmt.Errorf("decrypt: response corrupted in-transit")
 
 type GCPKeyIdentifier struct {
 	KeyStoreIdentifier
@@ -36,36 +40,60 @@ type GCPKeyIdentifier struct {
 	// CLI
 	ServiceAccountKey string
 
-	client *secretmanager.Client
+	client *kms.KeyManagementClient
 }
 
 func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 	var err error
 
 	if ki.ServiceAccountKey != "" {
-		ki.client, err = secretmanager.NewClient(context.Background(), option.WithCredentialsFile(ki.ServiceAccountKey))
-		if err != nil {
-			return err
+		ki.client, err = kms.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(ki.ServiceAccountKey))
+		if err == nil {
+			return nil
 		}
 	}
 
-	ki.client, err = secretmanager.NewClient(context.Background())
+	ki.client, err = kms.NewKeyManagementClient(context.Background())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, `No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
 
-		json, err := provideInput("Provide service account key JSON filename:", "")
+		var json string
+		json, err = provideInput("Provide service account key JSON filename:", "")
 		if err != nil {
 			return err
 		}
-		ki.client, err = secretmanager.NewClient(context.Background(), option.WithCredentialsFile(json))
-		if err != nil {
-			return err
+		ki.client, err = kms.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(json))
+		if err == nil {
+			return nil
 		}
 	}
-	return nil
+	return err
 }
 
-func (ki *GCPKeyIdentifier) DecryptKey(_ []byte) ([]byte, error) {
-	return nil, errors.New("not implemented")
+func crc32c(data []byte) int64 {
+	t := crc32.MakeTable(crc32.Castagnoli)
+	return int64(crc32.Checksum(data, t))
+}
+
+func (ki *GCPKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
+	defer func() {
+		ki.client.Close()
+		ki.client = nil
+	}()
+
+	resourceName := fmt.Sprintf("projects/%v/locations/%v/keyRings/%v/cryptoKeys/%v", ki.ProjectID, ki.Location, ki.KeyRing, ki.KeyName)
+	req := &kmspb.DecryptRequest{
+		Name:             resourceName,
+		Ciphertext:       key,
+		CiphertextCrc32C: wrapperspb.Int64(crc32c(key)),
+	}
+	result, err := ki.client.Decrypt(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	if crc32c(result.GetPlaintext()) != result.PlaintextCrc32C.Value {
+		return nil, ErrDataCorruptedInTransit
+	}
+	return result.GetPlaintext(), nil
 }

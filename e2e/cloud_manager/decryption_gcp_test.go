@@ -64,7 +64,7 @@ func TestDecryptWithGCP(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expectedContents, err := filesKmip.ReadFile(e2e.GenerateFileName(GCPTestsInputDir, i, "output"))
+		expectedContents, err := filesGCP.ReadFile(e2e.GenerateFileName(GCPTestsInputDir, i, "output"))
 		if err != nil {
 			t.Fatal(err)
 		}

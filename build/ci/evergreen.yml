@@ -1194,6 +1194,9 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          GCP_CREDENTIALS: ${gcp_credentials}
+          KMIP_CA: ${logs_decrypt_kmip_ca}
+          KMIP_CERT: ${logs_decrypt_kmip_cert}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,decrypt
 buildvariants:

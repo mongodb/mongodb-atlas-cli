@@ -30,7 +30,7 @@ import (
 //go:embed decryption/gcp/*
 var filesGCP embed.FS
 
-const GCPTestsInputDir = "decryption/kmip"
+const GCPTestsInputDir = "decryption/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
 	cliPath, err := e2e.Bin()

@@ -1187,6 +1187,7 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
+      - func: "install pykmip"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${cloud_manager_org_id}

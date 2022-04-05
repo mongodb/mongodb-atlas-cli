@@ -130,6 +130,7 @@ functions:
           - OM_VERSION
           - KMIP_CA
           - KMIP_CERT
+          - GCP_CREDENTIALS
           - revision
         working_dir: src/github.com/mongodb/mongocli
         env:

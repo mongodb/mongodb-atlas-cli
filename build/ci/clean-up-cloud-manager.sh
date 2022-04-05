@@ -21,7 +21,7 @@ if [[ -f project.sh ]]; then
   source project.sh
 fi
 
-if [[ "$MUST_CLEANUP_CM" == "true" ]]; then
+if [[ "${MUST_CLEANUP_CM-}" == "true" ]]; then
   echo "cleaning up cloud manager project $MCLI_PROJECT_ID"
   mongocli iam projects remove "$MCLI_PROJECT_ID"
 fi

@@ -23,5 +23,5 @@ fi
 
 if [[ "${MUST_CLEANUP_CM-}" == "true" ]]; then
   echo "cleaning up cloud manager project $MCLI_PROJECT_ID"
-  mongocli iam projects remove "$MCLI_PROJECT_ID"
+  mongocli iam projects delete "$MCLI_PROJECT_ID" --force
 fi

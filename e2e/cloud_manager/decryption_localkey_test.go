@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
@@ -38,6 +39,12 @@ func TestDecrypt(t *testing.T) {
 
 	tmp := t.TempDir()
 
+	keyFile := path.Join(tmp, "localKey")
+	err = e2e.DumpToTempFile(files, path.Join(LocalKeyTestsInputDir, "localKey"), keyFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	t.Cleanup(func() {
 		if err := os.RemoveAll(tmp); err != nil {
 			t.Fatal(err)
@@ -47,10 +54,6 @@ func TestDecrypt(t *testing.T) {
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
 			inputFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
-			if err != nil {
-				t.Fatal(err)
-			}
-			keyFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "localKey", tmp)
 			if err != nil {
 				t.Fatal(err)
 			}

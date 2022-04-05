@@ -34,12 +34,21 @@ func DumpToTemp(files embed.FS, srcDir string, i int, suffix, destDir string) (s
 	inputFile := GenerateFileName(srcDir, i, suffix)
 	outputFile := GenerateFileName(destDir, i, suffix)
 
-	content, err := files.ReadFile(inputFile)
+	err := DumpToTempFile(files, inputFile, outputFile)
 	if err != nil {
 		return "", err
 	}
 
-	return outputFile, os.WriteFile(outputFile, content, fs.ModePerm)
+	return outputFile, nil
+}
+
+func DumpToTempFile(files embed.FS, srcFile, destFile string) error {
+	content, err := files.ReadFile(srcFile)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(destFile, content, fs.ModePerm)
 }
 
 func ParseJSON(contents []byte) ([]map[string]interface{}, error) {

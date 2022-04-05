@@ -25,6 +25,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 //go:embed decryption/gcp/*
@@ -33,41 +34,32 @@ var filesGCP embed.FS
 const GCPTestsInputDir = "decryption/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
+	req := require.New(t)
+
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 
 	tmpDir := t.TempDir()
 
 	GCPCredentialsContent, ok := os.LookupEnv("GCP_CREDENTIALS")
-	if !ok {
-		t.Fatal("GCP Credentials not found")
-	}
+	req.True(ok, "GCP Credentials not found")
 	GCPCredentialsFile := path.Join(tmpDir, "gcp_credentials.json")
 	err = os.WriteFile(GCPCredentialsFile, []byte(GCPCredentialsContent), fs.ModePerm)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req.NoError(err)
 	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", GCPCredentialsFile)
 
 	t.Cleanup(func() {
-		if errCleanup := os.RemoveAll(tmpDir); errCleanup != nil {
-			t.Fatal(errCleanup)
-		}
+		err = os.RemoveAll(tmpDir)
+		req.NoError(err)
 	})
 
 	i := 1
 	t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
 		inputFile, err := dumpToTemp(filesGCP, GCPTestsInputDir, i, "input", tmpDir)
-		if err != nil {
-			t.Fatal(err)
-		}
+		req.NoError(err)
 
 		expectedContents, err := filesGCP.ReadFile(generateFileName(GCPTestsInputDir, i, "output"))
-		if err != nil {
-			t.Fatal(err)
-		}
+		req.NoError(err)
 
 		cmd := exec.Command(cliPath,
 			entity,
@@ -79,12 +71,10 @@ func TestDecryptWithGCP(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		gotContents, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %s", err, string(gotContents))
-		}
+		req.NoError(err, string(gotContents))
 
-		if equal, err := logsAreEqual(expectedContents, gotContents); !equal {
-			t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
-		}
+		equal, err := logsAreEqual(expectedContents, gotContents)
+		req.NoError(err)
+		req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 	})
 }

@@ -23,9 +23,11 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 //go:embed decryption/kmip/*
@@ -47,8 +49,8 @@ func decodeAndWriteToPath(encodedText, filepath string) error {
 }
 
 func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
-	caFile = tmpDir + "/tls-rootCA.pem"
-	certFile = tmpDir + "/tls-localhost.pem"
+	caFile = path.Join(tmpDir, "tls-rootCA.pem")
+	certFile = path.Join(tmpDir, "tls-localhost.pem")
 
 	if err := decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
 		return "", "", err
@@ -63,34 +65,26 @@ func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
 
 func TestDecryptWithKMIP(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req := require.New(t)
+	req.NoError(err)
 
 	tmpDir := t.TempDir()
 
 	t.Cleanup(func() {
-		if errCleanup := os.RemoveAll(tmpDir); errCleanup != nil {
-			t.Fatal(errCleanup)
-		}
+		err = os.RemoveAll(tmpDir)
+		req.NoError(err)
 	})
 
 	caFile, certFile, err := dumpCertsToTemp(tmpDir)
-	if err != nil {
-		t.Fatal(err)
-	}
+	req.NoError(err)
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
 			inputFile, err := dumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
-			if err != nil {
-				t.Fatal(err)
-			}
+			req.NoError(err)
 
 			expectedContents, err := filesKmip.ReadFile(generateFileName(KmipTestsInputDir, i, "output"))
-			if err != nil {
-				t.Fatal(err)
-			}
+			req.NoError(err)
 
 			cmd := exec.Command(cliPath,
 				entity,
@@ -106,13 +100,11 @@ func TestDecryptWithKMIP(t *testing.T) {
 			cmd.Env = os.Environ()
 
 			gotContents, err := cmd.CombinedOutput()
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %s", err, string(gotContents))
-			}
+			req.NoError(err, string(gotContents))
 
-			if equal, err := logsAreEqual(expectedContents, gotContents); !equal {
-				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
-			}
+			equal, err := logsAreEqual(expectedContents, gotContents)
+			req.NoError(err)
+			req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 		})
 	}
 }

@@ -16,4 +16,4 @@
 
 package atlas
 
-const deprecatedMessage = "\u26A0 There's a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but you can keep using them for 12 months (until April 30, 2023).\n\n"
+const deprecatedMessage = "\u26A0 There's a new, dedicated Atlas CLI available for Atlas users.  Install the Atlas CLI to enjoy the same capabilities and keep getting new features. Run \"brew install mongodb-atlas-cli\" or visit https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but you can keep using them for 12 months (until April 30, 2023).\n\n"

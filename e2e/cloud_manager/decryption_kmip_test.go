@@ -33,7 +33,7 @@ import (
 //go:embed decryption/kmip/*
 var filesKmip embed.FS
 
-const KmipTestsInputDir = "decryption/kmip"
+const kmipTestsInputDir = "decryption/kmip"
 
 func decodeAndWriteToPath(encodedText, filepath string) error {
 	if encodedText == "" {
@@ -80,10 +80,11 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := dumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
+			inputFile := generateFileNameCase(tmpDir, i, "input")
+			err := dumpToTemp(filesKmip, generateFileNameCase(kmipTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := filesKmip.ReadFile(generateFileName(KmipTestsInputDir, i, "output"))
+			expectedContents, err := filesKmip.ReadFile(generateFileNameCase(kmipTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,

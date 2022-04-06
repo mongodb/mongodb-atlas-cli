@@ -26,23 +26,15 @@ import (
 	"reflect"
 )
 
-func generateFileName(dir string, i int, suffix string) string {
+func generateFileName(dir, suffix string) string {
+	return path.Join(dir, fmt.Sprintf("test-%v", suffix))
+}
+
+func generateFileNameCase(dir string, i int, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
 }
 
-func dumpToTemp(files embed.FS, srcDir string, i int, suffix, destDir string) (string, error) {
-	inputFile := generateFileName(srcDir, i, suffix)
-	outputFile := generateFileName(destDir, i, suffix)
-
-	err := dumpToTempFile(files, inputFile, outputFile)
-	if err != nil {
-		return "", err
-	}
-
-	return outputFile, nil
-}
-
-func dumpToTempFile(files embed.FS, srcFile, destFile string) error {
+func dumpToTemp(files embed.FS, srcFile, destFile string) error {
 	content, err := files.ReadFile(srcFile)
 	if err != nil {
 		return err

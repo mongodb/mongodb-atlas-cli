@@ -17,22 +17,20 @@ package cloud_manager_test
 
 import (
 	"embed"
-	"io/fs"
 	"os"
 	"os/exec"
-	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/gcp/*
-var filesGCP embed.FS
+//go:embed decryption/aws/*
+var filesAWS embed.FS
 
-const gcpTestsInputDir = "decryption/gcp"
+const awsTestsInputDir = "decryption/aws"
 
-func TestDecryptWithGCP(t *testing.T) {
+func TestDecryptWithAWS(t *testing.T) {
 	req := require.New(t)
 
 	cliPath, err := e2e.Bin()
@@ -40,23 +38,16 @@ func TestDecryptWithGCP(t *testing.T) {
 
 	tmpDir := t.TempDir()
 
-	GCPCredentialsContent, ok := os.LookupEnv("GCP_CREDENTIALS")
-	req.True(ok, "GCP Credentials not found")
-	GCPCredentialsFile := path.Join(tmpDir, "gcp_credentials.json")
-	err = os.WriteFile(GCPCredentialsFile, []byte(GCPCredentialsContent), fs.ModePerm)
-	req.NoError(err)
-	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", GCPCredentialsFile)
-
 	t.Cleanup(func() {
 		err = os.RemoveAll(tmpDir)
 		req.NoError(err)
 	})
 
 	inputFile := generateFileName(tmpDir, "input")
-	err = dumpToTemp(filesGCP, generateFileName(gcpTestsInputDir, "input"), inputFile)
+	err = dumpToTemp(filesAWS, generateFileName(awsTestsInputDir, "input"), inputFile)
 	req.NoError(err)
 
-	expectedContents, err := filesGCP.ReadFile(generateFileName(gcpTestsInputDir, "output"))
+	expectedContents, err := filesAWS.ReadFile(generateFileName(awsTestsInputDir, "output"))
 	req.NoError(err)
 
 	cmd := exec.Command(cliPath,

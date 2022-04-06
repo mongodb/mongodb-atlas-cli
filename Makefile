@@ -21,7 +21,7 @@ REF=$(shell git describe --always --tags | grep '-')
 $(info $$REF is [${REF}])
 ifneq (,$(findstring -,$(REF))) # if the tag doesn't point to the commit, we add -next to the version
 	MCLI_VERSION:="$(MCLI_VERSION)-next"
-    ATLAS_VERSION:="$(ATLAS_VERSION)-next"
+	ATLAS_VERSION:="$(ATLAS_VERSION)-next"
 endif
 
 

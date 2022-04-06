@@ -219,11 +219,14 @@ func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
 		s.username = c.PublicAPIKey()
 		s.password = c.PrivateAPIKey()
-		t, err := c.Token()
-		if err != nil {
-			return err
+
+		if s.username == "" && s.password == "" {
+			t, err := c.Token()
+			if err != nil {
+				return err
+			}
+			s.accessToken = t
 		}
-		s.accessToken = t
 		return nil
 	}
 }

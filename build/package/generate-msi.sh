@@ -25,9 +25,6 @@ go-msi check-env
 
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-if [[ -z "${VERSION}" ]]; then
-    VERSION="$(git describe --abbrev=0 | cut -d "v" -f 2)"
-fi
 
 COMMIT=$(git log -n1 --format=format:"%H")
 

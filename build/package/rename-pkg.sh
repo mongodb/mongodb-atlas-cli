@@ -18,9 +18,6 @@ set -Eeou pipefail
 
 
 VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-if [[ -z "${VERSION}" ]]; then
-    VERSION="$(git describe --abbrev=0 | cut -d "v" -f 2)"
-fi
 
 FILENAME="${package_name-}"_"${VERSION}"_linux_x86_64
 if [[ "${unstable-}" == "-unstable" ]]; then

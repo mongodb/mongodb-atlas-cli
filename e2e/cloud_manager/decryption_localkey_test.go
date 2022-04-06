@@ -18,6 +18,7 @@ package cloud_manager_test
 import (
 	"embed"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -30,7 +31,7 @@ import (
 //go:embed decryption/localKey/*
 var files embed.FS
 
-const LocalKeyTestsInputDir = "decryption/localKey"
+const localKeyTestsInputDir = "decryption/localKey"
 
 func TestDecrypt(t *testing.T) {
 	cliPath, err := e2e.Bin()
@@ -39,8 +40,10 @@ func TestDecrypt(t *testing.T) {
 
 	tmp := t.TempDir()
 
+	keyFileContent, ok := os.LookupEnv("LOCAL_KEY")
+	req.True(ok, "Local key not found")
 	keyFile := path.Join(tmp, "localKey")
-	err = dumpToTempFile(files, path.Join(LocalKeyTestsInputDir, "localKey"), keyFile)
+	err = os.WriteFile(keyFile, []byte(keyFileContent), fs.ModePerm)
 	req.NoError(err)
 
 	t.Cleanup(func() {
@@ -50,10 +53,11 @@ func TestDecrypt(t *testing.T) {
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := dumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
+			inputFile := generateFileName(tmp, i, "input")
+			err := dumpToTemp(files, generateFileName(localKeyTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := files.ReadFile(generateFileName(LocalKeyTestsInputDir, i, "output"))
+			expectedContents, err := files.ReadFile(generateFileName(localKeyTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,

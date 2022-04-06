@@ -53,11 +53,11 @@ func TestDecrypt(t *testing.T) {
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile := generateFileName(tmp, i, "input")
-			err := dumpToTemp(files, generateFileName(localKeyTestsInputDir, i, "input"), inputFile)
+			inputFile := generateFileNameCase(tmp, i, "input")
+			err := dumpToTemp(files, generateFileNameCase(localKeyTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := files.ReadFile(generateFileName(localKeyTestsInputDir, i, "output"))
+			expectedContents, err := files.ReadFile(generateFileNameCase(localKeyTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,

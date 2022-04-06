@@ -26,7 +26,11 @@ import (
 	"reflect"
 )
 
-func generateFileName(dir string, i int, suffix string) string {
+func generateFileName(dir, suffix string) string {
+	return path.Join(dir, fmt.Sprintf("test-%v", suffix))
+}
+
+func generateFileNameCase(dir string, i int, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
 }
 

@@ -80,11 +80,11 @@ func TestDecryptWithKMIP(t *testing.T) {
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile := generateFileName(tmpDir, i, "input")
-			err := dumpToTemp(filesKmip, generateFileName(kmipTestsInputDir, i, "input"), inputFile)
+			inputFile := generateFileNameCase(tmpDir, i, "input")
+			err := dumpToTemp(filesKmip, generateFileNameCase(kmipTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := filesKmip.ReadFile(generateFileName(kmipTestsInputDir, i, "output"))
+			expectedContents, err := filesKmip.ReadFile(generateFileNameCase(kmipTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,

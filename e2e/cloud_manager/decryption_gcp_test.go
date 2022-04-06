@@ -17,7 +17,6 @@ package cloud_manager_test
 
 import (
 	"embed"
-	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -53,29 +52,26 @@ func TestDecryptWithGCP(t *testing.T) {
 		req.NoError(err)
 	})
 
-	i := 1
-	t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-		inputFile := generateFileName(tmpDir, i, "input")
-		err := dumpToTemp(filesGCP, generateFileName(gcpTestsInputDir, i, "input"), inputFile)
-		req.NoError(err)
+	inputFile := generateFileName(tmpDir, "input")
+	err = dumpToTemp(filesGCP, generateFileName(gcpTestsInputDir, "input"), inputFile)
+	req.NoError(err)
 
-		expectedContents, err := filesGCP.ReadFile(generateFileName(gcpTestsInputDir, i, "output"))
-		req.NoError(err)
+	expectedContents, err := filesGCP.ReadFile(generateFileName(gcpTestsInputDir, "output"))
+	req.NoError(err)
 
-		cmd := exec.Command(cliPath,
-			entity,
-			"logs",
-			"decrypt",
-			"--file",
-			inputFile,
-		)
-		cmd.Env = os.Environ()
+	cmd := exec.Command(cliPath,
+		entity,
+		"logs",
+		"decrypt",
+		"--file",
+		inputFile,
+	)
+	cmd.Env = os.Environ()
 
-		gotContents, err := cmd.CombinedOutput()
-		req.NoError(err, string(gotContents))
+	gotContents, err := cmd.CombinedOutput()
+	req.NoError(err, string(gotContents))
 
-		equal, err := logsAreEqual(expectedContents, gotContents)
-		req.NoError(err)
-		req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
-	})
+	equal, err := logsAreEqual(expectedContents, gotContents)
+	req.NoError(err)
+	req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 }

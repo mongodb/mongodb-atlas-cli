@@ -26,7 +26,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/AWS/*
+//go:embed decryption/aws/*
 var filesAWS embed.FS
 
 const awsTestsInputDir = "decryption/aws"

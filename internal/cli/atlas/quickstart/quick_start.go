@@ -32,7 +32,6 @@ import (
 	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
-	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 )
 
@@ -66,8 +65,6 @@ const (
 	defaultAtlasGovTier = "M30"
 	atlasAdmin          = "atlasAdmin"
 	mongoshURL          = "https://www.mongodb.com/try/download/shell"
-	atlasAccountURL     = "https://docs.atlas.mongodb.com/tutorial/create-atlas-account/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product/"
-	profileDocURL       = "https://docs.mongodb.com/mongocli/stable/configure/?utm_campaign=atlas_quickstart&utm_source=mongocli&utm_medium=product#std-label-mcli-configure"
 	defaultProvider     = "AWS"
 	defaultRegion       = "US_EAST_1"
 	defaultRegionGov    = "US_GOV_EAST_1"
@@ -227,40 +224,6 @@ func askMongoShellAndSetConfig() error {
 	return config.Save()
 }
 
-func askAtlasAccountAndProfile() error {
-	_, _ = fmt.Fprintln(os.Stderr, "No API credentials set.")
-
-	if err := openBrowserAtlasAccount(); err != nil {
-		return err
-	}
-
-	if err := openBrowserProfile(); err != nil {
-		return err
-	}
-
-	return validate.Credentials()
-}
-
-func openBrowserProfile() error {
-	openBrowserProfileDoc := false
-	q := newProfileDocQuestionOpenBrowser()
-	if err := survey.AskOne(q, &openBrowserProfileDoc); !openBrowserProfileDoc || err != nil {
-		return err
-	}
-
-	return browser.OpenURL(profileDocURL)
-}
-
-func openBrowserAtlasAccount() error {
-	q := newAtlasAccountQuestionOpenBrowser()
-	var openBrowserAtlasAccount bool
-	if err := survey.AskOne(q, &openBrowserAtlasAccount); !openBrowserAtlasAccount || err != nil {
-		return err
-	}
-
-	return browser.OpenURL(atlasAccountURL)
-}
-
 // setupCloseHandler creates a 'listener' on a new goroutine which will notify the
 // program if it receives an interrupt from the OS. We then handle this by printing
 // the dbUsername and dbPassword.
@@ -351,10 +314,6 @@ func Builder() *cobra.Command {
 		Short: "Create and access an Atlas Cluster.",
 		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.AccessToken() == "" && (config.PublicAPIKey() == "" || config.PrivateAPIKey() == "") {
-				// no profile set
-				return askAtlasAccountAndProfile()
-			}
 			opts.setTier()
 			return opts.PreRunE(
 				opts.ValidateProjectID,

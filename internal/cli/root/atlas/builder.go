@@ -207,7 +207,6 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 	searchByName := []string{
 		"__complete",
 		"help",
-		"quickstart",
 		figautocomplete.CmdUse,
 	}
 	for _, n := range searchByName {

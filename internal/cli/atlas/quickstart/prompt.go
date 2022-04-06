@@ -126,20 +126,6 @@ func newMongoShellQuestionOpenBrowser() survey.Prompt {
 	}
 }
 
-func newAtlasAccountQuestionOpenBrowser() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Do you want to create an Atlas account [This will open www.mongodb.com on your browser]?",
-		Default: true,
-	}
-}
-
-func newProfileDocQuestionOpenBrowser() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Do you want more information to set up your profile [This will open www.mongodb.com on your browser]?",
-		Default: true,
-	}
-}
-
 func newClusterCreateConfirm(clusterName string) survey.Prompt {
 	return &survey.Confirm{
 		Message: fmt.Sprintf("Do you want to create a new cluster %s with the following settings?", clusterName),

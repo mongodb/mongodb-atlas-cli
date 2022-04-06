@@ -17,10 +17,7 @@ package cloud_manager_test
 
 import (
 	"embed"
-	"encoding/base64"
-	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -30,60 +27,33 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/kmip/*
-var filesKmip embed.FS
+//go:embed decryption/localKey/*
+var files embed.FS
 
-const KmipTestsInputDir = "decryption/kmip"
+const LocalKeyTestsInputDir = "decryption/localKey"
 
-func decodeAndWriteToPath(encodedText, filepath string) error {
-	if encodedText == "" {
-		return errors.New("unexpected empty value")
-	}
-
-	decoded, err := base64.StdEncoding.DecodeString(encodedText)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(filepath, decoded, fs.ModePerm)
-}
-
-func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
-	caFile = path.Join(tmpDir, "tls-rootCA.pem")
-	certFile = path.Join(tmpDir, "tls-localhost.pem")
-
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
-		return "", "", err
-	}
-
-	if err := decodeAndWriteToPath(os.Getenv("KMIP_CERT"), certFile); err != nil {
-		return "", "", err
-	}
-
-	return caFile, certFile, nil
-}
-
-func TestDecryptWithKMIP(t *testing.T) {
+func TestDecrypt(t *testing.T) {
 	cliPath, err := e2e.Bin()
 	req := require.New(t)
 	req.NoError(err)
 
-	tmpDir := t.TempDir()
+	tmp := t.TempDir()
+
+	keyFile := path.Join(tmp, "localKey")
+	err = dumpToTempFile(files, path.Join(LocalKeyTestsInputDir, "localKey"), keyFile)
+	req.NoError(err)
 
 	t.Cleanup(func() {
-		err = os.RemoveAll(tmpDir)
+		err = os.RemoveAll(tmp)
 		req.NoError(err)
 	})
 
-	caFile, certFile, err := dumpCertsToTemp(tmpDir)
-	req.NoError(err)
-
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := dumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
+			inputFile, err := dumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
 			req.NoError(err)
 
-			expectedContents, err := filesKmip.ReadFile(generateFileName(KmipTestsInputDir, i, "output"))
+			expectedContents, err := files.ReadFile(generateFileName(LocalKeyTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,
@@ -92,13 +62,10 @@ func TestDecryptWithKMIP(t *testing.T) {
 				"decrypt",
 				"--file",
 				inputFile,
-				"--kmipServerCAFile",
-				caFile,
-				"--kmipClientCertificateFile",
-				certFile,
+				"--localKeyFile",
+				keyFile,
 			)
 			cmd.Env = os.Environ()
-
 			gotContents, err := cmd.CombinedOutput()
 			req.NoError(err, string(gotContents))
 

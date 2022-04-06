@@ -17,8 +17,4 @@ set -Eeou pipefail
 
 VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-if [[ -z "${VERSION}" ]]; then
-    VERSION=$(git describe | cut -d "v" -f 2)
-fi
-
 go run ../internal/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"

@@ -17,19 +17,12 @@ ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
-
-$(info $$MCLI_VERSION is [${MCLI_VERSION}])
-$(info $$ATLAS_VERSION is [${ATLAS_VERSION}])
-
-
 REF=$(shell git describe --always --tags | grep '-')
 $(info $$REF is [${REF}])
 ifneq (,$(findstring -,$(REF))) # if the tag doesn't point to the commit, we add -next to the version
 	MCLI_VERSION:="$(MCLI_VERSION)-next"
     ATLAS_VERSION:="$(ATLAS_VERSION)-next"
 endif
-$(info $$MCLI_VERSION is [${MCLI_VERSION}])
-$(info $$ATLAS_VERSION is [${ATLAS_VERSION}])
 
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}

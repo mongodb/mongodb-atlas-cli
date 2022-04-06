@@ -224,18 +224,6 @@ functions:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-  "clean-up cloud manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        add_to_path:
-          - ${go_bin}
-          - ../../bin
-        working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./clean-up-cloud-manager.sh
-        args: ['-h', 'hosts.json']
-        env:
-          XDG_CONFIG_HOME: ${workdir}
   "lint":
     - command: shell.exec
       type: test
@@ -300,6 +288,17 @@ functions:
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 post:
+  - command: subprocess.exec
+    type: setup
+    params:
+      add_to_path:
+        - ${go_bin}
+        - ../../bin
+      working_dir: src/github.com/mongodb/mongocli/build/ci
+      binary: ./clean-up-cloud-manager.sh
+      args: ['-h', 'hosts.json']
+      env:
+        XDG_CONFIG_HOME: ${workdir}
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongocli/*.xml"]
@@ -982,7 +981,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: cloudmanager,remote,replica
-      - func: "clean-up cloud manager"
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1005,7 +1003,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: cloudmanager,remote,sharded
-      - func: "clean-up cloud manager"
   # Deploy ops manager and test against it
   - name: ops_manager_4_4_generic_e2e
     tags: [ "e2e","ops-manager-44" ]

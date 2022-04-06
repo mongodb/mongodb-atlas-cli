@@ -40,6 +40,7 @@ set -euo pipefail
 
 export AGENT_API_KEY="{{.AgentAPIKey}}"
 export MCLI_PROJECT_ID="{{.ID}}"
+export MUST_CLEANUP_CM="true"
 EOF
 
 # shellcheck disable=SC2154

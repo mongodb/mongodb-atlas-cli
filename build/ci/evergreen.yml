@@ -134,6 +134,9 @@ functions:
           - GCP_CREDENTIALS
           - AWS_ACCESS_KEY
           - AWS_SECRET_ACCESS_KEY
+          - AZURE_TENANT_ID
+          - AZURE_CLIENT_ID
+          - AZURE_CLIENT_SECRET
           - revision
         working_dir: src/github.com/mongodb/mongocli
         env:
@@ -1202,6 +1205,9 @@ tasks:
           LOCAL_KEY: ${logs_decrypt_local_key}
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
+          AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
+          AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
+          AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,decrypt
 buildvariants:

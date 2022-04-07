@@ -15,12 +15,13 @@
 package keyproviders
 
 import (
-	"errors"
+	"context"
 	"fmt"
 	"os"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys/crypto"
 )
 
 type AzureKeyIdentifier struct {
@@ -28,7 +29,7 @@ type AzureKeyIdentifier struct {
 
 	// Header
 	KeyName          string
-	Environment      string
+	Environment      string // not used
 	KeyVaultEndpoint string
 	KeyVersion       string
 
@@ -83,6 +84,14 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 	return err
 }
 
-func (ki *AzureKeyIdentifier) DecryptKey(_ []byte) ([]byte, error) {
-	return nil, errors.New("not implemented")
+func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
+	client, err := crypto.NewClient(ki.KeyVaultEndpoint+"/keys/"+ki.KeyName+"/"+ki.KeyVersion, ki.credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	r, err := client.Decrypt(context.Background(), crypto.EncryptionAlgRSAOAEP, key, &crypto.DecryptOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return r.Plaintext, nil
 }

@@ -27,26 +27,26 @@ type AuditRecordType string
 type AuditLogLineKeyStoreIdentifier struct {
 	Provider *keyproviders.KeyStoreProvider `json:"provider,omitempty"`
 	// localKey
-	Filename *string `json:"filename,omitempty"`
+	Filename string `json:"filename,omitempty"`
 	// kmip
-	UID            *string                         `json:"uniqueKeyID,omitempty"`
-	KMIPServerName []string                        `json:"kmipServerName,omitempty"`
-	KMIPPort       *int                            `json:"kmipPort,omitempty"`
-	KeyWrapMethod  *keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
+	UID            string                         `json:"uniqueKeyID,omitempty"`
+	KMIPServerName []string                       `json:"kmipServerName,omitempty"`
+	KMIPPort       int                            `json:"kmipPort,omitempty"`
+	KeyWrapMethod  keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
 	// aws
-	Key      *string `json:"key,omitempty"`
-	Region   *string `json:"region,omitempty"`
-	Endpoint *string `json:"endpoint,omitempty"`
+	Key      string `json:"key,omitempty"`
+	Region   string `json:"region,omitempty"`
+	Endpoint string `json:"endpoint,omitempty"`
 	// azure & gcp
-	KeyName *string `json:"keyName,omitempty"`
+	KeyName string `json:"keyName,omitempty"`
 	// azure
-	Environment      *string `json:"environment,omitempty"`
-	KeyVaultEndpoint *string `json:"keyVaultEndpoint,omitempty"`
-	KeyVersion       *string `json:"keyVersion,omitempty"`
+	Environment      string `json:"environment,omitempty"`
+	KeyVaultEndpoint string `json:"keyVaultEndpoint,omitempty"`
+	KeyVersion       string `json:"keyVersion,omitempty"`
 	// gcp
-	ProjectID *string `json:"projectId,omitempty"`
-	Location  *string `json:"location,omitempty"`
-	KeyRing   *string `json:"keyRing,omitempty"`
+	ProjectID string `json:"projectId,omitempty"`
+	Location  string `json:"location,omitempty"`
+	KeyRing   string `json:"keyRing,omitempty"`
 }
 
 type AuditLogLine struct {
@@ -72,41 +72,41 @@ func (logLine *AuditLogLine) KeyProvider(opts *KeyProviderOpts) (keyproviders.Ke
 	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		return &keyproviders.LocalKeyIdentifier{
-			HeaderFilename: *logLine.KeyStoreIdentifier.Filename,
+			HeaderFilename: logLine.KeyStoreIdentifier.Filename,
 			Filename:       opts.Local.KeyFileName,
 		}, nil
 	case keyproviders.KMIP:
 		return &keyproviders.KMIPKeyIdentifier{
-			UniqueKeyID:               *logLine.KeyStoreIdentifier.UID,
+			UniqueKeyID:               logLine.KeyStoreIdentifier.UID,
 			ServerNames:               logLine.KeyStoreIdentifier.KMIPServerName,
-			ServerPort:                *logLine.KeyStoreIdentifier.KMIPPort,
-			KeyWrapMethod:             *logLine.KeyStoreIdentifier.KeyWrapMethod,
+			ServerPort:                logLine.KeyStoreIdentifier.KMIPPort,
+			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIP.ServerCAFileName,
 			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
 		}, nil
 	case keyproviders.AWS:
 		return &keyproviders.AWSKeyIdentifier{
-			Key:             *logLine.KeyStoreIdentifier.Key,
-			Region:          *logLine.KeyStoreIdentifier.Region,
-			Endpoint:        *logLine.KeyStoreIdentifier.Endpoint,
+			Key:             logLine.KeyStoreIdentifier.Key,
+			Region:          logLine.KeyStoreIdentifier.Region,
+			Endpoint:        logLine.KeyStoreIdentifier.Endpoint,
 			AccessKey:       opts.AWS.AccessKey,
 			SecretAccessKey: opts.AWS.SecretAccessKey,
 			SessionToken:    opts.AWS.SessionToken,
 		}, nil
 	case keyproviders.GCP:
 		return &keyproviders.GCPKeyIdentifier{
-			KeyName:           *logLine.KeyStoreIdentifier.KeyName,
-			ProjectID:         *logLine.KeyStoreIdentifier.ProjectID,
-			Location:          *logLine.KeyStoreIdentifier.Location,
-			KeyRing:           *logLine.KeyStoreIdentifier.KeyRing,
+			KeyName:           logLine.KeyStoreIdentifier.KeyName,
+			ProjectID:         logLine.KeyStoreIdentifier.ProjectID,
+			Location:          logLine.KeyStoreIdentifier.Location,
+			KeyRing:           logLine.KeyStoreIdentifier.KeyRing,
 			ServiceAccountKey: opts.GCP.ServiceAccountKey,
 		}, nil
 	case keyproviders.Azure:
 		return &keyproviders.AzureKeyIdentifier{
-			KeyName:          *logLine.KeyStoreIdentifier.KeyName,
-			Environment:      *logLine.KeyStoreIdentifier.Environment,
-			KeyVaultEndpoint: *logLine.KeyStoreIdentifier.KeyVaultEndpoint,
-			KeyVersion:       *logLine.KeyStoreIdentifier.KeyVersion,
+			KeyName:          logLine.KeyStoreIdentifier.KeyName,
+			Environment:      logLine.KeyStoreIdentifier.Environment,
+			KeyVaultEndpoint: logLine.KeyStoreIdentifier.KeyVaultEndpoint,
+			KeyVersion:       logLine.KeyStoreIdentifier.KeyVersion,
 			ClientID:         opts.Azure.ClientID,
 			TenantID:         opts.Azure.TenantID,
 			Secret:           opts.Azure.Secret,

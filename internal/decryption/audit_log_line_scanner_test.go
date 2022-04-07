@@ -48,7 +48,7 @@ func buildExpectedLog() []*AuditLogLine {
 			CompressionMode: &compressionMode,
 			KeyStoreIdentifier: AuditLogLineKeyStoreIdentifier{
 				Provider: &provider,
-				Filename: &filename,
+				Filename: filename,
 			},
 			EncryptedKey:    encryptedKey,
 			MAC:             &mac,

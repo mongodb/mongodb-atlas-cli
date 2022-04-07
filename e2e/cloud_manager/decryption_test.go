@@ -11,73 +11,66 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (decrypt && (cloudmanager || om44 || om50))
 
 package cloud_manager_test
 
 import (
+	"bufio"
+	"bytes"
 	"embed"
+	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
-	"os/exec"
-	"testing"
-
-	"github.com/mongodb/mongocli/e2e"
+	"path"
+	"reflect"
 )
 
-//go:embed decryption/localKey/*
-var files embed.FS
+func generateFileName(dir, suffix string) string {
+	return path.Join(dir, fmt.Sprintf("test-%v", suffix))
+}
 
-const LocalKeyTestsInputDir = "decryption/localKey"
+func generateFileNameCase(dir string, i int, suffix string) string {
+	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
+}
 
-func TestDecrypt(t *testing.T) {
-	cliPath, err := e2e.Bin()
+func dumpToTemp(files embed.FS, srcFile, destFile string) error {
+	content, err := files.ReadFile(srcFile)
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		return err
 	}
 
-	tmp := t.TempDir()
+	return os.WriteFile(destFile, content, fs.ModePerm)
+}
 
-	t.Cleanup(func() {
-		if err := os.RemoveAll(tmp); err != nil {
-			t.Fatal(err)
+func parseJSON(contents []byte) ([]map[string]interface{}, error) {
+	res := []map[string]interface{}{}
+
+	s := bufio.NewScanner(bytes.NewReader(contents))
+	for s.Scan() {
+		var item map[string]interface{}
+		err := json.Unmarshal(s.Bytes(), &item)
+		if err != nil {
+			return nil, err
 		}
-	})
-
-	for i := 1; i <= 4; i++ {
-		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "input", tmp)
-			if err != nil {
-				t.Fatal(err)
-			}
-			keyFile, err := e2e.DumpToTemp(files, LocalKeyTestsInputDir, i, "localKey", tmp)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			expectedContents, err := files.ReadFile(e2e.GenerateFileName(LocalKeyTestsInputDir, i, "output"))
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			cmd := exec.Command(cliPath,
-				entity,
-				"logs",
-				"decrypt",
-				"--file",
-				inputFile,
-				"--localKeyFile",
-				keyFile,
-			)
-			cmd.Env = os.Environ()
-			gotContents, err := cmd.CombinedOutput()
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(gotContents))
-			}
-
-			if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
-				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
-			}
-		})
+		res = append(res, item)
 	}
+	if s.Err() != nil {
+		return nil, s.Err()
+	}
+	return res, nil
+}
+
+func logsAreEqual(expected, got []byte) (bool, error) {
+	expectedLines, err := parseJSON(expected)
+	if err != nil {
+		return false, err
+	}
+
+	gotLines, err := parseJSON(got)
+	if err != nil {
+		return false, err
+	}
+
+	return reflect.DeepEqual(expectedLines, gotLines), nil
 }

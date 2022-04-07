@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (kmipdecrypt && (cloudmanager || om44 || om50))
+//go:build e2e || (decrypt && (cloudmanager || om44 || om50))
 
 package cloud_manager_test
 
@@ -23,15 +23,17 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 //go:embed decryption/kmip/*
 var filesKmip embed.FS
 
-const KmipTestsInputDir = "decryption/kmip"
+const kmipTestsInputDir = "decryption/kmip"
 
 func decodeAndWriteToPath(encodedText, filepath string) error {
 	if encodedText == "" {
@@ -47,8 +49,8 @@ func decodeAndWriteToPath(encodedText, filepath string) error {
 }
 
 func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
-	caFile = tmpDir + "/tls-rootCA.pem"
-	certFile = tmpDir + "/tls-localhost.pem"
+	caFile = path.Join(tmpDir, "tls-rootCA.pem")
+	certFile = path.Join(tmpDir, "tls-localhost.pem")
 
 	if err := decodeAndWriteToPath(os.Getenv("KMIP_CA"), caFile); err != nil {
 		return "", "", err
@@ -63,34 +65,27 @@ func dumpCertsToTemp(tmpDir string) (caFile, certFile string, err error) {
 
 func TestDecryptWithKMIP(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	req := require.New(t)
+	req.NoError(err)
 
 	tmpDir := t.TempDir()
 
 	t.Cleanup(func() {
-		if errCleanup := os.RemoveAll(tmpDir); errCleanup != nil {
-			t.Fatal(errCleanup)
-		}
+		err = os.RemoveAll(tmpDir)
+		req.NoError(err)
 	})
 
 	caFile, certFile, err := dumpCertsToTemp(tmpDir)
-	if err != nil {
-		t.Fatal(err)
-	}
+	req.NoError(err)
 
 	for i := 1; i <= 2; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile, err := e2e.DumpToTemp(filesKmip, KmipTestsInputDir, i, "input", tmpDir)
-			if err != nil {
-				t.Fatal(err)
-			}
+			inputFile := generateFileNameCase(tmpDir, i, "input")
+			err := dumpToTemp(filesKmip, generateFileNameCase(kmipTestsInputDir, i, "input"), inputFile)
+			req.NoError(err)
 
-			expectedContents, err := filesKmip.ReadFile(e2e.GenerateFileName(KmipTestsInputDir, i, "output"))
-			if err != nil {
-				t.Fatal(err)
-			}
+			expectedContents, err := filesKmip.ReadFile(generateFileNameCase(kmipTestsInputDir, i, "output"))
+			req.NoError(err)
 
 			cmd := exec.Command(cliPath,
 				entity,
@@ -106,13 +101,11 @@ func TestDecryptWithKMIP(t *testing.T) {
 			cmd.Env = os.Environ()
 
 			gotContents, err := cmd.CombinedOutput()
-			if err != nil {
-				t.Fatalf("unexpected error: %v, resp: %s", err, string(gotContents))
-			}
+			req.NoError(err, string(gotContents))
 
-			if equal, err := e2e.LogsAreEqual(expectedContents, gotContents); !equal {
-				t.Fatalf("decryption unexpected: expected %v, got %v, %v", string(expectedContents), string(gotContents), err)
-			}
+			equal, err := logsAreEqual(expectedContents, gotContents)
+			req.NoError(err)
+			req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 		})
 	}
 }

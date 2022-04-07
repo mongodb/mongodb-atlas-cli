@@ -15,9 +15,7 @@
 package decryption
 
 import (
-	"fmt"
 	"io"
-	"os"
 )
 
 type DecryptSection struct {
@@ -33,39 +31,6 @@ func (s *DecryptSection) zeroLEK() {
 	for i := range s.lek {
 		s.lek[i] = 0
 	}
-}
-
-type KeyProviderOpts struct {
-	Local KeyProviderLocalOpts
-	KMIP  KeyProviderKMIPOpts
-	AWS   KeyProviderAWSOpts
-	GCP   KeyProviderGCPOpts
-	Azure KeyProviderAzureOpts
-}
-
-type KeyProviderLocalOpts struct {
-	KeyFileName string
-}
-
-type KeyProviderKMIPOpts struct {
-	ServerCAFileName          string
-	ClientCertificateFileName string
-}
-
-type KeyProviderAWSOpts struct {
-	AccessKey       string
-	SecretAccessKey string
-	SessionToken    string
-}
-
-type KeyProviderGCPOpts struct {
-	ServiceAccountKey string
-}
-
-type KeyProviderAzureOpts struct {
-	ClientID string
-	TenantID string
-	Secret   string
 }
 
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
@@ -118,40 +83,6 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts *KeyProviderOpts) erro
 	}
 
 	return nil
-}
-
-func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifier, error) {
-	_, logLineScanner, err := readAuditLogFile(logReader)
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []*AuditLogLineKeyStoreIdentifier
-	idx := 0
-	for ; logLineScanner.Scan(); idx++ {
-		lineNb := idx + 1
-		logLine, err := logLineScanner.AuditLogLine()
-		if err != nil {
-			if _, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err); printErr != nil {
-				return nil, printErr
-			}
-			continue
-		}
-
-		if logLine.AuditRecordType != AuditHeaderRecord {
-			continue
-		}
-
-		ret = append(ret, &logLine.KeyStoreIdentifier)
-	}
-	if err := logLineScanner.Err(); err != nil {
-		lineNb := idx + 1
-		if _, printErr := fmt.Fprintf(os.Stderr, "error parsing line %d, %v", lineNb, err); printErr != nil {
-			return nil, printErr
-		}
-	}
-
-	return ret, nil
 }
 
 func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine, output AuditLogOutput, lineNb int) error {

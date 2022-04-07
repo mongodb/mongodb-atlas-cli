@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"github.com/mongodb/mongocli/internal/decryption/kmip"
@@ -34,10 +35,14 @@ const (
 // LocalKeyIdentifier config for the KMIP speaking server used to encrypt the Log Encryption Key (LEK).
 type KMIPKeyIdentifier struct {
 	KeyStoreIdentifier
-	UniqueKeyID               string
-	ServerNames               []string
-	ServerPort                int
-	KeyWrapMethod             KMIPKeyWrapMethod
+
+	// Header
+	UniqueKeyID   string
+	ServerNames   []string
+	ServerPort    int
+	KeyWrapMethod KMIPKeyWrapMethod
+
+	// CLI
 	ServerCAFileName          string
 	ClientCertificateFileName string
 }
@@ -46,6 +51,40 @@ type KMIPKeyIdentifier struct {
 type KMIPEncryptedKey struct {
 	IV  []byte
 	Key []byte
+}
+
+var ErrKMIPServerCAMissing = errors.New("server CA missing")
+var ErrKMIPClientCertificateMissing = errors.New("client certificate missing")
+
+func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
+	if ki.ServerCAFileName == "" || ki.ClientCertificateFileName == "" {
+		fmt.Fprintf(os.Stderr, `No credentials found for resource: KMIP uniqueKeyID="%v" serverNames="%v" serverPort="%v" keyWrapMethod="%v"
+`, ki.UniqueKeyID, strings.Join(ki.ServerNames, "; "), ki.ServerPort, ki.KeyWrapMethod)
+	}
+
+	if ki.ServerCAFileName == "" {
+		f, err := provideInput("Provide server CA filename:", "")
+		if err != nil {
+			return err
+		}
+		ki.ServerCAFileName = f
+		if ki.ServerCAFileName == "" {
+			return ErrKMIPServerCAMissing
+		}
+	}
+
+	if ki.ClientCertificateFileName == "" {
+		f, err := provideInput("Provide client certificate filename:", "")
+		if err != nil {
+			return err
+		}
+		ki.ClientCertificateFileName = f
+		if ki.ClientCertificateFileName == "" {
+			return ErrKMIPClientCertificateMissing
+		}
+	}
+
+	return nil
 }
 
 // DecryptKey decrypts LEK using KMIP get or decrypt methods.

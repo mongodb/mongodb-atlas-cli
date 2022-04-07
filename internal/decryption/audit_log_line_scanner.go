@@ -22,6 +22,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+type AuditLogFormat string
+
+const (
+	JSON AuditLogFormat = "JSON"
+	BSON AuditLogFormat = "BSON"
+)
+
 func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 	b := make([]byte, 1)
 

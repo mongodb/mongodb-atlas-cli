@@ -204,26 +204,26 @@ func shouldSetService(cmd *cobra.Command) bool {
 }
 
 func shouldCheckCredentials(cmd *cobra.Command) bool {
-	if cmd.Name() == figautocomplete.CmdUse { // figautocomplete command does not require credentials
-		return false
+	searchByName := []string{
+		"__complete",
+		"help",
+		figautocomplete.CmdUse,
 	}
-
-	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) { // completion commands do not require credentials
-		return false
+	for _, n := range searchByName {
+		if cmd.Name() == n {
+			return false
+		}
 	}
-
-	if cmd.Name() == "quickstart" { // quickstart has its own check
-		return false
+	searchByPath := []string{
+		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
 	}
-
-	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "config")) { // user wants to set credentials
-		return false
+	for _, p := range searchByPath {
+		if strings.HasPrefix(cmd.CommandPath(), p) {
+			return false
+		}
 	}
-
-	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "auth")) { // user wants to set credentials
-		return false
-	}
-
 	return true
 }
 

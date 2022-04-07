@@ -5,7 +5,7 @@ COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
 MCLI_BINARY_NAME=mongocli
-MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 |  xargs -I % sh -c 'echo %-next' )
+MCLI_VERSION?=$(shell git tag --list 'mongocli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 )
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
 MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
@@ -13,12 +13,14 @@ MCLI_E2E_BINARY?=../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
-ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 | xargs -I % sh -c 'echo %-next' )
+ATLAS_VERSION?=$(shell git tag --list 'atlascli/v*' --sort=taggerdate | tail -1 | cut -d "v" -f 2 )
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
-ifeq ($(ATLAS_VERSION),) # use git describe if we don't have an atlascli tag
-	ATLAS_VERSION=$(shell git describe --always --tags | cut -d "v" -f 2)
+REF=$(shell git describe --always --tags | grep '-')
+ifneq (,$(findstring -,$(REF))) # if the tag doesn't point to the commit, we add -next to the version
+	MCLI_VERSION:="$(MCLI_VERSION)-next"
+	ATLAS_VERSION:="$(ATLAS_VERSION)-next"
 endif
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongocli/internal/version.GitCommit=${MCLI_GIT_SHA}

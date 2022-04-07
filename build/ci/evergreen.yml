@@ -128,8 +128,12 @@ functions:
           - E2E_CLOUD_ROLE_ID
           - MCLI_OPS_MANAGER_URL
           - OM_VERSION
+          - LOCAL_KEY
           - KMIP_CA
           - KMIP_CERT
+          - GCP_CREDENTIALS
+          - AWS_ACCESS_KEY
+          - AWS_SECRET_ACCESS_KEY
           - revision
         working_dir: src/github.com/mongodb/mongocli
         env:
@@ -223,18 +227,6 @@ functions:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-  "clean-up cloud manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        add_to_path:
-          - ${go_bin}
-          - ../../bin
-        working_dir: src/github.com/mongodb/mongocli/build/ci
-        binary: ./clean-up-cloud-manager.sh
-        args: ['-h', 'hosts.json']
-        env:
-          XDG_CONFIG_HOME: ${workdir}
   "lint":
     - command: shell.exec
       type: test
@@ -299,6 +291,17 @@ functions:
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
 post:
+  - command: subprocess.exec
+    type: setup
+    params:
+      add_to_path:
+        - ${go_bin}
+        - ../../bin
+      working_dir: src/github.com/mongodb/mongocli/build/ci
+      binary: ./clean-up-cloud-manager.sh
+      args: ['-h', 'hosts.json']
+      env:
+        XDG_CONFIG_HOME: ${workdir}
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongocli/*.xml"]
@@ -981,7 +984,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: cloudmanager,remote,replica
-      - func: "clean-up cloud manager"
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1004,7 +1006,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TAGS: cloudmanager,remote,sharded
-      - func: "clean-up cloud manager"
   # Deploy ops manager and test against it
   - name: ops_manager_4_4_generic_e2e
     tags: [ "e2e","ops-manager-44" ]
@@ -1187,25 +1188,6 @@ tasks:
       - func: "clone"
       - func: "install gotestsum"
       - func: "build mongocli"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,decrypt
-  - name: cloud_manager_decrypt_with_kmip_e2e
-    tags: ["e2e", "generic"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "clone"
-      - func: "install gotestsum"
-      - func: "build mongocli"
       - func: "install pykmip"
       - func: "e2e test"
         vars:
@@ -1214,10 +1196,14 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
+          GCP_CREDENTIALS: ${logs_decrypt_gcp_credentials}
+          AWS_ACCESS_KEY: ${logs_decrypt_aws_access_key}
+          AWS_SECRET_ACCESS_KEY: ${logs_decrypt_aws_secret_access_key}
+          LOCAL_KEY: ${logs_decrypt_local_key}
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
-          E2E_TAGS: cloudmanager,kmipdecrypt
+          MCLI_SERVICE: cloud-manager
+          E2E_TAGS: cloudmanager,decrypt
 buildvariants:
   - name: code_health
     display_name: "Code Health"

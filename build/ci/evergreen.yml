@@ -1210,8 +1210,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: .code_health
   - name: e2e_generic
@@ -1219,8 +1219,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .generic"
   - name: e2e_atlas_clusters
@@ -1228,8 +1228,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
   - name: e2e_atlas_gov_clusters
@@ -1237,8 +1237,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .clusters .atlasgov"
   - name: e2e_atlas_networking
@@ -1246,8 +1246,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .networking .atlas"
   - name: e2e_atlas_live_migrations
@@ -1255,8 +1255,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .livemigrations .atlas"
   - name: e2e_atlas_datalake
@@ -1264,8 +1264,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .datalake .atlas"
   - name: e2e_cloud_manager_remote
@@ -1273,8 +1273,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .clusters .cloudmanager"
   - name: e2e_ops_manager_44
@@ -1282,8 +1282,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".ops-manager-44"
   - name: e2e_ops_manager_50
@@ -1291,8 +1291,8 @@ buildvariants:
     run_on:
       - rhel80-small
     expansions:
-      go_root: "/opt/golang/go1.17"
-      go_bin: "/opt/golang/go1.17/bin"
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".ops-manager-50"
 

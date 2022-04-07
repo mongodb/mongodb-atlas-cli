@@ -68,11 +68,6 @@ func Builder() *cobra.Command {
 			if config.Service() == "" {
 				config.SetService(config.CloudService)
 			}
-
-			if cmd.Name() == "quickstart" { // quickstart has its own check
-				return nil
-			}
-
 			return validate.Credentials()
 		},
 		Annotations: map[string]string{

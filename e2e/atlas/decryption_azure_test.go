@@ -34,7 +34,7 @@ const azureTestsInputDir = "decryption/azure"
 func TestDecryptWithAzure(t *testing.T) {
 	req := require.New(t)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
 	tmpDir := t.TempDir()

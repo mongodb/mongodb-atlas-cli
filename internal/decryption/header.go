@@ -24,6 +24,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var (
+	ErrTimestampMissing       = errors.New("missing timestamp")
+	ErrVersionMissing         = errors.New("missing version")
+	ErrCompressionModeMissing = errors.New("missing compression mode")
+	ErrCompressionModeInvalid = errors.New("invalid compression mode")
+	ErrProviderMissing        = errors.New("missing provider")
+	ErrEncryptedKeyMissing    = errors.New("missing encrypted key")
+	ErrMACMissing             = errors.New("missing mac")
+	ErrHeaderRecordInvalid    = errors.New("incorrect header record")
+)
+
 type HeaderRecord struct {
 	Timestamp       time.Time
 	Version         string
@@ -57,36 +68,36 @@ func decodeHeader(logLine *AuditLogLine, opts KeyProviderOpts) (*HeaderRecord, e
 
 func validateHeaderFields(logLine *AuditLogLine) error {
 	if logLine.TS == nil {
-		return errors.New("missing timestamp")
+		return ErrTimestampMissing
 	}
 
 	if logLine.Version == nil {
-		return errors.New("missing version")
+		return ErrVersionMissing
 	}
 
 	if logLine.CompressionMode == nil {
-		return errors.New("missing compression mode")
+		return ErrCompressionModeMissing
 	}
 
 	c := CompressionMode(*logLine.CompressionMode)
 
 	if c != CompressionModeNone && c != CompressionModeZstd {
-		return errors.New("invalid compression mode")
+		return ErrCompressionModeInvalid
 	}
 	if logLine.KeyStoreIdentifier.Provider == nil {
-		return errors.New("missing provider")
+		return ErrProviderMissing
 	}
 
 	if logLine.EncryptedKey == nil {
-		return errors.New("missing encrypted key")
+		return ErrEncryptedKeyMissing
 	}
 
 	if logLine.MAC == nil {
-		return errors.New("missing mac")
+		return ErrMACMissing
 	}
 
 	if logLine.AuditRecordType != AuditHeaderRecord {
-		return errors.New("incorrect header record")
+		return ErrHeaderRecordInvalid
 	}
 
 	return nil

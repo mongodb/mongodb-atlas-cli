@@ -22,6 +22,12 @@ import (
 	"github.com/mongodb/mongocli/internal/decryption/keyproviders"
 )
 
+var (
+	ErrInvalidHeaderLine       = errors.New("not a valid header line")
+	ErrKeyProviderMissing      = errors.New("key provider not set")
+	ErrKeyProviderNotSupported = errors.New("key provider not supported")
+)
+
 type AuditRecordType string
 
 type AuditLogLineKeyStoreIdentifier struct {
@@ -62,17 +68,17 @@ type AuditLogLine struct {
 
 func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
 	if logLine.AuditRecordType != AuditHeaderRecord {
-		return nil, errors.New("not a valid header line")
+		return nil, ErrInvalidHeaderLine
 	}
 
 	if logLine.KeyStoreIdentifier.Provider == nil {
-		return nil, errors.New("keyProvider not set")
+		return nil, ErrKeyProviderMissing
 	}
 
 	switch *logLine.KeyStoreIdentifier.Provider {
 	case keyproviders.LocalKey:
 		if opts.Local == nil {
-			return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 		}
 		return &keyproviders.LocalKeyIdentifier{
 			HeaderFilename: logLine.KeyStoreIdentifier.Filename,
@@ -80,7 +86,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		}, nil
 	case keyproviders.KMIP:
 		if opts.KMIP == nil {
-			return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 		}
 		return &keyproviders.KMIPKeyIdentifier{
 			UniqueKeyID:               logLine.KeyStoreIdentifier.UID,
@@ -92,7 +98,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		}, nil
 	case keyproviders.AWS:
 		if opts.AWS == nil {
-			return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 		}
 		return &keyproviders.AWSKeyIdentifier{
 			Key:             logLine.KeyStoreIdentifier.Key,
@@ -104,7 +110,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		}, nil
 	case keyproviders.GCP:
 		if opts.GCP == nil {
-			return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 		}
 		return &keyproviders.GCPKeyIdentifier{
 			KeyName:           logLine.KeyStoreIdentifier.KeyName,
@@ -115,7 +121,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 		}, nil
 	case keyproviders.Azure:
 		if opts.Azure == nil {
-			return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 		}
 		return &keyproviders.AzureKeyIdentifier{
 			KeyName:          logLine.KeyStoreIdentifier.KeyName,
@@ -127,7 +133,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 			Secret:           opts.Azure.Secret,
 		}, nil
 	default:
-		return nil, fmt.Errorf("keyProvider %s not supported", *logLine.KeyStoreIdentifier.Provider)
+		return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
 	}
 }
 

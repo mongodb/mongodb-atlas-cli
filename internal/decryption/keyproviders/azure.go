@@ -15,12 +15,12 @@
 package keyproviders
 
 import (
-	"errors"
+	"context"
 	"fmt"
-	"os"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys/crypto"
 )
 
 type AzureKeyIdentifier struct {
@@ -28,7 +28,7 @@ type AzureKeyIdentifier struct {
 
 	// Header
 	KeyName          string
-	Environment      string
+	Environment      string // not used
 	KeyVaultEndpoint string
 	KeyVersion       string
 
@@ -48,33 +48,6 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 		return nil
 	}
 
-	ki.credentials, err = azidentity.NewEnvironmentCredential(nil)
-	if err == nil {
-		return nil
-	}
-
-	fmt.Fprintf(os.Stderr, `No credentials found for resource: Azure environment="%v" keyVaultEndpoint="%v" keyName="%v" keyVersion="%v"
-`, ki.Environment, ki.KeyVaultEndpoint, ki.KeyName, ki.KeyVersion)
-	tenantID, err := provideInput("Provide Tenant ID:", ki.TenantID)
-	if err != nil {
-		return err
-	}
-
-	clientID, err := provideInput("Provide Client ID:", ki.ClientID)
-	if err != nil {
-		return err
-	}
-
-	secret, err := provideInput("Provide Secret:", ki.Secret)
-	if err != nil {
-		return err
-	}
-
-	ki.credentials, err = azidentity.NewClientSecretCredential(tenantID, clientID, secret, nil)
-	if err == nil {
-		return nil
-	}
-
 	ki.credentials, err = azidentity.NewDefaultAzureCredential(nil)
 	if err == nil {
 		return nil
@@ -83,6 +56,15 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 	return err
 }
 
-func (ki *AzureKeyIdentifier) DecryptKey(_ []byte) ([]byte, error) {
-	return nil, errors.New("not implemented")
+func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
+	keyURL := fmt.Sprintf("%v/keys/%v/%v", ki.KeyVaultEndpoint, ki.KeyName, ki.KeyVersion)
+	client, err := crypto.NewClient(keyURL, ki.credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	r, err := client.Decrypt(context.Background(), crypto.EncryptionAlgRSAOAEP, key, &crypto.DecryptOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return r.Plaintext, nil
 }

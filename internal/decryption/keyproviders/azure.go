@@ -17,7 +17,6 @@ package keyproviders
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
@@ -45,33 +44,6 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 	var err error
 
 	ki.credentials, err = azidentity.NewClientSecretCredential(ki.TenantID, ki.ClientID, ki.Secret, nil)
-	if err == nil {
-		return nil
-	}
-
-	ki.credentials, err = azidentity.NewEnvironmentCredential(nil)
-	if err == nil {
-		return nil
-	}
-
-	fmt.Fprintf(os.Stderr, `No credentials found for resource: Azure environment="%v" keyVaultEndpoint="%v" keyName="%v" keyVersion="%v"
-`, ki.Environment, ki.KeyVaultEndpoint, ki.KeyName, ki.KeyVersion)
-	tenantID, err := provideInput("Provide Tenant ID:", ki.TenantID)
-	if err != nil {
-		return err
-	}
-
-	clientID, err := provideInput("Provide Client ID:", ki.ClientID)
-	if err != nil {
-		return err
-	}
-
-	secret, err := provideInput("Provide Secret:", ki.Secret)
-	if err != nil {
-		return err
-	}
-
-	ki.credentials, err = azidentity.NewClientSecretCredential(tenantID, clientID, secret, nil)
 	if err == nil {
 		return nil
 	}

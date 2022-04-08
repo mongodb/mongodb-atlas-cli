@@ -58,22 +58,12 @@ func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 	return opts.Out == ""
 }
 
-func (opts *DecryptOpts) newKeyProviderOpts() *decryption.KeyProviderOpts {
-	return &decryption.KeyProviderOpts{
-		AWS: decryption.KeyProviderAWSOpts{
-			AccessKey:       opts.awsOpts.awsAccessKey,
-			SecretAccessKey: opts.awsOpts.awsSecretAccessKey,
-			SessionToken:    opts.awsOpts.awsSessionToken,
-		},
-		GCP: decryption.KeyProviderGCPOpts{
-			ServiceAccountKey: opts.gcpOpts.gcpServiceAccountKey,
-		},
-		Azure: decryption.KeyProviderAzureOpts{
-			ClientID: opts.azureOpts.azureClientID,
-			Secret:   opts.azureOpts.azureSecret,
-			TenantID: opts.azureOpts.azureTenantID,
-		},
-	}
+func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
+	return decryption.NewDecryption(
+		decryption.WithAWSOpts(opts.awsOpts.awsAccessKey, opts.awsOpts.awsSecretAccessKey, opts.awsOpts.awsSessionToken),
+		decryption.WithGCPOpts(opts.gcpOpts.gcpServiceAccountKey),
+		decryption.WithAzureOpts(opts.azureOpts.azureTenantID, opts.azureOpts.azureClientID, opts.azureOpts.azureSecret),
+	)
 }
 
 func (opts *DecryptOpts) Run() error {
@@ -93,9 +83,8 @@ func (opts *DecryptOpts) Run() error {
 	}
 	defer inReader.Close()
 
-	keyProviderOpts := opts.newKeyProviderOpts()
-
-	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.shouldPrintResultsToStdout() {
+	d := opts.newDecryption()
+	if err := d.Decrypt(inReader, outWriter); err != nil && !opts.shouldPrintResultsToStdout() {
 		_ = opts.OnError(outWriter)
 		return err
 	}

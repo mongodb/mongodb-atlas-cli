@@ -85,7 +85,8 @@ func (ki *AzureKeyIdentifier) ValidateCredentials() error {
 }
 
 func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
-	client, err := crypto.NewClient(ki.KeyVaultEndpoint+"/keys/"+ki.KeyName+"/"+ki.KeyVersion, ki.credentials, nil)
+	keyURL := fmt.Sprintf("%v/keys/%v/%v", ki.KeyVaultEndpoint, ki.KeyName, ki.KeyVersion)
+	client, err := crypto.NewClient(keyURL, ki.credentials, nil)
 	if err != nil {
 		return nil, err
 	}

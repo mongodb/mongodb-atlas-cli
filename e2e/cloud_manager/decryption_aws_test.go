@@ -34,7 +34,7 @@ const awsTestsInputDir = "decryption/aws"
 func TestDecryptWithAWS(t *testing.T) {
 	req := require.New(t)
 
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
@@ -52,6 +52,7 @@ func TestDecryptWithAWS(t *testing.T) {
 	req.NoError(err)
 
 	cmd := exec.Command(cliPath,
+		entity,
 		"logs",
 		"decrypt",
 		"--file",

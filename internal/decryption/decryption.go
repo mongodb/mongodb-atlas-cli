@@ -37,7 +37,9 @@ type Decryption struct {
 	opts KeyProviderOpts
 }
 
-func NewDecryption(options ...func(d *Decryption)) *Decryption {
+type Option func(d *Decryption)
+
+func NewDecryption(options ...Option) *Decryption {
 	d := &Decryption{}
 	for _, opt := range options {
 		opt(d)

@@ -25,6 +25,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongocli/e2e/decryption"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,11 +54,11 @@ func TestDecrypt(t *testing.T) {
 
 	for i := 1; i <= 4; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
-			inputFile := generateFileNameCase(tmp, i, "input")
-			err := dumpToTemp(files, generateFileNameCase(localKeyTestsInputDir, i, "input"), inputFile)
+			inputFile := decryption.GenerateFileNameCase(tmp, i, "input")
+			err := decryption.DumpToTemp(files, decryption.GenerateFileNameCase(localKeyTestsInputDir, i, "input"), inputFile)
 			req.NoError(err)
 
-			expectedContents, err := files.ReadFile(generateFileNameCase(localKeyTestsInputDir, i, "output"))
+			expectedContents, err := files.ReadFile(decryption.GenerateFileNameCase(localKeyTestsInputDir, i, "output"))
 			req.NoError(err)
 
 			cmd := exec.Command(cliPath,
@@ -73,7 +74,7 @@ func TestDecrypt(t *testing.T) {
 			gotContents, err := cmd.CombinedOutput()
 			req.NoError(err, string(gotContents))
 
-			equal, err := logsAreEqual(expectedContents, gotContents)
+			equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
 			req.NoError(err)
 			req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 		})

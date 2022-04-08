@@ -29,8 +29,8 @@ func (opts *Opts) askMongoShellQuestion() error {
 	}
 
 	fmt.Printf(`
-[Connect to %s]
-`, opts.ClusterName)
+[MongoDB Shell (mongosh) is an interactive command line interface to query, update and manage data in the MongoDB database.]
+`)
 
 	q := newMongoShellQuestionAccessDeployment(opts.ClusterName)
 	if err := survey.AskOne(q, &opts.runMongoShell); err != nil || !opts.runMongoShell {

@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (decrypt && (cloudmanager || om44 || om50))
+//go:build e2e || (atlas && decrypt)
 
-package cloud_manager_test
+package atlas_test
 
 import (
 	"embed"
@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	"github.com/mongodb/mongocli/e2e/decryption"
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,15 +44,14 @@ func TestDecryptWithAzure(t *testing.T) {
 		req.NoError(err)
 	})
 
-	inputFile := generateFileName(tmpDir, "input")
-	err = dumpToTemp(filesAzure, generateFileName(azureTestsInputDir, "input"), inputFile)
+	inputFile := decryption.GenerateFileName(tmpDir, "input")
+	err = decryption.DumpToTemp(filesAzure, decryption.GenerateFileName(azureTestsInputDir, "input"), inputFile)
 	req.NoError(err)
 
-	expectedContents, err := filesAzure.ReadFile(generateFileName(azureTestsInputDir, "output"))
+	expectedContents, err := filesAzure.ReadFile(decryption.GenerateFileName(azureTestsInputDir, "output"))
 	req.NoError(err)
 
 	cmd := exec.Command(cliPath,
-		entity,
 		"logs",
 		"decrypt",
 		"--file",
@@ -62,7 +62,7 @@ func TestDecryptWithAzure(t *testing.T) {
 	gotContents, err := cmd.CombinedOutput()
 	req.NoError(err, string(gotContents))
 
-	equal, err := logsAreEqual(expectedContents, gotContents)
+	equal, err := decryption.LogsAreEqual(expectedContents, gotContents)
 	req.NoError(err)
 	req.True(equal, "expected %v, got %v", string(expectedContents), string(gotContents))
 }

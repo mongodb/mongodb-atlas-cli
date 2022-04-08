@@ -119,10 +119,6 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	if err := opts.askMongoShellQuestion(); err != nil {
-		return err
-	}
-
 	if err := opts.askConfirmConfigQuestion(); err != nil {
 		return err
 	}
@@ -141,10 +137,17 @@ func (opts *Opts) Run() error {
 		return er
 	}
 
+	fmt.Print(quickstartTemplateCluster)
+
+	fmt.Print("Cluster created.")
+
 	if err := opts.loadSampleData(); err != nil {
 		return err
 	}
 
+	if err := opts.askMongoShellQuestion(); err != nil {
+		return err
+	}
 	// Get cluster's connection string
 	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {

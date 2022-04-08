@@ -1202,9 +1202,6 @@ tasks:
           LOCAL_KEY: ${logs_decrypt_local_key}
           KMIP_CA: ${logs_decrypt_kmip_ca}
           KMIP_CERT: ${logs_decrypt_kmip_cert}
-          AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
-          AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
-          AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,decrypt
   - name: atlas_decrypt_e2e
@@ -1229,6 +1226,9 @@ tasks:
           GCP_CREDENTIALS: ${logs_decrypt_gcp_credentials}
           AWS_ACCESS_KEY: ${logs_decrypt_aws_access_key}
           AWS_SECRET_ACCESS_KEY: ${logs_decrypt_aws_secret_access_key}
+          AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
+          AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
+          AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
           E2E_TAGS: atlas,decrypt
 buildvariants:
   - name: code_health

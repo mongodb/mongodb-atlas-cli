@@ -15,11 +15,11 @@
 package decryption
 
 type KeyProviderOpts struct {
-	Local KeyProviderLocalOpts
-	KMIP  KeyProviderKMIPOpts
-	AWS   KeyProviderAWSOpts
-	GCP   KeyProviderGCPOpts
-	Azure KeyProviderAzureOpts
+	Local *KeyProviderLocalOpts
+	KMIP  *KeyProviderKMIPOpts
+	AWS   *KeyProviderAWSOpts
+	GCP   *KeyProviderGCPOpts
+	Azure *KeyProviderAzureOpts
 }
 
 type KeyProviderLocalOpts struct {

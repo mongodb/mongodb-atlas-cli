@@ -33,10 +33,69 @@ func (s *DecryptSection) zeroLEK() {
 	}
 }
 
+type Decryption struct {
+	opts KeyProviderOpts
+}
+
+type Option func(d *Decryption)
+
+func NewDecryption(options ...Option) *Decryption {
+	d := &Decryption{}
+	for _, opt := range options {
+		opt(d)
+	}
+	return d
+}
+
+func WithLocalOpts(fileName string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.Local = &KeyProviderLocalOpts{
+			KeyFileName: fileName,
+		}
+	}
+}
+
+func WithKMIPOpts(serverCAFileName, clientCertificateFileName string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.KMIP = &KeyProviderKMIPOpts{
+			ServerCAFileName:          serverCAFileName,
+			ClientCertificateFileName: clientCertificateFileName,
+		}
+	}
+}
+
+func WithAWSOpts(accessKey, secretAccessKey, sessionToken string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.AWS = &KeyProviderAWSOpts{
+			AccessKey:       accessKey,
+			SecretAccessKey: secretAccessKey,
+			SessionToken:    sessionToken,
+		}
+	}
+}
+
+func WithGCPOpts(serviceAccountKey string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.GCP = &KeyProviderGCPOpts{
+			ServiceAccountKey: serviceAccountKey,
+		}
+	}
+}
+
+func WithAzureOpts(tenantID, clientID, secret string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.Azure = &KeyProviderAzureOpts{
+			TenantID: tenantID,
+			ClientID: clientID,
+			Secret:   secret,
+		}
+	}
+}
+
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
-func Decrypt(logReader io.ReadSeeker, out io.Writer, opts *KeyProviderOpts) error {
+func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 	_, logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
@@ -59,7 +118,7 @@ func Decrypt(logReader io.ReadSeeker, out io.Writer, opts *KeyProviderOpts) erro
 		switch logLine.AuditRecordType {
 		case AuditHeaderRecord:
 			decryptSection.zeroLEK()
-			if decryptSection, err = processHeader(logLine, opts); err != nil {
+			if decryptSection, err = processHeader(logLine, d.opts); err != nil {
 				if outputErr := output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
 					return outputErr
 				}

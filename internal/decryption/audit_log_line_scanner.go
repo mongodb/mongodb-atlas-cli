@@ -22,6 +22,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var (
+	ErrNoBytesToRead  = errors.New("no bytes to read")
+	ErrSeekNotAllowed = errors.New("impossible to seek bytes")
+)
+
 type AuditLogFormat string
 
 const (
@@ -38,7 +43,7 @@ func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 	}
 
 	if n != 1 {
-		return 0, errors.New("no bytes to read")
+		return 0, ErrNoBytesToRead
 	}
 
 	c, err := reader.Seek(0, io.SeekStart)
@@ -46,7 +51,7 @@ func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 		return 0, err
 	}
 	if c != 0 {
-		return 0, errors.New("impossible to seek bytes")
+		return 0, ErrSeekNotAllowed
 	}
 	return b[0], nil
 }

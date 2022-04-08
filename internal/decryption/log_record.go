@@ -17,6 +17,7 @@ package decryption
 import (
 	"encoding/base64"
 	"encoding/binary"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
@@ -32,9 +33,18 @@ type DecodedLogRecord struct {
 	KeyInvocationCount uint64
 }
 
+var (
+	ErrLogMissing            = errors.New("missing log")
+	ErrLogCorrupted          = errors.New("log corrupted")
+	ErrDecryptionFailure     = errors.New("decryption failure")
+	ErrDecompressionFailure  = errors.New("decompression failure")
+	ErrParse                 = errors.New("parsing error")
+	ErrKeyInvokCountMismatch = errors.New("logRecordIdx missmatch")
+)
+
 func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 	if logLine.Log == nil {
-		return nil, fmt.Errorf("missing log")
+		return nil, ErrLogMissing
 	}
 
 	log, err := base64.StdEncoding.DecodeString(*logLine.Log)
@@ -60,7 +70,7 @@ func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (bsonData interface{}, keyInvocationCount uint64, err error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
-		return nil, 0, fmt.Errorf("line %v is corrupted, %v", lineNb, decodeErr)
+		return nil, 0, fmt.Errorf("at line %v: %w: %v", lineNb, ErrLogCorrupted, decodeErr)
 	}
 
 	gcm := &aes.GCMInput{
@@ -72,17 +82,17 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 	decryptedLog, decryptErr := gcm.Decrypt(encryptedLogRecord.CipherText)
 
 	if decryptErr != nil {
-		return nil, 0, fmt.Errorf("error decrypting line %v, %v, %v", lineNb, decryptErr, decryptConfig.lek)
+		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrDecryptionFailure, lineNb, decryptErr)
 	}
 
 	decompressedLogRecord, decompressErr := decompress(decryptConfig.compressionMode, decryptedLog)
 	if decompressErr != nil {
-		return nil, 0, fmt.Errorf("error decompressing line %v, %v", lineNb, decompressErr)
+		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrDecompressionFailure, lineNb, decompressErr)
 	}
 
 	var bsonParsedLogRecord map[string]interface{}
 	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
-		return nil, 0, fmt.Errorf("error parsing decrypted line %v, %v", lineNb, bsonErr)
+		return nil, 0, fmt.Errorf("%w at line %v: %v", ErrParse, lineNb, bsonErr)
 	}
 
 	if _, ok := bsonParsedLogRecord["ts"]; !ok {
@@ -103,7 +113,7 @@ func (logLine *AuditLogLine) logAdditionalAuthData() []byte {
 func validateLogRecord(decryptSection *DecryptSection, keyInvocationCount uint64) error {
 	expected := decryptSection.lastKeyInvocationCount + 1
 	if expected != keyInvocationCount {
-		return fmt.Errorf("logRecordIdx missmatch, expected: %v, actual: %v", expected, keyInvocationCount)
+		return fmt.Errorf("%w: expected %v got %v", ErrKeyInvokCountMismatch, expected, keyInvocationCount)
 	}
 	return nil
 }

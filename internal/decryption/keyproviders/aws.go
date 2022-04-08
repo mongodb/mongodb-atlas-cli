@@ -15,6 +15,7 @@
 package keyproviders
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -38,6 +39,11 @@ type AWSKeyIdentifier struct {
 
 	credentials *credentials.Credentials
 }
+
+var (
+	ErrAWSInit    = errors.New("failed to initialize AWS KMS Service")
+	ErrAWSDecrypt = errors.New("unable to decrypt data key with AWS KMS Service")
+)
 
 func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 	p := &credentials.ChainProvider{
@@ -88,14 +94,14 @@ func (ki *AWSKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 	config := aws.NewConfig().WithCredentials(ki.credentials).WithRegion(ki.Region).WithEndpoint(ki.Endpoint)
 	s, err := session.NewSession(config)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize AWS KMS Service %w", err)
+		return nil, fmt.Errorf("%w: %v", ErrAWSInit, err)
 	}
 	service := kms.New(s, config)
 
 	input := (&kms.DecryptInput{}).SetCiphertextBlob(encryptedKey)
 	output, err := service.Decrypt(input)
 	if err != nil {
-		return nil, fmt.Errorf("unable to decrypt data key with AWS KMS %w", err)
+		return nil, fmt.Errorf("%w: %v", ErrAWSDecrypt, err)
 	}
 
 	return output.Plaintext, nil

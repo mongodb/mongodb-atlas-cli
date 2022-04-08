@@ -42,6 +42,13 @@ func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 	return opts.Out == ""
 }
 
+func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
+	return decryption.NewDecryption(
+		decryption.WithLocalOpts(opts.localKeyFileName),
+		decryption.WithKMIPOpts(opts.kmipServerCAFileName, opts.kmipClientCertificateFileName),
+	)
+}
+
 func (opts *DecryptOpts) Run() error {
 	var outWriter io.WriteCloser = os.Stdout
 	if !opts.shouldPrintResultsToStdout() {
@@ -59,17 +66,8 @@ func (opts *DecryptOpts) Run() error {
 	}
 	defer inReader.Close()
 
-	keyProviderOpts := &decryption.KeyProviderOpts{
-		Local: decryption.KeyProviderLocalOpts{
-			KeyFileName: opts.localKeyFileName,
-		},
-		KMIP: decryption.KeyProviderKMIPOpts{
-			ServerCAFileName:          opts.kmipServerCAFileName,
-			ClientCertificateFileName: opts.kmipClientCertificateFileName,
-		},
-	}
-
-	if err := decryption.Decrypt(inReader, outWriter, keyProviderOpts); err != nil && !opts.shouldPrintResultsToStdout() {
+	d := opts.newDecryption()
+	if err := d.Decrypt(inReader, outWriter); err != nil && !opts.shouldPrintResultsToStdout() {
 		_ = opts.OnError(outWriter)
 		return err
 	}

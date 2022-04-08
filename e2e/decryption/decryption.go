@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cloud_manager_test
+package decryption
 
 import (
 	"bufio"
@@ -26,15 +26,15 @@ import (
 	"reflect"
 )
 
-func generateFileName(dir, suffix string) string {
+func GenerateFileName(dir, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test-%v", suffix))
 }
 
-func generateFileNameCase(dir string, i int, suffix string) string {
+func GenerateFileNameCase(dir string, i int, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test%v-%v", i, suffix))
 }
 
-func dumpToTemp(files embed.FS, srcFile, destFile string) error {
+func DumpToTemp(files embed.FS, srcFile, destFile string) error {
 	content, err := files.ReadFile(srcFile)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func parseJSON(contents []byte) ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func logsAreEqual(expected, got []byte) (bool, error) {
+func LogsAreEqual(expected, got []byte) (bool, error) {
 	expectedLines, err := parseJSON(expected)
 	if err != nil {
 		return false, err

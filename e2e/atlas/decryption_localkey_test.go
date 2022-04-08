@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (decrypt && (cloudmanager || om44 || om50))
+//go:build e2e || (atlas && decrypt)
 
-package cloud_manager_test
+package atlas_test
 
 import (
 	"embed"
@@ -26,15 +26,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/aws/*
-var filesAWS embed.FS
+//go:embed decryption/localKey/*
+var filesLocalKey embed.FS
 
-const awsTestsInputDir = "decryption/aws"
+const localKeyTestsInputDir = "decryption/localKey"
 
-func TestDecryptWithAWS(t *testing.T) {
+func TestDecryptWithLocalKey(t *testing.T) {
 	req := require.New(t)
 
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
@@ -45,14 +45,13 @@ func TestDecryptWithAWS(t *testing.T) {
 	})
 
 	inputFile := decryption.GenerateFileName(tmpDir, "input")
-	err = decryption.DumpToTemp(filesAWS, decryption.GenerateFileName(awsTestsInputDir, "input"), inputFile)
+	err = decryption.DumpToTemp(filesLocalKey, decryption.GenerateFileName(localKeyTestsInputDir, "input"), inputFile)
 	req.NoError(err)
 
-	expectedContents, err := filesAWS.ReadFile(decryption.GenerateFileName(awsTestsInputDir, "output"))
+	expectedContents, err := filesLocalKey.ReadFile(decryption.GenerateFileName(localKeyTestsInputDir, "output"))
 	req.NoError(err)
 
 	cmd := exec.Command(cliPath,
-		entity,
 		"logs",
 		"decrypt",
 		"--file",

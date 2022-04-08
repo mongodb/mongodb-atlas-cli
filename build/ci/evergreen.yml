@@ -1181,7 +1181,7 @@ tasks:
         vars:
           E2E_TAGS: om50,remote,sharded
   - name: cloud_manager_decrypt_e2e
-    tags: [ "e2e","generic" ]
+    tags: [ "e2e","decrypt" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1205,7 +1205,7 @@ tasks:
           MCLI_SERVICE: cloud-manager
           E2E_TAGS: cloudmanager,decrypt
   - name: atlas_decrypt_e2e
-    tags: [ "e2e","generic" ]
+    tags: [ "e2e","decrypt" ]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1258,6 +1258,15 @@ buildvariants:
       go_bin: "/opt/golang/go1.18/bin"
     tasks:
       - name: ".e2e .clusters .atlas"
+  - name: e2e_decryption
+    display_name: "E2E Decryption Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      go_root: "/opt/golang/go1.18"
+      go_bin: "/opt/golang/go1.18/bin"
+    tasks:
+      - name: ".e2e .decrypt"
   - name: e2e_atlas_gov_clusters
     display_name: "E2E Atlas Gov Cluster Tests"
     run_on:

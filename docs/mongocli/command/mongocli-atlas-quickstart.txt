@@ -37,7 +37,7 @@ Options
    * - --accessListIp
      - strings
      - false
-     - IP address to be allowed to access the deployment. Set to 0.0.0.0/0 if you want to enable connection from anywhere; use comma(,) to separate multiple entries.
+     - IP address to be allowed to access the deployment.
    * - --clusterName
      - string
      - false

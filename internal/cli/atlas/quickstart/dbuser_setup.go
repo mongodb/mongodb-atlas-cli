@@ -61,7 +61,7 @@ func (opts *Opts) askDBUserOptions() error {
 	}
 
 	fmt.Print(`
-[Set up your database authentication access details]
+[Set up your database authentication access details. store them in a secure location.]
 `)
 	return survey.Ask(qs, opts)
 }

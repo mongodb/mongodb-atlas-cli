@@ -126,9 +126,9 @@ func newMongoShellQuestionOpenBrowser() survey.Prompt {
 	}
 }
 
-func newClusterCreateConfirm(clusterName string) survey.Prompt {
+func newClusterCreateConfirm() survey.Prompt {
 	return &survey.Confirm{
-		Message: fmt.Sprintf("Do you want to create a new cluster %s with the following settings?", clusterName),
+		Message: fmt.Sprintf("Are you ready to create your Atlas cluster with the above settings?"),
 		Default: true,
 	}
 }

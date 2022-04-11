@@ -47,7 +47,7 @@ Allow connections from (IP Address):	%s%s
 		loadSampleData,
 	)
 
-	q := newClusterCreateConfirm(opts.ClusterName)
+	q := newClusterCreateConfirm()
 	if err := survey.AskOne(q, &opts.Confirm); err != nil {
 		return err
 	}

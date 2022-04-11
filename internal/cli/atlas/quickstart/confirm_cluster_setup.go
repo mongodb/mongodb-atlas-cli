@@ -36,7 +36,7 @@ Load sample data:			Yes`
 	fmt.Printf(`
 [Confirm cluster settings]
 Cluster Name:				%s
-Cloud Provider and region:		%s
+Cloud Provider and Region:		%s
 Database Username:			%s
 Allow connections from (IP Address):	%s%s
 `,

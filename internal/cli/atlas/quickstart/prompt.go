@@ -49,7 +49,7 @@ func newClusterProviderQuestion() *survey.Question {
 
 func newAccessListQuestion(publicIP, message string) survey.Prompt {
 	return &survey.Input{
-		Message: fmt.Sprintf("Access List Entry%s", message),
+		Message: fmt.Sprintf("IP Access List Entry%s", message),
 		Help:    usage.NetworkAccessListIPEntry,
 		Default: publicIP,
 	}

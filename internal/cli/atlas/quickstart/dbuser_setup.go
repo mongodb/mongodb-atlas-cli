@@ -51,7 +51,7 @@ func (opts *Opts) askDBUserOptions() error {
 			return err
 		}
 		opts.DBUserPassword = pwd
-		message := fmt.Sprintf(" [Press Enter to use an auto-generated password '%s']", pwd)
+		message := fmt.Sprintf(" [Must be >10 characters. Press Enter to use an auto-generated password '%s']", pwd)
 
 		qs = append(qs, newDBUserPasswordQuestion(pwd, message))
 	}

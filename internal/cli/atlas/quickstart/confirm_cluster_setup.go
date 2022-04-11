@@ -41,7 +41,7 @@ Database Username:			%s
 Allow connections from (IP Address):	%s%s
 `,
 		opts.ClusterName,
-		strings.Join([]string{opts.Provider, opts.Region}, " - "),
+		opts.Provider+" - "+opts.Region,
 		opts.DBUsername,
 		strings.Join(opts.IPAddresses, ", "),
 		loadSampleData,

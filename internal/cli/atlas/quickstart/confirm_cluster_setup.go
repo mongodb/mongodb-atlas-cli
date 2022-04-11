@@ -33,14 +33,30 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 Load sample data:			Yes`
 	}
 
+	clusterTier := ""
+	if opts.tier != "m0" {
+		clusterTier = fmt.Sprintf(`
+Cluster Tier:				%s
+`, opts.tier)
+	}
+
+	clusterDisk := ""
+	if *opts.newCluster().DiskSizeGB != 0.5 {
+		clusterDisk = fmt.Sprintf(`
+Cluster Disk Size (GiB):		%.1f
+`, *opts.newCluster().DiskSizeGB)
+	}
+
 	fmt.Printf(`
 [Confirm cluster settings]
-Cluster Name:				%s
+Cluster Name:				%s%s%s
 Cloud Provider and Region:		%s
 Database Username:			%s
 Allow connections from (IP Address):	%s%s
 `,
 		opts.ClusterName,
+		clusterTier,
+		clusterDisk,
 		opts.Provider+" - "+opts.Region,
 		opts.DBUsername,
 		strings.Join(opts.IPAddresses, ", "),

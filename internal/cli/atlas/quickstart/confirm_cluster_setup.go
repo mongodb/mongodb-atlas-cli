@@ -30,18 +30,19 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 	loadSampleData := ""
 	if !opts.SkipSampleData {
 		loadSampleData = `
-Load sample data:			Yes`
+Load sample data:			Yes
+`
 	}
 
 	clusterTier := ""
-	if opts.tier != "m0" {
+	if opts.tier != defaultAtlasTier {
 		clusterTier = fmt.Sprintf(`
 Cluster Tier:				%s
 `, opts.tier)
 	}
 
 	clusterDisk := ""
-	if *opts.newCluster().DiskSizeGB != 0.5 {
+	if opts.newCluster().DiskSizeGB != nil && *opts.newCluster().DiskSizeGB != 0.5 {
 		clusterDisk = fmt.Sprintf(`
 Cluster Disk Size (GiB):		%.1f
 `, *opts.newCluster().DiskSizeGB)
@@ -49,14 +50,13 @@ Cluster Disk Size (GiB):		%.1f
 
 	fmt.Printf(`
 [Confirm cluster settings]
-Cluster Name:				%s%s%s
+Cluster Name:				%s%s
 Cloud Provider and Region:		%s
 Database Username:			%s
 Allow connections from (IP Address):	%s%s
 `,
 		opts.ClusterName,
-		clusterTier,
-		clusterDisk,
+		clusterTier+clusterDisk,
 		opts.Provider+" - "+opts.Region,
 		opts.DBUsername,
 		strings.Join(opts.IPAddresses, ", "),

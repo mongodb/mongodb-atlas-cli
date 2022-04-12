@@ -35,19 +35,19 @@ Load sample data:			Yes
 	}
 
 	clusterTier := ""
+	clusterDisk := ""
+
 	if opts.tier != defaultAtlasTier {
+		diskSize := 0.5
+
+		if opts.newCluster().DiskSizeGB != nil {
+			diskSize = *opts.newCluster().DiskSizeGB
+		}
+
 		clusterTier = fmt.Sprintf(`
 Cluster Tier:				%s
-`, opts.tier)
+Cluster Disk Size (GiB):		%.1f`, opts.tier, diskSize)
 	}
-
-	clusterDisk := ""
-	if opts.newCluster().DiskSizeGB != nil && *opts.newCluster().DiskSizeGB != 0.5 {
-		clusterDisk = fmt.Sprintf(`
-Cluster Disk Size (GiB):		%.1f
-`, *opts.newCluster().DiskSizeGB)
-	}
-
 	fmt.Printf(`
 [Confirm cluster settings]
 Cluster Name:				%s%s

@@ -95,6 +95,8 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIP.ServerCAFileName,
 			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
+			Username:                  opts.KMIP.Username,
+			Password:                  opts.KMIP.Password,
 		}, nil
 	case keyproviders.AWS:
 		if opts.AWS == nil {

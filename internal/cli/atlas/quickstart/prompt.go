@@ -48,7 +48,7 @@ func newClusterProviderQuestion() *survey.Question {
 }
 
 func newAccessListQuestion(publicIP, message string) survey.Prompt {
-	extraInfo := "  Use comma(,) to separate multiple entries. Use \"--allowAll\" to enable connection from anywhere."
+	extraInfo := "  Set to 0.0.0.0/0 if you want to enable connection from anywhere; use comma (,) to separate multiple entries."
 	return &survey.Input{
 		Message: fmt.Sprintf("IP Access List Entry%s", message),
 		Help:    usage.NetworkAccessListIPEntry + extraInfo,

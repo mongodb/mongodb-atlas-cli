@@ -18,6 +18,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mongodb/mongocli/internal/config"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/mongodb/mongocli/internal/randgen"
@@ -51,7 +53,11 @@ func (opts *Opts) askDBUserOptions() error {
 			return err
 		}
 		opts.DBUserPassword = pwd
-		message := fmt.Sprintf(" [Press Enter to use an auto-generated password '%s']", pwd)
+		minLength := 10
+		if config.Service() == config.CloudGovService {
+			minLength = 12
+		}
+		message := fmt.Sprintf(" [Must be >%d characters. Press Enter to use an auto-generated password '%s']", minLength, pwd)
 
 		qs = append(qs, newDBUserPasswordQuestion(pwd, message))
 	}
@@ -61,7 +67,7 @@ func (opts *Opts) askDBUserOptions() error {
 	}
 
 	fmt.Print(`
-[Set up your database authentication access details]
+[Set up your database authentication access details. Store them in a secure location.]
 `)
 	return survey.Ask(qs, opts)
 }

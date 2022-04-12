@@ -27,47 +27,43 @@ func (opts *Opts) askConfirmConfigQuestion() error {
 		return nil
 	}
 
-	diskSize := 0.5
-	if opts.newCluster().DiskSizeGB != nil {
-		diskSize = *opts.newCluster().DiskSizeGB
+	loadSampleData := ""
+	if !opts.SkipSampleData {
+		loadSampleData = `
+Load sample data:			Yes
+`
 	}
 
-	const noMsg = "No"
-	const yesMsg = "Yes"
-	loadSampleData := yesMsg
-	if opts.SkipSampleData {
-		loadSampleData = noMsg
-	}
+	clusterTier := ""
+	clusterDisk := ""
 
-	runMongoShell := noMsg
-	if opts.runMongoShell {
-		runMongoShell = yesMsg
-	}
+	if opts.tier != defaultAtlasTier {
+		diskSize := 0.5
 
-	fmt.Printf(`
-[Summary of changes]
-Cluster Name:				%s
+		if opts.newCluster().DiskSizeGB != nil {
+			diskSize = *opts.newCluster().DiskSizeGB
+		}
+
+		clusterTier = fmt.Sprintf(`
 Cluster Tier:				%s
-Cloud Provider:				%s
-Region:					%s
-Cluster Disk Size (GiB):		%.1f
+Cluster Disk Size (GiB):		%.1f`, opts.tier, diskSize)
+	}
+	fmt.Printf(`
+[Confirm cluster settings]
+Cluster Name:				%s%s
+Cloud Provider and Region:		%s
 Database Username:			%s
-Allow connections from (IP Address):	%s
-Load sample data:			%s
-Open shell:				%s
+Allow connections from (IP Address):	%s%s
 `,
 		opts.ClusterName,
-		opts.tier,
-		opts.Provider,
-		opts.Region,
-		diskSize,
+		clusterTier+clusterDisk,
+		opts.Provider+" - "+opts.Region,
 		opts.DBUsername,
 		strings.Join(opts.IPAddresses, ", "),
 		loadSampleData,
-		runMongoShell,
 	)
 
-	q := newClusterCreateConfirm(opts.ClusterName)
+	q := newClusterCreateConfirm()
 	if err := survey.AskOne(q, &opts.Confirm); err != nil {
 		return err
 	}

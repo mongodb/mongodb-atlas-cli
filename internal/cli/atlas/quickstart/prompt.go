@@ -48,9 +48,10 @@ func newClusterProviderQuestion() *survey.Question {
 }
 
 func newAccessListQuestion(publicIP, message string) survey.Prompt {
+	extraInfo := "  Set to 0.0.0.0/0 if you want to enable connection from anywhere; use comma (,) to separate multiple entries."
 	return &survey.Input{
-		Message: fmt.Sprintf("Access List Entry%s", message),
-		Help:    usage.NetworkAccessListIPEntry,
+		Message: fmt.Sprintf("IP Access List Entry%s", message),
+		Help:    usage.NetworkAccessListIPEntry + extraInfo,
 		Default: publicIP,
 	}
 }
@@ -126,9 +127,9 @@ func newMongoShellQuestionOpenBrowser() survey.Prompt {
 	}
 }
 
-func newClusterCreateConfirm(clusterName string) survey.Prompt {
+func newClusterCreateConfirm() survey.Prompt {
 	return &survey.Confirm{
-		Message: fmt.Sprintf("Do you want to create a new cluster %s with the following settings?", clusterName),
+		Message: "Are you ready to create your Atlas cluster with the above settings?",
 		Default: true,
 	}
 }

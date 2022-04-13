@@ -22,9 +22,10 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"path"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/e2e/decryption"

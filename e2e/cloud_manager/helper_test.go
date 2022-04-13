@@ -21,10 +21,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"sort"
 	"testing"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"

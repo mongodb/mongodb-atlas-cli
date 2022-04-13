@@ -18,9 +18,10 @@ package atlas_test
 import (
 	"log"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"strings"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/require"

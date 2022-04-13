@@ -21,9 +21,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"strings"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"

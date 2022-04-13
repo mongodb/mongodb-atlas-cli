@@ -23,9 +23,10 @@ import (
 	"fmt"
 	"math/big"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"testing"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"

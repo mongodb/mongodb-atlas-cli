@@ -19,8 +19,9 @@ package cloud_manager_test
 import (
 	"fmt"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 )

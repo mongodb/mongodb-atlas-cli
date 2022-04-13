@@ -19,9 +19,10 @@ package cloud_manager_test
 import (
 	"encoding/json"
 	"os"
-	exec "golang.org/x/sys/execabs"
 	"testing"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"

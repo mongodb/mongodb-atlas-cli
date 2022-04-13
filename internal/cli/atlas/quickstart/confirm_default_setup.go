@@ -27,13 +27,6 @@ func (opts *Opts) askConfirmDefaultQuestion() error {
 		return nil
 	}
 
-	loadSampleData := ""
-	if !opts.SkipSampleData {
-		loadSampleData = `
-Load sample data:			Yes
-`
-	}
-
 	clusterTier := ""
 	clusterDisk := ""
 
@@ -53,14 +46,14 @@ Cluster Disk Size (GiB):		%.1f`, opts.tier, diskSize)
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
 Database Username:			%s
-Allow connections from (IP Address):	%s%s
+Allow connections from (IP Address):	%s
+Load sample data:			Yes
 `,
 		opts.defaultValues.ClusterName,
 		clusterTier+clusterDisk,
 		opts.defaultValues.Provider+" - "+opts.defaultValues.Region,
 		opts.defaultValues.DBUsername,
 		strings.Join(opts.defaultValues.IPAddresses, ", "),
-		loadSampleData,
 	)
 
 	q := newClusterDefaultConfirm()

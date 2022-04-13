@@ -45,9 +45,13 @@ username: %s
 password: %s
 `
 
-const quickstartTemplateIntro = `You are creating a new Atlas cluster and enabling access to it.
+const quickstartTemplateStoreWarning = `
+Please store your database authentication access details in a secure location: 
+username: %s 
+password: %s
+`
 
-Press [Enter] to use the default values.
+const quickstartTemplateIntro = `Press [Enter] to use the default values.
 
 Enter [?] on any option to get help.
 `
@@ -113,17 +117,22 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	fmt.Print(quickstartTemplateIntro)
-
 	if err := opts.fillDefaultValues(); err != nil {
 		return err
 	}
 
+	// Default setup will display sample data as true.
+	opts.defaultValues.SkipSampleData = false
+
 	if err := opts.askConfirmDefaultQuestion(); err != nil || !opts.Confirm {
+		fmt.Print(quickstartTemplateIntro)
+
 		err = opts.interactiveSetup()
 		if err != nil {
 			return err
 		}
+	} else {
+		opts.replaceWithDefaultSettings()
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
@@ -131,6 +140,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
+	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
 	opts.setupCloseHandler()
 
 	fmt.Print(quickstartTemplateCluster)
@@ -296,7 +306,7 @@ func (opts *Opts) fillDefaultValues() error {
 	return nil
 }
 
-func (opts *Opts) replaceWithTempSettings() {
+func (opts *Opts) replaceWithDefaultSettings() {
 	if opts.defaultValues.ClusterName != "" {
 		opts.ClusterName = opts.defaultValues.ClusterName
 	}
@@ -382,7 +392,7 @@ func Builder() *cobra.Command {
 					return err
 				}
 
-				opts.replaceWithTempSettings()
+				opts.replaceWithDefaultSettings()
 			}
 
 			return opts.Run()

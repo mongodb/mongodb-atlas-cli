@@ -40,7 +40,7 @@ Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
 
 `
 const quickstartTemplateCloseHandler = `
-Enter '$ atlas cluster watch %s' to learn when your cluster is available.
+Enter 'atlas cluster watch %s' to learn when your cluster is available.
 `
 
 const quickstartTemplateStoreWarning = `

@@ -30,8 +30,7 @@ func (opts *Opts) askConfirmDefaultQuestion() error {
 	loadSampleData := ""
 	if !opts.SkipSampleData {
 		loadSampleData = `
-Load sample data:			Yes
-`
+Load sample data:			Yes`
 	}
 
 	clusterTier := ""

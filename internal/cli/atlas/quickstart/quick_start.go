@@ -40,9 +40,7 @@ Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
 
 `
 const quickstartTemplateCloseHandler = `
-You can connect to your Atlas cluster with the following user: 
-username: %s 
-password: %s
+Enter '$ atlas cluster watch %s' to learn when your cluster is available.
 `
 
 const quickstartTemplateStoreWarning = `
@@ -248,7 +246,7 @@ func (opts *Opts) setupCloseHandler() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		fmt.Printf(quickstartTemplateCloseHandler, opts.DBUsername, opts.DBUserPassword)
+		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
 		os.Exit(0)
 	}()
 }

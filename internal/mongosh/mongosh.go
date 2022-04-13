@@ -14,9 +14,10 @@
 package mongosh
 
 import (
-	exec "golang.org/x/sys/execabs"
 	"os"
 	"syscall"
+
+	exec "golang.org/x/sys/execabs"
 )
 
 func Bin() string {

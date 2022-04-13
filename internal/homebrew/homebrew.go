@@ -16,11 +16,12 @@ package homebrew
 
 import (
 	"bytes"
-	exec "golang.org/x/sys/execabs"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"

@@ -314,6 +314,8 @@ const (
 	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK)."
 	KMIPServerCAFile                         = "Path to the CA file used to connect to the server that supports KMIP."
 	KMIPClientCertificateFile                = "Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP)."
+	KMIPUsername                             = "Username for authenticating to the server that supports KMIP."
+	KMIPPassword                             = "Password that authenticates the username to the server that supports KMIP."
 	GCPServiceAccountKey                     = "GCP service account key file."
 	AzureClientID                            = "Application (client) ID assigned by Azure portal - App registrations experience."
 	AzureTenantID                            = "Tenant value in the path of the request can be used to control who can sign into the application."

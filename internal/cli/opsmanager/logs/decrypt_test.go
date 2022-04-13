@@ -37,6 +37,8 @@ func TestDecryptBuilder(t *testing.T) {
 			flag.LocalKeyFile,
 			flag.KMIPClientCertificateFile,
 			flag.KMIPServerCAFile,
+			flag.KMIPUsername,
+			flag.KMIPPassword,
 		},
 	)
 }

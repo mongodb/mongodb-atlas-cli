@@ -90,6 +90,18 @@ type Opts struct {
 	defaultValue        bool
 	Confirm             bool
 	store               store.AtlasClusterQuickStarter
+	defaultValues       DefaultOpts
+}
+
+type DefaultOpts struct {
+	ClusterName    string
+	Provider       string
+	Region         string
+	DBUsername     string
+	DBUserPassword string
+	IPAddresses    []string
+	SkipSampleData bool
+	SkipMongosh    bool // wont need
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
@@ -103,24 +115,15 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 func (opts *Opts) Run() error {
 	fmt.Print(quickstartTemplateIntro)
 
-	if err := opts.askClusterOptions(); err != nil {
+	if err := opts.fillDefaultValues(); err != nil {
 		return err
 	}
 
-	if err := opts.askSampleDataQuestion(); err != nil {
-		return err
-	}
-
-	if err := opts.createDatabaseUser(); err != nil {
-		return err
-	}
-
-	if err := opts.createAccessList(); err != nil {
-		return err
-	}
-
-	if err := opts.askConfirmConfigQuestion(); err != nil {
-		return err
+	if err := opts.askConfirmDefaultQuestion(); err != nil || !opts.Confirm {
+		err = opts.interactiveSetup()
+		if err != nil {
+			return err
+		}
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
@@ -251,31 +254,27 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) defaultValues() error {
-	if !opts.defaultValue {
-		return nil
-	}
-
-	opts.SkipSampleData = true
-	opts.SkipMongosh = true
+func (opts *Opts) fillDefaultValues() error {
+	opts.defaultValues.SkipSampleData = true
+	opts.defaultValues.SkipMongosh = true
 
 	if opts.ClusterName == "" {
-		opts.ClusterName = opts.defaultName
+		opts.defaultValues.ClusterName = opts.defaultName
 	}
 
 	if opts.Provider == "" {
-		opts.Provider = defaultProvider
+		opts.defaultValues.Provider = defaultProvider
 	}
 
 	if opts.Region == "" {
-		opts.Region = defaultRegion
+		opts.defaultValues.Region = defaultRegion
 		if config.CloudGovService == config.Service() {
-			opts.Region = defaultRegionGov
+			opts.defaultValues.Region = defaultRegionGov
 		}
 	}
 
 	if opts.DBUsername == "" {
-		opts.DBUsername = opts.defaultName
+		opts.defaultValues.DBUsername = opts.defaultName
 	}
 
 	if opts.DBUserPassword == "" {
@@ -283,18 +282,67 @@ func (opts *Opts) defaultValues() error {
 		if err != nil {
 			return err
 		}
-		opts.DBUserPassword = pwd
+		opts.defaultValues.DBUserPassword = pwd
 	}
 
 	if len(opts.IPAddresses) == 0 {
 		if publicIP := store.IPAddress(); publicIP != "" {
-			opts.IPAddresses = []string{publicIP}
+			opts.defaultValues.IPAddresses = []string{publicIP}
 		} else {
 			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
 		}
 	}
 
 	return nil
+}
+
+func (opts *Opts) replaceWithTempSettings() {
+	if opts.defaultValues.ClusterName != "" {
+		opts.ClusterName = opts.defaultValues.ClusterName
+	}
+
+	if opts.defaultValues.Provider != "" {
+		opts.Provider = opts.defaultValues.Provider
+	}
+
+	if opts.defaultValues.Region != "" {
+		opts.Region = opts.defaultValues.Region
+	}
+
+	if opts.defaultValues.DBUsername != "" {
+		opts.DBUsername = opts.defaultValues.DBUsername
+	}
+
+	if opts.defaultValues.DBUserPassword != "" {
+		opts.DBUserPassword = opts.defaultValues.DBUserPassword
+	}
+
+	if opts.defaultValues.IPAddresses != nil {
+		opts.IPAddresses = opts.defaultValues.IPAddresses
+	}
+
+	opts.SkipSampleData = opts.defaultValues.SkipSampleData
+	opts.SkipMongosh = opts.defaultValues.SkipMongosh
+}
+
+func (opts *Opts) interactiveSetup() error {
+	if err := opts.askClusterOptions(); err != nil {
+		return err
+	}
+
+	if err := opts.askSampleDataQuestion(); err != nil {
+		return err
+	}
+
+	if err := opts.createDatabaseUser(); err != nil {
+		return err
+	}
+
+	if err := opts.createAccessList(); err != nil {
+		return err
+	}
+
+	return opts.askConfirmConfigQuestion()
 }
 
 // Builder
@@ -329,9 +377,14 @@ func Builder() *cobra.Command {
 			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
 
-			if err := opts.defaultValues(); err != nil {
-				return err
+			if opts.defaultValue {
+				if err := opts.fillDefaultValues(); err != nil {
+					return err
+				}
+
+				opts.replaceWithTempSettings()
 			}
+
 			return opts.Run()
 		},
 	}

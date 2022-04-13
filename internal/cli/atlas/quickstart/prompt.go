@@ -133,3 +133,10 @@ func newClusterCreateConfirm() survey.Prompt {
 		Default: true,
 	}
 }
+
+func newClusterDefaultConfirm() survey.Prompt {
+	return &survey.Confirm{
+		Message: "Do you want to set up your first free database in Atlas with default settings (it's free forever)?",
+		Default: true,
+	}
+}

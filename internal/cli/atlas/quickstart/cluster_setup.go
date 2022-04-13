@@ -52,10 +52,6 @@ func (opts *Opts) askClusterOptions() error {
 `)
 	}
 
-	if err := survey.Ask(qs, opts); err != nil {
-		return err
-	}
-
 	// We need the provider to ask for the region
 	if opts.Region == "" {
 		return opts.askClusterRegion()

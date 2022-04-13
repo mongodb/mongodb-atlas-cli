@@ -119,9 +119,6 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	// Default setup will display sample data as true.
-	opts.defaultValues.SkipSampleData = false
-
 	if err := opts.askConfirmDefaultQuestion(); err != nil || !opts.Confirm {
 		fmt.Print(quickstartTemplateIntro)
 
@@ -131,6 +128,14 @@ func (opts *Opts) Run() error {
 		}
 	} else {
 		opts.replaceWithDefaultSettings()
+	}
+
+	if err := opts.createDatabaseUser(); err != nil {
+		return err
+	}
+
+	if err := opts.createAccessList(); err != nil {
+		return err
 	}
 
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
@@ -263,8 +268,8 @@ func (opts *Opts) setTier() {
 }
 
 func (opts *Opts) fillDefaultValues() error {
-	opts.defaultValues.SkipSampleData = true
-	opts.defaultValues.SkipMongosh = true
+	opts.defaultValues.SkipMongosh = opts.SkipMongosh
+	opts.defaultValues.SkipSampleData = opts.SkipSampleData
 
 	if opts.ClusterName == "" {
 		opts.defaultValues.ClusterName = opts.defaultName
@@ -354,11 +359,11 @@ func (opts *Opts) interactiveSetup() error {
 		return err
 	}
 
-	if err := opts.createDatabaseUser(); err != nil {
+	if err := opts.askDBUserOptions(); err != nil {
 		return err
 	}
 
-	if err := opts.createAccessList(); err != nil {
+	if err := opts.askAccessListOptions(); err != nil {
 		return err
 	}
 

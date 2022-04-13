@@ -24,9 +24,6 @@ import (
 )
 
 func (opts *Opts) createAccessList() error {
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
 	if opts.IPAddressesResponse != "" {
 		ips := strings.Split(opts.IPAddressesResponse, ",")
 		opts.IPAddresses = append(opts.IPAddresses, ips...)

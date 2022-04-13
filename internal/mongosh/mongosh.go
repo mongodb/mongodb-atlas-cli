@@ -15,7 +15,7 @@ package mongosh
 
 import (
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"syscall"
 )
 

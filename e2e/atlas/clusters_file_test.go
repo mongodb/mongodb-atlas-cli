@@ -19,8 +19,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/config"

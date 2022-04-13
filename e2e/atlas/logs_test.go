@@ -18,7 +18,7 @@ package atlas_test
 import (
 	"log"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"strings"
 	"testing"
 

@@ -18,7 +18,7 @@ package brew_test
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"strings"
 	"testing"
 

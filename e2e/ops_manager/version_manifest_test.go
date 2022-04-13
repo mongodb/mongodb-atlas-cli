@@ -18,7 +18,7 @@ package ops_manager_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"

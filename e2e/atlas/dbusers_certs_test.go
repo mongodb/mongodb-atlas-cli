@@ -19,7 +19,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"testing"
 
 	"github.com/mongodb/mongocli/internal/cli/atlas/dbusers"

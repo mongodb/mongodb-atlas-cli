@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"sort"
 	"testing"
 	"time"

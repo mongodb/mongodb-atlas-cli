@@ -18,7 +18,7 @@ package cloud_manager_test
 import (
 	"embed"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"

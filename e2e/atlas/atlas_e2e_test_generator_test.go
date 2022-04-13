@@ -19,9 +19,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"testing"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"

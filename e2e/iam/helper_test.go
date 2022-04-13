@@ -20,7 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"strconv"
 
 	"github.com/mongodb/mongocli/e2e"

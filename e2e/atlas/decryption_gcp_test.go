@@ -19,7 +19,7 @@ import (
 	"embed"
 	"io/fs"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"path"
 	"testing"
 

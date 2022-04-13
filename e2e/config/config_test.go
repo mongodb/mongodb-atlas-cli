@@ -18,7 +18,7 @@ package config_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"strings"
 	"testing"
 

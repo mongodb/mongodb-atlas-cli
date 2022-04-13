@@ -17,7 +17,7 @@ package homebrew
 import (
 	"bytes"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"path/filepath"
 	"strings"
 	"time"

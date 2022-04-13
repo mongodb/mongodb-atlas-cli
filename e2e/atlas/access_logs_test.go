@@ -18,8 +18,9 @@ package atlas_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"testing"
+
+	exec "golang.org/x/sys/execabs"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/require"

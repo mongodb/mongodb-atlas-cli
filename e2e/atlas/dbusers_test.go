@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"math/big"
 	"os"
-	"os/exec"
+	exec "golang.org/x/sys/execabs"
 	"testing"
 	"time"
 

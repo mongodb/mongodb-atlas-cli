@@ -41,8 +41,7 @@ func (opts *Opts) askConfirmDefaultQuestion() error {
 Cluster Tier:				%s
 Cluster Disk Size (GiB):		%.1f`, opts.tier, diskSize)
 	}
-	fmt.Printf(`
-[Default Settings]
+	fmt.Printf(`[Default Settings]
 Cluster Name:				%s%s
 Cloud Provider and Region:		%s
 Database Username:			%s

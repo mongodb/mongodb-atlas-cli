@@ -268,10 +268,14 @@ func (opts *Opts) fillDefaultValues() error {
 
 	if opts.ClusterName == "" {
 		opts.defaultValues.ClusterName = opts.defaultName
+	} else {
+		opts.defaultValues.ClusterName = opts.ClusterName
 	}
 
 	if opts.Provider == "" {
 		opts.defaultValues.Provider = defaultProvider
+	} else {
+		opts.defaultValues.Provider = opts.Provider
 	}
 
 	if opts.Region == "" {
@@ -279,10 +283,14 @@ func (opts *Opts) fillDefaultValues() error {
 		if config.CloudGovService == config.Service() {
 			opts.defaultValues.Region = defaultRegionGov
 		}
+	} else {
+		opts.defaultValues.Region = opts.Region
 	}
 
 	if opts.DBUsername == "" {
 		opts.defaultValues.DBUsername = opts.defaultName
+	} else {
+		opts.defaultValues.DBUsername = opts.DBUsername
 	}
 
 	if opts.DBUserPassword == "" {
@@ -291,6 +299,8 @@ func (opts *Opts) fillDefaultValues() error {
 			return err
 		}
 		opts.defaultValues.DBUserPassword = pwd
+	} else {
+		opts.defaultValues.DBUserPassword = opts.DBUserPassword
 	}
 
 	if len(opts.IPAddresses) == 0 {
@@ -299,6 +309,8 @@ func (opts *Opts) fillDefaultValues() error {
 		} else {
 			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
 		}
+	} else {
+		opts.defaultValues.IPAddresses = opts.IPAddresses
 	}
 
 	return nil

@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"sort"
 	"testing"
 	"time"
@@ -31,6 +30,7 @@ import (
 	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

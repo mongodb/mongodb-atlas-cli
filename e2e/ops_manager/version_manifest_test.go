@@ -18,11 +18,11 @@ package ops_manager_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestVersionManifest(t *testing.T) {

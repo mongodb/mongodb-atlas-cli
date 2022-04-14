@@ -18,11 +18,11 @@ package brew_test
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

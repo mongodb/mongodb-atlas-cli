@@ -18,12 +18,12 @@ package atlas_test
 import (
 	"embed"
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/e2e/decryption"
 	"github.com/stretchr/testify/require"
+	exec "golang.org/x/sys/execabs"
 )
 
 //go:embed decryption/localKey/*

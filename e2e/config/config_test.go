@@ -18,11 +18,11 @@ package config_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

@@ -17,11 +17,11 @@ package atlas_test
 
 import (
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestPerformanceAdvisor(t *testing.T) {

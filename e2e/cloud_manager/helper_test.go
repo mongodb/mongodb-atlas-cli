@@ -25,13 +25,12 @@ import (
 	"testing"
 	"time"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/internal/convert"
 	"github.com/openlyinc/pointy"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

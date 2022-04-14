@@ -22,11 +22,10 @@ import (
 	"strings"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestOnlineArchives(t *testing.T) {

@@ -22,10 +22,9 @@ import (
 	"testing"
 	"time"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestEvents(t *testing.T) {

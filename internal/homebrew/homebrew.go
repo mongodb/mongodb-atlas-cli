@@ -21,11 +21,10 @@ import (
 	"strings"
 	"time"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/file"
 	"github.com/spf13/afero"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

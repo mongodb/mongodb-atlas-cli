@@ -21,12 +21,11 @@ import (
 	"strconv"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

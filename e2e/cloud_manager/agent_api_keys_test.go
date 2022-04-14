@@ -21,11 +21,10 @@ import (
 	"os"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
+	exec "golang.org/x/sys/execabs"
 )
 
 const (

@@ -19,9 +19,8 @@ import (
 	"os"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
+	exec "golang.org/x/sys/execabs"
 )
 
 const completionEntity = "completion"

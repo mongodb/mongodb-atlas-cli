@@ -21,10 +21,9 @@ import (
 	"strings"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/require"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestLogs(t *testing.T) {

@@ -22,10 +22,9 @@ import (
 	"os"
 	"testing"
 
-	exec "golang.org/x/sys/execabs"
-
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestFeaturePolicies(t *testing.T) {

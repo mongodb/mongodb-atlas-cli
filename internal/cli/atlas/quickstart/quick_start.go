@@ -114,8 +114,8 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	values := &DefaultValues{}
-	if err := opts.fillDefaultValues(values); err != nil {
+	values, err := opts.newDefaultValues()
+	if err != nil {
 		return err
 	}
 
@@ -267,7 +267,8 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) fillDefaultValues(values *DefaultValues) error {
+func (opts *Opts) newDefaultValues() (*DefaultValues, error) {
+	values := &DefaultValues{}
 	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
@@ -298,7 +299,7 @@ func (opts *Opts) fillDefaultValues(values *DefaultValues) error {
 	if opts.DBUserPassword == "" {
 		pwd, err := generatePassword()
 		if err != nil {
-			return err
+			return nil, err
 		}
 		values.DBUserPassword = pwd
 	}
@@ -312,7 +313,7 @@ func (opts *Opts) fillDefaultValues(values *DefaultValues) error {
 		}
 	}
 
-	return nil
+	return values, nil
 }
 
 func (opts *Opts) replaceWithDefaultSettings(values *DefaultValues) {

@@ -94,7 +94,7 @@ type Opts struct {
 	store               store.AtlasClusterQuickStarter
 }
 
-type QuickstartValues struct {
+type DefaultValues struct {
 	ClusterName    string
 	Provider       string
 	Region         string
@@ -102,7 +102,7 @@ type QuickstartValues struct {
 	DBUserPassword string
 	IPAddresses    []string
 	SkipSampleData bool
-	SkipMongosh    bool // wont need
+	SkipMongosh    bool
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
@@ -114,7 +114,7 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	values := &QuickstartValues{}
+	values := &DefaultValues{}
 	if err := opts.fillDefaultValues(values); err != nil {
 		return err
 	}
@@ -267,7 +267,7 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) fillDefaultValues(values *QuickstartValues) error {
+func (opts *Opts) fillDefaultValues(values *DefaultValues) error {
 	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
@@ -315,7 +315,7 @@ func (opts *Opts) fillDefaultValues(values *QuickstartValues) error {
 	return nil
 }
 
-func (opts *Opts) replaceWithDefaultSettings(values *QuickstartValues) {
+func (opts *Opts) replaceWithDefaultSettings(values *DefaultValues) {
 	if values.ClusterName != "" {
 		opts.ClusterName = values.ClusterName
 	}

@@ -22,7 +22,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-func (opts *Opts) askConfirmDefaultQuestion(values *QuickstartValues) error {
+func (opts *Opts) askConfirmDefaultQuestion(values *DefaultValues) error {
 	if opts.Confirm {
 		return nil
 	}

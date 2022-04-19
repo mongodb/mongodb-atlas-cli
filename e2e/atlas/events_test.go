@@ -18,12 +18,12 @@ package atlas_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongocli/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestEvents(t *testing.T) {

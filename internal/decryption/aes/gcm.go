@@ -17,6 +17,7 @@ package aes
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"fmt"
 )
 
 type GCMInput struct {
@@ -26,7 +27,14 @@ type GCMInput struct {
 	Tag []byte
 }
 
-func (input *GCMInput) Decrypt(cipherText []byte) ([]byte, error) {
+func (input *GCMInput) Decrypt(cipherText []byte) (decrypted []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("aes-gcm decrypt error: %v", r)
+			decrypted = nil
+		}
+	}()
+
 	cipherBlock, err := aes.NewCipher(input.Key)
 	if err != nil {
 		return nil, err

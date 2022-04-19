@@ -44,10 +44,18 @@ Options
      - string
      - false
      - Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP).
+   * - --kmipPassword
+     - string
+     - false
+     - Password that authenticates the username to the server that supports KMIP.
    * - --kmipServerCAFile
      - string
      - false
      - Path to the CA file used to connect to the server that supports KMIP.
+   * - --kmipUsername
+     - string
+     - false
+     - Username for authenticating to the server that supports KMIP.
    * - --localKeyFile
      - string
      - false

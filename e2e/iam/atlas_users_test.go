@@ -18,12 +18,12 @@ package iam_test
 import (
 	"encoding/json"
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestUsers(t *testing.T) {

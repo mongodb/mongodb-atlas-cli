@@ -17,10 +17,10 @@ package config_test
 
 import (
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	exec "golang.org/x/sys/execabs"
 )
 
 const completionEntity = "completion"

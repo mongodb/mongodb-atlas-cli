@@ -17,6 +17,7 @@ package aes
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"fmt"
 )
 
 type CBCInput struct {
@@ -24,7 +25,14 @@ type CBCInput struct {
 	IV  []byte
 }
 
-func (input *CBCInput) Decrypt(cipherText []byte) ([]byte, error) {
+func (input *CBCInput) Decrypt(cipherText []byte) (decrypted []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("aes-cbc decrypt error: %v", r)
+			decrypted = nil
+		}
+	}()
+
 	cipherBlock, err := aes.NewCipher(input.Key)
 	if err != nil {
 		return nil, err

@@ -45,6 +45,8 @@ type KMIPKeyIdentifier struct {
 	// CLI
 	ServerCAFileName          string
 	ClientCertificateFileName string
+	Username                  string
+	Password                  string
 }
 
 // KMIPEncryptedKey encrypted LEK and tag, BSON marshaled.
@@ -57,6 +59,7 @@ var (
 	ErrKMIPServerCAMissing          = errors.New("server CA missing")
 	ErrKMIPClientCertificateMissing = errors.New("client certificate missing")
 	ErrKMIPServerNamesMissing       = errors.New("server name is not provided")
+	ErrKMIPPasswordMissing          = errors.New("password is not provided")
 )
 
 func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
@@ -84,6 +87,17 @@ func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
 		ki.ClientCertificateFileName = f
 		if ki.ClientCertificateFileName == "" {
 			return ErrKMIPClientCertificateMissing
+		}
+	}
+
+	if ki.Username != "" && ki.Password == "" {
+		p, err := provideInput("Provide password for \""+ki.Username+"\":", "")
+		if err != nil {
+			return err
+		}
+		ki.Password = p
+		if ki.Password == "" {
+			return ErrKMIPPasswordMissing
 		}
 	}
 
@@ -192,5 +206,7 @@ func (ki *KMIPKeyIdentifier) kmipClient(serverName string) (*kmip.Client, error)
 		RootCertificate:   rootCA,
 		ClientPrivateKey:  clientCertAndKey,
 		ClientCertificate: clientCertAndKey,
+		Username:          ki.Username,
+		Password:          ki.Password,
 	})
 }

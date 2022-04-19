@@ -17,14 +17,15 @@ package decryption
 import (
 	"fmt"
 	"io"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AuditLogOutput interface {
-	Warningf(lineNb int, format string, a ...interface{}) error
-	Error(lineNb int, err error) error
-	Errorf(lineNb int, format string, a ...interface{}) error
+	Warningf(lineNb int, logLine *AuditLogLine, format string, a ...interface{}) error
+	Error(lineNb int, logLine *AuditLogLine, err error) error
+	Errorf(lineNb int, logLine *AuditLogLine, format string, a ...interface{}) error
 	LogRecord(lineNb int, logRecord interface{}) error
 }
 
@@ -42,6 +43,7 @@ const (
 type AuditLogError struct {
 	Level AuditLogErrorLevel
 	Line  int
+	TS    *time.Time
 	Err   error
 }
 
@@ -51,6 +53,11 @@ func (e AuditLogError) MarshalBSON() ([]byte, error) {
 		bson.E{Key: "line", Value: e.Line},
 		bson.E{Key: "error", Value: e.Err.Error()},
 	}
+
+	if e.TS != nil {
+		doc = append(doc, bson.E{Key: "ts", Value: e.TS.UnixMilli()})
+	}
+
 	return bson.Marshal(doc)
 }
 
@@ -78,28 +85,34 @@ func (l *auditLogOutputWriter) writeRecord(value interface{}) error {
 	return err
 }
 
-func (l *auditLogOutputWriter) Warningf(lineNb int, format string, a ...interface{}) error {
+func (l *auditLogOutputWriter) Warningf(lineNb int, logLine *AuditLogLine, format string, a ...interface{}) error {
 	e := AuditLogError{
 		Level: AuditLogErrorLevelWarning,
 		Line:  lineNb,
 		Err:   fmt.Errorf(format, a...),
 	}
-
-	return l.writeRecord(e)
-}
-
-func (l *auditLogOutputWriter) Error(lineNb int, err error) error {
-	e := AuditLogError{
-		Level: AuditLogErrorLevelError,
-		Line:  lineNb,
-		Err:   err,
+	if logLine != nil {
+		e.TS = logLine.TS
 	}
 
 	return l.writeRecord(e)
 }
 
-func (l *auditLogOutputWriter) Errorf(lineNb int, format string, a ...interface{}) error {
-	return l.Error(lineNb, fmt.Errorf(format, a...))
+func (l *auditLogOutputWriter) Error(lineNb int, logLine *AuditLogLine, err error) error {
+	e := AuditLogError{
+		Level: AuditLogErrorLevelError,
+		Line:  lineNb,
+		Err:   err,
+	}
+	if logLine != nil {
+		e.TS = logLine.TS
+	}
+
+	return l.writeRecord(e)
+}
+
+func (l *auditLogOutputWriter) Errorf(lineNb int, logLine *AuditLogLine, format string, a ...interface{}) error {
+	return l.Error(lineNb, logLine, fmt.Errorf(format, a...))
 }
 
 func (l *auditLogOutputWriter) LogRecord(_ int, logRecord interface{}) error {

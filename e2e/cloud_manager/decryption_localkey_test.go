@@ -20,13 +20,13 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/mongodb/mongocli/e2e/decryption"
 	"github.com/stretchr/testify/require"
+	exec "golang.org/x/sys/execabs"
 )
 
 //go:embed decryption/localKey/*
@@ -52,7 +52,7 @@ func TestDecrypt(t *testing.T) {
 		req.NoError(err)
 	})
 
-	for i := 1; i <= 4; i++ {
+	for i := 1; i <= 5; i++ {
 		t.Run(fmt.Sprintf("Test case %v", i), func(t *testing.T) {
 			inputFile := decryption.GenerateFileNameCase(tmp, i, "input")
 			err := decryption.DumpToTemp(files, decryption.GenerateFileNameCase(localKeyTestsInputDir, i, "input"), inputFile)

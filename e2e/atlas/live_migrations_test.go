@@ -17,11 +17,11 @@ package atlas_test
 
 import (
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
 	"github.com/stretchr/testify/require"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestLinkToken(t *testing.T) {

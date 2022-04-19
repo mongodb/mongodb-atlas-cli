@@ -18,11 +18,11 @@ package cloud_manager_test
 
 import (
 	"os"
-	"os/exec"
 	"path"
 	"testing"
 
 	"github.com/mongodb/mongocli/e2e"
+	exec "golang.org/x/sys/execabs"
 )
 
 func TestKeyProviders(t *testing.T) {

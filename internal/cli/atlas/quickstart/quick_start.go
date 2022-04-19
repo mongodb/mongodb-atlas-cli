@@ -92,10 +92,9 @@ type Opts struct {
 	defaultValue        bool
 	Confirm             bool
 	store               store.AtlasClusterQuickStarter
-	defaultValues       DefaultOpts
 }
 
-type DefaultOpts struct {
+type QuickstartValues struct {
 	ClusterName    string
 	Provider       string
 	Region         string
@@ -115,11 +114,12 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	if err := opts.fillDefaultValues(); err != nil {
+	values := &QuickstartValues{}
+	if err := opts.fillDefaultValues(values); err != nil {
 		return err
 	}
 
-	if err := opts.askConfirmDefaultQuestion(); err != nil || !opts.Confirm {
+	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {
 		fmt.Print(quickstartTemplateIntro)
 
 		err = opts.interactiveSetup()
@@ -127,7 +127,7 @@ func (opts *Opts) Run() error {
 			return err
 		}
 	} else {
-		opts.replaceWithDefaultSettings()
+		opts.replaceWithDefaultSettings(values)
 	}
 
 	if err := opts.createDatabaseUser(); err != nil {
@@ -267,87 +267,81 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) fillDefaultValues() error {
-	opts.defaultValues.SkipMongosh = opts.SkipMongosh
-	opts.defaultValues.SkipSampleData = opts.SkipSampleData
+func (opts *Opts) fillDefaultValues(values *QuickstartValues) error {
+	values.SkipMongosh = opts.SkipMongosh
+	values.SkipSampleData = opts.SkipSampleData
 
+	values.ClusterName = opts.ClusterName
 	if opts.ClusterName == "" {
-		opts.defaultValues.ClusterName = opts.defaultName
-	} else {
-		opts.defaultValues.ClusterName = opts.ClusterName
+		values.ClusterName = opts.defaultName
 	}
 
+	values.Provider = opts.Provider
 	if opts.Provider == "" {
-		opts.defaultValues.Provider = defaultProvider
-	} else {
-		opts.defaultValues.Provider = opts.Provider
+		values.Provider = defaultProvider
 	}
 
+	values.Region = opts.Region
 	if opts.Region == "" {
-		opts.defaultValues.Region = defaultRegion
+		values.Region = defaultRegion
 		if config.CloudGovService == config.Service() {
-			opts.defaultValues.Region = defaultRegionGov
+			values.Region = defaultRegionGov
 		}
-	} else {
-		opts.defaultValues.Region = opts.Region
 	}
 
+	values.DBUsername = opts.DBUsername
 	if opts.DBUsername == "" {
-		opts.defaultValues.DBUsername = opts.defaultName
-	} else {
-		opts.defaultValues.DBUsername = opts.DBUsername
+		values.DBUsername = opts.defaultName
 	}
 
+	values.DBUserPassword = opts.DBUserPassword
 	if opts.DBUserPassword == "" {
 		pwd, err := generatePassword()
 		if err != nil {
 			return err
 		}
-		opts.defaultValues.DBUserPassword = pwd
-	} else {
-		opts.defaultValues.DBUserPassword = opts.DBUserPassword
+		values.DBUserPassword = pwd
 	}
 
+	values.IPAddresses = opts.IPAddresses
 	if len(opts.IPAddresses) == 0 {
 		if publicIP := store.IPAddress(); publicIP != "" {
-			opts.defaultValues.IPAddresses = []string{publicIP}
+			values.IPAddresses = []string{publicIP}
 		} else {
 			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
 		}
-	} else {
-		opts.defaultValues.IPAddresses = opts.IPAddresses
 	}
 
 	return nil
 }
 
-func (opts *Opts) replaceWithDefaultSettings() {
-	if opts.defaultValues.ClusterName != "" {
-		opts.ClusterName = opts.defaultValues.ClusterName
+func (opts *Opts) replaceWithDefaultSettings(values *QuickstartValues) {
+	if values.ClusterName != "" {
+		opts.ClusterName = values.ClusterName
 	}
 
-	if opts.defaultValues.Provider != "" {
-		opts.Provider = opts.defaultValues.Provider
+	if values.Provider != "" {
+		opts.Provider = values.Provider
 	}
 
-	if opts.defaultValues.Region != "" {
-		opts.Region = opts.defaultValues.Region
+	if values.Region != "" {
+		opts.Region = values.Region
 	}
 
-	if opts.defaultValues.DBUsername != "" {
-		opts.DBUsername = opts.defaultValues.DBUsername
+	if values.DBUsername != "" {
+		opts.DBUsername = values.DBUsername
 	}
 
-	if opts.defaultValues.DBUserPassword != "" {
-		opts.DBUserPassword = opts.defaultValues.DBUserPassword
+	if values.DBUserPassword != "" {
+		opts.DBUserPassword = values.DBUserPassword
 	}
 
-	if opts.defaultValues.IPAddresses != nil {
-		opts.IPAddresses = opts.defaultValues.IPAddresses
+	if values.IPAddresses != nil {
+		opts.IPAddresses = values.IPAddresses
 	}
 
-	opts.SkipSampleData = opts.defaultValues.SkipSampleData
-	opts.SkipMongosh = opts.defaultValues.SkipMongosh
+	opts.SkipSampleData = values.SkipSampleData
+	opts.SkipMongosh = values.SkipMongosh
 }
 
 func (opts *Opts) interactiveSetup() error {
@@ -401,14 +395,6 @@ func Builder() *cobra.Command {
 			const base10 = 10
 			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
-
-			if opts.defaultValue {
-				if err := opts.fillDefaultValues(); err != nil {
-					return err
-				}
-
-				opts.replaceWithDefaultSettings()
-			}
 
 			return opts.Run()
 		},

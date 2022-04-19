@@ -22,7 +22,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-func (opts *Opts) askConfirmDefaultQuestion() error {
+func (opts *Opts) askConfirmDefaultQuestion(values *QuickstartValues) error {
 	if opts.Confirm {
 		return nil
 	}
@@ -52,11 +52,11 @@ Cluster Name:				%s%s
 Cloud Provider and Region:		%s
 Database Username:			%s
 Allow connections from (IP Address):	%s%s`,
-		opts.defaultValues.ClusterName,
+		values.ClusterName,
 		clusterTier+clusterDisk,
-		opts.defaultValues.Provider+" - "+opts.defaultValues.Region,
-		opts.defaultValues.DBUsername,
-		strings.Join(opts.defaultValues.IPAddresses, ", "),
+		values.Provider+" - "+values.Region,
+		values.DBUsername,
+		strings.Join(values.IPAddresses, ", "),
 		loadSampleData,
 	)
 

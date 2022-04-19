@@ -16,6 +16,8 @@ package decryption
 
 import (
 	"io"
+
+	"github.com/spf13/afero"
 )
 
 type DecryptSection struct {
@@ -39,8 +41,10 @@ type Decryption struct {
 
 type Option func(d *Decryption)
 
-func NewDecryption(options ...Option) *Decryption {
-	d := &Decryption{}
+func NewDecryption(fs afero.Fs, options ...Option) *Decryption {
+	d := &Decryption{
+		opts: KeyProviderOpts{Fs: fs},
+	}
 	for _, opt := range options {
 		opt(d)
 	}
@@ -55,14 +59,9 @@ func WithLocalOpts(fileName string) func(d *Decryption) {
 	}
 }
 
-func WithKMIPOpts(serverCAFileName, clientCertificateFileName, username, password string) func(d *Decryption) {
+func WithKMIPOpts(opts *KeyProviderKMIPOpts) func(d *Decryption) {
 	return func(d *Decryption) {
-		d.opts.KMIP = &KeyProviderKMIPOpts{
-			ServerCAFileName:          serverCAFileName,
-			ClientCertificateFileName: clientCertificateFileName,
-			Username:                  username,
-			Password:                  password,
-		}
+		d.opts.KMIP = opts
 	}
 }
 

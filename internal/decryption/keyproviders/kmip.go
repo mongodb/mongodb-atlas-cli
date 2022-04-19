@@ -22,6 +22,8 @@ import (
 
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"github.com/mongodb/mongocli/internal/decryption/kmip"
+	"github.com/mongodb/mongocli/internal/decryption/pem"
+	"github.com/spf13/afero"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -43,8 +45,10 @@ type KMIPKeyIdentifier struct {
 	KeyWrapMethod KMIPKeyWrapMethod
 
 	// CLI
+	Fs                        afero.Fs
 	ServerCAFileName          string
 	ClientCertificateFileName string
+	ClientCertificatePassword string
 	Username                  string
 	Password                  string
 }
@@ -56,10 +60,11 @@ type KMIPEncryptedKey struct {
 }
 
 var (
-	ErrKMIPServerCAMissing          = errors.New("server CA missing")
-	ErrKMIPClientCertificateMissing = errors.New("client certificate missing")
-	ErrKMIPServerNamesMissing       = errors.New("server name is not provided")
-	ErrKMIPPasswordMissing          = errors.New("password is not provided")
+	ErrKMIPServerCAMissing                  = errors.New("server CA missing")
+	ErrKMIPClientCertificateMissing         = errors.New("client certificate missing")
+	ErrKMIPServerNamesMissing               = errors.New("server name is not provided")
+	ErrKMIPPasswordMissing                  = errors.New("password is not provided")
+	ErrKMIPClientCertificatePasswordMissing = errors.New("password for client certificate is not provided")
 )
 
 func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
@@ -68,40 +73,15 @@ func (ki *KMIPKeyIdentifier) ValidateCredentials() error {
 `, ki.UniqueKeyID, strings.Join(ki.ServerNames, "; "), ki.ServerPort, ki.KeyWrapMethod)
 	}
 
-	if ki.ServerCAFileName == "" {
-		f, err := provideInput("Provide server CA filename:", "")
-		if err != nil {
-			return err
-		}
-		ki.ServerCAFileName = f
-		if ki.ServerCAFileName == "" {
-			return ErrKMIPServerCAMissing
-		}
+	if err := ki.validateServerCA(); err != nil {
+		return err
 	}
 
-	if ki.ClientCertificateFileName == "" {
-		f, err := provideInput("Provide client certificate filename:", "")
-		if err != nil {
-			return err
-		}
-		ki.ClientCertificateFileName = f
-		if ki.ClientCertificateFileName == "" {
-			return ErrKMIPClientCertificateMissing
-		}
+	if err := ki.validateClientCert(); err != nil {
+		return err
 	}
 
-	if ki.Username != "" && ki.Password == "" {
-		p, err := provideInput("Provide password for \""+ki.Username+"\":", "")
-		if err != nil {
-			return err
-		}
-		ki.Password = p
-		if ki.Password == "" {
-			return ErrKMIPPasswordMissing
-		}
-	}
-
-	return nil
+	return ki.validateUsernameAndPassword()
 }
 
 // DecryptKey decrypts LEK using KMIP get or decrypt methods.
@@ -148,6 +128,69 @@ func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 	return nil, clientError
 }
 
+func (ki *KMIPKeyIdentifier) validateUsernameAndPassword() error {
+	if ki.Username != "" && ki.Password == "" {
+		p, err := provideInput("Provide password for \""+ki.Username+"\":", "")
+		if err != nil {
+			return err
+		}
+		ki.Password = p
+		if ki.Password == "" {
+			return ErrKMIPPasswordMissing
+		}
+	}
+	return nil
+}
+
+func (ki *KMIPKeyIdentifier) validateServerCA() error {
+	if ki.ServerCAFileName == "" {
+		f, err := provideInput("Provide server CA filename:", "")
+		if err != nil {
+			return err
+		}
+		ki.ServerCAFileName = f
+		if ki.ServerCAFileName == "" {
+			return ErrKMIPServerCAMissing
+		}
+	}
+
+	if _, err := pem.ValidateBlocks(ki.Fs, ki.ServerCAFileName); err != nil {
+		return fmt.Errorf("server CA %w", err)
+	}
+	return nil
+}
+
+func (ki *KMIPKeyIdentifier) validateClientCert() error {
+	if ki.ClientCertificateFileName == "" {
+		f, err := provideInput("Provide client certificate filename:", "")
+		if err != nil {
+			return err
+		}
+		ki.ClientCertificateFileName = f
+		if ki.ClientCertificateFileName == "" {
+			return ErrKMIPClientCertificateMissing
+		}
+	}
+
+	isEncrypted, err := pem.ValidateBlocks(ki.Fs, ki.ClientCertificateFileName)
+	if err != nil {
+		return fmt.Errorf("client certificate %w", err)
+	}
+
+	if isEncrypted && ki.ClientCertificatePassword == "" {
+		p, err := provideInput("Provide password for client certificate:", "")
+		if err != nil {
+			return err
+		}
+		ki.ClientCertificatePassword = p
+		if ki.ClientCertificatePassword == "" {
+			return ErrKMIPClientCertificatePasswordMissing
+		}
+	}
+
+	return nil
+}
+
 func (ki *KMIPKeyIdentifier) decryptWithKeyWrapMethodEncrypt(kmipClient *kmip.Client, kmipEncryptedKey *KMIPEncryptedKey) ([]byte, error) {
 	decryptedLEK, err := kmipClient.Decrypt(ki.UniqueKeyID, kmipEncryptedKey.Key, kmipEncryptedKey.IV)
 	if err != nil {
@@ -184,11 +227,6 @@ func (ki *KMIPKeyIdentifier) decodeEncryptedKey(encryptedKey []byte) (*KMIPEncry
 }
 
 func (ki *KMIPKeyIdentifier) kmipClient(serverName string) (*kmip.Client, error) {
-	clientCertAndKey, err := os.ReadFile(ki.ClientCertificateFileName)
-	if err != nil {
-		return nil, err
-	}
-
 	rootCA, err := os.ReadFile(ki.ServerCAFileName)
 	if err != nil {
 		return nil, err
@@ -199,13 +237,18 @@ func (ki *KMIPKeyIdentifier) kmipClient(serverName string) (*kmip.Client, error)
 		version = kmip.V10
 	}
 
+	clientCert, clientPrivateKey, err := pem.Decode(ki.Fs, ki.ClientCertificateFileName, ki.ClientCertificatePassword)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing client certificate: %w", err)
+	}
+
 	return kmip.NewClient(&kmip.Config{
 		Version:           version,
 		Hostname:          serverName,
 		Port:              ki.ServerPort,
 		RootCertificate:   rootCA,
-		ClientPrivateKey:  clientCertAndKey,
-		ClientCertificate: clientCertAndKey,
+		ClientPrivateKey:  clientPrivateKey,
+		ClientCertificate: clientCert,
 		Username:          ki.Username,
 		Password:          ki.Password,
 	})

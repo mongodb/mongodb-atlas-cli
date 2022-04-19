@@ -14,7 +14,10 @@
 
 package decryption
 
+import "github.com/spf13/afero"
+
 type KeyProviderOpts struct {
+	Fs    afero.Fs
 	Local *KeyProviderLocalOpts
 	KMIP  *KeyProviderKMIPOpts
 	AWS   *KeyProviderAWSOpts
@@ -29,6 +32,7 @@ type KeyProviderLocalOpts struct {
 type KeyProviderKMIPOpts struct {
 	ServerCAFileName          string
 	ClientCertificateFileName string
+	ClientCertificatePassword string
 	Username                  string
 	Password                  string
 }

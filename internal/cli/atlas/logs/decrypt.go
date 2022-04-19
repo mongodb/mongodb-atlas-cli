@@ -60,6 +60,7 @@ func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 
 func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	return decryption.NewDecryption(
+		opts.Fs,
 		decryption.WithAWSOpts(opts.awsOpts.awsAccessKey, opts.awsOpts.awsSecretAccessKey, opts.awsOpts.awsSessionToken),
 		decryption.WithGCPOpts(opts.gcpOpts.gcpServiceAccountKey),
 		decryption.WithAzureOpts(opts.azureOpts.azureTenantID, opts.azureOpts.azureClientID, opts.azureOpts.azureSecret),

@@ -51,7 +51,7 @@ func (opts *Opts) askAccessListOptions() error {
 		survey.WithValidator(survey.Required),
 	)
 
-	if err != nil && opts.IPAddressesResponse != "" {
+	if err == nil && opts.IPAddressesResponse != "" {
 		ips := strings.Split(opts.IPAddressesResponse, ",")
 		opts.IPAddresses = append(opts.IPAddresses, ips...)
 	}

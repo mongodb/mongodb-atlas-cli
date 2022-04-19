@@ -114,9 +114,9 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	values, err := opts.newDefaultValues()
-	if err != nil {
-		return err
+	values, dErr := opts.newDefaultValues()
+	if dErr != nil {
+		return dErr
 	}
 
 	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {

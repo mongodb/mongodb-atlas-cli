@@ -111,8 +111,13 @@ func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 		lineNb := idx + 1
 		logLine, err := logLineScanner.AuditLogLine()
 		if err != nil {
-			if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
+			if outputErr := output.Errorf(lineNb, logLine, "error parsing line %d, %v", lineNb, err); outputErr != nil {
 				return outputErr
+			}
+			if decryptSection != nil {
+				// even if log record is corrupted, consider it was encrypted,
+				// so the lastKeyInvocationCount should be incremented
+				decryptSection.lastKeyInvocationCount++
 			}
 			continue
 		}
@@ -121,7 +126,7 @@ func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 		case AuditHeaderRecord:
 			decryptSection.zeroLEK()
 			if decryptSection, err = processHeader(logLine, d.opts); err != nil {
-				if outputErr := output.Errorf(lineNb, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
+				if outputErr := output.Errorf(lineNb, logLine, `error processing header line %d: %s`, lineNb, err); outputErr != nil {
 					return outputErr
 				}
 			}
@@ -130,7 +135,7 @@ func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 				return err
 			}
 		default:
-			if outputErr := output.Errorf(lineNb, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType); outputErr != nil {
+			if outputErr := output.Errorf(lineNb, logLine, `line %d skipped, unknown auditRecordType="%s"`, lineNb, logLine.AuditRecordType); outputErr != nil {
 				return outputErr
 			}
 		}
@@ -138,7 +143,7 @@ func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 	decryptSection.zeroLEK()
 	if err := logLineScanner.Err(); err != nil {
 		lineNb := idx + 1
-		if outputErr := output.Errorf(lineNb, "error parsing line %d, %v", lineNb, err); outputErr != nil {
+		if outputErr := output.Errorf(lineNb, nil, "error parsing line %d, %v", lineNb, err); outputErr != nil {
 			return outputErr
 		}
 	}
@@ -148,18 +153,21 @@ func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
 
 func decryptAuditLogRecord(decryptSection *DecryptSection, logLine *AuditLogLine, output AuditLogOutput, lineNb int) error {
 	if decryptSection == nil {
-		return output.Warningf(lineNb, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
+		return output.Warningf(lineNb, logLine, `line %d skipped, the header record for current section is missing or corrupted`, lineNb)
 	}
 
 	decryptedLogRecord, keyInvocationCount, err := processLogRecord(decryptSection, logLine, lineNb)
 	if err != nil {
-		return output.Error(lineNb, err)
+		// even if log record is corrupted, consider it was encrypted,
+		// so the lastKeyInvocationCount should be incremented
+		decryptSection.lastKeyInvocationCount++
+		return output.Error(lineNb, logLine, err)
 	}
 
 	err = validateLogRecord(decryptSection, keyInvocationCount)
 	decryptSection.lastKeyInvocationCount = keyInvocationCount
 	if err != nil {
-		if outputErr := output.Error(lineNb, err); outputErr != nil {
+		if outputErr := output.Error(lineNb, logLine, err); outputErr != nil {
 			return outputErr
 		}
 	}

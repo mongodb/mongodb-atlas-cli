@@ -94,7 +94,7 @@ type Opts struct {
 	store               store.AtlasClusterQuickStarter
 }
 
-type DefaultValues struct {
+type quickstart struct {
 	ClusterName    string
 	Provider       string
 	Region         string
@@ -267,8 +267,8 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) newDefaultValues() (*DefaultValues, error) {
-	values := &DefaultValues{}
+func (opts *Opts) newDefaultValues() (*quickstart, error) {
+	values := &quickstart{}
 	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
@@ -316,7 +316,7 @@ func (opts *Opts) newDefaultValues() (*DefaultValues, error) {
 	return values, nil
 }
 
-func (opts *Opts) replaceWithDefaultSettings(values *DefaultValues) {
+func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
 	if values.ClusterName != "" {
 		opts.ClusterName = values.ClusterName
 	}

@@ -10,6 +10,12 @@ these tasks run on master and can be patched at any time.
 
 ## Stable release
 
+Stable releases are now managed by internal tooling (PCT)
+
+Use the instructions bellow as a fallback.
+
+**Deprecated**
+
 To generate a new stable release you can run:
 
 ```bash

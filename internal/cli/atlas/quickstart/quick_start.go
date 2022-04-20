@@ -40,14 +40,16 @@ Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
 
 `
 const quickstartTemplateCloseHandler = `
-You can connect to your Atlas cluster with the following user: 
+Enter 'atlas cluster watch %s' to learn when your cluster is available.
+`
+
+const quickstartTemplateStoreWarning = `
+Please store your database authentication access details in a secure location: 
 username: %s 
 password: %s
 `
 
-const quickstartTemplateIntro = `You are creating a new Atlas cluster and enabling access to it.
-
-Press [Enter] to use the default values.
+const quickstartTemplateIntro = `Press [Enter] to use the default values.
 
 Enter [?] on any option to get help.
 `
@@ -92,6 +94,17 @@ type Opts struct {
 	store               store.AtlasClusterQuickStarter
 }
 
+type quickstart struct {
+	ClusterName    string
+	Provider       string
+	Region         string
+	DBUsername     string
+	DBUserPassword string
+	IPAddresses    []string
+	SkipSampleData bool
+	SkipMongosh    bool
+}
+
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -101,14 +114,20 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *Opts) Run() error {
-	fmt.Print(quickstartTemplateIntro)
-
-	if err := opts.askClusterOptions(); err != nil {
-		return err
+	values, dErr := opts.newDefaultValues()
+	if dErr != nil {
+		return dErr
 	}
 
-	if err := opts.askSampleDataQuestion(); err != nil {
-		return err
+	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {
+		fmt.Print(quickstartTemplateIntro)
+
+		err = opts.interactiveSetup()
+		if err != nil {
+			return err
+		}
+	} else {
+		opts.replaceWithDefaultSettings(values)
 	}
 
 	if err := opts.createDatabaseUser(); err != nil {
@@ -119,15 +138,12 @@ func (opts *Opts) Run() error {
 		return err
 	}
 
-	if err := opts.askConfirmConfigQuestion(); err != nil {
-		return err
-	}
-
 	fmt.Printf(`We are deploying %s...`, opts.ClusterName)
 	if err := opts.createCluster(); err != nil {
 		return err
 	}
 
+	fmt.Printf(quickstartTemplateStoreWarning, opts.DBUsername, opts.DBUserPassword)
 	opts.setupCloseHandler()
 
 	fmt.Print(quickstartTemplateCluster)
@@ -235,7 +251,7 @@ func (opts *Opts) setupCloseHandler() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		fmt.Printf(quickstartTemplateCloseHandler, opts.DBUsername, opts.DBUserPassword)
+		fmt.Printf(quickstartTemplateCloseHandler, opts.ClusterName)
 		os.Exit(0)
 	}()
 }
@@ -251,50 +267,102 @@ func (opts *Opts) setTier() {
 	}
 }
 
-func (opts *Opts) defaultValues() error {
-	if !opts.defaultValue {
-		return nil
-	}
+func (opts *Opts) newDefaultValues() (*quickstart, error) {
+	values := &quickstart{}
+	values.SkipMongosh = opts.SkipMongosh
+	values.SkipSampleData = opts.SkipSampleData
 
-	opts.SkipSampleData = true
-	opts.SkipMongosh = true
-
+	values.ClusterName = opts.ClusterName
 	if opts.ClusterName == "" {
-		opts.ClusterName = opts.defaultName
+		values.ClusterName = opts.defaultName
 	}
 
+	values.Provider = opts.Provider
 	if opts.Provider == "" {
-		opts.Provider = defaultProvider
+		values.Provider = defaultProvider
 	}
 
+	values.Region = opts.Region
 	if opts.Region == "" {
-		opts.Region = defaultRegion
+		values.Region = defaultRegion
 		if config.CloudGovService == config.Service() {
-			opts.Region = defaultRegionGov
+			values.Region = defaultRegionGov
 		}
 	}
 
+	values.DBUsername = opts.DBUsername
 	if opts.DBUsername == "" {
-		opts.DBUsername = opts.defaultName
+		values.DBUsername = opts.defaultName
 	}
 
+	values.DBUserPassword = opts.DBUserPassword
 	if opts.DBUserPassword == "" {
 		pwd, err := generatePassword()
 		if err != nil {
-			return err
+			return nil, err
 		}
-		opts.DBUserPassword = pwd
+		values.DBUserPassword = pwd
 	}
 
+	values.IPAddresses = opts.IPAddresses
 	if len(opts.IPAddresses) == 0 {
 		if publicIP := store.IPAddress(); publicIP != "" {
-			opts.IPAddresses = []string{publicIP}
+			values.IPAddresses = []string{publicIP}
 		} else {
 			_, _ = fmt.Fprintln(os.Stderr, quickstartTemplateIPNotFound)
 		}
 	}
 
-	return nil
+	return values, nil
+}
+
+func (opts *Opts) replaceWithDefaultSettings(values *quickstart) {
+	if values.ClusterName != "" {
+		opts.ClusterName = values.ClusterName
+	}
+
+	if values.Provider != "" {
+		opts.Provider = values.Provider
+	}
+
+	if values.Region != "" {
+		opts.Region = values.Region
+	}
+
+	if values.DBUsername != "" {
+		opts.DBUsername = values.DBUsername
+	}
+
+	if values.DBUserPassword != "" {
+		opts.DBUserPassword = values.DBUserPassword
+	}
+
+	if values.IPAddresses != nil {
+		opts.IPAddresses = values.IPAddresses
+	}
+
+	opts.SkipSampleData = values.SkipSampleData
+	opts.SkipMongosh = values.SkipMongosh
+}
+
+func (opts *Opts) interactiveSetup() error {
+	if err := opts.askClusterOptions(); err != nil {
+		return err
+	}
+
+	if err := opts.askSampleDataQuestion(); err != nil {
+		return err
+	}
+
+	if err := opts.askDBUserOptions(); err != nil {
+		return err
+	}
+
+	if err := opts.askAccessListOptions(); err != nil {
+		return err
+	}
+
+	return opts.askConfirmConfigQuestion()
 }
 
 // Builder
@@ -329,9 +397,6 @@ func Builder() *cobra.Command {
 			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
 			opts.providerAndRegionToConstant()
 
-			if err := opts.defaultValues(); err != nil {
-				return err
-			}
 			return opts.Run()
 		},
 	}

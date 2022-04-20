@@ -24,13 +24,6 @@ import (
 )
 
 func (opts *Opts) createAccessList() error {
-	if err := opts.askAccessListOptions(); err != nil {
-		return err
-	}
-	if opts.IPAddressesResponse != "" {
-		ips := strings.Split(opts.IPAddressesResponse, ",")
-		opts.IPAddresses = append(opts.IPAddresses, ips...)
-	}
 	entries := opts.newProjectIPAccessList()
 	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
 		return err
@@ -52,11 +45,17 @@ func (opts *Opts) askAccessListOptions() error {
 	if publicIP != "" {
 		message = fmt.Sprintf(" [Press Enter to use your public IP address '%s']", publicIP)
 	}
-	return survey.AskOne(
+	err := survey.AskOne(
 		newAccessListQuestion(publicIP, message),
 		&opts.IPAddressesResponse,
 		survey.WithValidator(survey.Required),
 	)
+
+	if err == nil && opts.IPAddressesResponse != "" {
+		ips := strings.Split(opts.IPAddressesResponse, ",")
+		opts.IPAddresses = append(opts.IPAddresses, ips...)
+	}
+	return err
 }
 
 func (opts *Opts) newProjectIPAccessList() []*atlas.ProjectIPAccessList {

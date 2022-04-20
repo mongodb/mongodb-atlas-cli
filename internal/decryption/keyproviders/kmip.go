@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongocli/internal/decryption/aes"
 	"github.com/mongodb/mongocli/internal/decryption/kmip"
 	"github.com/mongodb/mongocli/internal/decryption/pem"
-	"github.com/spf13/afero"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -45,7 +44,6 @@ type KMIPKeyIdentifier struct {
 	KeyWrapMethod KMIPKeyWrapMethod
 
 	// CLI
-	Fs                        afero.Fs
 	ServerCAFileName          string
 	ClientCertificateFileName string
 	ClientCertificatePassword string
@@ -154,7 +152,7 @@ func (ki *KMIPKeyIdentifier) validateServerCA() error {
 		}
 	}
 
-	if _, err := pem.ValidateBlocks(ki.Fs, ki.ServerCAFileName); err != nil {
+	if _, err := pem.ValidateBlocks(ki.ServerCAFileName); err != nil {
 		return fmt.Errorf("server CA %w", err)
 	}
 	return nil
@@ -172,7 +170,7 @@ func (ki *KMIPKeyIdentifier) validateClientCert() error {
 		}
 	}
 
-	isEncrypted, err := pem.ValidateBlocks(ki.Fs, ki.ClientCertificateFileName)
+	isEncrypted, err := pem.ValidateBlocks(ki.ClientCertificateFileName)
 	if err != nil {
 		return fmt.Errorf("client certificate %w", err)
 	}
@@ -237,7 +235,7 @@ func (ki *KMIPKeyIdentifier) kmipClient(serverName string) (*kmip.Client, error)
 		version = kmip.V10
 	}
 
-	clientCert, clientPrivateKey, err := pem.Decode(ki.Fs, ki.ClientCertificateFileName, ki.ClientCertificatePassword)
+	clientCert, clientPrivateKey, err := pem.Decode(ki.ClientCertificateFileName, ki.ClientCertificatePassword)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing client certificate: %w", err)
 	}

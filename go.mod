@@ -26,7 +26,6 @@ require (
 	github.com/withfig/autocomplete-tools/packages/cobra v1.1.3
 	go.mongodb.org/atlas v0.15.0
 	go.mongodb.org/ops-manager v0.38.0
-	go.step.sm/crypto v0.16.1
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -51,7 +50,7 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	go.mongodb.org/mongo-driver v1.9.0
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
@@ -82,7 +81,6 @@ require (
 	cloud.google.com/go v0.100.2 // indirect
 	cloud.google.com/go/compute v1.5.0 // indirect
 	cloud.google.com/go/iam v0.1.0 // indirect
-	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v0.9.2 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.3.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.4.0 // indirect
@@ -94,7 +92,6 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.0-beta.8 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect

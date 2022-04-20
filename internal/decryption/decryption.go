@@ -16,8 +16,6 @@ package decryption
 
 import (
 	"io"
-
-	"github.com/spf13/afero"
 )
 
 type DecryptSection struct {
@@ -41,10 +39,8 @@ type Decryption struct {
 
 type Option func(d *Decryption)
 
-func NewDecryption(fs afero.Fs, options ...Option) *Decryption {
-	d := &Decryption{
-		opts: KeyProviderOpts{Fs: fs},
-	}
+func NewDecryption(options ...Option) *Decryption {
+	d := &Decryption{}
 	for _, opt := range options {
 		opt(d)
 	}

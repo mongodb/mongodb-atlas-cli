@@ -19,7 +19,6 @@ import (
 	"errors"
 
 	"github.com/spf13/afero"
-	"go.step.sm/crypto/pemutil"
 )
 
 type BlockType string
@@ -30,13 +29,30 @@ const (
 	EncryptedPrivateKeyBlock BlockType = "ENCRYPTED PRIVATE KEY"
 )
 
+var defaultPem = &pemDecoderValidator{
+	fs: afero.NewOsFs(),
+}
+
+type pemDecoderValidator struct {
+	fs afero.Fs
+}
+
+func Default() DecoderValidator {
+	return defaultPem
+}
+
+type DecoderValidator interface {
+	Decode(filename, password string) (cert, privateKey []byte, err error)
+	ValidateBlocks(filename string) (isEncrypted bool, err error)
+}
+
 var (
-	ErrKMIPCertificateBlock       = errors.New("file does not contain a certificate block")
-	ErrKMIPMissingPrivateKeyBlock = errors.New("file does not contain a private key block")
+	errKMIPCertificateBlock       = errors.New("file does not contain a certificate block")
+	errKMIPMissingPrivateKeyBlock = errors.New("file does not contain a private key block")
 )
 
-func load(fs afero.Fs, filename string) (map[BlockType]*pem.Block, error) {
-	clientCertAndKey, err := afero.ReadFile(fs, filename)
+func (p *pemDecoderValidator) load(filename string) (map[BlockType]*pem.Block, error) {
+	clientCertAndKey, err := afero.ReadFile(p.fs, filename)
 	if err != nil {
 		return nil, err
 	}
@@ -54,8 +70,12 @@ func load(fs afero.Fs, filename string) (map[BlockType]*pem.Block, error) {
 	return pemBlocks, nil
 }
 
-func Decode(fs afero.Fs, filename, password string) (cert, privateKey []byte, err error) {
-	pemBlocks, err := load(fs, filename)
+func Decode(filename, password string) (cert, privateKey []byte, err error) {
+	return defaultPem.Decode(filename, password)
+}
+
+func (p *pemDecoderValidator) Decode(filename, password string) (cert, privateKey []byte, err error) {
+	pemBlocks, err := p.load(filename)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -67,7 +87,7 @@ func Decode(fs afero.Fs, filename, password string) (cert, privateKey []byte, er
 		case RSAPrivateKeyBlock:
 			privateKey = pem.EncodeToMemory(pemBlock)
 		case EncryptedPrivateKeyBlock:
-			privateKeyBytes, err := pemutil.DecryptPKCS8PrivateKey(pemBlock.Bytes, []byte(password))
+			privateKeyBytes, err := DecryptPKCS8PrivateKey(pemBlock.Bytes, []byte(password))
 			if err != nil {
 				return nil, nil, err
 			}
@@ -79,8 +99,12 @@ func Decode(fs afero.Fs, filename, password string) (cert, privateKey []byte, er
 	return cert, privateKey, nil
 }
 
-func ValidateBlocks(fs afero.Fs, filename string) (isEncrypted bool, err error) {
-	pemBlocks, err := load(fs, filename)
+func ValidateBlocks(filename string) (isEncrypted bool, err error) {
+	return defaultPem.ValidateBlocks(filename)
+}
+
+func (p *pemDecoderValidator) ValidateBlocks(filename string) (isEncrypted bool, err error) {
+	pemBlocks, err := p.load(filename)
 	if err != nil {
 		return false, err
 	}
@@ -88,11 +112,11 @@ func ValidateBlocks(fs afero.Fs, filename string) (isEncrypted bool, err error) 
 	_, hasPrivateKey := pemBlocks[RSAPrivateKeyBlock]
 	_, hasEncryptedPrivateKey := pemBlocks[EncryptedPrivateKeyBlock]
 	if !hasPrivateKey && !hasEncryptedPrivateKey {
-		return false, ErrKMIPMissingPrivateKeyBlock
+		return false, errKMIPMissingPrivateKeyBlock
 	}
 
 	if _, hasCertBlock := pemBlocks[CertificateBlock]; !hasCertBlock {
-		return hasEncryptedPrivateKey, ErrKMIPCertificateBlock
+		return hasEncryptedPrivateKey, errKMIPCertificateBlock
 	}
 
 	return hasEncryptedPrivateKey, nil

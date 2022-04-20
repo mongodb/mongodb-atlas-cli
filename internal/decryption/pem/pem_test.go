@@ -220,8 +220,10 @@ func TestValidateBlocks(t *testing.T) {
 	t.Run("CA with private key and cert blocks is valid", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyCA), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		isEncrypted, err := ValidateBlocks(fs, "pemfile")
+		isEncrypted, err := pem.ValidateBlocks("pemfile")
+
 		assert.NoError(t, err)
 		assert.False(t, isEncrypted)
 	})
@@ -229,8 +231,10 @@ func TestValidateBlocks(t *testing.T) {
 	t.Run("client cert with private key and cert blocks is valid", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyCert), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		isEncrypted, err := ValidateBlocks(fs, "pemfile")
+		isEncrypted, err := pem.ValidateBlocks("pemfile")
+
 		assert.NoError(t, err)
 		assert.False(t, isEncrypted)
 	})
@@ -238,8 +242,10 @@ func TestValidateBlocks(t *testing.T) {
 	t.Run("client cert with encrypted private key and cert blocks is valid", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyEncryptedCert), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		isEncrypted, err := ValidateBlocks(fs, "pemfile")
+		isEncrypted, err := pem.ValidateBlocks("pemfile")
+
 		assert.NoError(t, err)
 		assert.True(t, isEncrypted)
 	})
@@ -248,8 +254,10 @@ func TestValidateBlocks(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		certContent := strings.ReplaceAll(DummyCert, string(CertificateBlock), "DUMMY PEM BLOCK TYPE")
 		_ = afero.WriteFile(fs, "pemfile", []byte(certContent), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		isEncrypted, err := ValidateBlocks(fs, "pemfile")
+		isEncrypted, err := pem.ValidateBlocks("pemfile")
+
 		assert.Error(t, err)
 		assert.False(t, isEncrypted)
 	})
@@ -258,8 +266,10 @@ func TestValidateBlocks(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		certContent := strings.ReplaceAll(DummyCert, string(RSAPrivateKeyBlock), "DUMMY PEM BLOCK TYPE")
 		_ = afero.WriteFile(fs, "pemfile", []byte(certContent), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		isEncrypted, err := ValidateBlocks(fs, "pemfile")
+		isEncrypted, err := pem.ValidateBlocks("pemfile")
+
 		assert.Error(t, err)
 		assert.False(t, isEncrypted)
 	})
@@ -269,8 +279,10 @@ func TestDecode(t *testing.T) {
 	t.Run("decode CA", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyCA), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		cert, privateKey, err := Decode(fs, "pemfile", "")
+		cert, privateKey, err := pem.Decode("pemfile", "")
+
 		assert.NoError(t, err)
 		assert.Contains(t, string(cert), CertificateBlock)
 		assert.Contains(t, string(privateKey), RSAPrivateKeyBlock)
@@ -279,8 +291,10 @@ func TestDecode(t *testing.T) {
 	t.Run("decode client cert with encrypted private key using wrong password returns error", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyEncryptedCert), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		cert, privateKey, err := Decode(fs, "pemfile", "wrong pwd")
+		cert, privateKey, err := pem.Decode("pemfile", "wrong pwd")
+
 		assert.Error(t, err)
 		assert.Nil(t, cert)
 		assert.Nil(t, privateKey)
@@ -289,8 +303,10 @@ func TestDecode(t *testing.T) {
 	t.Run("decode client cert with encrypted private key using correct password is successful", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
 		_ = afero.WriteFile(fs, "pemfile", []byte(DummyEncryptedCert), 0600)
+		pem := &pemDecoderValidator{fs: fs}
 
-		cert, privateKey, err := Decode(fs, "pemfile", DummyPwd)
+		cert, privateKey, err := pem.Decode("pemfile", DummyPwd)
+
 		assert.NoError(t, err)
 		assert.Contains(t, string(cert), CertificateBlock)
 		assert.Contains(t, string(privateKey), RSAPrivateKeyBlock)

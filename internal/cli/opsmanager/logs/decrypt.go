@@ -47,7 +47,6 @@ func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 
 func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	return decryption.NewDecryption(
-		opts.Fs,
 		decryption.WithLocalOpts(opts.localKeyFileName),
 		decryption.WithKMIPOpts(&decryption.KeyProviderKMIPOpts{
 			ServerCAFileName:          opts.kmipServerCAFileName,
@@ -112,7 +111,7 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
 	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)
 	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KMIPClientCertificateFile, "", "", usage.KMIPClientCertificateFile)
-	cmd.Flags().StringVarP(&opts.kmipClientCertificatePassword, flag.KMIPClientCertificatePassword, "", "", usage.KMIPClientCertificatePassword)
+	cmd.Flags().StringVar(&opts.kmipClientCertificatePassword, flag.KMIPClientCertificatePassword, "", usage.KMIPClientCertificatePassword)
 	cmd.Flags().StringVarP(&opts.kmipUsername, flag.KMIPUsername, "", "", usage.KMIPUsername)
 	cmd.Flags().StringVarP(&opts.kmipPassword, flag.KMIPPassword, "", "", usage.KMIPPassword)
 

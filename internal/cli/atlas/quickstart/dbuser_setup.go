@@ -27,10 +27,6 @@ import (
 )
 
 func (opts *Opts) createDatabaseUser() error {
-	if err := opts.askDBUserOptions(); err != nil {
-		return err
-	}
-
 	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}

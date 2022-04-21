@@ -274,11 +274,13 @@ const (
 	LocalKeyFile                             = "localKeyFile"                    // LocalKeyFile flag
 	KMIPServerCAFile                         = "kmipServerCAFile"                // KMIPServerCAFile flag
 	KMIPClientCertificateFile                = "kmipClientCertificateFile"       // KMIPClientCertificateFile flag
-	KMIPUsername                             = "kmipUsername"                    // KMIPUsername flag
-	KMIPPassword                             = "kmipPassword"                    // KMIPPassword flag
-	GCPServiceAccountKey                     = "gcpServiceAccountKey"            // GCPServiceAccountKey flag
-	AzureClientID                            = "azureClientId"                   // AzureClientID flag
-	AzureTenantID                            = "azureTenantId"                   // AzureTenantID flag
-	AzureSecret                              = "azureSecret"                     // AzureSecret flag
-	AWSSessionToken                          = "awsSessionToken"                 // AWSSessionToken flag
+	/* #nosec */
+	KMIPClientCertificatePassword = "kmipClientCertificatePassword" // KMIPClientCertificatePassword flag
+	KMIPUsername                  = "kmipUsername"                  // KMIPUsername flag
+	KMIPPassword                  = "kmipPassword"                  // KMIPPassword flag
+	GCPServiceAccountKey          = "gcpServiceAccountKey"          // GCPServiceAccountKey flag
+	AzureClientID                 = "azureClientId"                 // AzureClientID flag
+	AzureTenantID                 = "azureTenantId"                 // AzureTenantID flag
+	AzureSecret                   = "azureSecret"                   // AzureSecret flag
+	AWSSessionToken               = "awsSessionToken"               // AWSSessionToken flag
 )

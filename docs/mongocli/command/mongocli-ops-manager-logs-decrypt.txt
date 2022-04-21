@@ -44,6 +44,10 @@ Options
      - string
      - false
      - Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP).
+   * - --kmipClientCertificatePassword
+     - string
+     - false
+     - Password to decrypt the Private Key of the Client Certificate used to connect to the server that supports KMIP.
    * - --kmipPassword
      - string
      - false

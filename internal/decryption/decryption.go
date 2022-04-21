@@ -55,14 +55,9 @@ func WithLocalOpts(fileName string) func(d *Decryption) {
 	}
 }
 
-func WithKMIPOpts(serverCAFileName, clientCertificateFileName, username, password string) func(d *Decryption) {
+func WithKMIPOpts(opts *KeyProviderKMIPOpts) func(d *Decryption) {
 	return func(d *Decryption) {
-		d.opts.KMIP = &KeyProviderKMIPOpts{
-			ServerCAFileName:          serverCAFileName,
-			ClientCertificateFileName: clientCertificateFileName,
-			Username:                  username,
-			Password:                  password,
-		}
+		d.opts.KMIP = opts
 	}
 }
 

@@ -29,6 +29,7 @@ type KeyProviderLocalOpts struct {
 type KeyProviderKMIPOpts struct {
 	ServerCAFileName          string
 	ClientCertificateFileName string
+	ClientCertificatePassword string
 	Username                  string
 	Password                  string
 }

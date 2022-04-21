@@ -34,6 +34,7 @@ type DecryptOpts struct {
 	inFileName                    string
 	kmipServerCAFileName          string
 	kmipClientCertificateFileName string
+	kmipClientCertificatePassword string
 	kmipUsername                  string
 	kmipPassword                  string
 	localKeyFileName              string
@@ -47,7 +48,13 @@ func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
 func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	return decryption.NewDecryption(
 		decryption.WithLocalOpts(opts.localKeyFileName),
-		decryption.WithKMIPOpts(opts.kmipServerCAFileName, opts.kmipClientCertificateFileName, opts.kmipUsername, opts.kmipPassword),
+		decryption.WithKMIPOpts(&decryption.KeyProviderKMIPOpts{
+			ServerCAFileName:          opts.kmipServerCAFileName,
+			ClientCertificateFileName: opts.kmipClientCertificateFileName,
+			ClientCertificatePassword: opts.kmipClientCertificatePassword,
+			Username:                  opts.kmipUsername,
+			Password:                  opts.kmipPassword,
+		}),
 	)
 }
 
@@ -104,6 +111,7 @@ func DecryptBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.localKeyFileName, flag.LocalKeyFile, "", "", usage.LocalKeyFile)
 	cmd.Flags().StringVarP(&opts.kmipServerCAFileName, flag.KMIPServerCAFile, "", "", usage.KMIPServerCAFile)
 	cmd.Flags().StringVarP(&opts.kmipClientCertificateFileName, flag.KMIPClientCertificateFile, "", "", usage.KMIPClientCertificateFile)
+	cmd.Flags().StringVar(&opts.kmipClientCertificatePassword, flag.KMIPClientCertificatePassword, "", usage.KMIPClientCertificatePassword)
 	cmd.Flags().StringVarP(&opts.kmipUsername, flag.KMIPUsername, "", "", usage.KMIPUsername)
 	cmd.Flags().StringVarP(&opts.kmipPassword, flag.KMIPPassword, "", "", usage.KMIPPassword)
 

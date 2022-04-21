@@ -314,6 +314,7 @@ const (
 	LocalKeyFile                             = "Path to the file that contains the Key Encryption Key (KEK) that is used to encrypt the Log Encryption Key (LEK)."
 	KMIPServerCAFile                         = "Path to the CA file used to connect to the server that supports KMIP."
 	KMIPClientCertificateFile                = "Path to the Client Certificate file used to connect to the server that supports Key Management Interoperability Protocol (KMIP)."
+	KMIPClientCertificatePassword            = "Password to decrypt the Private Key of the Client Certificate used to connect to the server that supports KMIP."
 	KMIPUsername                             = "Username for authenticating to the server that supports KMIP."
 	KMIPPassword                             = "Password that authenticates the username to the server that supports KMIP."
 	GCPServiceAccountKey                     = "GCP service account key file."

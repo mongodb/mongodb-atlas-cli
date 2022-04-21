@@ -95,6 +95,7 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
 			ServerCAFileName:          opts.KMIP.ServerCAFileName,
 			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
+			ClientCertificatePassword: opts.KMIP.ClientCertificatePassword,
 			Username:                  opts.KMIP.Username,
 			Password:                  opts.KMIP.Password,
 		}, nil

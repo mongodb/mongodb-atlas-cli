@@ -226,14 +226,16 @@ func (opts *DefaultSetterOpts) SetUpOrg() {
 }
 
 func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
-	if opts.IsCloud() {
-		defaultPath := config.MongoShellPath()
-		if defaultPath == "" {
-			defaultPath = mongosh.Path()
-		}
-
-		config.SetMongoShellPath(defaultPath)
+	if !opts.IsCloud() {
+		return
 	}
+
+	defaultPath := config.MongoShellPath()
+	if defaultPath == "" {
+		defaultPath = mongosh.Path()
+	}
+
+	config.SetMongoShellPath(defaultPath)
 }
 
 func (opts *DefaultSetterOpts) SetUpOutput() {

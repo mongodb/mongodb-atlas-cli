@@ -172,7 +172,7 @@ func (opts *Opts) Run() error {
 
 	fmt.Printf(quickstartTemplate, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 
-	if opts.runMongoShell {
+	if opts.runMongoShell && config.MongoShellPath() != "" {
 		return mongosh.Run(config.MongoShellPath(), opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.StandardSrv)
 	}
 

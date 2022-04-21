@@ -394,7 +394,7 @@ func Builder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			const base10 = 10
-			opts.defaultName = "Quickstart-" + strconv.FormatInt(time.Now().Unix(), base10)
+			opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 			opts.providerAndRegionToConstant()
 
 			return opts.Run()

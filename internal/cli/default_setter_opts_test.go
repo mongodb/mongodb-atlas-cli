@@ -38,14 +38,14 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 			fields: fields{
 				Service: "cloud",
 			},
-			want: 2,
+			want: 1,
 		},
 		{
 			name: "cloud gov",
 			fields: fields{
 				Service: "cloudgov",
 			},
-			want: 2,
+			want: 1,
 		},
 		{
 			name: "cloud manager",

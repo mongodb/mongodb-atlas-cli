@@ -226,9 +226,16 @@ func (opts *DefaultSetterOpts) SetUpOrg() {
 }
 
 func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
-	if opts.MongoShellPath != "" {
-		config.SetMongoShellPath(opts.MongoShellPath)
+	if !opts.IsCloud() {
+		return
 	}
+
+	defaultPath := config.MongoShellPath()
+	if defaultPath == "" {
+		defaultPath = mongosh.Path()
+	}
+
+	config.SetMongoShellPath(defaultPath)
 }
 
 func (opts *DefaultSetterOpts) SetUpOutput() {
@@ -273,22 +280,6 @@ func (opts *DefaultSetterOpts) DefaultQuestions() []*survey.Question {
 				Default: config.Output(),
 			},
 		},
-	}
-	if opts.IsCloud() {
-		defaultPath := config.MongoShellPath()
-		if defaultPath == "" {
-			defaultPath = mongosh.Path()
-		}
-		atlasQuestion := &survey.Question{
-			Name: "mongoShellPath",
-			Prompt: &survey.Input{
-				Message: "Default MongoDB Shell Path:",
-				Help:    "MongoDB CLI will use the MongoDB shell version provided to allow you to access your deployments.",
-				Default: defaultPath,
-			},
-			Validate: validate.OptionalPath,
-		}
-		q = append(q, atlasQuestion)
 	}
 	return q
 }

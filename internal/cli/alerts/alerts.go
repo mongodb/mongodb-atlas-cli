@@ -17,6 +17,7 @@ package alerts
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts/settings"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -34,8 +35,11 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		AcknowledgeBuilder(),
 		UnacknowledgeBuilder(),
-		GlobalBuilder(),
 	)
+
+	if config.ToolName == config.MongoCLI {
+		cmd.AddCommand(GlobalBuilder())
+	}
 
 	return cmd
 }

@@ -44,6 +44,7 @@ type DefaultSetterOpts struct {
 	ProjectID      string
 	OrgID          string
 	MongoShellPath string
+	TelemetryEnabled bool
 	Output         string
 	Store          ProjectOrgsLister
 	OutWriter      io.Writer
@@ -236,6 +237,15 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 	}
 
 	config.SetMongoShellPath(defaultPath)
+}
+
+func (opts *DefaultSetterOpts) SetUpTelemetryEnabled() {
+	// TODO: Disabling telemetry by default while work is in progress (will be enabled in CLOUDP-120435)
+	telemetryEnabled := false
+	if config.IsTelemetryEnabledSet() {
+		telemetryEnabled = config.TelemetryEnabled()
+	}
+	config.SetTelemetryEnabled(telemetryEnabled)
 }
 
 func (opts *DefaultSetterOpts) SetUpOutput() {

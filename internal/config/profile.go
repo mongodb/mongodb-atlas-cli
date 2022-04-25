@@ -67,6 +67,7 @@ const (
 	configPerm                   = 0600
 	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
+	telemetryEnabled             = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
 )
@@ -123,6 +124,7 @@ func Properties() []string {
 		opsManagerSkipVerify,
 		mongoShellPath,
 		skipUpdateCheck,
+		telemetryEnabled,
 		AccessTokenField,
 		RefreshTokenField,
 	}
@@ -131,12 +133,14 @@ func Properties() []string {
 func BooleanProperties() []string {
 	return []string{
 		skipUpdateCheck,
+		telemetryEnabled,
 	}
 }
 
 func GlobalProperties() []string {
 	return []string{
 		skipUpdateCheck,
+		telemetryEnabled,
 	}
 }
 
@@ -441,6 +445,24 @@ func (p *Profile) SkipUpdateCheck() bool {
 func SetSkipUpdateCheck(v bool) { Default().SetSkipUpdateCheck(v) }
 func (p *Profile) SetSkipUpdateCheck(v bool) {
 	SetGlobal(skipUpdateCheck, v)
+}
+
+// IsTelemetryEnabledSet return true if telemetry_enabled has been set.
+func IsTelemetryEnabledSet() bool { return Default().IsTelemetryEnabledSet() }
+func (p *Profile) IsTelemetryEnabledSet() bool {
+	return viper.IsSet(telemetryEnabled)
+}
+
+// TelemetryEnabled get the configured telemetry enabled value.
+func TelemetryEnabled () bool { return Default().TelemetryEnabled() }
+func (p *Profile) TelemetryEnabled() bool {
+	return p.GetBool(telemetryEnabled)
+}
+
+// SetTelemetryEnabled sets the telemetry enabled value.
+func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
+func (p *Profile) SetTelemetryEnabled(v bool) {
+	SetGlobal(telemetryEnabled, v)
 }
 
 // Output get configured output format.

@@ -120,6 +120,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	}
 	opts.SetUpOutput()
 	opts.SetUpMongoSHPath()
+	opts.SetUpTelemetryEnabled()
 	if err := opts.config.Save(); err != nil {
 		return err
 	}

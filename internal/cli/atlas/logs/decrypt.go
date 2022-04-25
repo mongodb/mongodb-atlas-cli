@@ -58,12 +58,14 @@ func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 		decryption.WithAzureOpts(opts.azureOpts.azureTenantID, opts.azureOpts.azureClientID, opts.azureOpts.azureSecret),
 	)
 }
+func (opts *DecryptOpts) initDefaultOut() error {
+	if opts.Out == "" {
+		opts.Out = cli.StdOutMode // sets to "-"
+	}
+	return nil
+}
 
 func (opts *DecryptOpts) Run() error {
-	if opts.Out == "" {
-		opts.Out = cli.StdOutMode // set to "-"
-	}
-
 	outWriter, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
@@ -103,6 +105,9 @@ $ atlas logs decrypt --file /path/to/logFile.json --gcpServiceAccountKey <servic
 or Azure credentials
 $ atlas logs decrypt --file /path/to/logFile.json --azureClientId <clientId> --azureTenantId <tenantId> --azureSecret <secret>
 `,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(opts.initDefaultOut)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

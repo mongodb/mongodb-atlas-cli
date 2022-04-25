@@ -51,11 +51,14 @@ func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	)
 }
 
-func (opts *DecryptOpts) Run() error {
+func (opts *DecryptOpts) initDefaultOut() error {
 	if opts.Out == "" {
 		opts.Out = cli.StdOutMode // sets to "-"
 	}
+	return nil
+}
 
+func (opts *DecryptOpts) Run() error {
 	outWriter, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
@@ -74,7 +77,7 @@ func (opts *DecryptOpts) Run() error {
 		return err
 	}
 
-	if opts.ShouldDownloadToStdout() {
+	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 
@@ -93,6 +96,9 @@ func DecryptBuilder() *cobra.Command {
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
 	For audit logs in JSON format:
   $ mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(opts.initDefaultOut)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

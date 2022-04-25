@@ -454,7 +454,7 @@ func (p *Profile) IsTelemetryEnabledSet() bool {
 }
 
 // TelemetryEnabled get the configured telemetry enabled value.
-func TelemetryEnabled () bool { return Default().TelemetryEnabled() }
+func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
 	return p.GetBool(telemetryEnabled)
 }

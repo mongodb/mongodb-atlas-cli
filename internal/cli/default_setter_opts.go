@@ -39,15 +39,15 @@ type ProjectOrgsLister interface {
 }
 
 type DefaultSetterOpts struct {
-	Service        string
-	OpsManagerURL  string
-	ProjectID      string
-	OrgID          string
-	MongoShellPath string
+	Service          string
+	OpsManagerURL    string
+	ProjectID        string
+	OrgID            string
+	MongoShellPath   string
 	TelemetryEnabled bool
-	Output         string
-	Store          ProjectOrgsLister
-	OutWriter      io.Writer
+	Output           string
+	Store            ProjectOrgsLister
+	OutWriter        io.Writer
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {

@@ -16,8 +16,6 @@ package logs
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/decryption"
@@ -53,11 +51,6 @@ type DecryptAzureOpts struct {
 	azureSecret   string
 }
 
-// shouldPrintResultsToStdout returns true when the results should be printed to Stdout (--out|-o flag is not set).
-func (opts *DecryptOpts) shouldPrintResultsToStdout() bool {
-	return opts.Out == ""
-}
-
 func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 	return decryption.NewDecryption(
 		decryption.WithAWSOpts(opts.awsOpts.awsAccessKey, opts.awsOpts.awsSecretAccessKey, opts.awsOpts.awsSessionToken),
@@ -65,17 +58,19 @@ func (opts *DecryptOpts) newDecryption() *decryption.Decryption {
 		decryption.WithAzureOpts(opts.azureOpts.azureTenantID, opts.azureOpts.azureClientID, opts.azureOpts.azureSecret),
 	)
 }
+func (opts *DecryptOpts) initDefaultOut() error {
+	if opts.Out == "" {
+		opts.Out = cli.StdOutMode // sets to "-"
+	}
+	return nil
+}
 
 func (opts *DecryptOpts) Run() error {
-	var outWriter io.WriteCloser = os.Stdout
-	if !opts.shouldPrintResultsToStdout() {
-		var err error
-		outWriter, err = opts.NewWriteCloser()
-		if err != nil {
-			return err
-		}
-		defer outWriter.Close()
+	outWriter, err := opts.NewWriteCloser()
+	if err != nil {
+		return err
 	}
+	defer outWriter.Close()
 
 	inReader, err := opts.Fs.Open(opts.inFileName)
 	if err != nil {
@@ -84,12 +79,12 @@ func (opts *DecryptOpts) Run() error {
 	defer inReader.Close()
 
 	d := opts.newDecryption()
-	if err := d.Decrypt(inReader, outWriter); err != nil && !opts.shouldPrintResultsToStdout() {
+	if err := d.Decrypt(inReader, outWriter); err != nil && !opts.ShouldDownloadToStdout() {
 		_ = opts.OnError(outWriter)
 		return err
 	}
 
-	if !opts.shouldPrintResultsToStdout() {
+	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf("Decrypt of %s to %s completed.\n", opts.inFileName, opts.Out)
 	}
 
@@ -110,6 +105,9 @@ $ atlas logs decrypt --file /path/to/logFile.json --gcpServiceAccountKey <servic
 or Azure credentials
 $ atlas logs decrypt --file /path/to/logFile.json --azureClientId <clientId> --azureTenantId <tenantId> --azureSecret <secret>
 `,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(opts.initDefaultOut)
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},

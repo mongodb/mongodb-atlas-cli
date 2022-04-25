@@ -56,7 +56,7 @@ func (opts *DownloadOpts) Run() error {
 		_ = opts.OnError(f)
 		return err
 	}
-	if opts.Out != "/dev/stdout" {
+	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf(downloadMessage, opts.Out)
 	}
 	return f.Close()

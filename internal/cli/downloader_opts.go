@@ -17,9 +17,12 @@ package cli
 import (
 	"io"
 	"os"
+	"runtime"
 
 	"github.com/spf13/afero"
 )
+
+const StdOutMode = "-"
 
 // DownloaderOpts options required when deleting a resource.
 // A command can compose this struct and then safely rely on the methods Prompt, or Delete
@@ -30,8 +33,19 @@ type DownloaderOpts struct {
 	Fs    afero.Fs
 }
 
+func (opts *DownloaderOpts) ShouldDownloadToStdout() bool {
+	if runtime.GOOS != "windows" {
+		return opts.Out == StdOutMode || opts.Out == "/dev/stdout"
+	}
+	return opts.Out == StdOutMode
+}
+
 // NewWriteCloser creates a new file, if Force is false then don't allow to overwrite the file.
 func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
+	if opts.ShouldDownloadToStdout() {
+		return os.Stdout, nil
+	}
+
 	ff := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	if !opts.Force {
 		ff |= os.O_EXCL
@@ -42,6 +56,10 @@ func (opts *DownloaderOpts) NewWriteCloser() (io.WriteCloser, error) {
 }
 
 func (opts *DownloaderOpts) OnError(f io.Closer) error {
+	if opts.ShouldDownloadToStdout() {
+		return nil
+	}
+
 	_ = f.Close()
 	return opts.Fs.Remove(opts.Out)
 }

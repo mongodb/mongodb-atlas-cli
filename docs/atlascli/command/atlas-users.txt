@@ -51,7 +51,6 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-users-delete` - Delete an Ops Manager user.
 * :ref:`atlas-users-describe` - Get a user by username or id.
 * :ref:`atlas-users-invite` - Invite a user.
 
@@ -59,7 +58,6 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   delete </command/atlas-users-delete>
    describe </command/atlas-users-describe>
    invite </command/atlas-users-invite>
 

@@ -16,6 +16,7 @@ package users
 
 import (
 	"github.com/mongodb/mongocli/internal/cli"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -31,8 +32,11 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		InviteBuilder(),
 		DescribeBuilder(),
-		DeleteBuilder(),
 	)
+
+	if config.ToolName == config.MongoCLI {
+		cmd.AddCommand(DeleteBuilder())
+	}
 
 	return cmd
 }

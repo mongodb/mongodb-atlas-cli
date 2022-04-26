@@ -22,6 +22,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mongodb/mongocli/internal/config"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
@@ -36,6 +38,22 @@ func TestBuilder(t *testing.T) {
 		t,
 		Builder(),
 		3,
+		[]string{},
+	)
+}
+
+func TestBuilderForAtlas(t *testing.T) {
+	// Test for AtlasCLI
+	prevTool := config.ToolName
+	config.ToolName = config.AtlasCLI
+	defer func() {
+		config.ToolName = prevTool
+	}()
+
+	test.CmdValidator(
+		t,
+		Builder(),
+		4,
 		[]string{},
 	)
 }

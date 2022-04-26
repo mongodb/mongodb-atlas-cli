@@ -230,5 +230,9 @@ func Builder() *cobra.Command {
 		LogoutBuilder(),
 	)
 
+	if config.ToolName == config.AtlasCLI {
+		cmd.AddCommand(RegisterBuilder())
+	}
+
 	return cmd
 }

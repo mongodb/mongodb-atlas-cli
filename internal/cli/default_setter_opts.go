@@ -242,10 +242,13 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 func (opts *DefaultSetterOpts) SetUpTelemetryEnabled() {
 	// Telemetry is enabled by default
 	telemetryEnabled := true
+	fmt.Printf("*** A %t\n", telemetryEnabled)
 	if config.IsTelemetryEnabledSet() {
 		// But if telemetry has previously been set, preserve that setting
 		telemetryEnabled = config.TelemetryEnabled()
+		fmt.Printf("*** B %t\n", telemetryEnabled)
 	}
+	fmt.Printf("*** C %t\n", telemetryEnabled)
 	config.SetTelemetryEnabled(telemetryEnabled)
 }
 

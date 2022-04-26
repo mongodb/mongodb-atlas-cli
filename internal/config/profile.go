@@ -247,13 +247,17 @@ func (p *Profile) GetString(name string) string {
 
 func GetBool(name string) bool { return Default().GetBool(name) }
 func (p *Profile) GetBool(name string) bool {
+	fmt.Printf("*** GetBool name=%s\n", name)
 	value := p.Get(name)
 	switch v := value.(type) {
 	case bool:
+		fmt.Println("*** bool")
 		return v
 	case string:
+		fmt.Printf("*** string %v\n", v)
 		return IsTrue(v)
 	default:
+		fmt.Println("*** default")
 		return false
 	}
 }
@@ -450,19 +454,25 @@ func (p *Profile) SetSkipUpdateCheck(v bool) {
 // IsTelemetryEnabledSet return true if telemetry_enabled has been set.
 func IsTelemetryEnabledSet() bool { return Default().IsTelemetryEnabledSet() }
 func (p *Profile) IsTelemetryEnabledSet() bool {
+	fmt.Printf("*** IsTelemetryEnabledSet %t\n", viper.IsSet(telemetryEnabled))
 	return viper.IsSet(telemetryEnabled)
 }
 
 // TelemetryEnabled get the configured telemetry enabled value.
 func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
+	fmt.Printf("*** telemetryEnabled %s\n", telemetryEnabled)
+	fmt.Printf("*** TelemetryEnabled %t\n", p.GetBool(telemetryEnabled))
 	return p.GetBool(telemetryEnabled)
 }
 
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
 func (p *Profile) SetTelemetryEnabled(v bool) {
-	SetGlobal(telemetryEnabled, v)
+	fmt.Printf("*** SetTelemetryEnabled %t\n", v)
+	if ToolName == AtlasCLI {
+		SetGlobal(telemetryEnabled, v)
+	}
 }
 
 // Output get configured output format.

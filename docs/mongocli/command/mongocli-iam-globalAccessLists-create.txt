@@ -35,7 +35,7 @@ Options
    * - --cidr
      - string
      - true
-     - Whitelist entry in CIDR notation to be added for a given API key.
+     - Access list entry in CIDR notation to be added for a given API key.
    * - --desc
      - string
      - true

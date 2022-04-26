@@ -22,9 +22,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mongodb/mongocli/internal/config"
-
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"

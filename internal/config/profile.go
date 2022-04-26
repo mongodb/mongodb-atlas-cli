@@ -462,7 +462,9 @@ func (p *Profile) TelemetryEnabled() bool {
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
 func (p *Profile) SetTelemetryEnabled(v bool) {
-	SetGlobal(telemetryEnabled, v)
+	if ToolName == AtlasCLI {
+		SetGlobal(telemetryEnabled, v)
+	}
 }
 
 // Output get configured output format.

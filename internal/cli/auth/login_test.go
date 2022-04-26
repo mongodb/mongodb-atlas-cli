@@ -46,9 +46,10 @@ func TestBuilderForAtlas(t *testing.T) {
 	// Test for AtlasCLI
 	prevTool := config.ToolName
 	config.ToolName = config.AtlasCLI
-	defer func() {
+
+	t.Cleanup(func() {
 		config.ToolName = prevTool
-	}()
+	})
 
 	test.CmdValidator(
 		t,

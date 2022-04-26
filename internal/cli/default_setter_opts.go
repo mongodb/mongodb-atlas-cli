@@ -240,9 +240,10 @@ func (opts *DefaultSetterOpts) SetUpMongoSHPath() {
 }
 
 func (opts *DefaultSetterOpts) SetUpTelemetryEnabled() {
-	// TODO: Disabling telemetry by default while work is in progress (will be enabled in CLOUDP-120435)
-	telemetryEnabled := false
+	// Telemetry is enabled by default
+	telemetryEnabled := true
 	if config.IsTelemetryEnabledSet() {
+		// But if telemetry has previously been set, preserve that setting
 		telemetryEnabled = config.TelemetryEnabled()
 	}
 	config.SetTelemetryEnabled(telemetryEnabled)

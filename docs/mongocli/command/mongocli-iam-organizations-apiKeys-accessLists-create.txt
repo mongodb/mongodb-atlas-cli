@@ -39,7 +39,7 @@ Options
    * - --cidr
      - strings
      - false
-     - Whitelist entry in CIDR notation to be added for a given API key.
+     - Access list entry in CIDR notation to be added for a given API key.
    * - -h, --help
      - 
      - false

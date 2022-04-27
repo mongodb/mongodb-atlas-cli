@@ -104,7 +104,7 @@ const (
 	TeamRole                                 = "Project role you want to assign to the team."
 	MaxDate                                  = "Returns events whose created date is less than or equal to it."
 	MinDate                                  = "Returns events whose created date is greater than or equal to it."
-	ClusterFilename                          = "File name to use, optional file with a json cluster configuration."
+	ClusterFilename                          = "File name to use, optional file with a json cluster configuration. To learn more about json cluster configuration, see https://www.mongodb.com/docs/atlas/reference/api/cluster-advanced/create-one-cluster-advanced/."
 	PoliciesFilename                         = "File name to use, optional file with a json policy configuration."
 	SearchFilename                           = "File name to use, file with a json index configuration."
 	AccessListIps                            = "IP addresses to add to the new user's access list."

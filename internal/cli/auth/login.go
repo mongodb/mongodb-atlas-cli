@@ -190,7 +190,7 @@ func LoginBuilder() *cobra.Command {
 			if hasUserProgrammaticKeys() {
 				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
 
-Run '%s auth login --profile <profile_name>' to use your username and password on a new profile`, config.BinName())
+Run '%s auth login --profile <profile_name>' to use your username and password with a new profile`, config.BinName())
 			}
 
 			opts.OutWriter = cmd.OutOrStdout()
@@ -229,6 +229,10 @@ func Builder() *cobra.Command {
 		WhoAmIBuilder(),
 		LogoutBuilder(),
 	)
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.AddCommand(RegisterBuilder())
+	}
 
 	return cmd
 }

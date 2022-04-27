@@ -49,10 +49,10 @@ type loginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
 	RefreshToken   string
-	isGov          bool
+	IsGov          bool
 	isCloudManager bool
-	noBrowser      bool
-	skipConfig     bool
+	NoBrowser      bool
+	SkipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -65,7 +65,7 @@ func (opts *loginOpts) initFlow() error {
 
 func (opts *loginOpts) SetOAuthUpAccess() {
 	switch {
-	case opts.isGov:
+	case opts.IsGov:
 		opts.Service = config.CloudGovService
 	case opts.isCloudManager:
 		opts.Service = config.CloudManagerService
@@ -98,7 +98,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.skipConfig {
+	if opts.SkipConfig {
 		return opts.config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
@@ -155,7 +155,7 @@ Your code will expire after %.0f minutes.
 		code.VerificationURI,
 		codeDuration.Minutes(),
 	)
-	if !opts.noBrowser {
+	if !opts.NoBrowser {
 		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
@@ -210,9 +210,9 @@ Run '%s auth login --profile <profile_name>' to use your username and password w
 		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	}
 
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	return cmd
 }
 

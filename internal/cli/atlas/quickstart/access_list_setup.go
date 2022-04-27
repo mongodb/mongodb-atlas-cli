@@ -25,7 +25,7 @@ import (
 
 func (opts *Opts) createAccessList() error {
 	entries := opts.newProjectIPAccessList()
-	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
+	if _, err := opts.Store.CreateProjectIPAccessList(entries); err != nil {
 		return err
 	}
 

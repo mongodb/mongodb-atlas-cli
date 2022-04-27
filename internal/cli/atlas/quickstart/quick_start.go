@@ -63,7 +63,7 @@ We could not find your public IP address. To add your IP address run:
 
 const (
 	replicaSet          = "REPLICASET"
-	defaultAtlasTier    = "M0"
+	DefaultAtlasTier    = "M0"
 	defaultAtlasGovTier = "M30"
 	atlasAdmin          = "atlasAdmin"
 	mongoshURL          = "https://www.mongodb.com/try/download/shell"
@@ -75,9 +75,9 @@ const (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	defaultName         string
+	DefaultName         string
 	ClusterName         string
-	tier                string
+	Tier                string
 	Provider            string
 	Region              string
 	IPAddresses         []string
@@ -89,9 +89,9 @@ type Opts struct {
 	SkipMongosh         bool
 	runMongoShell       bool
 	mongoShellInstalled bool
-	defaultValue        bool
+	DefaultValue        bool
 	Confirm             bool
-	store               store.AtlasClusterQuickStarter
+	Store               store.AtlasClusterQuickStarter
 }
 
 type quickstart struct {
@@ -108,7 +108,7 @@ type quickstart struct {
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }
@@ -165,7 +165,7 @@ func (opts *Opts) Run() error {
 		return err
 	}
 	// Get cluster's connection string
-	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	cluster, err := opts.Store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return err
 	}
@@ -187,7 +187,7 @@ func (opts *Opts) loadSampleData() error {
 	fmt.Print(`
 Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 `)
-	sampleDataJob, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.ClusterName)
+	sampleDataJob, err := opts.Store.AddSampleData(opts.ConfigProjectID(), opts.ClusterName)
 
 	if err != nil {
 		return nil
@@ -199,7 +199,7 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 }
 
 func (opts *Opts) sampleDataWatcher() (bool, error) {
-	result, err := opts.store.SampleDataStatus(opts.ConfigProjectID(), opts.SampleDataJobID)
+	result, err := opts.Store.SampleDataStatus(opts.ConfigProjectID(), opts.SampleDataJobID)
 	if err != nil {
 		return false, err
 	}
@@ -210,7 +210,7 @@ func (opts *Opts) sampleDataWatcher() (bool, error) {
 }
 
 func (opts *Opts) clusterCreationWatcher() (bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	result, err := opts.Store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return false, err
 	}
@@ -262,8 +262,8 @@ func (opts *Opts) providerAndRegionToConstant() {
 }
 
 func (opts *Opts) setTier() {
-	if config.CloudGovService == config.Service() && opts.tier == defaultAtlasTier {
-		opts.tier = defaultAtlasGovTier
+	if config.CloudGovService == config.Service() && opts.Tier == DefaultAtlasTier {
+		opts.Tier = defaultAtlasGovTier
 	}
 }
 
@@ -274,7 +274,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 
 	values.ClusterName = opts.ClusterName
 	if opts.ClusterName == "" {
-		values.ClusterName = opts.defaultName
+		values.ClusterName = opts.DefaultName
 	}
 
 	values.Provider = opts.Provider
@@ -292,7 +292,7 @@ func (opts *Opts) newDefaultValues() (*quickstart, error) {
 
 	values.DBUsername = opts.DBUsername
 	if opts.DBUsername == "" {
-		values.DBUsername = opts.defaultName
+		values.DBUsername = opts.DefaultName
 	}
 
 	values.DBUserPassword = opts.DBUserPassword
@@ -394,7 +394,7 @@ func Builder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			const base10 = 10
-			opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
+			opts.DefaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 			opts.providerAndRegionToConstant()
 
 			return opts.Run()
@@ -402,7 +402,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, defaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.Tier, flag.Tier, DefaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
@@ -410,7 +410,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().BoolVarP(&opts.defaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
+	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

@@ -60,6 +60,6 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.Store = mockStore
 
 	require.NoError(t, opts.Run())
-	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
+	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.
 `, buf.String())
 }

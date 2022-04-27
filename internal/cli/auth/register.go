@@ -27,7 +27,7 @@ type registerOpts struct {
 }
 
 func (opts *registerOpts) Run() error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.\n")
 	// TODO: CLOUDP-120669
 	return nil
 }
@@ -45,7 +45,7 @@ func RegisterBuilder() *cobra.Command {
 			if hasUserProgrammaticKeys() {
 				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
 
-Run '%s auth register --profile <profileName>' to use your username and password on a new profile`, config.BinName())
+Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
 			}
 
 			opts.OutWriter = cmd.OutOrStdout()

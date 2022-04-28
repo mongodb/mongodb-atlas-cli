@@ -14,7 +14,7 @@ mongocli iam users
 
 Users operations.
 
-Create, list and manage your Atlas, Cloud Manager or Ops Manager users.
+Create, list and manage your Cloud Manager or Ops Manager users.
 
 Options
 -------

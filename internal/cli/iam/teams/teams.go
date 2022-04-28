@@ -17,15 +17,21 @@ package teams
 import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/iam/teams/users"
+	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
+	description := "Create, list and manage your Cloud Manager or Ops Manager teams."
+	if config.ToolName == config.AtlasCLI {
+		description = "Create, list and manage your Atlas teams."
+	}
+
 	const use = "teams"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   "Teams operations.",
-		Long:    "Create, list and manage your Atlas,Cloud Manager or Ops Manager teams.",
+		Long:    description,
 		Aliases: cli.GenerateAliases(use),
 	}
 

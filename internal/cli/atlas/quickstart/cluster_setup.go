@@ -27,7 +27,7 @@ import (
 )
 
 func (opts *Opts) createCluster() error {
-	if _, err := opts.Store.CreateCluster(opts.newCluster()); err != nil {
+	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
 	}
 
@@ -38,7 +38,7 @@ func (opts *Opts) askClusterOptions() error {
 	var qs []*survey.Question
 
 	if opts.ClusterName == "" {
-		opts.ClusterName = opts.DefaultName
+		opts.ClusterName = opts.defaultName
 		qs = append(qs, newClusterNameQuestion(opts.ClusterName))
 	}
 
@@ -95,7 +95,7 @@ func (opts *Opts) newCluster() *atlas.AdvancedCluster {
 	}
 
 	if opts.providerName() != tenant {
-		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.Tier]
+		diskSizeGB := atlas.DefaultDiskSizeGB[strings.ToUpper(opts.providerName())][opts.tier]
 		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 		cluster.DiskSizeGB = &diskSizeGB
 		cluster.MongoDBMajorVersion = mdbVersion
@@ -133,7 +133,7 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 
 	regionConfig.ProviderName = providerName
 	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.Tier,
+		InstanceSize: opts.tier,
 	}
 
 	members := 3
@@ -147,16 +147,16 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 }
 
 func (opts *Opts) providerName() string {
-	if opts.Tier == DefaultAtlasTier || opts.Tier == atlasM5 {
+	if opts.tier == DefaultAtlasTier || opts.tier == atlasM5 {
 		return tenant
 	}
 	return strings.ToUpper(opts.Provider)
 }
 
 func (opts *Opts) defaultRegions() ([]string, error) {
-	cloudProviders, err := opts.Store.CloudProviderRegions(
+	cloudProviders, err := opts.store.CloudProviderRegions(
 		opts.ConfigProjectID(),
-		opts.Tier,
+		opts.tier,
 		[]*string{&opts.Provider},
 	)
 

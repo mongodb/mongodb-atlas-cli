@@ -16,9 +16,9 @@ package setup
 
 import (
 	"context"
+	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
-	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
@@ -27,14 +27,37 @@ import (
 )
 
 type Opts struct {
-	quickstart.Opts
-	auth.RegisterOpts
+	// quickstart
+	cli.GlobalOpts
+	cli.WatchOpts
+	defaultName         string
+	ClusterName         string
+	tier                string
+	Provider            string
+	Region              string
+	IPAddresses         []string
+	IPAddressesResponse string
+	DBUsername          string
+	DBUserPassword      string
+	SampleDataJobID     string
+	SkipSampleData      bool
+	SkipMongosh         bool
+	runMongoShell       bool
+	mongoShellInstalled bool
+	defaultValue        bool
+	Confirm             bool
+	store store.AtlasClusterQuickStarter
+	// login
+	cli.DefaultSetterOpts
+	isGov          bool
+	noBrowser      bool
+	skipConfig     bool
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
-		opts.Store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
 }
@@ -76,12 +99,12 @@ func Builder() *cobra.Command {
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
 	// Quickstart related
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)

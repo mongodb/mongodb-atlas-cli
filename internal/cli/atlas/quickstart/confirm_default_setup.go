@@ -36,7 +36,7 @@ Load sample data:			Yes`
 	clusterTier := ""
 	clusterDisk := ""
 
-	if opts.Tier != DefaultAtlasTier {
+	if opts.tier != DefaultAtlasTier {
 		diskSize := 0.5
 
 		if opts.newCluster().DiskSizeGB != nil {
@@ -45,7 +45,7 @@ Load sample data:			Yes`
 
 		clusterTier = fmt.Sprintf(`
 Cluster Tier:				%s
-Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
+Cluster Disk Size (GiB):		%.1f`, opts.tier, diskSize)
 	}
 	fmt.Printf(`[Default Settings]
 Cluster Name:				%s%s

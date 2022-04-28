@@ -16,15 +16,12 @@ package projects
 
 import (
 	"context"
-	"strings"
-	"time"
 
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/store"
-	"github.com/mongodb/mongocli/internal/telemetry"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -78,21 +75,6 @@ func ListBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
-		},
-		PostRun: func(cmd *cobra.Command, args []string) {
-			now := time.Now()
-			cmdPath := cmd.CommandPath()
-			command := strings.ReplaceAll(cmdPath, " ", "-")
-			var properties = map[string]string{
-				"command": command,
-			}
-			var event = telemetry.Event{
-				Timestamp:  now.Format(time.RFC3339Nano),
-				Source:     "atlascli",
-				Name:       "atlascli-event",
-				Properties: properties,
-			}
-			_ = event.Cache()
 		},
 	}
 

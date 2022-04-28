@@ -21,6 +21,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/telemetry"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -126,6 +128,7 @@ func Builder(profile *string) *cobra.Command {
 			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
+			telemetry.TrackCommand(cmd)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

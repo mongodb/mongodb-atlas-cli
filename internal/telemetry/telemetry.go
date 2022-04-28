@@ -19,50 +19,76 @@ import (
 	"errors"
 	"os"
 	"path"
+	"strings"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 )
 
 const (
 	dirPermissions   = 0700
 	filePermissions  = 0600
 	cacheFilename    = "telemetry"
-	maxCacheFileSize = 100 * 1024 * 1024 // 100MB
+	maxCacheFileSize = 100_000_000 // 100MB
 )
 
 var fs = afero.NewOsFs()
 
 type Event struct {
-	Timestamp  string            `json:"timestamp"`
-	Source     string            `json:"source"`
-	Name       string            `json:"name"`
-	Properties map[string]string `json:"properties"`
+	Timestamp  string                 `json:"timestamp"`
+	Source     string                 `json:"source"`
+	Name       string                 `json:"name"`
+	Properties map[string]interface{} `json:"properties"`
 }
 
-func (event *Event) Cache() error {
+func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
-		return nil
+		return
 	}
-	file, err := openCacheFile()
-	if err != nil {
-		return err
+	now := time.Now()
+	cmdPath := cmd.CommandPath()
+	command := strings.ReplaceAll(cmdPath, " ", "-")
+	var properties = map[string]interface{}{
+		"command": command,
 	}
-	defer file.Close()
-	data, _ := json.MarshalIndent(event, "", "\t")
-	_, err = file.Write(data)
-	if err != nil {
-		return err
+	var event = Event{
+		Timestamp:  now.Format(time.RFC3339Nano),
+		Source:     config.ToolName,
+		Name:       config.ToolName + "-event",
+		Properties: properties,
 	}
-	return nil
-}
-
-func openCacheFile() (afero.File, error) {
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
-		return nil, err
+		logError(err)
+		return
 	}
-	cacheDir = path.Join(cacheDir, "atlascli")
+	cacheDir = path.Join(cacheDir, config.ToolName)
+	save(event, cacheDir)
+}
+
+func save(event Event, cacheDir string) {
+	file, err := openCacheFile(cacheDir)
+	if err != nil {
+		logError(err)
+		return
+	}
+	defer file.Close()
+	data, err := json.Marshal(event)
+	if err != nil {
+		logError(err)
+		return
+	}
+	_, err = file.Write(data)
+	if err != nil {
+		logError(err)
+		return
+	}
+	return
+}
+
+func openCacheFile(cacheDir string) (afero.File, error) {
 	exists, err := afero.DirExists(fs, cacheDir)
 	if err != nil {
 		return nil, err
@@ -89,4 +115,9 @@ func openCacheFile() (afero.File, error) {
 	}
 	file, err := fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
 	return file, err
+}
+
+func logError(err error) {
+	// No-op function until logging is implemented (CLOUDP-110988)
+	_ = err
 }

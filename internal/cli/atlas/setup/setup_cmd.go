@@ -66,7 +66,6 @@ func Builder() *cobra.Command {
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)

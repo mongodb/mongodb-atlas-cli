@@ -33,7 +33,7 @@ func TestRegisterBuilder(t *testing.T) {
 		t,
 		RegisterBuilder(),
 		0,
-		[]string{"gov", "NoBrowser"},
+		[]string{"gov", "noBrowser"},
 	)
 }
 

@@ -62,8 +62,8 @@ Run '%s auth register --profile <profileName>' to use your username and password
 	}
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "NoBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.SkipConfig, "SkipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 
 	return cmd
 }

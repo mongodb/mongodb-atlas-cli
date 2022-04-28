@@ -16,8 +16,8 @@ package setup
 
 import (
 	"context"
-	"github.com/mongodb/mongocli/internal/cli"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -46,12 +46,12 @@ type Opts struct {
 	mongoShellInstalled bool
 	defaultValue        bool
 	Confirm             bool
-	store store.AtlasClusterQuickStarter
+	store               store.AtlasClusterQuickStarter
 	// login
 	cli.DefaultSetterOpts
-	isGov          bool
-	noBrowser      bool
-	skipConfig     bool
+	isGov      bool
+	noBrowser  bool
+	skipConfig bool
 }
 
 func (opts *Opts) initStore(ctx context.Context) func() error {

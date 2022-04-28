@@ -15,20 +15,76 @@
 package auth
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
+const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
 type registerOpts struct {
 	loginOpts
 }
 
-func (opts *registerOpts) Run() error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.\n")
-	// TODO: CLOUDP-120669
+func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
+	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
+	code, _, err := opts.flow.RequestCode(ctx)
+	if err != nil {
+		return err
+	}
+
+	if opts.isGov {
+		code.VerificationURI = govAccountURI
+	} else {
+		code.VerificationURI = accountURI
+	}
+
+	opts.printAuthInstructions(code)
+
+	if !opts.noBrowser {
+		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+		}
+	}
+
+	accessToken, _, err := opts.flow.PollToken(ctx, code)
+	var target *atlas.ErrorResponse
+	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
+		return errors.New("authentication timed out")
+	}
+	if err != nil {
+		return err
+	}
+	opts.AccessToken = accessToken.AccessToken
+	opts.RefreshToken = accessToken.RefreshToken
+	return nil
+}
+
+func (opts *registerOpts) Run(ctx context.Context) error {
+	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+
+	if err := opts.registerAndAuthenticate(ctx); err != nil {
+		return err
+	}
+
+	opts.SetOAuthUpAccess()
+	s, err := opts.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+	if opts.skipConfig {
+		return opts.config.Save()
+	}
+
 	return nil
 }
 
@@ -56,7 +112,7 @@ Run '%s auth register --profile <profileName>' to use your username and password
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}

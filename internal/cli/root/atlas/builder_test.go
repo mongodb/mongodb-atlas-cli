@@ -36,7 +36,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(&profile),
-		33,
+		34,
 		[]string{},
 	)
 }

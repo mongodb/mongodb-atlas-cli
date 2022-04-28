@@ -63,7 +63,7 @@ We could not find your public IP address. To add your IP address run:
 
 const (
 	replicaSet          = "REPLICASET"
-	defaultAtlasTier    = "M0"
+	DefaultAtlasTier    = "M0"
 	defaultAtlasGovTier = "M30"
 	atlasAdmin          = "atlasAdmin"
 	mongoshURL          = "https://www.mongodb.com/try/download/shell"
@@ -262,7 +262,7 @@ func (opts *Opts) providerAndRegionToConstant() {
 }
 
 func (opts *Opts) setTier() {
-	if config.CloudGovService == config.Service() && opts.tier == defaultAtlasTier {
+	if config.CloudGovService == config.Service() && opts.tier == DefaultAtlasTier {
 		opts.tier = defaultAtlasGovTier
 	}
 }
@@ -402,7 +402,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, defaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, DefaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)

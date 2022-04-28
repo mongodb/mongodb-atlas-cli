@@ -48,11 +48,11 @@ func Test_registerOpts_Run(t *testing.T) {
 	loginOpts := &loginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
-		noBrowser:  true,
-		skipConfig: true,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
-	opts := &registerOpts{
+	opts := &RegisterOpts{
 		*loginOpts,
 	}
 

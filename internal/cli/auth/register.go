@@ -22,18 +22,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type registerOpts struct {
+type RegisterOpts struct {
 	loginOpts
 }
 
-func (opts *registerOpts) Run() error {
+func (opts *RegisterOpts) Run() error {
 	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.\n")
 	// TODO: CLOUDP-120669
 	return nil
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &registerOpts{}
+	opts := &RegisterOpts{}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
@@ -61,9 +61,9 @@ Run '%s auth register --profile <profileName>' to use your username and password
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 
 	return cmd
 }

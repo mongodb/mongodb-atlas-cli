@@ -46,7 +46,7 @@ func TestQuickstartOpts_Run(t *testing.T) {
 	opts := &Opts{
 		ClusterName:    "ProjectBar",
 		Region:         "US",
-		Store:          mockStore,
+		store:          mockStore,
 		IPAddresses:    []string{"0.0.0.0"},
 		DBUsername:     "user",
 		DBUserPassword: "test",

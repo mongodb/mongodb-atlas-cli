@@ -27,7 +27,7 @@ import (
 )
 
 func (opts *Opts) createDatabaseUser() error {
-	if _, err := opts.Store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
+	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
 		return err
 	}
 
@@ -38,7 +38,7 @@ func (opts *Opts) askDBUserOptions() error {
 	var qs []*survey.Question
 
 	if opts.DBUsername == "" {
-		opts.DBUsername = opts.DefaultName
+		opts.DBUsername = opts.defaultName
 
 		qs = append(qs, newDBUsernameQuestion(opts.DBUsername, opts.validateUniqueUsername))
 	}
@@ -74,7 +74,7 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 		return fmt.Errorf("the username %s is not valid", username)
 	}
 
-	_, err := opts.Store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
+	_, err := opts.store.DatabaseUser(convert.AdminDB, opts.ConfigProjectID(), username)
 	if err != nil {
 		var target *atlas.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "USERNAME_NOT_FOUND" {

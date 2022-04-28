@@ -28,13 +28,13 @@ import (
 )
 
 const (
-	dirPermissions   = 0700
-	filePermissions  = 0600
-	cacheFilename    = "telemetry"
-	maxCacheFileSize = 100_000_000 // 100MB
+	cacheFilename   = "telemetry"
+	dirPermissions  = 0700
+	filePermissions = 0600
 )
 
 var fs = afero.NewOsFs()
+var maxCacheFileSize int64 = 100_000_000 // 100MB
 
 type Event struct {
 	Timestamp  string                 `json:"timestamp"`
@@ -65,27 +65,25 @@ func TrackCommand(cmd *cobra.Command) {
 		return
 	}
 	cacheDir = path.Join(cacheDir, config.ToolName)
-	save(event, cacheDir)
-}
-
-func save(event Event, cacheDir string) {
-	file, err := openCacheFile(cacheDir)
+	err = save(event, cacheDir)
 	if err != nil {
 		logError(err)
 		return
+	}
+}
+
+func save(event Event, cacheDir string) error {
+	file, err := openCacheFile(cacheDir)
+	if err != nil {
+		return err
 	}
 	defer file.Close()
 	data, err := json.Marshal(event)
 	if err != nil {
-		logError(err)
-		return
+		return err
 	}
 	_, err = file.Write(data)
-	if err != nil {
-		logError(err)
-		return
-	}
-	return
+	return err
 }
 
 func openCacheFile(cacheDir string) (afero.File, error) {

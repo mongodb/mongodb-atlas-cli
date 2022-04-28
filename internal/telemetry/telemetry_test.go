@@ -74,11 +74,10 @@ func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 func TestTelemetry_OpenCacheFile(t *testing.T) {
 	fs = afero.NewMemMapFs()
 	a := assert.New(t)
-	file, err := openCacheFile(cacheDir)
+	_, err := openCacheFile(cacheDir)
 	a.NoError(err)
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
-	a.Equal(file.Name(), filename)
 	info, statError := fs.Stat(filename)
 	a.NoError(statError)
 	// Verify the file name

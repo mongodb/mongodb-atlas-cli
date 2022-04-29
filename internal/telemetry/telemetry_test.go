@@ -16,18 +16,17 @@ package telemetry
 
 import (
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
-
-	"github.com/spf13/afero"
-
-	"github.com/spf13/cobra"
+	"time"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
-/*
 const cacheDir = "/path/to/mock/dir"
 
 func TestTelemetry_Save(t *testing.T) {
@@ -93,21 +92,16 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 	var expectedSize int64 // The nil value is zero
 	a.Equal(info.Size(), expectedSize)
 }
-*/
 
 func TestTelemetry_TrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	fs = afero.NewMemMapFs()
-	p := config.AtlasCLIDefault()
-	p.SetFs(fs)
-	config.SetTelemetryEnabled(true)
-	a := assert.New(t)
-	a.True(config.TelemetryEnabled())
 	cmd := cobra.Command{
 		Use: "test-command",
 	}
 	track(&cmd)
 	// Verify that the file exists
+	a := assert.New(t)
 	cacheDir, err := os.UserCacheDir()
 	a.NoError(err)
 	cacheDir = filepath.Join(cacheDir, config.ToolName)

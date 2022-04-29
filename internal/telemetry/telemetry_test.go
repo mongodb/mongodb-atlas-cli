@@ -109,7 +109,7 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 	a.NoError(err)
 	cacheDir = filepath.Join(cacheDir, config.ToolName)
 	filename := filepath.Join(cacheDir, cacheFilename)
-	// TODO: Temporary print to debug unit test failure on Windows
+	// TODO: Temporary to debug unit test failure on Windows
 	fmt.Printf("--- filename: %s\n", filename)
 	info, statError := fs.Stat(filename)
 	fmt.Printf("--- statErr: %+v\n", statError)

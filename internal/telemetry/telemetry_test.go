@@ -17,7 +17,7 @@ package telemetry
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -107,8 +107,8 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 	// Verify that the file exists
 	cacheDir, err := os.UserCacheDir()
 	a.NoError(err)
-	cacheDir = path.Join(cacheDir, config.ToolName)
-	filename := path.Join(cacheDir, cacheFilename)
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
+	filename := filepath.Join(cacheDir, cacheFilename)
 	// TODO: Temporary print to debug unit test failure on Windows
 	fmt.Printf("--- filename: %s\n", filename)
 	info, statError := fs.Stat(filename)

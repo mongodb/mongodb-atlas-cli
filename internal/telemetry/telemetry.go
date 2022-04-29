@@ -19,7 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -45,7 +45,11 @@ type Event struct {
 }
 
 func TrackCommand(cmd *cobra.Command) {
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("*** TrackCommand cmd: %+v\n", cmd)
 	if !config.TelemetryEnabled() {
+		// TODO: Temporary print to debug unit test failure on Windows
+		fmt.Println("*** Telemetry not enabled!")
 		return
 	}
 	now := time.Now()
@@ -67,7 +71,7 @@ func TrackCommand(cmd *cobra.Command) {
 		logError(err)
 		return
 	}
-	cacheDir = path.Join(cacheDir, config.ToolName)
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
 	err = save(event, cacheDir)
 	if err != nil {
 		logError(err)
@@ -103,7 +107,7 @@ func openCacheFile(cacheDir string) (afero.File, error) {
 			return nil, mkdirError
 		}
 	}
-	filename := path.Join(cacheDir, cacheFilename)
+	filename := filepath.Join(cacheDir, cacheFilename)
 	exists, err = afero.Exists(fs, filename)
 	if err != nil {
 		return nil, err

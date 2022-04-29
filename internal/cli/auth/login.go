@@ -49,7 +49,6 @@ const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
 
 var errTimedOut = errors.New("authentication timed out")
 
-
 type loginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string

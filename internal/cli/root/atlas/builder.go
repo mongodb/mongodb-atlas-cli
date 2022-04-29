@@ -21,8 +21,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongocli/internal/telemetry"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/alerts"
 	"github.com/mongodb/mongocli/internal/cli/atlas/accesslists"
@@ -58,6 +56,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/latestrelease"
+	"github.com/mongodb/mongocli/internal/telemetry"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"

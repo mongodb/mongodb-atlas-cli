@@ -60,8 +60,8 @@ func Test_registerOpts_Run(t *testing.T) {
 		*loginOpts,
 	}
 
-	opts.OutWriter = buf
-	opts.Store = mockStore
+	opts.login.OutWriter = buf
+	opts.login.Store = mockStore
 
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",

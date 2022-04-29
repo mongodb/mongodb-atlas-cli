@@ -47,6 +47,9 @@ type LoginConfig interface {
 
 const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
 
+var errTimedOut = errors.New("authentication timed out")
+
+
 type loginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
@@ -171,7 +174,7 @@ func (opts *loginOpts) oauthFlow(ctx context.Context) error {
 	accessToken, _, err := opts.flow.PollToken(ctx, code)
 	var target *atlas.ErrorResponse
 	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
-		return errors.New("authentication timed out")
+		return errTimedOut
 	}
 	if err != nil {
 		return err

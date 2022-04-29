@@ -44,9 +44,6 @@ type Event struct {
 }
 
 func TrackCommand(cmd *cobra.Command) {
-	if !config.TelemetryEnabled() {
-		return
-	}
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
@@ -70,20 +67,6 @@ func TrackCommand(cmd *cobra.Command) {
 		logError(err)
 		return
 	}
-}
-
-func save(event Event, cacheDir string) error {
-	file, err := openCacheFile(cacheDir)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	data, err := json.Marshal(event)
-	if err != nil {
-		return err
-	}
-	_, err = file.Write(data)
-	return err
 }
 
 func openCacheFile(cacheDir string) (afero.File, error) {
@@ -113,6 +96,20 @@ func openCacheFile(cacheDir string) (afero.File, error) {
 	}
 	file, err := fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
 	return file, err
+}
+
+func save(event Event, cacheDir string) error {
+	file, err := openCacheFile(cacheDir)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	data, err := json.Marshal(event)
+	if err != nil {
+		return err
+	}
+	_, err = file.Write(data)
+	return err
 }
 
 func logError(err error) {

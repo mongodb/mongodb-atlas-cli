@@ -467,6 +467,11 @@ func (p *Profile) SetTelemetryEnabled(v bool) {
 	}
 }
 
+func (p *Profile) SetFs(fs afero.Fs) {
+	p.fs = fs
+	viper.SetFs(fs)
+}
+
 // Output get configured output format.
 func Output() string { return Default().Output() }
 func (p *Profile) Output() string {

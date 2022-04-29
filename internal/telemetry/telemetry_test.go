@@ -98,6 +98,8 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 func TestTelemetry_TrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	fs = afero.NewMemMapFs()
+	p := config.AtlasCLIDefault()
+	p.SetFs(fs)
 	config.SetTelemetryEnabled(true)
 	a := assert.New(t)
 	a.True(config.TelemetryEnabled())

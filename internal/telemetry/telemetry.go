@@ -44,6 +44,9 @@ type Event struct {
 }
 
 func TrackCommand(cmd *cobra.Command) {
+	if !config.TelemetryEnabled() {
+		return
+	}
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")

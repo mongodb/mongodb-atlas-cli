@@ -44,6 +44,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/atlas/security"
 	"github.com/mongodb/mongocli/internal/cli/atlas/serverless"
+	"github.com/mongodb/mongocli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/cli/events"
 	"github.com/mongodb/mongocli/internal/cli/figautocomplete"
@@ -144,6 +145,7 @@ func Builder(profile *string) *cobra.Command {
 		atlasConfig.Builder(),
 		auth.Builder(),
 		quickstart.Builder(),
+		setup.Builder(),
 		projects.Builder(),
 		organizations.AtlasCLIBuilder(),
 		users.Builder(),

@@ -37,7 +37,7 @@ Load sample data:			Yes
 	clusterTier := ""
 	clusterDisk := ""
 
-	if opts.tier != defaultAtlasTier {
+	if opts.tier != DefaultAtlasTier {
 		diskSize := 0.5
 
 		if opts.newCluster().DiskSizeGB != nil {

@@ -147,7 +147,7 @@ func (opts *Opts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
 }
 
 func (opts *Opts) providerName() string {
-	if opts.tier == defaultAtlasTier || opts.tier == atlasM5 {
+	if opts.tier == DefaultAtlasTier || opts.tier == atlasM5 {
 		return tenant
 	}
 	return strings.ToUpper(opts.Provider)

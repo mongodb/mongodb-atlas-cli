@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,27 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package invitations
+//go:build unit
+// +build unit
+
+package setup
 
 import (
-	"github.com/mongodb/mongocli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	const use = "invitations"
-	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Invitation operations.",
-		Long:    "Create, list and manage your MongoDB organization invites.",
-		Aliases: cli.GenerateAliases(use),
-	}
-
-	cmd.AddCommand(
-		ListBuilder(),
-		DescribeBuilder(),
-		DeleteBuilder(),
-		UpdateBuilder(),
-		InviteBuilder())
-	return cmd
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		0,
+		[]string{flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh, flag.SkipSampleData},
+	)
 }

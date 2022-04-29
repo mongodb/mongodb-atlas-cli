@@ -45,6 +45,10 @@ type LoginConfig interface {
 	AccessTokenSubject() (string, error)
 }
 
+const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
+
+var errTimedOut = errors.New("authentication timed out")
+
 type loginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
@@ -134,12 +138,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *loginOpts) oauthFlow(ctx context.Context) error {
-	code, _, err := opts.flow.RequestCode(ctx)
-	if err != nil {
-		return err
-	}
-
+func (opts *loginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 First, copy your one-time code: %s-%s
@@ -155,6 +154,16 @@ Your code will expire after %.0f minutes.
 		code.VerificationURI,
 		codeDuration.Minutes(),
 	)
+}
+
+func (opts *loginOpts) oauthFlow(ctx context.Context) error {
+	code, _, err := opts.flow.RequestCode(ctx)
+	if err != nil {
+		return err
+	}
+
+	opts.printAuthInstructions(code)
+
 	if !opts.noBrowser {
 		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
@@ -163,8 +172,8 @@ Your code will expire after %.0f minutes.
 
 	accessToken, _, err := opts.flow.PollToken(ctx, code)
 	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "DEVICE_AUTHORIZATION_EXPIRED" {
-		return errors.New("authentication timed out")
+	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
+		return errTimedOut
 	}
 	if err != nil {
 		return err

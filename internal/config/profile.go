@@ -456,15 +456,24 @@ func (p *Profile) IsTelemetryEnabledSet() bool {
 // TelemetryEnabled get the configured telemetry enabled value.
 func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
 func (p *Profile) TelemetryEnabled() bool {
+	if ToolName != AtlasCLI || !isTelemetryFeatureFlagSet() {
+		return false
+	}
 	return p.GetBool(telemetryEnabled)
 }
 
 // SetTelemetryEnabled sets the telemetry enabled value.
 func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
 func (p *Profile) SetTelemetryEnabled(v bool) {
-	if ToolName == AtlasCLI {
-		SetGlobal(telemetryEnabled, v)
+	if ToolName != AtlasCLI || !isTelemetryFeatureFlagSet() {
+		return
 	}
+	SetGlobal(telemetryEnabled, v)
+}
+
+func isTelemetryFeatureFlagSet() bool {
+	_, featureFlagSet := os.LookupEnv("MONGODB_ATLAS_TELEMETRY_FEATURE_FLAG")
+	return featureFlagSet
 }
 
 // Output get configured output format.

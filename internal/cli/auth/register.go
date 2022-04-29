@@ -15,25 +15,81 @@
 package auth
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type registerOpts struct {
-	loginOpts
+const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
+const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
+
+type RegisterOpts struct {
+	login loginOpts
 }
 
-func (opts *registerOpts) Run() error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.\n")
-	// TODO: CLOUDP-120669
+func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
+	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
+	code, _, err := opts.login.flow.RequestCode(ctx)
+	if err != nil {
+		return err
+	}
+
+	if opts.login.isGov {
+		code.VerificationURI = govAccountURI
+	} else {
+		code.VerificationURI = accountURI
+	}
+
+	opts.login.printAuthInstructions(code)
+
+	if !opts.login.noBrowser {
+		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+		}
+	}
+
+	accessToken, _, err := opts.login.flow.PollToken(ctx, code)
+	var target *atlas.ErrorResponse
+	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
+		return errTimedOut
+	}
+	if err != nil {
+		return err
+	}
+	opts.login.AccessToken = accessToken.AccessToken
+	opts.login.RefreshToken = accessToken.RefreshToken
+	return nil
+}
+
+func (opts *RegisterOpts) Run(ctx context.Context) error {
+	_, _ = fmt.Fprintf(opts.login.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+
+	if err := opts.registerAndAuthenticate(ctx); err != nil {
+		return err
+	}
+
+	opts.login.SetOAuthUpAccess()
+	s, err := opts.login.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.login.OutWriter, "Successfully logged in as %s.\n", s)
+	if opts.login.skipConfig {
+		return opts.login.config.Save()
+	}
+
 	return nil
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &registerOpts{}
+	opts := &RegisterOpts{}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
@@ -48,22 +104,22 @@ func RegisterBuilder() *cobra.Command {
 Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
 			}
 
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.config = config.Default()
+			opts.login.OutWriter = cmd.OutOrStdout()
+			opts.login.config = config.Default()
 			if config.OpsManagerURL() != "" {
-				opts.OpsManagerURL = config.OpsManagerURL()
+				opts.login.OpsManagerURL = config.OpsManagerURL()
 			}
-			return opts.initFlow()
+			return opts.login.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.login.Run(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.login.isGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.login.skipConfig, "skipConfig", false, "Skip profile configuration.")
 
 	return cmd
 }

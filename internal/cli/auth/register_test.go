@@ -19,6 +19,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -26,6 +27,8 @@ import (
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/auth"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestRegisterBuilder(t *testing.T) {
@@ -44,6 +47,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)
+	ctx := context.TODO()
 
 	loginOpts := &loginOpts{
 		flow:       mockFlow,
@@ -52,14 +56,62 @@ func Test_registerOpts_Run(t *testing.T) {
 		skipConfig: true,
 	}
 
-	opts := &registerOpts{
+	opts := &RegisterOpts{
 		*loginOpts,
 	}
 
-	opts.OutWriter = buf
-	opts.Store = mockStore
+	opts.login.OutWriter = buf
+	opts.login.Store = mockStore
 
-	require.NoError(t, opts.Run())
-	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activating your account.
+	expectedCode := &auth.DeviceCode{
+		UserCode:        "12345678",
+		VerificationURI: "http://localhost",
+		DeviceCode:      "123",
+		ExpiresIn:       300,
+		Interval:        10,
+	}
+
+	mockFlow.
+		EXPECT().
+		RequestCode(ctx).
+		Return(expectedCode, nil, nil).
+		Times(1)
+
+	expectedToken := &auth.Token{
+		AccessToken:  "asdf",
+		RefreshToken: "querty",
+		Scope:        "openid",
+		IDToken:      "1",
+		TokenType:    "Bearer",
+		ExpiresIn:    3600,
+	}
+	mockFlow.
+		EXPECT().
+		PollToken(ctx, expectedCode).
+		Return(expectedToken, nil, nil).
+		Times(1)
+
+	mockConfig.EXPECT().Set("service", "cloud").Times(1)
+	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
+	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
+	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	expectedOrgs := &atlas.Organizations{}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(0)
+	expectedProjects := &atlas.Projects{}
+	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
+
+	require.NoError(t, opts.Run(ctx))
+	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
+
+First, copy your one-time code: 1234-5678
+
+Next, sign in with your browser and enter the code.
+
+Or go to https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect
+
+Your code will expire after 5 minutes.
+Successfully logged in as test@10gen.com.
 `, buf.String())
 }

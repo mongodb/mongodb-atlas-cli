@@ -14,7 +14,7 @@ mongocli iam teams
 
 Teams operations.
 
-Create, list and manage your Atlas,Cloud Manager or Ops Manager teams.
+Create, list and manage your Cloud Manager or Ops Manager teams.
 
 Options
 -------

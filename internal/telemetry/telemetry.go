@@ -17,7 +17,6 @@ package telemetry
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,8 +45,6 @@ type Event struct {
 
 func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
-		// TODO: Temporary to debug unit test failure on Windows
-		fmt.Println("*** Telemetry not enabled!")
 		return
 	}
 	now := time.Now()

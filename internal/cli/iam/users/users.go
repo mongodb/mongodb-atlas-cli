@@ -21,11 +21,16 @@ import (
 )
 
 func Builder() *cobra.Command {
+	description := "Create, list and manage your Cloud Manager or Ops Manager users."
+	if config.ToolName == config.AtlasCLI {
+		description = "Create, list and manage your Atlas users."
+	}
+
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
 		Short:   "Users operations.",
-		Long:    "Create, list and manage your Atlas, Cloud Manager or Ops Manager users.",
+		Long:    description,
 		Aliases: cli.GenerateAliases(use),
 	}
 

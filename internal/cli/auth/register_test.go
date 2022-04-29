@@ -56,7 +56,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		skipConfig: true,
 	}
 
-	opts := &registerOpts{
+	opts := &RegisterOpts{
 		*loginOpts,
 	}
 

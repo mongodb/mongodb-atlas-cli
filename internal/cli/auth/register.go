@@ -30,11 +30,11 @@ import (
 const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
-type registerOpts struct {
+type RegisterOpts struct {
 	loginOpts
 }
 
-func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
+func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
 	code, _, err := opts.flow.RequestCode(ctx)
 	if err != nil {
@@ -68,7 +68,7 @@ func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
 	return nil
 }
 
-func (opts *registerOpts) Run(ctx context.Context) error {
+func (opts *RegisterOpts) Run(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
 	if err := opts.registerAndAuthenticate(ctx); err != nil {
@@ -89,7 +89,7 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &registerOpts{}
+	opts := &RegisterOpts{}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

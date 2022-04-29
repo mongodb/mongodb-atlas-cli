@@ -78,8 +78,8 @@ func Test_loginOpts_Run(t *testing.T) {
 	opts := &loginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
-		NoBrowser:  true,
-		SkipConfig: true,
+		noBrowser:  true,
+		skipConfig: true,
 	}
 	opts.OutWriter = buf
 	opts.Store = mockStore

@@ -45,14 +45,18 @@ type LoginConfig interface {
 	AccessTokenSubject() (string, error)
 }
 
+const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
+
+var errTimedOut = errors.New("authentication timed out")
+
 type loginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
 	RefreshToken   string
-	IsGov          bool
+	isGov          bool
 	isCloudManager bool
-	NoBrowser      bool
-	SkipConfig     bool
+	noBrowser      bool
+	skipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
@@ -65,7 +69,7 @@ func (opts *loginOpts) initFlow() error {
 
 func (opts *loginOpts) SetOAuthUpAccess() {
 	switch {
-	case opts.IsGov:
+	case opts.isGov:
 		opts.Service = config.CloudGovService
 	case opts.isCloudManager:
 		opts.Service = config.CloudManagerService
@@ -98,7 +102,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.SkipConfig {
+	if opts.skipConfig {
 		return opts.config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
@@ -134,12 +138,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *loginOpts) oauthFlow(ctx context.Context) error {
-	code, _, err := opts.flow.RequestCode(ctx)
-	if err != nil {
-		return err
-	}
-
+func (opts *loginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 First, copy your one-time code: %s-%s
@@ -155,7 +154,17 @@ Your code will expire after %.0f minutes.
 		code.VerificationURI,
 		codeDuration.Minutes(),
 	)
-	if !opts.NoBrowser {
+}
+
+func (opts *loginOpts) oauthFlow(ctx context.Context) error {
+	code, _, err := opts.flow.RequestCode(ctx)
+	if err != nil {
+		return err
+	}
+
+	opts.printAuthInstructions(code)
+
+	if !opts.noBrowser {
 		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
@@ -163,8 +172,8 @@ Your code will expire after %.0f minutes.
 
 	accessToken, _, err := opts.flow.PollToken(ctx, code)
 	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "DEVICE_AUTHORIZATION_EXPIRED" {
-		return errors.New("authentication timed out")
+	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
+		return errTimedOut
 	}
 	if err != nil {
 		return err
@@ -210,9 +219,9 @@ Run '%s auth login --profile <profile_name>' to use your username and password w
 		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	}
 
-	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
 	return cmd
 }
 

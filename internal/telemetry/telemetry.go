@@ -47,6 +47,10 @@ func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
 		return
 	}
+	track(cmd)
+}
+
+func track(cmd *cobra.Command) {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")

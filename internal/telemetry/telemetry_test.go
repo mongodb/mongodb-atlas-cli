@@ -106,7 +106,7 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 	cmd := cobra.Command{
 		Use: "test-command",
 	}
-	TrackCommand(&cmd)
+	track(&cmd)
 	// Verify that the file exists
 	cacheDir, err := os.UserCacheDir()
 	a.NoError(err)

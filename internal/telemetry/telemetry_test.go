@@ -21,13 +21,36 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
-	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
 const cacheDir = "/path/to/mock/dir"
+
+func TestTelemetry_Track(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+	fs = afero.NewMemMapFs()
+	cmd := cobra.Command{
+		Use: "test-command",
+	}
+	track(&cmd)
+	// Verify that the file exists
+	a := assert.New(t)
+	cacheDir, err := os.UserCacheDir()
+	a.NoError(err)
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
+	filename := filepath.Join(cacheDir, cacheFilename)
+	info, statError := fs.Stat(filename)
+	a.NoError(statError)
+	// Verify the file name
+	a.Equal(info.Name(), cacheFilename)
+	// Verify that the file contains some data
+	var minExpectedSize int64 = 10
+	a.True(info.Size() > minExpectedSize)
+}
 
 func TestTelemetry_Save(t *testing.T) {
 	config.ToolName = config.AtlasCLI
@@ -91,21 +114,4 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 	// Verify that the file is empty
 	var expectedSize int64 // The nil value is zero
 	a.Equal(info.Size(), expectedSize)
-}
-
-func TestTelemetry_TrackCommand(t *testing.T) {
-	config.ToolName = config.AtlasCLI
-	fs = afero.NewMemMapFs()
-	cmd := cobra.Command{
-		Use: "test-command",
-	}
-	track(&cmd)
-	// Verify that the file exists
-	a := assert.New(t)
-	cacheDir, err := os.UserCacheDir()
-	a.NoError(err)
-	cacheDir = filepath.Join(cacheDir, config.ToolName)
-	filename := filepath.Join(cacheDir, cacheFilename)
-	_, statError := fs.Stat(filename)
-	a.NoError(statError)
 }

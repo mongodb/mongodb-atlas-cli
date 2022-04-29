@@ -17,6 +17,7 @@ package telemetry
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -59,6 +60,8 @@ func TrackCommand(cmd *cobra.Command) {
 		Name:       config.ToolName + "-event",
 		Properties: properties,
 	}
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("*** event: %+v\n", event)
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		logError(err)
@@ -73,10 +76,14 @@ func TrackCommand(cmd *cobra.Command) {
 }
 
 func save(event Event, cacheDir string) error {
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("*** cacheDir: %s\n", cacheDir)
 	file, err := openCacheFile(cacheDir)
 	if err != nil {
 		return err
 	}
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("*** file: %+v\n", file)
 	defer file.Close()
 	data, err := json.Marshal(event)
 	if err != nil {
@@ -118,4 +125,6 @@ func openCacheFile(cacheDir string) (afero.File, error) {
 func logError(err error) {
 	// No-op function until logging is implemented (CLOUDP-110988)
 	_ = err
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("*** Error in Telemetry: %v\n", err)
 }

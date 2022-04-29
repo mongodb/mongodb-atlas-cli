@@ -98,7 +98,7 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 	config.SetTelemetryEnabled(true)
 	fs = afero.NewMemMapFs()
 	cmd := cobra.Command{
-		Use: "projects list",
+		Use: "test-command",
 	}
 	TrackCommand(&cmd)
 	a := assert.New(t)

@@ -15,15 +15,15 @@
 package telemetry
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/spf13/afero"
+
 	"github.com/spf13/cobra"
 
 	"github.com/mongodb/mongocli/internal/config"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -97,21 +97,14 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 
 func TestTelemetry_TrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-	config.SetTelemetryEnabled(true)
 	fs = afero.NewMemMapFs()
+	config.SetTelemetryEnabled(true)
+	a := assert.New(t)
+	a.True(config.TelemetryEnabled())
 	cmd := cobra.Command{
 		Use: "test-command",
 	}
-
-	// TODO: Temporary to debug unit test failure on Windows
-	config.SetTelemetryEnabled(true)
-	if !config.TelemetryEnabled() {
-		fmt.Println("=== Telemetry not enabled!")
-		return
-	}
-
 	TrackCommand(&cmd)
-	a := assert.New(t)
 	// Verify that the file exists
 	cacheDir, err := os.UserCacheDir()
 	a.NoError(err)

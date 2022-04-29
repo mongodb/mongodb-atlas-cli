@@ -15,10 +15,10 @@
 package telemetry
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"testing"
-	"time"
 
 	"github.com/spf13/cobra"
 
@@ -27,6 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+/*
 const cacheDir = "/path/to/mock/dir"
 
 func TestTelemetry_Save(t *testing.T) {
@@ -92,6 +93,7 @@ func TestTelemetry_OpenCacheFile(t *testing.T) {
 	var expectedSize int64 // The nil value is zero
 	a.Equal(info.Size(), expectedSize)
 }
+*/
 
 func TestTelemetry_TrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
@@ -107,7 +109,10 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 	a.NoError(err)
 	cacheDir = path.Join(cacheDir, config.ToolName)
 	filename := path.Join(cacheDir, cacheFilename)
+	// TODO: Temporary print to debug unit test failure on Windows
+	fmt.Printf("--- filename: %s\n", filename)
 	info, statError := fs.Stat(filename)
+	fmt.Printf("--- statErr: %+v\n", statError)
 	a.NoError(statError)
 	// Verify the file name
 	a.Equal(info.Name(), cacheFilename)

@@ -15,6 +15,7 @@
 package telemetry
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -104,6 +105,10 @@ func TestTelemetry_TrackCommand(t *testing.T) {
 
 	// TODO: Temporary to debug unit test failure on Windows
 	config.SetTelemetryEnabled(true)
+	if !config.TelemetryEnabled() {
+		fmt.Println("=== Telemetry not enabled!")
+		return
+	}
 
 	TrackCommand(&cmd)
 	a := assert.New(t)

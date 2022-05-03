@@ -57,12 +57,9 @@ func NewContext() context.Context {
 	})
 }
 
-func getValueFromContext(ctx context.Context) *telemetryContextValue {
+func valueFromContext(ctx context.Context) (telemetryContextValue, bool) {
 	value, ok := ctx.Value(contextKey).(telemetryContextValue)
-	if !ok {
-		return nil
-	}
-	return &value
+	return value, ok
 }
 
 func TrackCommand(cmd *cobra.Command) {
@@ -77,9 +74,11 @@ func generateEventData(cmd *cobra.Command) Event {
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
 
-	ctx := cmd.Context()
-	ctxValue := getValueFromContext(ctx)
-	duration := now.Sub(ctxValue.startTime)
+	ctxValue, found := valueFromContext(cmd.Context())
+	var duration time.Duration
+	if found {
+		duration = now.Sub(ctxValue.startTime)
+	}
 
 	var properties = map[string]interface{}{
 		"command":  command,

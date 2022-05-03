@@ -35,7 +35,11 @@ func TestTelemetry_Track(t *testing.T) {
 	fs = afero.NewMemMapFs()
 	cmd := cobra.Command{
 		Use: "test-command",
+		Run: func(cmd *cobra.Command, args []string) {
+		},
 	}
+	_ = cmd.ExecuteContext(NewContext())
+
 	track(&cmd)
 	// Verify that the file exists
 	a := assert.New(t)

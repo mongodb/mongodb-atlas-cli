@@ -57,6 +57,7 @@ import (
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/homebrew"
 	"github.com/mongodb/mongocli/internal/latestrelease"
+	"github.com/mongodb/mongocli/internal/telemetry"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/mongodb/mongocli/internal/version"
@@ -127,6 +128,7 @@ func Builder(profile *string) *cobra.Command {
 			if check, isHb := notifier.shouldCheck(); check {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
+			telemetry.TrackCommand(cmd)
 		},
 	}
 	rootCmd.SetVersionTemplate(formattedVersion())

@@ -112,7 +112,7 @@ Run '%s auth register --profile <profileName>' to use your username and password
 			return opts.login.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.login.Run(cmd.Context())
+			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}

@@ -20,52 +20,85 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
+type registerSurvey struct {
+	confirm func(message string, defaultResponse bool) (response bool, err error)
+}
+
 type RegisterOpts struct {
-	login loginOpts
+	login          loginOpts
+	registerSurvey *registerSurvey
+}
+
+var defaultRegisterSurvey = registerSurvey{
+	confirm: func(message string, defaultResponse bool) (response bool, err error) {
+		p := &survey.Confirm{
+			Message: message,
+			Default: defaultResponse,
+		}
+		err = survey.AskOne(p, &response)
+		return response, err
+	},
 }
 
 func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 	// TODO:CLOUDP-121210 - Replace with new request and remove URI override.
-	code, _, err := opts.login.flow.RequestCode(ctx)
-	if err != nil {
-		return err
-	}
-
-	if opts.login.isGov {
-		code.VerificationURI = govAccountURI
-	} else {
-		code.VerificationURI = accountURI
-	}
-
-	opts.login.printAuthInstructions(code)
-
-	if !opts.login.noBrowser {
-		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+	for {
+		code, _, err := opts.login.flow.RequestCode(ctx)
+		if err != nil {
+			return err
 		}
+
+		if opts.login.isGov {
+			code.VerificationURI = govAccountURI
+		} else {
+			code.VerificationURI = accountURI
+		}
+
+		opts.login.printAuthInstructions(code)
+
+		if !opts.login.noBrowser {
+			if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
+			}
+		}
+
+		accessToken, _, err := opts.login.flow.PollToken(ctx, code)
+		if retry, errRetry := opts.shouldRetryRegister(err); errRetry != nil {
+			return errRetry
+		} else if retry {
+			continue
+		}
+
+		if err != nil {
+			return err
+		}
+
+		opts.login.AccessToken = accessToken.AccessToken
+		opts.login.RefreshToken = accessToken.RefreshToken
+		return nil
+	}
+}
+
+func (opts *RegisterOpts) shouldRetryRegister(err error) (retry bool, errSurvey error) {
+	var target *atlas.ErrorResponse
+	tokenExpired := err == auth.ErrTimeout || (errors.As(err, &target) && target.ErrorCode == authExpiredError)
+	if !tokenExpired {
+		return false, nil
 	}
 
-	accessToken, _, err := opts.login.flow.PollToken(ctx, code)
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
-		return errTimedOut
-	}
-	if err != nil {
-		return err
-	}
-	opts.login.AccessToken = accessToken.AccessToken
-	opts.login.RefreshToken = accessToken.RefreshToken
-	return nil
+	return opts.registerSurvey.confirm("Your one-time verification code is expired. Would you like to generate a new one?", true)
 }
 
 func (opts *RegisterOpts) Run(ctx context.Context) error {
@@ -89,7 +122,7 @@ func (opts *RegisterOpts) Run(ctx context.Context) error {
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &RegisterOpts{}
+	opts := &RegisterOpts{registerSurvey: &defaultRegisterSurvey}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",

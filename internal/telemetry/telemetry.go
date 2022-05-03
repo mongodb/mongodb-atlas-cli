@@ -69,7 +69,7 @@ func TrackCommand(cmd *cobra.Command) {
 	track(cmd)
 }
 
-func generateEventData(cmd *cobra.Command) Event {
+func newEvent(cmd *cobra.Command) Event {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
@@ -96,7 +96,7 @@ func generateEventData(cmd *cobra.Command) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := generateEventData(cmd)
+	event := newEvent(cmd)
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

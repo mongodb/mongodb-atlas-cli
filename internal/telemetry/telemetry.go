@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -73,7 +74,6 @@ func newEvent(cmd *cobra.Command) Event {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
-
 	ctxValue, found := valueFromContext(cmd.Context())
 	var duration time.Duration
 	if found {
@@ -82,8 +82,14 @@ func newEvent(cmd *cobra.Command) Event {
 		logError(errors.New("telemetry context not found"))
 	}
 
+	setFlags := make([]string, 0, cmd.Flags().NFlag())
+	cmd.Flags().Visit(func(f *pflag.Flag) {
+		setFlags = append(setFlags, f.Name)
+	})
+
 	var properties = map[string]interface{}{
 		"command":  command,
+		"flags":    setFlags,
 		"duration": duration.Milliseconds(),
 		"result":   "SUCCESS",
 	}

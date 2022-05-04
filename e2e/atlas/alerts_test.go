@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	open = "OPEN"
+	closed = "CLOSED"
 )
 
 func TestAlerts(t *testing.T) {
@@ -102,7 +102,7 @@ func TestAlerts(t *testing.T) {
 			err := json.Unmarshal(resp, &alert)
 			a.NoError(err)
 			a.Equal(alertID, alert.ID)
-			a.Equal(open, alert.Status)
+			a.Equal(closed, alert.Status)
 		}
 	})
 

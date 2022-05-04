@@ -15,7 +15,6 @@
 package telemetry
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"os"
@@ -36,30 +35,13 @@ const (
 
 var fs = afero.NewOsFs()
 var maxCacheFileSize int64 = 100_000_000 // 100MB
-var contextKey = telemetryContextKey{}
+var startTime = time.Now()
 
 type Event struct {
 	Timestamp  string                 `json:"timestamp"`
 	Source     string                 `json:"source"`
 	Name       string                 `json:"name"`
 	Properties map[string]interface{} `json:"properties"`
-}
-
-type telemetryContextKey struct{}
-
-type telemetryContextValue struct {
-	startTime time.Time
-}
-
-func NewContext() context.Context {
-	return context.WithValue(context.Background(), contextKey, telemetryContextValue{
-		startTime: time.Now(),
-	})
-}
-
-func valueFromContext(ctx context.Context) (telemetryContextValue, bool) {
-	value, ok := ctx.Value(contextKey).(telemetryContextValue)
-	return value, ok
 }
 
 func TrackCommand(cmd *cobra.Command) {
@@ -74,11 +56,7 @@ func newEvent(cmd *cobra.Command) Event {
 	cmdPath := cmd.CommandPath()
 	command := strings.ReplaceAll(cmdPath, " ", "-")
 
-	ctxValue, found := valueFromContext(cmd.Context())
-	var duration time.Duration
-	if found {
-		duration = now.Sub(ctxValue.startTime)
-	}
+	duration := now.Sub(startTime)
 
 	var properties = map[string]interface{}{
 		"command":  command,

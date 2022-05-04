@@ -78,6 +78,8 @@ func newEvent(cmd *cobra.Command) Event {
 	var duration time.Duration
 	if found {
 		duration = now.Sub(ctxValue.startTime)
+	} else {
+		logError(errors.New("telemetry context not found"))
 	}
 
 	var properties = map[string]interface{}{

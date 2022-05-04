@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli/root/atlas"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -131,5 +132,5 @@ func main() {
 	cobra.EnableCommandSorting = false
 	cobra.OnInitialize(createConfigFromMongoCLIConfig, initConfig)
 
-	Execute(context.Background())
+	Execute(telemetry.NewContext())
 }

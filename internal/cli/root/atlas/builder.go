@@ -140,6 +140,8 @@ func Builder(profile *string) *cobra.Command {
 	logoutCmd.Hidden = true
 	whoCmd := auth.WhoAmIBuilder()
 	whoCmd.Hidden = true
+	registerCmd := auth.RegisterBuilder()
+	registerCmd.Hidden = true
 
 	rootCmd.AddCommand(
 		atlasConfig.Builder(),
@@ -175,6 +177,7 @@ func Builder(profile *string) *cobra.Command {
 		loginCmd,
 		logoutCmd,
 		whoCmd,
+		registerCmd,
 		figautocomplete.Builder(),
 	)
 
@@ -224,6 +227,7 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "login"),      // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
 	}
 	for _, p := range searchByPath {
 		if strings.HasPrefix(cmd.CommandPath(), p) {

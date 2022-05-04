@@ -110,8 +110,6 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	logoutCmd.Hidden = true
 	whoCmd := auth.WhoAmIBuilder()
 	whoCmd.Hidden = true
-	registerCmd := auth.RegisterBuilder()
-	registerCmd.Hidden = true
 
 	rootCmd.AddCommand(
 		cloudmanager.Builder(),

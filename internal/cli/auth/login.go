@@ -49,27 +49,27 @@ const authExpiredError = "DEVICE_AUTHORIZATION_EXPIRED"
 
 var errTimedOut = errors.New("authentication timed out")
 
-type loginOpts struct {
+type LoginOpts struct {
 	cli.DefaultSetterOpts
 	AccessToken    string
 	RefreshToken   string
-	isGov          bool
+	IsGov          bool
 	isCloudManager bool
-	noBrowser      bool
-	skipConfig     bool
+	NoBrowser      bool
+	SkipConfig     bool
 	config         LoginConfig
 	flow           Authenticator
 }
 
-func (opts *loginOpts) initFlow() error {
+func (opts *LoginOpts) initFlow() error {
 	var err error
 	opts.flow, err = oauth.FlowWithConfig(config.Default())
 	return err
 }
 
-func (opts *loginOpts) SetOAuthUpAccess() {
+func (opts *LoginOpts) SetOAuthUpAccess() {
 	switch {
-	case opts.isGov:
+	case opts.IsGov:
 		opts.Service = config.CloudGovService
 	case opts.isCloudManager:
 		opts.Service = config.CloudManagerService
@@ -92,7 +92,7 @@ func (opts *loginOpts) SetOAuthUpAccess() {
 	}
 }
 
-func (opts *loginOpts) Run(ctx context.Context) error {
+func (opts *LoginOpts) Run(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.skipConfig {
+	if opts.SkipConfig {
 		return opts.config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
@@ -138,7 +138,7 @@ func (opts *loginOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *loginOpts) printAuthInstructions(code *auth.DeviceCode) {
+func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
 	codeDuration := time.Duration(code.ExpiresIn) * time.Second
 	_, _ = fmt.Fprintf(opts.OutWriter, `
 First, copy your one-time code: %s-%s
@@ -156,7 +156,7 @@ Your code will expire after %.0f minutes.
 	)
 }
 
-func (opts *loginOpts) oauthFlow(ctx context.Context) error {
+func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	code, _, err := opts.flow.RequestCode(ctx)
 	if err != nil {
 		return err
@@ -164,7 +164,7 @@ func (opts *loginOpts) oauthFlow(ctx context.Context) error {
 
 	opts.printAuthInstructions(code)
 
-	if !opts.noBrowser {
+	if !opts.NoBrowser {
 		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
@@ -188,7 +188,7 @@ func hasUserProgrammaticKeys() bool {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := &loginOpts{}
+	opts := &LoginOpts{}
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
@@ -219,9 +219,9 @@ Run '%s auth login --profile <profile_name>' to use your username and password w
 		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	}
 
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	return cmd
 }
 

@@ -15,55 +15,28 @@
 package setup
 
 import (
-	"context"
-
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
-	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/flag"
-	"github.com/mongodb/mongocli/internal/store"
 	"github.com/mongodb/mongocli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 type Opts struct {
-	// quickstart
 	cli.GlobalOpts
 	cli.WatchOpts
-	defaultName         string
-	ClusterName         string
-	tier                string
-	Provider            string
-	Region              string
-	IPAddresses         []string
-	IPAddressesResponse string
-	DBUsername          string
-	DBUserPassword      string
-	SampleDataJobID     string
-	SkipSampleData      bool
-	SkipMongosh         bool
-	runMongoShell       bool
-	mongoShellInstalled bool
-	defaultValue        bool
-	Confirm             bool
-	store               store.AtlasClusterQuickStarter
+	// quickstart
+	quickstart quickstart.Opts
+	// register
+	register auth.RegisterOpts
 	// login
-	cli.DefaultSetterOpts
-	isGov      bool
-	noBrowser  bool
-	skipConfig bool
-}
-
-func (opts *Opts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
+	login auth.LoginOpts
 }
 
 func (opts *Opts) Run() error {
-	//TODO:
+	//TODO: Registration flow
+	//TODO: Quickstart flow
 	return nil
 }
 
@@ -89,7 +62,6 @@ func Builder() *cobra.Command {
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)
 		},
@@ -99,20 +71,20 @@ func Builder() *cobra.Command {
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&opts.isGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.login.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	// Quickstart related
-	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)
-	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
-	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
-	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
-	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.quickstart.ClusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.quickstart.Tier, flag.Tier, quickstart.DefaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.quickstart.Provider, flag.Provider, "", usage.Provider)
+	cmd.Flags().StringVarP(&opts.quickstart.Region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().StringSliceVar(&opts.quickstart.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
+	cmd.Flags().StringVar(&opts.quickstart.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.quickstart.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().BoolVar(&opts.quickstart.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
+	cmd.Flags().BoolVar(&opts.quickstart.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
+	cmd.Flags().BoolVar(&opts.quickstart.Confirm, flag.Force, false, usage.Force)
 
 	return cmd
 }

@@ -77,7 +77,7 @@ type Opts struct {
 	cli.WatchOpts
 	defaultName         string
 	ClusterName         string
-	tier                string
+	Tier                string
 	Provider            string
 	Region              string
 	IPAddresses         []string
@@ -262,8 +262,8 @@ func (opts *Opts) providerAndRegionToConstant() {
 }
 
 func (opts *Opts) setTier() {
-	if config.CloudGovService == config.Service() && opts.tier == DefaultAtlasTier {
-		opts.tier = defaultAtlasGovTier
+	if config.CloudGovService == config.Service() && opts.Tier == DefaultAtlasTier {
+		opts.Tier = defaultAtlasGovTier
 	}
 }
 
@@ -402,7 +402,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, DefaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.Tier, flag.Tier, DefaultAtlasTier, usage.Tier)
 	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
 	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)

@@ -49,7 +49,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 
-	loginOpts := LoginOpts{
+	loginOpts := &LoginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
 		NoBrowser:  true,
@@ -57,8 +57,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 
 	opts := &RegisterOpts{
-		login: loginOpts,
-		flow: Flow{ctx},
+		*loginOpts,
 	}
 
 	opts.login.OutWriter = buf

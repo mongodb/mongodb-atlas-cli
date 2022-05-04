@@ -112,7 +112,6 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.flow = Flow{cmd.Context()}
 			if hasUserProgrammaticKeys() {
 				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
 

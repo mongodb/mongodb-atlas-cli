@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2022 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package setup
 import (
 	"bytes"
 	"context"
+	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli/auth"
@@ -27,8 +28,6 @@ import (
 	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
 	"github.com/stretchr/testify/require"
-
-	"testing"
 )
 
 func TestBuilder(t *testing.T) {

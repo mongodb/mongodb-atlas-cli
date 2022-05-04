@@ -87,6 +87,11 @@ func newEvent(cmd *cobra.Command) Event {
 		"duration": duration.Milliseconds(),
 		"result":   "SUCCESS",
 	}
+
+	if cmd.CalledAs() != "" && cmd.CalledAs() != cmd.Name() {
+		properties["alias"] = cmd.CalledAs()
+	}
+
 	var event = Event{
 		Timestamp:  now.Format(time.RFC3339Nano),
 		Source:     config.ToolName,

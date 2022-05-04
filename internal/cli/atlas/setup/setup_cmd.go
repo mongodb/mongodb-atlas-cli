@@ -68,10 +68,11 @@ func Builder() *cobra.Command {
 		Long:   "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			err := opts.register.PreRun(cmd)
-			if err != nil {
+			// Run registration generic pre run
+			if err := opts.register.PreRun(cmd); err != nil {
 				return err
 			}
+			// TODO: Next pr to treat customers already authenticated.
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)

@@ -31,7 +31,7 @@ const accountURI = "https://account.mongodb.com/account/register?fromURI=https:/
 const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
 type RegisterOpts struct {
-	login loginOpts
+	login LoginOpts
 }
 
 func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
@@ -41,7 +41,7 @@ func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 		return err
 	}
 
-	if opts.login.isGov {
+	if opts.login.IsGov {
 		code.VerificationURI = govAccountURI
 	} else {
 		code.VerificationURI = accountURI
@@ -49,7 +49,7 @@ func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 
 	opts.login.printAuthInstructions(code)
 
-	if !opts.login.noBrowser {
+	if !opts.login.NoBrowser {
 		if errBrowser := browser.OpenURL(code.VerificationURI); errBrowser != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "There was an issue opening your browser\n")
 		}
@@ -81,7 +81,7 @@ func (opts *RegisterOpts) Run(ctx context.Context) error {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.login.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.login.skipConfig {
+	if opts.login.SkipConfig {
 		return opts.login.config.Save()
 	}
 
@@ -117,9 +117,9 @@ Run '%s auth register --profile <profileName>' to use your username and password
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.login.isGov, "gov", false, "Register to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.login.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
-	cmd.Flags().BoolVar(&opts.login.skipConfig, "skipConfig", false, "Skip profile configuration.")
+	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Register to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.login.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 
 	return cmd
 }

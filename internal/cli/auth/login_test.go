@@ -75,11 +75,11 @@ func Test_loginOpts_Run(t *testing.T) {
 	defer ctrl.Finish()
 	buf := new(bytes.Buffer)
 
-	opts := &loginOpts{
+	opts := &LoginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
-		noBrowser:  true,
-		skipConfig: true,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 	opts.OutWriter = buf
 	opts.Store = mockStore

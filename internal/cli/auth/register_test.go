@@ -49,11 +49,11 @@ func Test_registerOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 
-	loginOpts := &loginOpts{
+	loginOpts := &LoginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
-		noBrowser:  true,
-		skipConfig: true,
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
 	opts := &RegisterOpts{

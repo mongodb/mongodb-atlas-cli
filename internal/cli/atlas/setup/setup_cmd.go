@@ -37,8 +37,7 @@ type Opts struct {
 }
 
 func (opts *Opts) Run(ctx context.Context) error {
-	err := opts.register.Run(ctx)
-	if err != nil {
+	if err := opts.register.Run(ctx); err != nil {
 		return err
 	}
 	//TODO: Quickstart flow

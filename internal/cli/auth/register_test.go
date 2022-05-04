@@ -70,7 +70,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 
 	opts := &RegisterOpts{
-		login: loginOpts,
+		login:          loginOpts,
 		registerSurvey: nil,
 	}
 

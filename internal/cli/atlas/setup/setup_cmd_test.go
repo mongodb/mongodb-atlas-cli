@@ -48,7 +48,7 @@ func Test_registerOpts_Run(t *testing.T) {
 
 	opts := &Opts{
 		register: mockRegFlow,
-		login:    auth.LoginOpts{},
+		login:    &auth.LoginOpts{},
 	}
 
 	opts.login.OutWriter = buf

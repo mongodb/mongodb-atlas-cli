@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mongodb/mongocli/internal/cli"
 	"os"
 
 	"github.com/mongodb/mongocli/internal/cli/require"
@@ -27,41 +28,19 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+//go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
+
 const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
 const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
 
 type RegisterOpts struct {
+	cli.DefaultSetterOpts
 	login LoginOpts
-	flow Flow
 }
 
 type RegisterFlow interface {
-	Flow(opts *RegisterOpts) error
-}
-
-type Flow struct {
-	ctx context.Context
-}
-
-// Run should be used instead of run for external command dependencies.
-func (f *Flow) Flow(opts *RegisterOpts) error {
-	_, _ = fmt.Fprintf(opts.login.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
-
-	if err := opts.registerAndAuthenticate(f.ctx); err != nil {
-		return err
-	}
-
-	opts.login.SetOAuthUpAccess()
-	s, err := opts.login.config.AccessTokenSubject()
-	if err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.login.OutWriter, "Successfully logged in as %s.\n", s)
-	if opts.login.SkipConfig {
-		return opts.login.config.Save()
-	}
-
-	return nil
+	Run(ctx context.Context) error
+	PreRun(cmd *cobra.Command) error
 }
 
 func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
@@ -98,12 +77,43 @@ func (opts *RegisterOpts) registerAndAuthenticate(ctx context.Context) error {
 	return nil
 }
 
-func (opts *RegisterOpts) Run() error {
-	return opts.flow.Flow(opts)
+func (opts *RegisterOpts) Run(ctx context.Context) error {
+	_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+
+	if err := opts.registerAndAuthenticate(ctx); err != nil {
+		return err
+	}
+
+	opts.login.SetOAuthUpAccess()
+	s, err := opts.login.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+	if opts.login.SkipConfig {
+		return opts.login.config.Save()
+	}
+
+	return nil
+}
+
+func (opts *RegisterOpts) PreRun(cmd *cobra.Command) error {
+	if hasUserProgrammaticKeys() {
+		return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+
+Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
+	}
+	opts.OutWriter = cmd.OutOrStdout()
+	opts.login.OutWriter = cmd.OutOrStdout()
+	opts.login.config = config.Default()
+	if config.OpsManagerURL() != "" {
+		opts.login.OpsManagerURL = config.OpsManagerURL()
+	}
+	return opts.login.initFlow()
 }
 
 func RegisterBuilder() *cobra.Command {
-	opts := &RegisterOpts{}
+	opts :=  &RegisterOpts{}
 	cmd := &cobra.Command{
 		Use:    "register",
 		Short:  "Register with MongoDB Atlas.",
@@ -112,21 +122,10 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if hasUserProgrammaticKeys() {
-				return fmt.Errorf(`you have already set the programmatic keys for this profile. 
-
-Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
-			}
-
-			opts.login.OutWriter = cmd.OutOrStdout()
-			opts.login.config = config.Default()
-			if config.OpsManagerURL() != "" {
-				opts.login.OpsManagerURL = config.OpsManagerURL()
-			}
-			return opts.login.initFlow()
+			return opts.PreRun(cmd)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,
 	}

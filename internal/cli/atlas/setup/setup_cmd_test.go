@@ -18,6 +18,9 @@
 package setup
 
 import (
+	"bytes"
+	"context"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/flag"
@@ -39,22 +42,34 @@ func TestBuilder(t *testing.T) {
 
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockRegisterFlow{}(ctrl)
+	mockFlow2 := mocks.NewMockRegisterFlow(ctrl)
 	defer ctrl.Finish()
-	//ctx := context.TODO()
+	ctx := context.TODO()
 
-	registerOpts := auth.RegisterOpts{
+	//mockFlow := mocks.NewMockAuthenticator(ctrl)
+	//mockConfig := mocks.NewMockLoginConfig(ctrl)
+	//mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	//
+
+	buf := new(bytes.Buffer)
+	loginOpts := auth.LoginOpts{
+		NoBrowser:  true,
+		SkipConfig: true,
 	}
 
 	opts := &Opts{
-		register: registerOpts,
+		register: mockFlow2,
+		login: loginOpts,
 	}
 
-	//mockFlow.
-	//	EXPECT().
-	//	Run(ctx).
-	//	Return(nil).
-	//	Times(1)
+	opts.login.OutWriter = buf
 
-	require.NoError(t, opts.Run())
+	//
+	mockFlow2.
+		EXPECT().
+		Run(ctx).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
 }

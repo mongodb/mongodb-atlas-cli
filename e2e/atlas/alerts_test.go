@@ -39,12 +39,12 @@ func TestAlerts(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// This test should be run before all other tests to grab an alert ID for all others tests
-	t.Run("List with status OPEN", func(t *testing.T) {
+	t.Run("List with status CLOSED", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
 			"--status",
-			"OPEN",
+			"CLOSED",
 			"-o=json",
 		)
 
@@ -60,10 +60,12 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("List with no status", func(t *testing.T) {
+	t.Run("List with status OPEN", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
+			"--status",
+			"OPEN",
 			"-o=json",
 		)
 
@@ -72,12 +74,10 @@ func TestAlerts(t *testing.T) {
 		assert.NoError(t, err, string(resp))
 	})
 
-	t.Run("List with status CLOSED", func(t *testing.T) {
+	t.Run("List with no status", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
-			"--status",
-			"CLOSED",
 			"-o=json",
 		)
 

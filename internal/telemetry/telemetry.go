@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -83,9 +84,11 @@ func newEvent(cmd *cobra.Command) Event {
 	}
 
 	var properties = map[string]interface{}{
-		"command":  command,
-		"duration": duration.Milliseconds(),
-		"result":   "SUCCESS",
+		"command":    command,
+		"duration":   duration.Milliseconds(),
+		"version":    version.Version,
+		"git-commit": version.GitCommit,
+		"result":     "SUCCESS",
 	}
 	var event = Event{
 		Timestamp:  now.Format(time.RFC3339Nano),

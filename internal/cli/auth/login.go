@@ -56,9 +56,9 @@ type LoginOpts struct {
 	IsGov          bool
 	isCloudManager bool
 	NoBrowser      bool
-	SkipConfig     bool
-	config         LoginConfig
-	flow           Authenticator
+	SkipConfig bool
+	Config     LoginConfig
+	flow       Authenticator
 }
 
 func (opts *LoginOpts) initFlow() error {
@@ -76,19 +76,19 @@ func (opts *LoginOpts) SetOAuthUpAccess() {
 	default:
 		opts.Service = config.CloudService
 	}
-	opts.config.Set("service", opts.Service)
+	opts.Config.Set("service", opts.Service)
 
 	if opts.AccessToken != "" {
-		opts.config.Set(config.AccessTokenField, opts.AccessToken)
+		opts.Config.Set(config.AccessTokenField, opts.AccessToken)
 	}
 	if opts.RefreshToken != "" {
-		opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
+		opts.Config.Set(config.RefreshTokenField, opts.RefreshToken)
 	}
 	if opts.OpsManagerURL != "" {
-		opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
+		opts.Config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
 	}
 	if config.ClientID() != "" {
-		opts.config.Set(config.ClientIDField, config.ClientID())
+		opts.Config.Set(config.ClientIDField, config.ClientID())
 	}
 }
 
@@ -97,13 +97,13 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 		return err
 	}
 	opts.SetOAuthUpAccess()
-	s, err := opts.config.AccessTokenSubject()
+	s, err := opts.Config.AccessTokenSubject()
 	if err != nil {
 		return err
 	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 	if opts.SkipConfig {
-		return opts.config.Save()
+		return opts.Config.Save()
 	}
 	if err := opts.InitStore(ctx); err != nil {
 		return err
@@ -125,7 +125,7 @@ func (opts *LoginOpts) Run(ctx context.Context) error {
 	opts.SetUpOutput()
 	opts.SetUpMongoSHPath()
 	opts.SetUpTelemetryEnabled()
-	if err := opts.config.Save(); err != nil {
+	if err := opts.Config.Save(); err != nil {
 		return err
 	}
 	_, _ = fmt.Fprint(opts.OutWriter, "\nYour profile is now configured.\n")
@@ -203,7 +203,7 @@ Run '%s auth login --profile <profile_name>' to use your username and password w
 			}
 
 			opts.OutWriter = cmd.OutOrStdout()
-			opts.config = config.Default()
+			opts.Config = config.Default()
 			if config.OpsManagerURL() != "" {
 				opts.OpsManagerURL = config.OpsManagerURL()
 			}

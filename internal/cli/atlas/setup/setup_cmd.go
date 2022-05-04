@@ -70,7 +70,7 @@ func Builder() *cobra.Command {
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			// Run registration generic pre run
-			if err := opts.register.PreRun(cmd); err != nil {
+			if err := opts.register.PreRun(cmd.OutOrStdout()); err != nil {
 				return err
 			}
 			// TODO: Next pr to treat customers already authenticated.

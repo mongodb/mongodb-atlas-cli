@@ -6,10 +6,10 @@ package mocks
 
 import (
 	context "context"
+	io "io"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	cobra "github.com/spf13/cobra"
 )
 
 // MockRegisterFlow is a mock of RegisterFlow interface.
@@ -36,7 +36,7 @@ func (m *MockRegisterFlow) EXPECT() *MockRegisterFlowMockRecorder {
 }
 
 // PreRun mocks base method.
-func (m *MockRegisterFlow) PreRun(arg0 *cobra.Command) error {
+func (m *MockRegisterFlow) PreRun(arg0 io.Writer) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PreRun", arg0)
 	ret0, _ := ret[0].(error)

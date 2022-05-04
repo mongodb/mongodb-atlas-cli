@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -62,7 +63,7 @@ func NewRegisterFlow(l *LoginOpts) RegisterFlow {
 
 type RegisterFlow interface {
 	Run(ctx context.Context) error
-	PreRun(cmd *cobra.Command) error
+	PreRun(outWriter io.Writer) error
 }
 
 func (opts *registerOpts) registerAndAuthenticate(ctx context.Context) error {
@@ -134,9 +135,9 @@ func (opts *registerOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *registerOpts) PreRun(cmd *cobra.Command) error {
-	opts.OutWriter = cmd.OutOrStdout()
-	opts.login.OutWriter = cmd.OutOrStdout()
+func (opts *registerOpts) PreRun(outWriter io.Writer) error {
+	opts.OutWriter = outWriter
+	opts.login.OutWriter = outWriter
 	opts.login.config = config.Default()
 	if config.OpsManagerURL() != "" {
 		opts.login.OpsManagerURL = config.OpsManagerURL()
@@ -166,7 +167,7 @@ func RegisterBuilder() *cobra.Command {
 			if err := opts.registerPreRun(); err != nil {
 				return err
 			}
-			return opts.PreRun(cmd)
+			return opts.PreRun(cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

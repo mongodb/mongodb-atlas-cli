@@ -49,7 +49,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 
-	loginOpts := &LoginOpts{
+	loginOpts := LoginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
 		NoBrowser:  true,
@@ -57,7 +57,8 @@ func Test_registerOpts_Run(t *testing.T) {
 	}
 
 	opts := &RegisterOpts{
-		*loginOpts,
+		login: loginOpts,
+		flow: Flow{ctx},
 	}
 
 	opts.login.OutWriter = buf
@@ -102,7 +103,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	expectedProjects := &atlas.Projects{}
 	mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(0)
 
-	require.NoError(t, opts.Run(ctx))
+	require.NoError(t, opts.Run())
 	assert.Equal(t, `Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.
 
 First, copy your one-time code: 1234-5678

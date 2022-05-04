@@ -18,10 +18,14 @@
 package setup
 
 import (
-	"testing"
-
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongocli/internal/cli/auth"
 	"github.com/mongodb/mongocli/internal/flag"
+	"github.com/mongodb/mongocli/internal/mocks"
 	"github.com/mongodb/mongocli/internal/test"
+	"github.com/stretchr/testify/require"
+
+	"testing"
 )
 
 func TestBuilder(t *testing.T) {
@@ -31,4 +35,26 @@ func TestBuilder(t *testing.T) {
 		0,
 		[]string{flag.Region, flag.ClusterName, flag.Provider, flag.AccessListIP, flag.Username, flag.Password, flag.SkipMongosh, flag.SkipSampleData},
 	)
+}
+
+func Test_registerOpts_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRegisterFlow{}(ctrl)
+	defer ctrl.Finish()
+	//ctx := context.TODO()
+
+	registerOpts := auth.RegisterOpts{
+	}
+
+	opts := &Opts{
+		register: registerOpts,
+	}
+
+	//mockFlow.
+	//	EXPECT().
+	//	Run(ctx).
+	//	Return(nil).
+	//	Times(1)
+
+	require.NoError(t, opts.Run())
 }

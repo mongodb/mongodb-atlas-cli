@@ -62,7 +62,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	ctx := context.TODO()
 
-	loginOpts := LoginOpts{
+	loginOpts := &LoginOpts{
 		flow:       mockFlow,
 		config:     mockConfig,
 		NoBrowser:  true,
@@ -147,7 +147,7 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 	}
 
 	opts := &registerOpts{
-		login:          *loginOpts,
+		login:          loginOpts,
 		registerSurvey: nil,
 	}
 
@@ -209,7 +209,7 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 	}
 
 	opts := &registerOpts{
-		login:          *loginOpts,
+		login:          loginOpts,
 		registerSurvey: registerSurveyMock(buf, []bool{true, false}),
 	}
 

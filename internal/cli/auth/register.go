@@ -18,8 +18,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongocli/internal/cli"
 	"os"
+
+	"github.com/mongodb/mongocli/internal/cli"
 
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
@@ -98,11 +99,6 @@ func (opts *RegisterOpts) Run(ctx context.Context) error {
 }
 
 func (opts *RegisterOpts) PreRun(cmd *cobra.Command) error {
-	if hasUserProgrammaticKeys() {
-		return fmt.Errorf(`you have already set the programmatic keys for this profile. 
-
-Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
-	}
 	opts.OutWriter = cmd.OutOrStdout()
 	opts.login.OutWriter = cmd.OutOrStdout()
 	opts.login.config = config.Default()
@@ -110,6 +106,15 @@ Run '%s auth register --profile <profileName>' to use your username and password
 		opts.login.OpsManagerURL = config.OpsManagerURL()
 	}
 	return opts.login.initFlow()
+}
+
+func (opts *RegisterOpts) registerPreRun() error {
+	if hasUserProgrammaticKeys() {
+		return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+
+Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
+	}
+	return nil
 }
 
 func RegisterBuilder() *cobra.Command {
@@ -122,6 +127,9 @@ func RegisterBuilder() *cobra.Command {
   $ %s auth register
 `, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.registerPreRun(); err != nil {
+				return err
+			}
 			return opts.PreRun(cmd)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

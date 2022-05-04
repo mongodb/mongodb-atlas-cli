@@ -41,7 +41,6 @@ func (opts *Opts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	//TODO: Registration flow
 	//TODO: Quickstart flow
 	return nil
 }

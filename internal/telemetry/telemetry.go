@@ -83,9 +83,10 @@ func newEvent(cmd *cobra.Command) Event {
 	}
 
 	var properties = map[string]interface{}{
-		"command":  command,
-		"duration": duration.Milliseconds(),
-		"result":   "SUCCESS",
+		"command":      command,
+		"commandAlias": cmd.CalledAs(),
+		"duration":     duration.Milliseconds(),
+		"result":       "SUCCESS",
 	}
 	var event = Event{
 		Timestamp:  now.Format(time.RFC3339Nano),

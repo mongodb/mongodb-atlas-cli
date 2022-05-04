@@ -69,7 +69,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		SkipConfig: true,
 	}
 
-	opts := &RegisterOpts{
+	opts := &registerOpts{
 		login:          loginOpts,
 		registerSurvey: nil,
 	}
@@ -146,7 +146,7 @@ func Test_registerOpts_registerAndAuthenticate(t *testing.T) {
 		SkipConfig: true,
 	}
 
-	opts := &RegisterOpts{
+	opts := &registerOpts{
 		login:          *loginOpts,
 		registerSurvey: nil,
 	}
@@ -208,7 +208,7 @@ func Test_registerOpts_registerAndAuthenticate_pollTimeout(t *testing.T) {
 		SkipConfig: true,
 	}
 
-	opts := &RegisterOpts{
+	opts := &registerOpts{
 		login:          *loginOpts,
 		registerSurvey: registerSurveyMock(buf, []bool{true, false}),
 	}

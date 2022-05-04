@@ -33,7 +33,7 @@ type Opts struct {
 	// register
 	register auth.RegisterFlow
 	// login
-	login auth.LoginOpts
+	login *auth.LoginOpts
 }
 
 func (opts *Opts) Run(ctx context.Context) error {
@@ -55,8 +55,10 @@ func (opts *Opts) Run(ctx context.Context) error {
 //	[--skipMongosh skipMongosh]
 //	[--default]
 func Builder() *cobra.Command {
+	loginOpts := &auth.LoginOpts{}
 	opts := &Opts{
-		register: &auth.RegisterOpts{},
+		register: auth.NewRegisterFlow(loginOpts),
+		login:    loginOpts,
 	}
 	cmd := &cobra.Command{
 		Use: "setup",

@@ -172,7 +172,8 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 
 	accessToken, _, err := opts.flow.PollToken(ctx, code)
 	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == authExpiredError {
+	tokenExpired := err == auth.ErrTimeout || (errors.As(err, &target) && target.ErrorCode == authExpiredError)
+	if tokenExpired {
 		return errTimedOut
 	}
 	if err != nil {

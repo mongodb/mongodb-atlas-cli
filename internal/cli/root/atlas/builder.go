@@ -223,6 +223,8 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "login"),      // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
 	}
 	for _, p := range searchByPath {
 		if strings.HasPrefix(cmd.CommandPath(), p) {

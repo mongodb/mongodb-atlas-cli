@@ -42,30 +42,19 @@ func TestBuilder(t *testing.T) {
 
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow2 := mocks.NewMockRegisterFlow(ctrl)
+	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
 	defer ctrl.Finish()
 	ctx := context.TODO()
-
-	//mockFlow := mocks.NewMockAuthenticator(ctrl)
-	//mockConfig := mocks.NewMockLoginConfig(ctrl)
-	//mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	//
-
 	buf := new(bytes.Buffer)
-	loginOpts := auth.LoginOpts{
-		NoBrowser:  true,
-		SkipConfig: true,
-	}
 
 	opts := &Opts{
-		register: mockFlow2,
-		login: loginOpts,
+		register: mockRegFlow,
+		login:    auth.LoginOpts{},
 	}
 
 	opts.login.OutWriter = buf
 
-	//
-	mockFlow2.
+	mockRegFlow.
 		EXPECT().
 		Run(ctx).
 		Return(nil).

@@ -93,6 +93,7 @@ func (opts *LoginOpts) SetOAuthUpAccess() {
 }
 
 func (opts *LoginOpts) Run(ctx context.Context) error {
+	fmt.Println("here somehow")
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}

@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -69,7 +70,9 @@ func TrackCommand(cmd *cobra.Command) {
 	track(cmd)
 }
 
-func withProfile() func(Event) { // either "default" or base64 hash
+type eventOpt func(Event)
+
+func withProfile() eventOpt { // either "default" or base64 hash
 	return func(event Event) {
 		if config.Name() == config.DefaultProfile {
 			event.Properties["profile"] = config.DefaultProfile
@@ -81,14 +84,14 @@ func withProfile() func(Event) { // either "default" or base64 hash
 	}
 }
 
-func withCommandPath(cmd *cobra.Command) func(Event) {
+func withCommandPath(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		cmdPath := cmd.CommandPath()
 		event.Properties["command"] = strings.ReplaceAll(cmdPath, " ", "-")
 	}
 }
 
-func withDuration(cmd *cobra.Command) func(Event) {
+func withDuration(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
 		if !found {
@@ -100,7 +103,7 @@ func withDuration(cmd *cobra.Command) func(Event) {
 	}
 }
 
-func withFlags(cmd *cobra.Command) func(Event) {
+func withFlags(cmd *cobra.Command) eventOpt {
 	return func(event Event) {
 		setFlags := make([]string, 0, cmd.Flags().NFlag())
 		cmd.Flags().Visit(func(f *pflag.Flag) {
@@ -113,21 +116,21 @@ func withFlags(cmd *cobra.Command) func(Event) {
 	}
 }
 
-func withVersion() func(Event) {
+func withVersion() eventOpt {
 	return func(event Event) {
 		event.Properties["version"] = version.Version
 		event.Properties["git-commit"] = version.GitCommit
 	}
 }
 
-func withOS() func(Event) {
+func withOS() eventOpt {
 	return func(event Event) {
 		event.Properties["os"] = runtime.GOOS
 		event.Properties["arch"] = runtime.GOARCH
 	}
 }
 
-func withAuthMethod() func(Event) {
+func withAuthMethod() eventOpt {
 	return func(event Event) {
 		if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
 			event.Properties["auth_method"] = "api_key"
@@ -138,7 +141,33 @@ func withAuthMethod() func(Event) {
 	}
 }
 
-type eventOpt func(event Event)
+func withProjectID(cmd *cobra.Command) eventOpt {
+	return func(event Event) {
+		fromFlag, _ := cmd.Flags().GetString(flag.ProjectID)
+
+		if fromFlag != "" {
+			event.Properties["project_id"] = fromFlag
+		}
+
+		if config.ProjectID() != "" {
+			event.Properties["project_id"] = config.ProjectID()
+		}
+	}
+}
+
+func withOrgID(cmd *cobra.Command) eventOpt {
+	return func(event Event) {
+		fromFlag, _ := cmd.Flags().GetString(flag.OrgID)
+
+		if fromFlag != "" {
+			event.Properties["org_id"] = fromFlag
+		}
+
+		if config.ProjectID() != "" {
+			event.Properties["org_id"] = config.OrgID()
+		}
+	}
+}
 
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
@@ -158,7 +187,7 @@ func newEvent(opts ...eventOpt) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod())
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withProjectID(cmd), withOrgID(cmd))
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

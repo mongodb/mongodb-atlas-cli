@@ -62,11 +62,6 @@ func NewContext() context.Context {
 	})
 }
 
-func valueFromContext(ctx context.Context) (telemetryContextValue, bool) {
-	value, ok := ctx.Value(contextKey).(telemetryContextValue)
-	return value, ok
-}
-
 func TrackCommand(cmd *cobra.Command) {
 	if !config.TelemetryEnabled() {
 		return
@@ -74,61 +69,101 @@ func TrackCommand(cmd *cobra.Command) {
 	track(cmd)
 }
 
-func profile() string { // either "default" or base64 hash
-	if config.Name() == config.DefaultProfile {
-		return config.DefaultProfile
-	}
+func withProfile() func(Event) { // either "default" or base64 hash
+	return func(event Event) {
+		if config.Name() == config.DefaultProfile {
+			event.Properties["profile"] = config.DefaultProfile
+		}
 
-	h := sha256.Sum256([]byte(config.Name()))
-	return base64.StdEncoding.EncodeToString(h[:])
+		h := sha256.Sum256([]byte(config.Name()))
+		event.Properties["profile"] = base64.StdEncoding.EncodeToString(h[:])
+	}
 }
 
-func newEvent(cmd *cobra.Command) Event {
-	now := time.Now()
-	cmdPath := cmd.CommandPath()
-	command := strings.ReplaceAll(cmdPath, " ", "-")
-
-	ctxValue, found := valueFromContext(cmd.Context())
-	var duration time.Duration
-	if found {
-		duration = now.Sub(ctxValue.startTime)
-	} else {
-		logError(errors.New("telemetry context not found"))
+func withCommandPath(cmd *cobra.Command) func(Event) {
+	return func(event Event) {
+		cmdPath := cmd.CommandPath()
+		event.Properties["command"] = strings.ReplaceAll(cmdPath, " ", "-")
 	}
+}
 
-	setFlags := make([]string, 0, cmd.Flags().NFlag())
-	cmd.Flags().Visit(func(f *pflag.Flag) {
-		setFlags = append(setFlags, f.Name)
-	})
+func withDuration(cmd *cobra.Command) func(Event) {
+	return func(event Event) {
+		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
+		if !found {
+			logError(errors.New("telemetry context not found"))
+			return
+		}
 
-	var properties = map[string]interface{}{
-		"command":    command,
-		"duration":   duration.Milliseconds(),
-		"version":    version.Version,
-		"git-commit": version.GitCommit,
-		"os":         runtime.GOOS,
-		"arch":       runtime.GOARCH,
-		"flags":      setFlags,
-		"profile":    profile(),
-		"result":     "SUCCESS",
+		ts, err := time.Parse(time.RFC3339Nano, event.Timestamp)
+		if err != nil {
+			logError(err)
+			return
+		}
+
+		event.Properties["duration"] = ts.Sub(ctxValue.startTime).Milliseconds()
 	}
+}
 
-	if cmd.CalledAs() != "" && cmd.CalledAs() != cmd.Name() {
-		properties["alias"] = cmd.CalledAs()
+func withFlags(cmd *cobra.Command) func(Event) {
+	return func(event Event) {
+		setFlags := make([]string, 0, cmd.Flags().NFlag())
+		cmd.Flags().Visit(func(f *pflag.Flag) {
+			setFlags = append(setFlags, f.Name)
+		})
+
+		if len(setFlags) > 0 {
+			event.Properties["flags"] = setFlags
+		}
 	}
+}
 
+func withVersion() func(Event) {
+	return func(event Event) {
+		event.Properties["version"] = version.Version
+		event.Properties["git-commit"] = version.GitCommit
+	}
+}
+
+func withOS() func(Event) {
+	return func(event Event) {
+		event.Properties["os"] = runtime.GOOS
+		event.Properties["arch"] = runtime.GOARCH
+	}
+}
+
+func withAuthMethod() func(Event) {
+	return func(event Event) {
+		if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
+			event.Properties["auth_method"] = "api_key"
+			return
+		}
+
+		event.Properties["auth_method"] = "oauth"
+	}
+}
+
+type eventOpt func(event Event)
+
+func newEvent(opts ...eventOpt) Event {
 	var event = Event{
-		Timestamp:  now.Format(time.RFC3339Nano),
-		Source:     config.ToolName,
-		Name:       config.ToolName + "-event",
-		Properties: properties,
+		Timestamp: time.Now().Format(time.RFC3339Nano),
+		Source:    config.ToolName,
+		Name:      config.ToolName + "-event",
+		Properties: map[string]interface{}{
+			"result": "SUCCESS",
+		},
+	}
+
+	for _, fn := range opts {
+		fn(event)
 	}
 
 	return event
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(cmd)
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod())
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

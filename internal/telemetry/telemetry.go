@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/config"
 	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/mongodb/mongocli/internal/version"
@@ -180,6 +181,19 @@ func withOrgID(cmd *cobra.Command) eventOpt {
 	}
 }
 
+func withTerminal() eventOpt {
+	return func(event Event) {
+		if cli.IsTerminal(os.Stdout) {
+			event.Properties["terminal"] = "tty"
+			return
+		}
+
+		if cli.IsCygwinTerminal(os.Stdout) {
+			event.Properties["terminal"] = "cygwin"
+		}
+	}
+}
+
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
@@ -198,7 +212,7 @@ func newEvent(opts ...eventOpt) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd))
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd), withTerminal())
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

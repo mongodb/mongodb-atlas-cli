@@ -16,6 +16,8 @@ package telemetry
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"os"
@@ -72,6 +74,15 @@ func TrackCommand(cmd *cobra.Command) {
 	track(cmd)
 }
 
+func profile() string { // either "default" or base64 hash
+	if config.Name() == config.DefaultProfile {
+		return config.DefaultProfile
+	}
+
+	h := sha256.Sum256([]byte(config.Name()))
+	return base64.StdEncoding.EncodeToString(h[:])
+}
+
 func newEvent(cmd *cobra.Command) Event {
 	now := time.Now()
 	cmdPath := cmd.CommandPath()
@@ -98,6 +109,7 @@ func newEvent(cmd *cobra.Command) Event {
 		"os":         runtime.GOOS,
 		"arch":       runtime.GOARCH,
 		"flags":      setFlags,
+		"profile":    profile(),
 		"result":     "SUCCESS",
 	}
 

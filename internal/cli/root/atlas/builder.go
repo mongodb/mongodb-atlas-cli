@@ -192,6 +192,7 @@ Go version: %s
    os: %s
    arch: %s
    compiler: %s
+binary: %s
 `
 
 func shouldSetService(cmd *cobra.Command) bool {
@@ -245,7 +246,8 @@ func formattedVersion() string {
 		runtime.Version(),
 		runtime.GOOS,
 		runtime.GOARCH,
-		runtime.Compiler)
+		runtime.Compiler,
+		version.Binary)
 }
 
 func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {

@@ -44,6 +44,8 @@ else
    LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/config.ToolName=${TOOL_NAME:?}"
 fi
 
+LINKER_FLAGS="${LINKER_FLAGS} -X github.com/mongodb/mongocli/internal/version.Binary=${PACKAGE_NAME:?}"
+
 env GOOS=windows GOARCH=amd64 go build \
   -ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 

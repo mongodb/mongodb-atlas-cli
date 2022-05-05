@@ -141,6 +141,9 @@ func withAuthMethod() func(Event) {
 func withService() func(Event) {
 	return func(event Event) {
 		event.Properties["service"] = config.Service()
+		if config.OpsManagerURL() != "" {
+			event.Properties["ops_manager_url"] = config.OpsManagerURL()
+		}
 	}
 }
 

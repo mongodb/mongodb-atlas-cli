@@ -147,10 +147,20 @@ func withProjectID(cmd *cobra.Command) eventOpt {
 
 		if fromFlag != "" {
 			event.Properties["project_id"] = fromFlag
+			return
 		}
 
 		if config.ProjectID() != "" {
 			event.Properties["project_id"] = config.ProjectID()
+		}
+	}
+}
+
+func withService() func(Event) {
+	return func(event Event) {
+		event.Properties["service"] = config.Service()
+		if config.OpsManagerURL() != "" {
+			event.Properties["ops_manager_url"] = config.OpsManagerURL()
 		}
 	}
 }
@@ -161,6 +171,7 @@ func withOrgID(cmd *cobra.Command) eventOpt {
 
 		if fromFlag != "" {
 			event.Properties["org_id"] = fromFlag
+			return
 		}
 
 		if config.ProjectID() != "" {
@@ -187,7 +198,7 @@ func newEvent(opts ...eventOpt) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withProjectID(cmd), withOrgID(cmd))
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService(), withProjectID(cmd), withOrgID(cmd))
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

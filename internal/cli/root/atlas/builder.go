@@ -76,6 +76,7 @@ type Notifier struct {
 
 // Builder conditionally adds children commands as needed.
 func Builder(profile *string) *cobra.Command {
+	opts := &cli.RefresherOpts{}
 	rootCmd := &cobra.Command{
 		Version: version.Version,
 		Use:     atlas,

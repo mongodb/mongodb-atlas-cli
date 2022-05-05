@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongocli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -84,6 +85,11 @@ func newEvent(cmd *cobra.Command) Event {
 		logError(errors.New("telemetry context not found"))
 	}
 
+	setFlags := make([]string, 0, cmd.Flags().NFlag())
+	cmd.Flags().Visit(func(f *pflag.Flag) {
+		setFlags = append(setFlags, f.Name)
+	})
+
 	var properties = map[string]interface{}{
 		"command":    command,
 		"duration":   duration.Milliseconds(),
@@ -91,6 +97,7 @@ func newEvent(cmd *cobra.Command) Event {
 		"git-commit": version.GitCommit,
 		"os":         runtime.GOOS,
 		"arch":       runtime.GOARCH,
+		"flags":      setFlags,
 		"result":     "SUCCESS",
 	}
 

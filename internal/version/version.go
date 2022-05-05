@@ -20,5 +20,5 @@ var Version string
 // GitCommit git sha of the build.
 var GitCommit string
 
-// Binary name of the package installed.
-var Binary string
+// Package name of the package installed.
+var Package string

@@ -132,6 +132,7 @@ Go version: %s
    os: %s
    arch: %s
    compiler: %s
+package: %s
 `
 
 func formattedVersion() string {
@@ -142,7 +143,8 @@ func formattedVersion() string {
 		runtime.Version(),
 		runtime.GOOS,
 		runtime.GOARCH,
-		runtime.Compiler)
+		runtime.Compiler,
+		version.Package)
 }
 
 func (n *Notifier) shouldCheck() (shouldCheck, isHb bool) {

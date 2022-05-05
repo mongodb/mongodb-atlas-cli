@@ -59,12 +59,11 @@ func TestTelemetry_Track(t *testing.T) {
 func TestTelemetry_Save(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	fs = afero.NewMemMapFs()
-	now := time.Now()
 	var properties = map[string]interface{}{
 		"command": "mock-command",
 	}
 	var event = Event{
-		Timestamp:  now.Format(time.RFC3339Nano),
+		Timestamp:  time.Now(),
 		Source:     config.ToolName,
 		Name:       config.ToolName + "-event",
 		Properties: properties,
@@ -85,12 +84,11 @@ func TestTelemetry_Save(t *testing.T) {
 func TestTelemetry_Save_MaxCacheFileSize(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	fs = afero.NewMemMapFs()
-	now := time.Now()
 	var properties = map[string]interface{}{
 		"command": "mock-command",
 	}
 	var event = Event{
-		Timestamp:  now.Format(time.RFC3339Nano),
+		Timestamp:  time.Now(),
 		Source:     config.ToolName,
 		Name:       config.ToolName + "-event",
 		Properties: properties,

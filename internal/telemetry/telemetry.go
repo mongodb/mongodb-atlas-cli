@@ -44,7 +44,7 @@ var maxCacheFileSize int64 = 100_000_000 // 100MB
 var contextKey = telemetryContextKey{}
 
 type Event struct {
-	Timestamp  string                 `json:"timestamp"`
+	Timestamp  time.Time              `json:"timestamp"`
 	Source     string                 `json:"source"`
 	Name       string                 `json:"name"`
 	Properties map[string]interface{} `json:"properties"`
@@ -96,13 +96,7 @@ func withDuration(cmd *cobra.Command) func(Event) {
 			return
 		}
 
-		ts, err := time.Parse(time.RFC3339Nano, event.Timestamp)
-		if err != nil {
-			logError(err)
-			return
-		}
-
-		event.Properties["duration"] = ts.Sub(ctxValue.startTime).Milliseconds()
+		event.Properties["duration"] = event.Timestamp.Sub(ctxValue.startTime).Milliseconds()
 	}
 }
 
@@ -148,7 +142,7 @@ type eventOpt func(event Event)
 
 func newEvent(opts ...eventOpt) Event {
 	var event = Event{
-		Timestamp: time.Now().Format(time.RFC3339Nano),
+		Timestamp: time.Now(),
 		Source:    config.ToolName,
 		Name:      config.ToolName + "-event",
 		Properties: map[string]interface{}{

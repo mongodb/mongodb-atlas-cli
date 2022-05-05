@@ -33,8 +33,10 @@ import (
 
 //go:generate mockgen -destination=../../mocks/mock_register.go -package=mocks github.com/mongodb/mongocli/internal/cli/auth RegisterFlow
 
-const accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
-const govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
+const (
+	accountURI = "https://account.mongodb.com/account/register?fromURI=https://account.mongodb.com/account/connect"
+	govAccountURI = "https://account.mongodbgov.com/account/register?fromURI=https://account.mongodbgov.com/account/connect"
+)
 
 type registerSurvey struct {
 	confirm func(message string, defaultResponse bool) (response bool, err error)
@@ -150,9 +152,10 @@ func (opts *registerOpts) PreRun(outWriter io.Writer) error {
 
 func (opts *registerOpts) registerPreRun() error {
 	if hasUserProgrammaticKeys() {
-		return fmt.Errorf(`you have already set the programmatic keys for this profile. 
+		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
+		return fmt.Errorf(`%s
 
-Run '%s auth register --profile <profileName>' to use your username and password with a new profile`, config.BinName())
+%s`, msg, LoginWithProfileMsg)
 	}
 	return nil
 }

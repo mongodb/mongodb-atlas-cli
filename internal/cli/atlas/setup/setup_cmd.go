@@ -60,10 +60,11 @@ func (opts *Opts) PreRun() error {
 
 	if config.PublicAPIKey() != "" && config.PrivateAPIKey() != "" {
 		opts.skipRegister = true
+		msg := fmt.Sprintf(auth.AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		_, _ = fmt.Fprintf(opts.OutWriter, `
-You are already authenticated with an API key (Public key: %s). Run "atlas auth login --profile <profile_name>" to use your username and password on a new profile.
+%s %s
 
-`, config.PublicAPIKey())
+`, msg, auth.LoginWithProfileMsg)
 	}
 
 	return nil

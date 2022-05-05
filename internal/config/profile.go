@@ -141,6 +141,7 @@ func GlobalProperties() []string {
 	return []string{
 		skipUpdateCheck,
 		telemetryEnabled,
+		mongoShellPath,
 	}
 }
 

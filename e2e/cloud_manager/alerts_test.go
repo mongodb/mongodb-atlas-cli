@@ -117,7 +117,6 @@ func TestAlerts(t *testing.T) {
 			var alerts mongodbatlas.AlertsResponse
 			err = json.Unmarshal(resp, &alerts)
 			a.NoError(err, string(resp))
-
 		}
 	})
 

@@ -138,6 +138,12 @@ func withAuthMethod() func(Event) {
 	}
 }
 
+func withService() func(Event) {
+	return func(event Event) {
+		event.Properties["service"] = config.Service()
+	}
+}
+
 type eventOpt func(event Event)
 
 func newEvent(opts ...eventOpt) Event {
@@ -158,7 +164,7 @@ func newEvent(opts ...eventOpt) Event {
 }
 
 func track(cmd *cobra.Command) {
-	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod())
+	event := newEvent(withCommandPath(cmd), withDuration(cmd), withFlags(cmd), withProfile(), withVersion(), withOS(), withAuthMethod(), withService())
 
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {

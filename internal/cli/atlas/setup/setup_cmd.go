@@ -79,11 +79,9 @@ func (opts *Opts) PreRun() error {
 //	[--clusterName clusterName]
 //	[--provider provider]
 //	[--region regionName]
-//	[--projectId projectId]
 //	[--username username]
 //	[--password password]
 //	[--skipMongosh skipMongosh]
-//	[--default]
 func Builder() *cobra.Command {
 	loginOpts := &auth.LoginOpts{}
 	qsOpts := &quickstart.Opts{}
@@ -114,8 +112,6 @@ func Builder() *cobra.Command {
 					return err
 				}
 			}
-
-			// TODO: Next pr to treat customers already authenticated.
 
 			return opts.PreRunE(
 				opts.InitOutput(opts.OutWriter, ""),

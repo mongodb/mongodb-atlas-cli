@@ -16,6 +16,8 @@ package telemetry
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"os"
@@ -90,6 +92,12 @@ func newEvent(cmd *cobra.Command) Event {
 		setFlags = append(setFlags, f.Name)
 	})
 
+	profile := config.Name()
+	if profile != config.DefaultProfile { // hashing to avoid PII
+		h := sha256.Sum256([]byte(profile))
+		profile = base64.StdEncoding.EncodeToString(h[:])
+	}
+
 	var properties = map[string]interface{}{
 		"command":    command,
 		"duration":   duration.Milliseconds(),
@@ -98,6 +106,7 @@ func newEvent(cmd *cobra.Command) Event {
 		"os":         runtime.GOOS,
 		"arch":       runtime.GOARCH,
 		"flags":      setFlags,
+		"profile":    profile, // either "default" or base64 hash
 		"result":     "SUCCESS",
 	}
 

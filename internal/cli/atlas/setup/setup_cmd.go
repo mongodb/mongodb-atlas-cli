@@ -15,6 +15,8 @@
 package setup
 
 import (
+	"context"
+
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongocli/internal/cli/auth"
@@ -29,13 +31,15 @@ type Opts struct {
 	// quickstart
 	quickstart quickstart.Opts
 	// register
-	register auth.RegisterOpts
+	register auth.RegisterFlow
 	// login
-	login auth.LoginOpts
+	login *auth.LoginOpts
 }
 
-func (opts *Opts) Run() error {
-	//TODO: Registration flow
+func (opts *Opts) Run(ctx context.Context) error {
+	if err := opts.register.Run(ctx); err != nil {
+		return err
+	}
 	//TODO: Quickstart flow
 	return nil
 }
@@ -51,7 +55,11 @@ func (opts *Opts) Run() error {
 //	[--skipMongosh skipMongosh]
 //	[--default]
 func Builder() *cobra.Command {
-	opts := &Opts{}
+	loginOpts := &auth.LoginOpts{}
+	opts := &Opts{
+		register: auth.NewRegisterFlow(loginOpts),
+		login:    loginOpts,
+	}
 	cmd := &cobra.Command{
 		Use: "setup",
 		Example: `Override default cluster settings like name, provider or database username by using the command options
@@ -61,12 +69,17 @@ func Builder() *cobra.Command {
 		Long:   "This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.",
 		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// Run registration generic pre run
+			if err := opts.register.PreRun(cmd.OutOrStdout()); err != nil {
+				return err
+			}
+			// TODO: Next pr to treat customers already authenticated.
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 

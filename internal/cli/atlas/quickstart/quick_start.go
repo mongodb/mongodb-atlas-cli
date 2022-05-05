@@ -17,6 +17,7 @@ package quickstart
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"strconv"
@@ -34,6 +35,8 @@ import (
 	"github.com/mongodb/mongocli/internal/validate"
 	"github.com/spf13/cobra"
 )
+
+//go:generate mockgen -destination=../../../mocks/mock_quick_start.go -package=mocks github.com/mongodb/mongocli/internal/cli/atlas/quickstart Flow
 
 const quickstartTemplate = `
 Now you can connect to your Atlas cluster with: mongosh -u %s -p %s %s
@@ -105,6 +108,11 @@ type quickstart struct {
 	SkipMongosh    bool
 }
 
+type Flow interface {
+	PreRun(ctx context.Context, outWriter io.Writer) error
+	Run() error
+}
+
 func (opts *Opts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -113,7 +121,20 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *Opts) PreRun(ctx context.Context, outWriter io.Writer) error {
+	opts.setTier()
+	return opts.PreRunE(
+		opts.ValidateProjectID,
+		opts.initStore(ctx),
+		opts.InitOutput(outWriter, ""),
+	)
+}
+
 func (opts *Opts) Run() error {
+	const base10 = 10
+	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
+	opts.providerAndRegionToConstant()
+
 	values, dErr := opts.newDefaultValues()
 	if dErr != nil {
 		return dErr
@@ -385,18 +406,9 @@ func Builder() *cobra.Command {
 		Short: "Create and access an Atlas Cluster.",
 		Long:  "This command creates a new cluster, adds your public IP to the atlas access list and creates a db user to access your new MongoDB instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.setTier()
-			return opts.PreRunE(
-				opts.ValidateProjectID,
-				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), ""),
-			)
+			return opts.PreRun(cmd.Context(), cmd.OutOrStdout())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			const base10 = 10
-			opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
-			opts.providerAndRegionToConstant()
-
 			return opts.Run()
 		},
 	}

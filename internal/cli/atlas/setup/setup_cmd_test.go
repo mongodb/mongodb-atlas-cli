@@ -42,20 +42,35 @@ func TestBuilder(t *testing.T) {
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockRegFlow := mocks.NewMockRegisterFlow(ctrl)
+	mockQuickstartFlow := mocks.NewMockFlow(ctrl)
 	defer ctrl.Finish()
 	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{
-		register: mockRegFlow,
-		login:    &auth.LoginOpts{},
+		register:   mockRegFlow,
+		login:      &auth.LoginOpts{},
+		quickstart: mockQuickstartFlow,
 	}
 
+	opts.OutWriter = buf
 	opts.login.OutWriter = buf
 
 	mockRegFlow.
 		EXPECT().
 		Run(ctx).
+		Return(nil).
+		Times(1)
+
+	mockQuickstartFlow.
+		EXPECT().
+		Run().
+		Return(nil).
+		Times(1)
+
+	mockQuickstartFlow.
+		EXPECT().
+		PreRun(ctx, buf).
 		Return(nil).
 		Times(1)
 

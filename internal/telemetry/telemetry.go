@@ -73,6 +73,7 @@ func withProfile() func(Event) { // either "default" or base64 hash
 	return func(event Event) {
 		if config.Name() == config.DefaultProfile {
 			event.Properties["profile"] = config.DefaultProfile
+			return
 		}
 
 		h := sha256.Sum256([]byte(config.Name()))

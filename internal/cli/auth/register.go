@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongocli/internal/cli"
 	"github.com/mongodb/mongocli/internal/cli/require"
 	"github.com/mongodb/mongocli/internal/config"
+	"github.com/mongodb/mongocli/internal/flag"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
@@ -184,7 +185,7 @@ func (opts *registerOpts) registerPreRun() error {
 		msg := fmt.Sprintf(AlreadyAuthenticatedMsg, config.PublicAPIKey())
 		return fmt.Errorf(`%s
 
-%s`, msg, WithProfileMsg)
+%s`, msg, LoginWithProfileMsg)
 	}
 	return nil
 }
